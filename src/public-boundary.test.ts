@@ -62,7 +62,10 @@ test("the package exposes compositions without a second primitive barrel", async
     "tooltip",
   ];
 
-  expect(packageJson.dependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.4.0");
+  expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
+  expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.4.0 <0.5.0");
+  expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
+  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.4.0");
   expect(Object.keys(packageJson.exports)).not.toContain("./next-config");
   expect(packageJson.exports["./react/server"]).toEqual({
     types: "./src/react/server.ts",

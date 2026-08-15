@@ -21,12 +21,18 @@ async function filesBelow(directory: string): Promise<string[]> {
 
 const repository = process.cwd();
 const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
+const uiDevelopmentSpecifier = "github:hraness/ui#v0.4.0";
+const uiPeerRange = ">=0.4.0 <0.5.0";
+const uiInstallSource = process.env.HRANESS_UI_PACKAGE
+  ?? uiDevelopmentSpecifier;
 
 try {
   const archive = join(work, "package.tgz");
   const consumer = join(work, "consumer");
+  const neutralConsumer = join(work, "consumer-neutral");
   const unpacked = join(work, "unpacked");
   await mkdir(consumer);
+  await mkdir(neutralConsumer);
   await mkdir(unpacked);
   await run([
     process.execPath,
@@ -41,32 +47,84 @@ try {
   const packedRoot = join(unpacked, "package");
   const packedPackageJsonPath = join(packedRoot, "package.json");
   const packedPackageJson = await Bun.file(packedPackageJsonPath).json();
-  if (packedPackageJson.dependencies?.["@hraness/ui"] !== "github:hraness/ui#v0.4.0") {
-    throw new Error("Packed package does not retain the exact @hraness/ui v0.4.0 dependency.");
+  if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
+    throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
   }
-  let installSource = archive;
-  if (process.env.HRANESS_UI_PACKAGE !== undefined) {
+  if (packedPackageJson.peerDependencies?.["@hraness/ui"] !== uiPeerRange) {
+    throw new Error(`Packed package does not declare the ${uiPeerRange} @hraness/ui peer.`);
+  }
+  if (packedPackageJson.peerDependenciesMeta?.["@hraness/ui"]?.optional !== true) {
+    throw new Error("Packed package does not keep the entry-specific @hraness/ui peer optional at installation.");
+  }
+  if (packedPackageJson.devDependencies?.["@hraness/ui"] !== uiDevelopmentSpecifier) {
+    throw new Error("Packed package does not retain the exact @hraness/ui v0.4.0 development pin.");
+  }
+  await writeFile(
+    join(neutralConsumer, "package.json"),
+    JSON.stringify({ private: true, type: "module" }),
+  );
+  await run([
+    process.execPath,
+    "add",
+    archive,
+    "typescript@^6.0.3",
+    "--ignore-scripts",
+  ], neutralConsumer);
+  if (
+    await Bun.file(
+      join(neutralConsumer, "node_modules", "@hraness", "ui", "package.json"),
+    ).exists()
+  ) {
+    throw new Error("The framework-neutral consumer installed the optional @hraness/ui peer.");
+  }
+  await run([
+    "node",
+    "--input-type=module",
+    "-e",
+    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/syntax-highlighting')])",
+  ], neutralConsumer);
+  await writeFile(
+    join(neutralConsumer, "index.ts"),
+    [
+      'import * as core from "@hraness/design-kit";',
+      'import * as syntax from "@hraness/design-kit/syntax-highlighting";',
+      "void [core, syntax];",
+      "",
+    ].join("\n"),
+  );
+  for (const mode of ["Bundler", "NodeNext"] as const) {
     await writeFile(
-      packedPackageJsonPath,
-      `${JSON.stringify({
-        ...packedPackageJson,
-        dependencies: {
-          ...packedPackageJson.dependencies,
-          "@hraness/ui": process.env.HRANESS_UI_PACKAGE,
+      join(neutralConsumer, `tsconfig.${mode.toLowerCase()}.json`),
+      JSON.stringify({
+        compilerOptions: {
+          exactOptionalPropertyTypes: true,
+          lib: ["ES2023"],
+          module: mode === "Bundler" ? "Preserve" : "NodeNext",
+          moduleResolution: mode,
+          noEmit: true,
+          skipLibCheck: true,
+          strict: true,
+          target: "ES2023",
         },
-      }, null, 2)}\n`,
+        include: ["index.ts"],
+      }, null, 2),
     );
-    installSource = join(work, "package-smoke.tgz");
-    await run(["tar", "-czf", installSource, "-C", unpacked, "package"], repository);
+    await run([
+      process.execPath,
+      "x",
+      "tsc",
+      "-p",
+      `./tsconfig.${mode.toLowerCase()}.json`,
+    ], neutralConsumer);
   }
   await writeFile(
     join(consumer, "package.json"),
     JSON.stringify({ private: true, type: "module" }),
   );
-  await run([process.execPath, "add", installSource, "--ignore-scripts"], consumer);
   await run([
     process.execPath,
     "add",
+    uiInstallSource,
     "@types/bun@^1.3.14",
     "@types/react@^19.2.14",
     "@types/react-dom@^19.2.3",
@@ -76,6 +134,7 @@ try {
     "vite@8.1.5",
     "--ignore-scripts",
   ], consumer);
+  await run([process.execPath, "add", archive, "--ignore-scripts"], consumer);
   await run([
     "node",
     "--input-type=module",
@@ -169,16 +228,28 @@ try {
     join(react18Consumer, "package.json"),
     JSON.stringify({ private: true, type: "module" }),
   );
-  await run([process.execPath, "add", installSource, "--ignore-scripts"], react18Consumer);
   await run([
     process.execPath,
     "add",
+    uiInstallSource,
     "@types/react@18.3.28",
     "@types/react-dom@18.3.7",
     "react@18.3.1",
     "react-dom@18.3.1",
     "typescript@^6.0.3",
     "--ignore-scripts",
+  ], react18Consumer);
+  await run([
+    process.execPath,
+    "add",
+    archive,
+    "--ignore-scripts",
+  ], react18Consumer);
+  await run([
+    "node",
+    "--input-type=module",
+    "-e",
+    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')])",
   ], react18Consumer);
   await writeFile(
     join(react18Consumer, "index.ts"),

@@ -42,8 +42,8 @@ test("the portable portfolio inventory matches the package boundary", async () =
   }]);
   expect(dependencies).toEqual([{
     from: packageJson.name,
-    scope: "runtime",
-    specifier: packageJson.dependencies["@hraness/ui"],
+    scope: "peer",
+    specifier: packageJson.peerDependencies["@hraness/ui"],
     to: "@hraness/ui",
   }]);
   expect(inventory.publications).toEqual([{

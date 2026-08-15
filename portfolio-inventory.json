@@ -6,15 +6,15 @@
       "name": "@hraness/design-kit",
       "path": ".",
       "visibility": "public",
-      "version": "0.1.0"
+      "version": "0.1.1"
     }
   ],
   "contract": "hraness.portfolio-inventory/v1",
   "dependencies": [
     {
       "from": "@hraness/design-kit",
-      "scope": "runtime",
-      "specifier": "github:hraness/ui#v0.4.0",
+      "scope": "peer",
+      "specifier": ">=0.4.0 <0.5.0",
       "to": "@hraness/ui"
     }
   ],

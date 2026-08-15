@@ -11,12 +11,17 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.1.0"
+    "@hraness/design-kit": "github:hraness/design-kit#v0.1.1",
+    "@hraness/ui": "github:hraness/ui#v0.4.0"
   }
 }
 ```
 
-The package pins its portable core to `github:hraness/ui#v0.4.0`. React 18 or 19 and React DOM 18 or 19 are peer dependencies.
+`@hraness/ui` is an explicit peer dependency with the supported range
+`>=0.4.0 <0.5.0`; consumers should pin its immutable `v0.4.0` release as
+shown above when using the stylesheet or React entries. The peer is optional at
+installation so the framework-neutral root and syntax highlighter can be used
+on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
 ## Load the presentation layer
 
