@@ -1,0 +1,128 @@
+/* Jelly paints the host. Native or React Aria descendants retain semantics. */
+:root {
+  --jelly-font-display: var(--font-text);
+  --jelly-font-text: var(--font-text);
+  --jelly-font-mono: var(--font-mono);
+  --jelly-color-background-default: var(--background);
+  --jelly-color-background-surface: var(--surface);
+  --jelly-color-background-muted: var(--surface-raised);
+  --jelly-color-background-neutral: var(--grid);
+  --jelly-color-background-neutral-emphasis: var(--foreground);
+  --jelly-color-background-white: var(--surface);
+  --jelly-color-background-rose: var(--danger);
+  --jelly-color-background-amber: var(--warning);
+  --jelly-color-background-azure: var(--info);
+  --jelly-color-background-mint: var(--success);
+  --jelly-color-background-accent: var(--foreground);
+  --jelly-color-foreground-default: var(--foreground);
+  --jelly-color-foreground-muted: var(--muted);
+  --jelly-color-foreground-on-emphasis: var(--background);
+  --jelly-color-foreground-on-neutral: var(--foreground);
+  --jelly-color-foreground-on-white: var(--foreground);
+  --jelly-color-foreground-on-accent: var(--background);
+  --jelly-color-border-default: var(--line);
+  --jelly-color-border-focus: var(--focus);
+  --jelly-color-shadow: 32, 27, 25;
+  --jelly-radius-control: 16px;
+  --jelly-radius-card: 20px;
+  --jelly-radius-overlay: 24px;
+  --jelly-shadow-raised: 0 18px 44px -28px rgb(32 27 25 / 42%);
+}
+
+:root[data-theme="dark"],
+[data-theme="dark"],
+.dark {
+  --jelly-color-shadow: 0, 0, 0;
+  --jelly-shadow-raised: 0 20px 48px -26px rgb(0 0 0 / 72%);
+}
+
+.hraness-design-jelly-surface {
+  --jelly-card-padding-block: 0;
+  --jelly-card-padding-inline: 0;
+  --jelly-card-font-size: inherit;
+  --jelly-radius: var(--jelly-radius-card);
+  --jelly-fill: var(--surface-raised);
+  --jelly-label: var(--foreground);
+  --jelly-color-border-default: transparent;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  box-sizing: border-box;
+  border-radius: var(--jelly-radius);
+  color: var(--jelly-label);
+  font: inherit;
+}
+
+.hraness-design-jelly-surface[data-tone="primary"] {
+  --jelly-fill: var(--primary);
+  --jelly-label: var(--primary-foreground);
+}
+
+.hraness-design-jelly-surface[data-tone="quiet"] {
+  --jelly-fill: color-mix(in oklch, var(--surface) 64%, transparent);
+  --jelly-label: var(--muted);
+}
+
+.hraness-design-jelly-surface[data-tone="danger"] {
+  --jelly-fill: var(--danger);
+  --jelly-label: var(--background);
+}
+
+.hraness-design-jelly-surface[data-tone="field"] {
+  --jelly-fill: color-mix(in oklch, var(--surface-raised) 88%, var(--background));
+  --jelly-radius: var(--jelly-radius-control);
+}
+
+.hraness-design-jelly-surface[data-tone="overlay"] {
+  --jelly-fill: var(--popover);
+  --jelly-label: var(--popover-foreground);
+  --jelly-radius: var(--jelly-radius-overlay);
+}
+
+.hraness-design-jelly-surface[data-hovered][data-tone="neutral"] {
+  --jelly-fill: var(--surface-hover);
+}
+
+.hraness-design-jelly-surface[data-hovered][data-tone="primary"] {
+  --jelly-fill: color-mix(in oklch, var(--primary) 88%, var(--background));
+}
+
+.hraness-design-jelly-surface[data-disabled],
+.hraness-design-jelly-surface[data-pending] {
+  --jelly-fill: color-mix(in oklch, var(--surface-raised) 86%, var(--background));
+  --jelly-label: var(--disabled-foreground);
+  cursor: not-allowed;
+}
+
+.hraness-design-jelly-surface:not(:defined) {
+  border: 1px solid var(--line);
+  background: var(--jelly-fill);
+  box-shadow: var(--jelly-shadow-raised);
+}
+
+.hraness-design-jelly-surface:defined {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+jelly-card.hraness-design-jelly-surface[data-interaction="passive"],
+jelly-card.hraness-design-jelly-surface[data-interaction="field"] {
+  user-select: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hraness-design-jelly-surface {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hraness-design-jelly-surface,
+  .hraness-design-jelly-surface:defined {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+  }
+}

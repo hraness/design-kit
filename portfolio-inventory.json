@@ -1,0 +1,31 @@
+{
+  "brands": [],
+  "components": [
+    {
+      "kind": "package",
+      "name": "@hraness/design-kit",
+      "path": ".",
+      "visibility": "public",
+      "version": "0.1.0"
+    }
+  ],
+  "contract": "hraness.portfolio-inventory/v1",
+  "dependencies": [
+    {
+      "from": "@hraness/design-kit",
+      "scope": "runtime",
+      "specifier": "github:hraness/ui#v0.4.0",
+      "to": "@hraness/ui"
+    }
+  ],
+  "deployments": [],
+  "formatVersion": 1,
+  "publications": [
+    {
+      "component": "@hraness/design-kit",
+      "packageName": "@hraness/design-kit",
+      "repository": "hraness/design-kit"
+    }
+  ],
+  "repository": "hraness/design-kit"
+}

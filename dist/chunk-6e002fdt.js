@@ -1,0 +1,484 @@
+import {
+  highlightCode
+} from "./chunk-djxa5bgc.js";
+
+// src/react/procedural-recipe.ts
+var proceduralBackdropVariants = [
+  "atmosphere",
+  "grid",
+  "ripple",
+  "composite"
+];
+var proceduralRecipeVersion = 1;
+var defaultProceduralEffectPalette = {
+  highlight: "var(--aurora-gold)",
+  key: "var(--aurora-rose)",
+  shadow: "var(--aurora-violet)",
+  support: "var(--aurora-cyan)"
+};
+var colorRoles = [
+  "key",
+  "support",
+  "highlight",
+  "shadow"
+];
+function normalizeSeed(seed) {
+  const normalized = seed.trim();
+  if (normalized.length === 0) {
+    throw new RangeError("A procedural effect seed must contain a non-whitespace character.");
+  }
+  return normalized;
+}
+function normalizeVariation(variation) {
+  const normalized = variation ?? 0;
+  if (!Number.isSafeInteger(normalized)) {
+    throw new RangeError("A procedural effect variation must be a safe integer.");
+  }
+  return normalized === 0 ? 0 : normalized;
+}
+function normalizePalette(palette) {
+  const normalized = palette ?? defaultProceduralEffectPalette;
+  for (const role of colorRoles) {
+    if (normalized[role].trim().length === 0) {
+      throw new RangeError(`A procedural effect palette requires a nonblank ${role} color.`);
+    }
+  }
+  return {
+    highlight: normalized.highlight.trim(),
+    key: normalized.key.trim(),
+    shadow: normalized.shadow.trim(),
+    support: normalized.support.trim()
+  };
+}
+function seedHash(value) {
+  let hash = 2166136261;
+  for (let index = 0;index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+function seededUnitSequence(seed) {
+  let state = seedHash(seed);
+  return () => {
+    state = state + 1831565813 >>> 0;
+    let value = state;
+    value = Math.imul(value ^ value >>> 15, value | 1);
+    value ^= value + Math.imul(value ^ value >>> 7, value | 61);
+    return ((value ^ value >>> 14) >>> 0) / 4294967296;
+  };
+}
+function rounded(value, places = 3) {
+  const scale = 10 ** places;
+  const result = Math.round(value * scale) / scale;
+  return result === 0 ? 0 : result;
+}
+function between(next, minimum, maximum) {
+  return rounded(minimum + next() * (maximum - minimum));
+}
+function integerBetween(next, minimum, maximum) {
+  return Math.floor(minimum + next() * (maximum - minimum + 1));
+}
+function negativeIntegerBetween(next, minimum, maximum) {
+  const value = integerBetween(next, minimum, maximum);
+  return value === 0 ? 0 : -value;
+}
+function colorRole(next) {
+  return colorRoles[integerBetween(next, 0, colorRoles.length - 1)] ?? "key";
+}
+function proceduralIdentity(input, recipeName) {
+  const seed = normalizeSeed(input.seed);
+  const variation = normalizeVariation(input.variation);
+  return {
+    next: seededUnitSequence(`hraness-design-procedural-v${proceduralRecipeVersion}\x00${recipeName}\x00${seed}\x00${variation}`),
+    palette: normalizePalette(input.palette),
+    seed,
+    variation
+  };
+}
+function createProceduralBackdropRecipe(input) {
+  const { next, palette, seed, variation } = proceduralIdentity(input, "backdrop");
+  const variant = input.variant ?? "composite";
+  if (!proceduralBackdropVariants.includes(variant)) {
+    throw new RangeError(`Unsupported procedural backdrop variant: ${variant}.`);
+  }
+  const atmosphere = Array.from({ length: 5 }, () => ({
+    blur: between(next, 24, 54),
+    color: colorRole(next),
+    delay: negativeIntegerBetween(next, 0, 9000),
+    driftX: between(next, -18, 18),
+    driftY: between(next, -14, 14),
+    duration: integerBetween(next, 1e4, 18000),
+    height: between(next, 34, 68),
+    opacity: between(next, 0.16, 0.34),
+    rotation: between(next, -28, 28),
+    scale: between(next, 1.02, 1.12),
+    width: between(next, 42, 78),
+    x: between(next, 8, 92),
+    y: between(next, 8, 92)
+  }));
+  const gridSize = integerBetween(next, 42, 72);
+  const grid = {
+    offsetX: integerBetween(next, 0, gridSize - 1),
+    offsetY: integerBetween(next, 0, gridSize - 1),
+    opacity: between(next, 0.045, 0.095),
+    rotation: between(next, -2.5, 2.5),
+    size: gridSize
+  };
+  const ripple = {
+    aspect: between(next, 0.62, 0.9),
+    color: colorRole(next),
+    contours: Array.from({ length: 4 }, (_, index) => ({
+      delay: negativeIntegerBetween(next, 0, 7000),
+      duration: integerBetween(next, 8000, 14000),
+      opacity: between(next, 0.08, 0.18),
+      size: between(next, 28 + index * 13, 36 + index * 16)
+    })),
+    rotation: between(next, -18, 18),
+    x: between(next, 24, 76),
+    y: between(next, 22, 78)
+  };
+  return {
+    atmosphere,
+    grid,
+    palette,
+    ripple,
+    seed,
+    variation,
+    variant,
+    version: proceduralRecipeVersion
+  };
+}
+function createParticleHaloRecipe(input) {
+  const { next, palette, seed, variation } = proceduralIdentity(input, "halo");
+  const particles = Array.from({ length: 24 }, (_, index) => {
+    const angle = index / 24 * Math.PI * 2 + between(next, -0.11, 0.11);
+    const radiusX = between(next, 35, 49);
+    const radiusY = between(next, 34, 48);
+    return {
+      color: colorRole(next),
+      delay: negativeIntegerBetween(next, 0, 7000),
+      driftX: between(next, -7, 7),
+      driftY: between(next, -7, 7),
+      duration: integerBetween(next, 7000, 13000),
+      opacity: between(next, 0.26, 0.62),
+      size: between(next, 2, 6),
+      x: rounded(50 + Math.cos(angle) * radiusX),
+      y: rounded(50 + Math.sin(angle) * radiusY)
+    };
+  });
+  return {
+    palette,
+    particles,
+    seed,
+    variation,
+    version: proceduralRecipeVersion
+  };
+}
+
+// src/react/procedural-backdrop.tsx
+import { cn } from "@hraness/ui";
+import { jsx, jsxs } from "react/jsx-runtime";
+var colorVariables = {
+  highlight: "var(--hraness-design-procedural-highlight)",
+  key: "var(--hraness-design-procedural-key)",
+  shadow: "var(--hraness-design-procedural-shadow)",
+  support: "var(--hraness-design-procedural-support)"
+};
+var INERT_PROPS = { inert: true };
+function ProceduralBackdrop({
+  className,
+  palette,
+  seed,
+  style,
+  variation,
+  variant,
+  ...props
+}) {
+  const recipe = createProceduralBackdropRecipe({
+    seed,
+    ...palette === undefined ? {} : { palette },
+    ...variation === undefined ? {} : { variation },
+    ...variant === undefined ? {} : { variant }
+  });
+  const rootStyle = {
+    ...style,
+    "--hraness-design-procedural-highlight": recipe.palette.highlight,
+    "--hraness-design-procedural-key": recipe.palette.key,
+    "--hraness-design-procedural-shadow": recipe.palette.shadow,
+    "--hraness-design-procedural-support": recipe.palette.support
+  };
+  const showAtmosphere = recipe.variant === "atmosphere" || recipe.variant === "composite";
+  const showGrid = recipe.variant === "grid" || recipe.variant === "composite";
+  const showRipple = recipe.variant === "ripple" || recipe.variant === "composite";
+  const gridStyle = {
+    "--hraness-design-procedural-grid-offset-x": `${recipe.grid.offsetX}px`,
+    "--hraness-design-procedural-grid-offset-y": `${recipe.grid.offsetY}px`,
+    "--hraness-design-procedural-grid-opacity": recipe.grid.opacity,
+    "--hraness-design-procedural-grid-rotation": `${recipe.grid.rotation}deg`,
+    "--hraness-design-procedural-grid-size": `${recipe.grid.size}px`
+  };
+  const rippleStyle = {
+    "--hraness-design-procedural-ripple-aspect": recipe.ripple.aspect,
+    "--hraness-design-procedural-ripple-color": colorVariables[recipe.ripple.color],
+    "--hraness-design-procedural-ripple-rotation": `${recipe.ripple.rotation}deg`,
+    "--hraness-design-procedural-ripple-x": `${recipe.ripple.x}%`,
+    "--hraness-design-procedural-ripple-y": `${recipe.ripple.y}%`
+  };
+  return /* @__PURE__ */ jsxs("div", {
+    ...props,
+    ...INERT_PROPS,
+    "aria-hidden": "true",
+    className: cn("hraness-design-procedural-backdrop", className),
+    "data-recipe-version": recipe.version,
+    "data-variation": recipe.variation,
+    "data-variant": recipe.variant,
+    role: "presentation",
+    style: rootStyle,
+    children: [
+      showAtmosphere ? /* @__PURE__ */ jsx("span", {
+        className: "hraness-design-procedural-backdrop__atmosphere",
+        children: recipe.atmosphere.map((layer, index) => {
+          const layerStyle = {
+            "--hraness-design-procedural-layer-blur": `${layer.blur}px`,
+            "--hraness-design-procedural-layer-color": colorVariables[layer.color],
+            "--hraness-design-procedural-layer-delay": `${layer.delay}ms`,
+            "--hraness-design-procedural-layer-drift-x": `${layer.driftX}px`,
+            "--hraness-design-procedural-layer-drift-y": `${layer.driftY}px`,
+            "--hraness-design-procedural-layer-duration": `${layer.duration}ms`,
+            "--hraness-design-procedural-layer-height": `${layer.height}%`,
+            "--hraness-design-procedural-layer-opacity": layer.opacity,
+            "--hraness-design-procedural-layer-rotation": `${layer.rotation}deg`,
+            "--hraness-design-procedural-layer-scale": layer.scale,
+            "--hraness-design-procedural-layer-width": `${layer.width}%`,
+            "--hraness-design-procedural-layer-x": `${layer.x}%`,
+            "--hraness-design-procedural-layer-y": `${layer.y}%`
+          };
+          return /* @__PURE__ */ jsx("i", {
+            className: "hraness-design-procedural-backdrop__cloud",
+            style: layerStyle
+          }, index);
+        })
+      }) : null,
+      showGrid ? /* @__PURE__ */ jsx("span", {
+        className: "hraness-design-procedural-backdrop__grid",
+        style: gridStyle
+      }) : null,
+      showRipple ? /* @__PURE__ */ jsx("span", {
+        className: "hraness-design-procedural-backdrop__ripples",
+        style: rippleStyle,
+        children: recipe.ripple.contours.map((contour, index) => {
+          const contourStyle = {
+            "--hraness-design-procedural-ripple-delay": `${contour.delay}ms`,
+            "--hraness-design-procedural-ripple-duration": `${contour.duration}ms`,
+            "--hraness-design-procedural-ripple-opacity": contour.opacity,
+            "--hraness-design-procedural-ripple-size": `${contour.size}%`
+          };
+          return /* @__PURE__ */ jsx("i", {
+            className: "hraness-design-procedural-backdrop__ripple",
+            style: contourStyle
+          }, index);
+        })
+      }) : null
+    ]
+  });
+}
+
+// src/react/surfaces.tsx
+import { forwardRef } from "react";
+import { ThemedSurface, cn as cn2 } from "@hraness/ui";
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+function DitherSurface({
+  className,
+  density = "medium",
+  ...props
+}) {
+  return /* @__PURE__ */ jsx2(ThemedSurface, {
+    ...props,
+    className: cn2("hraness-design-dither-surface", className),
+    "data-density": density
+  });
+}
+function TopBar({
+  actions,
+  children,
+  className,
+  leading,
+  position = "static",
+  surface = "solid",
+  title,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs2("header", {
+    ...props,
+    className: cn2("hraness-design-top-bar", className),
+    "data-position": position,
+    "data-surface": surface,
+    children: [
+      /* @__PURE__ */ jsxs2("div", {
+        className: "hraness-design-top-bar__leading",
+        children: [
+          leading,
+          title === undefined ? null : /* @__PURE__ */ jsx2("div", {
+            className: "hraness-design-top-bar__title",
+            children: title
+          })
+        ]
+      }),
+      children === undefined ? null : /* @__PURE__ */ jsx2("div", {
+        className: "hraness-design-top-bar__content",
+        children
+      }),
+      actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
+        className: "hraness-design-top-bar__actions",
+        children: actions
+      })
+    ]
+  });
+}
+function BottomBar({ actions, children, className, leading, ...props }) {
+  return /* @__PURE__ */ jsxs2("footer", {
+    ...props,
+    className: cn2("hraness-design-bottom-bar", className),
+    children: [
+      leading === undefined ? null : /* @__PURE__ */ jsx2("div", {
+        className: "hraness-design-bottom-bar__leading",
+        children: leading
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-design-bottom-bar__content",
+        children
+      }),
+      actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
+        className: "hraness-design-bottom-bar__actions",
+        children: actions
+      })
+    ]
+  });
+}
+function PageCanvas({
+  as = "main",
+  className,
+  inset = "content",
+  size = "default",
+  ...props
+}) {
+  const Element = as;
+  return /* @__PURE__ */ jsx2(Element, {
+    ...props,
+    className: cn2("hraness-design-page-canvas", className),
+    "data-inset": inset,
+    "data-size": size
+  });
+}
+var DockedFooter = forwardRef(function DockedFooter2({
+  children,
+  className,
+  contentClassName,
+  density = "default",
+  inset = "content",
+  position = "fixed",
+  size = "default",
+  surface = "solid",
+  ...props
+}, ref) {
+  return /* @__PURE__ */ jsx2("footer", {
+    ...props,
+    className: cn2("hraness-design-docked-footer", className),
+    "data-position": position,
+    "data-surface": surface,
+    ref,
+    children: /* @__PURE__ */ jsx2("div", {
+      className: cn2("hraness-design-docked-footer__content", contentClassName),
+      "data-density": density,
+      "data-inset": inset,
+      "data-size": size,
+      children
+    })
+  });
+});
+
+// src/react/syntax-code.tsx
+import { jsx as jsx3 } from "react/jsx-runtime";
+function SyntaxCode({
+  className,
+  code,
+  language
+}) {
+  const highlighted = highlightCode(code, language);
+  const classes = className === undefined ? highlighted.className : `${highlighted.className} ${className}`;
+  return /* @__PURE__ */ jsx3("code", {
+    className: classes,
+    "data-language": highlighted.language,
+    dangerouslySetInnerHTML: { __html: highlighted.html }
+  });
+}
+
+// src/react/particle-halo.tsx
+import { cn as cn3 } from "@hraness/ui";
+import { jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
+var colorVariables2 = {
+  highlight: "var(--hraness-design-procedural-highlight)",
+  key: "var(--hraness-design-procedural-key)",
+  shadow: "var(--hraness-design-procedural-shadow)",
+  support: "var(--hraness-design-procedural-support)"
+};
+function ParticleHalo({
+  children,
+  className,
+  palette,
+  seed,
+  style,
+  variation,
+  ...props
+}) {
+  const recipe = createParticleHaloRecipe({
+    seed,
+    ...palette === undefined ? {} : { palette },
+    ...variation === undefined ? {} : { variation }
+  });
+  const rootStyle = {
+    ...style,
+    "--hraness-design-procedural-highlight": recipe.palette.highlight,
+    "--hraness-design-procedural-key": recipe.palette.key,
+    "--hraness-design-procedural-shadow": recipe.palette.shadow,
+    "--hraness-design-procedural-support": recipe.palette.support
+  };
+  return /* @__PURE__ */ jsxs3("div", {
+    ...props,
+    className: cn3("hraness-design-particle-halo", className),
+    "data-recipe-version": recipe.version,
+    "data-variation": recipe.variation,
+    style: rootStyle,
+    children: [
+      /* @__PURE__ */ jsx4("span", {
+        "aria-hidden": "true",
+        className: "hraness-design-particle-halo__particles",
+        role: "presentation",
+        children: recipe.particles.map((particle, index) => {
+          const particleStyle = {
+            "--hraness-design-particle-color": colorVariables2[particle.color],
+            "--hraness-design-particle-delay": `${particle.delay}ms`,
+            "--hraness-design-particle-drift-x": `${particle.driftX}px`,
+            "--hraness-design-particle-drift-y": `${particle.driftY}px`,
+            "--hraness-design-particle-duration": `${particle.duration}ms`,
+            "--hraness-design-particle-opacity": particle.opacity,
+            "--hraness-design-particle-size": `${particle.size}px`,
+            "--hraness-design-particle-x": `${particle.x}%`,
+            "--hraness-design-particle-y": `${particle.y}%`
+          };
+          return /* @__PURE__ */ jsx4("i", {
+            className: "hraness-design-particle-halo__particle",
+            style: particleStyle
+          }, index);
+        })
+      }),
+      /* @__PURE__ */ jsx4("div", {
+        className: "hraness-design-particle-halo__content",
+        children
+      })
+    ]
+  });
+}
+
+export { proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };

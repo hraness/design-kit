@@ -1,0 +1,160 @@
+{
+  "name": "@hraness/design-kit",
+  "version": "0.1.0",
+  "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "./src/*.css"
+  ],
+  "packageManager": "bun@1.3.14",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hraness/design-kit.git"
+  },
+  "homepage": "https://github.com/hraness/design-kit#readme",
+  "bugs": {
+    "url": "https://github.com/hraness/design-kit/issues"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "charts",
+    "effects",
+    "accessibility"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./src/react/index.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./react/server": {
+      "types": "./src/react/server.ts",
+      "import": "./dist/react/server.js"
+    },
+    "./charts.css": "./src/charts.css",
+    "./components.css": "./src/components.css",
+    "./design-gallery.css": "./src/design-gallery.css",
+    "./effects.css": "./src/effects.css",
+    "./fonts.css": "./src/fonts.css",
+    "./fonts/geist-mono/GeistMono[wght].woff2": "./src/fonts/geist-mono/GeistMono[wght].woff2",
+    "./jelly.css": "./src/jelly.css",
+    "./plain-publication.css": "./src/plain-publication.css",
+    "./plain-site.css": "./src/plain-site.css",
+    "./reset.css": "./src/reset.css",
+    "./styles.css": "./src/styles.css",
+    "./syntax-highlighting": {
+      "types": "./src/syntax-highlighting.ts",
+      "import": "./dist/syntax-highlighting.js"
+    },
+    "./syntax-highlighting.css": "./src/syntax-highlighting.css",
+    "./tokens.css": "./src/tokens.css",
+    "./typography.css": "./src/typography.css",
+    "./vendor/evilcharts/LICENSE": "./vendor/evilcharts/LICENSE",
+    "./vendor/evilcharts/UPSTREAM.md": "./vendor/evilcharts/UPSTREAM.md",
+    "./vendor/jelly-ui/LICENSE": "./vendor/jelly-ui/LICENSE",
+    "./vendor/jelly-ui/UPSTREAM.md": "./vendor/jelly-ui/UPSTREAM.md"
+  },
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "style": "./src/styles.css",
+  "files": [
+    "dist",
+    "src/charts.css",
+    "src/components.css",
+    "src/design-gallery.css",
+    "src/effects.css",
+    "src/fonts.css",
+    "src/fonts/geist-mono",
+    "src/index.ts",
+    "src/jelly.css",
+    "src/plain-publication.css",
+    "src/plain-site.css",
+    "src/react/animated-rail-stage.tsx",
+    "src/react/app-shell.tsx",
+    "src/react/aurora-dots-background.tsx",
+    "src/react/charts.tsx",
+    "src/react/chat.tsx",
+    "src/react/design-gallery.tsx",
+    "src/react/design-theme-context.tsx",
+    "src/react/fader.tsx",
+    "src/react/haptics.ts",
+    "src/react/index.ts",
+    "src/react/jelly-runtime.ts",
+    "src/react/jelly-surface.tsx",
+    "src/react/keyboard-shortcuts.ts",
+    "src/react/navigation-rail.tsx",
+    "src/react/particle-halo.tsx",
+    "src/react/phaser-dots.tsx",
+    "src/react/playback-transport.tsx",
+    "src/react/procedural-backdrop.tsx",
+    "src/react/procedural-recipe.ts",
+    "src/react/production-data-preview-notice.tsx",
+    "src/react/route-state.tsx",
+    "src/react/server.ts",
+    "src/react/surfaces.tsx",
+    "src/react/syntax-code.tsx",
+    "src/react/theme.tsx",
+    "src/reset.css",
+    "src/styles.css",
+    "src/syntax-highlighting.css",
+    "src/syntax-highlighting.ts",
+    "src/tokens.css",
+    "src/typography.css",
+    "vendor/evilcharts/LICENSE",
+    "vendor/evilcharts/UPSTREAM.md",
+    "vendor/jelly-ui/LICENSE",
+    "vendor/jelly-ui/UPSTREAM.md",
+    "vendor/jelly-ui/jelly.d.ts",
+    "vendor/jelly-ui/jelly.js",
+    "vendor/jelly-ui/jelly.js.map",
+    "portfolio-inventory.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "bun run ./scripts/build.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test ./src",
+    "test:browser": "bun run ./scripts/gallery-browser.ts",
+    "test:package": "bun run ./scripts/package-smoke.ts",
+    "check": "bun run lint && bun run typecheck && bun run build && bun run test:package && bun run test && bun run test:browser",
+    "prepack": "bun run check"
+  },
+  "dependencies": {
+    "@hraness/ui": "github:hraness/ui#v0.4.0",
+    "@hugeicons/core-free-icons": "^4.2.2",
+    "motion": "12.42.0",
+    "next-themes": "0.4.6",
+    "react-aria-components": "1.19.0",
+    "recharts": "3.8.0",
+    "sugar-high": "^1.2.1",
+    "web-haptics": "0.0.6"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/bun": "^1.3.14",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.2",
+    "fast-check": "^4.8.0",
+    "linkedom": "^0.18.12",
+    "playwright-core": "1.62.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.53.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

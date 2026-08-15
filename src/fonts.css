@@ -1,0 +1,8 @@
+/* Optional open-source display face. Default typography remains system-only. */
+@font-face {
+  font-display: swap;
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  src: url("./fonts/geist-mono/GeistMono[wght].woff2") format("woff2");
+}
