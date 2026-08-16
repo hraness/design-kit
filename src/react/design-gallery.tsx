@@ -42,6 +42,14 @@ export const designGallerySections = [
   { id: "syntax", label: "Syntax" },
 ] as const;
 
+/** Representative semantic control kinds every gallery consumer must exercise. */
+export const designGalleryTouchKinds = [
+  "button",
+  "link",
+  "radio",
+  "range",
+] as const;
+
 export const designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
   "application shells",

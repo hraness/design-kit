@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",

@@ -6,9 +6,13 @@ import { chromium, type Page } from "playwright-core";
 
 interface LayoutEvidence {
   readonly appearanceNames: readonly string[];
+  readonly auroraContained: boolean;
+  readonly auroraPosition: string;
   readonly checkedAppearance: readonly string[];
   readonly clientWidth: number;
   readonly copy: string;
+  readonly dotsContained: boolean;
+  readonly dotsPosition: string;
   readonly galleryPaddingLeft: number;
   readonly galleryPaddingRight: number;
   readonly heading: string;
@@ -66,6 +70,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const rail = document.querySelector(".hraness-design-app-shell__rail");
     const mobileTrigger = document.querySelector(".hraness-design-app-shell__mobile-trigger");
     const effect = document.querySelector(".design-gallery__effect");
+    const aurora = effect?.querySelector(".hraness-design-aurora-background");
+    const dots = effect?.querySelector(".hraness-design-aurora-dots");
     const plainLink = document.querySelector(".design-gallery__plain-link-example a");
     const plainTheme = document.querySelector(".design-gallery__plain-theme");
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
@@ -76,6 +82,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(rail instanceof HTMLElement)
       || !(mobileTrigger instanceof HTMLElement)
       || !(effect instanceof HTMLElement)
+      || !(aurora instanceof HTMLElement)
+      || !(dots instanceof HTMLElement)
       || !(plainLink instanceof HTMLAnchorElement)
       || !(plainTheme instanceof HTMLElement)
       || !(procedural instanceof HTMLElement)
@@ -86,6 +94,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const galleryStyle = getComputedStyle(gallery);
     const proceduralStyle = getComputedStyle(procedural);
     const effectBox = effect.getBoundingClientRect();
+    const auroraBox = aurora.getBoundingClientRect();
+    const dotsBox = dots.getBoundingClientRect();
     const proceduralBox = procedural.getBoundingClientRect();
     const appearance = [...document.querySelectorAll<HTMLInputElement>(
       '.hraness-design-theme-toggle input[type="radio"]',
@@ -101,11 +111,23 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
 
     return {
       appearanceNames: appearance.map((item) => item.getAttribute("aria-label") ?? ""),
+      auroraContained:
+        Math.abs(auroraBox.left - effectBox.left) <= 1
+        && Math.abs(auroraBox.right - effectBox.right) <= 1
+        && Math.abs(auroraBox.top - effectBox.top) <= 1
+        && Math.abs(auroraBox.bottom - effectBox.bottom) <= 1,
+      auroraPosition: getComputedStyle(aurora).position,
       checkedAppearance: appearance
         .filter((item) => item.checked)
         .map((item) => item.value),
       clientWidth: document.documentElement.clientWidth,
       copy: copy.textContent?.replace(/\s+/gu, " ").trim() ?? "",
+      dotsContained:
+        Math.abs(dotsBox.left - effectBox.left) <= 1
+        && Math.abs(dotsBox.right - effectBox.right) <= 1
+        && Math.abs(dotsBox.top - effectBox.top) <= 1
+        && Math.abs(dotsBox.bottom - effectBox.bottom) <= 1,
+      dotsPosition: getComputedStyle(dots).position,
       galleryPaddingLeft: Number.parseFloat(galleryStyle.paddingLeft),
       galleryPaddingRight: Number.parseFloat(galleryStyle.paddingRight),
       heading: heading.textContent?.trim() ?? "",
@@ -258,6 +280,14 @@ try {
           `${layout.id}: responsive shell ownership is incorrect`,
         );
         invariant(state.proceduralVariant === "composite", `${layout.id}: procedural variant changed`);
+        invariant(
+          state.auroraPosition === "absolute" && state.auroraContained,
+          `${layout.id}: aurora paint escaped its gallery specimen`,
+        );
+        invariant(
+          state.dotsPosition === "absolute" && state.dotsContained,
+          `${layout.id}: dot paint escaped its gallery specimen`,
+        );
         invariant(
           state.plainLinkDecoration === "none",
           `${layout.id}: plain links are not quiet at rest`,

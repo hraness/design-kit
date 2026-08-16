@@ -5,6 +5,7 @@ import {
   DesignSystemGallery,
   designGalleryRecipeCoverage,
   designGallerySections,
+  designGalleryTouchKinds,
   resolveGalleryTheme,
 } from "./design-gallery";
 
@@ -20,6 +21,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
+  expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
 });
 
 test("the gallery is product-neutral and server renderable", () => {

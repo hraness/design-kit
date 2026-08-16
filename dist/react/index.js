@@ -1723,6 +1723,12 @@ var designGallerySections = [
   { id: "effects", label: "Effects" },
   { id: "syntax", label: "Syntax" }
 ];
+var designGalleryTouchKinds = [
+  "button",
+  "link",
+  "radio",
+  "range"
+];
 var designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
   "application shells",
@@ -2467,6 +2473,7 @@ export {
   hapticInputForFeedback,
   disposeHapticFeedback,
   designThemes,
+  designGalleryTouchKinds,
   designGallerySections,
   designGalleryRecipeCoverage,
   decideKeyboardShortcut,

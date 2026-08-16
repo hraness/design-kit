@@ -90,6 +90,13 @@
   background: var(--background);
 }
 
+.design-gallery__effect > :where(
+  .hraness-design-aurora-background,
+  .hraness-design-aurora-dots
+) {
+  position: absolute;
+}
+
 .design-gallery__effect-copy {
   position: relative;
   z-index: 1;
