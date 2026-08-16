@@ -33,4 +33,21 @@ if (!result.success) {
 const reactEntry = join(outdir, "react/index.js");
 const source = await Bun.file(reactEntry).text();
 const directive = '"use client";\n';
-if (!source.startsWith(directive)) await writeFile(reactEntry, directive + source);
+const directiveLine = /^"use client";\r?\n?/gmu;
+const normalizedSource = directive + source.replace(directiveLine, "");
+await writeFile(reactEntry, normalizedSource);
+
+for await (const relativePath of new Bun.Glob("**/*.js").scan({ cwd: outdir })) {
+  const path = join(outdir, relativePath);
+  const builtSource = await Bun.file(path).text();
+  const directives = builtSource.match(/^"use client";\r?$/gmu) ?? [];
+  if (path === reactEntry) {
+    if (!builtSource.startsWith(directive) || directives.length !== 1) {
+      throw new Error("The React client entry must contain one leading use-client directive.");
+    }
+  } else if (directives.length > 0) {
+    throw new Error(
+      `Only the React client entry may contain a use-client directive: ${relativePath}`,
+    );
+  }
+}

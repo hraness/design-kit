@@ -157,6 +157,18 @@ try {
   if (packedFiles.some((path) => path.includes(".test."))) {
     throw new Error("Packed package contains test sources");
   }
+  const clientBundle = await Bun.file(
+    join(installed, "dist", "react", "index.js"),
+  ).text();
+  const clientDirectives = clientBundle.match(/^"use client";\r?$/gmu) ?? [];
+  if (
+    !clientBundle.startsWith('"use client";\n')
+    || clientDirectives.length !== 1
+  ) {
+    throw new Error(
+      "Packed React entry must have one leading use-client directive and no interior directives.",
+    );
+  }
 
   await writeFile(
     join(consumer, "index.ts"),

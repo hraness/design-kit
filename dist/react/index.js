@@ -26,7 +26,6 @@ import {
 import { AnimatePresence, motion as Motion, useReducedMotion } from "motion/react";
 import { cn } from "@hraness/ui";
 import { jsx } from "react/jsx-runtime";
-"use client";
 function railStageMotion(reduceMotion) {
   const duration = reduceMotion ? 0 : motion.duration.standard / 1000;
   return {
@@ -58,7 +57,6 @@ import { Menu01Icon } from "@hugeicons/core-free-icons";
 import { DialogContent, DialogTrigger, Icon, IconButton, cn as cn2 } from "@hraness/ui";
 import { useEffect, useState } from "react";
 import { jsx as jsx2, jsxs } from "react/jsx-runtime";
-"use client";
 function AppShell({
   bottomBar,
   children,
@@ -121,7 +119,6 @@ function AppShell({
 import { useEffect as useEffect2, useRef } from "react";
 import { cn as cn3 } from "@hraness/ui";
 import { jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
-"use client";
 var DOT_PATTERN = "hraness-design-phaser-dots__static";
 var DEFAULT_DOT_STYLE = {
   color: "var(--phaser-dots-static-color, var(--foreground))",
@@ -494,7 +491,6 @@ function PhaserDots({
 
 // src/react/aurora-dots-background.tsx
 import { jsx as jsx4, jsxs as jsxs3, Fragment } from "react/jsx-runtime";
-"use client";
 function AuroraDotsBackground() {
   return /* @__PURE__ */ jsxs3(Fragment, {
     children: [
@@ -527,7 +523,6 @@ import {
 } from "react";
 import { cn as cn4 } from "@hraness/ui";
 import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
-"use client";
 function finiteOr(value, fallback) {
   return Number.isFinite(value) ? value : fallback;
 }
@@ -900,7 +895,6 @@ function RangePlotChart({
 // src/react/chat.tsx
 import { Button, TextAreaField, cn as cn5 } from "@hraness/ui";
 import { jsx as jsx6, jsxs as jsxs5 } from "react/jsx-runtime";
-"use client";
 function ChatMessage({
   actions,
   avatar,
@@ -993,7 +987,6 @@ function ChatComposer({
 // src/react/design-theme-context.tsx
 import { createContext, useContext, useMemo } from "react";
 import { jsx as jsx7 } from "react/jsx-runtime";
-"use client";
 var DesignThemeContext = createContext({});
 function DesignPortalThemeProvider({
   children,
@@ -1047,7 +1040,6 @@ import {
 } from "react-aria-components";
 import { cn as cn6 } from "@hraness/ui";
 import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
-"use client";
 function Fader({
   className,
   density = "default",
@@ -1116,7 +1108,6 @@ import {
 import { cn as cn7 } from "@hraness/ui";
 
 // src/react/jelly-runtime.ts
-"use client";
 function createRetryableJellyRuntimeLoader(loader) {
   let runtime;
   return () => {
@@ -1163,7 +1154,6 @@ async function setJellyThemeMode(mode) {
 }
 
 // src/react/jelly-surface.tsx
-"use client";
 var JellyCard = "jelly-card";
 function composeJellyCapture(consumer, internal) {
   return (event) => {
@@ -1328,7 +1318,6 @@ import {
   cn as cn8
 } from "@hraness/ui";
 import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
-"use client";
 function NavigationRail({
   "aria-label": ariaLabel = "Primary navigation",
   children,
@@ -1430,7 +1419,6 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn9 } from "@hraness/ui";
 import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
-"use client";
 function PlaybackTransport({
   buttonAriaKeyShortcuts,
   buttonId,
@@ -1485,7 +1473,6 @@ function PlaybackTransport({
 
 // src/react/production-data-preview-notice.tsx
 import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
-"use client";
 function ProductionDataPreviewNotice({
   surfaceOrigin
 }) {
@@ -1522,7 +1509,6 @@ import {
   useSyncExternalStore
 } from "react";
 import { jsx as jsx12, jsxs as jsxs10, Fragment as Fragment2 } from "react/jsx-runtime";
-"use client";
 var designThemes = ["light", "dark", "system"];
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
@@ -1730,7 +1716,6 @@ function ThemeColorSync({
 
 // src/react/design-gallery.tsx
 import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
-"use client";
 var designGallerySections = [
   { id: "foundation", label: "Foundation" },
   { id: "shells", label: "Shells" },
@@ -2031,7 +2016,6 @@ export const shell = <AppShell rail={null}>Content</AppShell>;`,
 }
 // src/react/haptics.ts
 import { useCallback as useCallback2, useEffect as useEffect5 } from "react";
-"use client";
 var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
 function isHapticBrowserEnvironment(environment = globalThis) {
   return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
@@ -2163,7 +2147,6 @@ function useHapticFeedback(enabled = true) {
 }
 // src/react/keyboard-shortcuts.ts
 import { useEffect as useEffect6, useRef as useRef3 } from "react";
-"use client";
 var interactiveTargetSelector = [
   "a[href]",
   "area[href]",
@@ -2294,7 +2277,6 @@ import {
 } from "@hraness/ui";
 import { useEffect as useEffect7, useId as useId2 } from "react";
 import { jsx as jsx14, jsxs as jsxs12 } from "react/jsx-runtime";
-"use client";
 function RouteActions({ children }) {
   return /* @__PURE__ */ jsx14("div", {
     className: "hraness-design-route-state__actions",
