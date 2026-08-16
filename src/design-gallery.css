@@ -38,6 +38,25 @@
   gap: var(--space-4);
 }
 
+.design-gallery__plain-theme.plain-site.plain-publication {
+  display: block;
+  min-height: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--plain-line);
+  background: var(--plain-background);
+  color: var(--plain-foreground);
+}
+
+.design-gallery__plain-theme .plain-page {
+  margin: 0;
+  padding: 0;
+}
+
+.design-gallery__plain-link-example {
+  margin: 0;
+  font-size: var(--text-caption);
+}
+
 .design-gallery__jelly {
   display: grid;
   min-block-size: 8rem;
@@ -106,6 +125,7 @@
 
 @media (forced-colors: active) {
   .design-gallery__shell-preview,
+  .design-gallery__plain-theme,
   .design-gallery__instrument,
   .design-gallery__effect,
   .design-gallery__syntax {

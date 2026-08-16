@@ -19,10 +19,48 @@ async function filesBelow(directory: string): Promise<string[]> {
   return nested.flat();
 }
 
+function record(value: unknown, label: string): Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new TypeError(`${label} must be an object.`);
+  }
+  return value as Record<string, unknown>;
+}
+
+function stringField(value: Record<string, unknown>, key: string, label: string): string {
+  const field = value[key];
+  if (typeof field !== "string" || field.length === 0) {
+    throw new TypeError(`${label}.${key} must be a non-empty string.`);
+  }
+  return field;
+}
+
 const repository = process.cwd();
 const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
-const uiDevelopmentSpecifier = "github:hraness/ui#v0.4.0";
-const uiPeerRange = ">=0.4.0 <0.5.0";
+const rootManifest = record(
+  await Bun.file(join(repository, "package.json")).json() as unknown,
+  "package.json",
+);
+const rootDevDependencies = record(
+  rootManifest.devDependencies,
+  "package.json devDependencies",
+);
+const rootPeerDependencies = record(
+  rootManifest.peerDependencies,
+  "package.json peerDependencies",
+);
+const uiDevelopmentSpecifier = stringField(
+  rootDevDependencies,
+  "@hraness/ui",
+  "package.json devDependencies",
+);
+if (!/^github:hraness\/ui#v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u.test(uiDevelopmentSpecifier)) {
+  throw new Error("The @hraness/ui development dependency must use an exact immutable release tag.");
+}
+const uiPeerRange = stringField(
+  rootPeerDependencies,
+  "@hraness/ui",
+  "package.json peerDependencies",
+);
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
 
@@ -57,7 +95,7 @@ try {
     throw new Error("Packed package does not keep the entry-specific @hraness/ui peer optional at installation.");
   }
   if (packedPackageJson.devDependencies?.["@hraness/ui"] !== uiDevelopmentSpecifier) {
-    throw new Error("Packed package does not retain the exact @hraness/ui v0.4.0 development pin.");
+    throw new Error("Packed package does not retain the exact @hraness/ui development pin.");
   }
   await writeFile(
     join(neutralConsumer, "package.json"),

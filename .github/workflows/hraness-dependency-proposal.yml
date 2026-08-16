@@ -1,0 +1,98 @@
+name: Hraness dependency proposal
+
+on:
+  schedule:
+    - cron: "57 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hraness-dependency-proposal
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Prepare one immutable release proposal
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.3.14
+      - run: bun test scripts/propose-hraness-dependency-update.test.ts
+      - name: Select and apply one immutable release in the ephemeral checkout
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          bun run scripts/propose-hraness-dependency-update.ts
+          --apply --github-output "$GITHUB_OUTPUT"
+      - name: Refresh lockfile and portfolio artifacts
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          bun install --ignore-scripts --no-progress
+          if bun -e 'const value = await Bun.file("package.json").json(); process.exit(value.scripts?.["portfolio:generate"] ? 0 : 1)'; then
+            bun run portfolio:generate
+          elif bun -e 'const value = await Bun.file("package.json").json(); process.exit(value.scripts?.["check:portfolio-inventory"] ? 0 : 1)'; then
+            bun run check:portfolio-inventory --write
+            bun run check:portfolio-inventory
+          fi
+          bun install --frozen-lockfile --ignore-scripts --no-progress
+      - name: Build a bounded proposal artifact
+        if: steps.update.outputs.changed == 'true'
+        env:
+          BASE_COMMIT: ${{ github.sha }}
+          CONSUMER_REPOSITORY: ${{ github.repository }}
+          DEPENDENCIES: ${{ steps.update.outputs.dependencies }}
+          FROM_TAGS: ${{ steps.update.outputs.from_tags }}
+          PROPOSAL_DIRECTORY: ${{ runner.temp }}/hraness-dependency-proposal
+          RELEASE_REPOSITORY: ${{ steps.update.outputs.repository }}
+          TARGET_TAG: ${{ steps.update.outputs.target_tag }}
+        run: |
+          git diff --check
+          unexpected="$(git diff --name-only | awk '
+            !/(^|\/)package\.json$/ &&
+            $0 != "bun.lock" &&
+            $0 != "portfolio-inventory.json" { print }
+          ')"
+          if [[ -n "$unexpected" ]]; then
+            printf 'Unexpected generated paths:\n%s\n' "$unexpected"
+            exit 1
+          fi
+          untracked="$(git ls-files --others --exclude-standard)"
+          if [[ -n "$untracked" ]]; then
+            printf 'Unexpected untracked paths:\n%s\n' "$untracked"
+            exit 1
+          fi
+          if git diff --quiet; then
+            echo "The updater reported a change but produced no diff."
+            exit 1
+          fi
+
+          mkdir -p "$PROPOSAL_DIRECTORY"
+          git diff --binary > "$PROPOSAL_DIRECTORY/update.patch"
+          bun -e '
+            const metadata = {
+              baseCommit: process.env.BASE_COMMIT,
+              contract: "hraness.dependency-proposal/v1",
+              consumerRepository: process.env.CONSUMER_REPOSITORY,
+              dependencies: process.env.DEPENDENCIES?.split(",") ?? [],
+              fromTags: process.env.FROM_TAGS?.split(",") ?? [],
+              releaseRepository: process.env.RELEASE_REPOSITORY,
+              targetTag: process.env.TARGET_TAG,
+            };
+            await Bun.write(`${process.env.PROPOSAL_DIRECTORY}/metadata.json`, `${JSON.stringify(metadata, null, 2)}\n`);
+          '
+      - name: Upload the read-only proposal
+        if: steps.update.outputs.changed == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hraness-dependency-${{ steps.update.outputs.branch_slug }}
+          path: ${{ runner.temp }}/hraness-dependency-proposal
+          if-no-files-found: error
+          retention-days: 7

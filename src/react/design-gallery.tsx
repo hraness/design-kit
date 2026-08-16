@@ -47,6 +47,7 @@ export const designGalleryRecipeCoverage = [
   "application shells",
   "charts",
   "Jelly presentation",
+  "plain site and publication grammar",
   "procedural effects",
   "production preview notice",
   "syntax highlighting",
@@ -124,6 +125,16 @@ export function DesignSystemGallery({
           <JellySurface className="design-gallery__jelly" interaction="press" tone="neutral">
             <Button variant="quiet">Semantic button with optional Jelly paint</Button>
           </JellySurface>
+        </div>
+        <div
+          aria-label="Plain site link presentation"
+          className="design-gallery__plain-theme plain-site plain-publication"
+        >
+          <div className="plain-page">
+            <p className="design-gallery__plain-link-example">
+              Ordinary <a href="#foundation">blue links</a> stay quiet until interaction.
+            </p>
+          </div>
         </div>
       </section>
 

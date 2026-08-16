@@ -18,6 +18,7 @@ test("the public gallery covers the composition boundary", () => {
   ]);
   expect(designGalleryRecipeCoverage).toContain("@hraness/ui primitives");
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
+  expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
 });
 
@@ -29,6 +30,8 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("hraness-design-app-shell");
   expect(html).toContain("hraness-design-bar-list-chart");
   expect(html).toContain("hraness-design-production-data-preview-notice");
+  expect(html).toContain('class="design-gallery__plain-link-example"');
+  expect(html).toContain(">blue links</a> stay quiet until interaction.");
 });
 
 test("system appearance resolves from the supplied media preference", () => {

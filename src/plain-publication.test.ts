@@ -67,6 +67,12 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
   expect(plainSiteCss).toContain(
     ":where(.plain-header a, .plain-page a, .plain-footer a)",
   );
+  expect(plainSiteCss).toMatch(
+    /:where\(\.plain-header a, \.plain-page a, \.plain-footer a\)\s*\{[^}]*text-decoration:\s*none;/su,
+  );
+  expect(plainSiteCss).toMatch(
+    /\.plain-page a:is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration:\s*underline;/u,
+  );
   expect(plainSiteCss).toContain(
     ".plain-site :where(\n  .plain-header a:focus-visible,",
   );
@@ -78,6 +84,15 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
   );
   expect(publicationCss).toContain(
     ":where(.plain-site.plain-publication a:not(.hraness-design-skip-link))",
+  );
+  expect(publicationCss).toMatch(
+    /:where\(\.plain-site\.plain-publication a:not\(\.hraness-design-skip-link\)\)\s*\{[^}]*text-decoration:\s*none;/su,
+  );
+  expect(publicationCss).toMatch(
+    /a:not\(\.hraness-design-skip-link\):is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration:\s*underline;/u,
+  );
+  expect(publicationCss).not.toMatch(
+    /\.plain-publication__(?:primary-link|entry h3 a|related-grid > a)\s*\{[^}]*text-decoration:\s*underline;/su,
   );
   expect(publicationCss).not.toMatch(
     /^\.plain-site\.plain-publication a:not\(\.hraness-design-skip-link\)/mu,

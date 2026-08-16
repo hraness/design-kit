@@ -28,12 +28,16 @@
 :where(.plain-site.plain-publication a:not(.hraness-design-skip-link)) {
   color: var(--plain-link);
   overflow-wrap: anywhere;
+  text-decoration: none;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.15em;
 }
 
-:where(.plain-site.plain-publication a:not(.hraness-design-skip-link):hover) {
-  text-decoration-thickness: 2px;
+:where(
+  .plain-site.plain-publication
+    a:not(.hraness-design-skip-link):is(:hover, :focus-visible)
+) {
+  text-decoration: underline;
 }
 
 :where(.plain-site.plain-publication a:not(.hraness-design-skip-link):focus-visible) {
@@ -110,7 +114,6 @@
   color: var(--plain-link);
   font: inherit;
   font-weight: 400;
-  text-decoration: underline;
 }
 
 .plain-site.plain-publication .plain-publication__primary-link:is(:hover, :focus-visible) {
@@ -171,10 +174,6 @@
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.35;
-}
-
-.plain-site.plain-publication .plain-publication__entry h3 a {
-  text-decoration: underline;
 }
 
 @media (pointer: coarse) {
@@ -514,7 +513,6 @@
   padding: 0.8rem 0;
   border-top: 1px solid var(--plain-line);
   background: transparent;
-  text-decoration: underline;
 }
 
 .plain-site.plain-publication .plain-publication__related-grid > a:hover {

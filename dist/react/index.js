@@ -1728,6 +1728,7 @@ var designGalleryRecipeCoverage = [
   "application shells",
   "charts",
   "Jelly presentation",
+  "plain site and publication grammar",
   "procedural effects",
   "production preview notice",
   "syntax highlighting"
@@ -1842,6 +1843,24 @@ function DesignSystemGallery({
                 })
               })
             ]
+          }),
+          /* @__PURE__ */ jsx13("div", {
+            "aria-label": "Plain site link presentation",
+            className: "design-gallery__plain-theme plain-site plain-publication",
+            children: /* @__PURE__ */ jsx13("div", {
+              className: "plain-page",
+              children: /* @__PURE__ */ jsxs11("p", {
+                className: "design-gallery__plain-link-example",
+                children: [
+                  "Ordinary ",
+                  /* @__PURE__ */ jsx13("a", {
+                    href: "#foundation",
+                    children: "blue links"
+                  }),
+                  " stay quiet until interaction."
+                ]
+              })
+            })
           })
         ]
       }),

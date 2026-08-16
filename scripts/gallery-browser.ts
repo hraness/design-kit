@@ -16,6 +16,9 @@ interface LayoutEvidence {
   readonly mobileTriggerDisplay: string;
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
+  readonly plainLinkDecoration: string;
+  readonly plainThemeHeight: number;
+  readonly plainThemeMinHeight: string;
   readonly proceduralAriaHidden: boolean;
   readonly proceduralCanvasCount: number;
   readonly proceduralCloudCount: number;
@@ -63,6 +66,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const rail = document.querySelector(".hraness-design-app-shell__rail");
     const mobileTrigger = document.querySelector(".hraness-design-app-shell__mobile-trigger");
     const effect = document.querySelector(".design-gallery__effect");
+    const plainLink = document.querySelector(".design-gallery__plain-link-example a");
+    const plainTheme = document.querySelector(".design-gallery__plain-theme");
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
     if (
       !(gallery instanceof HTMLElement)
@@ -71,6 +76,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(rail instanceof HTMLElement)
       || !(mobileTrigger instanceof HTMLElement)
       || !(effect instanceof HTMLElement)
+      || !(plainLink instanceof HTMLAnchorElement)
+      || !(plainTheme instanceof HTMLElement)
       || !(procedural instanceof HTMLElement)
     ) {
       throw new Error("The public gallery structure is incomplete.");
@@ -106,6 +113,9 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       mobileTriggerDisplay: getComputedStyle(mobileTrigger).display,
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
+      plainLinkDecoration: getComputedStyle(plainLink).textDecorationLine,
+      plainThemeHeight: plainTheme.getBoundingClientRect().height,
+      plainThemeMinHeight: getComputedStyle(plainTheme).minHeight,
       proceduralAriaHidden: procedural.getAttribute("aria-hidden") === "true",
       proceduralCanvasCount: procedural.querySelectorAll("canvas").length,
       proceduralCloudCount: procedural.querySelectorAll(
@@ -248,6 +258,14 @@ try {
           `${layout.id}: responsive shell ownership is incorrect`,
         );
         invariant(state.proceduralVariant === "composite", `${layout.id}: procedural variant changed`);
+        invariant(
+          state.plainLinkDecoration === "none",
+          `${layout.id}: plain links are not quiet at rest`,
+        );
+        invariant(
+          state.plainThemeMinHeight === "0px" && state.plainThemeHeight < 160,
+          `${layout.id}: plain link specimen is not compact`,
+        );
         invariant(state.proceduralCloudCount === 5, `${layout.id}: procedural atmosphere is incomplete`);
         invariant(state.proceduralGridCount === 1, `${layout.id}: procedural grid is incomplete`);
         invariant(state.proceduralRippleCount === 4, `${layout.id}: procedural ripples are incomplete`);
@@ -258,6 +276,14 @@ try {
         invariant(
           state.palette.length === 4 && state.paletteValid,
           `${layout.id}: procedural palette is ${JSON.stringify(state.palette)}`,
+        );
+
+        const plainLink = page.locator(".design-gallery__plain-link-example a");
+        await plainLink.hover();
+        invariant(
+          await plainLink.evaluate((link) =>
+            getComputedStyle(link).textDecorationLine.includes("underline")),
+          `${layout.id}: plain links do not reveal an underline on interaction`,
         );
 
         const light = page.getByRole("radio", { name: "Light" });
