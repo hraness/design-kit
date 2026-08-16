@@ -30,6 +30,15 @@ test("plain-site exposes one compact, product-neutral site shell", () => {
     /\.plain-footer\s*\{[^}]*flex-wrap:\s*wrap;/su,
   );
   expect(plainSiteCss).toMatch(
+    /\.plain-header__inner\s*\{[^}]*align-items:\s*center;[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap;/su,
+  );
+  expect(plainSiteCss).toMatch(
+    /\.plain-wordmark\s*\{[^}]*flex:\s*1 1 auto;[^}]*min-inline-size:\s*var\(--plain-link-target-min\);[^}]*overflow-wrap:\s*anywhere;/su,
+  );
+  expect(plainSiteCss).toMatch(
+    /\.plain-nav\s*\{[^}]*justify-content:\s*flex-end;[^}]*margin-inline-start:\s*auto;[^}]*max-inline-size:\s*100%;[^}]*min-inline-size:\s*0;/su,
+  );
+  expect(plainSiteCss).toMatch(
     /@media \(pointer: coarse\)\s*\{[\s\S]*?\.plain-site\s*\{[^}]*--plain-link-target-min:\s*var\(--interactive-target-min, 48px\);/u,
   );
   expect(plainSiteCss).toMatch(
@@ -61,7 +70,13 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
     /\.plain-header__inner\s*\{[^}]*--plain-header-block-padding:\s*1\.15rem;[^}]*padding-top:\s*max\(\s*var\(--plain-header-block-padding\),\s*env\(safe-area-inset-top\)\s*\);[^}]*padding-bottom:\s*var\(--plain-header-block-padding\);/su,
   );
   expect(plainSiteCss).toMatch(
-    /@media \(max-width: 42rem\)\s*\{[\s\S]*?\.plain-header__inner\s*\{[^}]*--plain-header-block-padding:\s*1rem;[^}]*\}/u,
+    /@media \(max-width: 42rem\)\s*\{[\s\S]*?\.plain-header__inner\s*\{[^}]*--plain-header-block-padding:\s*0\.65rem;[^}]*gap:\s*0\.35rem 0\.75rem;[^}]*\}/u,
+  );
+  expect(plainSiteCss).not.toMatch(
+    /@media \(max-width: 42rem\)\s*\{[\s\S]*?\.plain-header__inner\s*\{[^}]*flex-direction:\s*column;/u,
+  );
+  expect(plainSiteCss).toMatch(
+    /@media \(max-width: 42rem\)\s*\{[\s\S]*?\.plain-wordmark\s*\{[^}]*flex-basis:\s*min\(11rem, 100%\);/u,
   );
 
   expect(plainSiteCss).toContain(

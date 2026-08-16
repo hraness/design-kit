@@ -155,9 +155,10 @@ body.plain-site > main {
 .plain-header__inner {
   --plain-header-block-padding: 1.15rem;
 
-  align-items: baseline;
+  align-items: center;
   border-bottom: 1px solid var(--plain-line);
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem 1.5rem;
   inline-size: 100%;
   justify-content: space-between;
@@ -176,11 +177,13 @@ body.plain-site > main {
   align-items: center;
   color: var(--plain-foreground);
   display: inline-flex;
+  flex: 1 1 auto;
   font: inherit;
   font-weight: 700;
   letter-spacing: 0;
   min-block-size: var(--plain-link-target-min);
   min-inline-size: var(--plain-link-target-min);
+  overflow-wrap: anywhere;
   text-decoration: none;
   text-transform: none;
 }
@@ -191,6 +194,14 @@ body.plain-site > main {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.85rem;
+}
+
+.plain-nav {
+  flex: 0 1 auto;
+  justify-content: flex-end;
+  margin-inline-start: auto;
+  max-inline-size: 100%;
+  min-inline-size: 0;
 }
 
 .plain-nav a,
@@ -332,10 +343,13 @@ body.plain-site > main {
 
 @media (max-width: 42rem) {
   .plain-header__inner {
-    --plain-header-block-padding: 1rem;
+    --plain-header-block-padding: 0.65rem;
 
-    align-items: flex-start;
-    flex-direction: column;
+    gap: 0.35rem 0.75rem;
+  }
+
+  .plain-wordmark {
+    flex-basis: min(11rem, 100%);
   }
 }
 

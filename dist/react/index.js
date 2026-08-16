@@ -1850,23 +1850,53 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsx13("div", {
+          /* @__PURE__ */ jsxs11("div", {
             "aria-label": "Plain site link presentation",
             className: "design-gallery__plain-theme plain-site plain-publication",
-            children: /* @__PURE__ */ jsx13("div", {
-              className: "plain-page",
-              children: /* @__PURE__ */ jsxs11("p", {
-                className: "design-gallery__plain-link-example",
-                children: [
-                  "Ordinary ",
-                  /* @__PURE__ */ jsx13("a", {
-                    href: "#foundation",
-                    children: "blue links"
-                  }),
-                  " stay quiet until interaction."
-                ]
+            children: [
+              /* @__PURE__ */ jsx13("header", {
+                className: "plain-header",
+                children: /* @__PURE__ */ jsxs11("div", {
+                  className: "plain-header__inner",
+                  "data-layout": "responsive-wrap",
+                  children: [
+                    /* @__PURE__ */ jsx13("a", {
+                      className: "plain-wordmark",
+                      href: "#foundation",
+                      children: "project-name.example"
+                    }),
+                    /* @__PURE__ */ jsxs11("nav", {
+                      "aria-label": "Plain site example",
+                      className: "plain-nav",
+                      children: [
+                        /* @__PURE__ */ jsx13("a", {
+                          href: "#foundation",
+                          children: "Articles"
+                        }),
+                        /* @__PURE__ */ jsx13("a", {
+                          href: "#shells",
+                          children: "About"
+                        })
+                      ]
+                    })
+                  ]
+                })
+              }),
+              /* @__PURE__ */ jsx13("div", {
+                className: "plain-page",
+                children: /* @__PURE__ */ jsxs11("p", {
+                  className: "design-gallery__plain-link-example",
+                  children: [
+                    "Ordinary ",
+                    /* @__PURE__ */ jsx13("a", {
+                      href: "#foundation",
+                      children: "blue links"
+                    }),
+                    " stay quiet until interaction."
+                  ]
+                })
               })
-            })
+            ]
           })
         ]
       }),

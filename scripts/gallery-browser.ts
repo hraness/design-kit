@@ -21,6 +21,10 @@ interface LayoutEvidence {
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
   readonly plainLinkDecoration: string;
+  readonly plainHeaderChildrenContained: boolean;
+  readonly plainHeaderHeight: number;
+  readonly plainHeaderOverflows: boolean;
+  readonly plainHeaderWrapped: boolean;
   readonly plainThemeHeight: number;
   readonly plainThemeMinHeight: string;
   readonly proceduralAriaHidden: boolean;
@@ -73,7 +77,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const aurora = effect?.querySelector(".hraness-design-aurora-background");
     const dots = effect?.querySelector(".hraness-design-aurora-dots");
     const plainLink = document.querySelector(".design-gallery__plain-link-example a");
+    const plainHeader = document.querySelector(".plain-header__inner");
+    const plainNav = plainHeader?.querySelector(".plain-nav");
     const plainTheme = document.querySelector(".design-gallery__plain-theme");
+    const plainWordmark = plainHeader?.querySelector(".plain-wordmark");
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
     if (
       !(gallery instanceof HTMLElement)
@@ -85,7 +92,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(aurora instanceof HTMLElement)
       || !(dots instanceof HTMLElement)
       || !(plainLink instanceof HTMLAnchorElement)
+      || !(plainHeader instanceof HTMLElement)
+      || !(plainNav instanceof HTMLElement)
       || !(plainTheme instanceof HTMLElement)
+      || !(plainWordmark instanceof HTMLAnchorElement)
       || !(procedural instanceof HTMLElement)
     ) {
       throw new Error("The public gallery structure is incomplete.");
@@ -96,6 +106,9 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const effectBox = effect.getBoundingClientRect();
     const auroraBox = aurora.getBoundingClientRect();
     const dotsBox = dots.getBoundingClientRect();
+    const plainHeaderBox = plainHeader.getBoundingClientRect();
+    const plainNavBox = plainNav.getBoundingClientRect();
+    const plainWordmarkBox = plainWordmark.getBoundingClientRect();
     const proceduralBox = procedural.getBoundingClientRect();
     const appearance = [...document.querySelectorAll<HTMLInputElement>(
       '.hraness-design-theme-toggle input[type="radio"]',
@@ -136,6 +149,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
       plainLinkDecoration: getComputedStyle(plainLink).textDecorationLine,
+      plainHeaderChildrenContained:
+        plainWordmarkBox.left >= plainHeaderBox.left - 1
+        && plainWordmarkBox.right <= plainHeaderBox.right + 1
+        && plainNavBox.left >= plainHeaderBox.left - 1
+        && plainNavBox.right <= plainHeaderBox.right + 1,
+      plainHeaderHeight: plainHeaderBox.height,
+      plainHeaderOverflows: plainHeader.scrollWidth > plainHeader.clientWidth + 1,
+      plainHeaderWrapped: Math.abs(plainWordmarkBox.top - plainNavBox.top) > 2,
       plainThemeHeight: plainTheme.getBoundingClientRect().height,
       plainThemeMinHeight: getComputedStyle(plainTheme).minHeight,
       proceduralAriaHidden: procedural.getAttribute("aria-hidden") === "true",
@@ -229,6 +250,7 @@ try {
       ...(process.env.CHROMIUM_EXECUTABLE_PATH === undefined
         ? []
         : [process.env.CHROMIUM_EXECUTABLE_PATH]),
+      chromium.executablePath(),
       "/Applications/Chromium.app/Contents/MacOS/Chromium",
       "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
       "/usr/bin/google-chrome",
@@ -293,8 +315,20 @@ try {
           `${layout.id}: plain links are not quiet at rest`,
         );
         invariant(
-          state.plainThemeMinHeight === "0px" && state.plainThemeHeight < 160,
-          `${layout.id}: plain link specimen is not compact`,
+          !state.plainHeaderOverflows && state.plainHeaderChildrenContained,
+          `${layout.id}: plain header content overflows its shell`,
+        );
+        invariant(
+          state.plainHeaderHeight <= 110,
+          `${layout.id}: plain header is ${String(state.plainHeaderHeight)}px tall`,
+        );
+        invariant(
+          layout.id === "compact" || !state.plainHeaderWrapped,
+          `${layout.id}: plain header wrapped despite available inline room`,
+        );
+        invariant(
+          state.plainThemeMinHeight === "0px" && state.plainThemeHeight < 260,
+          `${layout.id}: plain shell specimen is not compact`,
         );
         invariant(state.proceduralCloudCount === 5, `${layout.id}: procedural atmosphere is incomplete`);
         invariant(state.proceduralGridCount === 1, `${layout.id}: procedural grid is incomplete`);

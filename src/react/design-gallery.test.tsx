@@ -33,6 +33,9 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("hraness-design-bar-list-chart");
   expect(html).toContain("hraness-design-production-data-preview-notice");
   expect(html).toContain('class="design-gallery__plain-link-example"');
+  expect(html).toContain('class="plain-header__inner" data-layout="responsive-wrap"');
+  expect(html).toContain('class="plain-wordmark"');
+  expect(html).toContain("project-name.example");
   expect(html).toContain(">blue links</a> stay quiet until interaction.");
 });
 

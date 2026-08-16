@@ -138,6 +138,15 @@ export function DesignSystemGallery({
           aria-label="Plain site link presentation"
           className="design-gallery__plain-theme plain-site plain-publication"
         >
+          <header className="plain-header">
+            <div className="plain-header__inner" data-layout="responsive-wrap">
+              <a className="plain-wordmark" href="#foundation">project-name.example</a>
+              <nav aria-label="Plain site example" className="plain-nav">
+                <a href="#foundation">Articles</a>
+                <a href="#shells">About</a>
+              </nav>
+            </div>
+          </header>
           <div className="plain-page">
             <p className="design-gallery__plain-link-example">
               Ordinary <a href="#foundation">blue links</a> stay quiet until interaction.
