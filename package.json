@@ -123,6 +123,10 @@
     "test": "bun test ./src",
     "test:browser": "bun run ./scripts/gallery-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
+    "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
+    "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",
+    "kb:check": "bunx --bun github:hraness/kb#v0.15.1 check --root kb && bunx --bun github:hraness/kb#v0.15.1 agents check --root kb --repo .",
+    "kb:catalog": "bunx --bun github:hraness/kb#v0.15.1 catalog --root kb",
     "check": "bun run lint && bun run typecheck && bun run build && bun run test:package && bun run test && bun run test:browser",
     "prepack": "bun run check"
   },
