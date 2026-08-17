@@ -34,3 +34,17 @@ jobs:
           fi
       - run: bun pm pack --dry-run --ignore-scripts
       - run: node --input-type=module -e 'await Promise.all([import("./dist/index.js"), import("./dist/react/index.js"), import("./dist/react/server.js"), import("./dist/syntax-highlighting.js")])'
+
+  required:
+    name: Required
+    if: always()
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every blocking job
+        env:
+          CHECK: ${{ needs.check.result }}
+        run: |
+          set -euo pipefail
+          [[ "$CHECK" == success ]]
