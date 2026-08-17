@@ -16,6 +16,7 @@
 - Use Bun 1.3.14. Run `bun run check` before handing off a change.
 - Follow `WRITING.md` for internal prose and `STYLE.md` for public prose.
 - Apply unreasonably robust programming when agent work is cheap. Prefer coherent cross-file correctness and focused deterministic evidence to a knowingly weaker design.
+- Deliver changes to `main` through a current-head pull request. Keep the stable `Required` CI job green, resolve every review thread, and serialize merges. Human approval stays optional while one regular maintainer would otherwise self-review. Never force-push or bypass the gate.
 - Keep the installation-optional public `@hraness/ui` peer range at `>=0.4.0 <0.5.0` and the development installation pinned to an exact immutable compatible release tag. Stylesheet and React consumers install the peer explicitly; the framework-neutral root and syntax highlighter do not require it. Portable controls, React Aria behavior, overlays, fields, collections, navigation primitives, and low-level surfaces belong there.
 - Keep this package an opinionated presentation and composition layer. Do not add a second primitive barrel or copy public core styles.
 - Keep the design seam directional: `@hraness/ui` owns portable accessible primitives and tokens, this optional package owns stable presentation compositions, and each product owns layout, content, state, and its local visual contract. Never import product code here.
