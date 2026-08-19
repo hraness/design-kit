@@ -377,6 +377,8 @@
 }
 
 .hraness-design-fader__thumb {
+  top: 50%;
+  left: 50%;
   inline-size: var(--hraness-design-fader-thumb-inline-size);
   block-size: var(--hraness-design-fader-thumb-block-size);
   border: 2px solid var(--background);

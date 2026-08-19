@@ -191,11 +191,25 @@ export function DesignSystemGallery({
           <div className="design-gallery__instrument">
             <Fader
               aria-label="Example level"
+              className="design-gallery__vertical-fader"
               density="compact"
               label="Level"
               maxValue={100}
               minValue={0}
               onChange={setFaderValue}
+              showLabel
+              showOutput
+              value={faderValue}
+            />
+            <Fader
+              aria-label="Example horizontal level"
+              className="design-gallery__horizontal-fader"
+              density="compact"
+              label="Horizontal level"
+              maxValue={100}
+              minValue={0}
+              onChange={setFaderValue}
+              orientation="horizontal"
               showLabel
               showOutput
               value={faderValue}

@@ -107,3 +107,10 @@ test("composition CSS retains mobile, reduced-motion, and forced-color contracts
   expect(componentsCss).toContain(".hraness-design-fader");
   expect(componentsCss).not.toContain(".hraness-button");
 });
+
+test("fader thumbs define the cross axis that React Aria leaves unset", () => {
+  const thumb = declarations(ruleBody(componentsCss, ".hraness-design-fader__thumb"));
+
+  expect(thumb.get("top")).toBe("50%");
+  expect(thumb.get("left")).toBe("50%");
+});
