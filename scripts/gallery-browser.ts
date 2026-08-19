@@ -17,6 +17,7 @@ interface LayoutEvidence {
   readonly galleryPaddingRight: number;
   readonly heading: string;
   readonly headingClipped: boolean;
+  readonly horizontalFaderThumbCentered: boolean;
   readonly mobileTriggerDisplay: string;
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
@@ -38,6 +39,7 @@ interface LayoutEvidence {
   readonly proceduralVariant: string;
   readonly railDisplay: string;
   readonly scrollWidth: number;
+  readonly verticalFaderThumbCentered: boolean;
 }
 
 const layouts = [
@@ -82,6 +84,18 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const plainTheme = document.querySelector(".design-gallery__plain-theme");
     const plainWordmark = plainHeader?.querySelector(".plain-wordmark");
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
+    const horizontalFaderTrack = document.querySelector(
+      ".design-gallery__horizontal-fader .hraness-design-fader__track",
+    );
+    const horizontalFaderThumb = horizontalFaderTrack?.querySelector(
+      ".hraness-design-fader__thumb",
+    );
+    const verticalFaderTrack = document.querySelector(
+      ".design-gallery__vertical-fader .hraness-design-fader__track",
+    );
+    const verticalFaderThumb = verticalFaderTrack?.querySelector(
+      ".hraness-design-fader__thumb",
+    );
     if (
       !(gallery instanceof HTMLElement)
       || !(heading instanceof HTMLElement)
@@ -97,6 +111,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(plainTheme instanceof HTMLElement)
       || !(plainWordmark instanceof HTMLAnchorElement)
       || !(procedural instanceof HTMLElement)
+      || !(horizontalFaderTrack instanceof HTMLElement)
+      || !(horizontalFaderThumb instanceof HTMLElement)
+      || !(verticalFaderTrack instanceof HTMLElement)
+      || !(verticalFaderThumb instanceof HTMLElement)
     ) {
       throw new Error("The public gallery structure is incomplete.");
     }
@@ -110,6 +128,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const plainNavBox = plainNav.getBoundingClientRect();
     const plainWordmarkBox = plainWordmark.getBoundingClientRect();
     const proceduralBox = procedural.getBoundingClientRect();
+    const horizontalFaderTrackBox = horizontalFaderTrack.getBoundingClientRect();
+    const horizontalFaderThumbBox = horizontalFaderThumb.getBoundingClientRect();
+    const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
+    const verticalFaderThumbBox = verticalFaderThumb.getBoundingClientRect();
     const appearance = [...document.querySelectorAll<HTMLInputElement>(
       '.hraness-design-theme-toggle input[type="radio"]',
     )];
@@ -145,6 +167,11 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       galleryPaddingRight: Number.parseFloat(galleryStyle.paddingRight),
       heading: heading.textContent?.trim() ?? "",
       headingClipped: heading.scrollWidth > heading.clientWidth + 1,
+      horizontalFaderThumbCentered:
+        Math.abs(
+          (horizontalFaderThumbBox.top + horizontalFaderThumbBox.bottom) / 2
+          - (horizontalFaderTrackBox.top + horizontalFaderTrackBox.bottom) / 2,
+        ) <= 1,
       mobileTriggerDisplay: getComputedStyle(mobileTrigger).display,
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
@@ -180,6 +207,11 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       proceduralVariant: procedural.dataset.variant ?? "",
       railDisplay: getComputedStyle(rail).display,
       scrollWidth: document.documentElement.scrollWidth,
+      verticalFaderThumbCentered:
+        Math.abs(
+          (verticalFaderThumbBox.left + verticalFaderThumbBox.right) / 2
+          - (verticalFaderTrackBox.left + verticalFaderTrackBox.right) / 2,
+        ) <= 1,
     };
   });
 }
@@ -337,6 +369,14 @@ try {
         invariant(state.proceduralAriaHidden && state.proceduralInert, `${layout.id}: procedural paint entered the accessibility tree`);
         invariant(state.proceduralPointerEvents === "none", `${layout.id}: procedural paint captures input`);
         invariant(state.proceduralCoversEffect, `${layout.id}: procedural paint does not cover its presentation surface`);
+        invariant(
+          state.horizontalFaderThumbCentered,
+          `${layout.id}: horizontal fader thumb is not centered on its track`,
+        );
+        invariant(
+          state.verticalFaderThumbCentered,
+          `${layout.id}: vertical fader thumb is not centered on its track`,
+        );
         invariant(
           state.palette.length === 4 && state.paletteValid,
           `${layout.id}: procedural palette is ${JSON.stringify(state.palette)}`,

@@ -1991,11 +1991,25 @@ function DesignSystemGallery({
                 children: [
                   /* @__PURE__ */ jsx13(Fader, {
                     "aria-label": "Example level",
+                    className: "design-gallery__vertical-fader",
                     density: "compact",
                     label: "Level",
                     maxValue: 100,
                     minValue: 0,
                     onChange: setFaderValue,
+                    showLabel: true,
+                    showOutput: true,
+                    value: faderValue
+                  }),
+                  /* @__PURE__ */ jsx13(Fader, {
+                    "aria-label": "Example horizontal level",
+                    className: "design-gallery__horizontal-fader",
+                    density: "compact",
+                    label: "Horizontal level",
+                    maxValue: 100,
+                    minValue: 0,
+                    onChange: setFaderValue,
+                    orientation: "horizontal",
                     showLabel: true,
                     showOutput: true,
                     value: faderValue
