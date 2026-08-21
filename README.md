@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.1.5",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.1.6",
     "@hraness/ui": "github:hraness/ui#v0.4.1"
   }
 }
@@ -114,7 +114,12 @@ client boundary used by the interactive React barrel.
 
 ## Appearance and fonts
 
-Wrap browser applications with `DesignThemeProvider` and render `ThemeToggle` where the reader can choose Light, Dark, or System. The first visit is light, and the persisted preference uses a versioned Hraness-neutral key.
+Wrap browser applications with `DesignThemeProvider` and render `ThemeToggle`
+where the reader can choose Light, Dark, or System. The first visit defaults to
+System and follows the device preference. Explicit Light, Dark, and System
+choices persist under a versioned Hraness-neutral key. Server-rendered document
+roots may use Light as a safe concrete baseline while the blocking appearance
+bootstrap resolves the stored or System preference before paint.
 
 All default text, heading, and code roles use system stacks. Geist Mono is shipped under the SIL Open Font License as an optional display face. Load it explicitly, then map a semantic role:
 

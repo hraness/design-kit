@@ -98,6 +98,10 @@ export function DesignSystemGallery({
           Portable controls come from @hraness/ui. This package adds application
           shells, charts, effects, syntax, haptics, and optional Jelly paint.
         </p>
+        <p>
+          System follows your device on the first visit. Choosing Light, Dark,
+          or System saves that preference.
+        </p>
         <WrappingRow>
           <ThemeToggle presentation="segmented" />
           <SegmentedControl
