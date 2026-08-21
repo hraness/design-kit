@@ -4,6 +4,9 @@ import { basename, join } from "node:path";
 
 import { chromium, type Page } from "playwright-core";
 
+import { colors } from "../src/index.js";
+import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
+
 interface LayoutEvidence {
   readonly appearanceNames: readonly string[];
   readonly auroraContained: boolean;
@@ -40,6 +43,15 @@ interface LayoutEvidence {
   readonly railDisplay: string;
   readonly scrollWidth: number;
   readonly verticalFaderThumbCentered: boolean;
+}
+
+interface ThemeColorEvidence {
+  readonly activeContent: string;
+  readonly activeHasMedia: boolean;
+  readonly adaptiveMedia: readonly string[];
+  readonly backgroundColor: string;
+  readonly matchingColors: readonly string[];
+  readonly ownedCount: number;
 }
 
 const layouts = [
@@ -216,6 +228,38 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
   });
 }
 
+async function themeColorEvidence(page: Page): Promise<ThemeColorEvidence> {
+  return page.evaluate((activeAttribute) => {
+    const metas = Array.from(document.head.querySelectorAll<HTMLMetaElement>(
+      'meta[name="theme-color"]',
+    ));
+    const active = metas.find((meta) => meta.hasAttribute(activeAttribute));
+    if (active === undefined) throw new Error("The synchronized theme-color meta is missing.");
+
+    const normalizeColor = (value: string): string => {
+      const probe = document.createElement("span");
+      probe.style.color = value;
+      document.body.append(probe);
+      const normalized = getComputedStyle(probe).color;
+      probe.remove();
+      return normalized;
+    };
+
+    return {
+      activeContent: active.content,
+      activeHasMedia: active.hasAttribute("media"),
+      adaptiveMedia: metas
+        .filter((meta) => meta.hasAttribute("data-gallery-adaptive-theme-color"))
+        .map((meta) => meta.getAttribute("media") ?? ""),
+      backgroundColor: getComputedStyle(document.body).backgroundColor,
+      matchingColors: metas
+        .filter((meta) => !meta.hasAttribute("media") || matchMedia(meta.media).matches)
+        .map((meta) => normalizeColor(meta.content)),
+      ownedCount: metas.filter((meta) => meta.hasAttribute(activeAttribute)).length,
+    };
+  }, themeColorSyncActiveAttribute);
+}
+
 function startGalleryServer(directory: string) {
   const firstPort = 43_000 + (process.pid % 1_000);
   for (let offset = 0; offset < 20; offset += 1) {
@@ -270,6 +314,8 @@ try {
       "<!doctype html>",
       '<html lang="en"><head><meta charset="utf-8">',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      `<meta data-gallery-adaptive-theme-color="" name="theme-color" media="(prefers-color-scheme: light)" content="${colors.light.background}">`,
+      `<meta data-gallery-adaptive-theme-color="" name="theme-color" media="(prefers-color-scheme: dark)" content="${colors.dark.background}">`,
       `<link rel="stylesheet" href="/${basename(stylesheet)}">`,
       `</head><body><div id="root"></div><script type="module" src="/${basename(script)}"></script></body></html>`,
     ].join(""),
@@ -405,6 +451,65 @@ try {
           `${layout.id}: keyboard appearance change did not select Dark`,
         );
         invariant(failures.length === 0, `${layout.id}: ${failures.join("; ")}`);
+        await page.close();
+      }
+
+      for (const scenario of [
+        {
+          expectedColor: colors.light.background,
+          os: "dark",
+          preference: "light",
+        },
+        {
+          expectedColor: colors.dark.background,
+          os: "light",
+          preference: "dark",
+        },
+      ] as const) {
+        const page = await browser.newPage({ colorScheme: scenario.os });
+        const failures: string[] = [];
+        page.on("console", (message) => {
+          if (message.type() === "error") failures.push(`console: ${message.text()}`);
+        });
+        page.on("pageerror", (error) => failures.push(`page: ${error.message}`));
+        await page.addInitScript((preference) => {
+          localStorage.setItem("hraness-design-theme-v1", preference);
+        }, scenario.preference);
+        await page.goto(`http://${server.hostname}:${String(server.port)}/`, {
+          waitUntil: "networkidle",
+        });
+        await page.locator(`html[data-theme="${scenario.preference}"]`).waitFor();
+        await page.locator(`meta[${themeColorSyncActiveAttribute}]`).waitFor({
+          state: "attached",
+        });
+
+        const state = await themeColorEvidence(page);
+        invariant(
+          state.ownedCount === 1,
+          `${scenario.os}/${scenario.preference}: active meta ownership is ambiguous`,
+        );
+        invariant(
+          !state.activeHasMedia,
+          `${scenario.os}/${scenario.preference}: active meta is media-qualified`,
+        );
+        invariant(
+          state.activeContent === scenario.expectedColor,
+          `${scenario.os}/${scenario.preference}: active color is ${state.activeContent}`,
+        );
+        invariant(
+          state.adaptiveMedia.length === 2
+          && state.adaptiveMedia.every((media) => media === "not all"),
+          `${scenario.os}/${scenario.preference}: adaptive tags remain active ${JSON.stringify(state.adaptiveMedia)}`,
+        );
+        invariant(
+          state.matchingColors.length === 1
+          && state.matchingColors[0] === state.backgroundColor,
+          `${scenario.os}/${scenario.preference}: chrome ${JSON.stringify(state.matchingColors)} does not match ${state.backgroundColor}`,
+        );
+        invariant(
+          failures.length === 0,
+          `${scenario.os}/${scenario.preference}: ${failures.join("; ")}`,
+        );
         await page.close();
       }
     } finally {

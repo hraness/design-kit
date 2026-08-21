@@ -194,6 +194,16 @@ test("the global error document preserves fixed explicit themes", () => {
   }
 });
 
+test("theme color synchronization waits for a concrete resolved appearance", async () => {
+  const source = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
+
+  expect(source).toContain(
+    'const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark"',
+  );
+  expect(source).toContain("if (!hasResolvedColor || latestColor.current === undefined) return;");
+  expect(source).toContain("acquireThemeColorMeta(");
+});
+
 test("rail stages enter and exit in opposite directions at the shared duration", () => {
   expect(railStageMotion(false)).toEqual({
     animate: { opacity: 1, x: 0 },

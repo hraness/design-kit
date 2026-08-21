@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.1.6",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.1.7",
     "@hraness/ui": "github:hraness/ui#v0.4.1"
   }
 }
@@ -121,6 +121,11 @@ choices persist under a versioned Hraness-neutral key. Server-rendered document
 roots may use Light as a safe concrete baseline while the blocking appearance
 bootstrap resolves the stored or System preference before paint.
 
+`ThemeColorSync` leaves adaptive media-qualified server tags in control until a
+concrete Light or Dark preference resolves. It then owns one active browser
+chrome color, temporarily neutralizes competing same-name tags, and restores
+their exact media conditions after the final synchronized owner unmounts.
+
 All default text, heading, and code roles use system stacks. Geist Mono is shipped under the SIL Open Font License as an optional display face. Load it explicitly, then map a semantic role:
 
 ```css
@@ -152,7 +157,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and a headless Chromium gallery regression at 390×844 and 1280×720. The browser gate verifies responsive shell ownership, keyboard-operable appearance, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
+The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and a headless Chromium gallery regression at 390×844 and 1280×720. The browser gate verifies responsive shell ownership, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
 Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request. Report suspected vulnerabilities as described in [SECURITY.md](./SECURITY.md).
 
