@@ -1506,8 +1506,171 @@ import {
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import {
   useEffect as useEffect4,
+  useRef as useRef3,
   useSyncExternalStore
 } from "react";
+
+// src/react/theme-color-sync.ts
+var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
+var themeColorSyncDisabledAttribute = "data-hraness-design-theme-color-sync-disabled";
+var managersByDocument = new WeakMap;
+var ownerSequence = 0;
+function exactThemeColorMetas(manager) {
+  return Array.from(manager.document.head.querySelectorAll("meta[name]")).filter((meta) => meta.name === manager.metaName);
+}
+function currentRegisteredColor(manager) {
+  let color;
+  for (const registeredColor of manager.registrations.values())
+    color = registeredColor;
+  if (color === undefined)
+    throw new Error("Theme color synchronization has no active owner.");
+  return color;
+}
+function restoreDisabledMeta(meta, original) {
+  if (original.media === null)
+    meta.removeAttribute("media");
+  else
+    meta.setAttribute("media", original.media);
+  meta.removeAttribute(themeColorSyncDisabledAttribute);
+}
+function createActiveMeta(manager) {
+  const meta = manager.document.createElement("meta");
+  meta.name = manager.metaName;
+  meta.content = currentRegisteredColor(manager);
+  meta.setAttribute(themeColorSyncActiveAttribute, manager.owner);
+  manager.activeMetas.add(meta);
+  const first = exactThemeColorMetas(manager).find((candidate) => candidate.parentElement === manager.document.head);
+  manager.document.head.insertBefore(meta, first ?? null);
+  return meta;
+}
+function activeMetaIsOwned(manager) {
+  const active = manager.activeMeta;
+  return active !== null && active.parentElement === manager.document.head && active.name === manager.metaName && !active.hasAttribute("media") && active.getAttribute(themeColorSyncActiveAttribute) === manager.owner;
+}
+function disableCompetingMeta(manager, meta) {
+  if (manager.disabledMetas.has(meta)) {
+    if (meta.getAttribute(themeColorSyncDisabledAttribute) !== manager.owner) {
+      meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
+    }
+    if (meta.getAttribute("media") !== "not all")
+      meta.setAttribute("media", "not all");
+    return;
+  }
+  const ownedBy = meta.getAttribute(themeColorSyncDisabledAttribute);
+  if (ownedBy !== null || meta.getAttribute("media")?.trim().toLowerCase() === "not all") {
+    return;
+  }
+  manager.disabledMetas.set(meta, { media: meta.getAttribute("media") });
+  meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
+  meta.setAttribute("media", "not all");
+}
+function reconcileThemeColorMetas(manager) {
+  if (manager.registrations.size === 0)
+    return;
+  for (const [meta, original] of manager.disabledMetas) {
+    if (!manager.document.head.contains(meta) || meta.name !== manager.metaName) {
+      restoreDisabledMeta(meta, original);
+      manager.disabledMetas.delete(meta);
+    }
+  }
+  if (!activeMetaIsOwned(manager))
+    manager.activeMeta = createActiveMeta(manager);
+  const active = manager.activeMeta;
+  if (active === null)
+    return;
+  const metas = exactThemeColorMetas(manager);
+  const first = metas.find((meta) => meta.parentElement === manager.document.head);
+  if (first !== undefined && first !== active)
+    manager.document.head.insertBefore(active, first);
+  const color = currentRegisteredColor(manager);
+  if (active.content !== color)
+    active.content = color;
+  for (const meta of metas) {
+    if (meta !== active)
+      disableCompetingMeta(manager, meta);
+  }
+}
+function observeThemeColorMetas(manager) {
+  const Observer = manager.document.defaultView?.MutationObserver;
+  if (Observer === undefined)
+    return;
+  manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
+  manager.observer.observe(manager.document.head, {
+    attributeFilter: [
+      "content",
+      "media",
+      "name",
+      themeColorSyncActiveAttribute,
+      themeColorSyncDisabledAttribute
+    ],
+    attributes: true,
+    childList: true,
+    subtree: true
+  });
+}
+function destroyThemeColorManager(manager) {
+  manager.observer?.disconnect();
+  manager.observer = null;
+  for (const meta of manager.activeMetas)
+    meta.remove();
+  for (const [meta, original] of manager.disabledMetas) {
+    restoreDisabledMeta(meta, original);
+  }
+  manager.activeMetas.clear();
+  manager.disabledMetas.clear();
+  manager.activeMeta = null;
+  const documentManagers = managersByDocument.get(manager.document);
+  if (documentManagers?.get(manager.metaName) === manager) {
+    documentManagers.delete(manager.metaName);
+  }
+}
+function acquireThemeColorMeta(document2, metaName, registrationId, color) {
+  let documentManagers = managersByDocument.get(document2);
+  if (documentManagers === undefined) {
+    documentManagers = new Map;
+    managersByDocument.set(document2, documentManagers);
+  }
+  let manager = documentManagers.get(metaName);
+  if (manager === undefined) {
+    ownerSequence += 1;
+    manager = {
+      activeMeta: null,
+      activeMetas: new Set,
+      disabledMetas: new Map,
+      document: document2,
+      metaName,
+      observer: null,
+      owner: String(ownerSequence),
+      registrations: new Map
+    };
+    documentManagers.set(metaName, manager);
+  }
+  manager.registrations.set(registrationId, color);
+  reconcileThemeColorMetas(manager);
+  if (manager.observer === null)
+    observeThemeColorMetas(manager);
+  let released = false;
+  return {
+    release: () => {
+      if (released)
+        return;
+      released = true;
+      manager.registrations.delete(registrationId);
+      if (manager.registrations.size === 0)
+        destroyThemeColorManager(manager);
+      else
+        reconcileThemeColorMetas(manager);
+    },
+    update: (nextColor) => {
+      if (released || !manager.registrations.has(registrationId))
+        return;
+      manager.registrations.set(registrationId, nextColor);
+      reconcileThemeColorMetas(manager);
+    }
+  };
+}
+
+// src/react/theme.tsx
 import { jsx as jsx12, jsxs as jsxs10, Fragment as Fragment2 } from "react/jsx-runtime";
 var designThemes = ["light", "dark", "system"];
 var defaultDesignTheme = "system";
@@ -1703,15 +1866,27 @@ function ThemeColorSync({
   metaName = "theme-color"
 }) {
   const { resolvedTheme } = useTheme();
+  const registrationId = useRef3(Symbol("hraness-design-theme-color"));
+  const registration = useRef3(null);
+  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor }) : undefined;
+  const hasResolvedColor = resolvedColor !== undefined;
+  const latestColor = useRef3(resolvedColor);
+  latestColor.current = resolvedColor;
   useEffect4(() => {
-    const existing = Array.from(document.head.querySelectorAll("meta[name]")).find((meta2) => meta2.name === metaName && !meta2.hasAttribute("media"));
-    const meta = existing ?? document.createElement("meta");
-    if (existing === undefined) {
-      meta.name = metaName;
-      document.head.append(meta);
-    }
-    meta.content = themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor });
-  }, [darkColor, lightColor, metaName, resolvedTheme]);
+    if (!hasResolvedColor || latestColor.current === undefined)
+      return;
+    const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
+    registration.current = current;
+    return () => {
+      if (registration.current === current)
+        registration.current = null;
+      current.release();
+    };
+  }, [hasResolvedColor, metaName]);
+  useEffect4(() => {
+    if (resolvedColor !== undefined)
+      registration.current?.update(resolvedColor);
+  }, [resolvedColor]);
   return null;
 }
 
@@ -2219,7 +2394,7 @@ function useHapticFeedback(enabled = true) {
   return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
 }
 // src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect6, useRef as useRef3 } from "react";
+import { useEffect as useEffect6, useRef as useRef4 } from "react";
 var interactiveTargetSelector = [
   "a[href]",
   "area[href]",
@@ -2314,7 +2489,7 @@ function isNode(target) {
   return target !== null && typeof Node !== "undefined" && target instanceof Node;
 }
 function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef3({ bindings, isDisabled: options.isDisabled ?? false });
+  const latestRef = useRef4({ bindings, isDisabled: options.isDisabled ?? false });
   latestRef.current = { bindings, isDisabled: options.isDisabled ?? false };
   const scopeRef = options.scopeRef;
   useEffect6(() => {

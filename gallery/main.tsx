@@ -4,6 +4,7 @@ import "../src/styles.css";
 import {
   DesignSystemGallery,
   DesignThemeProvider,
+  ThemeColorSync,
 } from "../src/react";
 
 const root = document.querySelector("#root");
@@ -13,6 +14,7 @@ if (!(root instanceof HTMLElement)) {
 
 createRoot(root).render(
   <DesignThemeProvider>
+    <ThemeColorSync />
     <DesignSystemGallery />
   </DesignThemeProvider>,
 );

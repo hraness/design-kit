@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -98,6 +98,7 @@
     "src/react/server.ts",
     "src/react/surfaces.tsx",
     "src/react/syntax-code.tsx",
+    "src/react/theme-color-sync.ts",
     "src/react/theme.tsx",
     "src/reset.css",
     "src/styles.css",

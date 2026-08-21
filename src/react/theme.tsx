@@ -14,12 +14,17 @@ import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import {
   type ReactNode,
   useEffect,
+  useRef,
   useSyncExternalStore,
 } from "react";
 
 import { colors } from "../index.js";
 import { DesignPortalThemeProvider } from "./design-theme-context.js";
 import { setJellyThemeMode } from "./jelly-runtime.js";
+import {
+  acquireThemeColorMeta,
+  type ThemeColorMetaRegistration,
+} from "./theme-color-sync.js";
 
 export const designThemes = ["light", "dark", "system"] as const;
 export type DesignTheme = (typeof designThemes)[number];
@@ -317,17 +322,33 @@ export function ThemeColorSync({
   metaName = "theme-color",
 }: ThemeColorSyncProps) {
   const { resolvedTheme } = useTheme();
+  const registrationId = useRef(Symbol("hraness-design-theme-color"));
+  const registration = useRef<ThemeColorMetaRegistration | null>(null);
+  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark"
+    ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor })
+    : undefined;
+  const hasResolvedColor = resolvedColor !== undefined;
+  const latestColor = useRef(resolvedColor);
+  latestColor.current = resolvedColor;
 
   useEffect(() => {
-    const existing = Array.from(document.head.querySelectorAll<HTMLMetaElement>("meta[name]"))
-      .find((meta) => meta.name === metaName && !meta.hasAttribute("media"));
-    const meta = existing ?? document.createElement("meta");
-    if (existing === undefined) {
-      meta.name = metaName;
-      document.head.append(meta);
-    }
-    meta.content = themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor });
-  }, [darkColor, lightColor, metaName, resolvedTheme]);
+    if (!hasResolvedColor || latestColor.current === undefined) return;
+    const current = acquireThemeColorMeta(
+      document,
+      metaName,
+      registrationId.current,
+      latestColor.current,
+    );
+    registration.current = current;
+    return () => {
+      if (registration.current === current) registration.current = null;
+      current.release();
+    };
+  }, [hasResolvedColor, metaName]);
+
+  useEffect(() => {
+    if (resolvedColor !== undefined) registration.current?.update(resolvedColor);
+  }, [resolvedColor]);
 
   return null;
 }
