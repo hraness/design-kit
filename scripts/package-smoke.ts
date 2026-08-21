@@ -119,7 +119,7 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/syntax-highlighting')])",
+    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/syntax-highlighting')])",
   ], neutralConsumer);
   await writeFile(
     join(neutralConsumer, "index.ts"),
@@ -156,6 +156,40 @@ try {
     ], neutralConsumer);
   }
   await writeFile(
+    join(neutralConsumer, "browser.ts"),
+    [
+      'import { defaultDesignTheme, installAppearanceMenus, type AppearanceMenuOptions } from "@hraness/design-kit/browser";',
+      "const options = null as AppearanceMenuOptions | null;",
+      "void [defaultDesignTheme, installAppearanceMenus, options];",
+      "",
+    ].join("\n"),
+  );
+  for (const mode of ["Bundler", "NodeNext"] as const) {
+    await writeFile(
+      join(neutralConsumer, `tsconfig.browser-${mode.toLowerCase()}.json`),
+      JSON.stringify({
+        compilerOptions: {
+          exactOptionalPropertyTypes: true,
+          lib: ["ES2023", "DOM", "DOM.Iterable"],
+          module: mode === "Bundler" ? "Preserve" : "NodeNext",
+          moduleResolution: mode,
+          noEmit: true,
+          skipLibCheck: true,
+          strict: true,
+          target: "ES2023",
+        },
+        include: ["browser.ts"],
+      }, null, 2),
+    );
+    await run([
+      process.execPath,
+      "x",
+      "tsc",
+      "-p",
+      `./tsconfig.browser-${mode.toLowerCase()}.json`,
+    ], neutralConsumer);
+  }
+  await writeFile(
     join(consumer, "package.json"),
     JSON.stringify({ private: true, type: "module" }),
   );
@@ -182,6 +216,8 @@ try {
 
   const installed = join(consumer, "node_modules/@hraness/design-kit");
   for (const path of [
+    "dist/browser/index.js",
+    "src/appearance-menu.css",
     "src/styles.css",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
     "vendor/evilcharts/LICENSE",
@@ -206,6 +242,18 @@ try {
     throw new Error(
       "Packed React entry must have one leading use-client directive and no interior directives.",
     );
+  }
+  const browserBundle = await Bun.file(
+    join(installed, "dist", "browser", "index.js"),
+  ).text();
+  if (!browserBundle.includes("installAppearanceMenus")) {
+    throw new Error("Packed browser entry does not expose the appearance installer.");
+  }
+  if (
+    /(?:from\s*|import\s*)["'](?:next-themes|react(?:-dom|-aria-components)?)(?:\/[^"']*)?["']/u
+      .test(browserBundle)
+  ) {
+    throw new Error("Packed browser entry imports a React runtime dependency.");
   }
 
   await writeFile(

@@ -114,17 +114,38 @@ client boundary used by the interactive React barrel.
 
 ## Appearance and fonts
 
-Wrap browser applications with `DesignThemeProvider` and render `ThemeToggle`
-where the reader can choose Light, Dark, or System. The first visit defaults to
-System and follows the device preference. Explicit Light, Dark, and System
-choices persist under a versioned Hraness-neutral key. Server-rendered document
-roots may use Light as a safe concrete baseline while the blocking appearance
-bootstrap resolves the stored or System preference before paint.
+Wrap browser applications with `DesignThemeProvider` and render
+`ThemeMenuButton` as the final action in the product header. It exposes one
+icon-only trigger and a Light, Dark, or System menu with the same presentation
+across products. The first visit defaults to System and follows the device
+preference. Explicit Light, Dark, and System choices persist under a versioned
+Hraness-neutral key. Server-rendered document roots may use Light as a safe
+concrete baseline while the blocking appearance bootstrap resolves the stored
+or System preference before paint.
 
 `ThemeColorSync` leaves adaptive media-qualified server tags in control until a
 concrete Light or Dark preference resolves. It then owns one active browser
 chrome color, temporarily neutralizes competing same-name tags, and restores
 their exact media conditions after the final synchronized owner unmounts.
+
+Static HTML products use the same composition without a client framework:
+
+```ts
+import { installAppearanceMenus } from "@hraness/design-kit/browser";
+
+installAppearanceMenus({
+  darkThemeColor: "#09090d",
+  lightThemeColor: "#f7f3ea",
+  storageKey: "product-appearance",
+});
+```
+
+Load `@hraness/design-kit/appearance-menu.css`, render one progressive
+`[data-hraness-appearance-menu]` composition as the final header action, and
+bundle the installer into a small blocking local script. The installer applies
+the stored or System preference before the stylesheet loads, synchronizes
+browser chrome, and supplies the same icon, menu, keyboard, focus, and storage
+contract as the React control. Importing the browser module has no side effects.
 
 All default text, heading, and code roles use system stacks. Geist Mono is shipped under the SIL Open Font License as an optional display face. Load it explicitly, then map a semantic role:
 

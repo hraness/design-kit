@@ -15,7 +15,7 @@ import {
   DesignThemeProvider,
   type DesignTheme,
   ThemeColorSync,
-  ThemeToggle,
+  ThemeMenuButton,
 } from "./theme.js";
 
 export interface RouteErrorPageProps {
@@ -26,12 +26,14 @@ export interface RouteErrorPageProps {
   readonly canvasAs?: "div" | "main";
   readonly error: Error & { readonly digest?: string };
   readonly reset: () => void;
+  /** Adds a standalone header menu; product layouts should normally own it. */
   readonly showThemeToggle?: boolean;
   readonly titleAs?: ContentHeadingLevel;
 }
 
 export interface RouteNotFoundPageProps {
   readonly canvasAs?: "div" | "main";
+  /** Adds a standalone header menu; product layouts should normally own it. */
   readonly showThemeToggle?: boolean;
   readonly titleAs?: ContentHeadingLevel;
 }
@@ -56,23 +58,25 @@ function RouteActions({ children }: Readonly<{ children: ReactNode }>) {
 /** Shared root-segment 404 treatment for Next products. */
 export function RouteNotFoundPage({
   canvasAs = "main",
-  showThemeToggle = true,
+  showThemeToggle = false,
   titleAs = "h1",
 }: RouteNotFoundPageProps = {}) {
   return (
     <PageCanvas as={canvasAs} className="hraness-design-route-state">
-      <EmptyState
-        action={(
-          <RouteActions>
-            <LinkButton href="/" variant="primary">Return home</LinkButton>
-            {showThemeToggle ? <ThemeToggle /> : null}
-          </RouteActions>
-        )}
-        description="The address may be out of date, or this page may have moved."
-        icon={<span aria-hidden="true">404</span>}
-        title="Page not found"
-        titleAs={titleAs}
-      />
+      {showThemeToggle ? (
+        <header className="hraness-design-route-state__header">
+          <ThemeMenuButton />
+        </header>
+      ) : null}
+      <div className="hraness-design-route-state__content">
+        <EmptyState
+          action={<LinkButton href="/" variant="primary">Return home</LinkButton>}
+          description="The address may be out of date, or this page may have moved."
+          icon={<span aria-hidden="true">404</span>}
+          title="Page not found"
+          titleAs={titleAs}
+        />
+      </div>
     </PageCanvas>
   );
 }
@@ -84,7 +88,7 @@ export function RouteErrorPage({
   canvasAs = "main",
   error,
   reset,
-  showThemeToggle = true,
+  showThemeToggle = false,
   titleAs = "h1",
 }: RouteErrorPageProps) {
   const focusId = `${useId()}-route-error`;
@@ -101,19 +105,25 @@ export function RouteErrorPage({
       id={focusId}
       tabIndex={-1}
     >
-      <EmptyState
-        action={(
-          <RouteActions>
-            <Button onPress={reset} variant="primary">Try again</Button>
-            <LinkButton href="/">Return home</LinkButton>
-            {showThemeToggle ? <ThemeToggle /> : null}
-          </RouteActions>
-        )}
-        description="Retry this view, or return home and continue from there."
-        icon={<span aria-hidden="true">!</span>}
-        title="This view could not load"
-        titleAs={titleAs}
-      />
+      {showThemeToggle ? (
+        <header className="hraness-design-route-state__header">
+          <ThemeMenuButton />
+        </header>
+      ) : null}
+      <div className="hraness-design-route-state__content">
+        <EmptyState
+          action={(
+            <RouteActions>
+              <Button onPress={reset} variant="primary">Try again</Button>
+              <LinkButton href="/">Return home</LinkButton>
+            </RouteActions>
+          )}
+          description="Retry this view, or return home and continue from there."
+          icon={<span aria-hidden="true">!</span>}
+          title="This view could not load"
+          titleAs={titleAs}
+        />
+      </div>
     </PageCanvas>
   );
 }

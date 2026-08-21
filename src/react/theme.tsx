@@ -18,6 +18,17 @@ import {
   useSyncExternalStore,
 } from "react";
 
+import {
+  type ConcreteDesignTheme,
+  defaultDesignTheme,
+  type DesignTheme,
+  type DesignThemeLabels,
+  designThemeLabel,
+  designThemeStorageKey,
+  designThemes,
+  isDesignTheme,
+  normalizeDesignTheme,
+} from "../appearance.js";
 import { colors } from "../index.js";
 import { DesignPortalThemeProvider } from "./design-theme-context.js";
 import { setJellyThemeMode } from "./jelly-runtime.js";
@@ -26,22 +37,18 @@ import {
   type ThemeColorMetaRegistration,
 } from "./theme-color-sync.js";
 
-export const designThemes = ["light", "dark", "system"] as const;
-export type DesignTheme = (typeof designThemes)[number];
-export type ConcreteDesignTheme = Exclude<DesignTheme, "system">;
-export const defaultDesignTheme: DesignTheme = "system";
+export {
+  type ConcreteDesignTheme,
+  defaultDesignTheme,
+  type DesignTheme,
+  designThemeStorageKey,
+  designThemes,
+  isDesignTheme,
+  normalizeDesignTheme,
+} from "../appearance.js";
 
 const concreteThemes = ["light", "dark"] as const;
 const emptySubscribe = (): (() => void) => () => undefined;
-
-export function isDesignTheme(value: unknown): value is DesignTheme {
-  return typeof value === "string" && designThemes.some((theme) => theme === value);
-}
-
-/** Invalid or unavailable persisted values resolve to the shared first-visit preference. */
-export function normalizeDesignTheme(value: unknown): DesignTheme {
-  return isDesignTheme(value) ? value : defaultDesignTheme;
-}
 
 function useHydrated(): boolean {
   return useSyncExternalStore(emptySubscribe, () => true, () => false);
@@ -114,7 +121,7 @@ export function DesignThemeProvider({
   children,
   forcedTheme,
   nonce,
-  storageKey = "hraness-design-theme-v1",
+  storageKey = designThemeStorageKey,
 }: DesignThemeProviderProps) {
   return (
     <>
@@ -144,12 +151,12 @@ export function DesignThemeProvider({
   );
 }
 
-export type ThemeToggleLabels = Readonly<Partial<Record<DesignTheme, string>>>;
+export type ThemeToggleLabels = DesignThemeLabels;
 export type ThemeToggleDisplay = "icons" | "labels";
 export type ThemeTogglePresentation = "menu" | "segmented";
 
 function themeToggleLabel(id: DesignTheme, labels?: ThemeToggleLabels): string {
-  return labels?.[id] ?? `${id[0]?.toUpperCase() ?? ""}${id.slice(1)}`;
+  return designThemeLabel(id, labels);
 }
 
 export function themeToggleItems(
@@ -222,14 +229,17 @@ export type ThemeToggleProps =
   & ThemeToggleControlProps
   & ThemeTogglePresentationProps;
 
-/** A hydration-stable, persisted Light/Dark/System appearance control. */
+/**
+ * A hydration-stable, persisted Light/Dark/System appearance control.
+ * Persistent product chrome defaults to the compact menu presentation.
+ */
 export function ThemeToggle({
   "aria-label": ariaLabel = "Appearance",
   className,
-  display = "icons",
+  display,
   labels,
   onChange,
-  presentation = "segmented",
+  presentation,
   size = "compact",
   value: controlledValue,
 }: ThemeToggleProps) {
@@ -238,7 +248,9 @@ export function ThemeToggle({
   const controlled = controlledValue !== undefined;
   const ready = controlled || hydrated;
   const value = controlledValue ?? (hydrated ? normalizeDesignTheme(theme) : defaultDesignTheme);
-  const items = display === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
+  const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
+  const resolvedDisplay = display ?? "icons";
+  const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
   const changeTheme = (nextTheme: DesignTheme): void => {
     if (controlled) onChange?.(nextTheme);
     else setTheme(nextTheme);
@@ -249,15 +261,17 @@ export function ThemeToggle({
     <div
       aria-busy={!ready || undefined}
       className={cn("hraness-design-theme-toggle", className)}
-      data-display={presentation === "menu" ? "icons" : display}
-      data-presentation={presentation}
+      data-display={resolvedPresentation === "menu" ? "icons" : resolvedDisplay}
+      data-hraness-appearance-menu={resolvedPresentation === "menu" ? "" : undefined}
+      data-presentation={resolvedPresentation}
       data-ready={ready ? "true" : "false"}
       data-theme-value={value}
     >
-      {presentation === "menu" ? (
+      {resolvedPresentation === "menu" ? (
         <MenuTrigger>
           <IconButton
             aria-label={`${ariaLabel}: ${currentLabel}`}
+            controlClassName="hraness-design-theme-toggle__trigger"
             isDisabled={!ready}
             size={size}
             tooltip={`${ariaLabel}: ${currentLabel}`}
@@ -277,6 +291,7 @@ export function ThemeToggle({
           >
             {designThemes.map((id) => (
               <MenuItem
+                className="hraness-design-theme-toggle__item"
                 data-theme-value={id}
                 id={id}
                 key={id}
@@ -300,6 +315,16 @@ export function ThemeToggle({
       )}
     </div>
   );
+}
+
+export type ThemeMenuButtonProps = ThemeToggleBaseProps & ThemeToggleControlProps;
+
+/**
+ * The canonical persistent appearance selector. Render it as the final action
+ * in a product header so every surface exposes the same icon-menu pattern.
+ */
+export function ThemeMenuButton(props: ThemeMenuButtonProps) {
+  return <ThemeToggle {...props} presentation="menu" />;
 }
 
 export interface ThemeColorSyncProps {

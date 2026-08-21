@@ -32,7 +32,7 @@ import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import { PageCanvas, TopBar } from "./surfaces.js";
 import { SyntaxCode } from "./syntax-code.js";
-import { type ConcreteDesignTheme, type DesignTheme, ThemeToggle } from "./theme.js";
+import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
 export const designGallerySections = [
   { id: "foundation", label: "Foundation" },
@@ -90,7 +90,11 @@ export function DesignSystemGallery({
   const Root = isNestedInMain ? "div" : "main";
 
   return (
-    <Root className="design-gallery" data-design-gallery="public">
+    <Root
+      className="design-gallery"
+      data-design-gallery="public"
+      data-design-gallery-nested={isNestedInMain ? "true" : "false"}
+    >
       <header className="design-gallery__intro">
         <Badge tone="info">@hraness/design-kit</Badge>
         <h1>Presentation and composition reference</h1>
@@ -103,7 +107,6 @@ export function DesignSystemGallery({
           or System saves that preference.
         </p>
         <WrappingRow>
-          <ThemeToggle presentation="segmented" />
           <SegmentedControl
             aria-label="Gallery density"
             items={[

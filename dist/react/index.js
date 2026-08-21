@@ -1,8 +1,14 @@
 "use client";
 import {
   colors,
-  motion
-} from "../chunk-t88hdxxm.js";
+  defaultDesignTheme,
+  designThemeLabel,
+  designThemeStorageKey,
+  designThemes,
+  isDesignTheme,
+  motion,
+  normalizeDesignTheme
+} from "../chunk-gnpkqyfd.js";
 import {
   BottomBar,
   DitherSurface,
@@ -1019,7 +1025,7 @@ import {
   CardTitle,
   Icon as Icon3,
   LinkButton,
-  SegmentedControl as SegmentedControl2,
+  SegmentedControl,
   Slider,
   Tag,
   ThemedSurface,
@@ -1493,6 +1499,637 @@ function ProductionDataPreviewNotice({
   });
 }
 
+// src/react/design-gallery.tsx
+import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
+var designGallerySections = [
+  { id: "foundation", label: "Foundation" },
+  { id: "shells", label: "Shells" },
+  { id: "data", label: "Data" },
+  { id: "effects", label: "Effects" },
+  { id: "syntax", label: "Syntax" }
+];
+var designGalleryTouchKinds = [
+  "button",
+  "link",
+  "radio",
+  "range"
+];
+var designGalleryRecipeCoverage = [
+  "@hraness/ui primitives",
+  "application shells",
+  "charts",
+  "Jelly presentation",
+  "plain site and publication grammar",
+  "procedural effects",
+  "production preview notice",
+  "syntax highlighting"
+];
+function resolveGalleryTheme(theme, prefersDark) {
+  return theme === "system" ? prefersDark ? "dark" : "light" : theme;
+}
+var barData = [
+  { id: "alpha", label: "Alpha", value: 72, detail: "72 requests" },
+  { id: "beta", label: "Beta", value: 48, detail: "48 requests" },
+  { id: "gamma", label: "Gamma", value: 31, detail: "31 requests" }
+];
+var rangeData = [
+  { id: "north", label: "North", minimum: 24, median: 51, maximum: 78 },
+  { id: "south", label: "South", minimum: 38, median: 64, maximum: 82 }
+];
+function DesignSystemGallery({
+  isNestedInMain = false
+}) {
+  const [density, setDensity] = useState2("default");
+  const [faderValue, setFaderValue] = useState2(64);
+  const [playbackStatus, setPlaybackStatus] = useState2("idle");
+  const Root = isNestedInMain ? "div" : "main";
+  return /* @__PURE__ */ jsxs10(Root, {
+    className: "design-gallery",
+    "data-design-gallery": "public",
+    "data-design-gallery-nested": isNestedInMain ? "true" : "false",
+    children: [
+      /* @__PURE__ */ jsxs10("header", {
+        className: "design-gallery__intro",
+        children: [
+          /* @__PURE__ */ jsx12(Badge, {
+            tone: "info",
+            children: "@hraness/design-kit"
+          }),
+          /* @__PURE__ */ jsx12("h1", {
+            children: "Presentation and composition reference"
+          }),
+          /* @__PURE__ */ jsx12("p", {
+            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
+          }),
+          /* @__PURE__ */ jsx12("p", {
+            children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
+          }),
+          /* @__PURE__ */ jsx12(WrappingRow, {
+            children: /* @__PURE__ */ jsx12(SegmentedControl, {
+              "aria-label": "Gallery density",
+              items: [
+                { id: "compact", label: "Compact" },
+                { id: "default", label: "Default" }
+              ],
+              onChange: setDensity,
+              size: "compact",
+              value: density
+            })
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs10("section", {
+        className: "design-gallery__section",
+        id: "foundation",
+        children: [
+          /* @__PURE__ */ jsx12("h2", {
+            children: "Foundation boundary"
+          }),
+          /* @__PURE__ */ jsx12(ProductionDataPreviewNotice, {
+            surfaceOrigin: "https://preview.example.test"
+          }),
+          /* @__PURE__ */ jsxs10("div", {
+            className: "design-gallery__grid",
+            children: [
+              /* @__PURE__ */ jsxs10(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs10(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx12(CardTitle, {
+                        children: "Portable control"
+                      }),
+                      /* @__PURE__ */ jsx12(CardDescription, {
+                        children: "Rendered directly by @hraness/ui."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx12(CardContent, {
+                    children: /* @__PURE__ */ jsxs10(WrappingRow, {
+                      children: [
+                        /* @__PURE__ */ jsx12(Button2, {
+                          variant: "primary",
+                          children: "Primary action"
+                        }),
+                        /* @__PURE__ */ jsx12(LinkButton, {
+                          href: "#shells",
+                          children: "Open shells"
+                        }),
+                        /* @__PURE__ */ jsx12(Tag, {
+                          variant: "outline",
+                          children: "public core"
+                        })
+                      ]
+                    })
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsx12(JellySurface, {
+                className: "design-gallery__jelly",
+                interaction: "press",
+                tone: "neutral",
+                children: /* @__PURE__ */ jsx12(Button2, {
+                  variant: "quiet",
+                  children: "Semantic button with optional Jelly paint"
+                })
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs10("div", {
+            "aria-label": "Plain site link presentation",
+            className: "design-gallery__plain-theme plain-site plain-publication",
+            children: [
+              /* @__PURE__ */ jsx12("header", {
+                className: "plain-header",
+                children: /* @__PURE__ */ jsxs10("div", {
+                  className: "plain-header__inner",
+                  "data-layout": "responsive-wrap",
+                  children: [
+                    /* @__PURE__ */ jsx12("a", {
+                      className: "plain-wordmark",
+                      href: "#foundation",
+                      children: "project-name.example"
+                    }),
+                    /* @__PURE__ */ jsxs10("nav", {
+                      "aria-label": "Plain site example",
+                      className: "plain-nav",
+                      children: [
+                        /* @__PURE__ */ jsx12("a", {
+                          href: "#foundation",
+                          children: "Articles"
+                        }),
+                        /* @__PURE__ */ jsx12("a", {
+                          href: "#shells",
+                          children: "About"
+                        })
+                      ]
+                    })
+                  ]
+                })
+              }),
+              /* @__PURE__ */ jsx12("div", {
+                className: "plain-page",
+                children: /* @__PURE__ */ jsxs10("p", {
+                  className: "design-gallery__plain-link-example",
+                  children: [
+                    "Ordinary ",
+                    /* @__PURE__ */ jsx12("a", {
+                      href: "#foundation",
+                      children: "blue links"
+                    }),
+                    " stay quiet until interaction."
+                  ]
+                })
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs10("section", {
+        className: "design-gallery__section",
+        id: "shells",
+        children: [
+          /* @__PURE__ */ jsx12("h2", {
+            children: "Application shells"
+          }),
+          /* @__PURE__ */ jsx12(ViewportFrame, {
+            className: "design-gallery__shell-preview",
+            children: /* @__PURE__ */ jsx12(AppShell, {
+              navigationKey: "gallery",
+              rail: /* @__PURE__ */ jsx12(NavigationRail, {
+                children: /* @__PURE__ */ jsxs10(RailSection, {
+                  title: "Workspace",
+                  children: [
+                    /* @__PURE__ */ jsx12(RailItem, {
+                      href: "#foundation",
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                        icon: DashboardSquare01Icon
+                      }),
+                      isActive: true,
+                      label: "Overview"
+                    }),
+                    /* @__PURE__ */ jsx12(RailItem, {
+                      href: "#data",
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                        icon: Chart01Icon
+                      }),
+                      label: "Data"
+                    }),
+                    /* @__PURE__ */ jsx12(RailItem, {
+                      href: "#syntax",
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                        icon: CodeIcon
+                      }),
+                      label: "Syntax"
+                    })
+                  ]
+                })
+              }),
+              topBar: /* @__PURE__ */ jsx12(TopBar, {
+                title: "Reference workspace"
+              }),
+              children: /* @__PURE__ */ jsx12(PageCanvas, {
+                as: "div",
+                children: /* @__PURE__ */ jsx12(AnimatedRailStage, {
+                  stageKey: density,
+                  children: /* @__PURE__ */ jsxs10(ThemedSurface, {
+                    as: "section",
+                    tone: "card",
+                    children: [
+                      /* @__PURE__ */ jsxs10("h3", {
+                        children: [
+                          density === "compact" ? "Compact" : "Default",
+                          " composition"
+                        ]
+                      }),
+                      /* @__PURE__ */ jsx12("p", {
+                        children: "The route body changes while persistent navigation remains in place."
+                      })
+                    ]
+                  })
+                })
+              })
+            })
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs10("section", {
+        className: "design-gallery__section",
+        id: "data",
+        children: [
+          /* @__PURE__ */ jsx12("h2", {
+            children: "Data and instrument compositions"
+          }),
+          /* @__PURE__ */ jsxs10("div", {
+            className: "design-gallery__grid",
+            children: [
+              /* @__PURE__ */ jsx12(BarListChart, {
+                "aria-label": "Example request volume",
+                data: barData
+              }),
+              /* @__PURE__ */ jsx12(RangePlotChart, {
+                "aria-label": "Example regional ranges",
+                data: rangeData
+              }),
+              /* @__PURE__ */ jsxs10("div", {
+                className: "design-gallery__instrument",
+                children: [
+                  /* @__PURE__ */ jsx12(Fader, {
+                    "aria-label": "Example level",
+                    className: "design-gallery__vertical-fader",
+                    density: "compact",
+                    label: "Level",
+                    maxValue: 100,
+                    minValue: 0,
+                    onChange: setFaderValue,
+                    showLabel: true,
+                    showOutput: true,
+                    value: faderValue
+                  }),
+                  /* @__PURE__ */ jsx12(Fader, {
+                    "aria-label": "Example horizontal level",
+                    className: "design-gallery__horizontal-fader",
+                    density: "compact",
+                    label: "Horizontal level",
+                    maxValue: 100,
+                    minValue: 0,
+                    onChange: setFaderValue,
+                    orientation: "horizontal",
+                    showLabel: true,
+                    showOutput: true,
+                    value: faderValue
+                  }),
+                  /* @__PURE__ */ jsx12(Slider, {
+                    label: "Balance",
+                    maxValue: 100,
+                    minValue: 0,
+                    value: 50
+                  }),
+                  /* @__PURE__ */ jsx12(PlaybackTransport, {
+                    "aria-label": "Preview transport",
+                    onPlay: () => setPlaybackStatus("playing"),
+                    onStop: () => setPlaybackStatus("idle"),
+                    status: playbackStatus
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs10("section", {
+        className: "design-gallery__section",
+        id: "effects",
+        children: [
+          /* @__PURE__ */ jsx12("h2", {
+            children: "Decorative effects"
+          }),
+          /* @__PURE__ */ jsxs10("div", {
+            className: "design-gallery__effect",
+            children: [
+              /* @__PURE__ */ jsx12(AuroraDotsBackground, {}),
+              /* @__PURE__ */ jsx12(ProceduralBackdrop, {
+                seed: "public-gallery",
+                variant: "composite"
+              }),
+              /* @__PURE__ */ jsxs10("div", {
+                className: "design-gallery__effect-copy",
+                children: [
+                  /* @__PURE__ */ jsx12("h3", {
+                    children: "Semantic content stays ordinary DOM"
+                  }),
+                  /* @__PURE__ */ jsx12("p", {
+                    children: "Decorative paint is pointer-transparent and removable in forced colors."
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs10("section", {
+        className: "design-gallery__section",
+        id: "syntax",
+        children: [
+          /* @__PURE__ */ jsx12("h2", {
+            children: "Server syntax"
+          }),
+          /* @__PURE__ */ jsx12("pre", {
+            className: "design-gallery__syntax",
+            children: /* @__PURE__ */ jsx12(SyntaxCode, {
+              code: `import { AppShell } from "@hraness/design-kit/react";
+
+export const shell = <AppShell rail={null}>Content</AppShell>;`,
+              language: "typescript"
+            })
+          })
+        ]
+      })
+    ]
+  });
+}
+// src/react/haptics.ts
+import { useCallback as useCallback2, useEffect as useEffect4 } from "react";
+var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
+function isHapticBrowserEnvironment(environment = globalThis) {
+  return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
+}
+function hapticInputForFeedback(feedback) {
+  switch (feedback) {
+    case "error":
+      return "error";
+    case "press":
+      return "medium";
+    case "selection":
+      return "selection";
+    case "success":
+      return "success";
+    case "warning":
+      return "warning";
+  }
+}
+function hasCustomEventConstructor(candidate) {
+  return typeof candidate === "object" && candidate !== null && "CustomEvent" in candidate && typeof candidate.CustomEvent === "function";
+}
+function hasEventDispatcher(candidate) {
+  return typeof candidate === "object" && candidate !== null && "dispatchEvent" in candidate && typeof candidate.dispatchEvent === "function";
+}
+function dispatchHapticFeedbackEvent(environment, detail) {
+  if (!hasCustomEventConstructor(environment.window) || !hasEventDispatcher(environment.document))
+    return;
+  try {
+    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, { detail }));
+  } catch {}
+}
+function cancelAndDestroy(candidate) {
+  try {
+    candidate.cancel();
+  } catch {}
+  try {
+    candidate.destroy();
+  } catch {}
+}
+function createHapticFeedbackController(environment, loadModule) {
+  let engine = null;
+  let enginePromise = null;
+  let engineGeneration = 0;
+  const loadEngine = async () => {
+    if (!isHapticBrowserEnvironment(environment))
+      return null;
+    if (engine !== null)
+      return engine;
+    if (enginePromise !== null)
+      return enginePromise;
+    const generation = engineGeneration;
+    const pendingEngine = loadModule().then(({ WebHaptics }) => {
+      if (!isHapticBrowserEnvironment(environment))
+        return null;
+      const candidate = new WebHaptics({ debug: false, showSwitch: false });
+      if (generation !== engineGeneration) {
+        cancelAndDestroy(candidate);
+        return null;
+      }
+      engine = candidate;
+      return candidate;
+    }).catch(() => null);
+    enginePromise = pendingEngine;
+    pendingEngine.finally(() => {
+      if (enginePromise === pendingEngine)
+        enginePromise = null;
+    });
+    return pendingEngine;
+  };
+  return {
+    cancel() {
+      if (engine === null)
+        return false;
+      try {
+        engine.cancel();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    dispose() {
+      engineGeneration += 1;
+      const activeEngine = engine;
+      engine = null;
+      enginePromise = null;
+      if (activeEngine !== null)
+        cancelAndDestroy(activeEngine);
+    },
+    async prepare() {
+      return await loadEngine() !== null;
+    },
+    async trigger(feedback = "press") {
+      try {
+        const activeEngine = await loadEngine();
+        if (activeEngine === null)
+          return false;
+        const input = hapticInputForFeedback(feedback);
+        await activeEngine.trigger(input);
+        dispatchHapticFeedbackEvent(environment, { feedback, input });
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  };
+}
+var browserHaptics = createHapticFeedbackController(globalThis, async () => {
+  const { WebHaptics } = await import("web-haptics");
+  return { WebHaptics };
+});
+async function prepareHapticFeedback() {
+  return await browserHaptics.prepare();
+}
+async function triggerHapticFeedback(feedback = "press") {
+  return await browserHaptics.trigger(feedback);
+}
+function cancelHapticFeedback() {
+  return browserHaptics.cancel();
+}
+function disposeHapticFeedback() {
+  browserHaptics.dispose();
+}
+function useHapticFeedback(enabled = true) {
+  useEffect4(() => {
+    if (enabled)
+      prepareHapticFeedback();
+  }, [enabled]);
+  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
+}
+// src/react/keyboard-shortcuts.ts
+import { useEffect as useEffect5, useRef as useRef3 } from "react";
+var interactiveTargetSelector = [
+  "a[href]",
+  "area[href]",
+  "button",
+  "input",
+  "select",
+  "summary",
+  "textarea",
+  "[contenteditable]:not([contenteditable='false'])",
+  "[role='button']",
+  "[role='checkbox']",
+  "[role='combobox']",
+  "[role='gridcell']",
+  "[role='link']",
+  "[role='menuitem']",
+  "[role='option']",
+  "[role='radio']",
+  "[role='slider']",
+  "[role='spinbutton']",
+  "[role='switch']",
+  "[role='tab']",
+  "[role='textbox']",
+  "[tabindex]:not([tabindex='-1'])"
+].join(",");
+var textEntryTargetSelector = [
+  "input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])",
+  "select",
+  "textarea",
+  "[contenteditable]:not([contenteditable='false'])",
+  "[role='combobox']",
+  "[role='textbox']"
+].join(",");
+function hasClosest(target) {
+  return target !== null && "closest" in target && typeof target.closest === "function";
+}
+function isKeyboardInteractionTarget(target) {
+  return hasClosest(target) && target.closest(interactiveTargetSelector) !== null;
+}
+function isKeyboardTextEntryTarget(target) {
+  return hasClosest(target) && target.closest(textEntryTargetSelector) !== null;
+}
+function normalizedKey(key) {
+  switch (key) {
+    case "Esc":
+      return "Escape";
+    case "Left":
+      return "ArrowLeft";
+    case "Right":
+      return "ArrowRight";
+    case "Up":
+      return "ArrowUp";
+    case "Down":
+      return "ArrowDown";
+    case "Space":
+    case "Spacebar":
+      return " ";
+    default:
+      return key.length === 1 ? key.toLocaleLowerCase("en-US") : key;
+  }
+}
+function matchesKeyboardShortcut(event, shortcut) {
+  return normalizedKey(event.key) === normalizedKey(shortcut.key) && event.altKey === (shortcut.altKey ?? false) && event.ctrlKey === (shortcut.ctrlKey ?? false) && event.metaKey === (shortcut.metaKey ?? false) && event.shiftKey === (shortcut.shiftKey ?? false);
+}
+function decideKeyboardShortcut(shortcuts, event, context = {}) {
+  if (context.isDisabled === true)
+    return { kind: "ignore", reason: "disabled" };
+  if (event.defaultPrevented)
+    return { kind: "ignore", reason: "default-prevented" };
+  if (event.isComposing)
+    return { kind: "ignore", reason: "composing" };
+  let suppressedReason = null;
+  for (const [bindingIndex, shortcut] of shortcuts.entries()) {
+    if (shortcut.isDisabled === true || !matchesKeyboardShortcut(event, shortcut))
+      continue;
+    if (event.repeat && shortcut.allowRepeat !== true) {
+      suppressedReason ??= "repeat";
+      continue;
+    }
+    if (context.isEditableTarget === true && shortcut.allowWhenEditable !== true) {
+      suppressedReason ??= "editable-target";
+      continue;
+    }
+    if (context.isInteractiveTarget === true && context.isEditableTarget !== true && shortcut.allowWhenInteractive !== true && shortcut.allowWhenInteractiveTarget?.(context.target ?? null) !== true) {
+      suppressedReason ??= "interactive-target";
+      continue;
+    }
+    return { bindingId: shortcut.id, bindingIndex, kind: "handle" };
+  }
+  return { kind: "ignore", reason: suppressedReason ?? "no-match" };
+}
+function isNode(target) {
+  return target !== null && typeof Node !== "undefined" && target instanceof Node;
+}
+function useKeyboardShortcuts(bindings, options = {}) {
+  const latestRef = useRef3({ bindings, isDisabled: options.isDisabled ?? false });
+  latestRef.current = { bindings, isDisabled: options.isDisabled ?? false };
+  const scopeRef = options.scopeRef;
+  useEffect5(() => {
+    const onKeyDown = (event) => {
+      if (scopeRef !== undefined) {
+        const scope = scopeRef.current;
+        if (scope === null || !isNode(event.target) || !scope.contains(event.target))
+          return;
+      }
+      const current = latestRef.current;
+      const decision = decideKeyboardShortcut(current.bindings, event, {
+        isDisabled: current.isDisabled,
+        isEditableTarget: isKeyboardTextEntryTarget(event.target),
+        isInteractiveTarget: isKeyboardInteractionTarget(event.target),
+        target: event.target
+      });
+      if (decision.kind === "ignore")
+        return;
+      event.preventDefault();
+      current.bindings[decision.bindingIndex]?.onAction(event);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [scopeRef]);
+}
+// src/react/route-state.tsx
+import {
+  Button as Button3,
+  EmptyState,
+  LinkButton as LinkButton2,
+  Skeleton,
+  Spinner as Spinner2
+} from "@hraness/ui";
+import { useEffect as useEffect7, useId as useId2 } from "react";
+
 // src/react/theme.tsx
 import {
   AppearanceIcon,
@@ -1500,17 +2137,17 @@ import {
   Menu,
   MenuItem,
   MenuTrigger,
-  SegmentedControl,
+  SegmentedControl as SegmentedControl2,
   cn as cn10
 } from "@hraness/ui";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import {
-  useEffect as useEffect4,
-  useRef as useRef3,
+  useEffect as useEffect6,
+  useRef as useRef4,
   useSyncExternalStore
 } from "react";
 
-// src/react/theme-color-sync.ts
+// src/browser/theme-color-sync.ts
 var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
 var themeColorSyncDisabledAttribute = "data-hraness-design-theme-color-sync-disabled";
 var managersByDocument = new WeakMap;
@@ -1671,19 +2308,11 @@ function acquireThemeColorMeta(document2, metaName, registrationId, color) {
 }
 
 // src/react/theme.tsx
-import { jsx as jsx12, jsxs as jsxs10, Fragment as Fragment2 } from "react/jsx-runtime";
-var designThemes = ["light", "dark", "system"];
-var defaultDesignTheme = "system";
+import { jsx as jsx13, jsxs as jsxs11, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
 };
-function isDesignTheme(value) {
-  return typeof value === "string" && designThemes.some((theme) => theme === value);
-}
-function normalizeDesignTheme(value) {
-  return isDesignTheme(value) ? value : defaultDesignTheme;
-}
 function useHydrated() {
   return useSyncExternalStore(emptySubscribe, () => true, () => false);
 }
@@ -1693,7 +2322,7 @@ function themeStorageGuardScript(storageKey) {
 }
 function PersistedThemeNormalizer() {
   const { setTheme, theme } = useTheme();
-  useEffect4(() => {
+  useEffect6(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
@@ -1701,7 +2330,7 @@ function PersistedThemeNormalizer() {
 }
 function JellyThemeSync() {
   const { resolvedTheme } = useTheme();
-  useEffect4(() => {
+  useEffect6(() => {
     if (resolvedTheme === "light" || resolvedTheme === "dark") {
       setJellyThemeMode(resolvedTheme);
     }
@@ -1714,7 +2343,7 @@ function PortalThemeBridge({
 }) {
   const { resolvedTheme } = useTheme();
   const portalTheme = resolvedTheme === "light" || resolvedTheme === "dark" ? resolvedTheme : forcedTheme;
-  return /* @__PURE__ */ jsx12(DesignPortalThemeProvider, {
+  return /* @__PURE__ */ jsx13(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
   });
@@ -1723,17 +2352,17 @@ function DesignThemeProvider({
   children,
   forcedTheme,
   nonce,
-  storageKey = "hraness-design-theme-v1"
+  storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs10(Fragment2, {
+  return /* @__PURE__ */ jsxs11(Fragment2, {
     children: [
-      forcedTheme === undefined ? /* @__PURE__ */ jsx12("script", {
+      forcedTheme === undefined ? /* @__PURE__ */ jsx13("script", {
         ...nonce === undefined ? {} : { nonce },
         "data-hraness-design-theme-guard": "",
         dangerouslySetInnerHTML: { __html: themeStorageGuardScript(storageKey) },
         suppressHydrationWarning: true
       }) : null,
-      /* @__PURE__ */ jsxs10(NextThemeProvider, {
+      /* @__PURE__ */ jsxs11(NextThemeProvider, {
         ...nonce === undefined ? {} : { nonce },
         attribute: "data-theme",
         defaultTheme: forcedTheme ?? defaultDesignTheme,
@@ -1743,9 +2372,9 @@ function DesignThemeProvider({
         storageKey,
         themes: [...concreteThemes],
         children: [
-          forcedTheme === undefined ? /* @__PURE__ */ jsx12(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx12(JellyThemeSync, {}),
-          /* @__PURE__ */ jsx12(PortalThemeBridge, {
+          forcedTheme === undefined ? /* @__PURE__ */ jsx13(PersistedThemeNormalizer, {}) : null,
+          /* @__PURE__ */ jsx13(JellyThemeSync, {}),
+          /* @__PURE__ */ jsx13(PortalThemeBridge, {
             forcedTheme,
             children
           })
@@ -1755,7 +2384,7 @@ function DesignThemeProvider({
   });
 }
 function themeToggleLabel(id, labels) {
-  return labels?.[id] ?? `${id[0]?.toUpperCase() ?? ""}${id.slice(1)}`;
+  return designThemeLabel(id, labels);
 }
 function themeToggleItems(labels) {
   return [
@@ -1765,7 +2394,7 @@ function themeToggleItems(labels) {
   ];
 }
 function themeToggleIcon(id) {
-  return /* @__PURE__ */ jsx12(AppearanceIcon, {
+  return /* @__PURE__ */ jsx13(AppearanceIcon, {
     name: id
   });
 }
@@ -1791,10 +2420,10 @@ function themeToggleIconItems(labels) {
 function ThemeToggle({
   "aria-label": ariaLabel = "Appearance",
   className,
-  display = "icons",
+  display,
   labels,
   onChange,
-  presentation = "segmented",
+  presentation,
   size = "compact",
   value: controlledValue
 }) {
@@ -1803,7 +2432,9 @@ function ThemeToggle({
   const controlled = controlledValue !== undefined;
   const ready = controlled || hydrated;
   const value = controlledValue ?? (hydrated ? normalizeDesignTheme(theme) : defaultDesignTheme);
-  const items = display === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
+  const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
+  const resolvedDisplay = display ?? "icons";
+  const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -1811,23 +2442,25 @@ function ThemeToggle({
       setTheme(nextTheme);
   };
   const currentLabel = themeToggleLabel(value, labels);
-  return /* @__PURE__ */ jsx12("div", {
+  return /* @__PURE__ */ jsx13("div", {
     "aria-busy": !ready || undefined,
     className: cn10("hraness-design-theme-toggle", className),
-    "data-display": presentation === "menu" ? "icons" : display,
-    "data-presentation": presentation,
+    "data-display": resolvedPresentation === "menu" ? "icons" : resolvedDisplay,
+    "data-hraness-appearance-menu": resolvedPresentation === "menu" ? "" : undefined,
+    "data-presentation": resolvedPresentation,
     "data-ready": ready ? "true" : "false",
     "data-theme-value": value,
-    children: presentation === "menu" ? /* @__PURE__ */ jsxs10(MenuTrigger, {
+    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs11(MenuTrigger, {
       children: [
-        /* @__PURE__ */ jsx12(IconButton3, {
+        /* @__PURE__ */ jsx13(IconButton3, {
           "aria-label": `${ariaLabel}: ${currentLabel}`,
+          controlClassName: "hraness-design-theme-toggle__trigger",
           isDisabled: !ready,
           size,
           tooltip: `${ariaLabel}: ${currentLabel}`,
           children: themeToggleIcon(value)
         }),
-        /* @__PURE__ */ jsx12(Menu, {
+        /* @__PURE__ */ jsx13(Menu, {
           "aria-label": ariaLabel,
           className: "hraness-design-theme-toggle__menu",
           disallowEmptySelection: true,
@@ -1838,7 +2471,8 @@ function ThemeToggle({
           popoverClassName: "hraness-design-theme-toggle__popover",
           selectedKeys: [value],
           selectionMode: "single",
-          children: designThemes.map((id) => /* @__PURE__ */ jsx12(MenuItem, {
+          children: designThemes.map((id) => /* @__PURE__ */ jsx13(MenuItem, {
+            className: "hraness-design-theme-toggle__item",
             "data-theme-value": id,
             id,
             leading: themeToggleIcon(id),
@@ -1847,7 +2481,7 @@ function ThemeToggle({
           }, id))
         })
       ]
-    }) : /* @__PURE__ */ jsx12(SegmentedControl, {
+    }) : /* @__PURE__ */ jsx13(SegmentedControl2, {
       "aria-label": ariaLabel,
       isDisabled: !ready,
       items,
@@ -1855,6 +2489,12 @@ function ThemeToggle({
       size,
       value
     })
+  });
+}
+function ThemeMenuButton(props) {
+  return /* @__PURE__ */ jsx13(ThemeToggle, {
+    ...props,
+    presentation: "menu"
   });
 }
 function themeColorFor(resolvedTheme, values) {
@@ -1866,13 +2506,13 @@ function ThemeColorSync({
   metaName = "theme-color"
 }) {
   const { resolvedTheme } = useTheme();
-  const registrationId = useRef3(Symbol("hraness-design-theme-color"));
-  const registration = useRef3(null);
+  const registrationId = useRef4(Symbol("hraness-design-theme-color"));
+  const registration = useRef4(null);
   const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor }) : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
-  const latestColor = useRef3(resolvedColor);
+  const latestColor = useRef4(resolvedColor);
   latestColor.current = resolvedColor;
-  useEffect4(() => {
+  useEffect6(() => {
     if (!hasResolvedColor || latestColor.current === undefined)
       return;
     const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
@@ -1883,647 +2523,14 @@ function ThemeColorSync({
       current.release();
     };
   }, [hasResolvedColor, metaName]);
-  useEffect4(() => {
+  useEffect6(() => {
     if (resolvedColor !== undefined)
       registration.current?.update(resolvedColor);
   }, [resolvedColor]);
   return null;
 }
 
-// src/react/design-gallery.tsx
-import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
-var designGallerySections = [
-  { id: "foundation", label: "Foundation" },
-  { id: "shells", label: "Shells" },
-  { id: "data", label: "Data" },
-  { id: "effects", label: "Effects" },
-  { id: "syntax", label: "Syntax" }
-];
-var designGalleryTouchKinds = [
-  "button",
-  "link",
-  "radio",
-  "range"
-];
-var designGalleryRecipeCoverage = [
-  "@hraness/ui primitives",
-  "application shells",
-  "charts",
-  "Jelly presentation",
-  "plain site and publication grammar",
-  "procedural effects",
-  "production preview notice",
-  "syntax highlighting"
-];
-function resolveGalleryTheme(theme, prefersDark) {
-  return theme === "system" ? prefersDark ? "dark" : "light" : theme;
-}
-var barData = [
-  { id: "alpha", label: "Alpha", value: 72, detail: "72 requests" },
-  { id: "beta", label: "Beta", value: 48, detail: "48 requests" },
-  { id: "gamma", label: "Gamma", value: 31, detail: "31 requests" }
-];
-var rangeData = [
-  { id: "north", label: "North", minimum: 24, median: 51, maximum: 78 },
-  { id: "south", label: "South", minimum: 38, median: 64, maximum: 82 }
-];
-function DesignSystemGallery({
-  isNestedInMain = false
-}) {
-  const [density, setDensity] = useState2("default");
-  const [faderValue, setFaderValue] = useState2(64);
-  const [playbackStatus, setPlaybackStatus] = useState2("idle");
-  const Root = isNestedInMain ? "div" : "main";
-  return /* @__PURE__ */ jsxs11(Root, {
-    className: "design-gallery",
-    "data-design-gallery": "public",
-    children: [
-      /* @__PURE__ */ jsxs11("header", {
-        className: "design-gallery__intro",
-        children: [
-          /* @__PURE__ */ jsx13(Badge, {
-            tone: "info",
-            children: "@hraness/design-kit"
-          }),
-          /* @__PURE__ */ jsx13("h1", {
-            children: "Presentation and composition reference"
-          }),
-          /* @__PURE__ */ jsx13("p", {
-            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
-          }),
-          /* @__PURE__ */ jsx13("p", {
-            children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
-          }),
-          /* @__PURE__ */ jsxs11(WrappingRow, {
-            children: [
-              /* @__PURE__ */ jsx13(ThemeToggle, {
-                presentation: "segmented"
-              }),
-              /* @__PURE__ */ jsx13(SegmentedControl2, {
-                "aria-label": "Gallery density",
-                items: [
-                  { id: "compact", label: "Compact" },
-                  { id: "default", label: "Default" }
-                ],
-                onChange: setDensity,
-                size: "compact",
-                value: density
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs11("section", {
-        className: "design-gallery__section",
-        id: "foundation",
-        children: [
-          /* @__PURE__ */ jsx13("h2", {
-            children: "Foundation boundary"
-          }),
-          /* @__PURE__ */ jsx13(ProductionDataPreviewNotice, {
-            surfaceOrigin: "https://preview.example.test"
-          }),
-          /* @__PURE__ */ jsxs11("div", {
-            className: "design-gallery__grid",
-            children: [
-              /* @__PURE__ */ jsxs11(Card, {
-                children: [
-                  /* @__PURE__ */ jsxs11(CardHeader, {
-                    children: [
-                      /* @__PURE__ */ jsx13(CardTitle, {
-                        children: "Portable control"
-                      }),
-                      /* @__PURE__ */ jsx13(CardDescription, {
-                        children: "Rendered directly by @hraness/ui."
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx13(CardContent, {
-                    children: /* @__PURE__ */ jsxs11(WrappingRow, {
-                      children: [
-                        /* @__PURE__ */ jsx13(Button2, {
-                          variant: "primary",
-                          children: "Primary action"
-                        }),
-                        /* @__PURE__ */ jsx13(LinkButton, {
-                          href: "#shells",
-                          children: "Open shells"
-                        }),
-                        /* @__PURE__ */ jsx13(Tag, {
-                          variant: "outline",
-                          children: "public core"
-                        })
-                      ]
-                    })
-                  })
-                ]
-              }),
-              /* @__PURE__ */ jsx13(JellySurface, {
-                className: "design-gallery__jelly",
-                interaction: "press",
-                tone: "neutral",
-                children: /* @__PURE__ */ jsx13(Button2, {
-                  variant: "quiet",
-                  children: "Semantic button with optional Jelly paint"
-                })
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsxs11("div", {
-            "aria-label": "Plain site link presentation",
-            className: "design-gallery__plain-theme plain-site plain-publication",
-            children: [
-              /* @__PURE__ */ jsx13("header", {
-                className: "plain-header",
-                children: /* @__PURE__ */ jsxs11("div", {
-                  className: "plain-header__inner",
-                  "data-layout": "responsive-wrap",
-                  children: [
-                    /* @__PURE__ */ jsx13("a", {
-                      className: "plain-wordmark",
-                      href: "#foundation",
-                      children: "project-name.example"
-                    }),
-                    /* @__PURE__ */ jsxs11("nav", {
-                      "aria-label": "Plain site example",
-                      className: "plain-nav",
-                      children: [
-                        /* @__PURE__ */ jsx13("a", {
-                          href: "#foundation",
-                          children: "Articles"
-                        }),
-                        /* @__PURE__ */ jsx13("a", {
-                          href: "#shells",
-                          children: "About"
-                        })
-                      ]
-                    })
-                  ]
-                })
-              }),
-              /* @__PURE__ */ jsx13("div", {
-                className: "plain-page",
-                children: /* @__PURE__ */ jsxs11("p", {
-                  className: "design-gallery__plain-link-example",
-                  children: [
-                    "Ordinary ",
-                    /* @__PURE__ */ jsx13("a", {
-                      href: "#foundation",
-                      children: "blue links"
-                    }),
-                    " stay quiet until interaction."
-                  ]
-                })
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs11("section", {
-        className: "design-gallery__section",
-        id: "shells",
-        children: [
-          /* @__PURE__ */ jsx13("h2", {
-            children: "Application shells"
-          }),
-          /* @__PURE__ */ jsx13(ViewportFrame, {
-            className: "design-gallery__shell-preview",
-            children: /* @__PURE__ */ jsx13(AppShell, {
-              navigationKey: "gallery",
-              rail: /* @__PURE__ */ jsx13(NavigationRail, {
-                children: /* @__PURE__ */ jsxs11(RailSection, {
-                  title: "Workspace",
-                  children: [
-                    /* @__PURE__ */ jsx13(RailItem, {
-                      href: "#foundation",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
-                        icon: DashboardSquare01Icon
-                      }),
-                      isActive: true,
-                      label: "Overview"
-                    }),
-                    /* @__PURE__ */ jsx13(RailItem, {
-                      href: "#data",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
-                        icon: Chart01Icon
-                      }),
-                      label: "Data"
-                    }),
-                    /* @__PURE__ */ jsx13(RailItem, {
-                      href: "#syntax",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
-                        icon: CodeIcon
-                      }),
-                      label: "Syntax"
-                    })
-                  ]
-                })
-              }),
-              topBar: /* @__PURE__ */ jsx13(TopBar, {
-                title: "Reference workspace"
-              }),
-              children: /* @__PURE__ */ jsx13(PageCanvas, {
-                as: "div",
-                children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
-                  stageKey: density,
-                  children: /* @__PURE__ */ jsxs11(ThemedSurface, {
-                    as: "section",
-                    tone: "card",
-                    children: [
-                      /* @__PURE__ */ jsxs11("h3", {
-                        children: [
-                          density === "compact" ? "Compact" : "Default",
-                          " composition"
-                        ]
-                      }),
-                      /* @__PURE__ */ jsx13("p", {
-                        children: "The route body changes while persistent navigation remains in place."
-                      })
-                    ]
-                  })
-                })
-              })
-            })
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs11("section", {
-        className: "design-gallery__section",
-        id: "data",
-        children: [
-          /* @__PURE__ */ jsx13("h2", {
-            children: "Data and instrument compositions"
-          }),
-          /* @__PURE__ */ jsxs11("div", {
-            className: "design-gallery__grid",
-            children: [
-              /* @__PURE__ */ jsx13(BarListChart, {
-                "aria-label": "Example request volume",
-                data: barData
-              }),
-              /* @__PURE__ */ jsx13(RangePlotChart, {
-                "aria-label": "Example regional ranges",
-                data: rangeData
-              }),
-              /* @__PURE__ */ jsxs11("div", {
-                className: "design-gallery__instrument",
-                children: [
-                  /* @__PURE__ */ jsx13(Fader, {
-                    "aria-label": "Example level",
-                    className: "design-gallery__vertical-fader",
-                    density: "compact",
-                    label: "Level",
-                    maxValue: 100,
-                    minValue: 0,
-                    onChange: setFaderValue,
-                    showLabel: true,
-                    showOutput: true,
-                    value: faderValue
-                  }),
-                  /* @__PURE__ */ jsx13(Fader, {
-                    "aria-label": "Example horizontal level",
-                    className: "design-gallery__horizontal-fader",
-                    density: "compact",
-                    label: "Horizontal level",
-                    maxValue: 100,
-                    minValue: 0,
-                    onChange: setFaderValue,
-                    orientation: "horizontal",
-                    showLabel: true,
-                    showOutput: true,
-                    value: faderValue
-                  }),
-                  /* @__PURE__ */ jsx13(Slider, {
-                    label: "Balance",
-                    maxValue: 100,
-                    minValue: 0,
-                    value: 50
-                  }),
-                  /* @__PURE__ */ jsx13(PlaybackTransport, {
-                    "aria-label": "Preview transport",
-                    onPlay: () => setPlaybackStatus("playing"),
-                    onStop: () => setPlaybackStatus("idle"),
-                    status: playbackStatus
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs11("section", {
-        className: "design-gallery__section",
-        id: "effects",
-        children: [
-          /* @__PURE__ */ jsx13("h2", {
-            children: "Decorative effects"
-          }),
-          /* @__PURE__ */ jsxs11("div", {
-            className: "design-gallery__effect",
-            children: [
-              /* @__PURE__ */ jsx13(AuroraDotsBackground, {}),
-              /* @__PURE__ */ jsx13(ProceduralBackdrop, {
-                seed: "public-gallery",
-                variant: "composite"
-              }),
-              /* @__PURE__ */ jsxs11("div", {
-                className: "design-gallery__effect-copy",
-                children: [
-                  /* @__PURE__ */ jsx13("h3", {
-                    children: "Semantic content stays ordinary DOM"
-                  }),
-                  /* @__PURE__ */ jsx13("p", {
-                    children: "Decorative paint is pointer-transparent and removable in forced colors."
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs11("section", {
-        className: "design-gallery__section",
-        id: "syntax",
-        children: [
-          /* @__PURE__ */ jsx13("h2", {
-            children: "Server syntax"
-          }),
-          /* @__PURE__ */ jsx13("pre", {
-            className: "design-gallery__syntax",
-            children: /* @__PURE__ */ jsx13(SyntaxCode, {
-              code: `import { AppShell } from "@hraness/design-kit/react";
-
-export const shell = <AppShell rail={null}>Content</AppShell>;`,
-              language: "typescript"
-            })
-          })
-        ]
-      })
-    ]
-  });
-}
-// src/react/haptics.ts
-import { useCallback as useCallback2, useEffect as useEffect5 } from "react";
-var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
-function isHapticBrowserEnvironment(environment = globalThis) {
-  return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
-}
-function hapticInputForFeedback(feedback) {
-  switch (feedback) {
-    case "error":
-      return "error";
-    case "press":
-      return "medium";
-    case "selection":
-      return "selection";
-    case "success":
-      return "success";
-    case "warning":
-      return "warning";
-  }
-}
-function hasCustomEventConstructor(candidate) {
-  return typeof candidate === "object" && candidate !== null && "CustomEvent" in candidate && typeof candidate.CustomEvent === "function";
-}
-function hasEventDispatcher(candidate) {
-  return typeof candidate === "object" && candidate !== null && "dispatchEvent" in candidate && typeof candidate.dispatchEvent === "function";
-}
-function dispatchHapticFeedbackEvent(environment, detail) {
-  if (!hasCustomEventConstructor(environment.window) || !hasEventDispatcher(environment.document))
-    return;
-  try {
-    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, { detail }));
-  } catch {}
-}
-function cancelAndDestroy(candidate) {
-  try {
-    candidate.cancel();
-  } catch {}
-  try {
-    candidate.destroy();
-  } catch {}
-}
-function createHapticFeedbackController(environment, loadModule) {
-  let engine = null;
-  let enginePromise = null;
-  let engineGeneration = 0;
-  const loadEngine = async () => {
-    if (!isHapticBrowserEnvironment(environment))
-      return null;
-    if (engine !== null)
-      return engine;
-    if (enginePromise !== null)
-      return enginePromise;
-    const generation = engineGeneration;
-    const pendingEngine = loadModule().then(({ WebHaptics }) => {
-      if (!isHapticBrowserEnvironment(environment))
-        return null;
-      const candidate = new WebHaptics({ debug: false, showSwitch: false });
-      if (generation !== engineGeneration) {
-        cancelAndDestroy(candidate);
-        return null;
-      }
-      engine = candidate;
-      return candidate;
-    }).catch(() => null);
-    enginePromise = pendingEngine;
-    pendingEngine.finally(() => {
-      if (enginePromise === pendingEngine)
-        enginePromise = null;
-    });
-    return pendingEngine;
-  };
-  return {
-    cancel() {
-      if (engine === null)
-        return false;
-      try {
-        engine.cancel();
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    dispose() {
-      engineGeneration += 1;
-      const activeEngine = engine;
-      engine = null;
-      enginePromise = null;
-      if (activeEngine !== null)
-        cancelAndDestroy(activeEngine);
-    },
-    async prepare() {
-      return await loadEngine() !== null;
-    },
-    async trigger(feedback = "press") {
-      try {
-        const activeEngine = await loadEngine();
-        if (activeEngine === null)
-          return false;
-        const input = hapticInputForFeedback(feedback);
-        await activeEngine.trigger(input);
-        dispatchHapticFeedbackEvent(environment, { feedback, input });
-        return true;
-      } catch {
-        return false;
-      }
-    }
-  };
-}
-var browserHaptics = createHapticFeedbackController(globalThis, async () => {
-  const { WebHaptics } = await import("web-haptics");
-  return { WebHaptics };
-});
-async function prepareHapticFeedback() {
-  return await browserHaptics.prepare();
-}
-async function triggerHapticFeedback(feedback = "press") {
-  return await browserHaptics.trigger(feedback);
-}
-function cancelHapticFeedback() {
-  return browserHaptics.cancel();
-}
-function disposeHapticFeedback() {
-  browserHaptics.dispose();
-}
-function useHapticFeedback(enabled = true) {
-  useEffect5(() => {
-    if (enabled)
-      prepareHapticFeedback();
-  }, [enabled]);
-  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
-}
-// src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect6, useRef as useRef4 } from "react";
-var interactiveTargetSelector = [
-  "a[href]",
-  "area[href]",
-  "button",
-  "input",
-  "select",
-  "summary",
-  "textarea",
-  "[contenteditable]:not([contenteditable='false'])",
-  "[role='button']",
-  "[role='checkbox']",
-  "[role='combobox']",
-  "[role='gridcell']",
-  "[role='link']",
-  "[role='menuitem']",
-  "[role='option']",
-  "[role='radio']",
-  "[role='slider']",
-  "[role='spinbutton']",
-  "[role='switch']",
-  "[role='tab']",
-  "[role='textbox']",
-  "[tabindex]:not([tabindex='-1'])"
-].join(",");
-var textEntryTargetSelector = [
-  "input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])",
-  "select",
-  "textarea",
-  "[contenteditable]:not([contenteditable='false'])",
-  "[role='combobox']",
-  "[role='textbox']"
-].join(",");
-function hasClosest(target) {
-  return target !== null && "closest" in target && typeof target.closest === "function";
-}
-function isKeyboardInteractionTarget(target) {
-  return hasClosest(target) && target.closest(interactiveTargetSelector) !== null;
-}
-function isKeyboardTextEntryTarget(target) {
-  return hasClosest(target) && target.closest(textEntryTargetSelector) !== null;
-}
-function normalizedKey(key) {
-  switch (key) {
-    case "Esc":
-      return "Escape";
-    case "Left":
-      return "ArrowLeft";
-    case "Right":
-      return "ArrowRight";
-    case "Up":
-      return "ArrowUp";
-    case "Down":
-      return "ArrowDown";
-    case "Space":
-    case "Spacebar":
-      return " ";
-    default:
-      return key.length === 1 ? key.toLocaleLowerCase("en-US") : key;
-  }
-}
-function matchesKeyboardShortcut(event, shortcut) {
-  return normalizedKey(event.key) === normalizedKey(shortcut.key) && event.altKey === (shortcut.altKey ?? false) && event.ctrlKey === (shortcut.ctrlKey ?? false) && event.metaKey === (shortcut.metaKey ?? false) && event.shiftKey === (shortcut.shiftKey ?? false);
-}
-function decideKeyboardShortcut(shortcuts, event, context = {}) {
-  if (context.isDisabled === true)
-    return { kind: "ignore", reason: "disabled" };
-  if (event.defaultPrevented)
-    return { kind: "ignore", reason: "default-prevented" };
-  if (event.isComposing)
-    return { kind: "ignore", reason: "composing" };
-  let suppressedReason = null;
-  for (const [bindingIndex, shortcut] of shortcuts.entries()) {
-    if (shortcut.isDisabled === true || !matchesKeyboardShortcut(event, shortcut))
-      continue;
-    if (event.repeat && shortcut.allowRepeat !== true) {
-      suppressedReason ??= "repeat";
-      continue;
-    }
-    if (context.isEditableTarget === true && shortcut.allowWhenEditable !== true) {
-      suppressedReason ??= "editable-target";
-      continue;
-    }
-    if (context.isInteractiveTarget === true && context.isEditableTarget !== true && shortcut.allowWhenInteractive !== true && shortcut.allowWhenInteractiveTarget?.(context.target ?? null) !== true) {
-      suppressedReason ??= "interactive-target";
-      continue;
-    }
-    return { bindingId: shortcut.id, bindingIndex, kind: "handle" };
-  }
-  return { kind: "ignore", reason: suppressedReason ?? "no-match" };
-}
-function isNode(target) {
-  return target !== null && typeof Node !== "undefined" && target instanceof Node;
-}
-function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef4({ bindings, isDisabled: options.isDisabled ?? false });
-  latestRef.current = { bindings, isDisabled: options.isDisabled ?? false };
-  const scopeRef = options.scopeRef;
-  useEffect6(() => {
-    const onKeyDown = (event) => {
-      if (scopeRef !== undefined) {
-        const scope = scopeRef.current;
-        if (scope === null || !isNode(event.target) || !scope.contains(event.target))
-          return;
-      }
-      const current = latestRef.current;
-      const decision = decideKeyboardShortcut(current.bindings, event, {
-        isDisabled: current.isDisabled,
-        isEditableTarget: isKeyboardTextEntryTarget(event.target),
-        isInteractiveTarget: isKeyboardInteractionTarget(event.target),
-        target: event.target
-      });
-      if (decision.kind === "ignore")
-        return;
-      event.preventDefault();
-      current.bindings[decision.bindingIndex]?.onAction(event);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [scopeRef]);
-}
 // src/react/route-state.tsx
-import {
-  Button as Button3,
-  EmptyState,
-  LinkButton as LinkButton2,
-  Skeleton,
-  Spinner as Spinner2
-} from "@hraness/ui";
-import { useEffect as useEffect7, useId as useId2 } from "react";
 import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
 function RouteActions({ children }) {
   return /* @__PURE__ */ jsx14("div", {
@@ -2533,31 +2540,35 @@ function RouteActions({ children }) {
 }
 function RouteNotFoundPage({
   canvasAs = "main",
-  showThemeToggle = true,
+  showThemeToggle = false,
   titleAs = "h1"
 } = {}) {
-  return /* @__PURE__ */ jsx14(PageCanvas, {
+  return /* @__PURE__ */ jsxs12(PageCanvas, {
     as: canvasAs,
     className: "hraness-design-route-state",
-    children: /* @__PURE__ */ jsx14(EmptyState, {
-      action: /* @__PURE__ */ jsxs12(RouteActions, {
-        children: [
-          /* @__PURE__ */ jsx14(LinkButton2, {
+    children: [
+      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+        className: "hraness-design-route-state__header",
+        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
+      }) : null,
+      /* @__PURE__ */ jsx14("div", {
+        className: "hraness-design-route-state__content",
+        children: /* @__PURE__ */ jsx14(EmptyState, {
+          action: /* @__PURE__ */ jsx14(LinkButton2, {
             href: "/",
             variant: "primary",
             children: "Return home"
           }),
-          showThemeToggle ? /* @__PURE__ */ jsx14(ThemeToggle, {}) : null
-        ]
-      }),
-      description: "The address may be out of date, or this page may have moved.",
-      icon: /* @__PURE__ */ jsx14("span", {
-        "aria-hidden": "true",
-        children: "404"
-      }),
-      title: "Page not found",
-      titleAs
-    })
+          description: "The address may be out of date, or this page may have moved.",
+          icon: /* @__PURE__ */ jsx14("span", {
+            "aria-hidden": "true",
+            children: "404"
+          }),
+          title: "Page not found",
+          titleAs
+        })
+      })
+    ]
   });
 }
 function RouteErrorPage({
@@ -2566,7 +2577,7 @@ function RouteErrorPage({
   canvasAs = "main",
   error,
   reset,
-  showThemeToggle = true,
+  showThemeToggle = false,
   titleAs = "h1"
 }) {
   const focusId = `${useId2()}-route-error`;
@@ -2574,36 +2585,44 @@ function RouteErrorPage({
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
-  return /* @__PURE__ */ jsx14(PageCanvas, {
+  return /* @__PURE__ */ jsxs12(PageCanvas, {
     "aria-label": "This view could not load",
     "aria-live": announce ? "assertive" : undefined,
     as: canvasAs,
     className: "hraness-design-route-state",
     id: focusId,
     tabIndex: -1,
-    children: /* @__PURE__ */ jsx14(EmptyState, {
-      action: /* @__PURE__ */ jsxs12(RouteActions, {
-        children: [
-          /* @__PURE__ */ jsx14(Button3, {
-            onPress: reset,
-            variant: "primary",
-            children: "Try again"
+    children: [
+      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+        className: "hraness-design-route-state__header",
+        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
+      }) : null,
+      /* @__PURE__ */ jsx14("div", {
+        className: "hraness-design-route-state__content",
+        children: /* @__PURE__ */ jsx14(EmptyState, {
+          action: /* @__PURE__ */ jsxs12(RouteActions, {
+            children: [
+              /* @__PURE__ */ jsx14(Button3, {
+                onPress: reset,
+                variant: "primary",
+                children: "Try again"
+              }),
+              /* @__PURE__ */ jsx14(LinkButton2, {
+                href: "/",
+                children: "Return home"
+              })
+            ]
           }),
-          /* @__PURE__ */ jsx14(LinkButton2, {
-            href: "/",
-            children: "Return home"
+          description: "Retry this view, or return home and continue from there.",
+          icon: /* @__PURE__ */ jsx14("span", {
+            "aria-hidden": "true",
+            children: "!"
           }),
-          showThemeToggle ? /* @__PURE__ */ jsx14(ThemeToggle, {}) : null
-        ]
-      }),
-      description: "Retry this view, or return home and continue from there.",
-      icon: /* @__PURE__ */ jsx14("span", {
-        "aria-hidden": "true",
-        children: "!"
-      }),
-      title: "This view could not load",
-      titleAs
-    })
+          title: "This view could not load",
+          titleAs
+        })
+      })
+    ]
   });
 }
 function RouteLoadingPage({
@@ -2704,6 +2723,7 @@ export {
   hapticInputForFeedback,
   disposeHapticFeedback,
   designThemes,
+  designThemeStorageKey,
   designGalleryTouchKinds,
   designGallerySections,
   designGalleryRecipeCoverage,
@@ -2717,6 +2737,7 @@ export {
   bindJellyPointerRelease,
   TopBar,
   ThemeToggle,
+  ThemeMenuButton,
   ThemeColorSync,
   SyntaxCode,
   RouteNotFoundPage,

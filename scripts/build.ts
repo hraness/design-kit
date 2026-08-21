@@ -30,6 +30,29 @@ if (!result.success) {
   process.exit(1);
 }
 
+// Keep the standards-only browser entry self-contained. Bun currently loses
+// live re-export bindings when this entry shares the root appearance module in
+// a split multi-entry graph.
+const browserResult = await Bun.build({
+  entrypoints: [join(repository, "src/browser/index.ts")],
+  define: {
+    "process.env.NODE_ENV": '"production"',
+  },
+  format: "esm",
+  minify: false,
+  naming: "[dir]/[name].[ext]",
+  outdir,
+  packages: "external",
+  root: join(repository, "src"),
+  splitting: false,
+  target: "browser",
+});
+
+if (!browserResult.success) {
+  for (const log of browserResult.logs) console.error(log);
+  process.exit(1);
+}
+
 const reactEntry = join(outdir, "react/index.js");
 const source = await Bun.file(reactEntry).text();
 const directive = '"use client";\n';

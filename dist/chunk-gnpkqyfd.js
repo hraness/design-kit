@@ -1,3 +1,20 @@
+// src/appearance.ts
+var designThemes = ["light", "dark", "system"];
+var defaultDesignTheme = "system";
+var designThemeStorageKey = "hraness-design-theme-v1";
+function isDesignTheme(value) {
+  return typeof value === "string" && designThemes.some((theme) => theme === value);
+}
+function normalizeDesignTheme(value) {
+  return isDesignTheme(value) ? value : defaultDesignTheme;
+}
+function designThemeLabel(theme, labels) {
+  return labels?.[theme] ?? `${theme.charAt(0).toUpperCase()}${theme.slice(1)}`;
+}
+function resolveDesignTheme(theme, systemPrefersDark) {
+  return theme === "system" ? systemPrefersDark ? "dark" : "light" : theme;
+}
+
 // src/index.ts
 var colors = {
   light: {
@@ -229,4 +246,4 @@ function themeFor(mode) {
   return colors[mode];
 }
 
-export { colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };
+export { designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };

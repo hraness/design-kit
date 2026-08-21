@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -28,6 +28,11 @@
       "types": "./src/index.ts",
       "import": "./dist/index.js"
     },
+    "./browser": {
+      "types": "./src/browser/index.ts",
+      "import": "./dist/browser/index.js"
+    },
+    "./appearance-menu.css": "./src/appearance-menu.css",
     "./react": {
       "types": "./src/react/index.ts",
       "import": "./dist/react/index.js"
@@ -64,6 +69,11 @@
   "style": "./src/styles.css",
   "files": [
     "dist",
+    "src/appearance-menu.css",
+    "src/appearance.ts",
+    "src/browser/appearance-menu.ts",
+    "src/browser/index.ts",
+    "src/browser/theme-color-sync.ts",
     "src/charts.css",
     "src/components.css",
     "src/design-gallery.css",
