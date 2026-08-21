@@ -307,6 +307,9 @@ try {
           if (message.type() === "error") failures.push(`console: ${message.text()}`);
         });
         page.on("pageerror", (error) => failures.push(`page: ${error.message}`));
+        await page.addInitScript(() => {
+          localStorage.removeItem("hraness-design-theme-v1");
+        });
         await page.goto(`http://${server.hostname}:${String(server.port)}/`, {
           waitUntil: "networkidle",
         });
@@ -326,7 +329,10 @@ try {
           state.appearanceNames.join("\0") === "Light\0Dark\0System",
           `${layout.id}: appearance choices are ${JSON.stringify(state.appearanceNames)}`,
         );
-        invariant(state.checkedAppearance.length === 1, `${layout.id}: appearance selection is ambiguous`);
+        invariant(
+          state.checkedAppearance.join("") === "system",
+          `${layout.id}: first-visit appearance is ${JSON.stringify(state.checkedAppearance)}`,
+        );
         invariant(
           layout.id === "compact"
             ? state.railDisplay === "none" && state.mobileTriggerDisplay !== "none"

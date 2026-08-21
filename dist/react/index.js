@@ -1510,6 +1510,7 @@ import {
 } from "react";
 import { jsx as jsx12, jsxs as jsxs10, Fragment as Fragment2 } from "react/jsx-runtime";
 var designThemes = ["light", "dark", "system"];
+var defaultDesignTheme = "system";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
@@ -1518,20 +1519,20 @@ function isDesignTheme(value) {
   return typeof value === "string" && designThemes.some((theme) => theme === value);
 }
 function normalizeDesignTheme(value) {
-  return isDesignTheme(value) ? value : "light";
+  return isDesignTheme(value) ? value : defaultDesignTheme;
 }
 function useHydrated() {
   return useSyncExternalStore(emptySubscribe, () => true, () => false);
 }
 function themeStorageGuardScript(storageKey) {
   const serializedKey = JSON.stringify(storageKey).replaceAll("<", "\\u003c").replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
-  return `(()=>{try{const key=${serializedKey};const value=localStorage.getItem(key);if(value!==null&&value!=="light"&&value!=="dark"&&value!=="system")localStorage.setItem(key,"light")}catch{}})();`;
+  return `(()=>{try{const key=${serializedKey};const value=localStorage.getItem(key);if(value!==null&&value!=="light"&&value!=="dark"&&value!=="system")localStorage.setItem(key,"${defaultDesignTheme}")}catch{}})();`;
 }
 function PersistedThemeNormalizer() {
   const { setTheme, theme } = useTheme();
   useEffect4(() => {
     if (theme !== undefined && !isDesignTheme(theme))
-      setTheme("light");
+      setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
   return null;
 }
@@ -1572,7 +1573,7 @@ function DesignThemeProvider({
       /* @__PURE__ */ jsxs10(NextThemeProvider, {
         ...nonce === undefined ? {} : { nonce },
         attribute: "data-theme",
-        defaultTheme: forcedTheme ?? "light",
+        defaultTheme: forcedTheme ?? defaultDesignTheme,
         disableTransitionOnChange: true,
         enableSystem: forcedTheme === undefined,
         forcedTheme,
@@ -1638,7 +1639,7 @@ function ThemeToggle({
   const { setTheme, theme } = useTheme();
   const controlled = controlledValue !== undefined;
   const ready = controlled || hydrated;
-  const value = controlledValue ?? (hydrated ? normalizeDesignTheme(theme) : "light");
+  const value = controlledValue ?? (hydrated ? normalizeDesignTheme(theme) : defaultDesignTheme);
   const items = display === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
   const changeTheme = (nextTheme) => {
     if (controlled)
@@ -1774,6 +1775,9 @@ function DesignSystemGallery({
           }),
           /* @__PURE__ */ jsx13("p", {
             children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
+          }),
+          /* @__PURE__ */ jsx13("p", {
+            children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
           }),
           /* @__PURE__ */ jsxs11(WrappingRow, {
             children: [
@@ -2345,7 +2349,7 @@ import {
   Spinner as Spinner2
 } from "@hraness/ui";
 import { useEffect as useEffect7, useId as useId2 } from "react";
-import { jsx as jsx14, jsxs as jsxs12 } from "react/jsx-runtime";
+import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
 function RouteActions({ children }) {
   return /* @__PURE__ */ jsx14("div", {
     className: "hraness-design-route-state__actions",
@@ -2475,22 +2479,30 @@ function RouteLoadingPage({
 function GlobalErrorDocument({
   bodyClassName,
   diagnostics,
-  theme = "light",
+  theme = defaultDesignTheme,
   ...props
 }) {
+  const content = /* @__PURE__ */ jsxs12(Fragment3, {
+    children: [
+      diagnostics,
+      /* @__PURE__ */ jsx14(RouteErrorPage, {
+        ...props,
+        showThemeToggle: false
+      })
+    ]
+  });
   return /* @__PURE__ */ jsx14("html", {
-    "data-theme": theme,
+    "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
-    children: /* @__PURE__ */ jsxs12("body", {
+    children: /* @__PURE__ */ jsx14("body", {
       className: bodyClassName,
-      children: [
-        diagnostics,
-        /* @__PURE__ */ jsx14(RouteErrorPage, {
-          ...props,
-          showThemeToggle: false
-        })
-      ]
+      children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
+        children: [
+          /* @__PURE__ */ jsx14(ThemeColorSync, {}),
+          content
+        ]
+      }) : content
     })
   });
 }
@@ -2520,6 +2532,7 @@ export {
   designGalleryTouchKinds,
   designGallerySections,
   designGalleryRecipeCoverage,
+  defaultDesignTheme,
   decideKeyboardShortcut,
   createProceduralBackdropRecipe,
   createParticleHaloRecipe,
