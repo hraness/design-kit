@@ -31,7 +31,8 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("@hraness/design-kit");
   expect(html).toContain("System follows your device on the first visit.");
   expect(html).toContain("or System saves that preference.");
-  expect(html).toContain('data-theme-value="system"');
+  expect(html).toContain('data-design-gallery-nested="false"');
+  expect(html).not.toContain("hraness-design-theme-toggle");
   expect(html).toContain("hraness-design-app-shell");
   expect(html).toContain("hraness-design-bar-list-chart");
   expect(html).toContain("hraness-design-production-data-preview-notice");
@@ -40,6 +41,13 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('class="plain-wordmark"');
   expect(html).toContain("project-name.example");
   expect(html).toContain(">blue links</a> stay quiet until interaction.");
+});
+
+test("a nested gallery identifies itself and defers appearance to the product header", () => {
+  const html = renderToStaticMarkup(<DesignSystemGallery isNestedInMain />);
+
+  expect(html).toContain('data-design-gallery-nested="true"');
+  expect(html).not.toContain("hraness-design-theme-toggle");
 });
 
 test("system appearance resolves from the supplied media preference", () => {

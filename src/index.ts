@@ -1,4 +1,5 @@
 export * from "./syntax-highlighting.js";
+export * from "./appearance.js";
 
 export const colors = {
   light: {

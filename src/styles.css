@@ -5,6 +5,7 @@
 @import "./effects.css";
 @import "@hraness/ui/components.css";
 @import "./components.css";
+@import "./appearance-menu.css";
 @import "./charts.css";
 @import "./jelly.css";
 @import "./plain-site.css";

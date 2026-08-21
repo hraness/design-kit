@@ -232,6 +232,10 @@
   flex: 1 1 auto;
 }
 
+.hraness-design-top-bar__actions {
+  margin-inline-start: auto;
+}
+
 .hraness-design-top-bar__title {
   overflow: hidden;
   font-weight: var(--font-weight-bold);
@@ -454,6 +458,21 @@
 .hraness-design-route-state {
   display: grid;
   min-block-size: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.hraness-design-route-state__header {
+  display: flex;
+  min-inline-size: 0;
+  align-items: center;
+  justify-content: flex-end;
+  padding: var(--layout-chrome-inset);
+}
+
+.hraness-design-route-state__content {
+  display: grid;
+  min-block-size: 0;
+  grid-row: 2;
   place-items: center;
 }
 

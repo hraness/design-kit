@@ -8,10 +8,13 @@ import { colors } from "../src/index.js";
 import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
 
 interface LayoutEvidence {
-  readonly appearanceNames: readonly string[];
+  readonly appearanceInHeader: boolean;
+  readonly appearanceIsFinalAction: boolean;
+  readonly appearancePresentation: string;
+  readonly appearanceRightAligned: boolean;
+  readonly appearanceTriggerLabel: string;
   readonly auroraContained: boolean;
   readonly auroraPosition: string;
-  readonly checkedAppearance: readonly string[];
   readonly clientWidth: number;
   readonly copy: string;
   readonly dotsContained: boolean;
@@ -108,6 +111,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const verticalFaderThumb = verticalFaderTrack?.querySelector(
       ".hraness-design-fader__thumb",
     );
+    const appearance = document.querySelector(".hraness-design-theme-toggle");
+    const appearanceTrigger = appearance?.querySelector("button");
+    const appearanceHeader = appearance?.closest("header");
+    const appearanceActions = appearance?.parentElement;
     if (
       !(gallery instanceof HTMLElement)
       || !(heading instanceof HTMLElement)
@@ -127,6 +134,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(horizontalFaderThumb instanceof HTMLElement)
       || !(verticalFaderTrack instanceof HTMLElement)
       || !(verticalFaderThumb instanceof HTMLElement)
+      || !(appearance instanceof HTMLElement)
+      || !(appearanceTrigger instanceof HTMLButtonElement)
+      || !(appearanceHeader instanceof HTMLElement)
+      || !(appearanceActions instanceof HTMLElement)
     ) {
       throw new Error("The public gallery structure is incomplete.");
     }
@@ -144,9 +155,6 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const horizontalFaderThumbBox = horizontalFaderThumb.getBoundingClientRect();
     const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
     const verticalFaderThumbBox = verticalFaderThumb.getBoundingClientRect();
-    const appearance = [...document.querySelectorAll<HTMLInputElement>(
-      '.hraness-design-theme-toggle input[type="radio"]',
-    )];
     const paletteNames = [
       "--hraness-design-procedural-highlight",
       "--hraness-design-procedural-key",
@@ -157,16 +165,21 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const palette = paletteNames.map((name) => proceduralStyle.getPropertyValue(name).trim());
 
     return {
-      appearanceNames: appearance.map((item) => item.getAttribute("aria-label") ?? ""),
+      appearanceInHeader: appearanceHeader.tagName === "HEADER",
+      appearanceIsFinalAction: appearanceActions.lastElementChild === appearance,
+      appearancePresentation: appearance.dataset.presentation ?? "",
+      appearanceRightAligned:
+        Math.abs(
+          appearance.getBoundingClientRect().right
+          - appearanceActions.getBoundingClientRect().right,
+        ) <= 1,
+      appearanceTriggerLabel: appearanceTrigger.getAttribute("aria-label") ?? "",
       auroraContained:
         Math.abs(auroraBox.left - effectBox.left) <= 1
         && Math.abs(auroraBox.right - effectBox.right) <= 1
         && Math.abs(auroraBox.top - effectBox.top) <= 1
         && Math.abs(auroraBox.bottom - effectBox.bottom) <= 1,
       auroraPosition: getComputedStyle(aurora).position,
-      checkedAppearance: appearance
-        .filter((item) => item.checked)
-        .map((item) => item.value),
       clientWidth: document.documentElement.clientWidth,
       copy: copy.textContent?.replace(/\s+/gu, " ").trim() ?? "",
       dotsContained:
@@ -371,13 +384,22 @@ try {
           && state.galleryPaddingRight + 0.5 >= layout.minimumEdgePadding,
           `${layout.id}: gallery edge padding is below ${String(layout.minimumEdgePadding)}px`,
         );
+        invariant(state.appearanceInHeader, `${layout.id}: appearance trigger is outside the header`);
         invariant(
-          state.appearanceNames.join("\0") === "Light\0Dark\0System",
-          `${layout.id}: appearance choices are ${JSON.stringify(state.appearanceNames)}`,
+          state.appearanceIsFinalAction,
+          `${layout.id}: appearance trigger is not the final header action`,
         );
         invariant(
-          state.checkedAppearance.join("") === "system",
-          `${layout.id}: first-visit appearance is ${JSON.stringify(state.checkedAppearance)}`,
+          state.appearanceRightAligned,
+          `${layout.id}: appearance trigger is not aligned to the header action edge`,
+        );
+        invariant(
+          state.appearancePresentation === "menu",
+          `${layout.id}: appearance presentation is ${JSON.stringify(state.appearancePresentation)}`,
+        );
+        invariant(
+          state.appearanceTriggerLabel === "Appearance: System",
+          `${layout.id}: first-visit appearance is ${JSON.stringify(state.appearanceTriggerLabel)}`,
         );
         invariant(
           layout.id === "compact"
@@ -442,17 +464,54 @@ try {
           `${layout.id}: plain links do not reveal an underline on interaction`,
         );
 
-        const light = page.getByRole("radio", { name: "Light" });
-        await light.focus();
-        await page.keyboard.press("ArrowRight");
+        const appearanceTrigger = page.getByRole("button", { name: "Appearance: System" });
+        await appearanceTrigger.focus();
+        await page.keyboard.press("Enter");
+        const appearanceMenu = page.getByRole("menu", { name: "Appearance" });
+        await appearanceMenu.waitFor();
+        const appearanceChoices = await appearanceMenu
+          .locator('[role="menuitemradio"]')
+          .allTextContents();
+        invariant(
+          appearanceChoices.map((choice) => choice.trim()).join("\0") === "Light\0Dark\0System",
+          `${layout.id}: appearance choices are ${JSON.stringify(appearanceChoices)}`,
+        );
+        await page.keyboard.press("Home");
+        await page.keyboard.press("ArrowDown");
+        await page.keyboard.press("Enter");
         await page.locator('html[data-theme="dark"]').waitFor();
         invariant(
-          await page.getByRole("radio", { checked: true, name: "Dark" }).count() === 1,
+          await page.getByRole("button", { name: "Appearance: Dark" }).count() === 1,
           `${layout.id}: keyboard appearance change did not select Dark`,
         );
         invariant(failures.length === 0, `${layout.id}: ${failures.join("; ")}`);
         await page.close();
       }
+
+      const coarsePage = await browser.newPage({
+        colorScheme: "light",
+        hasTouch: true,
+        viewport: { height: 844, width: 390 },
+      });
+      await coarsePage.addInitScript(() => {
+        localStorage.removeItem("hraness-design-theme-v1");
+      });
+      await coarsePage.goto(`http://${server.hostname}:${String(server.port)}/`, {
+        waitUntil: "networkidle",
+      });
+      await coarsePage.locator('.hraness-design-theme-toggle[data-ready="true"]').waitFor();
+      const coarseTrigger = coarsePage.getByRole("button", { name: "Appearance: System" });
+      const coarseBox = await coarseTrigger.boundingBox();
+      invariant(coarseBox !== null, "coarse pointer: appearance trigger has no layout box");
+      invariant(
+        coarseBox.width >= 48 && coarseBox.height >= 48,
+        `coarse pointer: appearance trigger is ${String(coarseBox.width)}×${String(coarseBox.height)}`,
+      );
+      invariant(
+        await coarsePage.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+        "coarse pointer: appearance header overflows horizontally",
+      );
+      await coarsePage.close();
 
       for (const scenario of [
         {
