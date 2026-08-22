@@ -1,7 +1,9 @@
 import { expect, test } from "bun:test";
+import { parseHTML } from "linkedom";
 import { runInNewContext } from "node:vm";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { colors } from "../index";
 import { AnimatedRailStage, railStageMotion } from "./animated-rail-stage";
 import { useDesignPortalTheme } from "./design-theme-context";
 import { GlobalErrorDocument, RouteErrorPage, RouteNotFoundPage } from "./route-state";
@@ -181,7 +183,7 @@ test("the provider repairs invalid persisted values before next-themes resolves 
   }
 });
 
-test("the global error document follows the stored preference from a safe light baseline", () => {
+test("the global error document is System-first with adaptive static browser metadata", () => {
   const html = renderToStaticMarkup(
     <GlobalErrorDocument
       diagnostics={<span>Diagnostic details</span>}
@@ -189,27 +191,95 @@ test("the global error document follows the stored preference from a safe light 
       reset={() => undefined}
     />,
   );
+  const { document } = parseHTML(`<!doctype html>${html}`);
+  const themeColors = Array.from(
+    document.head.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'),
+  );
 
   expect(html).toContain('<html data-theme="light" lang="en">');
+  expect(document.head.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')?.content)
+    .toBe("light dark");
+  expect(themeColors.map((meta) => ({
+    color: meta.content,
+    media: meta.media,
+  }))).toEqual([
+    { color: colors.light.background, media: "(prefers-color-scheme: light)" },
+    { color: colors.dark.background, media: "(prefers-color-scheme: dark)" },
+  ]);
+  expect(html.indexOf('name="theme-color"')).toBeLessThan(
+    html.indexOf('data-hraness-design-theme-guard=""'),
+  );
   expect(html).toContain('data-hraness-design-theme-guard=""');
   expect(html).toContain("hraness-design-theme-v1");
   expect(html).toContain("Diagnostic details");
+  expect(html).not.toContain("Appearance:");
+  expect(html).not.toContain("data-hraness-appearance-menu");
   expect(html).not.toContain("hraness-design-theme-toggle");
 });
 
-test("the global error document preserves fixed explicit themes", () => {
-  for (const theme of ["light", "dark"] as const) {
+test("the global error document repairs invalid storage and leaves a missing preference to System", () => {
+  const html = renderToStaticMarkup(
+    <GlobalErrorDocument error={new Error("Boom")} reset={() => undefined} />,
+  );
+  const guard = /<script[^>]*data-hraness-design-theme-guard=""[^>]*>([\s\S]*?)<\/script>/u
+    .exec(html)?.[1];
+  expect(guard).toBeDefined();
+
+  for (const initial of [null, "sepia"] as const) {
+    let value: string | null = initial;
+    const localStorage = {
+      getItem: () => value,
+      setItem: (_key: string, next: string) => {
+        value = next;
+      },
+    };
+    runInNewContext(guard ?? "", { localStorage });
+    expect(value).toBe(initial === null ? null : "system");
+  }
+});
+
+test("the global error document uses one fixed matching metadata pair for explicit themes", () => {
+  for (const scenario of [
+    { color: "#f4efe7", theme: "light" },
+    { color: "#101419", theme: "dark" },
+  ] as const) {
     const html = renderToStaticMarkup(
       <GlobalErrorDocument
+        darkColor="#101419"
         error={new Error("Boom")}
+        lightColor="#f4efe7"
         reset={() => undefined}
-        theme={theme}
+        theme={scenario.theme}
       />,
     );
+    const { document } = parseHTML(`<!doctype html>${html}`);
+    const themeColors = Array.from(
+      document.head.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]'),
+    );
 
-    expect(html).toContain(`<html data-theme="${theme}" lang="en">`);
+    expect(html).toContain(`<html data-theme="${scenario.theme}" lang="en">`);
+    expect(document.head.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')?.content)
+      .toBe(scenario.theme);
+    expect(themeColors).toHaveLength(1);
+    expect(themeColors[0]?.content).toBe(scenario.color);
+    expect(themeColors[0]?.hasAttribute("media")).toBe(false);
     expect(html).not.toContain('data-hraness-design-theme-guard=""');
+    expect(html).not.toContain("hraness-design-theme-toggle");
   }
+});
+
+test("the global error document accepts product colors for adaptive head metadata", () => {
+  const html = renderToStaticMarkup(
+    <GlobalErrorDocument
+      darkColor="#101419"
+      error={new Error("Boom")}
+      lightColor="#f4efe7"
+      reset={() => undefined}
+    />,
+  );
+
+  expect(html).toContain('content="#f4efe7" media="(prefers-color-scheme: light)"');
+  expect(html).toContain('content="#101419" media="(prefers-color-scheme: dark)"');
 });
 
 test("theme color synchronization waits for a concrete resolved appearance", async () => {

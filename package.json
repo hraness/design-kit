@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -132,7 +132,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test ./src",
-    "test:browser": "bun run ./scripts/gallery-browser.ts",
+    "test:browser": "bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
     "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
     "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",

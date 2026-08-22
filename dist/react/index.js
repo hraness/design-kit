@@ -2672,7 +2672,9 @@ function RouteLoadingPage({
 }
 function GlobalErrorDocument({
   bodyClassName,
+  darkColor = colors.dark.background,
   diagnostics,
+  lightColor = colors.light.background,
   theme = defaultDesignTheme,
   ...props
 }) {
@@ -2685,19 +2687,49 @@ function GlobalErrorDocument({
       })
     ]
   });
-  return /* @__PURE__ */ jsx14("html", {
+  return /* @__PURE__ */ jsxs12("html", {
     "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
-    children: /* @__PURE__ */ jsx14("body", {
-      className: bodyClassName,
-      children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
+    children: [
+      /* @__PURE__ */ jsxs12("head", {
         children: [
-          /* @__PURE__ */ jsx14(ThemeColorSync, {}),
-          content
+          /* @__PURE__ */ jsx14("meta", {
+            content: theme === "system" ? "light dark" : theme,
+            name: "color-scheme"
+          }),
+          theme === "system" ? /* @__PURE__ */ jsxs12(Fragment3, {
+            children: [
+              /* @__PURE__ */ jsx14("meta", {
+                content: lightColor,
+                media: "(prefers-color-scheme: light)",
+                name: "theme-color"
+              }),
+              /* @__PURE__ */ jsx14("meta", {
+                content: darkColor,
+                media: "(prefers-color-scheme: dark)",
+                name: "theme-color"
+              })
+            ]
+          }) : /* @__PURE__ */ jsx14("meta", {
+            content: theme === "dark" ? darkColor : lightColor,
+            name: "theme-color"
+          })
         ]
-      }) : content
-    })
+      }),
+      /* @__PURE__ */ jsx14("body", {
+        className: bodyClassName,
+        children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
+          children: [
+            /* @__PURE__ */ jsx14(ThemeColorSync, {
+              darkColor,
+              lightColor
+            }),
+            content
+          ]
+        }) : content
+      })
+    ]
   });
 }
 export {
