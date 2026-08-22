@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.1.7",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.1.9",
     "@hraness/ui": "github:hraness/ui#v0.4.1"
   }
 }
@@ -128,6 +128,26 @@ concrete Light or Dark preference resolves. It then owns one active browser
 chrome color, temporarily neutralizes competing same-name tags, and restores
 their exact media conditions after the final synchronized owner unmounts.
 
+Use `GlobalErrorDocument` for a Next root `global-error` boundary. It remains
+control-free because the normal product header is unavailable. Its System
+default emits adaptive Light and Dark `theme-color` metadata plus a
+`light dark` `color-scheme` before hydration, then follows the same stored
+preference as the application. Products with their own canvas colors pass the
+same palette once:
+
+```tsx
+<GlobalErrorDocument
+  darkColor="#101419"
+  error={error}
+  lightColor="#f4efe7"
+  reset={reset}
+/>
+```
+
+An explicitly fixed `theme="light"` or `theme="dark"` emits one matching,
+unqualified `theme-color` and a fixed `color-scheme` without mounting the
+preference provider.
+
 Static HTML products use the same composition without a client framework:
 
 ```ts
@@ -178,7 +198,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and a headless Chromium gallery regression at 390×844 and 1280×720. The browser gate verifies responsive shell ownership, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
+The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
 Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request. Report suspected vulnerabilities as described in [SECURITY.md](./SECURITY.md).
 

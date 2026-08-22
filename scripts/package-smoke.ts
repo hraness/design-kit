@@ -213,6 +213,26 @@ try {
     "-e",
     "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')])",
   ], consumer);
+  await writeFile(
+    join(consumer, "global-error.mjs"),
+    [
+      'import { GlobalErrorDocument } from "@hraness/design-kit/react";',
+      'import { createElement } from "react";',
+      'import { renderToStaticMarkup } from "react-dom/server";',
+      'const props = { darkColor: "#101419", error: new Error("Smoke"), lightColor: "#f4efe7", reset() {} };',
+      "const system = renderToStaticMarkup(createElement(GlobalErrorDocument, props));",
+      'if (!system.includes(\'content="light dark" name="color-scheme"\')) throw new Error("Packed global-error is not System-first.");',
+      'if (!system.includes(\'content="#f4efe7" media="(prefers-color-scheme: light)" name="theme-color"\')) throw new Error("Packed global-error is missing custom Light metadata.");',
+      'if (!system.includes(\'content="#101419" media="(prefers-color-scheme: dark)" name="theme-color"\')) throw new Error("Packed global-error is missing custom Dark metadata.");',
+      'if ((system.match(/name="theme-color"/gu) ?? []).length !== 2) throw new Error("Packed System global-error does not expose two adaptive theme colors.");',
+      'if (system.includes("hraness-design-theme-toggle") || system.includes("data-hraness-appearance-menu")) throw new Error("Packed global-error exposes an appearance selector.");',
+      'const fixed = renderToStaticMarkup(createElement(GlobalErrorDocument, { ...props, theme: "dark" }));',
+      'if (!fixed.includes(\'content="dark" name="color-scheme"\')) throw new Error("Packed fixed global-error has the wrong color scheme.");',
+      'if (!fixed.includes(\'content="#101419" name="theme-color"\') || fixed.includes("prefers-color-scheme")) throw new Error("Packed fixed global-error metadata is not exact.");',
+      "",
+    ].join("\n"),
+  );
+  await run(["node", "./global-error.mjs"], consumer);
 
   const installed = join(consumer, "node_modules/@hraness/design-kit");
   for (const path of [
