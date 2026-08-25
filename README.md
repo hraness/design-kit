@@ -12,14 +12,14 @@ Pin the immutable GitHub release:
 {
   "dependencies": {
     "@hraness/design-kit": "github:hraness/design-kit#v0.1.9",
-    "@hraness/ui": "github:hraness/ui#v0.4.1"
+    "@hraness/ui": "github:hraness/ui#v0.4.6"
   }
 }
 ```
 
 `@hraness/ui` is an explicit peer dependency with the supported range
-`>=0.4.0 <0.5.0`; consumers should pin at least its immutable `v0.4.1` release as
-shown above when using the stylesheet or React entries. The peer is optional at
+`>=0.4.0 <0.5.0`; consumers should pin an immutable compatible release such as
+`v0.4.6` when using the stylesheet or React entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
