@@ -7,7 +7,7 @@ import {
   ThemeMenuButton,
   ThemeColorSync,
   TopBar,
-} from "../src/react";
+} from "@hraness/design-kit/react";
 
 const root = document.querySelector("#root");
 if (!(root instanceof HTMLElement)) {

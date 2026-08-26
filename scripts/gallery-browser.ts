@@ -321,6 +321,22 @@ try {
   const stylesheet = files.find((file) => file.endsWith(".css"));
   invariant(script !== undefined, "Gallery build did not emit JavaScript.");
   invariant(stylesheet !== undefined, "Gallery build did not emit CSS.");
+  const [builtCss, stylexCss] = await Promise.all([
+    Bun.file(join(work, stylesheet)).text(),
+    Bun.file(join(repository, "dist/stylex.css")).text(),
+  ]);
+  const stylexClasses = [...stylexCss.matchAll(/^\s*\.([\w-]+)\s*\{/gmu)]
+    .map((match) => match[1])
+    .filter((className): className is string => className !== undefined);
+  invariant(stylexClasses.length > 0, "Gallery build has no package StyleX selectors to verify.");
+  for (const className of new Set(stylexClasses)) {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const matches = builtCss.match(new RegExp(`\\.${escaped}(?=[\\s,{:])`, "gu")) ?? [];
+    invariant(
+      matches.length === 1,
+      `Gallery CSS contains the generated .${className} selector ${String(matches.length)} times.`,
+    );
+  }
   await writeFile(
     join(work, "index.html"),
     [

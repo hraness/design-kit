@@ -1,7 +1,7 @@
 <!-- kb:context scopes/repository--cdb4ee2aea69 -->
 # Contents
 
-- `src/index.ts` and `src/*.css` define framework-neutral tokens, system-font defaults, syntax highlighting, charts, effects, site grammar, and the ordered presentation stylesheet.
+- `src/index.ts`, `src/*.css`, and component-local `*.stylex.ts` files define framework-neutral tokens, system-font defaults, compiled atomic component presentation, syntax highlighting, charts, effects, site grammar, and the ordered presentation stylesheet.
 - `src/react/` contains application compositions, appearance persistence, charts, haptics, instruments, decorative effects, optional Jelly paint, and the executable public gallery.
 - `src/fonts/geist-mono/` contains the optional Geist Mono webfont, SIL Open Font License, and provenance.
 - `vendor/jelly-ui/` contains pinned Jelly runtime artifacts and MIT provenance. `vendor/evilcharts/` retains the chart adaptation's MIT provenance.
@@ -21,6 +21,9 @@
 - Keep this package an opinionated presentation and composition layer. Do not add a second primitive barrel or copy public core styles.
 - Keep the design seam directional: `@hraness/ui` owns portable accessible primitives and tokens, this optional package owns stable presentation compositions, and each product owns layout, content, state, and its local visual contract. Never import product code here.
 - Keep root exports framework-neutral. React runtime belongs behind `@hraness/design-kit/react`; standards-only DOM and browser runtime code belongs behind `@hraness/design-kit/browser`. Do not register custom elements or mutate browser globals on module import.
+- Author package-owned atomic component presentation in colocated `*.stylex.ts` files. Compile with the pinned StyleX 0.19.0 and unplugin 2.3.11 family, CommonJS module roots, property specificity, and `runtimeInjection: false`; keep `dist/stylex.css` deterministic and nonempty.
+- Keep complete and narrow component delivery aligned: `components.css` imports `dist/stylex.css` exactly once, while `styles.css` reaches it only through `components.css`. Generated atomic class names are implementation details, never public API or literal test expectations.
+- Keep tokens, resets, document grammar, cross-component layout, forced-color/media contracts, and audited vendor fallbacks in the existing global CSS boundary. Before another package adds an overlapping compiled style family, add a cross-package layer-order gate against its released artifact.
 - Keep persistent appearance selection to one icon-menu control at the final/rightmost product-header action. Do not place appearance controls in footers, navigation lists, route-state action rows, or nested gallery content. Fixed-theme, authentication-only, global-error, and non-HTML surfaces may omit the control.
 - Keep default typography on system stacks. Optional open fonts require their exact license, provenance, and integrity evidence.
 - Preserve native or React Aria semantics as the interactive layer. Jelly may paint a host but never replace the semantic descendant.

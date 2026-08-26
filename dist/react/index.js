@@ -1126,15 +1126,47 @@ function createRetryableJellyRuntimeLoader(loader) {
 }
 var loadBrowserJellyRuntime = createRetryableJellyRuntimeLoader(() => import("../chunk-v6dxv8rs.js"));
 var themeRequest = 0;
-function loadJellyRuntime() {
-  if (typeof window === "undefined")
-    return null;
-  return loadBrowserJellyRuntime();
+function shouldLoadJellyRuntime(documentRoot) {
+  return documentRoot.querySelector(".hraness-design-jelly-surface") !== null;
+}
+function applyJellyRootMode(root, mode) {
+  if (mode === "auto")
+    root.removeAttribute("data-jelly-mode");
+  else
+    root.setAttribute("data-jelly-mode", mode);
+}
+function readJellyRootMode(root) {
+  const mode = root.getAttribute("data-jelly-mode");
+  return mode === "light" || mode === "dark" ? mode : "auto";
+}
+async function loadJellyRuntimeForRoot(loader, root) {
+  try {
+    const runtime = await loader();
+    applyJellyThemeMode(runtime, readJellyRootMode(root));
+    return true;
+  } catch {
+    return false;
+  }
+}
+async function synchronizeJellyThemeMode(documentRoot, mode, loader, isCurrent = () => true) {
+  applyJellyRootMode(documentRoot.documentElement, mode);
+  if (!shouldLoadJellyRuntime(documentRoot))
+    return true;
+  let runtime;
+  try {
+    runtime = await loader();
+  } catch {
+    return false;
+  }
+  if (!isCurrent())
+    return false;
+  applyJellyThemeMode(runtime, mode);
+  return true;
 }
 async function ensureJellyRuntime() {
-  try {
-    await loadJellyRuntime();
-  } catch {}
+  if (typeof window === "undefined" || typeof document === "undefined")
+    return;
+  await loadJellyRuntimeForRoot(loadBrowserJellyRuntime, document.documentElement);
 }
 function applyJellyThemeMode(runtime, mode) {
   runtime.setThemeMode(mode);
@@ -1143,20 +1175,7 @@ async function setJellyThemeMode(mode) {
   if (typeof window === "undefined" || typeof document === "undefined")
     return false;
   const request = ++themeRequest;
-  if (mode === "auto")
-    document.documentElement.removeAttribute("data-jelly-mode");
-  else
-    document.documentElement.setAttribute("data-jelly-mode", mode);
-  let runtime;
-  try {
-    runtime = await loadJellyRuntime();
-  } catch {
-    return false;
-  }
-  if (runtime === null || request !== themeRequest)
-    return false;
-  applyJellyThemeMode(runtime, mode);
-  return true;
+  return synchronizeJellyThemeMode(document, mode, loadBrowserJellyRuntime, () => request === themeRequest);
 }
 
 // src/react/jelly-surface.tsx
@@ -1478,18 +1497,60 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
+import * as stylex from "@stylexjs/stylex";
+
+// src/react/production-data-preview-notice.stylex.ts
+var productionDataPreviewNoticeStyles = {
+  emphasis: {
+    k63SB2: "x1yotnlr",
+    kb6lSQ: "x1vyo3qp",
+    kP9fke: "xtvhhri",
+    $$css: true
+  },
+  root: {
+    kGNEyG: "x6s0dn4",
+    kWkggS: "x1gq7pca",
+    kL6WhQ: "x9ap2lz",
+    kfdmCh: "x1q0q8m5",
+    kt9PQ7: "xlxy82",
+    kGVxlE: "xlmpfgd",
+    kMwMTN: "xam1lc8",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kMv6JI: "xumcc2o",
+    kGuDYH: "xj8twjj",
+    kOIVth: "x5kxhqv",
+    k87sOh: "x13vifvy",
+    kjj79g: "xl56j7k",
+    kLWn49: "x1xfvgam",
+    kAzted: "xe8gcm",
+    k8WAf4: "x2d8rr9",
+    kg3NbH: "x1yt8f57",
+    kVAEAm: "x7wzq59",
+    k9WMMc: "x2b8uid",
+    kzqmXN: "xh8yej3",
+    kY2c9j: "x1qhe1ue",
+    $$css: true
+  }
+};
+
+// src/react/production-data-preview-notice.tsx
 import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 function ProductionDataPreviewNotice({
   surfaceOrigin
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
+  const noticePresentation = stylex.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs9("aside", {
+    ...noticePresentation,
     "aria-label": "Production data preview warning",
-    className: "hraness-design-production-data-preview-notice",
+    className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
     role: "alert",
     children: [
       /* @__PURE__ */ jsx11("strong", {
+        ...emphasisPresentation,
         children: "Production data preview"
       }),
       /* @__PURE__ */ jsx11("span", {
@@ -2491,9 +2552,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props) {
+function ThemeMenuButton(props2) {
   return /* @__PURE__ */ jsx13(ThemeToggle, {
-    ...props,
+    ...props2,
     presentation: "menu"
   });
 }
@@ -2676,13 +2737,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props
+  ...props2
 }) {
   const content = /* @__PURE__ */ jsxs12(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx14(RouteErrorPage, {
-        ...props,
+        ...props2,
         showThemeToggle: false
       })
     ]
