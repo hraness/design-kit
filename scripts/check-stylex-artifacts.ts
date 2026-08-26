@@ -221,6 +221,7 @@ function requireMutationRejected(description: string, validate: () => void): voi
 
 function requireMutationNegativeContracts(
   designCompiledCss: string,
+  designCompiledJavaScript: string,
   uiCompiledCss: string,
   localComponents: string,
   aggregateStylesheet: string,
@@ -403,6 +404,130 @@ function requireMutationNegativeContracts(
         "mutated @hraness/ui stylex.css",
       ),
     ],
+    [
+      "physical min-width layout substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "min-inline-size: 0;",
+          "min-width: 0;",
+          "physical min-width layout substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical BottomBar min-height substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "min-block-size: var(--bottom-bar-height);",
+          "min-height: var(--bottom-bar-height);",
+          "physical BottomBar min-height substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical TopBar min-height substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "min-block-size: var(--top-bar-height);",
+          "min-height: var(--top-bar-height);",
+          "physical TopBar min-height substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical width layout substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "inline-size: min(100%,var(--page-canvas-width));",
+          "width: min(100%,var(--page-canvas-width));",
+          "physical width layout substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical full-size max-width substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "max-inline-size: none;",
+          "max-width: none;",
+          "physical full-size max-width substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical wide-size max-width substitution",
+      () => requireLayoutSurfaceDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "max-inline-size: var(--page-canvas-wide);",
+          "max-width: var(--page-canvas-wide);",
+          "physical wide-size max-width substitution",
+        ),
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical top layout substitution",
+      () => requireLayoutSurfaceLogicalAtomicContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "inset-block-start: 0;",
+          "top: 0;",
+          "physical top layout substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical right layout substitution",
+      () => requireLayoutSurfaceLogicalAtomicContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "border-inline-end-color: var(--line);",
+          "border-right-color: var(--line);",
+          "physical right layout substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical bottom layout substitution",
+      () => requireLayoutSurfaceLogicalAtomicContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "inset-block-end: 0;",
+          "bottom: 0;",
+          "physical bottom layout substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical left layout substitution",
+      () => requireLayoutSurfaceLogicalAtomicContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "margin-inline-start: auto;",
+          "margin-left: auto;",
+          "physical left layout substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
   ] as const;
 
   for (const [description, mutation] of localMutations) {
@@ -500,6 +625,123 @@ const ditherDeclarations: readonly (readonly [RegExp, string])[] = [
 for (const [pattern, description] of ditherDeclarations) {
   requireMatch(compiledCss, pattern, `the DitherSurface ${description} declaration`);
 }
+const layoutSurfaceDeclarations: readonly (readonly [RegExp, string])[] = [
+  [/background-attachment:\s*scroll;/u, "surface background attachment reset"],
+  [/background-clip:\s*border-box;/u, "surface background clip reset"],
+  [/background-color:\s*var\(--background\);/u, "solid surface background"],
+  [
+    /background-color:\s*color-mix\(in oklch,\s*var\(--background\) 90%,\s*transparent\);/u,
+    "glass TopBar background",
+  ],
+  [/background-image:\s*none;/u, "surface background image reset"],
+  [/background-origin:\s*padding-box;/u, "surface background origin reset"],
+  [/background-repeat:\s*repeat;/u, "surface background repeat reset"],
+  [/background-size:\s*auto;/u, "surface background size reset"],
+  [/backdrop-filter:\s*blur\(18px\)\s+saturate\(1\.08\);/u, "glass TopBar filter"],
+  [/border-block-end-color:\s*var\(--line\);/u, "TopBar logical block-end border color"],
+  [/border-block-end-style:\s*solid;/u, "TopBar logical block-end border style"],
+  [/border-block-end-width:\s*1px;/u, "TopBar logical block-end border width"],
+  [/border-block-start-color:\s*var\(--line\);/u, "BottomBar and DockedFooter logical block-start border color"],
+  [/border-block-start-style:\s*solid;/u, "BottomBar and DockedFooter logical block-start border style"],
+  [/border-block-start-width:\s*1px;/u, "BottomBar and DockedFooter logical block-start border width"],
+  [/border-inline-end-color:\s*var\(--line\);/u, "surface inline-end border color"],
+  [/border-inline-start-color:\s*var\(--line\);/u, "surface inline-start border color"],
+  [/flex:\s*auto;/u, "bar content growth"],
+  [/gap:\s*var\(--space-2\);/u, "bar slot gap"],
+  [/gap:\s*var\(--space-3\);/u, "bar root gap"],
+  [/inset-block-end:\s*0;/u, "DockedFooter logical block-end inset"],
+  [/inset-block-start:\s*0;/u, "sticky TopBar logical block-start inset"],
+  [/inset-inline:\s*0;/u, "DockedFooter logical inline insets"],
+  [/margin-inline:\s*auto;/u, "PageCanvas and DockedFooter content logical inline margins"],
+  [/margin-inline-start:\s*auto;/u, "TopBar action alignment"],
+  [/min-inline-size:\s*0;/u, "bar and PageCanvas logical inline minimum"],
+  [/min-block-size:\s*var\(--bottom-bar-height\);/u, "BottomBar logical block minimum"],
+  [/min-block-size:\s*var\(--top-bar-height\);/u, "TopBar logical block minimum"],
+  [/inline-size:\s*min\(100%,\s*var\(--page-canvas-width\)\);/u, "PageCanvas and DockedFooter content logical inline size"],
+  [/max-inline-size:\s*none;/u, "full PageCanvas and DockedFooter content logical inline cap"],
+  [/max-inline-size:\s*var\(--page-canvas-wide\);/u, "wide PageCanvas and DockedFooter content logical inline cap"],
+  [/padding-block:\s*var\(--layout-edge-inset\);/u, "PageCanvas content inset"],
+  [
+    /padding-block:\s*max\(var\(--layout-chrome-inset\),\s*env\(safe-area-inset-top\)\)\s+var\(--layout-chrome-inset\);/u,
+    "sticky TopBar safe-area inset",
+  ],
+  [
+    /padding-block:\s*var\(--space-1\)\s+max\(var\(--space-1\),\s*env\(safe-area-inset-bottom\)\);/u,
+    "compact DockedFooter safe-area inset",
+  ],
+  [/position:\s*absolute;/u, "absolute DockedFooter position"],
+  [/position:\s*fixed;/u, "fixed DockedFooter position"],
+  [
+    /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?backdrop-filter:\s*none;[\s\S]*?background-color:\s*canvas;/u,
+    "forced-colors glass and surface reset",
+  ],
+  [
+    /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?border-block-end-color:\s*canvastext;[\s\S]*?border-block-start-color:\s*canvastext;/u,
+    "forced-colors bar edge borders",
+  ],
+  [/border-inline-end-color:\s*canvastext;/u, "forced-colors inline-end border"],
+  [/border-inline-start-color:\s*canvastext;/u, "forced-colors inline-start border"],
+];
+
+const layoutSurfacePhysicalSubstitutions: readonly (readonly [RegExp, string])[] = [
+  [/border-bottom-color:\s*var\(--line\);/u, "physical block-end border color substitution"],
+  [/border-bottom-width:\s*1px;/u, "physical block-end border width substitution"],
+  [/border-top-color:\s*var\(--line\);/u, "physical block-start border color substitution"],
+  [/border-top-width:\s*1px;/u, "physical block-start border width substitution"],
+  [/min-width:\s*0;/u, "physical min-width substitution"],
+  [/min-height:\s*var\(--bottom-bar-height\);/u, "physical BottomBar min-height substitution"],
+  [/min-height:\s*var\(--top-bar-height\);/u, "physical TopBar min-height substitution"],
+  [/width:\s*min\(100%,\s*var\(--page-canvas-width\)\);/u, "physical width substitution"],
+  [/max-width:\s*none;/u, "physical full-size max-width substitution"],
+  [/max-width:\s*var\(--page-canvas-wide\);/u, "physical wide-size max-width substitution"],
+];
+
+function requireLayoutSurfaceDeclarationContract(source: string, label: string): void {
+  for (const [pattern, description] of layoutSurfaceDeclarations) {
+    requireMatch(source, pattern, `${label} layout-surface ${description} declaration`);
+  }
+  for (const [pattern, description] of layoutSurfacePhysicalSubstitutions) {
+    forbid(source, pattern, `${label} layout-surface ${description}`);
+  }
+}
+
+function requireLayoutSurfaceLogicalAtomicContract(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const layoutStyleMap = javaScript.match(
+    /var layoutSurfaceStyles = \{([\s\S]*?)\n\};/u,
+  )?.[1];
+  if (layoutStyleMap === undefined) {
+    throw new Error(`${label} is missing the compiled layoutSurfaceStyles map`);
+  }
+  const classNames = [...new Set(layoutStyleMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+  if (classNames.length < 20) {
+    throw new Error(`${label} exposes too few compiled layout-surface atomic classes`);
+  }
+  const physicalLogicalSubstitution = /(?:^|\s)(?:top|right|bottom|left|min-width|min-height|width|max-width|border-(?:top|right|bottom|left)(?:-(?:color|style|width))?|margin-(?:left|right)|padding-(?:top|right|bottom|left))\s*:/u;
+  for (const className of classNames) {
+    const escapedClassName = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const ruleBodies = [...css.matchAll(
+      new RegExp(`\\.${escapedClassName}\\s*\\{([^}]*)\\}`, "gu"),
+    )].map((match) => match[1] ?? "");
+    if (ruleBodies.length === 0) {
+      throw new Error(`${label} is missing the ${className} layout-surface atomic rule`);
+    }
+    if (ruleBodies.some((body) => physicalLogicalSubstitution.test(body))) {
+      throw new Error(
+        `${label} maps layout-surface class ${className} to a physical directional substitution`,
+      );
+    }
+  }
+}
+requireLayoutSurfaceDeclarationContract(compiledCss, "the compiled");
+requireLayoutSurfaceLogicalAtomicContract(
+  compiledCss,
+  compiledJavaScript,
+  "the compiled artifact",
+);
 const noticeDeclarations: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center;/u, "root align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3);/u, "root background-color"],
@@ -598,6 +840,21 @@ forbid(
   /\.hraness-design-dither-surface(?:\s|\{|\[|:)/u,
   "the migrated DitherSurface legacy selector",
 );
+for (const stableClass of [
+  "top-bar",
+  "bottom-bar",
+  "page-canvas",
+  "docked-footer",
+] as const) {
+  forbid(
+    legacyComponents,
+    new RegExp(
+      `\\.hraness-design-${stableClass}(?:__[\\w-]+)?(?:\\s|\\{|\\[|,|:)`,
+      "u",
+    ),
+    `the migrated ${stableClass} legacy selector`,
+  );
+}
 requireGeneratedLayerContract(
   compiledCss,
   DESIGN_STYLEX_LAYERS,
@@ -622,6 +879,7 @@ requireLocalComponentsContract(legacyComponents);
 requireAggregateContract(orderedStylesheet);
 const rejectedMutationCount = requireMutationNegativeContracts(
   compiledCss,
+  compiledJavaScript,
   uiCompiledCss,
   legacyComponents,
   orderedStylesheet,

@@ -1,0 +1,46 @@
+@import "../dist/stylex.css";
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+}
+
+:root {
+  --background: #fbf6f2;
+  --font-weight-bold: 700;
+  --foreground: #201b19;
+  --line: #bbaaa2;
+  --space-2: 8px;
+  --space-3: 12px;
+  --z-chrome: 50;
+}
+
+[data-security-vertical-layout-matrix] {
+  display: grid;
+  gap: 16px;
+}
+
+.security-vertical-layout-specimen {
+  --bottom-bar-height: 29px;
+  --layout-chrome-inset: 7px;
+  --layout-edge-inset: 13px;
+  --page-canvas-wide: 144px;
+  --page-canvas-width: 192px;
+  --top-bar-height: 31px;
+
+  block-size: 320px;
+  inline-size: 320px;
+  overflow: clip;
+  writing-mode: vertical-rl;
+}
+
+.security-vertical-dock-frame {
+  position: relative;
+}

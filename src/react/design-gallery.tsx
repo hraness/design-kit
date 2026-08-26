@@ -30,7 +30,13 @@ import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
-import { DitherSurface, PageCanvas, TopBar } from "./surfaces.js";
+import {
+  BottomBar,
+  DitherSurface,
+  DockedFooter,
+  PageCanvas,
+  TopBar,
+} from "./surfaces.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
@@ -56,6 +62,7 @@ export const designGalleryRecipeCoverage = [
   "charts",
   "dither surface",
   "foil card surface",
+  "layout surfaces",
   "Jelly presentation",
   "plain site and publication grammar",
   "procedural effects",
@@ -168,6 +175,15 @@ export function DesignSystemGallery({
         <h2>Application shells</h2>
         <ViewportFrame className="design-gallery__shell-preview">
           <AppShell
+            bottomBar={(
+              <BottomBar
+                actions={<span>Synced</span>}
+                data-gallery-layout-bottom-bar=""
+                leading={<span>Ready</span>}
+              >
+                Reference footer
+              </BottomBar>
+            )}
             navigationKey="gallery"
             rail={(
               <NavigationRail>
@@ -178,9 +194,14 @@ export function DesignSystemGallery({
                 </RailSection>
               </NavigationRail>
             )}
-            topBar={<TopBar title="Reference workspace" />}
+            topBar={(
+              <TopBar
+                data-gallery-layout-top-bar=""
+                title="Reference workspace"
+              />
+            )}
           >
-            <PageCanvas as="div">
+            <PageCanvas as="div" data-gallery-layout-page-canvas="">
               <AnimatedRailStage stageKey={density}>
                 <DitherSurface
                   as="section"
@@ -195,6 +216,19 @@ export function DesignSystemGallery({
             </PageCanvas>
           </AppShell>
         </ViewportFrame>
+        <div
+          className="design-gallery__docked-footer-preview"
+          data-gallery-layout-docked-frame=""
+        >
+          <p>Docked commands remain inside their positioning owner.</p>
+          <DockedFooter
+            data-gallery-layout-docked-footer=""
+            density="compact"
+            position="absolute"
+          >
+            Reference commands
+          </DockedFooter>
+        </div>
       </section>
 
       <section className="design-gallery__section" id="data">

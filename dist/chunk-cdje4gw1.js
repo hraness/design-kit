@@ -286,6 +286,7 @@ function ProceduralBackdrop({
 
 // src/react/surfaces.tsx
 import { forwardRef } from "react";
+import * as stylex from "@stylexjs/stylex";
 import { ThemedSurface, cn as cn2 } from "@hraness/ui";
 
 // src/react/surfaces.stylex.ts
@@ -304,6 +305,153 @@ var ditherSurfaceStyles = {
     $$css: true
   }
 };
+var layoutSurfaceStyles = {
+  bar: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kOIVth: "x96y02u",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  barContent: {
+    kUk6DE: "x12lumcd",
+    $$css: true
+  },
+  barPart: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kOIVth: "xmgkybt",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  bottomBar: {
+    kmc9e2: "x3so8kt",
+    kT8eP4: "x1b1eqt9",
+    kVQ08L: "x1b207tk",
+    kF3gjK: "x1dtp59r",
+    kJVvJu: "xfmotut",
+    $$css: true
+  },
+  dockedAbsolute: {
+    kVAEAm: "x10l6tqk",
+    $$css: true
+  },
+  dockedContent: {
+    kULEZF: "xvaqoh0",
+    kYk0Dm: "xvueqy4",
+    $$css: true
+  },
+  dockedContentCompactInset: {
+    kF3gjK: "x19cf7fd",
+    kJVvJu: "x2qnaq3",
+    $$css: true
+  },
+  dockedContentCompactNoInset: {
+    kF3gjK: "x19cf7fd",
+    kJVvJu: "x10wq4n4",
+    $$css: true
+  },
+  dockedContentDefaultInset: {
+    kF3gjK: "x1noa3k7",
+    kJVvJu: "x2qnaq3",
+    $$css: true
+  },
+  dockedContentDefaultNoInset: {
+    kF3gjK: "x1noa3k7",
+    kJVvJu: "x10wq4n4",
+    $$css: true
+  },
+  dockedFixed: {
+    kVAEAm: "xixxii4",
+    $$css: true
+  },
+  dockedFooter: {
+    kmc9e2: "x3so8kt",
+    kT8eP4: "x1b1eqt9",
+    kctUWg: "xuufnwz",
+    khdm6U: "x17y0mx6",
+    kY2c9j: "x1nmkd3v",
+    $$css: true
+  },
+  dockedSticky: {
+    kVAEAm: "x7wzq59",
+    $$css: true
+  },
+  fullSize: {
+    k2kXS: "x1tec7hu",
+    $$css: true
+  },
+  pageCanvas: {
+    kULEZF: "xvaqoh0",
+    kYk0Dm: "xvueqy4",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  pageContentInset: {
+    kF3gjK: "xkdeioa",
+    kJVvJu: "x1w88gy1",
+    $$css: true
+  },
+  pageNoInset: {
+    kF3gjK: "xt970qd",
+    kJVvJu: "xnjsko4",
+    $$css: true
+  },
+  surface: {
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kWkggS: "x11gw9ax x9yvj25",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x1cwfr1t",
+    k4V0xq: "xtsjrx0 x14bdpvh",
+    kpvK8V: "xjttvrd x108usdd",
+    kffDkL: "x1j8yxcv x1x0u81l",
+    kEreRy: "xmmcp6y xjslfuv",
+    $$css: true
+  },
+  topBar: {
+    krFJ6x: "xn5uptl",
+    kP1A0P: "x1ae7zus",
+    kVQ08L: "x8k30ic",
+    $$css: true
+  },
+  topBarActions: {
+    kImiAN: "xvc5jky",
+    $$css: true
+  },
+  topBarGlass: {
+    k6WDB: "xz687w2 x14hm74v",
+    kWkggS: "x1g71ool x9yvj25",
+    $$css: true
+  },
+  topBarSticky: {
+    kUvb1J: "xlb5a52",
+    kF3gjK: "xh0s0sg",
+    kJVvJu: "x10wq4n4",
+    kVAEAm: "x7wzq59",
+    kY2c9j: "x1nmkd3v",
+    $$css: true
+  },
+  topBarStatic: {
+    kF3gjK: "x1dtp59r",
+    kJVvJu: "xfmotut",
+    $$css: true
+  },
+  topBarTitle: {
+    k63SB2: "x1lvx875",
+    kVQacm: "xb3r6kr",
+    kg5iWk: "xlyipyv",
+    khDVqt: "xuxw1ft",
+    $$css: true
+  },
+  wideSize: {
+    k2kXS: "x1bdwxy3",
+    $$css: true
+  }
+};
 
 // src/react/surfaces.tsx
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
@@ -316,10 +464,10 @@ function DitherSurface({
   className,
   density = "medium",
   xstyle,
-  ...props
+  ...props2
 }) {
   return /* @__PURE__ */ jsx2(ThemedSurface, {
-    ...props,
+    ...props2,
     className: cn2("hraness-design-dither-surface", className),
     "data-density": density,
     xstyle: [
@@ -337,50 +485,74 @@ function TopBar({
   position = "static",
   surface = "solid",
   title,
-  ...props
+  ...props2
 }) {
+  const rootPresentation = stylex.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.topBar, position === "sticky" ? layoutSurfaceStyles.topBarSticky : layoutSurfaceStyles.topBarStatic, surface === "glass" && layoutSurfaceStyles.topBarGlass);
+  const leadingPresentation = stylex.props(layoutSurfaceStyles.barPart);
+  const titlePresentation = stylex.props(layoutSurfaceStyles.topBarTitle);
+  const contentPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
+  const actionsPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.topBarActions);
   return /* @__PURE__ */ jsxs2("header", {
-    ...props,
-    className: cn2("hraness-design-top-bar", className),
+    ...rootPresentation,
+    ...props2,
+    className: cn2("hraness-design-top-bar", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     children: [
       /* @__PURE__ */ jsxs2("div", {
-        className: "hraness-design-top-bar__leading",
+        ...leadingPresentation,
+        className: cn2("hraness-design-top-bar__leading", leadingPresentation.className),
         children: [
           leading,
           title === undefined ? null : /* @__PURE__ */ jsx2("div", {
-            className: "hraness-design-top-bar__title",
+            ...titlePresentation,
+            className: cn2("hraness-design-top-bar__title", titlePresentation.className),
             children: title
           })
         ]
       }),
       children === undefined ? null : /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-top-bar__content",
+        ...contentPresentation,
+        className: cn2("hraness-design-top-bar__content", contentPresentation.className),
         children
       }),
       actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-top-bar__actions",
+        ...actionsPresentation,
+        className: cn2("hraness-design-top-bar__actions", actionsPresentation.className),
         children: actions
       })
     ]
   });
 }
-function BottomBar({ actions, children, className, leading, ...props }) {
+function BottomBar({
+  actions,
+  children,
+  className,
+  leading,
+  ...props2
+}) {
+  const rootPresentation = stylex.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.bottomBar);
+  const leadingPresentation = stylex.props(layoutSurfaceStyles.barPart);
+  const contentPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
+  const actionsPresentation = stylex.props(layoutSurfaceStyles.barPart);
   return /* @__PURE__ */ jsxs2("footer", {
-    ...props,
-    className: cn2("hraness-design-bottom-bar", className),
+    ...rootPresentation,
+    ...props2,
+    className: cn2("hraness-design-bottom-bar", rootPresentation.className, className),
     children: [
       leading === undefined ? null : /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-bottom-bar__leading",
+        ...leadingPresentation,
+        className: cn2("hraness-design-bottom-bar__leading", leadingPresentation.className),
         children: leading
       }),
       /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-bottom-bar__content",
+        ...contentPresentation,
+        className: cn2("hraness-design-bottom-bar__content", contentPresentation.className),
         children
       }),
       actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-bottom-bar__actions",
+        ...actionsPresentation,
+        className: cn2("hraness-design-bottom-bar__actions", actionsPresentation.className),
         children: actions
       })
     ]
@@ -391,12 +563,14 @@ function PageCanvas({
   className,
   inset = "content",
   size = "default",
-  ...props
+  ...props2
 }) {
   const Element = as;
+  const presentation = stylex.props(layoutSurfaceStyles.pageCanvas, inset === "content" ? layoutSurfaceStyles.pageContentInset : layoutSurfaceStyles.pageNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
   return /* @__PURE__ */ jsx2(Element, {
-    ...props,
-    className: cn2("hraness-design-page-canvas", className),
+    ...presentation,
+    ...props2,
+    className: cn2("hraness-design-page-canvas", presentation.className, className),
     "data-inset": inset,
     "data-size": size
   });
@@ -410,16 +584,20 @@ var DockedFooter = forwardRef(function DockedFooter2({
   position = "fixed",
   size = "default",
   surface = "solid",
-  ...props
+  ...props2
 }, ref) {
+  const rootPresentation = stylex.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.dockedFooter, position === "absolute" ? layoutSurfaceStyles.dockedAbsolute : position === "sticky" ? layoutSurfaceStyles.dockedSticky : layoutSurfaceStyles.dockedFixed);
+  const contentPresentation = stylex.props(layoutSurfaceStyles.dockedContent, density === "compact" ? inset === "content" ? layoutSurfaceStyles.dockedContentCompactInset : layoutSurfaceStyles.dockedContentCompactNoInset : inset === "content" ? layoutSurfaceStyles.dockedContentDefaultInset : layoutSurfaceStyles.dockedContentDefaultNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
   return /* @__PURE__ */ jsx2("footer", {
-    ...props,
-    className: cn2("hraness-design-docked-footer", className),
+    ...rootPresentation,
+    ...props2,
+    className: cn2("hraness-design-docked-footer", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     ref,
     children: /* @__PURE__ */ jsx2("div", {
-      className: cn2("hraness-design-docked-footer__content", contentClassName),
+      ...contentPresentation,
+      className: cn2("hraness-design-docked-footer__content", contentPresentation.className, contentClassName),
       "data-density": density,
       "data-inset": inset,
       "data-size": size,
@@ -460,7 +638,7 @@ function ParticleHalo({
   seed,
   style,
   variation,
-  ...props
+  ...props2
 }) {
   const recipe = createParticleHaloRecipe({
     seed,
@@ -475,7 +653,7 @@ function ParticleHalo({
     "--hraness-design-procedural-support": recipe.palette.support
   };
   return /* @__PURE__ */ jsxs3("div", {
-    ...props,
+    ...props2,
     className: cn3("hraness-design-particle-halo", className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,

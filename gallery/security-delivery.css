@@ -25,6 +25,11 @@
     --design-kit-stylex-dither-conflict: design-kit-priority2;
     background-size: 99px 99px;
   }
+
+  html body [data-design-kit-stylex-layout-conflict="true"].hraness-design-top-bar {
+    --design-kit-stylex-layout-conflict: design-kit-priority2;
+    top: 99px;
+  }
 }
 
 @layer components {
@@ -35,6 +40,16 @@
   html body [data-design-kit-stylex-dither-old-parent="true"].hraness-design-dither-surface {
     background-size: 88px 88px;
   }
+
+  html body [data-design-kit-stylex-layout-old-parent="true"].hraness-design-top-bar {
+    top: 88px;
+  }
+}
+
+.security-layout-dock-frame {
+  position: relative;
+  min-height: 8rem;
+  overflow: clip;
 }
 
 .security-canary-palette.security-canary-theme-light {
