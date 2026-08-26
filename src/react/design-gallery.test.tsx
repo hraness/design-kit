@@ -21,6 +21,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("foil card surface");
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
+  expect(designGalleryRecipeCoverage).toContain("layout surfaces");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
@@ -36,6 +37,16 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-design-gallery-nested="false"');
   expect(html).not.toContain("hraness-design-theme-toggle");
   expect(html).toContain("hraness-design-app-shell");
+  expect(html).toContain("hraness-design-top-bar");
+  expect(html).toContain('data-position="static"');
+  expect(html).toContain('data-surface="solid"');
+  expect(html).toContain("hraness-design-bottom-bar");
+  expect(html).toContain("hraness-design-page-canvas");
+  expect(html).toContain('data-inset="content"');
+  expect(html).toContain('data-size="default"');
+  expect(html).toContain("hraness-design-docked-footer");
+  expect(html).toContain('data-position="absolute"');
+  expect(html).toContain('data-density="compact"');
   expect(html).toContain("hraness-design-bar-list-chart");
   expect(html).toContain("hraness-design-production-data-preview-notice");
   expect(html).toContain("hraness-design-dither-surface");

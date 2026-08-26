@@ -10,15 +10,20 @@ import {
   type CSSProperties,
   Suspense,
   useEffect,
+  useRef,
 } from "react";
 
 import { builtDesignKitReact } from "./built-react.js";
 
 const {
+  BottomBar,
   DesignPortalThemeProvider,
   DesignThemeProvider,
   DitherSurface,
+  DockedFooter,
+  PageCanvas,
   ProductionDataPreviewNotice,
+  TopBar,
   useDesignPortalClassName,
   useDesignPortalTheme,
 } = builtDesignKitReact;
@@ -112,6 +117,109 @@ function PortalledDialog() {
   );
 }
 
+export function VerticalWritingLayoutSurfaceMatrix() {
+  return (
+    <section
+      aria-label="Vertical writing layout surface matrix"
+      data-security-vertical-layout-matrix=""
+    >
+      <div className="security-vertical-layout-specimen">
+        <TopBar data-security-vertical-layout="top">
+          Vertical top bar
+        </TopBar>
+        <BottomBar data-security-vertical-layout="bottom">
+          Vertical bottom bar
+        </BottomBar>
+      </div>
+      <div className="security-vertical-layout-specimen">
+        <PageCanvas
+          as="div"
+          data-security-vertical-layout="page-wide"
+          inset="content"
+          size="wide"
+        >
+          Vertical wide page
+        </PageCanvas>
+        <PageCanvas
+          as="div"
+          data-security-vertical-layout="page-full"
+          inset="none"
+          size="full"
+        >
+          Vertical full page
+        </PageCanvas>
+      </div>
+      <div className="security-vertical-layout-specimen security-vertical-dock-frame">
+        <DockedFooter
+          data-security-vertical-layout="docked"
+          position="absolute"
+          size="wide"
+        >
+          Vertical docked footer
+        </DockedFooter>
+      </div>
+    </section>
+  );
+}
+
+function LayoutSurfaceDeliveryMatrix() {
+  const dockedFooterRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    dockedFooterRef.current?.setAttribute("data-security-docked-ref", "ready");
+  }, []);
+
+  return (
+    <section aria-label="Layout surface delivery matrix" data-security-layout-matrix="">
+      <TopBar
+        actions={<span>Actions</span>}
+        className="security-caller-top-bar"
+        data-design-kit-stylex-layout-conflict="true"
+        data-security-layout="top"
+        leading={<span>Leading</span>}
+        position="sticky"
+        style={{ zIndex: 321 }}
+        surface="glass"
+        title="Security top bar"
+      >
+        Context
+      </TopBar>
+      <BottomBar
+        actions={<span>Actions</span>}
+        className="security-caller-bottom-bar"
+        data-security-layout="bottom"
+        leading={<span>Leading</span>}
+      >
+        Security bottom bar
+      </BottomBar>
+      <PageCanvas
+        as="div"
+        className="security-caller-page-canvas"
+        data-security-layout="page"
+        inset="none"
+        size="wide"
+      >
+        Security page canvas
+      </PageCanvas>
+      <div className="security-layout-dock-frame">
+        <DockedFooter
+          className="security-caller-docked-footer"
+          contentClassName="security-caller-docked-content"
+          data-security-layout="docked"
+          density="compact"
+          inset="none"
+          position="absolute"
+          ref={dockedFooterRef}
+          size="wide"
+          surface="glass"
+        >
+          Security docked footer
+        </DockedFooter>
+      </div>
+    </section>
+  );
+}
+
 function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryResource }>) {
   resource.read();
   return (
@@ -147,6 +255,7 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
             Caller dither
           </DitherSurface>
         </div>
+        <LayoutSurfaceDeliveryMatrix />
       </DesignPortalThemeProvider>
     </section>
   );

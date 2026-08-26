@@ -76,6 +76,60 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
 ];
 
+const layoutSurfaceDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/background-color:\s*var\(--background\)/u, "solid surface background"],
+  [
+    /background-color:\s*color-mix\(in oklch,\s*var\(--background\)\s*90%,\s*transparent\)/u,
+    "glass TopBar background",
+  ],
+  [/backdrop-filter:\s*blur\(18px\)\s*saturate\(1\.08\)/u, "glass TopBar filter"],
+  [/border-block-end-color:\s*var\(--line\)/u, "TopBar logical block-end border"],
+  [/border-block-start-color:\s*var\(--line\)/u, "footer logical block-start border"],
+  [/min-inline-size:\s*0/u, "logical inline minimum"],
+  [/min-block-size:\s*var\(--top-bar-height\)/u, "TopBar logical block minimum"],
+  [/min-block-size:\s*var\(--bottom-bar-height\)/u, "BottomBar logical block minimum"],
+  [/inline-size:\s*min\(100%,\s*var\(--page-canvas-width\)\)/u, "PageCanvas logical inline size"],
+  [/max-inline-size:\s*none/u, "full logical inline cap"],
+  [/max-inline-size:\s*var\(--page-canvas-wide\)/u, "wide logical inline cap"],
+  [
+    /padding-block:\s*var\(--space-1\)\s*max\(var\(--space-1\),\s*env\(safe-area-inset-bottom\)\)/u,
+    "compact DockedFooter safe-area inset",
+  ],
+  [/position:\s*absolute/u, "absolute DockedFooter position"],
+  [/position:\s*fixed/u, "fixed DockedFooter position"],
+  [/background-color:\s*canvas/u, "forced-colors surface background"],
+  [/border-block-end-color:\s*canvastext/u, "forced-colors TopBar logical border"],
+  [/border-block-start-color:\s*canvastext/u, "forced-colors footer logical borders"],
+  [/border-inline-end-color:\s*canvastext/u, "forced-colors inline-end borders"],
+  [/border-inline-start-color:\s*canvastext/u, "forced-colors inline-start borders"],
+];
+
+const layoutSurfaceIsolatedDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/inset-block-end:\s*0/u, "DockedFooter logical block-end inset"],
+  [/inset-block-start:\s*0/u, "sticky TopBar logical block-start inset"],
+  [/inset-inline:\s*0/u, "DockedFooter logical inline insets"],
+];
+
+const layoutSurfaceTokenPhysicalSubstitutions: readonly (readonly [RegExp, string])[] = [
+  [/border-bottom-color:\s*var\(--line\)/u, "physical block-end border color substitution"],
+  [/border-top-color:\s*var\(--line\)/u, "physical block-start border color substitution"],
+  [/min-height:\s*var\(--top-bar-height\)/u, "physical TopBar min-height substitution"],
+  [/min-height:\s*var\(--bottom-bar-height\)/u, "physical BottomBar min-height substitution"],
+  [/width:\s*min\(100%,\s*var\(--page-canvas-width\)\)/u, "physical width substitution"],
+  [/max-width:\s*var\(--page-canvas-wide\)/u, "physical wide max-width substitution"],
+];
+
+const layoutSurfaceIsolatedPhysicalSubstitutions: readonly (readonly [RegExp, string])[] = [
+  [/border-bottom-width:\s*1px/u, "physical block-end border width substitution"],
+  [/border-top-width:\s*1px/u, "physical block-start border width substitution"],
+  [/(?:^|\s)bottom:\s*0/u, "physical bottom inset substitution"],
+  [/min-width:\s*0/u, "physical min-width substitution"],
+  [/max-width:\s*none/u, "physical full-size max-width substitution"],
+];
+
+const migratedLayoutLegacySelector =
+  /\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u;
+
 function requireNoticePresentation(css: string, label: string): void {
   if (!css.includes("@layer components.hraness-design-kit.priority")) {
     throw new Error(`${label} lost the package-owned StyleX layer.`);
@@ -96,6 +150,35 @@ function requireDitherPresentation(css: string, label: string): void {
   for (const [pattern, declaration] of ditherDeclarationPatterns) {
     if (!pattern.test(css)) {
       throw new Error(`${label} lost the migrated DitherSurface ${declaration} declaration.`);
+    }
+  }
+}
+
+function requireLayoutSurfacePresentation(
+  css: string,
+  label: string,
+  isolated = false,
+): void {
+  for (const [pattern, declaration] of layoutSurfaceDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated layout-surface ${declaration} declaration.`);
+    }
+  }
+  if (isolated) {
+    for (const [pattern, declaration] of layoutSurfaceIsolatedDeclarationPatterns) {
+      if (!pattern.test(css)) {
+        throw new Error(
+          `${label} lost the migrated layout-surface ${declaration} declaration.`,
+        );
+      }
+    }
+  }
+  const forbidden = isolated
+    ? [...layoutSurfaceTokenPhysicalSubstitutions, ...layoutSurfaceIsolatedPhysicalSubstitutions]
+    : layoutSurfaceTokenPhysicalSubstitutions;
+  for (const [pattern, substitution] of forbidden) {
+    if (pattern.test(css)) {
+      throw new Error(`${label} contains a migrated layout-surface ${substitution}.`);
     }
   }
 }
@@ -247,8 +330,12 @@ try {
   }
   requireNoticePresentation(packedStylexCss, "Packed stylex.css");
   requireDitherPresentation(packedStylexCss, "Packed stylex.css");
+  requireLayoutSurfacePresentation(packedStylexCss, "Packed stylex.css", true);
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained the migrated legacy DitherSurface recipe.");
+  }
+  if (migratedLayoutLegacySelector.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained a migrated legacy layout-surface recipe.");
   }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
@@ -414,7 +501,7 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
@@ -456,7 +543,16 @@ try {
       'for (const className of new Set(dither)) { const count = stylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed design-kit stylex.css contains ${String(count)} selectors for rendered DitherSurface class ${className}.`); }',
       'const callerMarkup = renderToStaticMarkup(createElement(DitherSurface, { density: "fine", style: { "--hraness-design-dither-size": "11px", backgroundImage: "none", backgroundSize: "11px 11px" } }));',
       'if (!callerMarkup.includes("--hraness-design-dither-size:11px") || !callerMarkup.includes("background-image:none") || !callerMarkup.includes("background-size:11px 11px")) throw new Error("Packed DitherSurface lost caller-last native presentation.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, strong, uiPriority3 }));',
+      'const layoutMarkup = { bottom: renderToStaticMarkup(createElement(BottomBar, { actions: "Actions", className: "consumer-bottom", leading: "Leading", style: { color: "blue" }, title: "Native title" }, "Content")), docked: renderToStaticMarkup(createElement(DockedFooter, { className: "consumer-docked", contentClassName: "consumer-docked-content", density: "compact", inset: "none", position: "absolute", size: "wide", style: { color: "purple" }, surface: "glass" }, "Docked")), page: renderToStaticMarkup(createElement(PageCanvas, { as: "div", className: "consumer-page", inset: "none", size: "wide", style: { color: "green" } }, "Page")), top: renderToStaticMarkup(createElement(TopBar, { actions: "Actions", className: "consumer-top", leading: "Leading", position: "sticky", style: { zIndex: 123 }, surface: "glass", title: "Title" }, "Content")) };',
+      'const layoutContracts = { bottom: ["footer", "hraness-design-bottom-bar", "consumer-bottom"], docked: ["footer", "hraness-design-docked-footer", "consumer-docked"], page: ["div", "hraness-design-page-canvas", "consumer-page"], top: ["header", "hraness-design-top-bar", "consumer-top"] };',
+      'const layout = [];',
+      'for (const [name, markup] of Object.entries(layoutMarkup)) { const [tagName, stableClass, callerClass] = layoutContracts[name]; const tag = new RegExp(`<${tagName}[^>]*class="([^"]+)"`, "u").exec(markup); const classes = tag?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass || classes.at(-1) !== callerClass || classes.filter((className) => stylexCss.includes(`.${className} {`)).length === 0) throw new Error(`Packed ${name} layout surface lost stable, atomic, or caller-last classes.`); layout.push(...classes.filter((className) => className !== stableClass && className !== callerClass && stylexCss.includes(`.${className} {`))); }',
+      'if (!layoutMarkup.top.includes(`data-position="sticky"`) || !layoutMarkup.top.includes(`data-surface="glass"`) || !layoutMarkup.top.includes(`style="z-index:123"`) || !layoutMarkup.top.includes("hraness-design-top-bar__actions")) throw new Error("Packed TopBar lost its position, surface, native style, or slot contract.");',
+      'if (!layoutMarkup.bottom.includes(`title="Native title"`) || !layoutMarkup.bottom.includes("hraness-design-bottom-bar__content")) throw new Error("Packed BottomBar lost native or slot semantics.");',
+      'if (!layoutMarkup.page.includes(`data-inset="none"`) || !layoutMarkup.page.includes(`data-size="wide"`)) throw new Error("Packed PageCanvas lost its native element or variants.");',
+      'if (!layoutMarkup.docked.includes(`data-position="absolute"`) || !layoutMarkup.docked.includes(`data-surface="glass"`) || !layoutMarkup.docked.includes(`data-density="compact"`) || !layoutMarkup.docked.includes(`data-inset="none"`) || !layoutMarkup.docked.includes(`data-size="wide"`) || !layoutMarkup.docked.includes("consumer-docked-content")) throw new Error("Packed DockedFooter lost its root or content contract.");',
+      'if (new Set(layout).size < 12) throw new Error("Packed layout surfaces expose too few distinct atomic classes.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, layout: [...new Set(layout)], strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -582,10 +678,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { DitherSurface, JellySurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, JellySurface, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -606,6 +702,7 @@ try {
     readonly aside: readonly string[];
     readonly dither: readonly string[];
     readonly icon: readonly string[];
+    readonly layout: readonly string[];
     readonly strong: readonly string[];
     readonly uiPriority3: readonly string[];
   };
@@ -617,6 +714,7 @@ try {
   requireAtomicSelectorsPresent(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.dither, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.layout, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority3, "Packed aggregate Vite CSS");
   for (const layerName of [
     "components.hraness-ui.priority1",
@@ -631,11 +729,15 @@ try {
   }
   requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
   requireDitherPresentation(builtCss, "Packed aggregate Vite CSS");
+  requireLayoutSurfacePresentation(builtCss, "Packed aggregate Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");
   }
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy DitherSurface recipe.");
+  }
+  if (migratedLayoutLegacySelector.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained a migrated legacy layout-surface recipe.");
   }
 
   await writeFile(
@@ -644,10 +746,10 @@ try {
       'import { createElement } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/components.css";',
-      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither")));',
+      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked")));',
       "",
     ].join("\n"),
   );
@@ -679,13 +781,22 @@ try {
     noticeClasses.dither,
     "Packed narrow components.css Vite CSS",
   );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    noticeClasses.layout,
+    "Packed narrow components.css Vite CSS",
+  );
   requireNoticePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireDitherPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requireLayoutSurfacePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy notice recipe.");
   }
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy DitherSurface recipe.");
+  }
+  if (migratedLayoutLegacySelector.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy layout-surface recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -720,7 +831,7 @@ try {
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
     [
-      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
@@ -733,6 +844,12 @@ try {
       'for (const density of ["coarse", "fine", "medium"]) { const dither = renderToStaticMarkup(createElement(DitherSurface, { as: "article", density, tone: "secondary" }, density)); if (!dither.includes(`data-density="${density}"`) || !dither.includes("hraness-themed-surface") || !dither.includes("hraness-design-dither-surface") || !dither.includes(`data-slot="themed-surface"`) || dither.includes("style=")) throw new Error(`React 18 packed DitherSurface lost its ${density} semantic or extracted presentation contract.`); }',
       'const callerDither = renderToStaticMarkup(createElement(DitherSurface, { density: "fine", style: { "--hraness-design-dither-size": "11px", backgroundImage: "none", backgroundSize: "11px 11px" } }));',
       'if (!callerDither.includes("--hraness-design-dither-size:11px") || !callerDither.includes("background-image:none") || !callerDither.includes("background-size:11px 11px")) throw new Error("React 18 packed DitherSurface lost caller-last native presentation.");',
+      'const layout = [renderToStaticMarkup(createElement(TopBar, { className: "consumer-top", position: "sticky", style: { zIndex: 123 }, surface: "glass", title: "Top" }, "Content")), renderToStaticMarkup(createElement(BottomBar, { className: "consumer-bottom", title: "Native title" }, "Bottom")), renderToStaticMarkup(createElement(PageCanvas, { as: "div", className: "consumer-page", inset: "none", size: "wide" }, "Page")), renderToStaticMarkup(createElement(DockedFooter, { className: "consumer-docked", contentClassName: "consumer-docked-content", density: "compact", inset: "none", position: "absolute", size: "wide", surface: "glass" }, "Docked"))];',
+      'for (const [index, stableClass] of ["hraness-design-top-bar", "hraness-design-bottom-bar", "hraness-design-page-canvas", "hraness-design-docked-footer"].entries()) { const markup = layout[index]; const classes = new RegExp(`class="([^"]*${stableClass}[^"]*)"`, "u").exec(markup)?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass || classes.length < 3) throw new Error(`React 18 packed ${stableClass} lost stable or atomic presentation.`); }',
+      'if (!layout[0].includes(`data-position="sticky"`) || !layout[0].includes(`data-surface="glass"`) || !layout[0].includes(`style="z-index:123"`)) throw new Error("React 18 packed TopBar lost variants or native style.");',
+      'if (!layout[1].startsWith(`<footer`) || !layout[1].includes(`title="Native title"`)) throw new Error("React 18 packed BottomBar lost native semantics.");',
+      'if (!layout[2].startsWith(`<div`) || !layout[2].includes(`data-inset="none"`) || !layout[2].includes(`data-size="wide"`)) throw new Error("React 18 packed PageCanvas lost native semantics or variants.");',
+      'if (!layout[3].includes(`data-position="absolute"`) || !layout[3].includes(`data-surface="glass"`) || !layout[3].includes(`data-density="compact"`) || !layout[3].includes("consumer-docked-content")) throw new Error("React 18 packed DockedFooter lost root or content behavior.");',
       "",
     ].join("\n"),
   );

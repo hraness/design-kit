@@ -5,7 +5,7 @@ import { basename, join } from "node:path";
 
 import { chromium, type Browser, type Page } from "playwright-core";
 import { createElement } from "react";
-import { renderToReadableStream } from "react-dom/server";
+import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
 
 import {
   createHeldSecurityDeliveryResource,
@@ -13,6 +13,7 @@ import {
   securityDeliveryFallback,
   securityDeliveryStorageKey,
   securityDeliveryTerminal,
+  VerticalWritingLayoutSurfaceMatrix,
 } from "../gallery/security-delivery-fixture.js";
 
 const repository = process.cwd();
@@ -121,6 +122,57 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
 ];
 
+const layoutSurfaceDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/background-color:\s*var\(--background\)/u, "solid surface background"],
+  [
+    /background-color:\s*color-mix\(in oklch,\s*var\(--background\)\s*90%,\s*transparent\)/u,
+    "glass TopBar background",
+  ],
+  [/backdrop-filter:\s*blur\(18px\)\s*saturate\(1\.08\)/u, "glass TopBar filter"],
+  [/border-block-end-color:\s*var\(--line\)/u, "TopBar logical block-end border"],
+  [/border-block-start-color:\s*var\(--line\)/u, "footer logical block-start border"],
+  [/min-inline-size:\s*0/u, "logical inline minimum"],
+  [/min-block-size:\s*var\(--top-bar-height\)/u, "TopBar logical block minimum"],
+  [/min-block-size:\s*var\(--bottom-bar-height\)/u, "BottomBar logical block minimum"],
+  [/inline-size:\s*min\(100%,\s*var\(--page-canvas-width\)\)/u, "PageCanvas logical inline size"],
+  [/max-inline-size:\s*none/u, "full logical inline cap"],
+  [/max-inline-size:\s*var\(--page-canvas-wide\)/u, "wide logical inline cap"],
+  [
+    /padding-block:\s*var\(--space-1\)\s*max\(var\(--space-1\),\s*env\(safe-area-inset-bottom\)\)/u,
+    "compact DockedFooter safe-area inset",
+  ],
+  [/position:\s*absolute/u, "absolute DockedFooter position"],
+  [/position:\s*fixed/u, "fixed DockedFooter position"],
+  [/background-color:\s*canvas/u, "forced-colors surface background"],
+  [/border-block-end-color:\s*canvastext/u, "forced-colors TopBar logical border"],
+  [/border-block-start-color:\s*canvastext/u, "forced-colors footer logical borders"],
+  [/border-inline-end-color:\s*canvastext/u, "forced-colors inline-end borders"],
+  [/border-inline-start-color:\s*canvastext/u, "forced-colors inline-start borders"],
+];
+
+const layoutSurfaceIsolatedDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/inset-block-end:\s*0/u, "DockedFooter logical block-end inset"],
+  [/inset-block-start:\s*0/u, "sticky TopBar logical block-start inset"],
+  [/inset-inline:\s*0/u, "DockedFooter logical inline insets"],
+];
+
+const layoutSurfaceTokenPhysicalSubstitutions: readonly (readonly [RegExp, string])[] = [
+  [/border-bottom-color:\s*var\(--line\)/u, "physical block-end border color substitution"],
+  [/border-top-color:\s*var\(--line\)/u, "physical block-start border color substitution"],
+  [/min-height:\s*var\(--top-bar-height\)/u, "physical TopBar min-height substitution"],
+  [/min-height:\s*var\(--bottom-bar-height\)/u, "physical BottomBar min-height substitution"],
+  [/width:\s*min\(100%,\s*var\(--page-canvas-width\)\)/u, "physical width substitution"],
+  [/max-width:\s*var\(--page-canvas-wide\)/u, "physical wide max-width substitution"],
+];
+
+const layoutSurfaceIsolatedPhysicalSubstitutions: readonly (readonly [RegExp, string])[] = [
+  [/border-bottom-width:\s*1px/u, "physical block-end border width substitution"],
+  [/border-top-width:\s*1px/u, "physical block-start border width substitution"],
+  [/(?:^|\s)bottom:\s*0/u, "physical bottom inset substitution"],
+  [/min-width:\s*0/u, "physical min-width substitution"],
+  [/max-width:\s*none/u, "physical full-size max-width substitution"],
+];
+
 async function firstExecutable(paths: readonly string[]): Promise<string> {
   for (const path of paths) {
     try {
@@ -212,6 +264,24 @@ function streamedDocument(
       controller.close();
     },
   });
+}
+
+function verticalWritingDocument(): string {
+  const markup = renderToStaticMarkup(
+    createElement(VerticalWritingLayoutSurfaceMatrix),
+  );
+  return [
+    "<!doctype html>",
+    '<html lang="en">',
+    "<head>",
+    '<meta charset="utf-8">',
+    '<meta content="width=device-width,initial-scale=1" name="viewport">',
+    "<title>Vertical writing layout oracle</title>",
+    `<link href="/security-delivery-vertical.css" nonce="${nonce}" rel="stylesheet">`,
+    "</head>",
+    `<body>${markup}</body>`,
+    "</html>",
+  ].join("");
 }
 
 async function openBrowser(executablePath: string): Promise<Browser> {
@@ -367,12 +437,20 @@ try {
     "The combined CSS artifact lost the gallery-only design-kit priority2 DitherSurface conflict.",
   );
   invariant(
+    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[\s\S]*?\[data-design-kit-stylex-layout-conflict=(?:"true"|true)\]\.hraness-design-top-bar\s*\{(?=[^}]*--design-kit-stylex-layout-conflict:\s*design-kit-priority2)(?=[^}]*top:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only design-kit priority2 TopBar conflict.",
+  );
+  invariant(
     /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
   invariant(
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-dither-old-parent=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{[^}]*background-size:\s*88px\s+88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only DitherSurface old direct-parent negative control.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-layout-old-parent=(?:"true"|true)\]\.hraness-design-top-bar\s*\{[^}]*top:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only TopBar old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
@@ -393,6 +471,34 @@ try {
   invariant(
     !/\.hraness-design-dither-surface\s*(?:\{|\[|:)/u.test(designLegacyCss),
     "Legacy design-kit CSS can still satisfy the migrated DitherSurface selector.",
+  );
+  for (const [pattern, declaration] of layoutSurfaceDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss) && pattern.test(combinedCss),
+      `The packed or combined CSS artifact lost the migrated layout-surface ${declaration} declaration.`,
+    );
+  }
+  for (const [pattern, declaration] of layoutSurfaceIsolatedDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss),
+      `The packed StyleX artifact lost the migrated layout-surface ${declaration} declaration.`,
+    );
+  }
+  for (const [pattern, substitution] of layoutSurfaceTokenPhysicalSubstitutions) {
+    invariant(
+      !pattern.test(designStylexCss) && !pattern.test(combinedCss),
+      `The packed or combined CSS artifact contains a migrated layout-surface ${substitution}.`,
+    );
+  }
+  for (const [pattern, substitution] of layoutSurfaceIsolatedPhysicalSubstitutions) {
+    invariant(
+      !pattern.test(designStylexCss),
+      `The packed design-kit StyleX artifact contains a migrated layout-surface ${substitution}.`,
+    );
+  }
+  invariant(
+    !/\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u.test(designLegacyCss),
+    "Legacy design-kit CSS can still satisfy a migrated layout-surface selector.",
   );
   const reactAriaPressableRules = combinedCss.match(
     /\[data-react-aria-pressable\]\s*\{\s*touch-action:\s*pan-x pan-y pinch-zoom;?\s*\}/gu,
@@ -442,6 +548,7 @@ try {
     },
   );
   const documentStream = streamedDocument(applicationStream, hydrationFileName);
+  const verticalDocument = verticalWritingDocument();
   const requestPaths: string[] = [];
   const clientJavaScriptRequests: string[] = [];
   const clientJavaScriptRequestCount = (): number => clientJavaScriptRequests.length;
@@ -466,6 +573,17 @@ try {
           headers: { "content-type": "text/css" },
         });
       }
+      if (pathname === "/security-delivery-vertical.css") {
+        return new Response(
+          Bun.file(join(repository, "gallery/security-delivery-vertical.css")),
+          { headers: { "content-type": "text/css" } },
+        );
+      }
+      if (pathname === "/dist/stylex.css") {
+        return new Response(Bun.file(join(repository, "dist/stylex.css")), {
+          headers: { "content-type": "text/css" },
+        });
+      }
       if (pathname.endsWith(".js")) {
         clientJavaScriptRequests.push(pathname);
         const candidate = join(clientDirectory, basename(pathname));
@@ -480,6 +598,16 @@ try {
         if (rootServed) return new Response("Fixture already consumed", { status: 409 });
         rootServed = true;
         return new Response(documentStream, {
+          headers: {
+            "cache-control": "no-store",
+            "content-security-policy": contentSecurityPolicy,
+            "content-type": "text/html; charset=utf-8",
+            "x-content-type-options": "nosniff",
+          },
+        });
+      }
+      if (pathname === "/vertical-writing") {
+        return new Response(verticalDocument, {
           headers: {
             "cache-control": "no-store",
             "content-security-policy": contentSecurityPolicy,
@@ -995,6 +1123,325 @@ try {
       `The served aggregate CSS does not contain rendered DitherSurface class ${className}.`,
     );
   }
+  const layoutSurfaceEvidence = await page.evaluate(() => {
+    const top = document.querySelector('[data-security-layout="top"]');
+    const bottom = document.querySelector('[data-security-layout="bottom"]');
+    const pageCanvas = document.querySelector('[data-security-layout="page"]');
+    const docked = document.querySelector('[data-security-layout="docked"]');
+    const dockedContent = docked?.querySelector(
+      ".hraness-design-docked-footer__content",
+    );
+    const dockFrame = docked?.parentElement;
+    if (!(top instanceof HTMLElement)
+      || !(bottom instanceof HTMLElement)
+      || !(pageCanvas instanceof HTMLElement)
+      || !(docked instanceof HTMLElement)
+      || !(dockedContent instanceof HTMLElement)
+      || !(dockFrame instanceof HTMLElement)) {
+      throw new Error("The layout-surface delivery matrix is incomplete.");
+    }
+
+    const atomicClasses = (element: HTMLElement, excluded: readonly string[]) =>
+      [...element.classList].filter((className) => !excluded.includes(className));
+    const normalizedTop = getComputedStyle(top).top;
+    top.setAttribute("data-design-kit-stylex-layout-old-parent", "true");
+    const oldDirectParentTop = getComputedStyle(top).top;
+    top.removeAttribute("data-design-kit-stylex-layout-old-parent");
+    const restoredTopStyle = getComputedStyle(top);
+    const bottomStyle = getComputedStyle(bottom);
+    const pageStyle = getComputedStyle(pageCanvas);
+    const dockedStyle = getComputedStyle(docked);
+    const dockedContentStyle = getComputedStyle(dockedContent);
+    const dockedBox = docked.getBoundingClientRect();
+    const dockFrameBox = dockFrame.getBoundingClientRect();
+
+    return {
+      bottomBackground: bottomStyle.backgroundColor,
+      bottomBorderTopWidth: bottomStyle.borderTopWidth,
+      bottomClasses: atomicClasses(bottom, [
+        "hraness-design-bottom-bar",
+        "security-caller-bottom-bar",
+      ]),
+      bottomDisplay: bottomStyle.display,
+      bottomTag: bottom.tagName,
+      dockedBackground: dockedStyle.backgroundColor,
+      dockedBottom: dockedStyle.bottom,
+      dockedClasses: atomicClasses(docked, [
+        "hraness-design-docked-footer",
+        "security-caller-docked-footer",
+      ]),
+      dockedContained:
+        dockedBox.left >= dockFrameBox.left - 1
+        && dockedBox.right <= dockFrameBox.right + 1
+        && dockedBox.top >= dockFrameBox.top - 1
+        && dockedBox.bottom <= dockFrameBox.bottom + 1,
+      dockedContentClasses: atomicClasses(dockedContent, [
+        "hraness-design-docked-footer__content",
+        "security-caller-docked-content",
+      ]),
+      dockedContentLastClass: dockedContent.classList.item(
+        dockedContent.classList.length - 1,
+      ),
+      dockedContentPaddingTop: dockedContentStyle.paddingTop,
+      dockedDensity: dockedContent.dataset.density,
+      dockedInset: dockedContent.dataset.inset,
+      dockedLastClass: docked.classList.item(docked.classList.length - 1),
+      dockedPosition: dockedStyle.position,
+      dockedRef: docked.dataset.securityDockedRef,
+      dockedSize: dockedContent.dataset.size,
+      dockedSurface: docked.dataset.surface,
+      dockedTag: docked.tagName,
+      normalizedTop,
+      oldDirectParentTop,
+      pageClasses: atomicClasses(pageCanvas, [
+        "hraness-design-page-canvas",
+        "security-caller-page-canvas",
+      ]),
+      pageInset: pageCanvas.dataset.inset,
+      pageLastClass: pageCanvas.classList.item(pageCanvas.classList.length - 1),
+      pagePaddingLeft: pageStyle.paddingLeft,
+      pageSize: pageCanvas.dataset.size,
+      pageTag: pageCanvas.tagName,
+      pageWidth: pageCanvas.getBoundingClientRect().width,
+      restoredTop: restoredTopStyle.top,
+      topBackdropFilter: restoredTopStyle.backdropFilter,
+      topBackgroundImage: restoredTopStyle.backgroundImage,
+      topBackgroundSize: restoredTopStyle.backgroundSize,
+      topClasses: atomicClasses(top, [
+        "hraness-design-top-bar",
+        "security-caller-top-bar",
+      ]),
+      topConflictSentinel: restoredTopStyle
+        .getPropertyValue("--design-kit-stylex-layout-conflict")
+        .trim(),
+      topDisplay: restoredTopStyle.display,
+      topLastClass: top.classList.item(top.classList.length - 1),
+      topPosition: restoredTopStyle.position,
+      topPositionHook: top.dataset.position,
+      topSurface: top.dataset.surface,
+      topTag: top.tagName,
+      topZIndex: restoredTopStyle.zIndex,
+    };
+  });
+  invariant(
+    layoutSurfaceEvidence.normalizedTop === "0px"
+      && layoutSurfaceEvidence.oldDirectParentTop === "88px"
+      && layoutSurfaceEvidence.restoredTop === "0px"
+      && layoutSurfaceEvidence.topConflictSentinel === "design-kit-priority2",
+    `The real TopBar did not distinguish priority4 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+  );
+  invariant(
+    layoutSurfaceEvidence.topTag === "HEADER"
+      && layoutSurfaceEvidence.topPositionHook === "sticky"
+      && layoutSurfaceEvidence.topSurface === "glass"
+      && layoutSurfaceEvidence.topDisplay === "flex"
+      && layoutSurfaceEvidence.topPosition === "sticky"
+      && layoutSurfaceEvidence.topBackdropFilter.includes("blur")
+      && layoutSurfaceEvidence.topBackgroundImage === "none"
+      && layoutSurfaceEvidence.topBackgroundSize === "auto"
+      && layoutSurfaceEvidence.topZIndex === "321"
+      && layoutSurfaceEvidence.topLastClass === "security-caller-top-bar",
+    `The real TopBar lost native semantics, variants, glass presentation, or caller-last behavior: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+  );
+  invariant(
+    layoutSurfaceEvidence.bottomTag === "FOOTER"
+      && layoutSurfaceEvidence.bottomDisplay === "flex"
+      && layoutSurfaceEvidence.bottomBorderTopWidth === "1px"
+      && layoutSurfaceEvidence.dockedTag === "FOOTER"
+      && layoutSurfaceEvidence.dockedPosition === "absolute"
+      && layoutSurfaceEvidence.dockedBottom === "0px"
+      && layoutSurfaceEvidence.dockedSurface === "glass"
+      && layoutSurfaceEvidence.dockedDensity === "compact"
+      && layoutSurfaceEvidence.dockedInset === "none"
+      && layoutSurfaceEvidence.dockedSize === "wide"
+      && layoutSurfaceEvidence.dockedRef === "ready"
+      && layoutSurfaceEvidence.dockedContained
+      && layoutSurfaceEvidence.dockedContentPaddingTop === "4px"
+      && layoutSurfaceEvidence.dockedBackground === layoutSurfaceEvidence.bottomBackground
+      && layoutSurfaceEvidence.dockedLastClass === "security-caller-docked-footer"
+      && layoutSurfaceEvidence.dockedContentLastClass === "security-caller-docked-content",
+    `The real BottomBar or DockedFooter lost presentation, inert glass hook, containment, or ref/caller behavior: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+  );
+  invariant(
+    layoutSurfaceEvidence.pageTag === "DIV"
+      && layoutSurfaceEvidence.pageInset === "none"
+      && layoutSurfaceEvidence.pageSize === "wide"
+      && layoutSurfaceEvidence.pagePaddingLeft === "0px"
+      && layoutSurfaceEvidence.pageWidth > 0
+      && layoutSurfaceEvidence.pageLastClass === "security-caller-page-canvas",
+    `The real PageCanvas lost native, finite-variant, or caller-last behavior: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+  );
+  const verticalPage = await browser.newPage();
+  const verticalNavigation = await verticalPage.goto(`${origin}/vertical-writing`, {
+    waitUntil: "load",
+  });
+  invariant(verticalNavigation !== null, "The vertical-writing navigation returned no response.");
+  invariant(
+    verticalNavigation.headers()["content-security-policy"] === contentSecurityPolicy,
+    "The vertical-writing response did not carry the exact CSP.",
+  );
+  const verticalWritingEvidence = await verticalPage.evaluate(() => {
+    const top = document.querySelector('[data-security-vertical-layout="top"]');
+    const bottom = document.querySelector('[data-security-vertical-layout="bottom"]');
+    const pageWide = document.querySelector('[data-security-vertical-layout="page-wide"]');
+    const pageFull = document.querySelector('[data-security-vertical-layout="page-full"]');
+    const docked = document.querySelector('[data-security-vertical-layout="docked"]');
+    const dockedContent = docked?.querySelector(
+      ".hraness-design-docked-footer__content",
+    );
+    const dockFrame = docked?.parentElement;
+    if (!(top instanceof HTMLElement)
+      || !(bottom instanceof HTMLElement)
+      || !(pageWide instanceof HTMLElement)
+      || !(pageFull instanceof HTMLElement)
+      || !(docked instanceof HTMLElement)
+      || !(dockedContent instanceof HTMLElement)
+      || !(dockFrame instanceof HTMLElement)) {
+      throw new Error("The vertical-writing layout-surface matrix is incomplete.");
+    }
+
+    const topStyle = getComputedStyle(top);
+    const bottomStyle = getComputedStyle(bottom);
+    const pageWideStyle = getComputedStyle(pageWide);
+    const pageFullStyle = getComputedStyle(pageFull);
+    const dockedStyle = getComputedStyle(docked);
+    const dockedContentStyle = getComputedStyle(dockedContent);
+    const topBox = top.getBoundingClientRect();
+    const bottomBox = bottom.getBoundingClientRect();
+    const pageWideBox = pageWide.getBoundingClientRect();
+    const pageFullBox = pageFull.getBoundingClientRect();
+    const dockedBox = docked.getBoundingClientRect();
+    const dockedContentBox = dockedContent.getBoundingClientRect();
+    const dockFrameBox = dockFrame.getBoundingClientRect();
+
+    return {
+      bottomHeight: bottomBox.height,
+      bottomMinBlockSize: bottomStyle.getPropertyValue("min-block-size"),
+      bottomMinHeight: bottomStyle.minHeight,
+      bottomMinInlineSize: bottomStyle.getPropertyValue("min-inline-size"),
+      bottomMinWidth: bottomStyle.minWidth,
+      bottomWidth: bottomBox.width,
+      dockedBottom: dockedStyle.bottom,
+      dockedContentHeight: dockedContentBox.height,
+      dockedContentInlineSize: dockedContentStyle.getPropertyValue("inline-size"),
+      dockedContentMaxInlineSize: dockedContentStyle.getPropertyValue("max-inline-size"),
+      dockedContentPaddingBlockEnd: dockedContentStyle.getPropertyValue("padding-block-end"),
+      dockedContentPaddingBlockStart: dockedContentStyle.getPropertyValue("padding-block-start"),
+      dockedContentPaddingBottom: dockedContentStyle.paddingBottom,
+      dockedContentPaddingInlineEnd: dockedContentStyle.getPropertyValue("padding-inline-end"),
+      dockedContentPaddingInlineStart: dockedContentStyle.getPropertyValue("padding-inline-start"),
+      dockedContentPaddingLeft: dockedContentStyle.paddingLeft,
+      dockedContentPaddingRight: dockedContentStyle.paddingRight,
+      dockedContentPaddingTop: dockedContentStyle.paddingTop,
+      dockedContentWidth: dockedContentBox.width,
+      dockedFrameHeight: dockFrameBox.height,
+      dockedHeight: dockedBox.height,
+      dockedInsetInlineEnd: dockedStyle.getPropertyValue("inset-inline-end"),
+      dockedInsetInlineStart: dockedStyle.getPropertyValue("inset-inline-start"),
+      dockedTop: dockedStyle.top,
+      pageFullHeight: pageFullBox.height,
+      pageFullInlineSize: pageFullStyle.getPropertyValue("inline-size"),
+      pageFullMaxInlineSize: pageFullStyle.getPropertyValue("max-inline-size"),
+      pageFullPaddingBottom: pageFullStyle.paddingBottom,
+      pageFullPaddingTop: pageFullStyle.paddingTop,
+      pageFullWidth: pageFullBox.width,
+      pageWideHeight: pageWideBox.height,
+      pageWideInlineSize: pageWideStyle.getPropertyValue("inline-size"),
+      pageWideMaxInlineSize: pageWideStyle.getPropertyValue("max-inline-size"),
+      pageWidePaddingBottom: pageWideStyle.paddingBottom,
+      pageWidePaddingInlineEnd: pageWideStyle.getPropertyValue("padding-inline-end"),
+      pageWidePaddingInlineStart: pageWideStyle.getPropertyValue("padding-inline-start"),
+      pageWidePaddingTop: pageWideStyle.paddingTop,
+      pageWideWidth: pageWideBox.width,
+      topHeight: topBox.height,
+      topMinBlockSize: topStyle.getPropertyValue("min-block-size"),
+      topMinHeight: topStyle.minHeight,
+      topMinInlineSize: topStyle.getPropertyValue("min-inline-size"),
+      topMinWidth: topStyle.minWidth,
+      topWidth: topBox.width,
+      writingMode: topStyle.writingMode,
+    };
+  });
+  const approximately = (actual: number, expected: number) =>
+    Math.abs(actual - expected) < 0.75;
+  invariant(
+    verticalWritingEvidence.writingMode === "vertical-rl"
+      && verticalWritingEvidence.topMinBlockSize === "31px"
+      && verticalWritingEvidence.topMinInlineSize === "0px"
+      && verticalWritingEvidence.topMinWidth === "31px"
+      && verticalWritingEvidence.topMinHeight === "0px"
+      && verticalWritingEvidence.topWidth >= 31
+      && verticalWritingEvidence.topHeight > verticalWritingEvidence.topWidth
+      && verticalWritingEvidence.bottomMinBlockSize === "29px"
+      && verticalWritingEvidence.bottomMinInlineSize === "0px"
+      && verticalWritingEvidence.bottomMinWidth === "29px"
+      && verticalWritingEvidence.bottomMinHeight === "0px"
+      && verticalWritingEvidence.bottomWidth >= 29
+      && verticalWritingEvidence.bottomHeight > verticalWritingEvidence.bottomWidth,
+    `Vertical writing did not preserve the TopBar and BottomBar logical minimum axes: ${JSON.stringify(verticalWritingEvidence)}.`,
+  );
+  invariant(
+    verticalWritingEvidence.pageWideInlineSize === "144px"
+      && verticalWritingEvidence.pageWideMaxInlineSize === "144px"
+      && approximately(verticalWritingEvidence.pageWideHeight, 144)
+      && !approximately(verticalWritingEvidence.pageWideWidth, 144)
+      && verticalWritingEvidence.pageWidePaddingInlineStart === "13px"
+      && verticalWritingEvidence.pageWidePaddingInlineEnd === "13px"
+      && verticalWritingEvidence.pageWidePaddingTop === "13px"
+      && verticalWritingEvidence.pageWidePaddingBottom === "13px"
+      && verticalWritingEvidence.pageFullInlineSize === "192px"
+      && verticalWritingEvidence.pageFullMaxInlineSize === "none"
+      && approximately(verticalWritingEvidence.pageFullHeight, 192)
+      && !approximately(verticalWritingEvidence.pageFullWidth, 192)
+      && verticalWritingEvidence.pageFullPaddingTop === "0px"
+      && verticalWritingEvidence.pageFullPaddingBottom === "0px",
+    `Vertical writing did not preserve PageCanvas logical inline sizing, caps, and insets: ${JSON.stringify(verticalWritingEvidence)}.`,
+  );
+  invariant(
+    verticalWritingEvidence.dockedContentInlineSize === "144px"
+      && verticalWritingEvidence.dockedContentMaxInlineSize === "144px"
+      && approximately(verticalWritingEvidence.dockedContentHeight, 144)
+      && !approximately(verticalWritingEvidence.dockedContentWidth, 144)
+      && verticalWritingEvidence.dockedContentPaddingInlineStart === "13px"
+      && verticalWritingEvidence.dockedContentPaddingInlineEnd === "13px"
+      && verticalWritingEvidence.dockedContentPaddingBlockStart === "7px"
+      && verticalWritingEvidence.dockedContentPaddingBlockEnd === "7px"
+      && verticalWritingEvidence.dockedContentPaddingTop === "13px"
+      && verticalWritingEvidence.dockedContentPaddingBottom === "13px"
+      && verticalWritingEvidence.dockedContentPaddingRight === "7px"
+      && verticalWritingEvidence.dockedContentPaddingLeft === "7px"
+      && verticalWritingEvidence.dockedInsetInlineStart === "0px"
+      && verticalWritingEvidence.dockedInsetInlineEnd === "0px"
+      && verticalWritingEvidence.dockedTop === "0px"
+      && verticalWritingEvidence.dockedBottom === "0px"
+      && approximately(
+        verticalWritingEvidence.dockedHeight,
+        verticalWritingEvidence.dockedFrameHeight,
+      ),
+    `Vertical writing did not preserve DockedFooter logical inline sizing, cap, or distinct block/inline padding axes: ${JSON.stringify(verticalWritingEvidence)}.`,
+  );
+  await verticalPage.close();
+  const renderedLayoutClasses = [
+    ...layoutSurfaceEvidence.topClasses,
+    ...layoutSurfaceEvidence.bottomClasses,
+    ...layoutSurfaceEvidence.pageClasses,
+    ...layoutSurfaceEvidence.dockedClasses,
+    ...layoutSurfaceEvidence.dockedContentClasses,
+  ].filter((className) => classSelectorCount(designStylexCss, className) === 1);
+  invariant(
+    new Set(renderedLayoutClasses).size >= 12,
+    `The real layout surfaces expose too few design-kit atomic classes: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+  );
+  for (const className of new Set(renderedLayoutClasses)) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1,
+      `The design-kit StyleX artifact contains the wrong selector count for rendered layout-surface class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain rendered layout-surface class ${className}.`,
+    );
+  }
   await page.emulateMedia({ forcedColors: "active" });
   const forcedColorDitherEvidence = await page.evaluate(() => (
     [...document.querySelectorAll<HTMLElement>("[data-security-dither]")]
@@ -1013,6 +1460,73 @@ try {
           && text.length > 0,
       ),
     `Forced-colors mode did not remove only the decorative DitherSurface image: ${JSON.stringify(forcedColorDitherEvidence)}.`,
+  );
+  const forcedColorLayoutEvidence = await page.evaluate(() => {
+    const top = document.querySelector('[data-security-layout="top"]');
+    const bottom = document.querySelector('[data-security-layout="bottom"]');
+    const docked = document.querySelector('[data-security-layout="docked"]');
+    if (!(top instanceof HTMLElement)
+      || !(bottom instanceof HTMLElement)
+      || !(docked instanceof HTMLElement)) {
+      throw new Error("The forced-colors layout-surface matrix is incomplete.");
+    }
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "Canvas";
+    probe.style.color = "CanvasText";
+    document.body.append(probe);
+    const probeStyle = getComputedStyle(probe);
+    const canvas = probeStyle.backgroundColor;
+    const canvasText = probeStyle.color;
+    probe.remove();
+    const topStyle = getComputedStyle(top);
+    const bottomStyle = getComputedStyle(bottom);
+    const dockedStyle = getComputedStyle(docked);
+    return {
+      backgrounds: [
+        topStyle.backgroundColor,
+        bottomStyle.backgroundColor,
+        dockedStyle.backgroundColor,
+      ],
+      backgroundImages: [
+        topStyle.backgroundImage,
+        bottomStyle.backgroundImage,
+        dockedStyle.backgroundImage,
+      ],
+      bottomBorder: bottomStyle.borderTopColor,
+      canvas,
+      canvasText,
+      dockedBorder: dockedStyle.borderTopColor,
+      inlineBorders: [
+        topStyle.borderLeftColor,
+        topStyle.borderRightColor,
+        bottomStyle.borderLeftColor,
+        bottomStyle.borderRightColor,
+        dockedStyle.borderLeftColor,
+        dockedStyle.borderRightColor,
+      ],
+      text: [top.textContent, bottom.textContent, docked.textContent],
+      topBackdropFilter: topStyle.backdropFilter,
+      topBorder: topStyle.borderBottomColor,
+    };
+  });
+  invariant(
+    forcedColorLayoutEvidence.backgrounds.every(
+      (background) => background === forcedColorLayoutEvidence.canvas,
+    )
+      && forcedColorLayoutEvidence.backgroundImages.every(
+        (backgroundImage) => backgroundImage === "none",
+      )
+      && forcedColorLayoutEvidence.topBorder === forcedColorLayoutEvidence.canvasText
+      && forcedColorLayoutEvidence.bottomBorder === forcedColorLayoutEvidence.canvasText
+      && forcedColorLayoutEvidence.dockedBorder === forcedColorLayoutEvidence.canvasText
+      && forcedColorLayoutEvidence.inlineBorders.every(
+        (border) => border === forcedColorLayoutEvidence.canvasText,
+      )
+      && forcedColorLayoutEvidence.topBackdropFilter === "none"
+      && forcedColorLayoutEvidence.text.every(
+        (content) => content !== null && content.trim().length > 0,
+      ),
+    `Forced-colors mode did not preserve layout content while normalizing chrome: ${JSON.stringify(forcedColorLayoutEvidence)}.`,
   );
   await page.emulateMedia({ forcedColors: "none" });
   const pressableEvidence = await page.evaluate((styleId) => {
@@ -1110,15 +1624,18 @@ try {
   invariant(
     requestPaths.every((path) => [
       "/",
+      "/dist/stylex.css",
       "/favicon.ico",
       "/security-delivery.css",
+      "/security-delivery-vertical.css",
+      "/vertical-writing",
       `/${hydrationFileName}`,
     ].includes(path)),
     `The fixture requested an unexpected resource: ${JSON.stringify(requestPaths)}.`,
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface density/override/forced-color cascade evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

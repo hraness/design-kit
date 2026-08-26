@@ -71,6 +71,18 @@
   overflow: clip;
 }
 
+.design-gallery__docked-footer-preview {
+  position: relative;
+  min-block-size: 8rem;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  overflow: clip;
+}
+
+.design-gallery__docked-footer-preview > p {
+  margin: 0;
+}
+
 .design-gallery__instrument {
   display: flex;
   min-inline-size: 0;
@@ -158,6 +170,7 @@
 
 @media (forced-colors: active) {
   .design-gallery__shell-preview,
+  .design-gallery__docked-footer-preview,
   .design-gallery__plain-theme,
   .design-gallery__instrument,
   .design-gallery__effect,

@@ -22,7 +22,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-azet83h4.js";
+} from "../chunk-cdje4gw1.js";
 import"../chunk-djxa5bgc.js";
 import {
   __require
@@ -2058,6 +2058,7 @@ var designGalleryRecipeCoverage = [
   "charts",
   "dither surface",
   "foil card surface",
+  "layout surfaces",
   "Jelly presentation",
   "plain site and publication grammar",
   "procedural effects",
@@ -2234,6 +2235,16 @@ function DesignSystemGallery({
           /* @__PURE__ */ jsx13(ViewportFrame, {
             className: "design-gallery__shell-preview",
             children: /* @__PURE__ */ jsx13(AppShell, {
+              bottomBar: /* @__PURE__ */ jsx13(BottomBar, {
+                actions: /* @__PURE__ */ jsx13("span", {
+                  children: "Synced"
+                }),
+                "data-gallery-layout-bottom-bar": "",
+                leading: /* @__PURE__ */ jsx13("span", {
+                  children: "Ready"
+                }),
+                children: "Reference footer"
+              }),
               navigationKey: "gallery",
               rail: /* @__PURE__ */ jsx13(NavigationRail, {
                 children: /* @__PURE__ */ jsxs11(RailSection, {
@@ -2265,10 +2276,12 @@ function DesignSystemGallery({
                 })
               }),
               topBar: /* @__PURE__ */ jsx13(TopBar, {
+                "data-gallery-layout-top-bar": "",
                 title: "Reference workspace"
               }),
               children: /* @__PURE__ */ jsx13(PageCanvas, {
                 as: "div",
+                "data-gallery-layout-page-canvas": "",
                 children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
                   stageKey: density,
                   children: /* @__PURE__ */ jsxs11(DitherSurface, {
@@ -2291,6 +2304,21 @@ function DesignSystemGallery({
                 })
               })
             })
+          }),
+          /* @__PURE__ */ jsxs11("div", {
+            className: "design-gallery__docked-footer-preview",
+            "data-gallery-layout-docked-frame": "",
+            children: [
+              /* @__PURE__ */ jsx13("p", {
+                children: "Docked commands remain inside their positioning owner."
+              }),
+              /* @__PURE__ */ jsx13(DockedFooter, {
+                "data-gallery-layout-docked-footer": "",
+                density: "compact",
+                position: "absolute",
+                children: "Reference commands"
+              })
+            ]
           })
         ]
       }),

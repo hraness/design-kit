@@ -29,6 +29,14 @@ interface LayoutEvidence {
   readonly heading: string;
   readonly headingClipped: boolean;
   readonly horizontalFaderThumbCentered: boolean;
+  readonly layoutBottomDisplay: string;
+  readonly layoutDockBottom: string;
+  readonly layoutDockContained: boolean;
+  readonly layoutDockPosition: string;
+  readonly layoutPageWidth: number;
+  readonly layoutSurfacesAtomic: boolean;
+  readonly layoutSurfacesSemantic: boolean;
+  readonly layoutTopDisplay: string;
   readonly mobileTriggerDisplay: string;
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
@@ -111,6 +119,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const horizontalFaderThumb = horizontalFaderTrack?.querySelector(
       ".hraness-design-fader__thumb",
     );
+    const layoutTop = document.querySelector("[data-gallery-layout-top-bar]");
+    const layoutBottom = document.querySelector("[data-gallery-layout-bottom-bar]");
+    const layoutPage = document.querySelector("[data-gallery-layout-page-canvas]");
+    const layoutDock = document.querySelector("[data-gallery-layout-docked-footer]");
+    const layoutDockContent = layoutDock?.querySelector(
+      ".hraness-design-docked-footer__content",
+    );
+    const layoutDockFrame = document.querySelector("[data-gallery-layout-docked-frame]");
     const verticalFaderTrack = document.querySelector(
       ".design-gallery__vertical-fader .hraness-design-fader__track",
     );
@@ -139,6 +155,12 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(procedural instanceof HTMLElement)
       || !(horizontalFaderTrack instanceof HTMLElement)
       || !(horizontalFaderThumb instanceof HTMLElement)
+      || !(layoutTop instanceof HTMLElement)
+      || !(layoutBottom instanceof HTMLElement)
+      || !(layoutPage instanceof HTMLElement)
+      || !(layoutDock instanceof HTMLElement)
+      || !(layoutDockContent instanceof HTMLElement)
+      || !(layoutDockFrame instanceof HTMLElement)
       || !(verticalFaderTrack instanceof HTMLElement)
       || !(verticalFaderThumb instanceof HTMLElement)
       || !(appearance instanceof HTMLElement)
@@ -161,6 +183,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const proceduralBox = procedural.getBoundingClientRect();
     const horizontalFaderTrackBox = horizontalFaderTrack.getBoundingClientRect();
     const horizontalFaderThumbBox = horizontalFaderThumb.getBoundingClientRect();
+    const layoutDockBox = layoutDock.getBoundingClientRect();
+    const layoutDockFrameBox = layoutDockFrame.getBoundingClientRect();
     const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
     const verticalFaderThumbBox = verticalFaderThumb.getBoundingClientRect();
     const paletteNames = [
@@ -213,6 +237,43 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
           (horizontalFaderThumbBox.top + horizontalFaderThumbBox.bottom) / 2
           - (horizontalFaderTrackBox.top + horizontalFaderTrackBox.bottom) / 2,
         ) <= 1,
+      layoutBottomDisplay: getComputedStyle(layoutBottom).display,
+      layoutDockBottom: getComputedStyle(layoutDock).bottom,
+      layoutDockContained:
+        layoutDockBox.left >= layoutDockFrameBox.left - 1
+        && layoutDockBox.right <= layoutDockFrameBox.right + 1
+        && layoutDockBox.top >= layoutDockFrameBox.top - 1
+        && layoutDockBox.bottom <= layoutDockFrameBox.bottom + 1,
+      layoutDockPosition: getComputedStyle(layoutDock).position,
+      layoutPageWidth: layoutPage.getBoundingClientRect().width,
+      layoutSurfacesAtomic: [
+        [layoutTop, "hraness-design-top-bar"],
+        [layoutBottom, "hraness-design-bottom-bar"],
+        [layoutPage, "hraness-design-page-canvas"],
+        [layoutDock, "hraness-design-docked-footer"],
+        [layoutDockContent, "hraness-design-docked-footer__content"],
+      ].every(([element, stableClass]) =>
+        element instanceof HTMLElement
+        && typeof stableClass === "string"
+        && !element.hasAttribute("style")
+        && [...element.classList].some(
+          (className) => className !== stableClass && className.startsWith("x"),
+        )),
+      layoutSurfacesSemantic:
+        layoutTop.tagName === "HEADER"
+        && layoutTop.dataset.position === "static"
+        && layoutTop.dataset.surface === "solid"
+        && layoutBottom.tagName === "FOOTER"
+        && layoutPage.tagName === "DIV"
+        && layoutPage.dataset.inset === "content"
+        && layoutPage.dataset.size === "default"
+        && layoutDock.tagName === "FOOTER"
+        && layoutDock.dataset.position === "absolute"
+        && layoutDock.dataset.surface === "solid"
+        && layoutDockContent.dataset.density === "compact"
+        && layoutDockContent.dataset.inset === "content"
+        && layoutDockContent.dataset.size === "default",
+      layoutTopDisplay: getComputedStyle(layoutTop).display,
       mobileTriggerDisplay: getComputedStyle(mobileTrigger).display,
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
@@ -480,6 +541,26 @@ try {
             hasInlineStyle: state.ditherHasInlineStyle,
             size: state.ditherSize,
             themed: state.ditherUsesThemedSurface,
+          })}`,
+        );
+        invariant(
+          state.layoutSurfacesAtomic
+            && state.layoutSurfacesSemantic
+            && state.layoutTopDisplay === "flex"
+            && state.layoutBottomDisplay === "flex"
+            && state.layoutPageWidth > 0
+            && state.layoutDockPosition === "absolute"
+            && state.layoutDockBottom === "0px"
+            && state.layoutDockContained,
+          `${layout.id}: layout-surface delivery is ${JSON.stringify({
+            atomic: state.layoutSurfacesAtomic,
+            bottomDisplay: state.layoutBottomDisplay,
+            dockBottom: state.layoutDockBottom,
+            dockContained: state.layoutDockContained,
+            dockPosition: state.layoutDockPosition,
+            pageWidth: state.layoutPageWidth,
+            semantic: state.layoutSurfacesSemantic,
+            topDisplay: state.layoutTopDisplay,
           })}`,
         );
         invariant(
