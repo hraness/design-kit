@@ -56,9 +56,15 @@ test("the design layer composes the public primitive core first", () => {
   expect(resetCss).toContain('@import "@hraness/ui/reset.css";');
 
   const portableComponents = stylesCss.indexOf('@import "@hraness/ui/components.css";');
+  const portableStylex = stylesCss.indexOf('@import "@hraness/ui/stylex.css";');
   const designComponents = stylesCss.indexOf('@import "./components.css";');
   expect(portableComponents).toBeGreaterThanOrEqual(0);
-  expect(designComponents).toBeGreaterThan(portableComponents);
+  expect(portableStylex).toBeGreaterThan(portableComponents);
+  expect(designComponents).toBeGreaterThan(portableStylex);
+  expect(stylesCss.startsWith([
+    "@layer base, components;",
+    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;",
+  ].join("\n"))).toBe(true);
   expect(stylesCss).not.toContain("fonts.css");
 });
 
@@ -100,6 +106,11 @@ test("the default font roles are system stacks", () => {
 });
 
 test("composition CSS retains mobile, reduced-motion, and forced-color contracts", () => {
+  expect(componentsCss.startsWith([
+    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;",
+    '@import "../dist/stylex.css";',
+  ].join("\n"))).toBe(true);
+  expect(componentsCss).toContain("@layer components.hraness-design-kit.legacy {");
   expect(componentsCss).toContain("@media (max-width: 48rem)");
   expect(componentsCss).toContain("@media (prefers-reduced-motion: reduce)");
   expect(componentsCss).toContain("@media (forced-colors: active)");

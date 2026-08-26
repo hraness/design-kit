@@ -333,10 +333,29 @@ try {
     const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
     const matches = builtCss.match(new RegExp(`\\.${escaped}(?=[\\s,{:])`, "gu")) ?? [];
     invariant(
-      matches.length === 1,
-      `Gallery CSS contains the generated .${className} selector ${String(matches.length)} times.`,
+      matches.length >= 1,
+      `Gallery CSS does not contain the generated .${className} selector.`,
     );
   }
+  for (const layerName of [
+    "components.hraness-ui.priority1",
+    "components.hraness-ui.priority2",
+    "components.hraness-ui.priority3",
+    "components.hraness-design-kit.priority1",
+    "components.hraness-design-kit.priority2",
+    "components.hraness-design-kit.priority3",
+  ]) {
+    const escaped = layerName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const count = builtCss.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
+    invariant(
+      count === 1,
+      `Gallery CSS contains ${String(count)} ${layerName} blocks instead of one.`,
+    );
+  }
+  invariant(
+    /@layer\s+components\.hraness-ui\.priority3\s*\{[\s\S]*?padding-top:\s*var\(--space-5,\s*1\.25rem\)/u.test(builtCss),
+    "Gallery CSS lost the pinned UI QuietSite priority3 output.",
+  );
   await writeFile(
     join(work, "index.html"),
     [

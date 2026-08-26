@@ -66,7 +66,11 @@ test("the package exposes compositions without a second primitive barrel", async
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.4.0 <0.5.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toMatch(
-    /^github:hraness\/ui#v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u,
+    /^github:hraness\/ui#(?:v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)|[0-9a-f]{40})$/u,
+  );
+  expect(packageJson.scripts.prepublishOnly).toBe("bun run check:publication-ready");
+  expect(packageJson.scripts["check:publication-ready"]).toBe(
+    "bun run ./scripts/package-smoke.ts --publication",
   );
   expect(Object.keys(packageJson.exports)).not.toContain("./next-config");
   expect(packageJson.exports["./react/server"]).toEqual({

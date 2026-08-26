@@ -10,6 +10,24 @@
   }
 }
 
+/*
+ * Gallery-only cross-package sentinel. The normalized UI legacy layer is lower
+ * than design-kit priority2, so this wins. A rule left directly in the old
+ * `components` parent layer would instead keep the Button at inline-flex.
+ */
+@layer components.hraness-design-kit.priority2 {
+  html body [data-design-kit-stylex-layer-conflict="true"].hraness-button {
+    --design-kit-stylex-layer-conflict: design-kit-priority2;
+    display: grid;
+  }
+}
+
+@layer components {
+  html body [data-design-kit-stylex-old-parent="true"].hraness-button {
+    display: inline-flex;
+  }
+}
+
 .security-canary-palette.security-canary-theme-light {
   color-scheme: light;
   --background: #fbf6f2;
