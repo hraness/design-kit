@@ -19,6 +19,11 @@ interface LayoutEvidence {
   readonly copy: string;
   readonly dotsContained: boolean;
   readonly dotsPosition: string;
+  readonly ditherBackgroundImage: string;
+  readonly ditherDensity: string;
+  readonly ditherHasInlineStyle: boolean;
+  readonly ditherSize: string;
+  readonly ditherUsesThemedSurface: boolean;
   readonly galleryPaddingLeft: number;
   readonly galleryPaddingRight: number;
   readonly heading: string;
@@ -93,6 +98,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const effect = document.querySelector(".design-gallery__effect");
     const aurora = effect?.querySelector(".hraness-design-aurora-background");
     const dots = effect?.querySelector(".hraness-design-aurora-dots");
+    const dither = document.querySelector("[data-gallery-dither]");
     const plainLink = document.querySelector(".design-gallery__plain-link-example a");
     const plainHeader = document.querySelector(".plain-header__inner");
     const plainNav = plainHeader?.querySelector(".plain-nav");
@@ -124,6 +130,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(effect instanceof HTMLElement)
       || !(aurora instanceof HTMLElement)
       || !(dots instanceof HTMLElement)
+      || !(dither instanceof HTMLElement)
       || !(plainLink instanceof HTMLAnchorElement)
       || !(plainHeader instanceof HTMLElement)
       || !(plainNav instanceof HTMLElement)
@@ -144,6 +151,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
 
     const galleryStyle = getComputedStyle(gallery);
     const proceduralStyle = getComputedStyle(procedural);
+    const ditherStyle = getComputedStyle(dither);
     const effectBox = effect.getBoundingClientRect();
     const auroraBox = aurora.getBoundingClientRect();
     const dotsBox = dots.getBoundingClientRect();
@@ -188,6 +196,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
         && Math.abs(dotsBox.top - effectBox.top) <= 1
         && Math.abs(dotsBox.bottom - effectBox.bottom) <= 1,
       dotsPosition: getComputedStyle(dots).position,
+      ditherBackgroundImage: ditherStyle.backgroundImage,
+      ditherDensity: dither.dataset.density ?? "",
+      ditherHasInlineStyle: dither.hasAttribute("style"),
+      ditherSize: ditherStyle.backgroundSize,
+      ditherUsesThemedSurface:
+        dither.classList.contains("hraness-themed-surface")
+        && dither.classList.contains("hraness-design-dither-surface")
+        && dither.dataset.slot === "themed-surface",
       galleryPaddingLeft: Number.parseFloat(galleryStyle.paddingLeft),
       galleryPaddingRight: Number.parseFloat(galleryStyle.paddingRight),
       heading: heading.textContent?.trim() ?? "",
@@ -344,6 +360,7 @@ try {
     "components.hraness-design-kit.priority1",
     "components.hraness-design-kit.priority2",
     "components.hraness-design-kit.priority3",
+    "components.hraness-design-kit.priority4",
   ]) {
     const escaped = layerName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
     const count = builtCss.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
@@ -450,6 +467,20 @@ try {
         invariant(
           state.dotsPosition === "absolute" && state.dotsContained,
           `${layout.id}: dot paint escaped its gallery specimen`,
+        );
+        invariant(
+          state.ditherUsesThemedSurface
+            && state.ditherDensity === "medium"
+            && state.ditherSize === "4px 4px"
+            && state.ditherBackgroundImage.includes("radial-gradient")
+            && !state.ditherHasInlineStyle,
+          `${layout.id}: DitherSurface gallery delivery is ${JSON.stringify({
+            backgroundImage: state.ditherBackgroundImage,
+            density: state.ditherDensity,
+            hasInlineStyle: state.ditherHasInlineStyle,
+            size: state.ditherSize,
+            themed: state.ditherUsesThemedSurface,
+          })}`,
         );
         invariant(
           state.plainLinkDecoration === "none",

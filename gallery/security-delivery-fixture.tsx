@@ -7,17 +7,30 @@ import {
   QuietSiteFooter,
 } from "@hraness/ui";
 import {
+  type CSSProperties,
+  Suspense,
+  useEffect,
+} from "react";
+
+import { builtDesignKitReact } from "./built-react.js";
+
+const {
   DesignPortalThemeProvider,
   DesignThemeProvider,
+  DitherSurface,
   ProductionDataPreviewNotice,
   useDesignPortalClassName,
   useDesignPortalTheme,
-} from "@hraness/design-kit/react";
-import { Suspense, useEffect } from "react";
+} = builtDesignKitReact;
 
 export const securityDeliveryFallback = "Waiting for the streamed result";
 export const securityDeliveryTerminal = "Security delivery complete";
 export const securityDeliveryStorageKey = "hraness-design-theme-v1";
+
+const callerDitherStyle = {
+  "--hraness-design-dither-size": "11px",
+  backgroundSize: "11px 11px",
+} as CSSProperties;
 
 export interface SecurityDeliveryResource {
   read(): void;
@@ -112,6 +125,28 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
         <QuietSiteFooter data-security-ui-priority3="">
           UI priority3 delivery canary
         </QuietSiteFooter>
+        <div aria-label="Dither delivery matrix" data-security-dither-matrix="">
+          <DitherSurface
+            data-design-kit-stylex-dither-conflict="true"
+            data-security-dither="medium"
+            density="medium"
+          >
+            Medium dither
+          </DitherSurface>
+          <DitherSurface data-security-dither="coarse" density="coarse">
+            Coarse dither
+          </DitherSurface>
+          <DitherSurface data-security-dither="fine" density="fine">
+            Fine dither
+          </DitherSurface>
+          <DitherSurface
+            data-security-dither="caller"
+            density="fine"
+            style={callerDitherStyle}
+          >
+            Caller dither
+          </DitherSurface>
+        </div>
       </DesignPortalThemeProvider>
     </section>
   );

@@ -1,13 +1,15 @@
 import { createRoot } from "react-dom/client";
 
 import "../src/styles.css";
-import {
+import { builtDesignKitReact } from "./built-react.js";
+
+const {
   DesignSystemGallery,
   DesignThemeProvider,
   ThemeMenuButton,
   ThemeColorSync,
   TopBar,
-} from "@hraness/design-kit/react";
+} = builtDesignKitReact;
 
 const root = document.querySelector("#root");
 if (!(root instanceof HTMLElement)) {

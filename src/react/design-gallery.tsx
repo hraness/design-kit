@@ -13,7 +13,6 @@ import {
   SegmentedControl,
   Slider,
   Tag,
-  ThemedSurface,
   ViewportFrame,
   WrappingRow,
 } from "@hraness/ui";
@@ -30,7 +29,7 @@ import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
-import { PageCanvas, TopBar } from "./surfaces.js";
+import { DitherSurface, PageCanvas, TopBar } from "./surfaces.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
@@ -54,6 +53,7 @@ export const designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
   "application shells",
   "charts",
+  "dither surface",
   "Jelly presentation",
   "plain site and publication grammar",
   "procedural effects",
@@ -180,10 +180,15 @@ export function DesignSystemGallery({
           >
             <PageCanvas as="div">
               <AnimatedRailStage stageKey={density}>
-                <ThemedSurface as="section" tone="card">
+                <DitherSurface
+                  as="section"
+                  data-gallery-dither=""
+                  density={density === "compact" ? "fine" : "medium"}
+                  tone="card"
+                >
                   <h3>{density === "compact" ? "Compact" : "Default"} composition</h3>
                   <p>The route body changes while persistent navigation remains in place.</p>
-                </ThemedSurface>
+                </DitherSurface>
               </AnimatedRailStage>
             </PageCanvas>
           </AppShell>

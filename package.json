@@ -110,6 +110,7 @@
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/route-state.tsx",
     "src/react/server.ts",
+    "src/react/surfaces.stylex.ts",
     "src/react/surfaces.tsx",
     "src/react/syntax-code.tsx",
     "src/react/theme-color-sync.ts",
@@ -171,7 +172,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@hraness/ui": "github:hraness/ui#13f254b5e7c171e95005f32e01c4fdcf0aba9f83",
+    "@hraness/ui": "github:hraness/ui#6a4b0bd474262114356ab79c4ca10b76fe22c9cf",
     "@stylexjs/unplugin": "0.19.0",
     "@types/bun": "^1.3.14",
     "@types/react": "^19.2.14",

@@ -5,9 +5,9 @@ const DESIGN_COMPONENTS_IMPORT = '@import "./components.css";';
 const DESIGN_STYLEX_IMPORT = '@import "../dist/stylex.css";';
 const GALLERY_LAYER_CONFLICT_SENTINEL = "data-design-kit-stylex-";
 const LOCAL_LAYER_PRELUDE =
-  "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
 const PORTFOLIO_LAYER_PRELUDE =
-  "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
 const TOP_LEVEL_LAYER_PRELUDE = "@layer base, components;";
 const UI_COMPONENTS_IMPORT = '@import "@hraness/ui/components.css";';
 const UI_STYLEX_IMPORT = '@import "@hraness/ui/stylex.css";';
@@ -16,6 +16,7 @@ const DESIGN_STYLEX_LAYERS = [
   "components.hraness-design-kit.priority1",
   "components.hraness-design-kit.priority2",
   "components.hraness-design-kit.priority3",
+  "components.hraness-design-kit.priority4",
 ] as const;
 const UI_LEGACY_LAYERS = [
   "components.hraness-ui.legacy.base",
@@ -188,7 +189,7 @@ function requireAggregateContract(source: string): void {
   if (statements.length !== expectedStatements.length
     || statements.some((statement, index) => statement !== expectedStatements[index])) {
     throw new Error(
-      "src/styles.css must contain the exact base < components and UI legacy < UI priority1/2/3 < design-kit legacy < design-kit priority1/2/3 preludes before its ordered imports",
+      "src/styles.css must contain the exact base < components and UI legacy < UI priority1/2/3 < design-kit legacy < design-kit priority1/2/3/4 preludes before its ordered imports",
     );
   }
 }
@@ -226,9 +227,9 @@ function requireMutationNegativeContracts(
 ): number {
   const localLegacyLayer = "@layer components.hraness-design-kit.legacy {";
   const invertedLocalPrelude =
-    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority2, components.hraness-design-kit.priority1, components.hraness-design-kit.priority3;";
+    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority2, components.hraness-design-kit.priority1, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const invertedPortfolioPrelude =
-    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-design-kit.legacy, components.hraness-ui.priority3, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-design-kit.legacy, components.hraness-ui.priority3, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const localMutations = [
     [
       "direct-parent local legacy restoration",
@@ -310,6 +311,28 @@ function requireMutationNegativeContracts(
       ),
     ],
     [
+      "unlayered aggregate handwritten rule",
+      `${aggregateStylesheet}\n.hraness-design-aggregate-unlayered-mutation { color: red; }\n`,
+    ],
+    [
+      "missing aggregate UI components import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        `${UI_COMPONENTS_IMPORT}\n`,
+        "",
+        "missing aggregate UI components import",
+      ),
+    ],
+    [
+      "duplicate aggregate UI components import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        UI_COMPONENTS_IMPORT,
+        `${UI_COMPONENTS_IMPORT}\n${UI_COMPONENTS_IMPORT}`,
+        "duplicate aggregate UI components import",
+      ),
+    ],
+    [
       "missing aggregate UI StyleX import",
       replaceExactlyOnce(
         aggregateStylesheet,
@@ -327,6 +350,24 @@ function requireMutationNegativeContracts(
         "duplicate aggregate UI StyleX import",
       ),
     ],
+    [
+      "missing aggregate design-kit components import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        `${DESIGN_COMPONENTS_IMPORT}\n`,
+        "",
+        "missing aggregate design-kit components import",
+      ),
+    ],
+    [
+      "duplicate aggregate design-kit components import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        DESIGN_COMPONENTS_IMPORT,
+        `${DESIGN_COMPONENTS_IMPORT}\n${DESIGN_COMPONENTS_IMPORT}`,
+        "duplicate aggregate design-kit components import",
+      ),
+    ],
   ] as const;
 
   const generatedMutations = [
@@ -341,7 +382,7 @@ function requireMutationNegativeContracts(
     [
       "undeclared generated design-kit priority layer",
       () => requireGeneratedLayerContract(
-        `${designCompiledCss}\n@layer components.hraness-design-kit.priority4 { .x-design-priority4-mutation { color: red; } }\n`,
+        `${designCompiledCss}\n@layer components.hraness-design-kit.priority5 { .x-design-priority5-mutation { color: red; } }\n`,
         DESIGN_STYLEX_LAYERS,
         "mutated dist/stylex.css",
       ),
@@ -433,6 +474,32 @@ requireMatch(
   /@layer components\.hraness-design-kit\.priority2\s*\{/u,
   "the package-owned priority2 layer",
 );
+requireMatch(
+  compiledCss,
+  /@layer components\.hraness-design-kit\.priority4\s*\{/u,
+  "the package-owned priority4 layer",
+);
+const ditherDeclarations: readonly (readonly [RegExp, string])[] = [
+  [
+    /@layer components\.hraness-design-kit\.priority1\s*\{[\s\S]*?--hraness-design-dither-size:\s*3px;[\s\S]*?--hraness-design-dither-size:\s*7px;/u,
+    "literal fine and coarse density variables in priority1",
+  ],
+  [
+    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\);/u,
+    "radial texture",
+  ],
+  [
+    /background-size:\s*var\(--hraness-design-dither-size,\s*4px\)\s+var\(--hraness-design-dither-size,\s*4px\);/u,
+    "public density-variable texture size",
+  ],
+  [
+    /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?background-image:\s*none;/u,
+    "forced-colors texture removal",
+  ],
+];
+for (const [pattern, description] of ditherDeclarations) {
+  requireMatch(compiledCss, pattern, `the DitherSurface ${description} declaration`);
+}
 const noticeDeclarations: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center;/u, "root align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3);/u, "root background-color"],
@@ -525,6 +592,11 @@ forbid(
   legacyComponents,
   /\.hraness-design-production-data-preview-notice(?:\s|\{|:)/u,
   "the migrated notice's legacy selector",
+);
+forbid(
+  legacyComponents,
+  /\.hraness-design-dither-surface(?:\s|\{|\[|:)/u,
+  "the migrated DitherSurface legacy selector",
 );
 requireGeneratedLayerContract(
   compiledCss,

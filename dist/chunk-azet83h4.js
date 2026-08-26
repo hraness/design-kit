@@ -287,16 +287,46 @@ function ProceduralBackdrop({
 // src/react/surfaces.tsx
 import { forwardRef } from "react";
 import { ThemedSurface, cn as cn2 } from "@hraness/ui";
+
+// src/react/surfaces.stylex.ts
+var ditherSurfaceStyles = {
+  coarse: {
+    "--hraness-design-dither-size": "xvx1b6g",
+    $$css: true
+  },
+  fine: {
+    "--hraness-design-dither-size": "xgcu659",
+    $$css: true
+  },
+  texture: {
+    kKwaWg: "xtuv73v xhobzj1",
+    kgSjnq: "x150knr0",
+    $$css: true
+  }
+};
+
+// src/react/surfaces.tsx
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+var ditherSurfaceDensityStyles = {
+  coarse: ditherSurfaceStyles.coarse,
+  fine: ditherSurfaceStyles.fine,
+  medium: undefined
+};
 function DitherSurface({
   className,
   density = "medium",
+  xstyle,
   ...props
 }) {
   return /* @__PURE__ */ jsx2(ThemedSurface, {
     ...props,
     className: cn2("hraness-design-dither-surface", className),
-    "data-density": density
+    "data-density": density,
+    xstyle: [
+      ditherSurfaceStyles.texture,
+      ditherSurfaceDensityStyles[density],
+      xstyle
+    ]
   });
 }
 function TopBar({

@@ -1,4 +1,14 @@
 @layer components.hraness-design-kit.priority1 {
+  .xgcu659 {
+    --hraness-design-dither-size: 3px;
+  }
+
+  .xvx1b6g {
+    --hraness-design-dither-size: 7px;
+  }
+}
+
+@layer components.hraness-design-kit.priority2 {
   .x5kxhqv {
     gap: var(--space-1, .25rem) var(--space-3, .75rem);
   }
@@ -12,13 +22,21 @@
   }
 }
 
-@layer components.hraness-design-kit.priority2 {
+@layer components.hraness-design-kit.priority3 {
   .x6s0dn4 {
     align-items: center;
   }
 
   .x1gq7pca {
     background-color: #fc3;
+  }
+
+  .xtuv73v {
+    background-image: radial-gradient(color-mix(in oklch,currentColor 18%,transparent) .75px,transparent .75px);
+  }
+
+  .x150knr0 {
+    background-size: var(--hraness-design-dither-size, 4px) var(--hraness-design-dither-size, 4px);
   }
 
   .xlmpfgd {
@@ -76,9 +94,15 @@
   .x1qhe1ue {
     z-index: calc(var(--z-tooltip, 3000) + 1);
   }
+
+  @media (forced-colors: active) {
+    .xhobzj1.xhobzj1 {
+      background-image: none;
+    }
+  }
 }
 
-@layer components.hraness-design-kit.priority3 {
+@layer components.hraness-design-kit.priority4 {
   .x9ap2lz {
     border-bottom-color: #5c1906;
   }
