@@ -15,6 +15,8 @@ import {
   securityDeliveryTerminal,
 } from "../gallery/security-delivery-fixture.js";
 
+const repository = process.cwd();
+
 interface ObservedSecurityElement {
   readonly hydration: boolean;
   readonly kind: "script" | "style";
@@ -103,6 +105,20 @@ const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/font-weight:\s*var\(--font-weight-bold,\s*700\)/u, "emphasis font-weight"],
   [/letter-spacing:\s*0?\.04em/u, "emphasis letter-spacing"],
   [/text-transform:\s*uppercase/u, "emphasis text-transform"],
+];
+
+const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/--hraness-design-dither-size:\s*3px/u, "fine density variable"],
+  [/--hraness-design-dither-size:\s*7px/u, "coarse density variable"],
+  [
+    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
+    "radial texture",
+  ],
+  [
+    /background-size:\s*var\(--hraness-design-dither-size,\s*4px\)\s*var\(--hraness-design-dither-size,\s*4px\)/u,
+    "public density-variable texture size",
+  ],
+  [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
 ];
 
 async function firstExecutable(paths: readonly string[]): Promise<string> {
@@ -251,7 +267,6 @@ async function installPageObservers(page: Page): Promise<void> {
   }, nonce);
 }
 
-const repository = process.cwd();
 const work = await mkdtemp(join(tmpdir(), "hraness-security-delivery-browser-"));
 const clientDirectory = join(work, "client");
 const cssDirectory = join(work, "css");
@@ -303,8 +318,10 @@ try {
   invariant(cssOutputs.length === 1, `Expected one combined CSS artifact, received ${String(cssOutputs.length)}.`);
   const cssOutput = cssOutputs[0];
   invariant(cssOutput !== undefined, "The combined CSS artifact is unavailable.");
-  const [combinedCss, uiStylexCss] = await Promise.all([
+  const [combinedCss, designLegacyCss, designStylexCss, uiStylexCss] = await Promise.all([
     Bun.file(cssOutput.path).text(),
+    Bun.file(join(repository, "src/components.css")).text(),
+    Bun.file(join(repository, "dist/stylex.css")).text(),
     Bun.file(join(repository, "node_modules/@hraness/ui/dist/stylex.css")).text(),
   ]);
   const uiPriority3Marker = "@layer components.hraness-ui.priority3";
@@ -326,6 +343,7 @@ try {
     "components.hraness-ui.priority3",
     "components.hraness-design-kit.priority1",
     "components.hraness-design-kit.priority3",
+    "components.hraness-design-kit.priority4",
   ]) {
     invariant(
       layerBlockCount(combinedCss, layerName) === 1,
@@ -337,7 +355,7 @@ try {
     `The combined CSS artifact must contain one compiled and one gallery-only design-kit priority2 block, received ${String(layerBlockCount(combinedCss, "components.hraness-design-kit.priority2"))}.`,
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*,\s*components\.hraness-ui\.priority1\s*,\s*components\.hraness-ui\.priority2\s*,\s*components\.hraness-ui\.priority3\s*,\s*components\.hraness-design-kit\.legacy\s*,\s*components\.hraness-design-kit\.priority1\s*,\s*components\.hraness-design-kit\.priority2\s*,\s*components\.hraness-design-kit\.priority3/u.test(combinedCss),
+    /@layer\s+components\.hraness-ui\.legacy\s*,\s*components\.hraness-ui\.priority1\s*,\s*components\.hraness-ui\.priority2\s*,\s*components\.hraness-ui\.priority3\s*,\s*components\.hraness-design-kit\.legacy\s*,\s*components\.hraness-design-kit\.priority1\s*,\s*components\.hraness-design-kit\.priority2\s*,\s*components\.hraness-design-kit\.priority3\s*,\s*components\.hraness-design-kit\.priority4/u.test(combinedCss),
     "The combined CSS artifact lost the frozen cross-package layer prelude.",
   );
   invariant(
@@ -345,8 +363,16 @@ try {
     "The combined CSS artifact lost the gallery-only design-kit priority2 Button conflict.",
   );
   invariant(
+    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[\s\S]*?\[data-design-kit-stylex-dither-conflict=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{(?=[^}]*--design-kit-stylex-dither-conflict:\s*design-kit-priority2)(?=[^}]*background-size:\s*99px\s+99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only design-kit priority2 DitherSurface conflict.",
+  );
+  invariant(
     /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-dither-old-parent=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{[^}]*background-size:\s*88px\s+88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only DitherSurface old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
@@ -357,6 +383,16 @@ try {
   invariant(
     !combinedCss.includes(".hraness-design-production-data-preview-notice{"),
     "Legacy CSS can still satisfy the migrated notice selector.",
+  );
+  for (const [pattern, declaration] of ditherDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss) && pattern.test(combinedCss),
+      `The packed or combined CSS artifact lost the migrated DitherSurface ${declaration} declaration.`,
+    );
+  }
+  invariant(
+    !/\.hraness-design-dither-surface\s*(?:\{|\[|:)/u.test(designLegacyCss),
+    "Legacy design-kit CSS can still satisfy the migrated DitherSurface selector.",
   );
   const reactAriaPressableRules = combinedCss.match(
     /\[data-react-aria-pressable\]\s*\{\s*touch-action:\s*pan-x pan-y pinch-zoom;?\s*\}/gu,
@@ -799,11 +835,19 @@ try {
     const button = control?.closest(".hraness-button");
     const icon = control?.querySelector('[data-slot="icon"]');
     const quietSiteFooter = document.querySelector('[data-security-ui-priority3]');
+    const mediumDither = document.querySelector('[data-security-dither="medium"]');
+    const coarseDither = document.querySelector('[data-security-dither="coarse"]');
+    const fineDither = document.querySelector('[data-security-dither="fine"]');
+    const callerDither = document.querySelector('[data-security-dither="caller"]');
     if (!(control instanceof HTMLButtonElement)
       || !(button instanceof HTMLElement)
       || !(icon instanceof SVGElement)
-      || !(quietSiteFooter instanceof HTMLElement)) {
-      throw new Error("The cross-package Button, Icon, and UI priority3 canary is missing.");
+      || !(quietSiteFooter instanceof HTMLElement)
+      || !(mediumDither instanceof HTMLElement)
+      || !(coarseDither instanceof HTMLElement)
+      || !(fineDither instanceof HTMLElement)
+      || !(callerDither instanceof HTMLElement)) {
+      throw new Error("The cross-package Button, Icon, UI priority3, or DitherSurface canary is missing.");
     }
     button.setAttribute("data-design-kit-stylex-layer-conflict", "true");
     const buttonStyle = getComputedStyle(button);
@@ -813,6 +857,15 @@ try {
     button.removeAttribute("data-design-kit-stylex-old-parent");
     const iconStyle = getComputedStyle(icon);
     const quietSiteFooterStyle = getComputedStyle(quietSiteFooter);
+    const mediumStyle = getComputedStyle(mediumDither);
+    const normalizedDitherSize = mediumStyle.backgroundSize;
+    mediumDither.setAttribute("data-design-kit-stylex-dither-old-parent", "true");
+    const oldDirectParentDitherSize = getComputedStyle(mediumDither).backgroundSize;
+    mediumDither.removeAttribute("data-design-kit-stylex-dither-old-parent");
+    const restoredDitherStyle = getComputedStyle(mediumDither);
+    const coarseDitherStyle = getComputedStyle(coarseDither);
+    const fineDitherStyle = getComputedStyle(fineDither);
+    const callerDitherStyle = getComputedStyle(callerDither);
     return {
       normalizedDisplay,
       oldDirectParentDisplay,
@@ -829,6 +882,33 @@ try {
       ),
       uiPriority3HasInlineStyle: quietSiteFooter.hasAttribute("style"),
       uiPriority3PaddingTop: quietSiteFooterStyle.paddingTop,
+      callerDitherBackgroundImage: callerDitherStyle.backgroundImage,
+      callerDitherHasInlineStyle: callerDither.hasAttribute("style"),
+      callerDitherSize: callerDitherStyle.backgroundSize,
+      callerDitherVariable: callerDitherStyle
+        .getPropertyValue("--hraness-design-dither-size")
+        .trim(),
+      coarseDitherSize: coarseDitherStyle.backgroundSize,
+      coarseDitherVariable: coarseDitherStyle
+        .getPropertyValue("--hraness-design-dither-size")
+        .trim(),
+      ditherClasses: [...mediumDither.classList].filter(
+        (className) => className !== "hraness-themed-surface"
+          && className !== "hraness-design-dither-surface",
+      ),
+      ditherConflictSentinel: restoredDitherStyle
+        .getPropertyValue("--design-kit-stylex-dither-conflict")
+        .trim(),
+      ditherDensity: mediumDither.dataset.density,
+      ditherHasInlineStyle: mediumDither.hasAttribute("style"),
+      ditherImage: restoredDitherStyle.backgroundImage,
+      fineDitherSize: fineDitherStyle.backgroundSize,
+      fineDitherVariable: fineDitherStyle
+        .getPropertyValue("--hraness-design-dither-size")
+        .trim(),
+      normalizedDitherSize,
+      oldDirectParentDitherSize,
+      restoredDitherSize: restoredDitherStyle.backgroundSize,
     };
   });
   invariant(
@@ -874,6 +954,67 @@ try {
       `The served aggregate CSS does not contain the rendered UI priority3 class ${className}.`,
     );
   }
+  invariant(
+    crossPackageEvidence.ditherDensity === "medium"
+      && crossPackageEvidence.normalizedDitherSize === "4px 4px"
+      && crossPackageEvidence.oldDirectParentDitherSize === "88px 88px"
+      && crossPackageEvidence.restoredDitherSize === "4px 4px"
+      && crossPackageEvidence.ditherConflictSentinel === "design-kit-priority2",
+    `The real DitherSurface did not distinguish normalized priority3 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  invariant(
+    crossPackageEvidence.ditherImage.includes("radial-gradient")
+      && crossPackageEvidence.coarseDitherSize === "7px 7px"
+      && crossPackageEvidence.coarseDitherVariable === "7px"
+      && crossPackageEvidence.fineDitherSize === "3px 3px"
+      && crossPackageEvidence.fineDitherVariable === "3px"
+      && !crossPackageEvidence.ditherHasInlineStyle,
+    `The real DitherSurface lost its extracted texture or finite density contract: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  invariant(
+    crossPackageEvidence.callerDitherSize === "11px 11px"
+      && crossPackageEvidence.callerDitherVariable === "11px"
+      && crossPackageEvidence.callerDitherBackgroundImage.includes("radial-gradient")
+      && crossPackageEvidence.callerDitherHasInlineStyle,
+    `The real DitherSurface lost caller-last native density override behavior: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  const renderedDitherClasses = crossPackageEvidence.ditherClasses.filter(
+    (className) => classSelectorCount(designStylexCss, className) === 1,
+  );
+  invariant(
+    renderedDitherClasses.length >= 2,
+    `The real medium DitherSurface exposes fewer than two design-kit atomic classes: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  for (const className of renderedDitherClasses) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1,
+      `The design-kit StyleX artifact contains the wrong selector count for rendered DitherSurface class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain rendered DitherSurface class ${className}.`,
+    );
+  }
+  await page.emulateMedia({ forcedColors: "active" });
+  const forcedColorDitherEvidence = await page.evaluate(() => (
+    [...document.querySelectorAll<HTMLElement>("[data-security-dither]")]
+      .map((element) => ({
+        backgroundImage: getComputedStyle(element).backgroundImage,
+        density: element.dataset.density,
+        text: element.textContent?.trim(),
+      }))
+  ));
+  invariant(
+    forcedColorDitherEvidence.length === 4
+      && forcedColorDitherEvidence.every(
+        ({ backgroundImage, density, text }) => backgroundImage === "none"
+          && density !== undefined
+          && text !== undefined
+          && text.length > 0,
+      ),
+    `Forced-colors mode did not remove only the decorative DitherSurface image: ${JSON.stringify(forcedColorDitherEvidence)}.`,
+  );
+  await page.emulateMedia({ forcedColors: "none" });
   const pressableEvidence = await page.evaluate((styleId) => {
     const element = document.querySelector("#security-canary-dialog-trigger");
     const link = document.querySelector(`#${styleId}`);
@@ -977,7 +1118,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed StyleX CSS, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface density/override/forced-color cascade evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

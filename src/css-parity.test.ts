@@ -48,6 +48,7 @@ const css = await Bun.file(new URL("./tokens.css", import.meta.url)).text();
 const resetCss = await Bun.file(new URL("./reset.css", import.meta.url)).text();
 const stylesCss = await Bun.file(new URL("./styles.css", import.meta.url)).text();
 const componentsCss = await Bun.file(new URL("./components.css", import.meta.url)).text();
+const stylexCss = await Bun.file(new URL("../dist/stylex.css", import.meta.url)).text();
 const light = declarations(ruleBody(css, ":root"));
 const dark = declarations(ruleBody(css, ".dark"));
 
@@ -63,7 +64,7 @@ test("the design layer composes the public primitive core first", () => {
   expect(designComponents).toBeGreaterThan(portableStylex);
   expect(stylesCss.startsWith([
     "@layer base, components;",
-    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;",
+    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;",
   ].join("\n"))).toBe(true);
   expect(stylesCss).not.toContain("fonts.css");
 });
@@ -107,7 +108,7 @@ test("the default font roles are system stacks", () => {
 
 test("composition CSS retains mobile, reduced-motion, and forced-color contracts", () => {
   expect(componentsCss.startsWith([
-    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;",
+    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;",
     '@import "../dist/stylex.css";',
   ].join("\n"))).toBe(true);
   expect(componentsCss).toContain("@layer components.hraness-design-kit.legacy {");
@@ -117,6 +118,10 @@ test("composition CSS retains mobile, reduced-motion, and forced-color contracts
   expect(componentsCss).toContain(".hraness-design-app-shell");
   expect(componentsCss).toContain(".hraness-design-fader");
   expect(componentsCss).not.toContain(".hraness-button");
+  expect(componentsCss).not.toContain(".hraness-design-dither-surface");
+  expect(stylexCss).toContain("--hraness-design-dither-size: 3px");
+  expect(stylexCss).toContain("--hraness-design-dither-size: 7px");
+  expect(stylexCss).toContain("@media (forced-colors: active)");
 });
 
 test("fader thumbs define the cross axis that React Aria leaves unset", () => {

@@ -62,6 +62,20 @@ const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/text-transform:\s*uppercase/u, "emphasis text-transform"],
 ];
 
+const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/--hraness-design-dither-size:\s*3px/u, "fine density variable"],
+  [/--hraness-design-dither-size:\s*7px/u, "coarse density variable"],
+  [
+    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
+    "radial texture",
+  ],
+  [
+    /background-size:\s*var\(--hraness-design-dither-size,\s*4px\)\s+var\(--hraness-design-dither-size,\s*4px\)/u,
+    "public density-variable texture size",
+  ],
+  [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
+];
+
 function requireNoticePresentation(css: string, label: string): void {
   if (!css.includes("@layer components.hraness-design-kit.priority")) {
     throw new Error(`${label} lost the package-owned StyleX layer.`);
@@ -69,6 +83,19 @@ function requireNoticePresentation(css: string, label: string): void {
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     if (!pattern.test(css)) {
       throw new Error(`${label} lost the migrated notice ${declaration} declaration.`);
+    }
+  }
+}
+
+function requireDitherPresentation(css: string, label: string): void {
+  for (const layer of ["priority1", "priority2", "priority3", "priority4"]) {
+    if (!css.includes(`@layer components.hraness-design-kit.${layer}`)) {
+      throw new Error(`${label} lost the package-owned ${layer} StyleX layer.`);
+    }
+  }
+  for (const [pattern, declaration] of ditherDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated DitherSurface ${declaration} declaration.`);
     }
   }
 }
@@ -201,8 +228,8 @@ try {
   const aggregateStylexImports = packedStylesCss
     .split("\n")
     .filter((line) => line.trim() === stylexImport);
-  const localLayerPrelude = "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
-  const portfolioLayerPrelude = "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  const localLayerPrelude = "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
+  const portfolioLayerPrelude = "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   if (componentStylexImports.length !== 1
     || !packedComponentsCss.startsWith(`${localLayerPrelude}\n${stylexImport}\n`)) {
     throw new Error("Packed components.css does not freeze the local layers and deliver dist/stylex.css exactly once before legacy recipes.");
@@ -219,6 +246,10 @@ try {
     throw new Error("Packed styles.css does not freeze and compose the exact cross-package component layer contract.");
   }
   requireNoticePresentation(packedStylexCss, "Packed stylex.css");
+  requireDitherPresentation(packedStylexCss, "Packed stylex.css");
+  if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained the migrated legacy DitherSurface recipe.");
+  }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
   }
@@ -383,7 +414,7 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
@@ -391,8 +422,11 @@ try {
       'const stylexCss = await readFile(new URL(stylexUrl), "utf8");',
       'if (!stylexCss.includes("@layer components.hraness-design-kit.priority")) throw new Error("Packed stylex.css lost its package layer.");',
       'if (!stylexCss.includes("position: sticky") || !stylexCss.includes("text-transform: uppercase")) throw new Error("Packed stylex.css lost the notice declarations.");',
+      'for (const layer of ["priority1", "priority2", "priority3", "priority4"]) { if (!stylexCss.includes(`@layer components.hraness-design-kit.${layer}`)) throw new Error(`Packed stylex.css lost design-kit ${layer}.`); }',
+      'if (!stylexCss.includes("--hraness-design-dither-size: 3px") || !stylexCss.includes("--hraness-design-dither-size: 7px") || !stylexCss.includes("background-size: var(--hraness-design-dither-size, 4px) var(--hraness-design-dither-size, 4px)") || !stylexCss.includes("@media (forced-colors: active)")) throw new Error("Packed stylex.css lost the DitherSurface declarations.");',
       'const componentsCss = await readFile(new URL(import.meta.resolve("@hraness/design-kit/components.css")), "utf8");',
       'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
+      'if (componentsCss.includes(".hraness-design-dither-surface")) throw new Error("Legacy CSS still declares the migrated DitherSurface.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
       'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
       'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
@@ -415,7 +449,14 @@ try {
       'const uiPriority3 = footer.filter((className) => uiPriority3Css.includes(`.${className} {`));',
       'if (uiPriority3.length === 0) throw new Error("Packed UI QuietSiteFooter exposes no class from the emitted priority3 layer.");',
       'for (const className of new Set(uiPriority3)) { const count = uiStylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered priority3 class ${className}.`); }',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, icon, strong, uiPriority3 }));',
+      'const ditherMarkup = Object.fromEntries(["coarse", "fine", "medium"].map((density) => [density, renderToStaticMarkup(createElement(DitherSurface, { as: "article", density, tone: "secondary" }, density))]));',
+      'for (const [density, markup] of Object.entries(ditherMarkup)) { if (!markup.includes(`data-density="${density}"`) || !markup.includes("hraness-themed-surface") || !markup.includes("hraness-design-dither-surface") || !markup.includes(`data-slot="themed-surface"`) || markup.includes("style=")) throw new Error(`Packed DitherSurface lost its ${density} semantic or extracted presentation contract.`); }',
+      'const dither = /<article[^>]*class="([^"]+)"/u.exec(ditherMarkup.coarse)?.[1]?.split(" ").filter((name) => name !== "hraness-themed-surface" && name !== "hraness-design-dither-surface" && name.length > 0 && stylexCss.includes(`.${name} {`));',
+      'if (dither === undefined || dither.length < 3) throw new Error("Packed coarse DitherSurface exposes fewer than three design-kit atomic classes.");',
+      'for (const className of new Set(dither)) { const count = stylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed design-kit stylex.css contains ${String(count)} selectors for rendered DitherSurface class ${className}.`); }',
+      'const callerMarkup = renderToStaticMarkup(createElement(DitherSurface, { density: "fine", style: { "--hraness-design-dither-size": "11px", backgroundImage: "none", backgroundSize: "11px 11px" } }));',
+      'if (!callerMarkup.includes("--hraness-design-dither-size:11px") || !callerMarkup.includes("background-image:none") || !callerMarkup.includes("background-size:11px 11px")) throw new Error("Packed DitherSurface lost caller-last native presentation.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -429,6 +470,7 @@ try {
     "src/components.css",
     "src/styles.css",
     "src/react/production-data-preview-notice.stylex.ts",
+    "src/react/surfaces.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
     "vendor/evilcharts/LICENSE",
     "vendor/jelly-ui/LICENSE",
@@ -528,10 +570,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { JellySurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { DitherSurface, JellySurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -550,6 +592,7 @@ try {
   )).join("\n");
   const noticeClasses = await Bun.file(join(consumer, "notice-classes.json")).json() as {
     readonly aside: readonly string[];
+    readonly dither: readonly string[];
     readonly icon: readonly string[];
     readonly strong: readonly string[];
     readonly uiPriority3: readonly string[];
@@ -560,6 +603,7 @@ try {
     throw new Error("Packed notice exposes no generated StyleX classes to the Vite oracle.");
   }
   requireAtomicSelectorsPresent(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.dither, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority3, "Packed aggregate Vite CSS");
   for (const layerName of [
@@ -569,12 +613,17 @@ try {
     "components.hraness-design-kit.priority1",
     "components.hraness-design-kit.priority2",
     "components.hraness-design-kit.priority3",
+    "components.hraness-design-kit.priority4",
   ]) {
     requireLayerBlockExactlyOnce(builtCss, layerName, "Packed aggregate Vite CSS");
   }
   requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
+  requireDitherPresentation(builtCss, "Packed aggregate Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");
+  }
+  if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained the migrated legacy DitherSurface recipe.");
   }
 
   await writeFile(
@@ -583,10 +632,10 @@ try {
       'import { createElement } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/components.css";',
-      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
+      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither")));',
       "",
     ].join("\n"),
   );
@@ -613,9 +662,18 @@ try {
     generatedNoticeClasses,
     "Packed narrow components.css Vite CSS",
   );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    noticeClasses.dither,
+    "Packed narrow components.css Vite CSS",
+  );
   requireNoticePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requireDitherPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy notice recipe.");
+  }
+  if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy DitherSurface recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -650,7 +708,7 @@ try {
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
     [
-      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { DitherSurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
@@ -660,6 +718,9 @@ try {
       'if (strongClasses === undefined || strongClasses.length === 0) throw new Error("React 18 packed notice emphasis lost atomic classes.");',
       'if (!html.includes(\'role="alert"\') || !html.includes(\'aria-label="Production data preview warning"\')) throw new Error("React 18 packed notice lost alert semantics.");',
       'if (html.includes("style=")) throw new Error("React 18 packed notice emitted inline presentation.");',
+      'for (const density of ["coarse", "fine", "medium"]) { const dither = renderToStaticMarkup(createElement(DitherSurface, { as: "article", density, tone: "secondary" }, density)); if (!dither.includes(`data-density="${density}"`) || !dither.includes("hraness-themed-surface") || !dither.includes("hraness-design-dither-surface") || !dither.includes(`data-slot="themed-surface"`) || dither.includes("style=")) throw new Error(`React 18 packed DitherSurface lost its ${density} semantic or extracted presentation contract.`); }',
+      'const callerDither = renderToStaticMarkup(createElement(DitherSurface, { density: "fine", style: { "--hraness-design-dither-size": "11px", backgroundImage: "none", backgroundSize: "11px 11px" } }));',
+      'if (!callerDither.includes("--hraness-design-dither-size:11px") || !callerDither.includes("background-image:none") || !callerDither.includes("background-size:11px 11px")) throw new Error("React 18 packed DitherSurface lost caller-last native presentation.");',
       "",
     ].join("\n"),
   );

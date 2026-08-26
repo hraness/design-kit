@@ -32,7 +32,7 @@ Import the complete stylesheet once after Tailwind, if the application uses it:
 @import "@hraness/design-kit/styles.css";
 ```
 
-The complete stylesheet composes the token, reset, legacy component, and extracted StyleX layers from `@hraness/ui` before applying design-kit presentation. It keeps `base` below `components`, then freezes UI legacy, priority1, priority2, and priority3 before design-kit legacy, priority1, priority2, and priority3. Migrated declarations therefore win according to package ownership and StyleX priority without relying on import timing. It uses system font stacks by default. Package-owned atomic component presentation is authored in colocated `*.stylex.ts` files and compiled into deterministic `dist/stylex.css` with runtime injection disabled. `styles.css` reaches that local artifact once through `components.css`, so the public narrow component entry and the complete entry carry the same component recipes. Generated atomic class names are declaration hashes that may repeat across package layers; they are internal and do not identify package ownership. Use documented stable classes only when a composition exposes one. StyleX 0.19 physicalizes the notice's block-axis inset and border into `top` and `border-bottom` rules. The notice preserves horizontal LTR and RTL behavior; this compiler canary does not claim vertical-writing-mode parity.
+The complete stylesheet composes the token, reset, legacy component, and extracted StyleX layers from `@hraness/ui` before applying design-kit presentation. It keeps `base` below `components`, then freezes UI legacy, priority1, priority2, and priority3 before design-kit legacy, priority1, priority2, priority3, and priority4. Migrated declarations therefore win according to package ownership and StyleX priority without relying on import timing. It uses system font stacks by default. Package-owned atomic component presentation is authored in colocated `*.stylex.ts` files and compiled into deterministic `dist/stylex.css` with runtime injection disabled. `styles.css` reaches that local artifact once through `components.css`, so the public narrow component entry and the complete entry carry the same component recipes. Generated atomic class names are declaration hashes that may repeat across package layers; they are internal and do not identify package ownership. Use documented stable classes only when a composition exposes one. StyleX 0.19 physicalizes the notice's block-axis inset and border into `top` and `border-bottom` rules. The notice preserves horizontal LTR and RTL behavior; this compiler canary does not claim vertical-writing-mode parity.
 
 Import narrower layers when the application does not need the full presentation system:
 
@@ -86,6 +86,8 @@ export function Workspace() {
 ```
 
 Connect routing with `RouterProvider` from `@hraness/ui`. Design-kit rail links use that public router context and intent-prefetch contract.
+
+`DitherSurface` composes its product-neutral texture through the typed `ThemedSurface` seam from `@hraness/ui`. Its `density` is one of `coarse`, `fine`, or `medium`; the default medium texture uses `4px`, while coarse and fine set the literal public `--hraness-design-dither-size` property to `7px` and `3px`. A caller `xstyle` recipe is applied after the shared texture, and native `style` remains last for deliberate per-instance overrides. Forced-colors mode removes the decorative image without changing the surface's content, native element, tone, shape, or border.
 
 ## Use charts and syntax
 
@@ -198,7 +200,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The current unreleased migration train pins the reviewed UI candidate at full commit `13f254b5e7c171e95005f32e01c4fdcf0aba9f83` for development and CI. Publication is intentionally blocked while that commit pin is present. Replace it with the corresponding immutable stable tag only after the UI candidate is released and re-run the complete check before publishing. The last stable rollback pair remains `@hraness/ui` `v0.4.6` with `@hraness/design-kit` `v0.1.9`.
+The current unreleased migration train pins the reviewed UI candidate at full commit `6a4b0bd474262114356ab79c4ca10b76fe22c9cf` for development and CI. Publication is intentionally blocked while that commit pin is present. Replace it with the corresponding immutable stable tag only after the UI candidate is released and re-run the complete check before publishing. The last stable rollback pair remains `@hraness/ui` `v0.4.6` with `@hraness/design-kit` `v0.1.9`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

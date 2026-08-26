@@ -1,15 +1,17 @@
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
 
-import {
-  DesignThemeProvider,
-  GlobalErrorDocument,
-  RouteErrorPage,
-  ThemeColorSync,
-} from "../src/react";
+import { builtDesignKitReact } from "./built-react.js";
 import {
   globalErrorFixtureColors,
   globalErrorFixtureMessage,
 } from "./global-error-fixture";
+
+const {
+  DesignThemeProvider,
+  GlobalErrorDocument,
+  RouteErrorPage,
+  ThemeColorSync,
+} = builtDesignKitReact;
 
 interface ThemeColorLifecycleFixture {
   readonly mount: () => void;

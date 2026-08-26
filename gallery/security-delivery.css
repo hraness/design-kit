@@ -20,11 +20,20 @@
     --design-kit-stylex-layer-conflict: design-kit-priority2;
     display: grid;
   }
+
+  html body [data-design-kit-stylex-dither-conflict="true"].hraness-design-dither-surface {
+    --design-kit-stylex-dither-conflict: design-kit-priority2;
+    background-size: 99px 99px;
+  }
 }
 
 @layer components {
   html body [data-design-kit-stylex-old-parent="true"].hraness-button {
     display: inline-flex;
+  }
+
+  html body [data-design-kit-stylex-dither-old-parent="true"].hraness-design-dither-surface {
+    background-size: 88px 88px;
   }
 }
 

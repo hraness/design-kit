@@ -22,7 +22,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-6e002fdt.js";
+} from "../chunk-azet83h4.js";
 import"../chunk-djxa5bgc.js";
 import {
   __require
@@ -1028,7 +1028,6 @@ import {
   SegmentedControl,
   Slider,
   Tag,
-  ThemedSurface,
   ViewportFrame,
   WrappingRow
 } from "@hraness/ui";
@@ -1579,6 +1578,7 @@ var designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
   "application shells",
   "charts",
+  "dither surface",
   "Jelly presentation",
   "plain site and publication grammar",
   "procedural effects",
@@ -1792,8 +1792,10 @@ function DesignSystemGallery({
                 as: "div",
                 children: /* @__PURE__ */ jsx12(AnimatedRailStage, {
                   stageKey: density,
-                  children: /* @__PURE__ */ jsxs10(ThemedSurface, {
+                  children: /* @__PURE__ */ jsxs10(DitherSurface, {
                     as: "section",
+                    "data-gallery-dither": "",
+                    density: density === "compact" ? "fine" : "medium",
                     tone: "card",
                     children: [
                       /* @__PURE__ */ jsxs10("h3", {

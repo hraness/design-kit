@@ -6,13 +6,24 @@ import { forwardRef } from "react";
 
 import { ThemedSurface, cn, type ThemedSurfaceProps } from "@hraness/ui";
 
+import { ditherSurfaceStyles } from "./surfaces.stylex.js";
+
+export type DitherSurfaceDensity = "coarse" | "fine" | "medium";
+
 export interface DitherSurfaceProps extends ThemedSurfaceProps {
-  readonly density?: "coarse" | "fine" | "medium";
+  readonly density?: DitherSurfaceDensity;
 }
+
+const ditherSurfaceDensityStyles = {
+  coarse: ditherSurfaceStyles.coarse,
+  fine: ditherSurfaceStyles.fine,
+  medium: undefined,
+} as const satisfies Readonly<Record<DitherSurfaceDensity, unknown>>;
 
 export function DitherSurface({
   className,
   density = "medium",
+  xstyle,
   ...props
 }: DitherSurfaceProps) {
   return (
@@ -20,6 +31,14 @@ export function DitherSurface({
       {...props}
       className={cn("hraness-design-dither-surface", className)}
       data-density={density}
+      xstyle={[
+        ditherSurfaceStyles.texture,
+        // The public ThemedSurface seam intentionally types standard CSS
+        // properties. StyleX still extracts this package-owned literal custom
+        // property, so keep the narrow cast at the composition boundary.
+        ditherSurfaceDensityStyles[density] as ThemedSurfaceProps["xstyle"],
+        xstyle,
+      ]}
     />
   );
 }

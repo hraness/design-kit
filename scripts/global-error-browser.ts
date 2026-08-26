@@ -7,16 +7,19 @@ import { chromium, type Browser, type Page } from "playwright-core";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { builtDesignKitReact } from "../gallery/built-react.js";
 import {
   globalErrorFixtureColors,
   globalErrorFixtureMessage,
 } from "../gallery/global-error-fixture.js";
-import { GlobalErrorDocument } from "../src/react/route-state.js";
 import {
   themeColorSyncActiveAttribute,
   themeColorSyncDisabledAttribute,
 } from "../src/react/theme-color-sync.js";
 import type { DesignTheme } from "../src/react/theme.js";
+
+const repository = process.cwd();
+const { GlobalErrorDocument } = builtDesignKitReact;
 
 interface ThemeColorEvidence {
   readonly activeColor: string | null;
@@ -175,7 +178,6 @@ async function openBrowser(executablePath: string): Promise<Browser> {
   return chromium.launch({ args: ["--no-sandbox"], executablePath, headless: true });
 }
 
-const repository = process.cwd();
 const work = await mkdtemp(join(tmpdir(), "hraness-global-error-browser-"));
 
 try {
