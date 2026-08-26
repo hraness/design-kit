@@ -6,6 +6,8 @@ export * from "./chat.js";
 export * from "./design-theme-context.js";
 export * from "./design-gallery.js";
 export * from "./fader.js";
+export * from "./foil-card-math.js";
+export * from "./foil-card-surface.js";
 export * from "./haptics.js";
 export * from "./jelly-surface.js";
 export * from "./keyboard-shortcuts.js";

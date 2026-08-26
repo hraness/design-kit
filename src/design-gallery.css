@@ -94,6 +94,28 @@
   background: var(--background);
 }
 
+.design-gallery__foil-example {
+  inline-size: min(100%, 22rem);
+}
+
+.design-gallery__foil-card {
+  display: grid;
+  min-block-size: 18rem;
+  align-content: space-between;
+  gap: var(--space-8);
+  padding: var(--space-5);
+  background: color-mix(in oklch, var(--surface) 78%, transparent);
+}
+
+.design-gallery__foil-card > :where(div) {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.design-gallery__foil-card :where(h3, p) {
+  margin: 0;
+}
+
 .design-gallery__effect > :where(
   .hraness-design-aurora-background,
   .hraness-design-aurora-dots
@@ -141,5 +163,9 @@
   .design-gallery__effect,
   .design-gallery__syntax {
     border-color: CanvasText;
+  }
+
+  .design-gallery__foil-card {
+    background: Canvas;
   }
 }

@@ -469,6 +469,10 @@ try {
     "src/appearance-menu.css",
     "src/components.css",
     "src/styles.css",
+    "src/browser/artifact-share.ts",
+    "src/react/foil-card-math.ts",
+    "src/react/foil-card-surface.tsx",
+    "src/react/foil-card-surface.stylex.ts",
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/surfaces.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
@@ -513,6 +517,13 @@ try {
     throw new Error("Packed browser entry does not expose the appearance installer.");
   }
   if (
+    !browserBundle.includes("buildXShareIntentUrl")
+    || !browserBundle.includes("canShareFileNatively")
+    || !browserBundle.includes("shareFileNatively")
+  ) {
+    throw new Error("Packed browser entry does not expose artifact sharing helpers.");
+  }
+  if (
     /(?:from\s*|import\s*)["'](?:next-themes|react(?:-dom|-aria-components)?)(?:\/[^"']*)?["']/u
       .test(browserBundle)
   ) {
@@ -523,9 +534,10 @@ try {
     join(consumer, "index.ts"),
     [
       'import * as core from "@hraness/design-kit";',
+      'import * as browser from "@hraness/design-kit/browser";',
       'import * as react from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
-      "void [core, react, serverReact];",
+      "void [browser, core, react, serverReact];",
       "",
     ].join("\n"),
   );

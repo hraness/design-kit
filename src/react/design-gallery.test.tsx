@@ -18,6 +18,7 @@ test("the public gallery covers the composition boundary", () => {
     "syntax",
   ]);
   expect(designGalleryRecipeCoverage).toContain("@hraness/ui primitives");
+  expect(designGalleryRecipeCoverage).toContain("foil card surface");
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
@@ -40,6 +41,9 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("hraness-design-dither-surface");
   expect(html).toContain('data-density="medium"');
   expect(html).toContain('data-gallery-dither=""');
+  expect(html).toContain("hraness-design-foil-card-surface");
+  expect(html).toContain('data-foil-preset="prism"');
+  expect(html).toContain('data-foil-render-mode="interactive"');
   expect(html).toContain('class="design-gallery__plain-link-example"');
   expect(html).toContain('class="plain-header__inner" data-layout="responsive-wrap"');
   expect(html).toContain('class="plain-wordmark"');
