@@ -2,9 +2,40 @@ import { cp, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { relative, resolve } from "node:path";
 
-import { buildPackage } from "./build.js";
+async function buildInFreshProcess(
+  buildScript: string,
+  destination: string,
+): Promise<void> {
+  // @stylexjs/unplugin shares extracted rules through a process-global store.
+  // Isolate each absolute-root proof so one compiler cannot retain the other
+  // root's rules before their generated outputs are compared.
+  const subprocess = Bun.spawn({
+    cmd: [process.execPath, buildScript],
+    cwd: destination,
+    env: process.env,
+    stderr: "pipe",
+    stdout: "pipe",
+  });
+  const [exitCode, stderr, stdout] = await Promise.all([
+    subprocess.exited,
+    new Response(subprocess.stderr).text(),
+    new Response(subprocess.stdout).text(),
+  ]);
+  if (exitCode !== 0) {
+    const diagnostic = [stdout.trim(), stderr.trim()]
+      .filter((output) => output.length > 0)
+      .join("\n");
+    throw new Error(
+      `StyleX determinism build failed in ${destination}${diagnostic.length > 0 ? `:\n${diagnostic}` : ""}`,
+    );
+  }
+}
 
-async function buildCopy(repository: string, destination: string): Promise<void> {
+async function buildCopy(
+  repository: string,
+  destination: string,
+  buildScript: string,
+): Promise<void> {
   await Promise.all([
     cp(resolve(repository, "src"), resolve(destination, "src"), {
       recursive: true,
@@ -13,7 +44,7 @@ async function buildCopy(repository: string, destination: string): Promise<void>
       recursive: true,
     }),
   ]);
-  await buildPackage(destination);
+  await buildInFreshProcess(buildScript, destination);
 }
 
 async function filesBelow(directory: string): Promise<string[]> {
@@ -26,13 +57,14 @@ async function filesBelow(directory: string): Promise<string[]> {
 }
 
 const repository = process.cwd();
+const buildScript = resolve(repository, "scripts/build.ts");
 const work = await mkdtemp(resolve(tmpdir(), "hraness-design-kit-stylex-determinism-"));
 const firstRoot = resolve(work, "first");
 const secondRoot = resolve(work, "nested", "second");
 
 try {
-  await buildCopy(repository, firstRoot);
-  await buildCopy(repository, secondRoot);
+  await buildCopy(repository, firstRoot, buildScript);
+  await buildCopy(repository, secondRoot, buildScript);
 
   const [firstFiles, secondFiles] = await Promise.all([
     filesBelow(resolve(firstRoot, "dist")),
