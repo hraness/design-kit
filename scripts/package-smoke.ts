@@ -87,8 +87,33 @@ function requireAtomicSelectorsExactlyOnce(
   }
 }
 
+function requireAtomicSelectorsPresent(
+  css: string,
+  classNames: readonly string[],
+  label: string,
+): void {
+  for (const className of new Set(classNames)) {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const count = css.match(new RegExp(`\\.${escaped}\\s*(?:\\{|,)`, "gu"))?.length ?? 0;
+    if (count < 1) {
+      throw new Error(`${label} does not contain rendered atomic class ${className}.`);
+    }
+  }
+}
+
+function requireLayerBlockExactlyOnce(
+  css: string,
+  layerName: string,
+  label: string,
+): void {
+  const escaped = layerName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const count = css.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
+  if (count !== 1) {
+    throw new Error(`${label} contains ${String(count)} ${layerName} blocks instead of one.`);
+  }
+}
+
 const repository = process.cwd();
-const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
 const rootManifest = record(
   await Bun.file(join(repository, "package.json")).json() as unknown,
   "package.json",
@@ -110,8 +135,22 @@ const uiDevelopmentSpecifier = stringField(
   "@hraness/ui",
   "package.json devDependencies",
 );
-if (!/^github:hraness\/ui#v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u.test(uiDevelopmentSpecifier)) {
-  throw new Error("The @hraness/ui development dependency must use an exact immutable release tag.");
+const immutableUiRelease = /^github:hraness\/ui#v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/u;
+const reviewedUiCommit = /^github:hraness\/ui#[0-9a-f]{40}$/u;
+if (!immutableUiRelease.test(uiDevelopmentSpecifier)
+  && !reviewedUiCommit.test(uiDevelopmentSpecifier)) {
+  throw new Error(
+    "The @hraness/ui development dependency must use an exact immutable release tag or full reviewed commit.",
+  );
+}
+if (process.argv.includes("--publication")) {
+  if (!immutableUiRelease.test(uiDevelopmentSpecifier)) {
+    throw new Error(
+      "Publication is blocked while @hraness/ui uses a full-commit development candidate; replace it with the reviewed immutable release tag.",
+    );
+  }
+  console.log("Publication dependency gate passed an immutable @hraness/ui release tag");
+  process.exit(0);
 }
 const uiPeerRange = stringField(
   rootPeerDependencies,
@@ -129,6 +168,7 @@ if (stringField(rootDevDependencies, "unplugin", "package.json devDependencies")
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
+const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
 
 try {
   const archive = join(work, "package.tgz");
@@ -161,14 +201,22 @@ try {
   const aggregateStylexImports = packedStylesCss
     .split("\n")
     .filter((line) => line.trim() === stylexImport);
-  if (componentStylexImports.length !== 1 || !packedComponentsCss.startsWith(`${stylexImport}\n`)) {
-    throw new Error("Packed components.css does not deliver dist/stylex.css exactly once before legacy recipes.");
+  const localLayerPrelude = "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  const portfolioLayerPrelude = "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  if (componentStylexImports.length !== 1
+    || !packedComponentsCss.startsWith(`${localLayerPrelude}\n${stylexImport}\n`)) {
+    throw new Error("Packed components.css does not freeze the local layers and deliver dist/stylex.css exactly once before legacy recipes.");
   }
   if (aggregateStylexImports.length !== 0) {
     throw new Error("Packed styles.css imports dist/stylex.css separately from components.css.");
   }
   if ((packedStylesCss.match(/@import "\.\/components\.css";/gu) ?? []).length !== 1) {
     throw new Error("Packed styles.css does not compose the narrow component entry exactly once.");
+  }
+  if (!packedStylesCss.startsWith(`@layer base, components;\n${portfolioLayerPrelude}\n`)
+    || (packedStylesCss.match(/@import "@hraness\/ui\/components\.css";/gu) ?? []).length !== 1
+    || (packedStylesCss.match(/@import "@hraness\/ui\/stylex\.css";/gu) ?? []).length !== 1) {
+    throw new Error("Packed styles.css does not freeze and compose the exact cross-package component layer contract.");
   }
   requireNoticePresentation(packedStylexCss, "Packed stylex.css");
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
@@ -292,6 +340,7 @@ try {
     process.execPath,
     "add",
     uiInstallSource,
+    "@hugeicons/core-free-icons@^4.2.2",
     "@types/bun@^1.3.14",
     "@types/react@^19.2.14",
     "@types/react-dom@^19.2.3",
@@ -332,6 +381,8 @@ try {
     join(consumer, "stylex-notice.mjs"),
     [
       'import { readFile, writeFile } from "node:fs/promises";',
+      'import { Search01Icon } from "@hugeicons/core-free-icons";',
+      'import { Icon, QuietSiteFooter } from "@hraness/ui";',
       'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
@@ -343,13 +394,28 @@ try {
       'const componentsCss = await readFile(new URL(import.meta.resolve("@hraness/design-kit/components.css")), "utf8");',
       'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
+      'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
+      'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
+      'const uiPriority3Index = uiStylexCss.indexOf(uiPriority3Marker);',
+      'if (uiPriority3Index < 0) throw new Error("Packed UI stylex.css lost its emitted priority3 layer.");',
+      'const uiPriority3Css = uiStylexCss.slice(uiPriority3Index);',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
       'const aside = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
       'const strong = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
       'if (aside === undefined || !aside.includes("hraness-design-production-data-preview-notice") || aside.length < 2) throw new Error("Packed notice lost its stable and atomic classes.");',
       'if (strong === undefined || strong.length === 0) throw new Error("Packed notice emphasis lost its atomic classes.");',
       'if (html.includes("style=")) throw new Error("Packed notice emitted inline presentation.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, strong }));',
+      'const iconHtml = renderToStaticMarkup(createElement(Icon, { icon: Search01Icon }));',
+      'const icon = /<svg[^>]*class="([^"]+)"/u.exec(iconHtml)?.[1]?.split(" ").filter((name) => name !== "hraness-icon" && name.length > 0);',
+      'if (icon === undefined || icon.length === 0 || iconHtml.includes("style=")) throw new Error("Packed UI Icon lost extracted StyleX classes.");',
+      'for (const className of new Set(icon)) { const escaped = className.replace(/[.*+?^${}()|[\\]\\\\]/gu, "\\\\$&"); const count = uiStylexCss.match(new RegExp(`\\\\.${escaped}\\\\s*(?:\\\\{|,)`, "gu"))?.length ?? 0; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered Icon class ${className}.`); }',
+      'const footerHtml = renderToStaticMarkup(createElement(QuietSiteFooter, null, "UI priority3 canary"));',
+      'const footer = /<footer[^>]*class="([^"]+)"/u.exec(footerHtml)?.[1]?.split(" ").filter((name) => name !== "hraness-quiet-site-footer" && name.length > 0);',
+      'if (footer === undefined || footer.length === 0 || footerHtml.includes("style=")) throw new Error("Packed UI QuietSiteFooter lost extracted StyleX classes.");',
+      'const uiPriority3 = footer.filter((className) => uiPriority3Css.includes(`.${className} {`));',
+      'if (uiPriority3.length === 0) throw new Error("Packed UI QuietSiteFooter exposes no class from the emitted priority3 layer.");',
+      'for (const className of new Set(uiPriority3)) { const count = uiStylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered priority3 class ${className}.`); }',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, icon, strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -459,11 +525,13 @@ try {
       'import { createElement } from "react";',
       'import { Fragment } from "react";',
       'import { createRoot } from "react-dom/client";',
+      'import { Search01Icon } from "@hugeicons/core-free-icons";',
+      'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
       'import { JellySurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -482,14 +550,28 @@ try {
   )).join("\n");
   const noticeClasses = await Bun.file(join(consumer, "notice-classes.json")).json() as {
     readonly aside: readonly string[];
+    readonly icon: readonly string[];
     readonly strong: readonly string[];
+    readonly uiPriority3: readonly string[];
   };
   const generatedNoticeClasses = [...noticeClasses.aside, ...noticeClasses.strong]
     .filter((name) => name !== "hraness-design-production-data-preview-notice");
   if (generatedNoticeClasses.length === 0) {
     throw new Error("Packed notice exposes no generated StyleX classes to the Vite oracle.");
   }
-  requireAtomicSelectorsExactlyOnce(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority3, "Packed aggregate Vite CSS");
+  for (const layerName of [
+    "components.hraness-ui.priority1",
+    "components.hraness-ui.priority2",
+    "components.hraness-ui.priority3",
+    "components.hraness-design-kit.priority1",
+    "components.hraness-design-kit.priority2",
+    "components.hraness-design-kit.priority3",
+  ]) {
+    requireLayerBlockExactlyOnce(builtCss, layerName, "Packed aggregate Vite CSS");
+  }
   requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");

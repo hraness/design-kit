@@ -68,8 +68,13 @@ function escapeRegularExpression(value: string): string {
 
 function classSelectorCount(css: string, className: string): number {
   return css.match(
-    new RegExp(`\\.${escapeRegularExpression(className)}(?=[{,:])`, "gu"),
+    new RegExp(`\\.${escapeRegularExpression(className)}(?=\\s*[{,:])`, "gu"),
   )?.length ?? 0;
+}
+
+function layerBlockCount(css: string, layerName: string): number {
+  const escaped = escapeRegularExpression(layerName);
+  return css.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
 }
 
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
@@ -298,11 +303,50 @@ try {
   invariant(cssOutputs.length === 1, `Expected one combined CSS artifact, received ${String(cssOutputs.length)}.`);
   const cssOutput = cssOutputs[0];
   invariant(cssOutput !== undefined, "The combined CSS artifact is unavailable.");
-  const combinedCss = await Bun.file(cssOutput.path).text();
+  const [combinedCss, uiStylexCss] = await Promise.all([
+    Bun.file(cssOutput.path).text(),
+    Bun.file(join(repository, "node_modules/@hraness/ui/dist/stylex.css")).text(),
+  ]);
+  const uiPriority3Marker = "@layer components.hraness-ui.priority3";
+  const uiPriority3Index = uiStylexCss.indexOf(uiPriority3Marker);
+  invariant(uiPriority3Index >= 0, "The pinned UI artifact has no emitted priority3 layer.");
+  const uiPriority3Css = uiStylexCss.slice(uiPriority3Index);
+  invariant(
+    /padding-top:\s*var\(--space-5,\s*1\.25rem\)/u.test(uiPriority3Css),
+    "The pinned UI priority3 layer lost the QuietSite footer padding canary.",
+  );
   invariant(combinedCss.trim().length > 0, "The combined CSS artifact is empty.");
   invariant(
     combinedCss.includes("@layer components.hraness-design-kit.priority"),
     "The combined CSS artifact lost the package-owned StyleX layer.",
+  );
+  for (const layerName of [
+    "components.hraness-ui.priority1",
+    "components.hraness-ui.priority2",
+    "components.hraness-ui.priority3",
+    "components.hraness-design-kit.priority1",
+    "components.hraness-design-kit.priority3",
+  ]) {
+    invariant(
+      layerBlockCount(combinedCss, layerName) === 1,
+      `The combined CSS artifact contains ${String(layerBlockCount(combinedCss, layerName))} ${layerName} blocks instead of one.`,
+    );
+  }
+  invariant(
+    layerBlockCount(combinedCss, "components.hraness-design-kit.priority2") === 2,
+    `The combined CSS artifact must contain one compiled and one gallery-only design-kit priority2 block, received ${String(layerBlockCount(combinedCss, "components.hraness-design-kit.priority2"))}.`,
+  );
+  invariant(
+    /@layer\s+components\.hraness-ui\.legacy\s*,\s*components\.hraness-ui\.priority1\s*,\s*components\.hraness-ui\.priority2\s*,\s*components\.hraness-ui\.priority3\s*,\s*components\.hraness-design-kit\.legacy\s*,\s*components\.hraness-design-kit\.priority1\s*,\s*components\.hraness-design-kit\.priority2\s*,\s*components\.hraness-design-kit\.priority3/u.test(combinedCss),
+    "The combined CSS artifact lost the frozen cross-package layer prelude.",
+  );
+  invariant(
+    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[^}]*\[data-design-kit-stylex-layer-conflict=(?:"true"|true)\]\.hraness-button\s*\{(?=[^}]*--design-kit-stylex-layer-conflict:\s*design-kit-priority2)(?=[^}]*display:\s*grid)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only design-kit priority2 Button conflict.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
@@ -642,8 +686,8 @@ try {
   invariant(noticeEvidence.emphasisClasses.length > 0, "The notice emphasis has no rendered atomic classes.");
   for (const className of [...noticeAtomicClasses, ...noticeEvidence.emphasisClasses]) {
     invariant(
-      classSelectorCount(combinedCss, className) === 1,
-      `The served combined CSS does not contain exactly one selector for rendered atomic class ${className}.`,
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served combined CSS does not contain rendered notice atomic class ${className}.`,
     );
   }
 
@@ -750,6 +794,86 @@ try {
   );
 
   const trigger = page.locator("#security-canary-dialog-trigger");
+  const crossPackageEvidence = await page.evaluate(() => {
+    const control = document.querySelector("#security-canary-dialog-trigger");
+    const button = control?.closest(".hraness-button");
+    const icon = control?.querySelector('[data-slot="icon"]');
+    const quietSiteFooter = document.querySelector('[data-security-ui-priority3]');
+    if (!(control instanceof HTMLButtonElement)
+      || !(button instanceof HTMLElement)
+      || !(icon instanceof SVGElement)
+      || !(quietSiteFooter instanceof HTMLElement)) {
+      throw new Error("The cross-package Button, Icon, and UI priority3 canary is missing.");
+    }
+    button.setAttribute("data-design-kit-stylex-layer-conflict", "true");
+    const buttonStyle = getComputedStyle(button);
+    const normalizedDisplay = buttonStyle.display;
+    button.setAttribute("data-design-kit-stylex-old-parent", "true");
+    const oldDirectParentDisplay = getComputedStyle(button).display;
+    button.removeAttribute("data-design-kit-stylex-old-parent");
+    const iconStyle = getComputedStyle(icon);
+    const quietSiteFooterStyle = getComputedStyle(quietSiteFooter);
+    return {
+      normalizedDisplay,
+      oldDirectParentDisplay,
+      restoredDisplay: getComputedStyle(button).display,
+      buttonSentinel: buttonStyle
+        .getPropertyValue("--design-kit-stylex-layer-conflict")
+        .trim(),
+      iconClasses: [...icon.classList].filter((className) => className !== "hraness-icon"),
+      iconDisplay: iconStyle.display,
+      iconFlex: iconStyle.flex,
+      iconHasInlineStyle: icon.hasAttribute("style"),
+      uiPriority3Classes: [...quietSiteFooter.classList].filter(
+        (className) => className !== "hraness-quiet-site-footer",
+      ),
+      uiPriority3HasInlineStyle: quietSiteFooter.hasAttribute("style"),
+      uiPriority3PaddingTop: quietSiteFooterStyle.paddingTop,
+    };
+  });
+  invariant(
+    crossPackageEvidence.normalizedDisplay === "grid"
+      && crossPackageEvidence.oldDirectParentDisplay === "inline-flex"
+      && crossPackageEvidence.restoredDisplay === "grid"
+      && crossPackageEvidence.buttonSentinel === "design-kit-priority2",
+    `The real Button did not distinguish normalized UI legacy from the old direct-parent negative control: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  invariant(
+    crossPackageEvidence.iconClasses.length > 0
+      && crossPackageEvidence.iconDisplay === "block"
+      && crossPackageEvidence.iconFlex === "0 0 auto"
+      && !crossPackageEvidence.iconHasInlineStyle,
+    `The real UI Icon lost its extracted StyleX presentation: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  for (const className of crossPackageEvidence.iconClasses) {
+    invariant(
+      classSelectorCount(uiStylexCss, className) === 1,
+      `The pinned UI StyleX artifact contains ${String(classSelectorCount(uiStylexCss, className))} selectors for the rendered Icon class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain the rendered UI Icon class ${className}.`,
+    );
+  }
+  const renderedUiPriority3Classes = crossPackageEvidence.uiPriority3Classes.filter(
+    (className) => classSelectorCount(uiPriority3Css, className) === 1,
+  );
+  invariant(
+    renderedUiPriority3Classes.length > 0
+      && crossPackageEvidence.uiPriority3PaddingTop === "20px"
+      && !crossPackageEvidence.uiPriority3HasInlineStyle,
+    `The real UI QuietSiteFooter lost its extracted priority3 presentation: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  for (const className of renderedUiPriority3Classes) {
+    invariant(
+      classSelectorCount(uiStylexCss, className) === 1,
+      `The pinned UI StyleX artifact contains ${String(classSelectorCount(uiStylexCss, className))} selectors for rendered priority3 class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain the rendered UI priority3 class ${className}.`,
+    );
+  }
   const pressableEvidence = await page.evaluate((styleId) => {
     const element = document.querySelector("#security-canary-dialog-trigger");
     const link = document.querySelector(`#${styleId}`);

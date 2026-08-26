@@ -1,4 +1,7 @@
+@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;
 @import "../dist/stylex.css";
+
+@layer components.hraness-design-kit.legacy {
 
 .hraness-design-visually-hidden {
   position: absolute;
@@ -525,4 +528,5 @@
   .hraness-design-dither-surface {
     background-image: none;
   }
+}
 }

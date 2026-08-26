@@ -1,9 +1,13 @@
+@layer base, components;
+@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;
+
 @import "./tokens.css";
 @import "./reset.css";
 @import "./typography.css";
 @import "./syntax-highlighting.css";
 @import "./effects.css";
 @import "@hraness/ui/components.css";
+@import "@hraness/ui/stylex.css";
 @import "./components.css";
 @import "./appearance-menu.css";
 @import "./charts.css";

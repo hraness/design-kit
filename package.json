@@ -135,6 +135,7 @@
     "build": "bun run ./scripts/build.ts",
     "check:stylex-artifacts": "bun run ./scripts/check-stylex-artifacts.ts",
     "check:stylex-determinism": "bun run ./scripts/check-stylex-determinism.ts",
+    "check:publication-ready": "bun run ./scripts/package-smoke.ts --publication",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
@@ -145,7 +146,8 @@
     "kb:check": "bunx --bun github:hraness/kb#v0.15.1 check --root kb && bunx --bun github:hraness/kb#v0.15.1 agents check --root kb --repo .",
     "kb:catalog": "bunx --bun github:hraness/kb#v0.15.1 catalog --root kb",
     "check": "bun run lint && bun run typecheck && bun run build && bun run check:stylex-artifacts && bun run check:stylex-determinism && bun run test:package && bun run test && bun run test:browser",
-    "prepack": "bun run check"
+    "prepack": "bun run check",
+    "prepublishOnly": "bun run check:publication-ready"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.2.2",
@@ -169,7 +171,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@hraness/ui": "github:hraness/ui#v0.4.1",
+    "@hraness/ui": "github:hraness/ui#13f254b5e7c171e95005f32e01c4fdcf0aba9f83",
     "@stylexjs/unplugin": "0.19.0",
     "@types/bun": "^1.3.14",
     "@types/react": "^19.2.14",

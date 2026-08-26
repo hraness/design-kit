@@ -1,6 +1,32 @@
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join, resolve } from "node:path";
 
+const DESIGN_COMPONENTS_IMPORT = '@import "./components.css";';
+const DESIGN_STYLEX_IMPORT = '@import "../dist/stylex.css";';
+const GALLERY_LAYER_CONFLICT_SENTINEL = "data-design-kit-stylex-";
+const LOCAL_LAYER_PRELUDE =
+  "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+const PORTFOLIO_LAYER_PRELUDE =
+  "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+const TOP_LEVEL_LAYER_PRELUDE = "@layer base, components;";
+const UI_COMPONENTS_IMPORT = '@import "@hraness/ui/components.css";';
+const UI_STYLEX_IMPORT = '@import "@hraness/ui/stylex.css";';
+
+const DESIGN_STYLEX_LAYERS = [
+  "components.hraness-design-kit.priority1",
+  "components.hraness-design-kit.priority2",
+  "components.hraness-design-kit.priority3",
+] as const;
+const UI_LEGACY_LAYERS = [
+  "components.hraness-ui.legacy.base",
+  "components.hraness-ui.legacy",
+] as const;
+const UI_STYLEX_LAYERS = [
+  "components.hraness-ui.priority1",
+  "components.hraness-ui.priority2",
+  "components.hraness-ui.priority3",
+] as const;
+
 function requireMatch(source: string, pattern: RegExp, description: string): void {
   if (!pattern.test(source)) {
     throw new Error(`StyleX artifact is missing ${description}`);
@@ -11,6 +37,350 @@ function forbid(source: string, pattern: RegExp, description: string): void {
   if (pattern.test(source)) {
     throw new Error(`StyleX artifact unexpectedly contains ${description}`);
   }
+}
+
+function topLevelStatements(source: string, description: string): string[] {
+  const statements: string[] = [];
+  let blockDepth = 0;
+  let escaped = false;
+  let start = -1;
+  let stringQuote: '"' | "'" | undefined;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+
+    if (stringQuote !== undefined) {
+      if (escaped) {
+        escaped = false;
+      } else if (character === "\\") {
+        escaped = true;
+      } else if (character === stringQuote) {
+        stringQuote = undefined;
+      }
+      continue;
+    }
+
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0) {
+        throw new Error(`${description} contains an unterminated comment`);
+      }
+      index = commentEnd + 1;
+      continue;
+    }
+
+    if (start < 0) {
+      if (/\s/u.test(character)) continue;
+      start = index;
+    }
+
+    if (character === '"' || character === "'") {
+      stringQuote = character;
+      continue;
+    }
+
+    if (character === "{") {
+      blockDepth += 1;
+      continue;
+    }
+    if (character === "}") {
+      blockDepth -= 1;
+      if (blockDepth < 0) {
+        throw new Error(`${description} contains an unmatched closing brace`);
+      }
+      if (blockDepth === 0 && start >= 0) {
+        statements.push(source.slice(start, index + 1).trim());
+        start = -1;
+      }
+      continue;
+    }
+    if (character === ";" && blockDepth === 0 && start >= 0) {
+      statements.push(source.slice(start, index + 1).trim());
+      start = -1;
+    }
+  }
+
+  if (stringQuote !== undefined || blockDepth !== 0) {
+    throw new Error(`${description} contains an unterminated CSS construct`);
+  }
+  if (start >= 0 && source.slice(start).trim().length > 0) {
+    throw new Error(`${description} contains an unterminated top-level statement`);
+  }
+  return statements;
+}
+
+function requireOnlyLayerBlocks(
+  source: string,
+  allowedLayers: ReadonlySet<string>,
+  description: string,
+): string[] {
+  const statements = topLevelStatements(source, description);
+  if (statements.length === 0) {
+    throw new Error(`${description} must contain a named layer block`);
+  }
+
+  return statements.map((statement) => {
+    const layer = statement.match(/^@layer\s+([A-Za-z0-9_.-]+)\s*\{/u)?.[1];
+    if (layer === undefined || !allowedLayers.has(layer)) {
+      throw new Error(
+        `${description} contains top-level content outside its allowed named layers`,
+      );
+    }
+    return layer;
+  });
+}
+
+function requireGeneratedLayerContract(
+  source: string,
+  allowedLayers: readonly string[],
+  description: string,
+  requiredLayers: readonly string[] = allowedLayers,
+): void {
+  const layers = requireOnlyLayerBlocks(
+    source,
+    new Set(allowedLayers),
+    description,
+  );
+  for (const layer of requiredLayers) {
+    if (!layers.includes(layer)) {
+      throw new Error(`${description} must declare ${layer}`);
+    }
+  }
+}
+
+function requireLocalComponentsContract(source: string): void {
+  const statements = topLevelStatements(source, "src/components.css");
+  const legacyLayer = statements[2]?.match(
+    /^@layer\s+(components\.hraness-design-kit\.legacy)\s*\{/u,
+  )?.[1];
+  if (statements.length !== 3
+    || statements[0] !== LOCAL_LAYER_PRELUDE
+    || statements[1] !== DESIGN_STYLEX_IMPORT
+    || legacyLayer !== "components.hraness-design-kit.legacy") {
+    throw new Error(
+      "src/components.css must contain the exact local layer prelude, one StyleX import, and one legacy layer block with no bare or unlayered rules",
+    );
+  }
+}
+
+function requireAggregateContract(source: string): void {
+  const expectedStatements = [
+    TOP_LEVEL_LAYER_PRELUDE,
+    PORTFOLIO_LAYER_PRELUDE,
+    '@import "./tokens.css";',
+    '@import "./reset.css";',
+    '@import "./typography.css";',
+    '@import "./syntax-highlighting.css";',
+    '@import "./effects.css";',
+    UI_COMPONENTS_IMPORT,
+    UI_STYLEX_IMPORT,
+    DESIGN_COMPONENTS_IMPORT,
+    '@import "./appearance-menu.css";',
+    '@import "./charts.css";',
+    '@import "./jelly.css";',
+    '@import "./plain-site.css";',
+    '@import "./plain-publication.css";',
+    '@import "./design-gallery.css";',
+  ];
+  const statements = topLevelStatements(source, "src/styles.css");
+  if (statements.length !== expectedStatements.length
+    || statements.some((statement, index) => statement !== expectedStatements[index])) {
+    throw new Error(
+      "src/styles.css must contain the exact base < components and UI legacy < UI priority1/2/3 < design-kit legacy < design-kit priority1/2/3 preludes before its ordered imports",
+    );
+  }
+}
+
+function replaceExactlyOnce(
+  source: string,
+  target: string,
+  replacement: string,
+  description: string,
+): string {
+  const firstIndex = source.indexOf(target);
+  const lastIndex = source.lastIndexOf(target);
+  if (firstIndex < 0 || firstIndex !== lastIndex) {
+    throw new Error(
+      `Cannot build the ${description} mutation because its target occurs ${firstIndex < 0 ? "zero" : "more than one"} times`,
+    );
+  }
+  return `${source.slice(0, firstIndex)}${replacement}${source.slice(firstIndex + target.length)}`;
+}
+
+function requireMutationRejected(description: string, validate: () => void): void {
+  try {
+    validate();
+  } catch {
+    return;
+  }
+  throw new Error(`StyleX artifact validators accepted the ${description} mutation`);
+}
+
+function requireMutationNegativeContracts(
+  designCompiledCss: string,
+  uiCompiledCss: string,
+  localComponents: string,
+  aggregateStylesheet: string,
+): number {
+  const localLegacyLayer = "@layer components.hraness-design-kit.legacy {";
+  const invertedLocalPrelude =
+    "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority2, components.hraness-design-kit.priority1, components.hraness-design-kit.priority3;";
+  const invertedPortfolioPrelude =
+    "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-design-kit.legacy, components.hraness-ui.priority3, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3;";
+  const localMutations = [
+    [
+      "direct-parent local legacy restoration",
+      replaceExactlyOnce(
+        localComponents,
+        localLegacyLayer,
+        "@layer components {",
+        "direct-parent local legacy restoration",
+      ),
+    ],
+    [
+      "wrong local legacy layer",
+      replaceExactlyOnce(
+        localComponents,
+        localLegacyLayer,
+        "@layer components.hraness-ui.legacy {",
+        "wrong local legacy layer",
+      ),
+    ],
+    [
+      "unlayered local handwritten rule",
+      `${localComponents}\n.hraness-design-unlayered-mutation { color: red; }\n`,
+    ],
+    [
+      "missing local StyleX import",
+      replaceExactlyOnce(
+        localComponents,
+        `${DESIGN_STYLEX_IMPORT}\n`,
+        "",
+        "missing local StyleX import",
+      ),
+    ],
+    [
+      "duplicate local StyleX import",
+      replaceExactlyOnce(
+        localComponents,
+        DESIGN_STYLEX_IMPORT,
+        `${DESIGN_STYLEX_IMPORT}\n${DESIGN_STYLEX_IMPORT}`,
+        "duplicate local StyleX import",
+      ),
+    ],
+    [
+      "inverted local layer prelude",
+      replaceExactlyOnce(
+        localComponents,
+        LOCAL_LAYER_PRELUDE,
+        invertedLocalPrelude,
+        "inverted local layer prelude",
+      ),
+    ],
+    [
+      "missing local layer prelude",
+      replaceExactlyOnce(
+        localComponents,
+        `${LOCAL_LAYER_PRELUDE}\n`,
+        "",
+        "missing local layer prelude",
+      ),
+    ],
+  ] as const;
+
+  const aggregateMutations = [
+    [
+      "aggregate UI/design-kit priority inversion",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        PORTFOLIO_LAYER_PRELUDE,
+        invertedPortfolioPrelude,
+        "aggregate UI/design-kit priority inversion",
+      ),
+    ],
+    [
+      "aggregate base/components inversion",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        TOP_LEVEL_LAYER_PRELUDE,
+        "@layer components, base;",
+        "aggregate base/components inversion",
+      ),
+    ],
+    [
+      "missing aggregate UI StyleX import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        `${UI_STYLEX_IMPORT}\n`,
+        "",
+        "missing aggregate UI StyleX import",
+      ),
+    ],
+    [
+      "duplicate aggregate UI StyleX import",
+      replaceExactlyOnce(
+        aggregateStylesheet,
+        UI_STYLEX_IMPORT,
+        `${UI_STYLEX_IMPORT}\n${UI_STYLEX_IMPORT}`,
+        "duplicate aggregate UI StyleX import",
+      ),
+    ],
+  ] as const;
+
+  const generatedMutations = [
+    [
+      "unlayered generated design-kit rule",
+      () => requireGeneratedLayerContract(
+        `${designCompiledCss}\n.x-design-unlayered-mutation { color: red; }\n`,
+        DESIGN_STYLEX_LAYERS,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "undeclared generated design-kit priority layer",
+      () => requireGeneratedLayerContract(
+        `${designCompiledCss}\n@layer components.hraness-design-kit.priority4 { .x-design-priority4-mutation { color: red; } }\n`,
+        DESIGN_STYLEX_LAYERS,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "unlayered generated UI rule",
+      () => requireGeneratedLayerContract(
+        `${uiCompiledCss}\n.x-ui-unlayered-mutation { color: red; }\n`,
+        UI_STYLEX_LAYERS,
+        "mutated @hraness/ui stylex.css",
+      ),
+    ],
+    [
+      "undeclared generated UI priority layer",
+      () => requireGeneratedLayerContract(
+        `${uiCompiledCss}\n@layer components.hraness-ui.priority4 { .x-ui-priority4-mutation { color: red; } }\n`,
+        UI_STYLEX_LAYERS,
+        "mutated @hraness/ui stylex.css",
+      ),
+    ],
+  ] as const;
+
+  for (const [description, mutation] of localMutations) {
+    requireMutationRejected(
+      description,
+      () => requireLocalComponentsContract(mutation),
+    );
+  }
+  for (const [description, mutation] of aggregateMutations) {
+    requireMutationRejected(
+      description,
+      () => requireAggregateContract(mutation),
+    );
+  }
+  for (const [description, validate] of generatedMutations) {
+    requireMutationRejected(description, validate);
+  }
+
+  return localMutations.length + aggregateMutations.length + generatedMutations.length;
 }
 
 async function JavaScriptBelow(directory: string): Promise<string[]> {
@@ -29,10 +399,18 @@ const javaScriptPaths = await JavaScriptBelow(dist);
 const javaScriptSources = new Map(await Promise.all(
   javaScriptPaths.map(async (path) => [path, await readFile(path, "utf8")] as const),
 ));
-const [compiledCss, orderedStylesheet, legacyComponents] = await Promise.all([
+const [
+  compiledCss,
+  orderedStylesheet,
+  legacyComponents,
+  uiLegacyComponents,
+  uiCompiledCss,
+] = await Promise.all([
   readFile(resolve(dist, "stylex.css"), "utf8"),
   readFile(resolve(repository, "src/styles.css"), "utf8"),
   readFile(resolve(repository, "src/components.css"), "utf8"),
+  readFile(resolve(repository, "node_modules/@hraness/ui/src/components.css"), "utf8"),
+  readFile(resolve(repository, "node_modules/@hraness/ui/dist/stylex.css"), "utf8"),
 ]);
 const compiledJavaScript = [...javaScriptSources.values()].join("\n");
 
@@ -44,6 +422,11 @@ requireMatch(
   compiledCss,
   /@layer components\.hraness-design-kit\.priority1\s*\{/u,
   "the package-owned priority1 layer",
+);
+requireMatch(
+  compiledCss,
+  /@layer components\.hraness-design-kit\.priority3\s*\{/u,
+  "the package-owned priority3 layer",
 );
 requireMatch(
   compiledCss,
@@ -143,34 +526,40 @@ forbid(
   /\.hraness-design-production-data-preview-notice(?:\s|\{|:)/u,
   "the migrated notice's legacy selector",
 );
+requireGeneratedLayerContract(
+  compiledCss,
+  DESIGN_STYLEX_LAYERS,
+  "dist/stylex.css",
+);
+requireGeneratedLayerContract(
+  uiLegacyComponents,
+  UI_LEGACY_LAYERS,
+  "the pinned @hraness/ui components.css",
+);
+requireGeneratedLayerContract(
+  uiCompiledCss,
+  UI_STYLEX_LAYERS,
+  "the pinned @hraness/ui stylex.css",
+);
+requireMatch(
+  uiCompiledCss,
+  /@layer components\.hraness-ui\.priority3\s*\{[\s\S]*?padding-top:\s*var\(--space-5,\s*1\.25rem\);/u,
+  "the pinned @hraness/ui QuietSite priority3 padding declaration",
+);
+requireLocalComponentsContract(legacyComponents);
+requireAggregateContract(orderedStylesheet);
+const rejectedMutationCount = requireMutationNegativeContracts(
+  compiledCss,
+  uiCompiledCss,
+  legacyComponents,
+  orderedStylesheet,
+);
+forbid(
+  `${compiledJavaScript}\n${compiledCss}\n${legacyComponents}\n${orderedStylesheet}`,
+  new RegExp(GALLERY_LAYER_CONFLICT_SENTINEL, "u"),
+  "the gallery-only cross-package layer sentinel in package output",
+);
 
-const stylexImport = '@import "../dist/stylex.css";';
-const aggregateImports = orderedStylesheet
-  .split("\n")
-  .filter((line) => line.trim() === stylexImport);
-if (aggregateImports.length !== 0) {
-  throw new Error("src/styles.css must reach dist/stylex.css only through components.css");
-}
-const componentImports = legacyComponents
-  .split("\n")
-  .filter((line) => line.trim() === stylexImport);
-if (componentImports.length !== 1 || !legacyComponents.startsWith(`${stylexImport}\n`)) {
-  throw new Error("src/components.css must import dist/stylex.css exactly once before its legacy recipes");
-}
-
-const uiComponentsIndex = orderedStylesheet.indexOf('@import "@hraness/ui/components.css";');
-const legacyComponentsIndex = orderedStylesheet.indexOf('@import "./components.css";');
-const appearanceIndex = orderedStylesheet.indexOf('@import "./appearance-menu.css";');
-if ((orderedStylesheet.match(/@import "@hraness\/ui\/components\.css";/gu) ?? []).length !== 1
-  || (orderedStylesheet.match(/@import "\.\/components\.css";/gu) ?? []).length !== 1
-  || (orderedStylesheet.match(/@import "\.\/appearance-menu\.css";/gu) ?? []).length !== 1) {
-  throw new Error("src/styles.css must compose each component-order boundary exactly once");
-}
-if (!(uiComponentsIndex < legacyComponentsIndex
-  && legacyComponentsIndex < appearanceIndex)) {
-  throw new Error(
-    "src/styles.css must place the component entry after UI components and before appearance compositions",
-  );
-}
-
-console.log("StyleX package artifacts match the compiler contract");
+console.log(
+  `StyleX package artifacts match the compiler contract and reject ${String(rejectedMutationCount)} malformed layer mutations`,
+);

@@ -1,4 +1,11 @@
-import { Button, DialogContent, DialogTrigger } from "@hraness/ui";
+import { Search01Icon } from "@hugeicons/core-free-icons";
+import {
+  Button,
+  DialogContent,
+  DialogTrigger,
+  Icon,
+  QuietSiteFooter,
+} from "@hraness/ui";
 import {
   DesignPortalThemeProvider,
   DesignThemeProvider,
@@ -73,7 +80,12 @@ function PortalledDialog() {
 
   return (
     <DialogTrigger>
-      <Button id="security-canary-dialog-trigger">Open delivery dialog</Button>
+      <Button
+        id="security-canary-dialog-trigger"
+        leading={<Icon icon={Search01Icon} />}
+      >
+        Open delivery dialog
+      </Button>
       <DialogContent
         closeLabel="Close security delivery dialog"
         overlayClassName={`${themeClassName} ${portalClassName}`}
@@ -97,6 +109,9 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
         theme="light"
       >
         <PortalledDialog />
+        <QuietSiteFooter data-security-ui-priority3="">
+          UI priority3 delivery canary
+        </QuietSiteFooter>
       </DesignPortalThemeProvider>
     </section>
   );
