@@ -1,6 +1,8 @@
 import * as appearance from "../appearance.js";
 import { installAppearanceMenus as installMenus } from "./appearance-menu.js";
 
+export * from "./artifact-share.js";
+
 export type {
   ConcreteDesignTheme,
   DesignTheme,

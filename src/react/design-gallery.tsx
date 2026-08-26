@@ -24,6 +24,7 @@ import { AppShell } from "./app-shell.js";
 import { AuroraDotsBackground } from "./aurora-dots-background.js";
 import { BarListChart, RangePlotChart } from "./charts.js";
 import { Fader } from "./fader.js";
+import { FoilCardSurface } from "./foil-card-surface.js";
 import { JellySurface } from "./jelly-surface.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
@@ -54,6 +55,7 @@ export const designGalleryRecipeCoverage = [
   "application shells",
   "charts",
   "dither surface",
+  "foil card surface",
   "Jelly presentation",
   "plain site and publication grammar",
   "procedural effects",
@@ -239,6 +241,21 @@ export function DesignSystemGallery({
 
       <section className="design-gallery__section" id="effects">
         <h2>Decorative effects</h2>
+        <FoilCardSurface
+          className="design-gallery__foil-example"
+          intensity="standard"
+          preset="prism"
+          renderMode="interactive"
+          seed="public-gallery-foil"
+        >
+          <article className="design-gallery__foil-card">
+            <Tag variant="outline">Seeded surface</Tag>
+            <div>
+              <h3>Semantic card content</h3>
+              <p>Pointer paint decorates this ordinary article without replacing it.</p>
+            </div>
+          </article>
+        </FoilCardSurface>
         <div className="design-gallery__effect">
           <AuroraDotsBackground />
           <ProceduralBackdrop seed="public-gallery" variant="composite" />

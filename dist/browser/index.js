@@ -628,6 +628,99 @@ function installAppearanceMenus(options) {
   return publicInstallation;
 }
 
+// src/browser/artifact-share.ts
+function nonblank(value, label) {
+  if (value.trim().length === 0) {
+    throw new RangeError(`${label} must contain a non-whitespace character.`);
+  }
+  return value;
+}
+function publicWebUrl(value) {
+  const normalized = nonblank(value, "An artifact share URL").trim();
+  let url;
+  try {
+    url = new URL(normalized);
+  } catch {
+    throw new RangeError("An artifact share URL must be an absolute URL.");
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new RangeError("An artifact share URL must use HTTP or HTTPS.");
+  }
+  return url.href;
+}
+function normalizedIntent(input) {
+  return {
+    text: nonblank(input.text, "Artifact share text"),
+    url: publicWebUrl(input.url)
+  };
+}
+function buildXShareIntentUrl(input) {
+  const { text, url } = normalizedIntent(input);
+  const intent = new URL("https://x.com/intent/post");
+  intent.searchParams.set("text", text);
+  intent.searchParams.set("url", url);
+  return intent.href;
+}
+function buildLinkedInShareIntentUrl(url) {
+  const intent = new URL("https://www.linkedin.com/sharing/share-offsite/");
+  intent.searchParams.set("url", publicWebUrl(url));
+  return intent.href;
+}
+function buildBlueskyShareIntentUrl(input) {
+  const { text, url } = normalizedIntent(input);
+  const intent = new URL("https://bsky.app/intent/compose");
+  intent.searchParams.set("text", `${text}
+${url}`);
+  return intent.href;
+}
+async function copyTextToClipboard(text) {
+  const clipboard = globalThis.navigator?.clipboard;
+  if (clipboard === undefined || typeof clipboard.writeText !== "function") {
+    throw new Error("Clipboard text writing is unavailable in this environment.");
+  }
+  await clipboard.writeText(text);
+}
+function downloadBlob(blob, filename) {
+  const normalizedFilename = nonblank(filename, "A download filename").trim();
+  const document = globalThis.document;
+  if (document === undefined || typeof URL.createObjectURL !== "function" || typeof URL.revokeObjectURL !== "function") {
+    throw new Error("Blob downloads are unavailable in this environment.");
+  }
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.download = normalizedFilename;
+  anchor.hidden = true;
+  anchor.href = objectUrl;
+  anchor.rel = "noopener";
+  document.body.append(anchor);
+  try {
+    anchor.click();
+  } finally {
+    anchor.remove();
+    globalThis.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+  }
+}
+function isAbortError(error) {
+  return typeof error === "object" && error !== null && "name" in error && error.name === "AbortError";
+}
+async function shareFileNatively(file) {
+  const shareNavigator = globalThis.navigator;
+  if (shareNavigator === undefined || typeof shareNavigator.canShare !== "function" || typeof shareNavigator.share !== "function") {
+    return { kind: "unavailable" };
+  }
+  const shareData = { files: [file] };
+  try {
+    if (!shareNavigator.canShare(shareData))
+      return { kind: "unavailable" };
+    await shareNavigator.share(shareData);
+    return { kind: "shared" };
+  } catch (error) {
+    if (isAbortError(error))
+      return { kind: "cancelled" };
+    return { error, kind: "failed" };
+  }
+}
+
 // src/browser/index.ts
 var defaultDesignTheme2 = defaultDesignTheme;
 var designThemeLabel2 = designThemeLabel;
@@ -638,12 +731,18 @@ var isDesignTheme2 = isDesignTheme;
 var normalizeDesignTheme2 = normalizeDesignTheme;
 var resolveDesignTheme2 = resolveDesignTheme;
 export {
+  shareFileNatively,
   resolveDesignTheme2 as resolveDesignTheme,
   normalizeDesignTheme2 as normalizeDesignTheme,
   isDesignTheme2 as isDesignTheme,
   installAppearanceMenus2 as installAppearanceMenus,
+  downloadBlob,
   designThemes2 as designThemes,
   designThemeStorageKey2 as designThemeStorageKey,
   designThemeLabel2 as designThemeLabel,
-  defaultDesignTheme2 as defaultDesignTheme
+  defaultDesignTheme2 as defaultDesignTheme,
+  copyTextToClipboard,
+  buildXShareIntentUrl,
+  buildLinkedInShareIntentUrl,
+  buildBlueskyShareIntentUrl
 };
