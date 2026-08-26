@@ -28,18 +28,67 @@ const loadBrowserJellyRuntime = createRetryableJellyRuntimeLoader(
 );
 let themeRequest = 0;
 
-function loadJellyRuntime(): Promise<JellyThemeRuntime> | null {
-  if (typeof window === "undefined") return null;
-  return loadBrowserJellyRuntime();
+export function shouldLoadJellyRuntime(
+  documentRoot: Pick<Document, "querySelector">,
+): boolean {
+  return documentRoot.querySelector(".hraness-design-jelly-surface") !== null;
+}
+
+export function applyJellyRootMode(
+  root: Pick<HTMLElement, "removeAttribute" | "setAttribute">,
+  mode: ThemeMode,
+): void {
+  if (mode === "auto") root.removeAttribute("data-jelly-mode");
+  else root.setAttribute("data-jelly-mode", mode);
+}
+
+export function readJellyRootMode(
+  root: Pick<HTMLElement, "getAttribute">,
+): ThemeMode {
+  const mode = root.getAttribute("data-jelly-mode");
+  return mode === "light" || mode === "dark" ? mode : "auto";
+}
+
+export async function loadJellyRuntimeForRoot(
+  loader: JellyRuntimeLoader,
+  root: Pick<HTMLElement, "getAttribute">,
+): Promise<boolean> {
+  try {
+    const runtime = await loader();
+    applyJellyThemeMode(runtime, readJellyRootMode(root));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function synchronizeJellyThemeMode(
+  documentRoot: Pick<Document, "documentElement" | "querySelector">,
+  mode: ThemeMode,
+  loader: JellyRuntimeLoader,
+  isCurrent: () => boolean = () => true,
+): Promise<boolean> {
+  applyJellyRootMode(documentRoot.documentElement, mode);
+  if (!shouldLoadJellyRuntime(documentRoot)) return true;
+
+  let runtime: JellyThemeRuntime;
+  try {
+    runtime = await loader();
+  } catch {
+    return false;
+  }
+  if (!isCurrent()) return false;
+
+  applyJellyThemeMode(runtime, mode);
+  return true;
 }
 
 /** Register the pinned Jelly custom elements once, and only in a browser. */
 export async function ensureJellyRuntime(): Promise<void> {
-  try {
-    await loadJellyRuntime();
-  } catch {
-    // CSS keeps every control usable through its :not(:defined) fallback.
-  }
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  // A surface mounted after the theme effect still receives the root's already
+  // selected mode as soon as its browser-only runtime upgrades the element.
+  await loadJellyRuntimeForRoot(loadBrowserJellyRuntime, document.documentElement);
 }
 
 /** Use Jelly's public theme API so every upgraded canvas receives its repaint event. */
@@ -55,17 +104,10 @@ export async function setJellyThemeMode(mode: ThemeMode): Promise<boolean> {
   if (typeof window === "undefined" || typeof document === "undefined") return false;
 
   const request = ++themeRequest;
-  if (mode === "auto") document.documentElement.removeAttribute("data-jelly-mode");
-  else document.documentElement.setAttribute("data-jelly-mode", mode);
-
-  let runtime: JellyThemeRuntime | null;
-  try {
-    runtime = await loadJellyRuntime();
-  } catch {
-    return false;
-  }
-  if (runtime === null || request !== themeRequest) return false;
-
-  applyJellyThemeMode(runtime, mode);
-  return true;
+  return synchronizeJellyThemeMode(
+    document,
+    mode,
+    loadBrowserJellyRuntime,
+    () => request === themeRequest,
+  );
 }

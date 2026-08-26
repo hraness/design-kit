@@ -1,0 +1,43 @@
+@import "../src/styles.css";
+
+/*
+ * Bounded React Aria bridge: usePress recognizes the matching external-link
+ * sentinel and does not add its otherwise permanent document style element.
+ */
+@layer {
+  [data-react-aria-pressable] {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+}
+
+.security-canary-palette.security-canary-theme-light {
+  color-scheme: light;
+  --background: #fbf6f2;
+  --foreground: #201b19;
+  --line: #bbaaa2;
+  --card: #ffffff;
+  --card-foreground: #201b19;
+  --focus: #0d61ac;
+  --ui-background: var(--background);
+  --ui-foreground: var(--foreground);
+  --ui-border: var(--line);
+  --ui-card: var(--card);
+  --ui-card-foreground: var(--card-foreground);
+  --ui-ring: var(--focus);
+}
+
+.security-canary-palette.security-canary-theme-dark {
+  color-scheme: dark;
+  --background: #000000;
+  --foreground: #f2f2ed;
+  --line: #5f645d;
+  --card: #0d0e0c;
+  --card-foreground: #f2f2ed;
+  --focus: #6aa9ed;
+  --ui-background: var(--background);
+  --ui-foreground: var(--foreground);
+  --ui-border: var(--line);
+  --ui-card: var(--card);
+  --ui-card-foreground: var(--card-foreground);
+  --ui-ring: var(--focus);
+}

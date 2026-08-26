@@ -34,6 +34,59 @@ function stringField(value: Record<string, unknown>, key: string, label: string)
   return field;
 }
 
+const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/align-items:\s*center/u, "align-items"],
+  [/background-color:\s*(?:#ffcc33|#fc3)/u, "background-color"],
+  [/border-bottom-color:\s*#5c1906/u, "border-block-end color"],
+  [/border-bottom-style:\s*solid/u, "border-block-end style"],
+  [/border-bottom-width:\s*2px/u, "border-block-end width"],
+  [/box-shadow:\s*0\s+3px\s+12px\s+#24140059/u, "box-shadow"],
+  [/color:\s*#241400/u, "color"],
+  [/display:\s*flex/u, "display"],
+  [/flex-wrap:\s*wrap/u, "flex-wrap"],
+  [/font-family:\s*var\(--font-text,\s*system-ui,\s*sans-serif\)/u, "font-family"],
+  [/font-size:\s*var\(--text-label,\s*0?\.875rem\)/u, "font-size"],
+  [/gap:\s*var\(--space-1,\s*0?\.25rem\)\s+var\(--space-3,\s*0?\.75rem\)/u, "gap"],
+  [/top:\s*0/u, "logical block-start inset"],
+  [/justify-content:\s*center/u, "justify-content"],
+  [/line-height:\s*1\.35/u, "line-height"],
+  [/min-height:\s*3rem/u, "min-height"],
+  [/padding-block:\s*max\(var\(--space-2,\s*0?\.5rem\),\s*env\(safe-area-inset-top\)\)/u, "padding-block"],
+  [/padding-inline:\s*max\(var\(--space-4,\s*1rem\),\s*env\(safe-area-inset-left\)\)\s+max\(var\(--space-4,\s*1rem\),\s*env\(safe-area-inset-right\)\)/u, "padding-inline"],
+  [/position:\s*sticky/u, "position"],
+  [/text-align:\s*center/u, "text-align"],
+  [/width:\s*100%/u, "width"],
+  [/z-index:\s*calc\(var\(--z-tooltip,\s*3000\)\s*\+\s*1\)/u, "z-index"],
+  [/font-weight:\s*var\(--font-weight-bold,\s*700\)/u, "emphasis font-weight"],
+  [/letter-spacing:\s*0?\.04em/u, "emphasis letter-spacing"],
+  [/text-transform:\s*uppercase/u, "emphasis text-transform"],
+];
+
+function requireNoticePresentation(css: string, label: string): void {
+  if (!css.includes("@layer components.hraness-design-kit.priority")) {
+    throw new Error(`${label} lost the package-owned StyleX layer.`);
+  }
+  for (const [pattern, declaration] of noticeDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated notice ${declaration} declaration.`);
+    }
+  }
+}
+
+function requireAtomicSelectorsExactlyOnce(
+  css: string,
+  classNames: readonly string[],
+  label: string,
+): void {
+  for (const className of new Set(classNames)) {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const count = css.match(new RegExp(`\\.${escaped}\\s*(?:\\{|,)`, "gu"))?.length ?? 0;
+    if (count !== 1) {
+      throw new Error(`${label} contains ${String(count)} selectors for notice atomic class ${className}.`);
+    }
+  }
+}
+
 const repository = process.cwd();
 const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
 const rootManifest = record(
@@ -43,6 +96,10 @@ const rootManifest = record(
 const rootDevDependencies = record(
   rootManifest.devDependencies,
   "package.json devDependencies",
+);
+const rootDependencies = record(
+  rootManifest.dependencies,
+  "package.json dependencies",
 );
 const rootPeerDependencies = record(
   rootManifest.peerDependencies,
@@ -61,6 +118,15 @@ const uiPeerRange = stringField(
   "@hraness/ui",
   "package.json peerDependencies",
 );
+if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
+  throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
+}
+if (stringField(rootDevDependencies, "@stylexjs/unplugin", "package.json devDependencies") !== "0.19.0") {
+  throw new Error("The StyleX compiler adapter must be pinned to 0.19.0.");
+}
+if (stringField(rootDevDependencies, "unplugin", "package.json devDependencies") !== "2.3.11") {
+  throw new Error("The StyleX compiler family must pin unplugin 2.3.11.");
+}
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
 
@@ -85,6 +151,26 @@ try {
   const packedRoot = join(unpacked, "package");
   const packedPackageJsonPath = join(packedRoot, "package.json");
   const packedPackageJson = await Bun.file(packedPackageJsonPath).json();
+  const packedStylexCss = await Bun.file(join(packedRoot, "dist/stylex.css")).text();
+  const packedComponentsCss = await Bun.file(join(packedRoot, "src/components.css")).text();
+  const packedStylesCss = await Bun.file(join(packedRoot, "src/styles.css")).text();
+  const stylexImport = '@import "../dist/stylex.css";';
+  const componentStylexImports = packedComponentsCss
+    .split("\n")
+    .filter((line) => line.trim() === stylexImport);
+  const aggregateStylexImports = packedStylesCss
+    .split("\n")
+    .filter((line) => line.trim() === stylexImport);
+  if (componentStylexImports.length !== 1 || !packedComponentsCss.startsWith(`${stylexImport}\n`)) {
+    throw new Error("Packed components.css does not deliver dist/stylex.css exactly once before legacy recipes.");
+  }
+  if (aggregateStylexImports.length !== 0) {
+    throw new Error("Packed styles.css imports dist/stylex.css separately from components.css.");
+  }
+  if ((packedStylesCss.match(/@import "\.\/components\.css";/gu) ?? []).length !== 1) {
+    throw new Error("Packed styles.css does not compose the narrow component entry exactly once.");
+  }
+  requireNoticePresentation(packedStylexCss, "Packed stylex.css");
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
   }
@@ -96,6 +182,15 @@ try {
   }
   if (packedPackageJson.devDependencies?.["@hraness/ui"] !== uiDevelopmentSpecifier) {
     throw new Error("Packed package does not retain the exact @hraness/ui development pin.");
+  }
+  if (packedPackageJson.dependencies?.["@stylexjs/stylex"] !== "0.19.0") {
+    throw new Error("Packed package lost the exact StyleX runtime dependency.");
+  }
+  if (
+    packedPackageJson.devDependencies?.["@stylexjs/unplugin"] !== "0.19.0"
+    || packedPackageJson.devDependencies?.unplugin !== "2.3.11"
+  ) {
+    throw new Error("Packed package lost the exact StyleX 0.19.0/unplugin 2.3.11 compiler family.");
   }
   await writeFile(
     join(neutralConsumer, "package.json"),
@@ -233,12 +328,41 @@ try {
     ].join("\n"),
   );
   await run(["node", "./global-error.mjs"], consumer);
+  await writeFile(
+    join(consumer, "stylex-notice.mjs"),
+    [
+      'import { readFile, writeFile } from "node:fs/promises";',
+      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { createElement } from "react";',
+      'import { renderToStaticMarkup } from "react-dom/server";',
+      'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
+      'if (new URL(stylexUrl).protocol !== "file:") throw new Error("Packed stylex.css is not a file export.");',
+      'const stylexCss = await readFile(new URL(stylexUrl), "utf8");',
+      'if (!stylexCss.includes("@layer components.hraness-design-kit.priority")) throw new Error("Packed stylex.css lost its package layer.");',
+      'if (!stylexCss.includes("position: sticky") || !stylexCss.includes("text-transform: uppercase")) throw new Error("Packed stylex.css lost the notice declarations.");',
+      'const componentsCss = await readFile(new URL(import.meta.resolve("@hraness/design-kit/components.css")), "utf8");',
+      'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
+      'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
+      'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
+      'const aside = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
+      'const strong = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
+      'if (aside === undefined || !aside.includes("hraness-design-production-data-preview-notice") || aside.length < 2) throw new Error("Packed notice lost its stable and atomic classes.");',
+      'if (strong === undefined || strong.length === 0) throw new Error("Packed notice emphasis lost its atomic classes.");',
+      'if (html.includes("style=")) throw new Error("Packed notice emitted inline presentation.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, strong }));',
+      "",
+    ].join("\n"),
+  );
+  await run(["node", "./stylex-notice.mjs"], consumer);
 
   const installed = join(consumer, "node_modules/@hraness/design-kit");
   for (const path of [
     "dist/browser/index.js",
+    "dist/stylex.css",
     "src/appearance-menu.css",
+    "src/components.css",
     "src/styles.css",
+    "src/react/production-data-preview-notice.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
     "vendor/evilcharts/LICENSE",
     "vendor/jelly-ui/LICENSE",
@@ -262,6 +386,17 @@ try {
     throw new Error(
       "Packed React entry must have one leading use-client directive and no interior directives.",
     );
+  }
+  const packedJavaScript = (await Promise.all(
+    packedFiles
+      .filter((path) => path.endsWith(".js"))
+      .map(async (path) => Bun.file(path).text()),
+  )).join("\n");
+  if (/stylex\.create|stylexCreate|Unexpected ["']stylex\.create/u.test(packedJavaScript)) {
+    throw new Error("Packed JavaScript contains an uncompiled StyleX authoring call.");
+  }
+  if (/stylex-inject|stylexInject|data-stylex|stylesheet-group/u.test(packedJavaScript)) {
+    throw new Error("Packed JavaScript contains StyleX runtime injection.");
   }
   const browserBundle = await Bun.file(
     join(installed, "dist", "browser", "index.js"),
@@ -322,12 +457,13 @@ try {
     join(consumer, "src/main.tsx"),
     [
       'import { createElement } from "react";',
+      'import { Fragment } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/styles.css";',
-      'import { JellySurface } from "@hraness/design-kit/react";',
+      'import { JellySurface, ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run")));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -338,6 +474,66 @@ try {
   }
   if (builtFiles.filter((path) => path.endsWith(".js")).length < 2) {
     throw new Error("Packed Vite consumer did not preserve the dynamic Jelly chunk.");
+  }
+  const builtCss = (await Promise.all(
+    builtFiles
+      .filter((path) => path.endsWith(".css"))
+      .map(async (path) => Bun.file(path).text()),
+  )).join("\n");
+  const noticeClasses = await Bun.file(join(consumer, "notice-classes.json")).json() as {
+    readonly aside: readonly string[];
+    readonly strong: readonly string[];
+  };
+  const generatedNoticeClasses = [...noticeClasses.aside, ...noticeClasses.strong]
+    .filter((name) => name !== "hraness-design-production-data-preview-notice");
+  if (generatedNoticeClasses.length === 0) {
+    throw new Error("Packed notice exposes no generated StyleX classes to the Vite oracle.");
+  }
+  requireAtomicSelectorsExactlyOnce(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
+  requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
+  if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");
+  }
+
+  await writeFile(
+    join(consumer, "src/main.tsx"),
+    [
+      'import { createElement } from "react";',
+      'import { createRoot } from "react-dom/client";',
+      'import "@hraness/design-kit/components.css";',
+      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'const target = document.getElementById("root");',
+      'if (target === null) throw new Error("Missing root");',
+      'createRoot(target).render(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
+      "",
+    ].join("\n"),
+  );
+  await run([
+    process.execPath,
+    "x",
+    "vite",
+    "build",
+    "--outDir",
+    "dist-components",
+    "--emptyOutDir",
+  ], consumer);
+  const narrowBuiltFiles = await filesBelow(join(consumer, "dist-components"));
+  const narrowBuiltCss = (await Promise.all(
+    narrowBuiltFiles
+      .filter((path) => path.endsWith(".css"))
+      .map(async (path) => Bun.file(path).text()),
+  )).join("\n");
+  if (narrowBuiltCss.length === 0) {
+    throw new Error("Packed narrow components.css Vite consumer emitted no stylesheet.");
+  }
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    generatedNoticeClasses,
+    "Packed narrow components.css Vite CSS",
+  );
+  requireNoticePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy notice recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -369,6 +565,23 @@ try {
     "-e",
     "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')])",
   ], react18Consumer);
+  await writeFile(
+    join(react18Consumer, "notice-react18.mjs"),
+    [
+      'import { ProductionDataPreviewNotice } from "@hraness/design-kit/react";',
+      'import { createElement } from "react";',
+      'import { renderToStaticMarkup } from "react-dom/server";',
+      'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
+      'const asideClasses = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
+      'const strongClasses = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
+      'if (asideClasses === undefined || !asideClasses.includes("hraness-design-production-data-preview-notice") || asideClasses.length < 2) throw new Error("React 18 packed notice lost stable or atomic classes.");',
+      'if (strongClasses === undefined || strongClasses.length === 0) throw new Error("React 18 packed notice emphasis lost atomic classes.");',
+      'if (!html.includes(\'role="alert"\') || !html.includes(\'aria-label="Production data preview warning"\')) throw new Error("React 18 packed notice lost alert semantics.");',
+      'if (html.includes("style=")) throw new Error("React 18 packed notice emitted inline presentation.");',
+      "",
+    ].join("\n"),
+  );
+  await run(["node", "./notice-react18.mjs"], react18Consumer);
   await writeFile(
     join(react18Consumer, "index.ts"),
     [

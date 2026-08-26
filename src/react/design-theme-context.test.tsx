@@ -13,7 +13,7 @@ function ThemeProbe() {
   return <div className={portalClassName} data-theme={theme}>Overlay</div>;
 }
 
-test("an explicit subtree theme remains available across React portal boundaries", () => {
+test("explicit portal values remain available to descendant overlay content", () => {
   const html = renderToStaticMarkup(
     <DesignPortalThemeProvider portalClassName="product-theme" theme="dark">
       <ThemeProbe />

@@ -1,9 +1,67 @@
 import { expect, test } from "bun:test";
+import { parseHTML } from "linkedom";
 
 import {
+  applyJellyRootMode,
   applyJellyThemeMode,
   createRetryableJellyRuntimeLoader,
+  loadJellyRuntimeForRoot,
+  shouldLoadJellyRuntime,
+  synchronizeJellyThemeMode,
 } from "./jelly-runtime";
+
+test("theme sync does not load Jelly when the document has no Jelly surface", async () => {
+  const { document } = parseHTML("<!doctype html><html><head></head><body></body></html>");
+  let loads = 0;
+
+  expect(await synchronizeJellyThemeMode(document, "dark", async () => {
+    loads += 1;
+    return { setThemeMode: () => undefined };
+  })).toBeTrue();
+
+  expect(loads).toBe(0);
+  expect(shouldLoadJellyRuntime(document)).toBeFalse();
+  expect(document.documentElement.getAttribute("data-jelly-mode")).toBe("dark");
+  expect(document.querySelector("style[data-jelly-tokens]")).toBeNull();
+});
+
+test("an initially present Jelly surface loads with the selected root mode", async () => {
+  const { document } = parseHTML(
+    '<!doctype html><html><head></head><body><jelly-card class="hraness-design-jelly-surface"></jelly-card></body></html>',
+  );
+  const modes: string[] = [];
+  let loads = 0;
+
+  expect(shouldLoadJellyRuntime(document)).toBeTrue();
+  expect(await synchronizeJellyThemeMode(document, "light", async () => {
+    loads += 1;
+    return { setThemeMode: (mode = "auto") => modes.push(mode) };
+  })).toBeTrue();
+  expect(loads).toBe(1);
+  expect(document.documentElement.getAttribute("data-jelly-mode")).toBe("light");
+  expect(modes).toEqual(["light"]);
+});
+
+test("a later-mounted Jelly surface receives the mode selected before it existed", async () => {
+  const { document } = parseHTML("<!doctype html><html><head></head><body></body></html>");
+  const modes: string[] = [];
+
+  applyJellyRootMode(document.documentElement, "dark");
+  expect(shouldLoadJellyRuntime(document)).toBeFalse();
+
+  const surface = document.createElement("jelly-card");
+  surface.className = "hraness-design-jelly-surface";
+  document.body.append(surface);
+
+  expect(surface.isConnected).toBeTrue();
+  expect(shouldLoadJellyRuntime(document)).toBeTrue();
+  expect(await loadJellyRuntimeForRoot(
+    async () => ({ setThemeMode: (mode = "auto") => modes.push(mode) }),
+    document.documentElement,
+  )).toBeTrue();
+  expect(document.documentElement.getAttribute("data-jelly-mode")).toBe("dark");
+  expect(modes).toEqual(["dark"]);
+});
 
 test("theme changes use Jelly's public API and emit the canvas repaint event", async () => {
   const events = new EventTarget();
