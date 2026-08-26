@@ -107,24 +107,55 @@ function isAbortError(error: unknown): boolean {
     && error.name === "AbortError";
 }
 
-/**
- * Opens the native share sheet with one already-prepared file. No text, title,
- * or URL is added to either capability detection or the share call.
- */
-export async function shareFileNatively(file: File): Promise<NativeFileShareResult> {
+function filesOnlyShareData(file: File): ShareData {
+  return { files: [file] };
+}
+
+function nativeFileShareNavigator(): Navigator | undefined {
   const shareNavigator = globalThis.navigator;
   if (
     shareNavigator === undefined
     || typeof shareNavigator.canShare !== "function"
     || typeof shareNavigator.share !== "function"
   ) {
+    return undefined;
+  }
+  return shareNavigator;
+}
+
+function canShareFileWithNavigator(
+  shareNavigator: Navigator,
+  file: File,
+): boolean {
+  try {
+    return shareNavigator.canShare(filesOnlyShareData(file));
+  } catch {
+    return false;
+  }
+}
+
+/** Checks native file-share support using a files-only Web Share payload. */
+export function canShareFileNatively(file: File): boolean {
+  const shareNavigator = nativeFileShareNavigator();
+  return shareNavigator !== undefined
+    && canShareFileWithNavigator(shareNavigator, file);
+}
+
+/**
+ * Opens the native share sheet with one already-prepared file. No text, title,
+ * or URL is added to either capability detection or the share call.
+ */
+export async function shareFileNatively(file: File): Promise<NativeFileShareResult> {
+  const shareNavigator = nativeFileShareNavigator();
+  if (
+    shareNavigator === undefined
+    || !canShareFileWithNavigator(shareNavigator, file)
+  ) {
     return { kind: "unavailable" };
   }
 
-  const shareData: ShareData = { files: [file] };
   try {
-    if (!shareNavigator.canShare(shareData)) return { kind: "unavailable" };
-    await shareNavigator.share(shareData);
+    await shareNavigator.share(filesOnlyShareData(file));
     return { kind: "shared" };
   } catch (error) {
     if (isAbortError(error)) return { kind: "cancelled" };

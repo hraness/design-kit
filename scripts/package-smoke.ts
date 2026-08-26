@@ -518,6 +518,7 @@ try {
   }
   if (
     !browserBundle.includes("buildXShareIntentUrl")
+    || !browserBundle.includes("canShareFileNatively")
     || !browserBundle.includes("shareFileNatively")
   ) {
     throw new Error("Packed browser entry does not expose artifact sharing helpers.");

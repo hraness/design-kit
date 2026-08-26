@@ -5,6 +5,7 @@ import {
   buildBlueskyShareIntentUrl,
   buildLinkedInShareIntentUrl,
   buildXShareIntentUrl,
+  canShareFileNatively,
   copyTextToClipboard,
   downloadBlob,
   shareFileNatively,
@@ -163,6 +164,55 @@ test("native file sharing uses files-only capability and share payloads", async 
   }
 });
 
+test("native file sharing capability is synchronous, files-only, and exception-safe", () => {
+  const file = new File(["artifact"], "artifact.png", { type: "image/png" });
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {},
+  });
+  expect(canShareFileNatively(file)).toBeFalse();
+
+  let incompleteCapabilityCalls = 0;
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {
+      canShare: () => {
+        incompleteCapabilityCalls += 1;
+        return true;
+      },
+    },
+  });
+  expect(canShareFileNatively(file)).toBeFalse();
+  expect(incompleteCapabilityCalls).toBe(0);
+
+  const payloads: ShareData[] = [];
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {
+      canShare: (data: ShareData) => {
+        payloads.push(data);
+        return true;
+      },
+      share: async () => {},
+    },
+  });
+  expect(canShareFileNatively(file)).toBeTrue();
+  expect(payloads).toHaveLength(1);
+  expect(Object.keys(payloads[0] ?? {})).toEqual(["files"]);
+  expect(payloads[0]?.files).toEqual([file]);
+
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {
+      canShare: () => {
+        throw new Error("capability failed");
+      },
+      share: async () => {},
+    },
+  });
+  expect(canShareFileNatively(file)).toBeFalse();
+});
+
 test("native sharing distinguishes cancellation, unavailability, and failure", async () => {
   const file = new File(["artifact"], "artifact.png", { type: "image/png" });
   Object.defineProperty(globalThis, "navigator", {
@@ -170,6 +220,21 @@ test("native sharing distinguishes cancellation, unavailability, and failure", a
     value: {},
   });
   expect(await shareFileNatively(file)).toEqual({ kind: "unavailable" });
+
+  let shareCalls = 0;
+  Object.defineProperty(globalThis, "navigator", {
+    configurable: true,
+    value: {
+      canShare: () => {
+        throw new Error("capability failed");
+      },
+      share: async () => {
+        shareCalls += 1;
+      },
+    },
+  });
+  expect(await shareFileNatively(file)).toEqual({ kind: "unavailable" });
+  expect(shareCalls).toBe(0);
 
   Object.defineProperty(globalThis, "navigator", {
     configurable: true,

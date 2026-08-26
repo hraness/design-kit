@@ -703,16 +703,34 @@ function downloadBlob(blob, filename) {
 function isAbortError(error) {
   return typeof error === "object" && error !== null && "name" in error && error.name === "AbortError";
 }
-async function shareFileNatively(file) {
+function filesOnlyShareData(file) {
+  return { files: [file] };
+}
+function nativeFileShareNavigator() {
   const shareNavigator = globalThis.navigator;
   if (shareNavigator === undefined || typeof shareNavigator.canShare !== "function" || typeof shareNavigator.share !== "function") {
+    return;
+  }
+  return shareNavigator;
+}
+function canShareFileWithNavigator(shareNavigator, file) {
+  try {
+    return shareNavigator.canShare(filesOnlyShareData(file));
+  } catch {
+    return false;
+  }
+}
+function canShareFileNatively(file) {
+  const shareNavigator = nativeFileShareNavigator();
+  return shareNavigator !== undefined && canShareFileWithNavigator(shareNavigator, file);
+}
+async function shareFileNatively(file) {
+  const shareNavigator = nativeFileShareNavigator();
+  if (shareNavigator === undefined || !canShareFileWithNavigator(shareNavigator, file)) {
     return { kind: "unavailable" };
   }
-  const shareData = { files: [file] };
   try {
-    if (!shareNavigator.canShare(shareData))
-      return { kind: "unavailable" };
-    await shareNavigator.share(shareData);
+    await shareNavigator.share(filesOnlyShareData(file));
     return { kind: "shared" };
   } catch (error) {
     if (isAbortError(error))
@@ -742,6 +760,7 @@ export {
   designThemeLabel2 as designThemeLabel,
   defaultDesignTheme2 as defaultDesignTheme,
   copyTextToClipboard,
+  canShareFileNatively,
   buildXShareIntentUrl,
   buildLinkedInShareIntentUrl,
   buildBlueskyShareIntentUrl
