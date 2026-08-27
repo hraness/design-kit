@@ -16,6 +16,11 @@
  * `components` parent layer would instead keep the Button at inline-flex.
  */
 @layer components.hraness-ui.legacy {
+  html body [data-design-kit-stylex-fader-conflict="true"].hraness-design-fader {
+    --design-kit-stylex-fader-conflict: ui-legacy;
+    min-inline-size: 99px;
+  }
+
   html body [data-design-kit-stylex-playback-conflict="true"]
     .hraness-design-playback-transport {
     --design-kit-stylex-playback-conflict: ui-legacy;
@@ -51,6 +56,10 @@
 
   html body [data-design-kit-stylex-layout-old-parent="true"].hraness-design-top-bar {
     top: 88px;
+  }
+
+  html body [data-design-kit-stylex-fader-old-parent="true"].hraness-design-fader {
+    min-inline-size: 88px;
   }
 
   html body [data-design-kit-stylex-playback-old-parent="true"]

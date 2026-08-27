@@ -251,6 +251,24 @@ function requireMutationNegativeContracts(
       ),
     ],
     [
+      "restored Fader root legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        ".hraness-design-chat-message {",
+        ".hraness-design-fader { display: grid; }\n\n.hraness-design-chat-message {",
+        "restored Fader root legacy selector",
+      ),
+    ],
+    [
+      "restored Fader pseudo legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        ".hraness-design-chat-message {",
+        ".hraness-design-fader__track::before { inline-size: 4px; }\n\n.hraness-design-chat-message {",
+        "restored Fader pseudo legacy selector",
+      ),
+    ],
+    [
       "direct-parent local legacy restoration",
       replaceExactlyOnce(
         localComponents,
@@ -572,6 +590,58 @@ function requireMutationNegativeContracts(
         "mutated dist/stylex.css",
       ),
     ],
+    [
+      "mutated Fader default thumb block variable",
+      () => requireFaderDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "--hraness-design-fader-thumb-block-size: 1.125rem;",
+          "--hraness-design-fader-thumb-block-size: 1.25rem;",
+          "mutated Fader default thumb block variable",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical Fader rail inline-size substitution",
+      () => requireFaderDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "inline-size: 4px;",
+          "width: 4px;",
+          "physical Fader rail inline-size substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "missing Fader thumb cross-axis top",
+      () => requireFaderDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "top: 50%;",
+          "top: 51%;",
+          "missing Fader thumb cross-axis top",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "mutated Fader focus outline",
+      () => requireFaderDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "outline-offset: 3px;",
+          "outline-offset: 2px;",
+          "mutated Fader focus outline",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
   ] as const;
 
   for (const [description, mutation] of localMutations) {
@@ -580,6 +650,7 @@ function requireMutationNegativeContracts(
       () => {
         requireLocalComponentsContract(mutation);
         requirePlaybackTransportLegacyRemoval(mutation, "mutated src/components.css");
+        requireFaderLegacyRemoval(mutation, "mutated src/components.css");
       },
     );
   }
@@ -797,6 +868,167 @@ function requirePlaybackTransportLegacyRemoval(source: string, label: string): v
   );
 }
 
+function requireFaderLegacyRemoval(source: string, label: string): void {
+  forbid(
+    source,
+    /\.hraness-design-fader/u,
+    `${label} Fader legacy selector`,
+  );
+}
+
+function requireFaderDeclarationContract(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const styleMap = javaScript.match(
+    /var faderStyles = \{([\s\S]*?)\n\};/u,
+  )?.[1];
+  if (styleMap === undefined) {
+    throw new Error(`${label} is missing the compiled faderStyles map`);
+  }
+
+  const expectedBranches = {
+    caption: [
+      ["font-size: var(--text-caption);", "priority3"],
+    ],
+    compact: [
+      ["--hraness-design-fader-thumb-block-size: .75rem;", "priority1"],
+      ["--hraness-design-fader-thumb-inline-size: 1.5rem;", "priority1"],
+      ["--hraness-design-fader-track-length: var(--interactive-target-min);", "priority1"],
+    ],
+    fillRail: [
+      ["background-color: var(--primary);", "priority3"],
+      ["block-size: 100%;", "priority3"],
+      ["inset-block-end: 0;", "priority3"],
+    ],
+    focusVisible: [
+      ["outline-color: var(--focus);", "priority3"],
+      ["outline-offset: 3px;", "priority3"],
+      ["outline-style: solid;", "priority3"],
+      ["outline-width: 3px;", "priority3"],
+    ],
+    horizontalRoot: [
+      ["min-inline-size: 8rem;", "priority3"],
+    ],
+    horizontalTrack: [
+      ["block-size: var(--interactive-target-min);", "priority3"],
+      ["inline-size: 100%;", "priority3"],
+    ],
+    labelRow: [
+      ["align-items: center;", "priority3"],
+      ["display: flex;", "priority3"],
+      ["gap: var(--space-1);", "priority2"],
+    ],
+    rail: [
+      ["border-radius: var(--radius-round);", "priority2"],
+      ["inline-size: 4px;", "priority3"],
+      ["inset-inline: calc(50% - 2px);", "priority2"],
+      ["position: absolute;", "priority3"],
+    ],
+    root: [
+      ["--hraness-design-fader-thumb-block-size: 1.125rem;", "priority1"],
+      ["--hraness-design-fader-thumb-inline-size: 1.75rem;", "priority1"],
+      ["--hraness-design-fader-track-length: 6rem;", "priority1"],
+      ["display: grid;", "priority3"],
+      ["gap: var(--space-2);", "priority2"],
+      ["justify-items: center;", "priority3"],
+      ["min-inline-size: var(--interactive-target-min);", "priority3"],
+    ],
+    thumb: [
+      ["background-color: var(--primary);", "priority3"],
+      ["block-size: var(--hraness-design-fader-thumb-block-size);", "priority3"],
+      ["border-color: var(--background);", "priority2"],
+      ["border-radius: var(--radius-sm);", "priority2"],
+      ["border-style: solid;", "priority2"],
+      ["border-width: 2px;", "priority2"],
+      ["box-shadow: 0 0 0 1px var(--line);", "priority3"],
+      ["inline-size: var(--hraness-design-fader-thumb-inline-size);", "priority3"],
+      ["left: 50%;", "priority4"],
+      ["top: 50%;", "priority4"],
+    ],
+    track: [
+      ["block-size: var(--hraness-design-fader-track-length);", "priority3"],
+      ["inline-size: var(--interactive-target-min);", "priority3"],
+      ["position: relative;", "priority3"],
+    ],
+    trackRail: [
+      ["background-color: var(--grid);", "priority3"],
+      ["inset-block: 0;", "priority2"],
+    ],
+  } as const;
+
+  const actualBranchNames = [...styleMap.matchAll(
+    /^ {2}([A-Za-z][A-Za-z0-9]*):\s*\{/gmu,
+  )].map((match) => match[1]);
+  const expectedBranchNames = Object.keys(expectedBranches);
+  if (JSON.stringify(actualBranchNames) !== JSON.stringify(expectedBranchNames)) {
+    throw new Error(`${label} exposes the wrong Fader recipe branches`);
+  }
+
+  const layerStarts = DESIGN_STYLEX_LAYERS.map((layer) => ({
+    index: css.indexOf(`@layer ${layer} {`),
+    priority: layer.slice(layer.lastIndexOf(".") + 1),
+  }));
+  if (layerStarts.some(({ index }) => index < 0)) {
+    throw new Error(`${label} is missing a design-kit priority layer`);
+  }
+  const priorityFor = (index: number): string | undefined =>
+    layerStarts.find(({ index: start }, layerIndex) => {
+      const next = layerStarts[layerIndex + 1]?.index ?? css.length;
+      return index > start && index < next;
+    })?.priority;
+  const allClassNames = new Set<string>();
+
+  for (const [branch, expectedDeclarations] of Object.entries(expectedBranches)) {
+    const branchMap = styleMap.match(
+      new RegExp(`^  ${branch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+    )?.[1];
+    if (branchMap === undefined) {
+      throw new Error(`${label} is missing the Fader ${branch} recipe branch`);
+    }
+    const classNames = [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+    if (classNames.length !== expectedDeclarations.length) {
+      throw new Error(
+        `${label} exposes the wrong Fader ${branch} atomic class count`,
+      );
+    }
+    const actualDeclarations = classNames.map((className) => {
+      allClassNames.add(className);
+      const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+      const matches = [...css.matchAll(
+        new RegExp(`\\.${escaped}\\s*\\{([^}]*)\\}`, "gu"),
+      )];
+      if (matches.length !== 1 || matches[0]?.index === undefined) {
+        throw new Error(
+          `${label} contains ${String(matches.length)} rules for Fader class ${className}`,
+        );
+      }
+      const body = (matches[0][1] ?? "").replace(/\s+/gu, " ").trim();
+      return `${priorityFor(matches[0].index) ?? "missing"}\u0000${body}`;
+    });
+    const expected = expectedDeclarations.map(
+      ([body, priority]) => `${priority}\u0000${body}`,
+    );
+    if (
+      actualDeclarations.length !== expected.length
+      || actualDeclarations.some((declaration) => !expected.includes(declaration))
+      || new Set(actualDeclarations).size !== expected.length
+    ) {
+      throw new Error(
+        `${label} does not preserve the exact Fader ${branch} recipe`,
+      );
+    }
+  }
+
+  for (const className of allClassNames) {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    if (new RegExp(`\\.${escaped}::?[A-Za-z-]+`, "u").test(css)) {
+      throw new Error(`${label} emitted a pseudo selector for Fader class ${className}`);
+    }
+  }
+}
+
 function requirePlaybackTransportDeclarationContract(
   css: string,
   javaScript: string,
@@ -897,6 +1129,11 @@ requireLayoutSurfaceLogicalAtomicContract(
   "the compiled artifact",
 );
 requirePlaybackTransportDeclarationContract(
+  compiledCss,
+  compiledJavaScript,
+  "the compiled artifact",
+);
+requireFaderDeclarationContract(
   compiledCss,
   compiledJavaScript,
   "the compiled artifact",
@@ -1015,6 +1252,7 @@ for (const stableClass of [
   );
 }
 requirePlaybackTransportLegacyRemoval(legacyComponents, "src/components.css");
+requireFaderLegacyRemoval(legacyComponents, "src/components.css");
 requireGeneratedLayerContract(
   compiledCss,
   DESIGN_STYLEX_LAYERS,

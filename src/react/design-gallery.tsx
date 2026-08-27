@@ -61,6 +61,7 @@ export const designGalleryRecipeCoverage = [
   "application shells",
   "charts",
   "dither surface",
+  "fader",
   "foil card surface",
   "layout surfaces",
   "Jelly presentation",
@@ -262,8 +263,10 @@ export function DesignSystemGallery({
             <Fader
               aria-label="Example level"
               className="design-gallery__vertical-fader"
-              density="compact"
+              data-gallery-fader="vertical"
+              density="default"
               label="Level"
+              labelAccessory={<span data-gallery-fader-accessory="">dB</span>}
               maxValue={100}
               minValue={0}
               onChange={setFaderValue}
@@ -274,6 +277,7 @@ export function DesignSystemGallery({
             <Fader
               aria-label="Example horizontal level"
               className="design-gallery__horizontal-fader"
+              data-gallery-fader="horizontal"
               density="compact"
               label="Horizontal level"
               maxValue={100}
