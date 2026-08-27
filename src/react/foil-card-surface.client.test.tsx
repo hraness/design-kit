@@ -252,16 +252,17 @@ test("one delegated controller drives a 50-card deck with cached geometry", () =
   act(() => mountedRoot?.render(
     <FoilCardDeck aria-label="Fifty cards">
       {Array.from({ length: 50 }, (_, index) => (
-        <FoilCardSurface
-          intensity="standard"
-          key={index}
-          ornament={index % 2 === 0 ? "circuit" : "facets"}
-          preset="prism"
-          renderMode="interactive"
-          seed={`deck-card-${String(index)}`}
-        >
-          <span data-card-copy={String(index)}>Card {index}</span>
-        </FoilCardSurface>
+        <a href={`#card-${String(index)}`} key={index}>
+          <FoilCardSurface
+            intensity="standard"
+            ornament={index % 2 === 0 ? "circuit" : "facets"}
+            preset="prism"
+            renderMode="interactive"
+            seed={`deck-card-${String(index)}`}
+          >
+            <span data-card-copy={String(index)}>Card {index}</span>
+          </FoilCardSurface>
+        </a>
       ))}
     </FoilCardDeck>,
   ));
@@ -377,26 +378,32 @@ test("one delegated controller drives a 50-card deck with cached geometry", () =
 
   const thirdCopy = surfaces[2]?.querySelector("span");
   const fourthCopy = surfaces[3]?.querySelector("span");
+  const thirdLink = surfaces[2]?.parentElement;
+  const fourthLink = surfaces[3]?.parentElement;
   if (
     thirdCopy === null
     || thirdCopy === undefined
     || fourthCopy === null
     || fourthCopy === undefined
+    || thirdLink === null
+    || thirdLink === undefined
+    || fourthLink === null
+    || fourthLink === undefined
   ) throw new Error("Missing focus copies.");
-  thirdCopy.dispatchEvent(pointerEvent(EventConstructor, "focusin", {}));
+  thirdLink.dispatchEvent(pointerEvent(EventConstructor, "focusin", {}));
   expect(surfaces[2]?.hasAttribute("data-foil-active")).toBeTrue();
   expect(surfaces[2]?.style.getPropertyValue("--foil-rotate-x")).toBe("0deg");
   expect(surfaces[2]?.style.getPropertyValue("--foil-rotate-y")).toBe("0deg");
   expect(surfaces.filter((surface) => surface.hasAttribute("data-foil-active")))
     .toHaveLength(1);
-  thirdCopy.dispatchEvent(pointerEvent(EventConstructor, "focusout", {
-    relatedTarget: fourthCopy,
+  thirdLink.dispatchEvent(pointerEvent(EventConstructor, "focusout", {
+    relatedTarget: fourthLink,
   }));
-  fourthCopy.dispatchEvent(pointerEvent(EventConstructor, "focusin", {}));
+  fourthLink.dispatchEvent(pointerEvent(EventConstructor, "focusin", {}));
   expect(surfaces[3]?.hasAttribute("data-foil-active")).toBeTrue();
   expect(surfaces.filter((surface) => surface.hasAttribute("data-foil-active")))
     .toHaveLength(1);
-  fourthCopy.dispatchEvent(pointerEvent(EventConstructor, "focusout", {
+  fourthLink.dispatchEvent(pointerEvent(EventConstructor, "focusout", {
     relatedTarget: null,
   }));
   expect(surfaces.some((surface) => surface.hasAttribute("data-foil-active")))
