@@ -40,6 +40,18 @@ interface LayoutEvidence {
   readonly mobileTriggerDisplay: string;
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
+  readonly playbackAlignItems: string;
+  readonly playbackAtomic: boolean;
+  readonly playbackCallerLast: boolean;
+  readonly playbackDisplay: string;
+  readonly playbackFlexWrap: string;
+  readonly playbackGlyphBlockSize: string;
+  readonly playbackGlyphHasInlineStyle: boolean;
+  readonly playbackGlyphInlineSize: string;
+  readonly playbackGap: string;
+  readonly playbackHasInlineStyle: boolean;
+  readonly playbackSemantic: boolean;
+  readonly playbackStatus: string;
   readonly plainLinkDecoration: string;
   readonly plainHeaderChildrenContained: boolean;
   readonly plainHeaderHeight: number;
@@ -127,6 +139,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       ".hraness-design-docked-footer__content",
     );
     const layoutDockFrame = document.querySelector("[data-gallery-layout-docked-frame]");
+    const playback = document.querySelector(".design-gallery__playback-transport");
+    const playbackCommand = document.querySelector("#design-gallery-playback-command");
+    const playbackGlyph = playbackCommand?.querySelector(
+      '[data-slot="icon"], [data-slot="spinner"]',
+    );
+    const playbackButton = playbackCommand?.closest(
+      ".hraness-design-playback-transport__button",
+    );
     const verticalFaderTrack = document.querySelector(
       ".design-gallery__vertical-fader .hraness-design-fader__track",
     );
@@ -161,6 +181,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(layoutDock instanceof HTMLElement)
       || !(layoutDockContent instanceof HTMLElement)
       || !(layoutDockFrame instanceof HTMLElement)
+      || !(playback instanceof HTMLElement)
+      || !(playbackCommand instanceof HTMLButtonElement)
+      || !(playbackGlyph instanceof HTMLElement || playbackGlyph instanceof SVGElement)
+      || !(playbackButton instanceof HTMLElement)
       || !(verticalFaderTrack instanceof HTMLElement)
       || !(verticalFaderThumb instanceof HTMLElement)
       || !(appearance instanceof HTMLElement)
@@ -185,6 +209,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const horizontalFaderThumbBox = horizontalFaderThumb.getBoundingClientRect();
     const layoutDockBox = layoutDock.getBoundingClientRect();
     const layoutDockFrameBox = layoutDockFrame.getBoundingClientRect();
+    const playbackStyle = getComputedStyle(playback);
+    const playbackGlyphStyle = getComputedStyle(playbackGlyph);
     const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
     const verticalFaderThumbBox = verticalFaderThumb.getBoundingClientRect();
     const paletteNames = [
@@ -277,6 +303,31 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       mobileTriggerDisplay: getComputedStyle(mobileTrigger).display,
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
+      playbackAlignItems: playbackStyle.alignItems,
+      playbackAtomic:
+        [...playback.classList].filter((className) => className.startsWith("x")).length >= 4
+        && [...playbackGlyph.classList].filter((className) => className.startsWith("x")).length >= 2,
+      playbackCallerLast:
+        playback.classList.item(playback.classList.length - 1)
+        === "design-gallery__playback-transport",
+      playbackDisplay: playbackStyle.display,
+      playbackFlexWrap: playbackStyle.flexWrap,
+      playbackGlyphBlockSize: playbackGlyphStyle.blockSize,
+      playbackGlyphHasInlineStyle: playbackGlyph.hasAttribute("style"),
+      playbackGlyphInlineSize: playbackGlyphStyle.inlineSize,
+      playbackGap: playbackStyle.gap,
+      playbackHasInlineStyle: playback.hasAttribute("style"),
+      playbackSemantic:
+        playback.classList.contains("hraness-toolbar")
+        && playback.classList.contains("hraness-design-playback-transport")
+        && playback.getAttribute("role") === "toolbar"
+        && playback.getAttribute("aria-label") === "Preview transport"
+        && playbackCommand.getAttribute("aria-label") === "Play"
+        && playbackCommand.dataset.playbackCommand === "play"
+        && playbackButton.dataset.size === "large"
+        && playbackButton.dataset.variant === "primary"
+        && playbackButton.classList.contains("hraness-design-playback-transport__button"),
+      playbackStatus: playback.dataset.playbackStatus ?? "",
       plainLinkDecoration: getComputedStyle(plainLink).textDecorationLine,
       plainHeaderChildrenContained:
         plainWordmarkBox.left >= plainHeaderBox.left - 1
@@ -434,6 +485,13 @@ try {
     /@layer\s+components\.hraness-ui\.priority3\s*\{[\s\S]*?padding-top:\s*var\(--space-5,\s*1\.25rem\)/u.test(builtCss),
     "Gallery CSS lost the pinned UI QuietSite priority3 output.",
   );
+  invariant(
+    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u.test(builtCss)
+      && /@layer\s+components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u.test(builtCss)
+      && /@layer\s+components\.hraness-design-kit\.priority3\s*\{[\s\S]*?inline-size:\s*1\.5rem/u.test(builtCss)
+      && !/@layer\s+components\.hraness-design-kit\.priority5/u.test(builtCss),
+    "Gallery CSS lost the PlaybackTransport priority2/priority3 logical recipe.",
+  );
   await writeFile(
     join(work, "index.html"),
     [
@@ -564,6 +622,34 @@ try {
           })}`,
         );
         invariant(
+          state.playbackAtomic
+            && state.playbackCallerLast
+            && state.playbackSemantic
+            && state.playbackStatus === "idle"
+            && state.playbackDisplay === "flex"
+            && state.playbackFlexWrap === "wrap"
+            && state.playbackAlignItems === "center"
+            && state.playbackGap === "8px"
+            && state.playbackGlyphInlineSize === "24px"
+            && state.playbackGlyphBlockSize === "24px"
+            && !state.playbackHasInlineStyle
+            && !state.playbackGlyphHasInlineStyle,
+          `${layout.id}: PlaybackTransport delivery is ${JSON.stringify({
+            alignItems: state.playbackAlignItems,
+            atomic: state.playbackAtomic,
+            blockSize: state.playbackGlyphBlockSize,
+            callerLast: state.playbackCallerLast,
+            display: state.playbackDisplay,
+            flexWrap: state.playbackFlexWrap,
+            gap: state.playbackGap,
+            glyphHasInlineStyle: state.playbackGlyphHasInlineStyle,
+            inlineSize: state.playbackGlyphInlineSize,
+            rootHasInlineStyle: state.playbackHasInlineStyle,
+            semantic: state.playbackSemantic,
+            status: state.playbackStatus,
+          })}`,
+        );
+        invariant(
           state.plainLinkDecoration === "none",
           `${layout.id}: plain links are not quiet at rest`,
         );
@@ -601,6 +687,28 @@ try {
         invariant(
           state.palette.length === 4 && state.paletteValid,
           `${layout.id}: procedural palette is ${JSON.stringify(state.palette)}`,
+        );
+
+        const playbackCommand = page.locator("#design-gallery-playback-command");
+        await playbackCommand.click();
+        await page.locator(
+          '.design-gallery__playback-transport[data-playback-status="playing"]',
+        ).waitFor();
+        invariant(
+          await playbackCommand.getAttribute("aria-label") === "Stop"
+            && await playbackCommand.getAttribute("data-playback-command") === "stop"
+            && await playbackCommand.locator('[data-slot="icon"]').count() === 1,
+          `${layout.id}: Play did not transition the stable command to Stop`,
+        );
+        await playbackCommand.click();
+        await page.locator(
+          '.design-gallery__playback-transport[data-playback-status="idle"]',
+        ).waitFor();
+        invariant(
+          await playbackCommand.getAttribute("aria-label") === "Play"
+            && await playbackCommand.getAttribute("data-playback-command") === "play"
+            && await playbackCommand.locator('[data-slot="icon"]').count() === 1,
+          `${layout.id}: Stop did not restore the stable Play command`,
         );
 
         const plainLink = page.locator(".design-gallery__plain-link-example a");

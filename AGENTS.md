@@ -28,6 +28,7 @@
 - Keep persistent appearance selection to one icon-menu control at the final/rightmost product-header action. Do not place appearance controls in footers, navigation lists, route-state action rows, or nested gallery content. Fixed-theme, authentication-only, global-error, and non-HTML surfaces may omit the control.
 - Keep default typography on system stacks. Optional open fonts require their exact license, provenance, and integrity evidence.
 - Preserve native or React Aria semantics as the interactive layer. Jelly may paint a host but never replace the semantic descendant.
+- Keep `PlaybackTransport` as one stable large primary command with an exclusive accessible name, idle-only disablement, pending busy state, play-or-stop callback routing, logical 1.5rem glyph sizing, and its existing caller, id, shortcut, ref, and trailing-control seams. Do not add a public `xstyle` prop without a concrete consumer contract.
 - Keep decorative effects pointer-transparent, reduced-motion aware, forced-color safe, deterministic where seeded, and removable without losing meaningful content.
 - Keep chart data and units application-owned. Shared charts own responsive geometry, exact-value accessibility, reduced motion, and forced-color behavior.
 - Model public states so invalid combinations cannot exist. Parse foreign values from `unknown` at owned boundaries.

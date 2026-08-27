@@ -122,6 +122,33 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
 ];
 
+const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [
+    /@layer components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
+    "priority2 gap",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?align-items:\s*center/u,
+    "priority3 alignment",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?display:\s*flex/u,
+    "priority3 flex display",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?flex-wrap:\s*wrap/u,
+    "priority3 wrapping",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?inline-size:\s*1\.5rem/u,
+    "priority3 logical inline glyph size",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
+    "priority3 logical block glyph size",
+  ],
+];
+
 const layoutSurfaceDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/background-color:\s*var\(--background\)/u, "solid surface background"],
   [
@@ -441,6 +468,10 @@ try {
     "The combined CSS artifact lost the gallery-only design-kit priority2 TopBar conflict.",
   );
   invariant(
+    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-playback-conflict=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{(?=[^}]*--design-kit-stylex-playback-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the matched gallery-only UI legacy PlaybackTransport conflict.",
+  );
+  invariant(
     /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
@@ -451,6 +482,10 @@ try {
   invariant(
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-layout-old-parent=(?:"true"|true)\]\.hraness-design-top-bar\s*\{[^}]*top:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only TopBar old direct-parent negative control.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only PlaybackTransport old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
@@ -499,6 +534,20 @@ try {
   invariant(
     !/\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u.test(designLegacyCss),
     "Legacy design-kit CSS can still satisfy a migrated layout-surface selector.",
+  );
+  for (const [pattern, declaration] of playbackTransportDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss) && pattern.test(combinedCss),
+      `The packed or combined CSS artifact lost the migrated PlaybackTransport ${declaration} declaration.`,
+    );
+  }
+  invariant(
+    !designLegacyCss.includes(".hraness-design-playback-transport {")
+      && !designLegacyCss.includes(
+        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"])',
+      )
+      && !/@layer\s+components\.hraness-design-kit\.priority5/u.test(designStylexCss),
+    "PlaybackTransport retained a legacy visual selector or leaked priority5 output.",
   );
   const reactAriaPressableRules = combinedCss.match(
     /\[data-react-aria-pressable\]\s*\{\s*touch-action:\s*pan-x pan-y pinch-zoom;?\s*\}/gu,
@@ -1123,6 +1172,141 @@ try {
       `The served aggregate CSS does not contain rendered DitherSurface class ${className}.`,
     );
   }
+  const playbackTransportEvidence = await page.evaluate(() => {
+    const matrix = document.querySelector("[data-security-playback-matrix]");
+    const root = matrix?.querySelector(".hraness-design-playback-transport");
+    const command = matrix?.querySelector("#security-playback-command");
+    const commandHost = command?.closest(
+      ".hraness-design-playback-transport__button",
+    );
+    const glyph = command?.querySelector('[data-slot="spinner"]');
+    const trailing = matrix?.querySelector("[data-security-playback-trailing]");
+    if (!(matrix instanceof HTMLElement)
+      || !(root instanceof HTMLElement)
+      || !(command instanceof HTMLButtonElement)
+      || !(commandHost instanceof HTMLElement)
+      || !(glyph instanceof HTMLElement)
+      || !(trailing instanceof HTMLElement)) {
+      throw new Error("The PlaybackTransport delivery matrix is incomplete.");
+    }
+    const normalizedStyle = getComputedStyle(root);
+    const normalizedGap = normalizedStyle.gap;
+    matrix.setAttribute("data-design-kit-stylex-playback-old-parent", "true");
+    const oldDirectParentGap = getComputedStyle(root).gap;
+    matrix.removeAttribute("data-design-kit-stylex-playback-old-parent");
+    const restoredStyle = getComputedStyle(root);
+    const glyphStyle = getComputedStyle(glyph);
+    return {
+      alignItems: restoredStyle.alignItems,
+      ariaBusy: command.getAttribute("aria-busy"),
+      ariaLabel: command.getAttribute("aria-label"),
+      callerLastClass: root.classList.item(root.classList.length - 1),
+      command: command.dataset.playbackCommand,
+      commandHostBusy: commandHost.getAttribute("aria-busy"),
+      commandHostSize: commandHost.dataset.size,
+      commandHostVariant: commandHost.dataset.variant,
+      commandId: command.id,
+      display: restoredStyle.display,
+      flexWrap: restoredStyle.flexWrap,
+      glyphBlockSize: glyphStyle.blockSize,
+      glyphClasses: [...glyph.classList].filter(
+        (className) => className !== "hraness-spinner",
+      ),
+      glyphHeight: glyphStyle.height,
+      glyphInlineSize: glyphStyle.inlineSize,
+      glyphSlot: glyph.dataset.slot,
+      glyphWidth: glyphStyle.width,
+      hasInlineStyle: root.hasAttribute("style"),
+      labelledBy: root.getAttribute("aria-labelledby"),
+      normalizedGap,
+      oldDirectParentGap,
+      ref: command.dataset.securityPlaybackRef,
+      restoredGap: restoredStyle.gap,
+      rootClasses: [...root.classList].filter(
+        (className) => ![
+          "hraness-toolbar",
+          "hraness-design-playback-transport",
+          "security-caller-playback-transport",
+        ].includes(className),
+      ),
+      rootHasStableClass: root.classList.contains(
+        "hraness-design-playback-transport",
+      ),
+      rootSlot: root.dataset.slot,
+      sentinel: restoredStyle
+        .getPropertyValue("--design-kit-stylex-playback-conflict")
+        .trim(),
+      status: root.dataset.playbackStatus,
+      trailingAfterCommand: commandHost.nextElementSibling === trailing,
+    };
+  });
+  invariant(
+    playbackTransportEvidence.normalizedGap === "8px"
+      && playbackTransportEvidence.oldDirectParentGap === "88px"
+      && playbackTransportEvidence.restoredGap === "8px"
+      && playbackTransportEvidence.sentinel === "ui-legacy",
+    `The real PlaybackTransport did not distinguish normalized package layers from the matched UI legacy conflict and old direct-parent counterfactual: ${JSON.stringify(playbackTransportEvidence)}.`,
+  );
+  invariant(
+    playbackTransportEvidence.display === "flex"
+      && playbackTransportEvidence.flexWrap === "wrap"
+      && playbackTransportEvidence.alignItems === "center"
+      && playbackTransportEvidence.glyphInlineSize === "24px"
+      && playbackTransportEvidence.glyphBlockSize === "24px"
+      && playbackTransportEvidence.glyphWidth === "24px"
+      && playbackTransportEvidence.glyphHeight === "24px"
+      && !playbackTransportEvidence.hasInlineStyle,
+    `The real PlaybackTransport lost its extracted flex or logical glyph presentation: ${JSON.stringify(playbackTransportEvidence)}.`,
+  );
+  invariant(
+    playbackTransportEvidence.rootHasStableClass
+      && playbackTransportEvidence.rootSlot === "toolbar"
+      && playbackTransportEvidence.callerLastClass === "security-caller-playback-transport"
+      && playbackTransportEvidence.labelledBy === "security-playback-title"
+      && playbackTransportEvidence.status === "pending"
+      && playbackTransportEvidence.commandId === "security-playback-command"
+      && playbackTransportEvidence.command === "stop"
+      && playbackTransportEvidence.ariaLabel === "Cancel playback start"
+      && playbackTransportEvidence.ariaBusy === null
+      && playbackTransportEvidence.commandHostBusy === "true"
+      && playbackTransportEvidence.commandHostSize === "large"
+      && playbackTransportEvidence.commandHostVariant === "primary"
+      && playbackTransportEvidence.glyphSlot === "spinner"
+      && playbackTransportEvidence.ref === "ready"
+      && playbackTransportEvidence.trailingAfterCommand,
+    `The real PlaybackTransport lost a semantic, pending, ref, stable-hook, or trailing-order contract: ${JSON.stringify(playbackTransportEvidence)}.`,
+  );
+  invariant(
+    playbackTransportEvidence.rootClasses.length === 4,
+    `The real PlaybackTransport exposes the wrong root atomic class count: ${JSON.stringify(playbackTransportEvidence)}.`,
+  );
+  for (const className of playbackTransportEvidence.rootClasses) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1
+        && classSelectorCount(combinedCss, className) >= 1,
+      `The served PlaybackTransport root class ${className} is missing or duplicated.`,
+    );
+  }
+  const renderedPlaybackGlyphClasses = playbackTransportEvidence.glyphClasses.filter(
+    (className) => {
+      const escaped = escapeRegularExpression(className);
+      return new RegExp(
+        `\\.${escaped}\\s*\\{[^}]*(?:block-size|inline-size):\\s*1\\.5rem`,
+        "u",
+      ).test(designStylexCss);
+    },
+  );
+  invariant(
+    renderedPlaybackGlyphClasses.length === 2,
+    `The real PlaybackTransport exposes the wrong logical glyph atomic classes: ${JSON.stringify(playbackTransportEvidence)}.`,
+  );
+  for (const className of renderedPlaybackGlyphClasses) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1
+        && classSelectorCount(combinedCss, className) >= 1,
+      `The served PlaybackTransport glyph class ${className} is missing or duplicated.`,
+    );
+  }
   const layoutSurfaceEvidence = await page.evaluate(() => {
     const top = document.querySelector('[data-security-layout="top"]');
     const bottom = document.querySelector('[data-security-layout="bottom"]');
@@ -1528,6 +1712,64 @@ try {
       ),
     `Forced-colors mode did not preserve layout content while normalizing chrome: ${JSON.stringify(forcedColorLayoutEvidence)}.`,
   );
+  const forcedColorPlaybackEvidence = await page.evaluate(() => {
+    const root = document.querySelector(".security-caller-playback-transport");
+    const command = document.querySelector("#security-playback-command");
+    const glyph = command?.querySelector('[data-slot="spinner"]');
+    const trailing = document.querySelector("[data-security-playback-trailing]");
+    if (!(root instanceof HTMLElement)
+      || !(command instanceof HTMLButtonElement)
+      || !(glyph instanceof HTMLElement)
+      || !(trailing instanceof HTMLElement)) {
+      throw new Error("The forced-colors PlaybackTransport matrix is incomplete.");
+    }
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "ButtonFace";
+    probe.style.color = "ButtonText";
+    probe.style.borderColor = "CanvasText";
+    probe.style.borderStyle = "solid";
+    document.body.append(probe);
+    const probeStyle = getComputedStyle(probe);
+    const buttonFace = probeStyle.backgroundColor;
+    const buttonText = probeStyle.color;
+    const canvasText = probeStyle.borderColor;
+    probe.remove();
+    const commandStyle = getComputedStyle(command);
+    const glyphStyle = getComputedStyle(glyph);
+    return {
+      buttonFace,
+      buttonText,
+      canvasText,
+      commandBackground: commandStyle.backgroundColor,
+      commandBorder: commandStyle.borderColor,
+      commandColor: commandStyle.color,
+      commandForcedColorAdjust: commandStyle.forcedColorAdjust,
+      glyphBlockSize: glyphStyle.blockSize,
+      glyphBorderBlockStartColor: glyphStyle.borderBlockStartColor,
+      glyphInlineSize: glyphStyle.inlineSize,
+      glyphVisible: glyph.getBoundingClientRect().width > 0
+        && glyph.getBoundingClientRect().height > 0,
+      rootText: root.textContent?.trim(),
+      trailingText: trailing.textContent?.trim(),
+    };
+  });
+  invariant(
+    forcedColorPlaybackEvidence.commandBackground
+      === forcedColorPlaybackEvidence.buttonFace
+      && forcedColorPlaybackEvidence.commandColor
+        === forcedColorPlaybackEvidence.buttonText
+      && forcedColorPlaybackEvidence.commandBorder
+        === forcedColorPlaybackEvidence.canvasText
+      && forcedColorPlaybackEvidence.commandForcedColorAdjust === "auto"
+      && forcedColorPlaybackEvidence.glyphBorderBlockStartColor
+        === forcedColorPlaybackEvidence.commandColor
+      && forcedColorPlaybackEvidence.glyphInlineSize === "24px"
+      && forcedColorPlaybackEvidence.glyphBlockSize === "24px"
+      && forcedColorPlaybackEvidence.glyphVisible
+      && forcedColorPlaybackEvidence.rootText?.includes("Trailing control") === true
+      && forcedColorPlaybackEvidence.trailingText === "Trailing control",
+    `Forced-colors mode did not preserve PlaybackTransport command, spinner, or trailing content: ${JSON.stringify(forcedColorPlaybackEvidence)}.`,
+  );
   await page.emulateMedia({ forcedColors: "none" });
   const pressableEvidence = await page.evaluate((styleId) => {
     const element = document.querySelector("#security-canary-dialog-trigger");
@@ -1635,7 +1877,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

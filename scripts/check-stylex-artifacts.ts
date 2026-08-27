@@ -233,6 +233,24 @@ function requireMutationNegativeContracts(
     "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-design-kit.legacy, components.hraness-ui.priority3, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const localMutations = [
     [
+      "restored PlaybackTransport root legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        ".hraness-design-chat-message {",
+        ".hraness-design-playback-transport { display: flex; }\n\n.hraness-design-chat-message {",
+        "restored PlaybackTransport root legacy selector",
+      ),
+    ],
+    [
+      "restored PlaybackTransport descendant legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        ".hraness-design-chat-message {",
+        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"]) { inline-size: 1.5rem; }\n\n.hraness-design-chat-message {',
+        "restored PlaybackTransport descendant legacy selector",
+      ),
+    ],
+    [
       "direct-parent local legacy restoration",
       replaceExactlyOnce(
         localComponents,
@@ -528,12 +546,41 @@ function requireMutationNegativeContracts(
         "mutated dist/stylex.css",
       ),
     ],
+    [
+      "physical PlaybackTransport glyph width substitution",
+      () => requirePlaybackTransportDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "inline-size: 1.5rem;",
+          "width: 1.5rem;",
+          "physical PlaybackTransport glyph width substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical PlaybackTransport glyph height substitution",
+      () => requirePlaybackTransportDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "block-size: 1.5rem;",
+          "height: 1.5rem;",
+          "physical PlaybackTransport glyph height substitution",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
   ] as const;
 
   for (const [description, mutation] of localMutations) {
     requireMutationRejected(
       description,
-      () => requireLocalComponentsContract(mutation),
+      () => {
+        requireLocalComponentsContract(mutation);
+        requirePlaybackTransportLegacyRemoval(mutation, "mutated src/components.css");
+      },
     );
   }
   for (const [description, mutation] of aggregateMutations) {
@@ -736,8 +783,120 @@ function requireLayoutSurfaceLogicalAtomicContract(
     }
   }
 }
+
+function requirePlaybackTransportLegacyRemoval(source: string, label: string): void {
+  forbid(
+    source,
+    /\.hraness-design-playback-transport\s*\{/u,
+    `${label} PlaybackTransport root legacy selector`,
+  );
+  forbid(
+    source,
+    /\.hraness-design-playback-transport__button\s+:is\(svg,\s*\[data-slot=["']spinner["']\]\)/u,
+    `${label} PlaybackTransport glyph legacy selector`,
+  );
+}
+
+function requirePlaybackTransportDeclarationContract(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const styleMap = javaScript.match(
+    /var playbackTransportStyles = \{([\s\S]*?)\n\};/u,
+  )?.[1];
+  if (styleMap === undefined) {
+    throw new Error(`${label} is missing the compiled playbackTransportStyles map`);
+  }
+  const glyphMap = styleMap.match(/glyph:\s*\{([^}]*)\}/u)?.[1];
+  const rootMap = styleMap.match(/root:\s*\{([^}]*)\}/u)?.[1];
+  if (glyphMap === undefined || rootMap === undefined) {
+    throw new Error(`${label} is missing a PlaybackTransport recipe branch`);
+  }
+  const classNames = (map: string) => [
+    ...new Set(map.match(/\bx[a-z0-9]+\b/gu) ?? []),
+  ];
+  const glyphClasses = classNames(glyphMap);
+  const rootClasses = classNames(rootMap);
+  if (glyphClasses.length !== 2 || rootClasses.length !== 4) {
+    throw new Error(
+      `${label} exposes the wrong PlaybackTransport atomic class counts`,
+    );
+  }
+  const layerStarts = [
+    "priority1",
+    "priority2",
+    "priority3",
+    "priority4",
+  ].map((priority) => ({
+    index: css.indexOf(`@layer components.hraness-design-kit.${priority} {`),
+    priority,
+  }));
+  if (layerStarts.some(({ index }) => index < 0)) {
+    throw new Error(`${label} is missing a design-kit priority layer`);
+  }
+  const priorityFor = (index: number): string | undefined =>
+    layerStarts.find(({ index: start }, layerIndex) => {
+      const next = layerStarts[layerIndex + 1]?.index ?? css.length;
+      return index > start && index < next;
+    })?.priority;
+  const ruleFor = (className: string) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const matches = [...css.matchAll(
+      new RegExp(`\\.${escaped}\\s*\\{([^}]*)\\}`, "gu"),
+    )];
+    if (matches.length !== 1 || matches[0]?.index === undefined) {
+      throw new Error(
+        `${label} contains ${String(matches.length)} rules for PlaybackTransport class ${className}`,
+      );
+    }
+    return {
+      body: (matches[0][1] ?? "").replace(/\s+/gu, " ").trim(),
+      priority: priorityFor(matches[0].index),
+    };
+  };
+  const glyphRules = glyphClasses.map(ruleFor);
+  const rootRules = rootClasses.map(ruleFor);
+  const expectedGlyph = new Set([
+    "block-size: 1.5rem;",
+    "inline-size: 1.5rem;",
+  ]);
+  const expectedRoot = new Set([
+    "align-items: center;",
+    "display: flex;",
+    "flex-wrap: wrap;",
+    "gap: var(--space-2);",
+  ]);
+  if (glyphRules.some(({ body, priority }) =>
+    !expectedGlyph.has(body) || priority !== "priority3")
+    || rootRules.some(({ body, priority }) =>
+      !expectedRoot.has(body)
+      || priority !== (body.startsWith("gap:") ? "priority2" : "priority3"))) {
+    throw new Error(
+      `${label} does not preserve the exact PlaybackTransport priority2/priority3 recipe`,
+    );
+  }
+  if (new Set(glyphRules.map(({ body }) => body)).size !== expectedGlyph.size
+    || new Set(rootRules.map(({ body }) => body)).size !== expectedRoot.size) {
+    throw new Error(`${label} duplicates or omits a PlaybackTransport declaration`);
+  }
+  if ([...glyphRules, ...rootRules].some(({ priority }) =>
+    priority === "priority1" || priority === "priority4" || priority === undefined)) {
+    throw new Error(`${label} leaked PlaybackTransport output outside priority2/priority3`);
+  }
+  for (const { body } of glyphRules) {
+    if (/(?:^|\s)(?:height|width):\s*1\.5rem;/u.test(body)) {
+      throw new Error(`${label} physicalized a PlaybackTransport logical glyph size`);
+    }
+  }
+}
 requireLayoutSurfaceDeclarationContract(compiledCss, "the compiled");
 requireLayoutSurfaceLogicalAtomicContract(
+  compiledCss,
+  compiledJavaScript,
+  "the compiled artifact",
+);
+requirePlaybackTransportDeclarationContract(
   compiledCss,
   compiledJavaScript,
   "the compiled artifact",
@@ -855,6 +1014,7 @@ for (const stableClass of [
     `the migrated ${stableClass} legacy selector`,
   );
 }
+requirePlaybackTransportLegacyRemoval(legacyComponents, "src/components.css");
 requireGeneratedLayerContract(
   compiledCss,
   DESIGN_STYLEX_LAYERS,
