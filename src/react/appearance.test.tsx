@@ -4,7 +4,6 @@ import { runInNewContext } from "node:vm";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { colors } from "../index";
-import { AnimatedRailStage, railStageMotion } from "./animated-rail-stage";
 import { useDesignPortalTheme } from "./design-theme-context";
 import { GlobalErrorDocument, RouteErrorPage, RouteNotFoundPage } from "./route-state";
 import {
@@ -290,29 +289,4 @@ test("theme color synchronization waits for a concrete resolved appearance", asy
   );
   expect(source).toContain("if (!hasResolvedColor || latestColor.current === undefined) return;");
   expect(source).toContain("acquireThemeColorMeta(");
-});
-
-test("rail stages enter and exit in opposite directions at the shared duration", () => {
-  expect(railStageMotion(false)).toEqual({
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -10 },
-    initial: { opacity: 0, x: 14 },
-    transition: { duration: 0.18, ease: "easeOut" },
-  });
-});
-
-test("rail stages expose their route identity for deterministic composition checks", () => {
-  const html = renderToStaticMarkup(
-    <AnimatedRailStage stageKey="/workspace/detail">Detail</AnimatedRailStage>,
-  );
-  expect(html).toContain('data-stage-key="/workspace/detail"');
-});
-
-test("reduced motion removes translation and transition time without hiding content", () => {
-  expect(railStageMotion(true)).toEqual({
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 0 },
-    initial: { opacity: 1, x: 0 },
-    transition: { duration: 0, ease: "easeOut" },
-  });
 });

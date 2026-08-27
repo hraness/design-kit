@@ -16,6 +16,7 @@ import {
 import { builtDesignKitReact } from "./built-react.js";
 
 const {
+  AnimatedRailStage,
   BottomBar,
   DesignPortalThemeProvider,
   DesignThemeProvider,
@@ -228,6 +229,24 @@ function LayoutSurfaceDeliveryMatrix() {
   );
 }
 
+function AnimatedRailStageDeliveryMatrix() {
+  return (
+    <section
+      aria-labelledby="security-animated-rail-stage-title"
+      data-design-kit-stylex-animated-rail-stage-conflict="true"
+      data-security-animated-rail-stage-matrix=""
+    >
+      <h2 id="security-animated-rail-stage-title">Animated rail stage delivery matrix</h2>
+      <AnimatedRailStage
+        className="security-caller-animated-rail-stage"
+        stageKey="security-stage"
+      >
+        Animated stage content
+      </AnimatedRailStage>
+    </section>
+  );
+}
+
 function PlaybackTransportDeliveryMatrix() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -323,6 +342,7 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
             Caller dither
           </DitherSurface>
         </div>
+        <AnimatedRailStageDeliveryMatrix />
         <LayoutSurfaceDeliveryMatrix />
         <FaderDeliveryMatrix />
         <PlaybackTransportDeliveryMatrix />

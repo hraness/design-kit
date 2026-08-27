@@ -30,26 +30,56 @@ import {
 
 // src/react/animated-rail-stage.tsx
 import { AnimatePresence, motion as Motion, useReducedMotion } from "motion/react";
+import * as stylex from "@stylexjs/stylex";
 import { cn } from "@hraness/ui";
+
+// src/react/animated-rail-stage.stylex.ts
+var animatedRailStageStyles = {
+  root: {
+    kdYMnH: "xesnm00",
+    k3aq6I: "x9jhkrq",
+    kmkexE: "x82x5i2",
+    $$css: true
+  }
+};
+
+// src/react/animated-rail-stage.tsx
 import { jsx } from "react/jsx-runtime";
 function railStageMotion(reduceMotion) {
   const duration = reduceMotion ? 0 : motion.duration.standard / 1000;
   return {
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: reduceMotion ? 0 : -motion.distance.railExit },
-    initial: { opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : motion.distance.railEnter },
-    transition: { duration, ease: "easeOut" }
+    animate: {
+      opacity: 1,
+      x: 0
+    },
+    exit: {
+      opacity: 0,
+      x: reduceMotion ? 0 : -motion.distance.railExit
+    },
+    initial: {
+      opacity: reduceMotion ? 1 : 0,
+      x: reduceMotion ? 0 : motion.distance.railEnter
+    },
+    transition: {
+      duration,
+      ease: "easeOut"
+    }
   };
 }
-function AnimatedRailStage({ children, className, stageKey }) {
+function AnimatedRailStage({
+  children,
+  className,
+  stageKey
+}) {
   const reduceMotion = useReducedMotion();
   const stageMotion = railStageMotion(reduceMotion ?? false);
+  const presentation = stylex.props(animatedRailStageStyles.root);
   return /* @__PURE__ */ jsx(AnimatePresence, {
     initial: false,
     mode: "wait",
     children: /* @__PURE__ */ jsx(Motion.div, {
       animate: stageMotion.animate,
-      className: cn("hraness-design-animated-rail-stage", className),
+      className: cn("hraness-design-animated-rail-stage", presentation.className, className),
       "data-stage-key": String(stageKey),
       exit: stageMotion.exit,
       initial: stageMotion.initial,
@@ -142,7 +172,7 @@ function PhaserDots({
   dotClassName,
   trailClassName,
   style,
-  ...props
+  ...props2
 }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -474,7 +504,7 @@ function PhaserDots({
     maskImage: maskGradient
   } : style;
   return /* @__PURE__ */ jsxs2("div", {
-    ...props,
+    ...props2,
     ...INERT_PROPS,
     ref: containerRef,
     role: "presentation",
@@ -955,7 +985,7 @@ function ChatComposer({
   placeholder,
   sendLabel = "Send",
   value,
-  ...props
+  ...props2
 }) {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -964,7 +994,7 @@ function ChatComposer({
     onSubmit();
   };
   return /* @__PURE__ */ jsxs5("form", {
-    ...props,
+    ...props2,
     className: cn5("hraness-design-chat-composer", className),
     onSubmit: handleSubmit,
     children: [
@@ -1036,7 +1066,7 @@ import { useState as useState2 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
-import * as stylex from "@stylexjs/stylex";
+import * as stylex2 from "@stylexjs/stylex";
 import { cn as cn6 } from "@hraness/ui";
 
 // src/react/fader.stylex.ts
@@ -1134,16 +1164,16 @@ function Fader({
   orientation = "vertical",
   showLabel = false,
   showOutput = false,
-  ...props2
+  ...props3
 }) {
-  const rootPresentation = stylex.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
-  const labelRowPresentation = stylex.props(faderStyles.labelRow);
-  const captionPresentation = stylex.props(faderStyles.caption);
-  const trackPresentation = stylex.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
-  const trackRailPresentation = stylex.props(faderStyles.rail, faderStyles.trackRail);
-  const fillRailPresentation = stylex.props(faderStyles.rail, faderStyles.fillRail);
+  const rootPresentation = stylex2.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
+  const labelRowPresentation = stylex2.props(faderStyles.labelRow);
+  const captionPresentation = stylex2.props(faderStyles.caption);
+  const trackPresentation = stylex2.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
+  const trackRailPresentation = stylex2.props(faderStyles.rail, faderStyles.trackRail);
+  const fillRailPresentation = stylex2.props(faderStyles.rail, faderStyles.fillRail);
   return /* @__PURE__ */ jsxs6(AriaSlider, {
-    ...props2,
+    ...props3,
     className: cn6("hraness-design-fader", rootPresentation.className, className),
     "data-density": density,
     orientation,
@@ -1189,7 +1219,7 @@ function Fader({
             className: ({
               isFocusVisible
             }) => {
-              const thumbPresentation = stylex.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
+              const thumbPresentation = stylex2.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
               return cn6("hraness-design-fader__thumb", thumbPresentation.className);
             },
             ...inputRef === undefined ? {} : {
@@ -1203,7 +1233,7 @@ function Fader({
 }
 
 // src/react/foil-card-surface.tsx
-import * as stylex2 from "@stylexjs/stylex";
+import * as stylex3 from "@stylexjs/stylex";
 import { cn as cn7 } from "@hraness/ui";
 import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
 
@@ -1736,7 +1766,7 @@ function addMediaListener(media, listener) {
 function FoilCardDeck({
   children,
   className,
-  ...props3
+  ...props4
 }) {
   const rootRef = useRef2(null);
   const registrations = useRef2(new Map);
@@ -1975,7 +2005,7 @@ function FoilCardDeck({
   return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
     value: contextValue,
     children: /* @__PURE__ */ jsx9("div", {
-      ...props3,
+      ...props4,
       className: cn7("hraness-design-foil-card-deck", className),
       "data-foil-card-deck": "",
       ref: rootRef,
@@ -2007,14 +2037,14 @@ function FoilCardSurface({
   const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
-  const rootPresentation = stylex2.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
-  const basePresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
-  const spectrumPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
-  const sheenPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
-  const texturePresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
-  const ornamentPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
-  const contentPresentation = stylex2.props(foilCardSurfaceStyles.content);
-  const activePresentation = stylex2.props(foilCardSurfaceStyles.active);
+  const rootPresentation = stylex3.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
+  const basePresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
+  const spectrumPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
+  const sheenPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
+  const texturePresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
+  const contentPresentation = stylex3.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex3.props(foilCardSurfaceStyles.active);
   useEffect3(() => {
     if (renderMode !== "interactive")
       return;
@@ -2309,7 +2339,7 @@ var JellySurface = forwardRef(function JellySurface2({
   onPointerMoveCapture,
   surfaceRef,
   tone = "neutral",
-  ...props3
+  ...props4
 }, forwardedRef) {
   const hostRef = useRef3(null);
   const activePointer = useRef3(null);
@@ -2346,7 +2376,7 @@ var JellySurface = forwardRef(function JellySurface2({
     }
   };
   return createElement(JellyCard, {
-    ...props3,
+    ...props4,
     className: cn8("hraness-design-jelly-surface", className),
     "data-disabled": isDisabled ? "true" : undefined,
     "data-pending": isPending ? "true" : undefined,
@@ -2414,10 +2444,10 @@ function NavigationRail({
   className,
   footer,
   header,
-  ...props3
+  ...props4
 }) {
   return /* @__PURE__ */ jsxs8("aside", {
-    ...props3,
+    ...props4,
     "aria-label": ariaLabel,
     className: cn9("hraness-design-navigation-rail", className),
     children: [
@@ -2442,11 +2472,11 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props3
+  ...props4
 }) {
   const Heading = titleAs;
   return /* @__PURE__ */ jsxs8("section", {
-    ...props3,
+    ...props4,
     className: cn9("hraness-design-rail-section", className),
     children: [
       title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
@@ -2468,10 +2498,10 @@ function RailItem({
   icon,
   isActive = false,
   label,
-  ...props3
+  ...props4
 }) {
   return /* @__PURE__ */ jsxs8(Link, {
-    ...props3,
+    ...props4,
     "aria-current": isActive ? "page" : undefined,
     className: cn9("hraness-design-rail-item", className),
     href,
@@ -2505,7 +2535,7 @@ function RailItem({
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex3 from "@stylexjs/stylex";
+import * as stylex4 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -2543,8 +2573,8 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex3.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex3.props(playbackTransportStyles.glyph);
+  const rootPresentation = stylex4.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex4.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs9(Toolbar, {
     ...accessibleName,
     className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
@@ -2591,7 +2621,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex4 from "@stylexjs/stylex";
+import * as stylex5 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2635,8 +2665,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex4.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex4.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex5.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex5.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs10("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -2671,6 +2701,7 @@ var designGalleryTouchKinds = [
 ];
 var designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
+  "animated rail stage",
   "application shells",
   "charts",
   "dither surface",
@@ -2939,6 +2970,7 @@ function DesignSystemGallery({
                 as: "div",
                 "data-gallery-layout-page-canvas": "",
                 children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
+                  className: "design-gallery__animated-rail-stage",
                   stageKey: density,
                   children: /* @__PURE__ */ jsxs11(DitherSurface, {
                     as: "section",
@@ -3757,9 +3789,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props5) {
+function ThemeMenuButton(props6) {
   return /* @__PURE__ */ jsx14(ThemeToggle, {
-    ...props5,
+    ...props6,
     presentation: "menu"
   });
 }
@@ -3942,13 +3974,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props5
+  ...props6
 }) {
   const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx15(RouteErrorPage, {
-        ...props5,
+        ...props6,
         showThemeToggle: false
       })
     ]

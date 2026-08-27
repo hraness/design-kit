@@ -80,6 +80,18 @@ function layerBlockCount(css: string, layerName: string): number {
   return css.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
 }
 
+const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/min-inline-size:\s*0/u, "logical minimum inline-size"],
+  [
+    /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?transform:\s*none\s*!important/u,
+    "important reduced-motion transform fallback",
+  ],
+  [
+    /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?transition:\s*none\s*!important/u,
+    "important reduced-motion transition fallback",
+  ],
+];
+
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center/u, "align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3)/u, "background-color"],
@@ -509,7 +521,11 @@ try {
     "The combined CSS artifact lost the matched gallery-only UI legacy Fader conflict.",
   );
   invariant(
-    /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
+    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-conflict=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{(?=[^}]*--design-kit-stylex-animated-rail-stage-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the matched gallery-only UI legacy AnimatedRailStage conflict.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
   invariant(
@@ -528,6 +544,10 @@ try {
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only Fader old direct-parent negative control.",
   );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only AnimatedRailStage old direct-parent negative control.",
+  );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
       pattern.test(combinedCss),
@@ -537,6 +557,16 @@ try {
   invariant(
     !combinedCss.includes(".hraness-design-production-data-preview-notice{"),
     "Legacy CSS can still satisfy the migrated notice selector.",
+  );
+  for (const [pattern, declaration] of animatedRailStageDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss) && pattern.test(combinedCss),
+      `The packed or combined CSS artifact lost the migrated AnimatedRailStage ${declaration} declaration.`,
+    );
+  }
+  invariant(
+    !designLegacyCss.includes(".hraness-design-animated-rail-stage"),
+    "Legacy design-kit CSS can still satisfy the migrated AnimatedRailStage selector.",
   );
   for (const [pattern, declaration] of ditherDeclarationPatterns) {
     invariant(
@@ -1098,6 +1128,12 @@ try {
     const button = control?.closest(".hraness-button");
     const icon = control?.querySelector('[data-slot="icon"]');
     const quietSiteFooter = document.querySelector('[data-security-ui-priority3]');
+    const animatedRailStageMatrix = document.querySelector(
+      "[data-security-animated-rail-stage-matrix]",
+    );
+    const animatedRailStage = animatedRailStageMatrix?.querySelector(
+      ".hraness-design-animated-rail-stage",
+    );
     const mediumDither = document.querySelector('[data-security-dither="medium"]');
     const coarseDither = document.querySelector('[data-security-dither="coarse"]');
     const fineDither = document.querySelector('[data-security-dither="fine"]');
@@ -1106,11 +1142,13 @@ try {
       || !(button instanceof HTMLElement)
       || !(icon instanceof SVGElement)
       || !(quietSiteFooter instanceof HTMLElement)
+      || !(animatedRailStageMatrix instanceof HTMLElement)
+      || !(animatedRailStage instanceof HTMLElement)
       || !(mediumDither instanceof HTMLElement)
       || !(coarseDither instanceof HTMLElement)
       || !(fineDither instanceof HTMLElement)
       || !(callerDither instanceof HTMLElement)) {
-      throw new Error("The cross-package Button, Icon, UI priority3, or DitherSurface canary is missing.");
+      throw new Error("The cross-package Button, Icon, UI priority3, AnimatedRailStage, or DitherSurface canary is missing.");
     }
     button.setAttribute("data-design-kit-stylex-layer-conflict", "true");
     const buttonStyle = getComputedStyle(button);
@@ -1120,6 +1158,20 @@ try {
     button.removeAttribute("data-design-kit-stylex-old-parent");
     const iconStyle = getComputedStyle(icon);
     const quietSiteFooterStyle = getComputedStyle(quietSiteFooter);
+    const normalizedAnimatedRailStageMinInlineSize = getComputedStyle(
+      animatedRailStage,
+    ).minInlineSize;
+    animatedRailStageMatrix.setAttribute(
+      "data-design-kit-stylex-animated-rail-stage-old-parent",
+      "true",
+    );
+    const oldDirectParentAnimatedRailStageMinInlineSize = getComputedStyle(
+      animatedRailStage,
+    ).minInlineSize;
+    animatedRailStageMatrix.removeAttribute(
+      "data-design-kit-stylex-animated-rail-stage-old-parent",
+    );
+    const restoredAnimatedRailStageStyle = getComputedStyle(animatedRailStage);
     const mediumStyle = getComputedStyle(mediumDither);
     const normalizedDitherSize = mediumStyle.backgroundSize;
     mediumDither.setAttribute("data-design-kit-stylex-dither-old-parent", "true");
@@ -1130,6 +1182,23 @@ try {
     const fineDitherStyle = getComputedStyle(fineDither);
     const callerDitherStyle = getComputedStyle(callerDither);
     return {
+      animatedRailStageCallerLast:
+        animatedRailStage.classList.item(animatedRailStage.classList.length - 1)
+          === "security-caller-animated-rail-stage",
+      animatedRailStageClasses: [...animatedRailStage.classList].filter(
+        (className) => className !== "hraness-design-animated-rail-stage"
+          && className !== "security-caller-animated-rail-stage",
+      ),
+      animatedRailStageConflictSentinel: restoredAnimatedRailStageStyle
+        .getPropertyValue("--design-kit-stylex-animated-rail-stage-conflict")
+        .trim(),
+      animatedRailStageHasMotionStyle: animatedRailStage.hasAttribute("style"),
+      animatedRailStageStageKey: animatedRailStage.dataset.stageKey,
+      animatedRailStageText: animatedRailStage.textContent?.trim(),
+      normalizedAnimatedRailStageMinInlineSize,
+      oldDirectParentAnimatedRailStageMinInlineSize,
+      restoredAnimatedRailStageMinInlineSize:
+        restoredAnimatedRailStageStyle.minInlineSize,
       normalizedDisplay,
       oldDirectParentDisplay,
       restoredDisplay: getComputedStyle(button).display,
@@ -1174,6 +1243,57 @@ try {
       restoredDitherSize: restoredDitherStyle.backgroundSize,
     };
   });
+  invariant(
+    crossPackageEvidence.animatedRailStageCallerLast
+      && crossPackageEvidence.animatedRailStageClasses.length === 3
+      && crossPackageEvidence.animatedRailStageConflictSentinel === "ui-legacy"
+      && crossPackageEvidence.animatedRailStageHasMotionStyle
+      && crossPackageEvidence.animatedRailStageStageKey === "security-stage"
+      && crossPackageEvidence.animatedRailStageText === "Animated stage content"
+      && crossPackageEvidence.normalizedAnimatedRailStageMinInlineSize === "0px"
+      && crossPackageEvidence.oldDirectParentAnimatedRailStageMinInlineSize === "88px"
+      && crossPackageEvidence.restoredAnimatedRailStageMinInlineSize === "0px",
+    `The real AnimatedRailStage lost its extracted presentation, route identity, or layer behavior: ${JSON.stringify(crossPackageEvidence)}.`,
+  );
+  for (const className of crossPackageEvidence.animatedRailStageClasses) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1,
+      `The design-kit StyleX artifact contains ${String(classSelectorCount(designStylexCss, className))} selectors for rendered AnimatedRailStage class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain rendered AnimatedRailStage class ${className}.`,
+    );
+  }
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const reducedMotionAnimatedRailStageEvidence = await page.evaluate(() => {
+    const stage = document.querySelector(".security-caller-animated-rail-stage");
+    if (!(stage instanceof HTMLElement)) {
+      throw new Error("The reduced-motion AnimatedRailStage is missing.");
+    }
+    stage.style.transform = "translateX(99px)";
+    stage.style.transition = "transform 10s";
+    const style = getComputedStyle(stage);
+    const evidence = {
+      computedTransform: style.transform,
+      computedTransitionProperty: style.transitionProperty,
+      inlineTransform: stage.style.transform,
+      inlineTransition: stage.style.transition,
+      text: stage.textContent?.trim(),
+    };
+    stage.style.removeProperty("transform");
+    stage.style.removeProperty("transition");
+    return evidence;
+  });
+  invariant(
+    reducedMotionAnimatedRailStageEvidence.computedTransform === "none"
+      && reducedMotionAnimatedRailStageEvidence.computedTransitionProperty === "none"
+      && reducedMotionAnimatedRailStageEvidence.inlineTransform === "translateX(99px)"
+      && reducedMotionAnimatedRailStageEvidence.inlineTransition === "transform 10s"
+      && reducedMotionAnimatedRailStageEvidence.text === "Animated stage content",
+    `Reduced motion did not override Motion-authored AnimatedRailStage transform and transition while preserving content: ${JSON.stringify(reducedMotionAnimatedRailStageEvidence)}.`,
+  );
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   invariant(
     crossPackageEvidence.normalizedDisplay === "grid"
       && crossPackageEvidence.oldDirectParentDisplay === "inline-flex"
@@ -2218,7 +2338,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, AnimatedRailStage semantic/caller/cascade/reduced-motion evidence, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

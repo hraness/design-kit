@@ -113,15 +113,15 @@ test("default proportional roles use bundled Nebula Sans and mono stays system-o
   expect(css).not.toContain("size-adjust");
 });
 
-test("composition CSS retains mobile, reduced-motion, and forced-color contracts", () => {
+test("composition CSS retains mobile, extracted reduced-motion, and forced-color contracts", () => {
   expect(componentsCss.startsWith([
     "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;",
     '@import "../dist/stylex.css";',
   ].join("\n"))).toBe(true);
   expect(componentsCss).toContain("@layer components.hraness-design-kit.legacy {");
   expect(componentsCss).toContain("@media (max-width: 48rem)");
-  expect(componentsCss).toContain("@media (prefers-reduced-motion: reduce)");
   expect(componentsCss).toContain("@media (forced-colors: active)");
+  expect(componentsCss).not.toContain(".hraness-design-animated-rail-stage");
   expect(componentsCss).toContain(".hraness-design-app-shell");
   expect(componentsCss).not.toContain(".hraness-design-fader");
   expect(componentsCss).not.toContain(".hraness-button");
@@ -156,4 +156,7 @@ test("composition CSS retains mobile, reduced-motion, and forced-color contracts
   expect(stylexCss).not.toContain("border-bottom-color: canvastext");
   expect(stylexCss).not.toContain("border-top-color: canvastext");
   expect(stylexCss).toContain("@media (forced-colors: active)");
+  expect(stylexCss).toContain("@media (prefers-reduced-motion: reduce)");
+  expect(stylexCss).toContain("transform: none !important");
+  expect(stylexCss).toContain("transition: none !important");
 });

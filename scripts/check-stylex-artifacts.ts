@@ -227,17 +227,36 @@ function requireMutationNegativeContracts(
   aggregateStylesheet: string,
 ): number {
   const localLegacyLayer = "@layer components.hraness-design-kit.legacy {";
+  const localMigrationAnchor = ".hraness-design-app-shell {\n  display: grid;";
   const invertedLocalPrelude =
     "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority2, components.hraness-design-kit.priority1, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const invertedPortfolioPrelude =
     "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-design-kit.legacy, components.hraness-ui.priority3, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const localMutations = [
     [
+      "restored AnimatedRailStage root legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        localMigrationAnchor,
+        ".hraness-design-animated-rail-stage { min-inline-size: 0; }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "restored AnimatedRailStage root legacy selector",
+      ),
+    ],
+    [
+      "restored AnimatedRailStage reduced-motion legacy selector",
+      replaceExactlyOnce(
+        localComponents,
+        localMigrationAnchor,
+        "@media (prefers-reduced-motion: reduce) { .hraness-design-animated-rail-stage { transform: none !important; transition: none !important; } }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "restored AnimatedRailStage reduced-motion legacy selector",
+      ),
+    ],
+    [
       "restored PlaybackTransport root legacy selector",
       replaceExactlyOnce(
         localComponents,
-        ".hraness-design-chat-message {",
-        ".hraness-design-playback-transport { display: flex; }\n\n.hraness-design-chat-message {",
+        localMigrationAnchor,
+        ".hraness-design-playback-transport { display: flex; }\n\n.hraness-design-app-shell {\n  display: grid;",
         "restored PlaybackTransport root legacy selector",
       ),
     ],
@@ -245,8 +264,8 @@ function requireMutationNegativeContracts(
       "restored PlaybackTransport descendant legacy selector",
       replaceExactlyOnce(
         localComponents,
-        ".hraness-design-chat-message {",
-        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"]) { inline-size: 1.5rem; }\n\n.hraness-design-chat-message {',
+        localMigrationAnchor,
+        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"]) { inline-size: 1.5rem; }\n\n.hraness-design-app-shell {\n  display: grid;',
         "restored PlaybackTransport descendant legacy selector",
       ),
     ],
@@ -254,8 +273,8 @@ function requireMutationNegativeContracts(
       "restored Fader root legacy selector",
       replaceExactlyOnce(
         localComponents,
-        ".hraness-design-chat-message {",
-        ".hraness-design-fader { display: grid; }\n\n.hraness-design-chat-message {",
+        localMigrationAnchor,
+        ".hraness-design-fader { display: grid; }\n\n.hraness-design-app-shell {\n  display: grid;",
         "restored Fader root legacy selector",
       ),
     ],
@@ -263,8 +282,8 @@ function requireMutationNegativeContracts(
       "restored Fader pseudo legacy selector",
       replaceExactlyOnce(
         localComponents,
-        ".hraness-design-chat-message {",
-        ".hraness-design-fader__track::before { inline-size: 4px; }\n\n.hraness-design-chat-message {",
+        localMigrationAnchor,
+        ".hraness-design-fader__track::before { inline-size: 4px; }\n\n.hraness-design-app-shell {\n  display: grid;",
         "restored Fader pseudo legacy selector",
       ),
     ],
@@ -438,6 +457,32 @@ function requireMutationNegativeContracts(
         `${uiCompiledCss}\n@layer components.hraness-ui.priority4 { .x-ui-priority4-mutation { color: red; } }\n`,
         UI_STYLEX_LAYERS,
         "mutated @hraness/ui stylex.css",
+      ),
+    ],
+    [
+      "mutated AnimatedRailStage reduced-motion transform importance",
+      () => requireAnimatedRailStageDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "transform: none !important;",
+          "transform: none;",
+          "mutated AnimatedRailStage reduced-motion transform importance",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "mutated AnimatedRailStage reduced-motion transition importance",
+      () => requireAnimatedRailStageDeclarationContract(
+        replaceExactlyOnce(
+          designCompiledCss,
+          "transition: none !important;",
+          "transition: none;",
+          "mutated AnimatedRailStage reduced-motion transition importance",
+        ),
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
       ),
     ],
     [
@@ -649,6 +694,7 @@ function requireMutationNegativeContracts(
       description,
       () => {
         requireLocalComponentsContract(mutation);
+        requireAnimatedRailStageLegacyRemoval(mutation, "mutated src/components.css");
         requirePlaybackTransportLegacyRemoval(mutation, "mutated src/components.css");
         requireFaderLegacyRemoval(mutation, "mutated src/components.css");
       },
@@ -852,6 +898,83 @@ function requireLayoutSurfaceLogicalAtomicContract(
         `${label} maps layout-surface class ${className} to a physical directional substitution`,
       );
     }
+  }
+}
+
+function requireAnimatedRailStageLegacyRemoval(source: string, label: string): void {
+  forbid(
+    source,
+    /\.hraness-design-animated-rail-stage/u,
+    `${label} AnimatedRailStage legacy selector`,
+  );
+}
+
+function requireAnimatedRailStageDeclarationContract(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const styleMap = javaScript.match(
+    /var animatedRailStageStyles = \{([\s\S]*?)\n\};/u,
+  )?.[1];
+  const rootMap = styleMap?.match(/root:\s*\{([^}]*)\}/u)?.[1];
+  if (rootMap === undefined) {
+    throw new Error(`${label} is missing the compiled AnimatedRailStage root recipe`);
+  }
+  const classNames = [...new Set(rootMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+  if (classNames.length !== 3) {
+    throw new Error(`${label} exposes the wrong AnimatedRailStage atomic class count`);
+  }
+
+  const layerStarts = DESIGN_STYLEX_LAYERS.map((layer) => ({
+    index: css.indexOf(`@layer ${layer} {`),
+    priority: layer.slice(layer.lastIndexOf(".") + 1),
+  }));
+  if (layerStarts.some(({ index }) => index < 0)) {
+    throw new Error(`${label} is missing a design-kit priority layer`);
+  }
+  const priorityFor = (index: number): string | undefined =>
+    layerStarts.find(({ index: start }, layerIndex) => {
+      const next = layerStarts[layerIndex + 1]?.index ?? css.length;
+      return index > start && index < next;
+    })?.priority;
+
+  const actual = classNames.map((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const rules = [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^}]*)\\}`, "gu"),
+    )];
+    if (rules.length !== 1 || rules[0]?.index === undefined) {
+      throw new Error(
+        `${label} contains ${String(rules.length)} rules for AnimatedRailStage class ${className}`,
+      );
+    }
+    const body = (rules[0][1] ?? "").replace(/\s+/gu, " ").trim();
+    const isReducedMotion = body === "transform: none !important;"
+      || body === "transition: none !important;";
+    if (isReducedMotion) {
+      const property = body.startsWith("transform:") ? "transform" : "transition";
+      const mediaRule = new RegExp(
+        `@media \\(prefers-reduced-motion: reduce\\)\\s*\\{\\s*\\.${escaped}\\.${escaped}\\s*\\{\\s*${property}:\\s*none !important;\\s*\\}\\s*\\}`,
+        "u",
+      );
+      if (!mediaRule.test(css)) {
+        throw new Error(
+          `${label} does not bind AnimatedRailStage ${property} to reduced motion`,
+        );
+      }
+    }
+    return `${priorityFor(rules[0].index) ?? "missing"}\u0000${body}`;
+  });
+  const expected = [
+    "priority2\u0000transition: none !important;",
+    "priority3\u0000min-inline-size: 0;",
+    "priority3\u0000transform: none !important;",
+  ];
+  if (actual.length !== expected.length
+    || actual.some((declaration) => !expected.includes(declaration))
+    || new Set(actual).size !== expected.length) {
+    throw new Error(`${label} does not preserve the exact AnimatedRailStage recipe`);
   }
 }
 
@@ -1128,6 +1251,11 @@ requireLayoutSurfaceLogicalAtomicContract(
   compiledJavaScript,
   "the compiled artifact",
 );
+requireAnimatedRailStageDeclarationContract(
+  compiledCss,
+  compiledJavaScript,
+  "the compiled artifact",
+);
 requirePlaybackTransportDeclarationContract(
   compiledCss,
   compiledJavaScript,
@@ -1251,6 +1379,7 @@ for (const stableClass of [
     `the migrated ${stableClass} legacy selector`,
   );
 }
+requireAnimatedRailStageLegacyRemoval(legacyComponents, "src/components.css");
 requirePlaybackTransportLegacyRemoval(legacyComponents, "src/components.css");
 requireFaderLegacyRemoval(legacyComponents, "src/components.css");
 requireGeneratedLayerContract(
