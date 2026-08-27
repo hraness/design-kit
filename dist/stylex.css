@@ -13,12 +13,32 @@
     background-position: 0 0;
   }
 
+  .x9ylygx {
+    background-position: .7rem 1.4rem, .75rem 1.45rem, right .7rem bottom 1.4rem, right .75rem bottom 1.45rem, left 1.35rem bottom .7rem, left 1.4rem bottom .75rem, right 1.35rem top .7rem, right 1.4rem top .75rem;
+  }
+
+  .xhsufdf {
+    background-position: .8rem .8rem, .8rem .8rem, right .8rem top .8rem, right .8rem top .8rem, left .8rem bottom .8rem, left .8rem bottom .8rem, right .8rem bottom .8rem, right .8rem bottom .8rem;
+  }
+
+  .x8owtp4 {
+    background-position: 1rem .65rem, left 1rem bottom .65rem, .65rem 1rem, right .65rem top 1rem;
+  }
+
+  .x1akr6q6 {
+    background-position: 0 0, 100% 0, 0 100%, 100% 100%;
+  }
+
   .xw2ojrw {
     background-position: var(--foil-light-x, 50%) var(--foil-light-y, 50%);
   }
 
-  .xvy3trx {
-    border-radius: var(--radius-lg, .75rem);
+  .x1pjcqnp {
+    border-radius: inherit;
+  }
+
+  .x1ec2q3q {
+    border-radius: var(--foil-card-radius, var(--radius-lg, .75rem));
   }
 
   .x12lumcd {
@@ -135,6 +155,10 @@
     background-color: var(--card, var(--surface, #111217));
   }
 
+  .x14ln0l {
+    background-image: conic-gradient(from 270deg at 0 0,transparent 0 24deg,#ffffffd1 25deg 42deg,transparent 43deg),conic-gradient(from 0deg at 100% 0,transparent 0 24deg,#ffffffd1 25deg 42deg,transparent 43deg),conic-gradient(from 180deg at 0 100%,transparent 0 24deg,#ffffffd1 25deg 42deg,transparent 43deg),conic-gradient(from 90deg at 100% 100%,transparent 0 24deg,#ffffffd1 25deg 42deg,transparent 43deg);
+  }
+
   .x13cdjw9 {
     background-image: conic-gradient(from var(--foil-spectrum-angle, 0deg) at 48% 46%,#6f4213,#e0a72c,#fff0a6,#a96512,#f6ca50,#7b4915,#6f4213);
   }
@@ -153,6 +177,10 @@
 
   .x72ax6r {
     background-image: linear-gradient(142deg, #d8dce7 0, #666d7d 22%, #f4f5f8 43%, #4f5563 67%, #c9ced9 100%);
+  }
+
+  .xk14mg1 {
+    background-image: linear-gradient(90deg, #0000, #ffffffe0), linear-gradient(#0000, #ffffffe0), linear-gradient(270deg, #0000, #ffffffe0), linear-gradient(#ffffffe0, #0000), linear-gradient(90deg, #ffffffe0, #0000), linear-gradient(0deg, #ffffffe0, #0000), linear-gradient(270deg, #ffffffe0, #0000), linear-gradient(0deg, #0000, #ffffffe0);
   }
 
   .x1ly227q {
@@ -175,6 +203,10 @@
     background-image: radial-gradient(circle at var(--foil-light-x, 50%) var(--foil-light-y, 50%),#fffffff0 0,#ffffff5c 10%,transparent 36%);
   }
 
+  .x6wo6xk {
+    background-image: radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(90deg, #ffffffc7, #0000), radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(270deg, #ffffffc7, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(0deg, #ffffffad, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(#ffffffad, #0000);
+  }
+
   .xtuv73v {
     background-image: radial-gradient(color-mix(in oklch,currentColor 18%,transparent) .75px,transparent .75px);
   }
@@ -195,6 +227,10 @@
     background-image: repeating-linear-gradient(116deg, #0000 0 9px, #e2ffff85 10px 11px, #0000 12px 22px);
   }
 
+  .x10gea7a {
+    background-image: repeating-linear-gradient(90deg, #ffffffd6 0 .45rem, #0000 .45rem .78rem), repeating-linear-gradient(90deg, #ffffffd6 0 .45rem, #0000 .45rem .78rem), repeating-linear-gradient(0deg, #ffffffb8 0 .45rem, #0000 .45rem .8rem), repeating-linear-gradient(0deg, #ffffffb8 0 .45rem, #0000 .45rem .8rem);
+  }
+
   .x1peed02 {
     background-image: repeating-linear-gradient(calc(var(--foil-spectrum-angle, 0deg) + 116deg),transparent 0 7%,#b2fff7b8 8% 10%,transparent 11% 18%,#87beffa3 19% 21%,transparent 22% 31%);
   }
@@ -211,6 +247,10 @@
     background-image: repeating-linear-gradient(calc(var(--foil-spectrum-angle, 0deg) + 38deg),transparent 0 4px,#fff7be85 5px 6px,transparent 7px 13px);
   }
 
+  .xn77bxw {
+    background-image: repeating-radial-gradient(circle at 0 0, #0000 0 .38rem, #ffffffb3 .42rem .46rem, #0000 .5rem .84rem), repeating-radial-gradient(circle at 100% 0, #0000 0 .38rem, #ffffffb3 .42rem .46rem, #0000 .5rem .84rem), repeating-radial-gradient(circle at 0 100%, #0000 0 .38rem, #ffffffb3 .42rem .46rem, #0000 .5rem .84rem), repeating-radial-gradient(circle at 100% 100%, #0000 0 .38rem, #ffffffb3 .42rem .46rem, #0000 .5rem .84rem);
+  }
+
   .xwzb1fz {
     background-image: repeating-radial-gradient(circle, #0000 0 5px, #ffffff61 6px 7px, #0000 8px 15px);
   }
@@ -221,6 +261,10 @@
 
   .x12koezg {
     background-origin: padding-box;
+  }
+
+  .xiy17q3 {
+    background-repeat: no-repeat;
   }
 
   .x182nak8 {
@@ -263,12 +307,32 @@
     background-size: 24px 24px;
   }
 
+  .x160majy {
+    background-size: 28% 1px, 1px 20%, 28% 1px, 1px 20%, 28% 1px, 1px 20%, 28% 1px, 1px 20%;
+  }
+
+  .x42se0v {
+    background-size: 30% 24%, 30% 24%, 30% 24%, 30% 24%;
+  }
+
   .xlpqoug {
     background-size: 32px 32px;
   }
 
+  .x1kza8ck {
+    background-size: 34% 24%, 34% 24%, 34% 24%, 34% 24%;
+  }
+
+  .xxeqw4r {
+    background-size: 5px 5px, 34% 1px, 5px 5px, 34% 1px, 5px 5px, 1px 26%, 5px 5px, 1px 26%;
+  }
+
   .x1cwfr1t {
     background-size: auto;
+  }
+
+  .xzvt7yr {
+    background-size: calc(100% - 2rem) 1px, calc(100% - 2rem) 1px, 1px calc(100% - 2rem), 1px calc(100% - 2rem);
   }
 
   .x150knr0 {
@@ -311,6 +375,10 @@
     box-shadow: 0 1.2rem 3.6rem #04060c3d, inset 0 1px #ffffff47;
   }
 
+  .xl1q07f {
+    box-shadow: 0 1.75rem 5rem #04060c52, 0 0 2.4rem #70b1ff1f, inset 0 1px #ffffff57;
+  }
+
   .xlmpfgd {
     box-shadow: 0 3px 12px #24140059;
   }
@@ -337,6 +405,14 @@
 
   .xrvj5dj {
     display: grid;
+  }
+
+  .x1s85apg {
+    display: none;
+  }
+
+  .xldhu1s {
+    filter: drop-shadow(0 0 .35rem #ffffff38);
   }
 
   .x2g5esg {
@@ -431,10 +507,6 @@
     min-inline-size: 0;
   }
 
-  .x6ossdz {
-    mix-blend-mode: color-dodge;
-  }
-
   .xwgxeq8 {
     mix-blend-mode: overlay;
   }
@@ -447,52 +519,64 @@
     mix-blend-mode: soft-light;
   }
 
-  .x1ptxcow {
-    opacity: .1;
+  .xi7uqbu {
+    opacity: var(--foil-base-opacity, .34);
   }
 
-  .x17odgkw {
-    opacity: .17;
+  .x10bp2pq {
+    opacity: var(--foil-base-opacity, .44);
   }
 
-  .x1vx7kgm {
-    opacity: .22;
+  .x16x8d5k {
+    opacity: var(--foil-base-opacity, .56);
   }
 
-  .xvpkmg4 {
-    opacity: .25;
+  .x16xcxh8 {
+    opacity: var(--foil-ornament-opacity, .14);
   }
 
-  .x1gstqnd {
-    opacity: .26;
+  .x10b34n9 {
+    opacity: var(--foil-ornament-opacity, .2);
   }
 
-  .x5dmra7 {
-    opacity: .38;
+  .x1m2aqx4 {
+    opacity: var(--foil-ornament-opacity, .26);
   }
 
-  .x1wst0fl {
-    opacity: .46;
+  .xuhx63e {
+    opacity: var(--foil-sheen-opacity, .03);
   }
 
-  .x1ktcbtz {
-    opacity: .56;
+  .xa69gww {
+    opacity: var(--foil-sheen-opacity, .04);
   }
 
-  .x1i5mnmd {
-    opacity: .66;
+  .xkxdd59 {
+    opacity: var(--foil-sheen-opacity, .06);
   }
 
-  .xf9vgkq {
-    opacity: .72;
+  .x1pnhqfb {
+    opacity: var(--foil-spectrum-opacity, .08);
   }
 
-  .x1qnzyi6 {
-    opacity: .86;
+  .x15nu2d2 {
+    opacity: var(--foil-spectrum-opacity, .12);
   }
 
-  .x1hc1fzr {
-    opacity: 1;
+  .xta48a9 {
+    opacity: var(--foil-spectrum-opacity, .18);
+  }
+
+  .x1ytbps3 {
+    opacity: var(--foil-texture-opacity, .04);
+  }
+
+  .xjkwg1t {
+    opacity: var(--foil-texture-opacity, .06);
+  }
+
+  .xcwlixh {
+    opacity: var(--foil-texture-opacity, .08);
   }
 
   .x14ytart {
@@ -595,8 +679,16 @@
     will-change: auto;
   }
 
+  .x1so62im {
+    will-change: transform;
+  }
+
   .x1ja2u2z {
     z-index: 0;
+  }
+
+  .x1vjfegm {
+    z-index: 1;
   }
 
   .xhtitgo {
@@ -605,14 +697,6 @@
 
   .xzkaem6 {
     z-index: 3;
-  }
-
-  .xoegz02 {
-    z-index: 4;
-  }
-
-  .x1u8a7rm {
-    z-index: 5;
   }
 
   .x1qhe1ue {
@@ -716,12 +800,6 @@
   @media (prefers-reduced-motion: reduce) {
     .x12w9bfk.x12w9bfk {
       transition-duration: 0s;
-    }
-  }
-
-  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none) {
-    .xe5ou9b.xe5ou9b {
-      will-change: transform;
     }
   }
 }

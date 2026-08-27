@@ -116,6 +116,41 @@ Server components can import `SyntaxCode`, deterministic procedural effects, and
 static surfaces from `@hraness/design-kit/react/server` without crossing the
 client boundary used by the interactive React barrel.
 
+## Foil cards and decks
+
+`FoilCardSurface` adds deterministic material paint behind semantic card
+content. Use `renderMode="static"` for image capture and other motionless
+surfaces. Interactive cards work on their own; a collection should be wrapped
+once in `FoilCardDeck`, which delegates pointer and focus interaction through a
+single controller and keeps geometry cached for the active descendant.
+
+```tsx
+import { FoilCardDeck, FoilCardSurface } from "@hraness/design-kit/react";
+
+<FoilCardDeck aria-label="Reference cards" className="card-grid">
+  {records.map((record) => (
+    <FoilCardSurface
+      intensity="standard"
+      key={record.id}
+      ornament="circuit"
+      preset="aurora"
+      renderMode="interactive"
+      seed={record.id}
+    >
+      <article>{record.label}</article>
+    </FoilCardSurface>
+  ))}
+</FoilCardDeck>
+```
+
+The optional `ornament` is one of `none`, `corners`, `rails`, `circuit`,
+`radial`, or `facets`. It affects edge paint only, so product content remains
+legible. Set `--foil-card-radius` on a surface or deck descendant to match a
+product-owned card radius. Fine-pointer movement activates directional
+diffraction; keyboard focus gets a motionless material cue. Touch, reduced
+motion, and forced-colors modes keep ordinary semantic content intact, and no
+inactive card receives `will-change`.
+
 ## Appearance and fonts
 
 Wrap browser applications with `DesignThemeProvider` and render

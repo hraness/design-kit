@@ -106,13 +106,20 @@
   background: var(--background);
 }
 
+.design-gallery__foil-deck {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--space-4);
+}
+
 .design-gallery__foil-example {
-  inline-size: min(100%, 22rem);
+  min-inline-size: 0;
+  --foil-card-radius: 1rem;
 }
 
 .design-gallery__foil-card {
   display: grid;
-  min-block-size: 18rem;
+  min-block-size: 16rem;
   align-content: space-between;
   gap: var(--space-8);
   padding: var(--space-5);

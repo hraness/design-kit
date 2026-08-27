@@ -53,8 +53,15 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-density="medium"');
   expect(html).toContain('data-gallery-dither=""');
   expect(html).toContain("hraness-design-foil-card-surface");
+  expect(html).toContain("hraness-design-foil-card-deck");
   expect(html).toContain('data-foil-preset="prism"');
   expect(html).toContain('data-foil-render-mode="interactive"');
+  expect(html).toContain('data-foil-controller="deck"');
+  expect(html).toContain('data-foil-ornament="corners"');
+  expect(html).toContain('data-foil-ornament="rails"');
+  expect(html).toContain('data-foil-ornament="circuit"');
+  expect(html).toContain('data-foil-ornament="radial"');
+  expect(html).toContain('data-foil-ornament="facets"');
   expect(html).toContain('class="design-gallery__plain-link-example"');
   expect(html).toContain('class="plain-header__inner" data-layout="responsive-wrap"');
   expect(html).toContain('class="plain-wordmark"');
