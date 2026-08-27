@@ -281,6 +281,26 @@ test("one delegated controller drives a 50-card deck with cached geometry", () =
     ".hraness-design-foil-card-surface",
   )];
   if (deck === null || surfaces.length !== 50) throw new Error("Missing test deck.");
+  const tokenListPrototype = Object.getPrototypeOf(surfaces[0]?.classList) as {
+    toggle: typeof DOMTokenList.prototype.toggle;
+  };
+  const nativeToggle = tokenListPrototype.toggle;
+  Object.defineProperty(tokenListPrototype, "toggle", {
+    configurable: true,
+    value: function toggle(
+      this: DOMTokenList,
+      token: string,
+      force?: boolean,
+    ): boolean {
+      if (/\s/u.test(token)) {
+        throw new DOMException(
+          "Class tokens cannot contain whitespace.",
+          "InvalidCharacterError",
+        );
+      }
+      return nativeToggle.call(this, token, force);
+    },
+  });
   const boundsReads = Array.from({ length: 50 }, () => 0);
   for (const [index, surface] of surfaces.entries()) {
     Object.defineProperty(surface, "getBoundingClientRect", {

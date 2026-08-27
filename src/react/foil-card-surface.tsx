@@ -238,7 +238,9 @@ function setActive(
   if (active) element.setAttribute("data-foil-active", "true");
   else element.removeAttribute("data-foil-active");
   if (activeClassName !== undefined) {
-    element.classList.toggle(activeClassName, active);
+    for (const className of activeClassName.split(/\s+/u)) {
+      if (className.length > 0) element.classList.toggle(className, active);
+    }
   }
 }
 
