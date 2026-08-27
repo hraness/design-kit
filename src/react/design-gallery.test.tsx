@@ -18,6 +18,7 @@ test("the public gallery covers the composition boundary", () => {
     "syntax",
   ]);
   expect(designGalleryRecipeCoverage).toContain("@hraness/ui primitives");
+  expect(designGalleryRecipeCoverage).toContain("animated rail stage");
   expect(designGalleryRecipeCoverage).toContain("foil card surface");
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
@@ -40,6 +41,11 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-design-gallery-nested="false"');
   expect(html).not.toContain("hraness-design-theme-toggle");
   expect(html).toContain("hraness-design-app-shell");
+  expect(html).toContain("hraness-design-animated-rail-stage");
+  expect(html).toContain('data-stage-key="default"');
+  expect(html).toMatch(
+    /class="hraness-design-animated-rail-stage x[^"]+ design-gallery__animated-rail-stage"/u,
+  );
   expect(html).toContain("hraness-design-top-bar");
   expect(html).toContain('data-position="static"');
   expect(html).toContain('data-surface="solid"');

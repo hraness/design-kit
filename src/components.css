@@ -14,10 +14,6 @@
   border: 0;
 }
 
-.hraness-design-animated-rail-stage {
-  min-inline-size: 0;
-}
-
 .hraness-design-app-shell {
   display: grid;
   grid-template:
@@ -264,13 +260,6 @@
 
   .hraness-design-chat-composer {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hraness-design-animated-rail-stage {
-    transform: none !important;
-    transition: none !important;
   }
 }
 

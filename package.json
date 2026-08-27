@@ -94,6 +94,7 @@
     "src/jelly.css",
     "src/plain-publication.css",
     "src/plain-site.css",
+    "src/react/animated-rail-stage.stylex.ts",
     "src/react/animated-rail-stage.tsx",
     "src/react/app-shell.tsx",
     "src/react/aurora-dots-background.tsx",

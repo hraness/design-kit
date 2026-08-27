@@ -58,6 +58,7 @@ export const designGalleryTouchKinds = [
 
 export const designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
+  "animated rail stage",
   "application shells",
   "charts",
   "dither surface",
@@ -225,7 +226,10 @@ export function DesignSystemGallery({
             )}
           >
             <PageCanvas as="div" data-gallery-layout-page-canvas="">
-              <AnimatedRailStage stageKey={density}>
+              <AnimatedRailStage
+                className="design-gallery__animated-rail-stage"
+                stageKey={density}
+              >
                 <DitherSurface
                   as="section"
                   data-gallery-dither=""

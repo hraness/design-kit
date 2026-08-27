@@ -8,6 +8,13 @@ import { colors } from "../src/index.js";
 import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
 
 interface LayoutEvidence {
+  readonly animatedRailStageAtomic: boolean;
+  readonly animatedRailStageCallerLast: boolean;
+  readonly animatedRailStageMinInlineSize: string;
+  readonly animatedRailStageMotionStyle: string;
+  readonly animatedRailStageStageKey: string;
+  readonly animatedRailStageTransform: string;
+  readonly animatedRailStageTransitionProperty: string;
   readonly appearanceInHeader: boolean;
   readonly appearanceIsFinalAction: boolean;
   readonly appearancePresentation: string;
@@ -169,6 +176,9 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       ".hraness-design-docked-footer__content",
     );
     const layoutDockFrame = document.querySelector("[data-gallery-layout-docked-frame]");
+    const animatedRailStage = document.querySelector(
+      ".design-gallery__animated-rail-stage",
+    );
     const playback = document.querySelector(".design-gallery__playback-transport");
     const playbackCommand = document.querySelector("#design-gallery-playback-command");
     const playbackGlyph = playbackCommand?.querySelector(
@@ -233,6 +243,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(layoutDock instanceof HTMLElement)
       || !(layoutDockContent instanceof HTMLElement)
       || !(layoutDockFrame instanceof HTMLElement)
+      || !(animatedRailStage instanceof HTMLElement)
       || !(playback instanceof HTMLElement)
       || !(playbackCommand instanceof HTMLButtonElement)
       || !(playbackGlyph instanceof HTMLElement || playbackGlyph instanceof SVGElement)
@@ -272,6 +283,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const horizontalFaderThumbStyle = getComputedStyle(horizontalFaderThumb);
     const layoutDockBox = layoutDock.getBoundingClientRect();
     const layoutDockFrameBox = layoutDockFrame.getBoundingClientRect();
+    const animatedRailStageStyle = getComputedStyle(animatedRailStage);
     const playbackStyle = getComputedStyle(playback);
     const playbackGlyphStyle = getComputedStyle(playbackGlyph);
     const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
@@ -291,6 +303,17 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const palette = paletteNames.map((name) => proceduralStyle.getPropertyValue(name).trim());
 
     return {
+      animatedRailStageAtomic:
+        animatedRailStage.classList.contains("hraness-design-animated-rail-stage")
+        && [...animatedRailStage.classList].some((className) => className.startsWith("x")),
+      animatedRailStageCallerLast:
+        animatedRailStage.classList.item(animatedRailStage.classList.length - 1)
+          === "design-gallery__animated-rail-stage",
+      animatedRailStageMinInlineSize: animatedRailStageStyle.minInlineSize,
+      animatedRailStageMotionStyle: animatedRailStage.getAttribute("style") ?? "",
+      animatedRailStageStageKey: animatedRailStage.dataset.stageKey ?? "",
+      animatedRailStageTransform: animatedRailStageStyle.transform,
+      animatedRailStageTransitionProperty: animatedRailStageStyle.transitionProperty,
       appearanceInHeader: appearanceHeader.tagName === "HEADER",
       appearanceIsFinalAction: appearanceActions.lastElementChild === appearance,
       appearancePresentation: appearance.dataset.presentation ?? "",
@@ -785,6 +808,24 @@ try {
             ? state.railDisplay === "none" && state.mobileTriggerDisplay !== "none"
             : state.railDisplay !== "none" && state.mobileTriggerDisplay === "none",
           `${layout.id}: responsive shell ownership is incorrect`,
+        );
+        invariant(
+          state.animatedRailStageAtomic
+            && state.animatedRailStageCallerLast
+            && state.animatedRailStageMinInlineSize === "0px"
+            && state.animatedRailStageMotionStyle.includes("opacity: 1")
+            && state.animatedRailStageStageKey === "default"
+            && state.animatedRailStageTransform === "none"
+            && state.animatedRailStageTransitionProperty === "none",
+          `${layout.id}: AnimatedRailStage gallery delivery is ${JSON.stringify({
+            atomic: state.animatedRailStageAtomic,
+            callerLast: state.animatedRailStageCallerLast,
+            minInlineSize: state.animatedRailStageMinInlineSize,
+            motionStyle: state.animatedRailStageMotionStyle,
+            stageKey: state.animatedRailStageStageKey,
+            transform: state.animatedRailStageTransform,
+            transitionProperty: state.animatedRailStageTransitionProperty,
+          })}`,
         );
         invariant(state.proceduralVariant === "composite", `${layout.id}: procedural variant changed`);
         invariant(

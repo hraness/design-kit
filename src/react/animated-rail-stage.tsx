@@ -1,10 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion as Motion, useReducedMotion } from "motion/react";
+import * as stylex from "@stylexjs/stylex";
 import type { ReactNode } from "react";
 
 import { motion } from "../index.js";
 import { cn } from "@hraness/ui";
+import { animatedRailStageStyles } from "./animated-rail-stage.stylex.js";
 
 export interface AnimatedRailStageProps {
   readonly children: ReactNode;
@@ -26,11 +28,16 @@ export function railStageMotion(reduceMotion: boolean) {
 export function AnimatedRailStage({ children, className, stageKey }: AnimatedRailStageProps) {
   const reduceMotion = useReducedMotion();
   const stageMotion = railStageMotion(reduceMotion ?? false);
+  const presentation = stylex.props(animatedRailStageStyles.root);
   return (
     <AnimatePresence initial={false} mode="wait">
       <Motion.div
         animate={stageMotion.animate}
-        className={cn("hraness-design-animated-rail-stage", className)}
+        className={cn(
+          "hraness-design-animated-rail-stage",
+          presentation.className,
+          className,
+        )}
         data-stage-key={String(stageKey)}
         exit={stageMotion.exit}
         initial={stageMotion.initial}

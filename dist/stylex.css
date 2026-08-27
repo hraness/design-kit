@@ -176,6 +176,12 @@
   .x1w88gy1 {
     padding-inline: var(--layout-edge-inset);
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .x82x5i2.x82x5i2 {
+      transition: none !important;
+    }
+  }
 }
 
 @layer components.hraness-design-kit.priority3 {
@@ -928,6 +934,12 @@
 
     .xqswhxe.xqswhxe {
       outline-width: 2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .x9jhkrq.x9jhkrq {
+      transform: none !important;
     }
   }
 
