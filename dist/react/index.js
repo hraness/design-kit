@@ -2403,11 +2403,27 @@ function RailItem({
 }
 
 // src/react/playback-transport.tsx
-import {
-  PlayIcon,
-  StopIcon
-} from "@hugeicons/core-free-icons";
+import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
+import * as stylex2 from "@stylexjs/stylex";
+
+// src/react/playback-transport.stylex.ts
+var playbackTransportStyles = {
+  glyph: {
+    kLWsYc: "xkl2xug",
+    kULEZF: "xsta65m",
+    $$css: true
+  },
+  root: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kOIVth: "xmgkybt",
+    $$css: true
+  }
+};
+
+// src/react/playback-transport.tsx
 import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 function PlaybackTransport({
   buttonAriaKeyShortcuts,
@@ -2427,17 +2443,25 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
+  const rootPresentation = stylex2.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex2.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs9(Toolbar, {
     ...accessibleName,
-    className: cn10("hraness-design-playback-transport", className),
+    className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
     "data-playback-status": status,
     children: [
       /* @__PURE__ */ jsx11(IconButton2, {
         "aria-busy": isPending || undefined,
         "aria-label": commandLabel,
-        ...buttonAriaKeyShortcuts === undefined ? {} : { "aria-keyshortcuts": buttonAriaKeyShortcuts },
-        ...buttonId === undefined ? {} : { id: buttonId },
-        ...buttonRef === undefined ? {} : { buttonRef },
+        ...buttonAriaKeyShortcuts === undefined ? {} : {
+          "aria-keyshortcuts": buttonAriaKeyShortcuts
+        },
+        ...buttonId === undefined ? {} : {
+          id: buttonId
+        },
+        ...buttonRef === undefined ? {} : {
+          buttonRef
+        },
         className: "hraness-design-playback-transport__button",
         "data-playback-command": isIdle ? "play" : "stop",
         isDisabled: isIdle && isPlayDisabled,
@@ -2451,7 +2475,12 @@ function PlaybackTransport({
         },
         size: "large",
         variant: "primary",
-        children: isPending ? /* @__PURE__ */ jsx11(Spinner, {}) : /* @__PURE__ */ jsx11(Icon2, {
+        children: isPending ? /* @__PURE__ */ jsx11(Spinner, {
+          ...glyphPresentation
+        }) : /* @__PURE__ */ jsx11(Icon2, {
+          ...glyphPresentation.className === undefined ? {} : {
+            className: glyphPresentation.className
+          },
           icon: isIdle ? PlayIcon : StopIcon,
           size: 24
         })
@@ -2462,7 +2491,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex2 from "@stylexjs/stylex";
+import * as stylex3 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2506,8 +2535,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex2.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex2.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex3.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex3.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs10("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -2548,6 +2577,7 @@ var designGalleryRecipeCoverage = [
   "foil card surface",
   "layout surfaces",
   "Jelly presentation",
+  "playback transport",
   "plain site and publication grammar",
   "procedural effects",
   "production preview notice",
@@ -2871,6 +2901,9 @@ function DesignSystemGallery({
                   }),
                   /* @__PURE__ */ jsx13(PlaybackTransport, {
                     "aria-label": "Preview transport",
+                    buttonAriaKeyShortcuts: "Space",
+                    buttonId: "design-gallery-playback-command",
+                    className: "design-gallery__playback-transport",
                     onPlay: () => setPlaybackStatus("playing"),
                     onStop: () => setPlaybackStatus("idle"),
                     status: playbackStatus
@@ -3587,9 +3620,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props3) {
+function ThemeMenuButton(props4) {
   return /* @__PURE__ */ jsx14(ThemeToggle, {
-    ...props3,
+    ...props4,
     presentation: "menu"
   });
 }
@@ -3772,13 +3805,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props3
+  ...props4
 }) {
   const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx15(RouteErrorPage, {
-        ...props3,
+        ...props4,
         showThemeToggle: false
       })
     ]

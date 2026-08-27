@@ -22,6 +22,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
   expect(designGalleryRecipeCoverage).toContain("layout surfaces");
+  expect(designGalleryRecipeCoverage).toContain("playback transport");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
@@ -52,6 +53,10 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("hraness-design-dither-surface");
   expect(html).toContain('data-density="medium"');
   expect(html).toContain('data-gallery-dither=""');
+  expect(html).toContain("hraness-design-playback-transport");
+  expect(html).toContain("design-gallery__playback-transport");
+  expect(html).toContain('data-playback-status="idle"');
+  expect(html).toContain('id="design-gallery-playback-command"');
   expect(html).toContain("hraness-design-foil-card-surface");
   expect(html).toContain("hraness-design-foil-card-deck");
   expect(html).toContain('data-foil-preset="prism"');

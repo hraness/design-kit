@@ -108,6 +108,7 @@
     "src/react/particle-halo.tsx",
     "src/react/phaser-dots.tsx",
     "src/react/playback-transport.tsx",
+    "src/react/playback-transport.stylex.ts",
     "src/react/procedural-backdrop.tsx",
     "src/react/procedural-recipe.ts",
     "src/react/production-data-preview-notice.tsx",

@@ -5,7 +5,10 @@ import {
   StopIcon,
 } from "@hugeicons/core-free-icons";
 import { Icon, IconButton, Spinner, Toolbar, cn } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
 import type { ReactNode, Ref } from "react";
+
+import { playbackTransportStyles } from "./playback-transport.stylex.js";
 
 type AccessibleName =
   | { readonly "aria-label": string; readonly "aria-labelledby"?: never }
@@ -57,11 +60,17 @@ export function PlaybackTransport({
     : isPending
       ? pendingLabel
       : stopLabel;
+  const rootPresentation = stylex.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex.props(playbackTransportStyles.glyph);
 
   return (
     <Toolbar
       {...accessibleName}
-      className={cn("hraness-design-playback-transport", className)}
+      className={cn(
+        "hraness-design-playback-transport",
+        rootPresentation.className,
+        className,
+      )}
       data-playback-status={status}
     >
       <IconButton
@@ -86,8 +95,16 @@ export function PlaybackTransport({
         variant="primary"
       >
         {isPending
-          ? <Spinner />
-          : <Icon icon={isIdle ? PlayIcon : StopIcon} size={24} />}
+          ? <Spinner {...glyphPresentation} />
+          : (
+              <Icon
+                {...(glyphPresentation.className === undefined
+                  ? {}
+                  : { className: glyphPresentation.className })}
+                icon={isIdle ? PlayIcon : StopIcon}
+                size={24}
+              />
+            )}
       </IconButton>
       {trailingControls}
     </Toolbar>

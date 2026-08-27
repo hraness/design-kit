@@ -129,6 +129,35 @@ const layoutSurfaceIsolatedPhysicalSubstitutions: readonly (readonly [RegExp, st
 
 const migratedLayoutLegacySelector =
   /\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u;
+const migratedPlaybackLegacySelector =
+  /\.hraness-design-playback-transport(?:__button\s+:is\(svg,\s*\[data-slot=["']spinner["']\]\)|\s*\{)/u;
+
+const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [
+    /@layer components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
+    "priority2 gap",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?align-items:\s*center/u,
+    "priority3 alignment",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?display:\s*flex/u,
+    "priority3 flex display",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?flex-wrap:\s*wrap/u,
+    "priority3 wrapping",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?inline-size:\s*1\.5rem/u,
+    "priority3 logical inline glyph size",
+  ],
+  [
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
+    "priority3 logical block glyph size",
+  ],
+];
 
 function requireNoticePresentation(css: string, label: string): void {
   if (!css.includes("@layer components.hraness-design-kit.priority")) {
@@ -180,6 +209,19 @@ function requireLayoutSurfacePresentation(
     if (pattern.test(css)) {
       throw new Error(`${label} contains a migrated layout-surface ${substitution}.`);
     }
+  }
+}
+
+function requirePlaybackTransportPresentation(css: string, label: string): void {
+  for (const [pattern, declaration] of playbackTransportDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(
+        `${label} lost the migrated PlaybackTransport ${declaration} declaration.`,
+      );
+    }
+  }
+  if (/@layer\s+components\.hraness-design-kit\.priority5/u.test(css)) {
+    throw new Error(`${label} leaked a design-kit priority5 layer.`);
   }
 }
 
@@ -331,11 +373,15 @@ try {
   requireNoticePresentation(packedStylexCss, "Packed stylex.css");
   requireDitherPresentation(packedStylexCss, "Packed stylex.css");
   requireLayoutSurfacePresentation(packedStylexCss, "Packed stylex.css", true);
+  requirePlaybackTransportPresentation(packedStylexCss, "Packed stylex.css");
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained the migrated legacy DitherSurface recipe.");
   }
   if (migratedLayoutLegacySelector.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained a migrated legacy layout-surface recipe.");
+  }
+  if (migratedPlaybackLegacySelector.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained a migrated legacy PlaybackTransport recipe.");
   }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
@@ -501,8 +547,8 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
-      'import { createElement } from "react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { Children, createElement, isValidElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
       'if (new URL(stylexUrl).protocol !== "file:") throw new Error("Packed stylex.css is not a file export.");',
@@ -514,6 +560,7 @@ try {
       'const componentsCss = await readFile(new URL(import.meta.resolve("@hraness/design-kit/components.css")), "utf8");',
       'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
       'if (componentsCss.includes(".hraness-design-dither-surface")) throw new Error("Legacy CSS still declares the migrated DitherSurface.");',
+      'if (componentsCss.includes(".hraness-design-playback-transport {") || componentsCss.includes(`.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"])`)) throw new Error("Legacy CSS still declares the migrated PlaybackTransport recipe.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
       'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
       'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
@@ -552,7 +599,19 @@ try {
       'if (!layoutMarkup.page.includes(`data-inset="none"`) || !layoutMarkup.page.includes(`data-size="wide"`)) throw new Error("Packed PageCanvas lost its native element or variants.");',
       'if (!layoutMarkup.docked.includes(`data-position="absolute"`) || !layoutMarkup.docked.includes(`data-surface="glass"`) || !layoutMarkup.docked.includes(`data-density="compact"`) || !layoutMarkup.docked.includes(`data-inset="none"`) || !layoutMarkup.docked.includes(`data-size="wide"`) || !layoutMarkup.docked.includes("consumer-docked-content")) throw new Error("Packed DockedFooter lost its root or content contract.");',
       'if (new Set(layout).size < 12) throw new Error("Packed layout surfaces expose too few distinct atomic classes.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, layout: [...new Set(layout)], strong, uiPriority3 }));',
+      'const playbackMarkup = Object.fromEntries(["idle", "pending", "playing"].map((status) => [status, renderToStaticMarkup(createElement(PlaybackTransport, { "aria-label": "Preview transport", className: "consumer-playback", onPlay() {}, onStop() {}, status }))]));',
+      'const playback = [];',
+      'for (const [status, markup] of Object.entries(playbackMarkup)) { const root = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup); const classes = root?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || classes[1] !== "hraness-design-playback-transport" || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || !markup.includes(`data-size="large"`) || !markup.includes(`data-variant="primary"`) || markup.includes("<jelly-card")) throw new Error(`Packed PlaybackTransport lost its ${status} semantic or class contract.`); playback.push(...classes.filter((name) => stylexCss.includes(`.${name} {`))); }',
+      'if (!playbackMarkup.idle.includes(`aria-label="Play"`) || !playbackMarkup.idle.includes(`data-playback-command="play"`) || !playbackMarkup.idle.includes(`data-slot="icon"`) || playbackMarkup.idle.includes(`aria-busy="true"`)) throw new Error("Packed idle PlaybackTransport lost its label, command, glyph, or busy contract.");',
+      'if (!playbackMarkup.pending.includes(`aria-label="Cancel playback start"`) || !playbackMarkup.pending.includes(`data-playback-command="stop"`) || !playbackMarkup.pending.includes(`data-slot="spinner"`) || !playbackMarkup.pending.includes(`aria-busy="true"`)) throw new Error("Packed pending PlaybackTransport lost its label, command, spinner, or busy contract.");',
+      'if (!playbackMarkup.playing.includes(`aria-label="Stop"`) || !playbackMarkup.playing.includes(`data-playback-command="stop"`) || !playbackMarkup.playing.includes(`data-slot="icon"`) || playbackMarkup.playing.includes(`aria-busy="true"`)) throw new Error("Packed playing PlaybackTransport lost its label, command, glyph, or busy contract.");',
+      'const playbackGlyphByStatus = Object.fromEntries(Object.entries(playbackMarkup).map(([status, markup]) => { const glyph = /<(?:svg|span)(?=[^>]*data-slot="(?:icon|spinner)")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup); const glyphClasses = glyph?.[1]?.split(" ").filter(Boolean); if (glyphClasses === undefined) throw new Error(`Packed ${status} PlaybackTransport has no rendered glyph classes.`); const logicalClasses = glyphClasses.filter((name) => new RegExp(`\\\\.${name}\\\\s*\\\\{\\\\s*(?:block-size|inline-size):\\\\s*1\\\\.5rem;`, "u").test(stylexCss)); const logicalProperties = logicalClasses.map((name) => new RegExp(`\\\\.${name}\\\\s*\\\\{\\\\s*((?:block-size|inline-size)):\\\\s*1\\\\.5rem;`, "u").exec(stylexCss)?.[1]); if (logicalClasses.length !== 2 || new Set(logicalClasses).size !== 2 || new Set(logicalProperties).size !== 2 || !logicalProperties.includes("block-size") || !logicalProperties.includes("inline-size")) throw new Error(`Packed ${status} PlaybackTransport did not receive exactly the two logical 1.5rem glyph atoms: ${JSON.stringify({ glyphClasses, logicalClasses, logicalProperties })}.`); return [status, logicalClasses]; }));',
+      'const playbackGlyph = [...new Set(Object.values(playbackGlyphByStatus).flat())];',
+      'if (new Set(playback).size < 4 || playbackGlyph.length !== 2) throw new Error("Packed PlaybackTransport exposes the wrong root or shared logical glyph atomic classes.");',
+      'const playbackRef = { current: null }; let playCount = 0; let stopCount = 0;',
+      'for (const status of ["idle", "pending", "playing"]) { const direct = PlaybackTransport({ "aria-labelledby": "preview-label", buttonAriaKeyShortcuts: "Space", buttonId: "preview-command", buttonRef: playbackRef, onPlay() { playCount += 1; }, onStop() { stopCount += 1; }, status }); const command = isValidElement(direct) ? Children.toArray(direct.props.children)[0] : undefined; if (!isValidElement(command) || command.props.buttonRef !== playbackRef || command.props.id !== "preview-command" || command.props["aria-keyshortcuts"] !== "Space") throw new Error(`Packed PlaybackTransport lost its ${status} button targeting seam.`); command.props.onPress(); }',
+      'if (playCount !== 1 || stopCount !== 2) throw new Error("Packed PlaybackTransport changed its play/stop callback routing.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -569,6 +628,7 @@ try {
     "src/react/foil-card-math.ts",
     "src/react/foil-card-surface.tsx",
     "src/react/foil-card-surface.stylex.ts",
+    "src/react/playback-transport.stylex.ts",
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/surfaces.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
@@ -632,8 +692,18 @@ try {
       'import * as core from "@hraness/design-kit";',
       'import * as browser from "@hraness/design-kit/browser";',
       'import * as react from "@hraness/design-kit/react";',
+      'import type { PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
-      "void [browser, core, react, serverReact];",
+      'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
+      'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
+      'const playbackByLabelledby: PlaybackTransportProps = { "aria-labelledby": "preview-label", ...callbacks };',
+      '// @ts-expect-error PlaybackTransport requires exactly one accessible naming strategy.',
+      'const playbackWithoutName: PlaybackTransportProps = { ...callbacks };',
+      '// @ts-expect-error PlaybackTransport rejects two accessible naming strategies.',
+      'const playbackWithBothNames: PlaybackTransportProps = { "aria-label": "Preview", "aria-labelledby": "preview-label", ...callbacks };',
+      '// @ts-expect-error PlaybackTransport intentionally exposes no public xstyle seam.',
+      'const playbackWithXstyle: PlaybackTransportProps = { "aria-label": "Preview", ...callbacks, xstyle: {} };',
+      "void [browser, core, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
       "",
     ].join("\n"),
   );
@@ -678,10 +748,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { BottomBar, DitherSurface, DockedFooter, JellySurface, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -703,6 +773,8 @@ try {
     readonly dither: readonly string[];
     readonly icon: readonly string[];
     readonly layout: readonly string[];
+    readonly playback: readonly string[];
+    readonly playbackGlyph: readonly string[];
     readonly strong: readonly string[];
     readonly uiPriority3: readonly string[];
   };
@@ -715,6 +787,8 @@ try {
   requireAtomicSelectorsPresent(builtCss, noticeClasses.dither, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.layout, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.playback, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.playbackGlyph, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority3, "Packed aggregate Vite CSS");
   for (const layerName of [
     "components.hraness-ui.priority1",
@@ -730,6 +804,7 @@ try {
   requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
   requireDitherPresentation(builtCss, "Packed aggregate Vite CSS");
   requireLayoutSurfacePresentation(builtCss, "Packed aggregate Vite CSS");
+  requirePlaybackTransportPresentation(builtCss, "Packed aggregate Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");
   }
@@ -739,6 +814,9 @@ try {
   if (migratedLayoutLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy layout-surface recipe.");
   }
+  if (migratedPlaybackLegacySelector.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained a migrated legacy PlaybackTransport recipe.");
+  }
 
   await writeFile(
     join(consumer, "src/main.tsx"),
@@ -746,10 +824,10 @@ try {
       'import { createElement } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/components.css";',
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked")));',
+      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" })));',
       "",
     ].join("\n"),
   );
@@ -786,9 +864,20 @@ try {
     noticeClasses.layout,
     "Packed narrow components.css Vite CSS",
   );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    noticeClasses.playback,
+    "Packed narrow components.css Vite CSS",
+  );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    noticeClasses.playbackGlyph,
+    "Packed narrow components.css Vite CSS",
+  );
   requireNoticePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireDitherPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireLayoutSurfacePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requirePlaybackTransportPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy notice recipe.");
   }
@@ -797,6 +886,9 @@ try {
   }
   if (migratedLayoutLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy layout-surface recipe.");
+  }
+  if (migratedPlaybackLegacySelector.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy PlaybackTransport recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -831,7 +923,7 @@ try {
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
     [
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
@@ -850,6 +942,9 @@ try {
       'if (!layout[1].startsWith(`<footer`) || !layout[1].includes(`title="Native title"`)) throw new Error("React 18 packed BottomBar lost native semantics.");',
       'if (!layout[2].startsWith(`<div`) || !layout[2].includes(`data-inset="none"`) || !layout[2].includes(`data-size="wide"`)) throw new Error("React 18 packed PageCanvas lost native semantics or variants.");',
       'if (!layout[3].includes(`data-position="absolute"`) || !layout[3].includes(`data-surface="glass"`) || !layout[3].includes(`data-density="compact"`) || !layout[3].includes("consumer-docked-content")) throw new Error("React 18 packed DockedFooter lost root or content behavior.");',
+      'const playback = Object.fromEntries(["idle", "pending", "playing"].map((status) => [status, renderToStaticMarkup(createElement(PlaybackTransport, { "aria-label": "Preview", className: "consumer-playback", onPlay() {}, onStop() {}, status }))]));',
+      'for (const [status, markup] of Object.entries(playback)) { const classes = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup)?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || classes[1] !== "hraness-design-playback-transport" || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || markup.includes("style=")) throw new Error(`React 18 packed PlaybackTransport lost its ${status} semantic or extracted presentation contract.`); }',
+      'if (!playback.idle.includes(`aria-label="Play"`) || !playback.idle.includes(`data-slot="icon"`) || !playback.pending.includes(`aria-label="Cancel playback start"`) || !playback.pending.includes(`data-slot="spinner"`) || !playback.pending.includes(`aria-busy="true"`) || !playback.playing.includes(`aria-label="Stop"`) || !playback.playing.includes(`data-slot="icon"`)) throw new Error("React 18 packed PlaybackTransport lost its lifecycle command contract.");',
       "",
     ].join("\n"),
   );
@@ -858,8 +953,18 @@ try {
     join(react18Consumer, "index.ts"),
     [
       'import * as clientReact from "@hraness/design-kit/react";',
+      'import type { PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
-      "void [clientReact, serverReact];",
+      'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
+      'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
+      'const playbackByLabelledby: PlaybackTransportProps = { "aria-labelledby": "preview-label", ...callbacks };',
+      '// @ts-expect-error PlaybackTransport requires exactly one accessible naming strategy.',
+      'const playbackWithoutName: PlaybackTransportProps = { ...callbacks };',
+      '// @ts-expect-error PlaybackTransport rejects two accessible naming strategies.',
+      'const playbackWithBothNames: PlaybackTransportProps = { "aria-label": "Preview", "aria-labelledby": "preview-label", ...callbacks };',
+      '// @ts-expect-error PlaybackTransport intentionally exposes no public xstyle seam.',
+      'const playbackWithXstyle: PlaybackTransportProps = { "aria-label": "Preview", ...callbacks, xstyle: {} };',
+      "void [clientReact, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
       "",
     ].join("\n"),
   );

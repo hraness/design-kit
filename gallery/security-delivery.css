@@ -15,6 +15,14 @@
  * than design-kit priority2, so this wins. A rule left directly in the old
  * `components` parent layer would instead keep the Button at inline-flex.
  */
+@layer components.hraness-ui.legacy {
+  html body [data-design-kit-stylex-playback-conflict="true"]
+    .hraness-design-playback-transport {
+    --design-kit-stylex-playback-conflict: ui-legacy;
+    gap: 99px;
+  }
+}
+
 @layer components.hraness-design-kit.priority2 {
   html body [data-design-kit-stylex-layer-conflict="true"].hraness-button {
     --design-kit-stylex-layer-conflict: design-kit-priority2;
@@ -43,6 +51,11 @@
 
   html body [data-design-kit-stylex-layout-old-parent="true"].hraness-design-top-bar {
     top: 88px;
+  }
+
+  html body [data-design-kit-stylex-playback-old-parent="true"]
+    .hraness-design-playback-transport {
+    gap: 88px;
   }
 }
 

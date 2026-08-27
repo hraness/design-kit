@@ -22,6 +22,7 @@ const {
   DitherSurface,
   DockedFooter,
   PageCanvas,
+  PlaybackTransport,
   ProductionDataPreviewNotice,
   TopBar,
   useDesignPortalClassName,
@@ -220,6 +221,35 @@ function LayoutSurfaceDeliveryMatrix() {
   );
 }
 
+function PlaybackTransportDeliveryMatrix() {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    buttonRef.current?.setAttribute("data-security-playback-ref", "ready");
+  }, []);
+
+  return (
+    <section
+      aria-labelledby="security-playback-title"
+      data-design-kit-stylex-playback-conflict="true"
+      data-security-playback-matrix=""
+    >
+      <h2 id="security-playback-title">Playback delivery matrix</h2>
+      <PlaybackTransport
+        aria-labelledby="security-playback-title"
+        buttonAriaKeyShortcuts="Space"
+        buttonId="security-playback-command"
+        buttonRef={buttonRef}
+        className="security-caller-playback-transport"
+        onPlay={() => undefined}
+        onStop={() => undefined}
+        status="pending"
+        trailingControls={<span data-security-playback-trailing="">Trailing control</span>}
+      />
+    </section>
+  );
+}
+
 function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryResource }>) {
   resource.read();
   return (
@@ -256,6 +286,7 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
           </DitherSurface>
         </div>
         <LayoutSurfaceDeliveryMatrix />
+        <PlaybackTransportDeliveryMatrix />
       </DesignPortalThemeProvider>
     </section>
   );

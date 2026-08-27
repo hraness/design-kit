@@ -64,6 +64,7 @@ export const designGalleryRecipeCoverage = [
   "foil card surface",
   "layout surfaces",
   "Jelly presentation",
+  "playback transport",
   "plain site and publication grammar",
   "procedural effects",
   "production preview notice",
@@ -273,6 +274,9 @@ export function DesignSystemGallery({
             <Slider label="Balance" maxValue={100} minValue={0} value={50} />
             <PlaybackTransport
               aria-label="Preview transport"
+              buttonAriaKeyShortcuts="Space"
+              buttonId="design-gallery-playback-command"
+              className="design-gallery__playback-transport"
               onPlay={() => setPlaybackStatus("playing")}
               onStop={() => setPlaybackStatus("idle")}
               status={playbackStatus}

@@ -339,6 +339,10 @@
     background-size: var(--hraness-design-dither-size, 4px) var(--hraness-design-dither-size, 4px);
   }
 
+  .xkl2xug {
+    block-size: 1.5rem;
+  }
+
   .xtsjrx0 {
     border-block-end-color: var(--line);
   }
@@ -453,6 +457,10 @@
 
   .x1agbcgv {
     grid-row-start: 1;
+  }
+
+  .xsta65m {
+    inline-size: 1.5rem;
   }
 
   .xvaqoh0 {
