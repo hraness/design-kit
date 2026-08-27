@@ -84,7 +84,7 @@ test("the package exposes compositions without a second primitive barrel", async
 
 test("excluded source and font boundaries stay absent", async () => {
   const sourceFiles = await readdir(new URL("./react/", import.meta.url));
-  const fontDirectories = await readdir(new URL("./fonts/", import.meta.url));
+  const fontDirectories = (await readdir(new URL("./fonts/", import.meta.url))).sort();
   const restrictedEffect = "li" + "quid.tsx";
   const restrictedFontDirectory = "mono" + "lisa";
 
