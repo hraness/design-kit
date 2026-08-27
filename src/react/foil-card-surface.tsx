@@ -92,6 +92,8 @@ type PendingDeckInteraction =
   | Readonly<{ element: HTMLElement; kind: "reset" }>;
 
 const FoilDeckContext = createContext<FoilDeckContextValue | null>(null);
+const delegatedSurfaceSelector =
+  ".hraness-design-foil-card-surface[data-foil-controller='deck']";
 
 const presetStyles = {
   aurora: {
@@ -391,12 +393,26 @@ export function FoilCardDeck({
     };
     const findRegisteredSurface = (target: EventTarget | null): HTMLElement | null => {
       if (!(target instanceof Element)) return null;
-      const surface = target.closest<HTMLElement>(
-        ".hraness-design-foil-card-surface[data-foil-controller='deck']",
-      );
+      const surface = target.closest<HTMLElement>(delegatedSurfaceSelector);
       return surface !== null && root.contains(surface) && registrations.current.has(surface)
         ? surface
         : null;
+    };
+    const findRegisteredFocusSurface = (
+      target: EventTarget | null,
+    ): HTMLElement | null => {
+      const ancestorSurface = findRegisteredSurface(target);
+      if (ancestorSurface !== null) return ancestorSurface;
+      if (!(target instanceof Element) || !root.contains(target)) return null;
+      let match: HTMLElement | null = null;
+      for (const candidate of target.querySelectorAll<HTMLElement>(
+        delegatedSurfaceSelector,
+      )) {
+        if (!registrations.current.has(candidate)) continue;
+        if (match !== null) return null;
+        match = candidate;
+      }
+      return match;
     };
     const handlePointerMove = (event: PointerEvent): void => {
       if (event.pointerType !== "mouse" || !motionIsEnabled(
@@ -428,15 +444,15 @@ export function FoilCardDeck({
     };
     const handleFocusIn = (event: FocusEvent): void => {
       if (forcedColors.matches) return;
-      const element = findRegisteredSurface(event.target);
+      const element = findRegisteredFocusSurface(event.target);
       if (element === null) return;
       focusedElement.current = element;
       activateFocus(element);
     };
     const handleFocusOut = (event: FocusEvent): void => {
-      const element = findRegisteredSurface(event.target);
+      const element = findRegisteredFocusSurface(event.target);
       if (element === null || focusedElement.current !== element) return;
-      const next = findRegisteredSurface(event.relatedTarget);
+      const next = findRegisteredFocusSurface(event.relatedTarget);
       if (next === element) return;
       focusedElement.current = next;
       if (next !== null && !forcedColors.matches) {

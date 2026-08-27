@@ -1450,6 +1450,7 @@ var foilCardIntensities = ["subtle", "standard", "vivid"];
 var foilCardRenderModes = ["interactive", "static"];
 var foilCardOrnaments = ["none", "corners", "rails", "circuit", "radial", "facets"];
 var FoilDeckContext = createContext2(null);
+var delegatedSurfaceSelector = ".hraness-design-foil-card-surface[data-foil-controller='deck']";
 var presetStyles = {
   aurora: {
     base: foilCardSurfaceStyles.auroraBase,
@@ -1748,8 +1749,24 @@ function FoilCardDeck({
     const findRegisteredSurface = (target) => {
       if (!(target instanceof Element))
         return null;
-      const surface = target.closest(".hraness-design-foil-card-surface[data-foil-controller='deck']");
+      const surface = target.closest(delegatedSurfaceSelector);
       return surface !== null && root.contains(surface) && registrations.current.has(surface) ? surface : null;
+    };
+    const findRegisteredFocusSurface = (target) => {
+      const ancestorSurface = findRegisteredSurface(target);
+      if (ancestorSurface !== null)
+        return ancestorSurface;
+      if (!(target instanceof Element) || !root.contains(target))
+        return null;
+      let match = null;
+      for (const candidate of target.querySelectorAll(delegatedSurfaceSelector)) {
+        if (!registrations.current.has(candidate))
+          continue;
+        if (match !== null)
+          return null;
+        match = candidate;
+      }
+      return match;
     };
     const handlePointerMove = (event) => {
       if (event.pointerType !== "mouse" || !motionIsEnabled(finePointer, reducedMotion, forcedColors))
@@ -1788,17 +1805,17 @@ function FoilCardDeck({
     const handleFocusIn = (event) => {
       if (forcedColors.matches)
         return;
-      const element = findRegisteredSurface(event.target);
+      const element = findRegisteredFocusSurface(event.target);
       if (element === null)
         return;
       focusedElement.current = element;
       activateFocus(element);
     };
     const handleFocusOut = (event) => {
-      const element = findRegisteredSurface(event.target);
+      const element = findRegisteredFocusSurface(event.target);
       if (element === null || focusedElement.current !== element)
         return;
-      const next = findRegisteredSurface(event.relatedTarget);
+      const next = findRegisteredFocusSurface(event.relatedTarget);
       if (next === element)
         return;
       focusedElement.current = next;
