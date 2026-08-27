@@ -1615,7 +1615,10 @@ function setActive(element, activeClassName, active) {
   else
     element.removeAttribute("data-foil-active");
   if (activeClassName !== undefined) {
-    element.classList.toggle(activeClassName, active);
+    for (const className of activeClassName.split(/\s+/u)) {
+      if (className.length > 0)
+        element.classList.toggle(className, active);
+    }
   }
 }
 function motionIsEnabled(finePointer, reducedMotion, forcedColors) {
