@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -173,7 +173,7 @@
     "web-haptics": "0.0.6"
   },
   "peerDependencies": {
-    "@hraness/ui": ">=0.4.0 <0.5.0",
+    "@hraness/ui": ">=0.4.7 <0.5.0",
     "react": ">=18 <20",
     "react-dom": ">=18 <20"
   },

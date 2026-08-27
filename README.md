@@ -11,14 +11,14 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.2.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.2.1",
     "@hraness/ui": "github:hraness/ui#v0.4.7"
   }
 }
 ```
 
 `@hraness/ui` is an explicit peer dependency with the supported range
-`>=0.4.0 <0.5.0`; consumers should pin an immutable compatible release such as
+`>=0.4.7 <0.5.0`; consumers should pin an immutable compatible release such as
 `v0.4.7` when using the stylesheet or React entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
@@ -247,7 +247,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.2.0`. The previous rollback pair remains `@hraness/ui` `v0.4.6` with `@hraness/design-kit` `v0.1.9`.
+The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.2.1`. The previous rollback pair remains `@hraness/ui` `v0.4.6` with `@hraness/design-kit` `v0.1.9`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted layout-surface and playback-transport delivery, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
