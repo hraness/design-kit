@@ -122,6 +122,38 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/@media\s*\(forced-colors:\s*active\)/u, "forced-colors override"],
 ];
 
+const faderDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [
+    /--hraness-design-fader-thumb-block-size:\s*1\.125rem/u,
+    "default thumb block-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-block-size:\s*0?\.75rem/u,
+    "compact thumb block-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-inline-size:\s*1\.75rem/u,
+    "default thumb inline-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-inline-size:\s*1\.5rem/u,
+    "compact thumb inline-size variable",
+  ],
+  [/--hraness-design-fader-track-length:\s*6rem/u, "default track length"],
+  [
+    /--hraness-design-fader-track-length:\s*var\(--interactive-target-min\)/u,
+    "compact track length",
+  ],
+  [/inline-size:\s*4px/u, "logical rail thickness"],
+  [/inset-inline:\s*calc\(50%\s*-\s*2px\)/u, "logical rail centering"],
+  [/background-color:\s*var\(--grid\)/u, "track rail color"],
+  [/background-color:\s*var\(--primary\)/u, "fill and thumb color"],
+  [/left:\s*50%/u, "thumb cross-axis left"],
+  [/top:\s*50%/u, "thumb cross-axis top"],
+  [/outline-offset:\s*3px/u, "focus outline offset"],
+  [/outline-width:\s*3px/u, "focus outline width"],
+];
+
 const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [
     /@layer components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
@@ -473,6 +505,10 @@ try {
     "The combined CSS artifact lost the matched gallery-only UI legacy PlaybackTransport conflict.",
   );
   invariant(
+    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-fader-conflict=(?:"true"|true)\]\.hraness-design-fader\s*\{(?=[^}]*--design-kit-stylex-fader-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the matched gallery-only UI legacy Fader conflict.",
+  );
+  invariant(
     /@layer\s+components\s*\{[^}]*\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
@@ -487,6 +523,10 @@ try {
   invariant(
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only PlaybackTransport old direct-parent negative control.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only Fader old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
@@ -504,6 +544,20 @@ try {
       `The packed or combined CSS artifact lost the migrated DitherSurface ${declaration} declaration.`,
     );
   }
+  for (const [pattern, declaration] of faderDeclarationPatterns) {
+    invariant(
+      pattern.test(designStylexCss),
+      `The packed StyleX artifact lost the migrated Fader ${declaration} declaration.`,
+    );
+  }
+  invariant(
+    !designLegacyCss.includes(".hraness-design-fader")
+      && !/\.hraness-design-fader[^{]*::?before/u.test(combinedCss)
+      && !/@layer\s+components\.hraness-design-kit\.priority(?:5|6)/u.test(
+        designStylexCss,
+      ),
+    "Fader retained legacy or pseudo presentation or leaked priority5/priority6 output.",
+  );
   invariant(
     !/\.hraness-design-dither-surface\s*(?:\{|\[|:)/u.test(designLegacyCss),
     "Legacy design-kit CSS can still satisfy the migrated DitherSurface selector.",
@@ -1204,6 +1258,219 @@ try {
       `The served aggregate CSS does not contain rendered DitherSurface class ${className}.`,
     );
   }
+  const faderEvidence = await page.evaluate(() => {
+    const matrix = document.querySelector("[data-security-fader-matrix]");
+    const root = matrix?.querySelector(".hraness-design-fader");
+    const label = root?.querySelector(".hraness-design-fader__label");
+    const accessory = root?.querySelector("[data-security-fader-accessory]");
+    const output = root?.querySelector(".hraness-design-fader__output");
+    const track = root?.querySelector(".hraness-design-fader__track");
+    const trackRail = root?.querySelector(".hraness-design-fader__track-rail");
+    const fill = root?.querySelector(".hraness-design-fader__fill");
+    const fillRail = root?.querySelector(".hraness-design-fader__fill-rail");
+    const thumb = root?.querySelector(".hraness-design-fader__thumb");
+    const input = thumb?.querySelector('input[type="range"]');
+    if (!(matrix instanceof HTMLElement)
+      || !(root instanceof HTMLElement)
+      || !(label instanceof HTMLElement)
+      || !(accessory instanceof HTMLElement)
+      || !(output instanceof HTMLOutputElement)
+      || !(track instanceof HTMLElement)
+      || !(trackRail instanceof HTMLElement)
+      || !(fill instanceof HTMLElement)
+      || !(fillRail instanceof HTMLElement)
+      || !(thumb instanceof HTMLElement)
+      || !(input instanceof HTMLInputElement)) {
+      throw new Error("The Fader delivery matrix is incomplete.");
+    }
+    const normalizedMinInlineSize = getComputedStyle(root).minInlineSize;
+    root.setAttribute("data-design-kit-stylex-fader-old-parent", "true");
+    const oldDirectParentMinInlineSize = getComputedStyle(root).minInlineSize;
+    root.removeAttribute("data-design-kit-stylex-fader-old-parent");
+    const rootStyle = getComputedStyle(root);
+    const trackStyle = getComputedStyle(track);
+    const trackRailStyle = getComputedStyle(trackRail);
+    const fillRailStyle = getComputedStyle(fillRail);
+    const thumbStyle = getComputedStyle(thumb);
+    const generatedClasses = (element: HTMLElement, stableClass: string) =>
+      [...element.classList].filter((className) =>
+        className !== stableClass
+        && className !== "security-caller-fader");
+    return {
+      accessory: accessory.textContent?.trim(),
+      callerLastClass: root.classList.item(root.classList.length - 1),
+      density: root.dataset.density,
+      fillHasReactAriaGeometry: fill.hasAttribute("style"),
+      fillRailBackground: fillRailStyle.backgroundColor,
+      fillRailClasses: generatedClasses(
+        fillRail,
+        "hraness-design-fader__fill-rail",
+      ),
+      fillRailInlineSize: fillRailStyle.inlineSize,
+      fillRailIsInert: fillRail.getAttribute("aria-hidden") === "true"
+        && fillRail.tabIndex === -1,
+      inputOrientation: input.getAttribute("aria-orientation"),
+      inputRef: input.dataset.securityFaderInputRef,
+      inputValue: input.value,
+      labelClasses: generatedClasses(label, "hraness-design-fader__label"),
+      labelHasInlineStyle: label.hasAttribute("style"),
+      labelText: label.textContent?.replace(/\s+/gu, " ").trim(),
+      normalizedMinInlineSize,
+      oldDirectParentMinInlineSize,
+      orientation: root.dataset.orientation,
+      outputClasses: generatedClasses(output, "hraness-design-fader__output"),
+      outputHasInlineStyle: output.hasAttribute("style"),
+      outputText: output.textContent?.trim(),
+      ref: root.dataset.securityFaderRef,
+      role: root.getAttribute("role"),
+      rootClasses: generatedClasses(root, "hraness-design-fader"),
+      rootHasCallerStyle: root.hasAttribute("style"),
+      rootLabel: root.getAttribute("aria-label"),
+      sentinel: rootStyle
+        .getPropertyValue("--design-kit-stylex-fader-conflict")
+        .trim(),
+      thumbBlockSize: thumbStyle.blockSize,
+      thumbClasses: generatedClasses(thumb, "hraness-design-fader__thumb"),
+      thumbHasReactAriaGeometry: thumb.hasAttribute("style"),
+      thumbInlineSize: thumbStyle.inlineSize,
+      thumbVariableBlockSize: rootStyle
+        .getPropertyValue("--hraness-design-fader-thumb-block-size")
+        .trim(),
+      thumbVariableInlineSize: rootStyle
+        .getPropertyValue("--hraness-design-fader-thumb-inline-size")
+        .trim(),
+      trackBlockSize: trackStyle.blockSize,
+      trackClasses: generatedClasses(track, "hraness-design-fader__track"),
+      trackHasReactAriaGeometry: track.hasAttribute("style"),
+      trackInlineSize: trackStyle.inlineSize,
+      trackLengthVariable: rootStyle
+        .getPropertyValue("--hraness-design-fader-track-length")
+        .trim(),
+      trackRailBackground: trackRailStyle.backgroundColor,
+      trackRailBlockSize: trackRailStyle.blockSize,
+      trackRailClasses: generatedClasses(
+        trackRail,
+        "hraness-design-fader__track-rail",
+      ),
+      trackRailInlineSize: trackRailStyle.inlineSize,
+      trackRailIsInert: trackRail.getAttribute("aria-hidden") === "true"
+        && trackRail.tabIndex === -1,
+    };
+  });
+  invariant(
+    faderEvidence.normalizedMinInlineSize === "48px"
+      && faderEvidence.oldDirectParentMinInlineSize === "88px"
+      && faderEvidence.sentinel === "ui-legacy",
+    `The real Fader did not distinguish normalized package layers from the matched UI legacy conflict and old direct-parent counterfactual: ${JSON.stringify(faderEvidence)}.`,
+  );
+  invariant(
+    faderEvidence.thumbVariableBlockSize === "20px"
+      && faderEvidence.thumbVariableInlineSize === "30px"
+      && faderEvidence.trackLengthVariable === "7rem"
+      && faderEvidence.thumbBlockSize === "20px"
+      && faderEvidence.thumbInlineSize === "30px"
+      && faderEvidence.trackBlockSize === "112px"
+      && faderEvidence.trackInlineSize === "48px"
+      && faderEvidence.trackRailInlineSize === "4px"
+      && faderEvidence.trackRailBlockSize === "112px"
+      && faderEvidence.fillRailInlineSize === "4px"
+      && faderEvidence.trackRailBackground !== "rgba(0, 0, 0, 0)"
+      && faderEvidence.fillRailBackground !== "rgba(0, 0, 0, 0)"
+      && faderEvidence.trackRailBackground !== faderEvidence.fillRailBackground,
+    `The real Fader lost caller-last variables, logical dimensions, or rail presentation: ${JSON.stringify(faderEvidence)}.`,
+  );
+  invariant(
+    faderEvidence.role === "group"
+      && faderEvidence.rootLabel === "Security level"
+      && faderEvidence.density === "default"
+      && faderEvidence.orientation === "vertical"
+      && faderEvidence.inputOrientation === "vertical"
+      && faderEvidence.inputValue === "40"
+      && faderEvidence.outputText === "40"
+      && faderEvidence.labelText === "Security gain"
+      && faderEvidence.accessory === "dB"
+      && faderEvidence.ref === "ready"
+      && faderEvidence.inputRef === "ready"
+      && faderEvidence.callerLastClass === "security-caller-fader"
+      && faderEvidence.rootHasCallerStyle
+      && !faderEvidence.labelHasInlineStyle
+      && !faderEvidence.outputHasInlineStyle
+      && faderEvidence.trackHasReactAriaGeometry
+      && faderEvidence.fillHasReactAriaGeometry
+      && faderEvidence.thumbHasReactAriaGeometry
+      && faderEvidence.trackRailIsInert
+      && faderEvidence.fillRailIsInert,
+    `The real Fader lost a semantic, ref, stable-hook, caller, or React Aria geometry contract: ${JSON.stringify(faderEvidence)}.`,
+  );
+  invariant(
+    faderEvidence.rootClasses.length === 7
+      && faderEvidence.labelClasses.length === 1
+      && faderEvidence.outputClasses.length === 1
+      && faderEvidence.trackClasses.length === 3
+      && faderEvidence.trackRailClasses.length === 6
+      && faderEvidence.fillRailClasses.length === 7
+      && faderEvidence.thumbClasses.length === 10,
+    `The real Fader exposes the wrong atomic class counts: ${JSON.stringify(faderEvidence)}.`,
+  );
+  const renderedFaderClasses = new Set([
+    ...faderEvidence.rootClasses,
+    ...faderEvidence.labelClasses,
+    ...faderEvidence.outputClasses,
+    ...faderEvidence.trackClasses,
+    ...faderEvidence.trackRailClasses,
+    ...faderEvidence.fillRailClasses,
+    ...faderEvidence.thumbClasses,
+  ]);
+  for (const className of renderedFaderClasses) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1
+        && classSelectorCount(combinedCss, className) >= 1,
+      `The served Fader class ${className} is missing or duplicated.`,
+    );
+  }
+  const faderInput = page.locator(
+    '[data-security-fader-matrix] input[type="range"]',
+  );
+  const faderThumb = page.locator(
+    "[data-security-fader-matrix] .hraness-design-fader__thumb",
+  );
+  await faderInput.focus();
+  await page.keyboard.press("ArrowUp");
+  await page.waitForFunction(() =>
+    document.querySelector(
+      "[data-security-fader-matrix] .hraness-design-fader__thumb",
+    )?.hasAttribute("data-focus-visible"));
+  const focusedFaderEvidence = await faderThumb.evaluate((thumb) => {
+    const style = getComputedStyle(thumb);
+    return {
+      classes: [...thumb.classList].filter(
+        (className) => className !== "hraness-design-fader__thumb",
+      ),
+      offset: style.outlineOffset,
+      style: style.outlineStyle,
+      visible: thumb.hasAttribute("data-focus-visible"),
+      width: style.outlineWidth,
+    };
+  });
+  invariant(
+    Number(await faderInput.inputValue()) === 41
+      && await page.locator(
+        "[data-security-fader-matrix] .hraness-design-fader__output",
+      ).textContent() === "41"
+      && focusedFaderEvidence.visible
+      && focusedFaderEvidence.width === "3px"
+      && focusedFaderEvidence.offset === "3px"
+      && focusedFaderEvidence.style === "solid"
+      && focusedFaderEvidence.classes.length === 14,
+    `The real Fader lost keyboard value or focus-visible behavior: ${JSON.stringify(focusedFaderEvidence)}.`,
+  );
+  for (const className of focusedFaderEvidence.classes) {
+    invariant(
+      classSelectorCount(designStylexCss, className) === 1
+        && classSelectorCount(combinedCss, className) >= 1,
+      `The served focused Fader class ${className} is missing or duplicated.`,
+    );
+  }
   const playbackTransportEvidence = await page.evaluate(() => {
     const matrix = document.querySelector("[data-security-playback-matrix]");
     const root = matrix?.querySelector(".hraness-design-playback-transport");
@@ -1677,6 +1944,47 @@ try {
       ),
     `Forced-colors mode did not remove only the decorative DitherSurface image: ${JSON.stringify(forcedColorDitherEvidence)}.`,
   );
+  const forcedColorFaderEvidence = await page.evaluate(() => {
+    const root = document.querySelector(
+      "[data-security-fader-matrix] .hraness-design-fader",
+    );
+    const label = root?.querySelector(".hraness-design-fader__label");
+    const output = root?.querySelector(".hraness-design-fader__output");
+    const input = root?.querySelector('input[type="range"]');
+    const rails = root?.querySelectorAll(
+      ".hraness-design-fader__track-rail, .hraness-design-fader__fill-rail",
+    );
+    if (!(root instanceof HTMLElement)
+      || !(label instanceof HTMLElement)
+      || !(output instanceof HTMLOutputElement)
+      || !(input instanceof HTMLInputElement)
+      || rails === undefined) {
+      throw new Error("The forced-colors Fader matrix is incomplete.");
+    }
+    return {
+      inputOrientation: input.getAttribute("aria-orientation"),
+      inputValue: input.value,
+      label: label.textContent?.replace(/\s+/gu, " ").trim(),
+      output: output.textContent?.trim(),
+      railCount: rails.length,
+      railsHidden: [...rails].every(
+        (rail) => rail.getAttribute("aria-hidden") === "true",
+      ),
+      role: root.getAttribute("role"),
+      rootLabel: root.getAttribute("aria-label"),
+    };
+  });
+  invariant(
+    forcedColorFaderEvidence.role === "group"
+      && forcedColorFaderEvidence.rootLabel === "Security level"
+      && forcedColorFaderEvidence.inputOrientation === "vertical"
+      && forcedColorFaderEvidence.inputValue === "41"
+      && forcedColorFaderEvidence.output === "41"
+      && forcedColorFaderEvidence.label === "Security gain"
+      && forcedColorFaderEvidence.railCount === 2
+      && forcedColorFaderEvidence.railsHidden,
+    `Forced-colors mode did not preserve Fader semantics and value content: ${JSON.stringify(forcedColorFaderEvidence)}.`,
+  );
   const forcedColorLayoutEvidence = await page.evaluate(() => {
     const top = document.querySelector('[data-security-layout="top"]');
     const bottom = document.querySelector('[data-security-layout="bottom"]');
@@ -1910,7 +2218,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

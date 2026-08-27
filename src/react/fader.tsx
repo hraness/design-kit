@@ -10,8 +10,11 @@ import {
   SliderThumb,
   SliderTrack,
 } from "react-aria-components";
+import * as stylex from "@stylexjs/stylex";
 
 import { cn } from "@hraness/ui";
+
+import { faderStyles } from "./fader.stylex.js";
 
 export type FaderProps = Omit<
   AriaSliderProps<number>,
@@ -41,29 +44,105 @@ export function Fader({
   showOutput = false,
   ...props
 }: FaderProps) {
+  const rootPresentation = stylex.props(
+    faderStyles.root,
+    density === "compact" && faderStyles.compact,
+    orientation === "horizontal" && faderStyles.horizontalRoot,
+  );
+  const labelRowPresentation = stylex.props(faderStyles.labelRow);
+  const captionPresentation = stylex.props(faderStyles.caption);
+  const trackPresentation = stylex.props(
+    faderStyles.track,
+    orientation === "horizontal" && faderStyles.horizontalTrack,
+  );
+  const trackRailPresentation = stylex.props(
+    faderStyles.rail,
+    faderStyles.trackRail,
+  );
+  const fillRailPresentation = stylex.props(faderStyles.rail, faderStyles.fillRail);
+
   return (
     <AriaSlider
       {...props}
-      className={cn("hraness-design-fader", className)}
+      className={cn(
+        "hraness-design-fader",
+        rootPresentation.className,
+        className,
+      )}
       data-density={density}
       orientation={orientation}
       ref={faderRef}
     >
       {showLabel && labelAccessory !== undefined ? (
-        <div className="hraness-design-fader__label-row">
-          <Label className="hraness-design-fader__label">{label}</Label>
+        <div
+          className={cn(
+            "hraness-design-fader__label-row",
+            labelRowPresentation.className,
+          )}
+        >
+          <Label
+            className={cn(
+              "hraness-design-fader__label",
+              captionPresentation.className,
+            )}
+          >
+            {label}
+          </Label>
           <span className="hraness-design-fader__label-accessory">{labelAccessory}</span>
         </div>
       ) : showLabel ? (
-        <Label className="hraness-design-fader__label">{label}</Label>
+        <Label
+          className={cn(
+            "hraness-design-fader__label",
+            captionPresentation.className,
+          )}
+        >
+          {label}
+        </Label>
       ) : (
         <Label className="hraness-design-visually-hidden">{label}</Label>
       )}
-      {showOutput ? <SliderOutput className="hraness-design-fader__output" /> : null}
-      <SliderTrack className="hraness-design-fader__track">
-        <SliderFill className="hraness-design-fader__fill" />
+      {showOutput ? (
+        <SliderOutput
+          className={cn(
+            "hraness-design-fader__output",
+            captionPresentation.className,
+          )}
+        />
+      ) : null}
+      <SliderTrack
+        className={cn(
+          "hraness-design-fader__track",
+          trackPresentation.className,
+        )}
+      >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "hraness-design-fader__track-rail",
+            trackRailPresentation.className,
+          )}
+        />
+        <SliderFill className="hraness-design-fader__fill">
+          <span
+            aria-hidden="true"
+            className={cn(
+              "hraness-design-fader__fill-rail",
+              fillRailPresentation.className,
+            )}
+          />
+        </SliderFill>
         <SliderThumb
-          className="hraness-design-fader__thumb"
+          className={({ isFocusVisible }) => {
+            const thumbPresentation = stylex.props(
+              faderStyles.thumb,
+              isFocusVisible && faderStyles.focusVisible,
+            );
+            return cn(
+              "hraness-design-fader__thumb",
+              thumbPresentation.className,
+            );
+          }}
           {...(inputRef === undefined ? {} : { inputRef })}
         />
       </SliderTrack>

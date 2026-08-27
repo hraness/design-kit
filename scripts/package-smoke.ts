@@ -131,6 +131,8 @@ const migratedLayoutLegacySelector =
   /\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u;
 const migratedPlaybackLegacySelector =
   /\.hraness-design-playback-transport(?:__button\s+:is\(svg,\s*\[data-slot=["']spinner["']\]\)|\s*\{)/u;
+const migratedFaderLegacySelector =
+  /\.hraness-design-fader(?:__[\w-]+)?(?:\[[^\]]+\])?(?:(?:::before|::after)|\s+\.hraness-design-fader__[\w-]+)?\s*(?:\{|,)/u;
 
 const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [
@@ -157,6 +159,47 @@ const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])
     /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
     "priority3 logical block glyph size",
   ],
+];
+
+const faderDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [
+    /--hraness-design-fader-thumb-block-size:\s*(?:0?\.75rem)/u,
+    "compact thumb block-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-block-size:\s*1\.125rem/u,
+    "default thumb block-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-inline-size:\s*1\.5rem/u,
+    "compact thumb inline-size variable",
+  ],
+  [
+    /--hraness-design-fader-thumb-inline-size:\s*1\.75rem/u,
+    "default thumb inline-size variable",
+  ],
+  [
+    /--hraness-design-fader-track-length:\s*6rem/u,
+    "default track-length variable",
+  ],
+  [
+    /--hraness-design-fader-track-length:\s*var\(--interactive-target-min\)/u,
+    "compact track-length variable",
+  ],
+  [
+    /block-size:\s*var\(--hraness-design-fader-thumb-block-size\)/u,
+    "thumb block-size variable consumption",
+  ],
+  [
+    /inline-size:\s*var\(--hraness-design-fader-thumb-inline-size\)/u,
+    "thumb inline-size variable consumption",
+  ],
+  [
+    /block-size:\s*var\(--hraness-design-fader-track-length\)/u,
+    "track-length variable consumption",
+  ],
+  [/inset-inline:\s*calc\(50%\s*-\s*2px\)/u, "logical rail inset"],
+  [/min-inline-size:\s*8rem/u, "horizontal minimum inline-size"],
 ];
 
 function requireNoticePresentation(css: string, label: string): void {
@@ -222,6 +265,14 @@ function requirePlaybackTransportPresentation(css: string, label: string): void 
   }
   if (/@layer\s+components\.hraness-design-kit\.priority5/u.test(css)) {
     throw new Error(`${label} leaked a design-kit priority5 layer.`);
+  }
+}
+
+function requireFaderPresentation(css: string, label: string): void {
+  for (const [pattern, declaration] of faderDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated Fader ${declaration} declaration.`);
+    }
   }
 }
 
@@ -374,6 +425,7 @@ try {
   requireDitherPresentation(packedStylexCss, "Packed stylex.css");
   requireLayoutSurfacePresentation(packedStylexCss, "Packed stylex.css", true);
   requirePlaybackTransportPresentation(packedStylexCss, "Packed stylex.css");
+  requireFaderPresentation(packedStylexCss, "Packed stylex.css");
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained the migrated legacy DitherSurface recipe.");
   }
@@ -382,6 +434,9 @@ try {
   }
   if (migratedPlaybackLegacySelector.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained a migrated legacy PlaybackTransport recipe.");
+  }
+  if (migratedFaderLegacySelector.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained a migrated legacy Fader recipe.");
   }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
@@ -548,7 +603,7 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { Children, createElement, isValidElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
@@ -562,6 +617,7 @@ try {
       'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
       'if (componentsCss.includes(".hraness-design-dither-surface")) throw new Error("Legacy CSS still declares the migrated DitherSurface.");',
       'if (componentsCss.includes(".hraness-design-playback-transport {") || componentsCss.includes(`.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"])`)) throw new Error("Legacy CSS still declares the migrated PlaybackTransport recipe.");',
+      'if (componentsCss.includes(".hraness-design-fader")) throw new Error("Legacy CSS still declares the migrated Fader recipe.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
       'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
       'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
@@ -612,7 +668,14 @@ try {
       'const playbackRef = { current: null }; let playCount = 0; let stopCount = 0;',
       'for (const status of ["idle", "pending", "playing"]) { const direct = PlaybackTransport({ "aria-labelledby": "preview-label", buttonAriaKeyShortcuts: "Space", buttonId: "preview-command", buttonRef: playbackRef, onPlay() { playCount += 1; }, onStop() { stopCount += 1; }, status }); const command = isValidElement(direct) ? Children.toArray(direct.props.children)[0] : undefined; if (!isValidElement(command) || command.props.buttonRef !== playbackRef || command.props.id !== "preview-command" || command.props["aria-keyshortcuts"] !== "Space") throw new Error(`Packed PlaybackTransport lost its ${status} button targeting seam.`); command.props.onPress(); }',
       'if (playCount !== 1 || stopCount !== 2) throw new Error("Packed PlaybackTransport changed its play/stop callback routing.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
+      'const faderMarkup = { defaultVertical: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 })), horizontalCompact: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("button", { type: "button" }, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })) };',
+      'const faderContracts = { defaultVertical: { callerClass: "consumer-fader-default", density: "default", orientation: "vertical", value: "32" }, horizontalCompact: { callerClass: "consumer-fader-compact", density: "compact", orientation: "horizontal", value: "64" } };',
+      'const faderTag = (markup, stableClass) => { const classMatch = [...markup.matchAll(/class="([^"]+)"/gu)].find((match) => match[1]?.split(" ").includes(stableClass)); const marker = classMatch?.index ?? -1; const start = markup.lastIndexOf("<", marker); const end = markup.indexOf(">", marker); if (marker < 0 || start < 0 || end < 0) throw new Error(`Packed Fader has no complete ${stableClass} tag.`); return markup.slice(start, end + 1); };',
+      'const faderClasses = (markup, stableClass) => { const classes = /class="([^"]+)"/u.exec(faderTag(markup, stableClass))?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass) throw new Error(`Packed Fader lost its stable-first ${stableClass} class contract.`); return classes; };',
+      'const fader = [];',
+      'for (const [variant, markup] of Object.entries(faderMarkup)) { const contract = faderContracts[variant]; const rootTag = faderTag(markup, "hraness-design-fader"); const rootClasses = faderClasses(markup, "hraness-design-fader"); if (rootClasses.at(-1) !== contract.callerClass || !rootTag.includes(`data-density="${contract.density}"`) || !rootTag.includes(`data-orientation="${contract.orientation}"`) || !rootTag.includes(`role="group"`) || rootTag.includes("style=")) throw new Error(`Packed ${variant} Fader lost stable, generated, caller-last, variant, or extracted root presentation.`); const hooks = ["hraness-design-fader", ...(variant === "horizontalCompact" ? ["hraness-design-fader__label-row"] : []), "hraness-design-fader__label", "hraness-design-fader__output", "hraness-design-fader__track", "hraness-design-fader__track-rail", "hraness-design-fader__fill-rail", "hraness-design-fader__thumb"]; for (const hook of hooks) { const generated = faderClasses(markup, hook).filter((name) => name !== contract.callerClass && name !== hook && stylexCss.includes(`.${name} {`)); if (generated.length === 0) throw new Error(`Packed ${variant} Fader ${hook} exposes no generated design-kit class.`); fader.push(...generated); } const labelTag = faderTag(markup, "hraness-design-fader__label"); const outputTag = faderTag(markup, "hraness-design-fader__output"); const trackTag = faderTag(markup, "hraness-design-fader__track"); if (labelTag.includes("style=") || outputTag.includes("style=") || !trackTag.includes(`style="position:relative;touch-action:none"`) || /(?:block-size|inline-size|--hraness-design-fader)/u.test(trackTag)) throw new Error(`Packed ${variant} Fader leaked package-owned inline presentation.`); const range = /<input(?=[^>]*type="range")[^>]*>/u.exec(markup)?.[0]; if (range === undefined || !range.includes(`min="0"`) || !range.includes(`max="100"`) || !range.includes(`step="1"`) || !range.includes(`aria-orientation="${contract.orientation}"`) || !range.includes(`value="${contract.value}"`)) throw new Error(`Packed ${variant} Fader lost native range semantics.`); for (const rail of ["hraness-design-fader__track-rail", "hraness-design-fader__fill-rail"]) { const matches = markup.match(new RegExp(`<span(?=[^>]*aria-hidden="true")(?=[^>]*class="[^"]*${rail}[^"]*")[^>]*>`, "gu")) ?? []; if (matches.length !== 1) throw new Error(`Packed ${variant} Fader lost its single aria-hidden ${rail} hook.`); } }',
+      'if (!faderMarkup.defaultVertical.includes(">Gain</label>") || !faderMarkup.defaultVertical.includes(">32</output>") || !faderMarkup.horizontalCompact.includes(">Pan</label>") || !faderMarkup.horizontalCompact.includes(`<span class="hraness-design-fader__label-accessory"><button type="button">Reset</button></span>`) || !faderMarkup.horizontalCompact.includes(">64</output>")) throw new Error("Packed Fader lost its label, accessory, or output contract.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ aside, dither, fader: [...new Set(fader)], icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -630,6 +693,7 @@ try {
     "src/react/foil-card-math.ts",
     "src/react/foil-card-surface.tsx",
     "src/react/foil-card-surface.stylex.ts",
+    "src/react/fader.stylex.ts",
     "src/react/playback-transport.stylex.ts",
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/surfaces.stylex.ts",
@@ -711,7 +775,7 @@ try {
       'import * as core from "@hraness/design-kit";',
       'import * as browser from "@hraness/design-kit/browser";',
       'import * as react from "@hraness/design-kit/react";',
-      'import type { PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
       'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
@@ -722,7 +786,13 @@ try {
       'const playbackWithBothNames: PlaybackTransportProps = { "aria-label": "Preview", "aria-labelledby": "preview-label", ...callbacks };',
       '// @ts-expect-error PlaybackTransport intentionally exposes no public xstyle seam.',
       'const playbackWithXstyle: PlaybackTransportProps = { "aria-label": "Preview", ...callbacks, xstyle: {} };',
-      "void [browser, core, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
+      'const defaultFader: FaderProps = { className: "consumer-fader", label: "Gain", value: 32 };',
+      'const compactHorizontalFader: FaderProps = { density: "compact", label: "Pan", labelAccessory: "Reset", orientation: "horizontal", showLabel: true, showOutput: true, value: 64 };',
+      '// @ts-expect-error Fader intentionally exposes no public xstyle seam.',
+      'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
+      '// @ts-expect-error Fader owns its children structure.',
+      'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
+      "void [browser, compactHorizontalFader, core, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
       "",
     ].join("\n"),
   );
@@ -767,10 +837,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { BottomBar, DitherSurface, DockedFooter, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, Fader, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -790,6 +860,7 @@ try {
   const noticeClasses = await Bun.file(join(consumer, "notice-classes.json")).json() as {
     readonly aside: readonly string[];
     readonly dither: readonly string[];
+    readonly fader: readonly string[];
     readonly icon: readonly string[];
     readonly layout: readonly string[];
     readonly playback: readonly string[];
@@ -804,6 +875,7 @@ try {
   }
   requireAtomicSelectorsPresent(builtCss, generatedNoticeClasses, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.dither, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.fader, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.layout, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.playback, "Packed aggregate Vite CSS");
@@ -824,6 +896,7 @@ try {
   requireDitherPresentation(builtCss, "Packed aggregate Vite CSS");
   requireLayoutSurfacePresentation(builtCss, "Packed aggregate Vite CSS");
   requirePlaybackTransportPresentation(builtCss, "Packed aggregate Vite CSS");
+  requireFaderPresentation(builtCss, "Packed aggregate Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy notice recipe.");
   }
@@ -836,6 +909,9 @@ try {
   if (migratedPlaybackLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy PlaybackTransport recipe.");
   }
+  if (migratedFaderLegacySelector.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained a migrated legacy Fader recipe.");
+  }
 
   await writeFile(
     join(consumer, "src/main.tsx"),
@@ -843,10 +919,10 @@ try {
       'import { createElement } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/components.css";',
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" })));',
+      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })));',
       "",
     ].join("\n"),
   );
@@ -880,6 +956,11 @@ try {
   );
   requireAtomicSelectorsExactlyOnce(
     narrowBuiltCss,
+    noticeClasses.fader,
+    "Packed narrow components.css Vite CSS",
+  );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
     noticeClasses.layout,
     "Packed narrow components.css Vite CSS",
   );
@@ -897,6 +978,7 @@ try {
   requireDitherPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireLayoutSurfacePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requirePlaybackTransportPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requireFaderPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   if (/\.hraness-design-production-data-preview-notice\s*(?:\{|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy notice recipe.");
   }
@@ -908,6 +990,9 @@ try {
   }
   if (migratedPlaybackLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy PlaybackTransport recipe.");
+  }
+  if (migratedFaderLegacySelector.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy Fader recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -942,7 +1027,7 @@ try {
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
     [
-      'import { BottomBar, DitherSurface, DockedFooter, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
@@ -964,6 +1049,12 @@ try {
       'const playback = Object.fromEntries(["idle", "pending", "playing"].map((status) => [status, renderToStaticMarkup(createElement(PlaybackTransport, { "aria-label": "Preview", className: "consumer-playback", onPlay() {}, onStop() {}, status }))]));',
       'for (const [status, markup] of Object.entries(playback)) { const classes = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup)?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || classes[1] !== "hraness-design-playback-transport" || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || markup.includes("style=")) throw new Error(`React 18 packed PlaybackTransport lost its ${status} semantic or extracted presentation contract.`); }',
       'if (!playback.idle.includes(`aria-label="Play"`) || !playback.idle.includes(`data-slot="icon"`) || !playback.pending.includes(`aria-label="Cancel playback start"`) || !playback.pending.includes(`data-slot="spinner"`) || !playback.pending.includes(`aria-busy="true"`) || !playback.playing.includes(`aria-label="Stop"`) || !playback.playing.includes(`data-slot="icon"`)) throw new Error("React 18 packed PlaybackTransport lost its lifecycle command contract.");',
+      'const faderMarkup = { defaultVertical: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 })), horizontalCompact: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("button", { type: "button" }, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })) };',
+      'const faderContracts = { defaultVertical: { callerClass: "consumer-fader-default", density: "default", orientation: "vertical", value: "32" }, horizontalCompact: { callerClass: "consumer-fader-compact", density: "compact", orientation: "horizontal", value: "64" } };',
+      'const faderTag = (markup, stableClass) => { const classMatch = [...markup.matchAll(/class="([^"]+)"/gu)].find((match) => match[1]?.split(" ").includes(stableClass)); const marker = classMatch?.index ?? -1; const start = markup.lastIndexOf("<", marker); const end = markup.indexOf(">", marker); if (marker < 0 || start < 0 || end < 0) throw new Error(`React 18 packed Fader has no complete ${stableClass} tag.`); return markup.slice(start, end + 1); };',
+      'const faderClasses = (markup, stableClass) => { const classes = /class="([^"]+)"/u.exec(faderTag(markup, stableClass))?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass || classes.length < 2) throw new Error(`React 18 packed Fader lost stable or generated ${stableClass} classes.`); return classes; };',
+      'for (const [variant, markup] of Object.entries(faderMarkup)) { const contract = faderContracts[variant]; const rootTag = faderTag(markup, "hraness-design-fader"); const rootClasses = faderClasses(markup, "hraness-design-fader"); if (rootClasses.at(-1) !== contract.callerClass || !rootTag.includes(`data-density="${contract.density}"`) || !rootTag.includes(`data-orientation="${contract.orientation}"`) || !rootTag.includes(`role="group"`) || rootTag.includes("style=")) throw new Error(`React 18 packed ${variant} Fader lost stable, generated, caller-last, variant, or extracted root presentation.`); const hooks = ["hraness-design-fader", ...(variant === "horizontalCompact" ? ["hraness-design-fader__label-row"] : []), "hraness-design-fader__label", "hraness-design-fader__output", "hraness-design-fader__track", "hraness-design-fader__track-rail", "hraness-design-fader__fill-rail", "hraness-design-fader__thumb"]; for (const hook of hooks) faderClasses(markup, hook); const labelTag = faderTag(markup, "hraness-design-fader__label"); const outputTag = faderTag(markup, "hraness-design-fader__output"); const trackTag = faderTag(markup, "hraness-design-fader__track"); if (labelTag.includes("style=") || outputTag.includes("style=") || !trackTag.includes(`style="position:relative;touch-action:none"`) || /(?:block-size|inline-size|--hraness-design-fader)/u.test(trackTag)) throw new Error(`React 18 packed ${variant} Fader leaked package-owned inline presentation.`); const range = /<input(?=[^>]*type="range")[^>]*>/u.exec(markup)?.[0]; if (range === undefined || !range.includes(`min="0"`) || !range.includes(`max="100"`) || !range.includes(`step="1"`) || !range.includes(`aria-orientation="${contract.orientation}"`) || !range.includes(`value="${contract.value}"`)) throw new Error(`React 18 packed ${variant} Fader lost native range semantics.`); for (const rail of ["hraness-design-fader__track-rail", "hraness-design-fader__fill-rail"]) { const matches = markup.match(new RegExp(`<span(?=[^>]*aria-hidden="true")(?=[^>]*class="[^"]*${rail}[^"]*")[^>]*>`, "gu")) ?? []; if (matches.length !== 1) throw new Error(`React 18 packed ${variant} Fader lost its single aria-hidden ${rail} hook.`); } }',
+      'if (!faderMarkup.defaultVertical.includes(">Gain</label>") || !faderMarkup.defaultVertical.includes(">32</output>") || !faderMarkup.horizontalCompact.includes(">Pan</label>") || !faderMarkup.horizontalCompact.includes(`<span class="hraness-design-fader__label-accessory"><button type="button">Reset</button></span>`) || !faderMarkup.horizontalCompact.includes(">64</output>")) throw new Error("React 18 packed Fader lost its label, accessory, or output contract.");',
       "",
     ].join("\n"),
   );
@@ -972,7 +1063,7 @@ try {
     join(react18Consumer, "index.ts"),
     [
       'import * as clientReact from "@hraness/design-kit/react";',
-      'import type { PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
       'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
@@ -983,7 +1074,13 @@ try {
       'const playbackWithBothNames: PlaybackTransportProps = { "aria-label": "Preview", "aria-labelledby": "preview-label", ...callbacks };',
       '// @ts-expect-error PlaybackTransport intentionally exposes no public xstyle seam.',
       'const playbackWithXstyle: PlaybackTransportProps = { "aria-label": "Preview", ...callbacks, xstyle: {} };',
-      "void [clientReact, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
+      'const defaultFader: FaderProps = { className: "consumer-fader", label: "Gain", value: 32 };',
+      'const compactHorizontalFader: FaderProps = { density: "compact", label: "Pan", labelAccessory: "Reset", orientation: "horizontal", showLabel: true, showOutput: true, value: 64 };',
+      '// @ts-expect-error Fader intentionally exposes no public xstyle seam.',
+      'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
+      '// @ts-expect-error Fader owns its children structure.',
+      'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
+      "void [clientReact, compactHorizontalFader, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
       "",
     ].join("\n"),
   );

@@ -1035,15 +1035,94 @@ import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-fr
 import { useState as useState2 } from "react";
 
 // src/react/fader.tsx
-import {
-  Label,
-  Slider as AriaSlider,
-  SliderFill,
-  SliderOutput,
-  SliderThumb,
-  SliderTrack
-} from "react-aria-components";
+import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
+import * as stylex from "@stylexjs/stylex";
 import { cn as cn6 } from "@hraness/ui";
+
+// src/react/fader.stylex.ts
+var faderStyles = {
+  caption: {
+    kGuDYH: "xaasd0c",
+    $$css: true
+  },
+  compact: {
+    "--hraness-design-fader-thumb-block-size": "x157jks9",
+    "--hraness-design-fader-thumb-inline-size": "x11jzih6",
+    "--hraness-design-fader-track-length": "x1jd1xi1",
+    $$css: true
+  },
+  fillRail: {
+    kWkggS: "x8qxh4v",
+    kLWsYc: "xuxy95z",
+    kctUWg: "xuufnwz",
+    $$css: true
+  },
+  focusVisible: {
+    kjBf7l: "x1ozvyeg",
+    kInvED: "x1ewu8gn",
+    k3XXqK: "xaatb59",
+    kMeerF: "x1s780dp",
+    $$css: true
+  },
+  horizontalRoot: {
+    kdYMnH: "x1dc76y4",
+    $$css: true
+  },
+  horizontalTrack: {
+    kLWsYc: "xmuazpc",
+    kULEZF: "xiuoait",
+    $$css: true
+  },
+  labelRow: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kOIVth: "xm15xud",
+    $$css: true
+  },
+  rail: {
+    kaIpWk: "x18j2vf1",
+    kULEZF: "x1n10oyr",
+    khdm6U: "xfpd54u",
+    kVAEAm: "x10l6tqk",
+    $$css: true
+  },
+  root: {
+    "--hraness-design-fader-thumb-block-size": "xzmbhks",
+    "--hraness-design-fader-thumb-inline-size": "xo319r4",
+    "--hraness-design-fader-track-length": "x1ywzl2e",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xmgkybt",
+    kAPf3g: "x1o2pa38",
+    kdYMnH: "xct6bk3",
+    $$css: true
+  },
+  thumb: {
+    kWkggS: "x8qxh4v",
+    kLWsYc: "x1v98byi",
+    kVAM5u: "x1g4gko8",
+    kaIpWk: "x1sybd2c",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xdh2fpr",
+    kGVxlE: "x123c105",
+    kULEZF: "x1lmdbwv",
+    kbCHJM: "x1nrll8i",
+    k87sOh: "xwa60dl",
+    $$css: true
+  },
+  track: {
+    kLWsYc: "x1du97gc",
+    kULEZF: "xofvnd4",
+    kVAEAm: "x1n2onr6",
+    $$css: true
+  },
+  trackRail: {
+    kWkggS: "x1uslotl",
+    kygpup: "x10no89f",
+    $$css: true
+  }
+};
+
+// src/react/fader.tsx
 import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
 function Fader({
   className,
@@ -1055,20 +1134,26 @@ function Fader({
   orientation = "vertical",
   showLabel = false,
   showOutput = false,
-  ...props
+  ...props2
 }) {
+  const rootPresentation = stylex.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
+  const labelRowPresentation = stylex.props(faderStyles.labelRow);
+  const captionPresentation = stylex.props(faderStyles.caption);
+  const trackPresentation = stylex.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
+  const trackRailPresentation = stylex.props(faderStyles.rail, faderStyles.trackRail);
+  const fillRailPresentation = stylex.props(faderStyles.rail, faderStyles.fillRail);
   return /* @__PURE__ */ jsxs6(AriaSlider, {
-    ...props,
-    className: cn6("hraness-design-fader", className),
+    ...props2,
+    className: cn6("hraness-design-fader", rootPresentation.className, className),
     "data-density": density,
     orientation,
     ref: faderRef,
     children: [
       showLabel && labelAccessory !== undefined ? /* @__PURE__ */ jsxs6("div", {
-        className: "hraness-design-fader__label-row",
+        className: cn6("hraness-design-fader__label-row", labelRowPresentation.className),
         children: [
           /* @__PURE__ */ jsx8(Label, {
-            className: "hraness-design-fader__label",
+            className: cn6("hraness-design-fader__label", captionPresentation.className),
             children: label
           }),
           /* @__PURE__ */ jsx8("span", {
@@ -1077,24 +1162,39 @@ function Fader({
           })
         ]
       }) : showLabel ? /* @__PURE__ */ jsx8(Label, {
-        className: "hraness-design-fader__label",
+        className: cn6("hraness-design-fader__label", captionPresentation.className),
         children: label
       }) : /* @__PURE__ */ jsx8(Label, {
         className: "hraness-design-visually-hidden",
         children: label
       }),
       showOutput ? /* @__PURE__ */ jsx8(SliderOutput, {
-        className: "hraness-design-fader__output"
+        className: cn6("hraness-design-fader__output", captionPresentation.className)
       }) : null,
       /* @__PURE__ */ jsxs6(SliderTrack, {
-        className: "hraness-design-fader__track",
+        className: cn6("hraness-design-fader__track", trackPresentation.className),
         children: [
+          /* @__PURE__ */ jsx8("span", {
+            "aria-hidden": "true",
+            className: cn6("hraness-design-fader__track-rail", trackRailPresentation.className)
+          }),
           /* @__PURE__ */ jsx8(SliderFill, {
-            className: "hraness-design-fader__fill"
+            className: "hraness-design-fader__fill",
+            children: /* @__PURE__ */ jsx8("span", {
+              "aria-hidden": "true",
+              className: cn6("hraness-design-fader__fill-rail", fillRailPresentation.className)
+            })
           }),
           /* @__PURE__ */ jsx8(SliderThumb, {
-            className: "hraness-design-fader__thumb",
-            ...inputRef === undefined ? {} : { inputRef }
+            className: ({
+              isFocusVisible
+            }) => {
+              const thumbPresentation = stylex.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
+              return cn6("hraness-design-fader__thumb", thumbPresentation.className);
+            },
+            ...inputRef === undefined ? {} : {
+              inputRef
+            }
           })
         ]
       })
@@ -1103,7 +1203,7 @@ function Fader({
 }
 
 // src/react/foil-card-surface.tsx
-import * as stylex from "@stylexjs/stylex";
+import * as stylex2 from "@stylexjs/stylex";
 import { cn as cn7 } from "@hraness/ui";
 import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
 
@@ -1636,7 +1736,7 @@ function addMediaListener(media, listener) {
 function FoilCardDeck({
   children,
   className,
-  ...props2
+  ...props3
 }) {
   const rootRef = useRef2(null);
   const registrations = useRef2(new Map);
@@ -1875,7 +1975,7 @@ function FoilCardDeck({
   return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
     value: contextValue,
     children: /* @__PURE__ */ jsx9("div", {
-      ...props2,
+      ...props3,
       className: cn7("hraness-design-foil-card-deck", className),
       "data-foil-card-deck": "",
       ref: rootRef,
@@ -1907,14 +2007,14 @@ function FoilCardSurface({
   const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
-  const rootPresentation = stylex.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
-  const basePresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
-  const spectrumPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
-  const sheenPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
-  const texturePresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
-  const ornamentPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
-  const contentPresentation = stylex.props(foilCardSurfaceStyles.content);
-  const activePresentation = stylex.props(foilCardSurfaceStyles.active);
+  const rootPresentation = stylex2.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
+  const basePresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
+  const spectrumPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
+  const sheenPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
+  const texturePresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex2.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
+  const contentPresentation = stylex2.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex2.props(foilCardSurfaceStyles.active);
   useEffect3(() => {
     if (renderMode !== "interactive")
       return;
@@ -2209,7 +2309,7 @@ var JellySurface = forwardRef(function JellySurface2({
   onPointerMoveCapture,
   surfaceRef,
   tone = "neutral",
-  ...props2
+  ...props3
 }, forwardedRef) {
   const hostRef = useRef3(null);
   const activePointer = useRef3(null);
@@ -2246,7 +2346,7 @@ var JellySurface = forwardRef(function JellySurface2({
     }
   };
   return createElement(JellyCard, {
-    ...props2,
+    ...props3,
     className: cn8("hraness-design-jelly-surface", className),
     "data-disabled": isDisabled ? "true" : undefined,
     "data-pending": isPending ? "true" : undefined,
@@ -2314,10 +2414,10 @@ function NavigationRail({
   className,
   footer,
   header,
-  ...props2
+  ...props3
 }) {
   return /* @__PURE__ */ jsxs8("aside", {
-    ...props2,
+    ...props3,
     "aria-label": ariaLabel,
     className: cn9("hraness-design-navigation-rail", className),
     children: [
@@ -2342,11 +2442,11 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props2
+  ...props3
 }) {
   const Heading = titleAs;
   return /* @__PURE__ */ jsxs8("section", {
-    ...props2,
+    ...props3,
     className: cn9("hraness-design-rail-section", className),
     children: [
       title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
@@ -2368,10 +2468,10 @@ function RailItem({
   icon,
   isActive = false,
   label,
-  ...props2
+  ...props3
 }) {
   return /* @__PURE__ */ jsxs8(Link, {
-    ...props2,
+    ...props3,
     "aria-current": isActive ? "page" : undefined,
     className: cn9("hraness-design-rail-item", className),
     href,
@@ -2405,7 +2505,7 @@ function RailItem({
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex2 from "@stylexjs/stylex";
+import * as stylex3 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -2443,8 +2543,8 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex2.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex2.props(playbackTransportStyles.glyph);
+  const rootPresentation = stylex3.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex3.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs9(Toolbar, {
     ...accessibleName,
     className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
@@ -2491,7 +2591,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex3 from "@stylexjs/stylex";
+import * as stylex4 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2535,8 +2635,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex3.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex3.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex4.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex4.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs10("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -2574,6 +2674,7 @@ var designGalleryRecipeCoverage = [
   "application shells",
   "charts",
   "dither surface",
+  "fader",
   "foil card surface",
   "layout surfaces",
   "Jelly presentation",
@@ -2901,8 +3002,13 @@ function DesignSystemGallery({
                   /* @__PURE__ */ jsx13(Fader, {
                     "aria-label": "Example level",
                     className: "design-gallery__vertical-fader",
-                    density: "compact",
+                    "data-gallery-fader": "vertical",
+                    density: "default",
                     label: "Level",
+                    labelAccessory: /* @__PURE__ */ jsx13("span", {
+                      "data-gallery-fader-accessory": "",
+                      children: "dB"
+                    }),
                     maxValue: 100,
                     minValue: 0,
                     onChange: setFaderValue,
@@ -2913,6 +3019,7 @@ function DesignSystemGallery({
                   /* @__PURE__ */ jsx13(Fader, {
                     "aria-label": "Example horizontal level",
                     className: "design-gallery__horizontal-fader",
+                    "data-gallery-fader": "horizontal",
                     density: "compact",
                     label: "Horizontal level",
                     maxValue: 100,
@@ -3650,9 +3757,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props4) {
+function ThemeMenuButton(props5) {
   return /* @__PURE__ */ jsx14(ThemeToggle, {
-    ...props4,
+    ...props5,
     presentation: "menu"
   });
 }
@@ -3835,13 +3942,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props4
+  ...props5
 }) {
   const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx15(RouteErrorPage, {
-        ...props4,
+        ...props5,
         showThemeToggle: false
       })
     ]

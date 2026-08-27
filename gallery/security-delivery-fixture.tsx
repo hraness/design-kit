@@ -21,6 +21,7 @@ const {
   DesignThemeProvider,
   DitherSurface,
   DockedFooter,
+  Fader,
   PageCanvas,
   PlaybackTransport,
   ProductionDataPreviewNotice,
@@ -36,6 +37,12 @@ export const securityDeliveryStorageKey = "hraness-design-theme-v1";
 const callerDitherStyle = {
   "--hraness-design-dither-size": "11px",
   backgroundSize: "11px 11px",
+} as CSSProperties;
+
+const callerFaderStyle = {
+  "--hraness-design-fader-thumb-block-size": "20px",
+  "--hraness-design-fader-thumb-inline-size": "30px",
+  "--hraness-design-fader-track-length": "7rem",
 } as CSSProperties;
 
 export interface SecurityDeliveryResource {
@@ -250,6 +257,37 @@ function PlaybackTransportDeliveryMatrix() {
   );
 }
 
+function FaderDeliveryMatrix() {
+  const faderRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    faderRef.current?.setAttribute("data-security-fader-ref", "ready");
+    inputRef.current?.setAttribute("data-security-fader-input-ref", "ready");
+  }, []);
+
+  return (
+    <section aria-labelledby="security-fader-title" data-security-fader-matrix="">
+      <h2 id="security-fader-title">Fader delivery matrix</h2>
+      <Fader
+        aria-label="Security level"
+        className="security-caller-fader"
+        data-design-kit-stylex-fader-conflict="true"
+        defaultValue={40}
+        faderRef={faderRef}
+        inputRef={inputRef}
+        label="Security gain"
+        labelAccessory={<span data-security-fader-accessory="">dB</span>}
+        maxValue={100}
+        minValue={0}
+        showLabel
+        showOutput
+        style={callerFaderStyle}
+      />
+    </section>
+  );
+}
+
 function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryResource }>) {
   resource.read();
   return (
@@ -286,6 +324,7 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
           </DitherSurface>
         </div>
         <LayoutSurfaceDeliveryMatrix />
+        <FaderDeliveryMatrix />
         <PlaybackTransportDeliveryMatrix />
       </DesignPortalThemeProvider>
     </section>

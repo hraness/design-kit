@@ -24,6 +24,16 @@ interface LayoutEvidence {
   readonly ditherHasInlineStyle: boolean;
   readonly ditherSize: string;
   readonly ditherUsesThemedSurface: boolean;
+  readonly faderAtomic: boolean;
+  readonly faderCallerLast: boolean;
+  readonly faderCompactCustomProperties: readonly string[];
+  readonly faderDefaultCustomProperties: readonly string[];
+  readonly faderHorizontalDimensions: readonly string[];
+  readonly faderInertRails: boolean;
+  readonly faderNoOwnedInlinePresentation: boolean;
+  readonly faderRailPresentation: readonly string[];
+  readonly faderSemantic: boolean;
+  readonly faderVerticalDimensions: readonly string[];
   readonly galleryPaddingLeft: number;
   readonly galleryPaddingRight: number;
   readonly heading: string;
@@ -131,12 +141,26 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const proportionalSpecimen = document.querySelector('[data-gallery-font="proportional"]');
     const monoSpecimen = document.querySelector('[data-gallery-font="mono"]');
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
-    const horizontalFaderTrack = document.querySelector(
-      ".design-gallery__horizontal-fader .hraness-design-fader__track",
+    const horizontalFader = document.querySelector('[data-gallery-fader="horizontal"]');
+    const horizontalFaderLabel = horizontalFader?.querySelector(
+      ".hraness-design-fader__label",
+    );
+    const horizontalFaderOutput = horizontalFader?.querySelector(
+      ".hraness-design-fader__output",
+    );
+    const horizontalFaderTrack = horizontalFader?.querySelector(
+      ".hraness-design-fader__track",
+    );
+    const horizontalFaderTrackRail = horizontalFaderTrack?.querySelector(
+      ".hraness-design-fader__track-rail",
+    );
+    const horizontalFaderFillRail = horizontalFaderTrack?.querySelector(
+      ".hraness-design-fader__fill-rail",
     );
     const horizontalFaderThumb = horizontalFaderTrack?.querySelector(
       ".hraness-design-fader__thumb",
     );
+    const horizontalFaderInput = horizontalFaderThumb?.querySelector('input[type="range"]');
     const layoutTop = document.querySelector("[data-gallery-layout-top-bar]");
     const layoutBottom = document.querySelector("[data-gallery-layout-bottom-bar]");
     const layoutPage = document.querySelector("[data-gallery-layout-page-canvas]");
@@ -153,12 +177,26 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const playbackButton = playbackCommand?.closest(
       ".hraness-design-playback-transport__button",
     );
-    const verticalFaderTrack = document.querySelector(
-      ".design-gallery__vertical-fader .hraness-design-fader__track",
+    const verticalFader = document.querySelector('[data-gallery-fader="vertical"]');
+    const verticalFaderLabel = verticalFader?.querySelector(
+      ".hraness-design-fader__label",
+    );
+    const verticalFaderOutput = verticalFader?.querySelector(
+      ".hraness-design-fader__output",
+    );
+    const verticalFaderTrack = verticalFader?.querySelector(
+      ".hraness-design-fader__track",
+    );
+    const verticalFaderTrackRail = verticalFaderTrack?.querySelector(
+      ".hraness-design-fader__track-rail",
+    );
+    const verticalFaderFillRail = verticalFaderTrack?.querySelector(
+      ".hraness-design-fader__fill-rail",
     );
     const verticalFaderThumb = verticalFaderTrack?.querySelector(
       ".hraness-design-fader__thumb",
     );
+    const verticalFaderInput = verticalFaderThumb?.querySelector('input[type="range"]');
     const appearance = document.querySelector(".hraness-design-theme-toggle");
     const appearanceTrigger = appearance?.querySelector("button");
     const appearanceHeader = appearance?.closest("header");
@@ -181,8 +219,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(proportionalSpecimen instanceof HTMLElement)
       || !(monoSpecimen instanceof HTMLElement)
       || !(procedural instanceof HTMLElement)
+      || !(horizontalFader instanceof HTMLElement)
+      || !(horizontalFaderLabel instanceof HTMLElement)
+      || !(horizontalFaderOutput instanceof HTMLOutputElement)
       || !(horizontalFaderTrack instanceof HTMLElement)
+      || !(horizontalFaderTrackRail instanceof HTMLElement)
+      || !(horizontalFaderFillRail instanceof HTMLElement)
       || !(horizontalFaderThumb instanceof HTMLElement)
+      || !(horizontalFaderInput instanceof HTMLInputElement)
       || !(layoutTop instanceof HTMLElement)
       || !(layoutBottom instanceof HTMLElement)
       || !(layoutPage instanceof HTMLElement)
@@ -193,8 +237,14 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(playbackCommand instanceof HTMLButtonElement)
       || !(playbackGlyph instanceof HTMLElement || playbackGlyph instanceof SVGElement)
       || !(playbackButton instanceof HTMLElement)
+      || !(verticalFader instanceof HTMLElement)
+      || !(verticalFaderLabel instanceof HTMLElement)
+      || !(verticalFaderOutput instanceof HTMLOutputElement)
       || !(verticalFaderTrack instanceof HTMLElement)
+      || !(verticalFaderTrackRail instanceof HTMLElement)
+      || !(verticalFaderFillRail instanceof HTMLElement)
       || !(verticalFaderThumb instanceof HTMLElement)
+      || !(verticalFaderInput instanceof HTMLInputElement)
       || !(appearance instanceof HTMLElement)
       || !(appearanceTrigger instanceof HTMLButtonElement)
       || !(appearanceHeader instanceof HTMLElement)
@@ -215,12 +265,22 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const proceduralBox = procedural.getBoundingClientRect();
     const horizontalFaderTrackBox = horizontalFaderTrack.getBoundingClientRect();
     const horizontalFaderThumbBox = horizontalFaderThumb.getBoundingClientRect();
+    const horizontalFaderStyle = getComputedStyle(horizontalFader);
+    const horizontalFaderTrackStyle = getComputedStyle(horizontalFaderTrack);
+    const horizontalFaderTrackRailStyle = getComputedStyle(horizontalFaderTrackRail);
+    const horizontalFaderFillRailStyle = getComputedStyle(horizontalFaderFillRail);
+    const horizontalFaderThumbStyle = getComputedStyle(horizontalFaderThumb);
     const layoutDockBox = layoutDock.getBoundingClientRect();
     const layoutDockFrameBox = layoutDockFrame.getBoundingClientRect();
     const playbackStyle = getComputedStyle(playback);
     const playbackGlyphStyle = getComputedStyle(playbackGlyph);
     const verticalFaderTrackBox = verticalFaderTrack.getBoundingClientRect();
     const verticalFaderThumbBox = verticalFaderThumb.getBoundingClientRect();
+    const verticalFaderStyle = getComputedStyle(verticalFader);
+    const verticalFaderTrackStyle = getComputedStyle(verticalFaderTrack);
+    const verticalFaderTrackRailStyle = getComputedStyle(verticalFaderTrackRail);
+    const verticalFaderFillRailStyle = getComputedStyle(verticalFaderFillRail);
+    const verticalFaderThumbStyle = getComputedStyle(verticalFaderThumb);
     const paletteNames = [
       "--hraness-design-procedural-highlight",
       "--hraness-design-procedural-key",
@@ -262,6 +322,117 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
         dither.classList.contains("hraness-themed-surface")
         && dither.classList.contains("hraness-design-dither-surface")
         && dither.dataset.slot === "themed-surface",
+      faderAtomic: [
+        [horizontalFader, "hraness-design-fader"],
+        [horizontalFaderLabel, "hraness-design-fader__label"],
+        [horizontalFaderOutput, "hraness-design-fader__output"],
+        [horizontalFaderTrack, "hraness-design-fader__track"],
+        [horizontalFaderTrackRail, "hraness-design-fader__track-rail"],
+        [horizontalFaderFillRail, "hraness-design-fader__fill-rail"],
+        [horizontalFaderThumb, "hraness-design-fader__thumb"],
+        [verticalFader, "hraness-design-fader"],
+        [verticalFaderLabel, "hraness-design-fader__label"],
+        [verticalFaderOutput, "hraness-design-fader__output"],
+        [verticalFaderTrack, "hraness-design-fader__track"],
+        [verticalFaderTrackRail, "hraness-design-fader__track-rail"],
+        [verticalFaderFillRail, "hraness-design-fader__fill-rail"],
+        [verticalFaderThumb, "hraness-design-fader__thumb"],
+      ].every(([element, stableClass]) =>
+        element instanceof HTMLElement
+        && typeof stableClass === "string"
+        && element.classList.contains(stableClass)
+        && [...element.classList].some((className) => className.startsWith("x"))),
+      faderCallerLast:
+        horizontalFader.classList.item(horizontalFader.classList.length - 1)
+          === "design-gallery__horizontal-fader"
+        && verticalFader.classList.item(verticalFader.classList.length - 1)
+          === "design-gallery__vertical-fader",
+      faderCompactCustomProperties: [
+        horizontalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-thumb-block-size",
+        ).trim(),
+        horizontalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-thumb-inline-size",
+        ).trim(),
+        horizontalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-track-length",
+        ).trim(),
+      ],
+      faderDefaultCustomProperties: [
+        verticalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-thumb-block-size",
+        ).trim(),
+        verticalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-thumb-inline-size",
+        ).trim(),
+        verticalFaderStyle.getPropertyValue(
+          "--hraness-design-fader-track-length",
+        ).trim(),
+      ],
+      faderHorizontalDimensions: [
+        horizontalFaderStyle.minInlineSize,
+        horizontalFaderTrackStyle.inlineSize,
+        horizontalFaderTrackStyle.blockSize,
+        horizontalFaderThumbStyle.inlineSize,
+        horizontalFaderThumbStyle.blockSize,
+      ],
+      faderInertRails:
+        horizontalFaderTrackRail.getAttribute("aria-hidden") === "true"
+        && horizontalFaderFillRail.getAttribute("aria-hidden") === "true"
+        && verticalFaderTrackRail.getAttribute("aria-hidden") === "true"
+        && verticalFaderFillRail.getAttribute("aria-hidden") === "true"
+        && horizontalFaderTrackRail.tabIndex === -1
+        && horizontalFaderFillRail.tabIndex === -1
+        && verticalFaderTrackRail.tabIndex === -1
+        && verticalFaderFillRail.tabIndex === -1,
+      faderNoOwnedInlinePresentation: [
+        horizontalFader,
+        horizontalFaderLabel,
+        horizontalFaderOutput,
+        horizontalFaderTrackRail,
+        horizontalFaderFillRail,
+        verticalFader,
+        verticalFaderLabel,
+        verticalFaderOutput,
+        verticalFaderTrackRail,
+        verticalFaderFillRail,
+      ].every((element) => !element.hasAttribute("style")),
+      faderRailPresentation: [
+        horizontalFaderTrackRailStyle.inlineSize,
+        horizontalFaderTrackRailStyle.blockSize,
+        horizontalFaderTrackRailStyle.backgroundColor,
+        horizontalFaderFillRailStyle.inlineSize,
+        horizontalFaderFillRailStyle.backgroundColor,
+        verticalFaderTrackRailStyle.inlineSize,
+        verticalFaderTrackRailStyle.blockSize,
+        verticalFaderTrackRailStyle.backgroundColor,
+        verticalFaderFillRailStyle.inlineSize,
+        verticalFaderFillRailStyle.backgroundColor,
+      ],
+      faderSemantic:
+        horizontalFader.getAttribute("role") === "group"
+        && horizontalFader.getAttribute("aria-label") === "Example horizontal level"
+        && horizontalFader.dataset.density === "compact"
+        && horizontalFader.dataset.orientation === "horizontal"
+        && horizontalFaderLabel.textContent?.trim() === "Horizontal level"
+        && horizontalFaderOutput.textContent?.trim() === "64"
+        && horizontalFaderInput.getAttribute("aria-orientation") === "horizontal"
+        && horizontalFaderInput.value === "64"
+        && verticalFader.getAttribute("role") === "group"
+        && verticalFader.getAttribute("aria-label") === "Example level"
+        && verticalFader.dataset.density === "default"
+        && verticalFader.dataset.orientation === "vertical"
+        && verticalFaderLabel.textContent?.replace(/\s+/gu, " ").trim() === "Level"
+        && verticalFaderOutput.textContent?.trim() === "64"
+        && verticalFaderInput.getAttribute("aria-orientation") === "vertical"
+        && verticalFaderInput.value === "64",
+      faderVerticalDimensions: [
+        verticalFaderStyle.minInlineSize,
+        verticalFaderTrackStyle.inlineSize,
+        verticalFaderTrackStyle.blockSize,
+        verticalFaderThumbStyle.inlineSize,
+        verticalFaderThumbStyle.blockSize,
+      ],
       galleryPaddingLeft: Number.parseFloat(galleryStyle.paddingLeft),
       galleryPaddingRight: Number.parseFloat(galleryStyle.paddingRight),
       heading: heading.textContent?.trim() ?? "",
@@ -506,6 +677,17 @@ try {
       && !/@layer\s+components\.hraness-design-kit\.priority5/u.test(builtCss),
     "Gallery CSS lost the PlaybackTransport priority2/priority3 logical recipe.",
   );
+  invariant(
+    /--hraness-design-fader-thumb-block-size:\s*1\.125rem/u.test(builtCss)
+      && /--hraness-design-fader-thumb-block-size:\s*\.?75rem/u.test(builtCss)
+      && /--hraness-design-fader-thumb-inline-size:\s*1\.75rem/u.test(builtCss)
+      && /--hraness-design-fader-thumb-inline-size:\s*1\.5rem/u.test(builtCss)
+      && /--hraness-design-fader-track-length:\s*6rem/u.test(builtCss)
+      && /inline-size:\s*4px/u.test(builtCss)
+      && /outline-offset:\s*3px/u.test(builtCss)
+      && !/@layer\s+components\.hraness-design-kit\.priority(?:5|6)/u.test(builtCss),
+    "Gallery CSS lost the Fader default, compact, rail, or focus recipe.",
+  );
   await writeFile(
     join(work, "index.html"),
     [
@@ -628,6 +810,51 @@ try {
           })}`,
         );
         invariant(
+          state.faderAtomic
+            && state.faderCallerLast
+            && state.faderInertRails
+            && state.faderNoOwnedInlinePresentation
+            && state.faderSemantic
+            && Number.parseFloat(state.faderDefaultCustomProperties[0] ?? "") === 1.125
+            && Number.parseFloat(state.faderDefaultCustomProperties[1] ?? "") === 1.75
+            && Number.parseFloat(state.faderDefaultCustomProperties[2] ?? "") === 6
+            && Number.parseFloat(state.faderCompactCustomProperties[0] ?? "") === 0.75
+            && Number.parseFloat(state.faderCompactCustomProperties[1] ?? "") === 1.5
+            && Number.parseFloat(state.faderCompactCustomProperties[2] ?? "") === 3
+            && Number.parseFloat(state.faderVerticalDimensions[0] ?? "") === 48
+            && Number.parseFloat(state.faderVerticalDimensions[1] ?? "") === 48
+            && Number.parseFloat(state.faderVerticalDimensions[2] ?? "") === 96
+            && Number.parseFloat(state.faderVerticalDimensions[3] ?? "") === 28
+            && Number.parseFloat(state.faderVerticalDimensions[4] ?? "") === 18
+            && Number.parseFloat(state.faderHorizontalDimensions[0] ?? "") === 128
+            && Number.parseFloat(state.faderHorizontalDimensions[1] ?? "") >= 128
+            && Number.parseFloat(state.faderHorizontalDimensions[2] ?? "") === 48
+            && Number.parseFloat(state.faderHorizontalDimensions[3] ?? "") === 24
+            && Number.parseFloat(state.faderHorizontalDimensions[4] ?? "") === 12
+            && Number.parseFloat(state.faderRailPresentation[0] ?? "") === 4
+            && Number.parseFloat(state.faderRailPresentation[1] ?? "") === 48
+            && Number.parseFloat(state.faderRailPresentation[3] ?? "") === 4
+            && Number.parseFloat(state.faderRailPresentation[5] ?? "") === 4
+            && Number.parseFloat(state.faderRailPresentation[6] ?? "") === 96
+            && Number.parseFloat(state.faderRailPresentation[8] ?? "") === 4
+            && state.faderRailPresentation[2] !== "rgba(0, 0, 0, 0)"
+            && state.faderRailPresentation[4] !== "rgba(0, 0, 0, 0)"
+            && state.faderRailPresentation[2] !== state.faderRailPresentation[4]
+            && state.faderRailPresentation[7] !== state.faderRailPresentation[9],
+          `${layout.id}: Fader delivery is ${JSON.stringify({
+            atomic: state.faderAtomic,
+            callerLast: state.faderCallerLast,
+            compact: state.faderCompactCustomProperties,
+            default: state.faderDefaultCustomProperties,
+            horizontal: state.faderHorizontalDimensions,
+            inertRails: state.faderInertRails,
+            noOwnedInlinePresentation: state.faderNoOwnedInlinePresentation,
+            rails: state.faderRailPresentation,
+            semantic: state.faderSemantic,
+            vertical: state.faderVerticalDimensions,
+          })}`,
+        );
+        invariant(
           state.layoutSurfacesAtomic
             && state.layoutSurfacesSemantic
             && state.layoutTopDisplay === "flex"
@@ -709,6 +936,79 @@ try {
         invariant(
           state.verticalFaderThumbCentered,
           `${layout.id}: vertical fader thumb is not centered on its track`,
+        );
+        const verticalFaderInput = page.locator(
+          '[data-gallery-fader="vertical"] input[type="range"]',
+        );
+        const verticalFaderThumb = page.locator(
+          '[data-gallery-fader="vertical"] .hraness-design-fader__thumb',
+        );
+        const verticalValueBefore = Number(await verticalFaderInput.inputValue());
+        await verticalFaderInput.focus();
+        await page.keyboard.press("ArrowUp");
+        await page.waitForFunction(() =>
+          document.querySelector(
+            '[data-gallery-fader="vertical"] .hraness-design-fader__thumb',
+          )?.hasAttribute("data-focus-visible"));
+        const verticalFocus = await verticalFaderThumb.evaluate((thumb) => {
+          const style = getComputedStyle(thumb);
+          return {
+            offset: style.outlineOffset,
+            style: style.outlineStyle,
+            visible: thumb.hasAttribute("data-focus-visible"),
+            width: style.outlineWidth,
+          };
+        });
+        invariant(
+          Number(await verticalFaderInput.inputValue()) === verticalValueBefore + 1
+            && await page.locator(
+              '[data-gallery-fader="vertical"] .hraness-design-fader__output',
+            ).textContent() === String(verticalValueBefore + 1)
+            && verticalFocus.visible
+            && verticalFocus.width === "3px"
+            && verticalFocus.offset === "3px"
+            && verticalFocus.style === "solid",
+          `${layout.id}: vertical Fader keyboard or focus-visible state is ${JSON.stringify({
+            focus: verticalFocus,
+            value: await verticalFaderInput.inputValue(),
+          })}`,
+        );
+
+        const horizontalFaderInput = page.locator(
+          '[data-gallery-fader="horizontal"] input[type="range"]',
+        );
+        const horizontalFaderThumb = page.locator(
+          '[data-gallery-fader="horizontal"] .hraness-design-fader__thumb',
+        );
+        const horizontalValueBefore = Number(await horizontalFaderInput.inputValue());
+        await horizontalFaderInput.focus();
+        await page.keyboard.press("ArrowRight");
+        await page.waitForFunction(() =>
+          document.querySelector(
+            '[data-gallery-fader="horizontal"] .hraness-design-fader__thumb',
+          )?.hasAttribute("data-focus-visible"));
+        const horizontalFocus = await horizontalFaderThumb.evaluate((thumb) => {
+          const style = getComputedStyle(thumb);
+          return {
+            offset: style.outlineOffset,
+            style: style.outlineStyle,
+            visible: thumb.hasAttribute("data-focus-visible"),
+            width: style.outlineWidth,
+          };
+        });
+        invariant(
+          Number(await horizontalFaderInput.inputValue()) === horizontalValueBefore + 1
+            && await page.locator(
+              '[data-gallery-fader="horizontal"] .hraness-design-fader__output',
+            ).textContent() === String(horizontalValueBefore + 1)
+            && horizontalFocus.visible
+            && horizontalFocus.width === "3px"
+            && horizontalFocus.offset === "3px"
+            && horizontalFocus.style === "solid",
+          `${layout.id}: horizontal Fader keyboard or focus-visible state is ${JSON.stringify({
+            focus: horizontalFocus,
+            value: await horizontalFaderInput.inputValue(),
+          })}`,
         );
         invariant(
           state.palette.length === 4 && state.paletteValid,
