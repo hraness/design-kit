@@ -24,6 +24,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("layout surfaces");
   expect(designGalleryRecipeCoverage).toContain("playback transport");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
+  expect(designGalleryRecipeCoverage).toContain("Nebula Sans typography");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
 });
@@ -72,6 +73,9 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('class="plain-wordmark"');
   expect(html).toContain("project-name.example");
   expect(html).toContain(">blue links</a> stay quiet until interaction.");
+  expect(html).toContain('data-gallery-font="proportional"');
+  expect(html).toContain('data-gallery-font="mono"');
+  expect(html).toContain("More shape, less noise.");
 });
 
 test("a nested gallery identifies itself and defers appearance to the product header", () => {

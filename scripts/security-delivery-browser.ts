@@ -53,7 +53,7 @@ const contentSecurityPolicy = [
   "style-src-attr 'unsafe-inline'",
   "child-src 'none'",
   "connect-src 'none'",
-  "font-src 'none'",
+  "font-src 'self'",
   "frame-src 'none'",
   "img-src 'none'",
   "manifest-src 'none'",
@@ -403,6 +403,7 @@ try {
 
   const cssBuild = await Bun.build({
     entrypoints: [join(repository, "gallery/security-delivery.css")],
+    external: ["*.woff2"],
     minify: true,
     naming: "security-delivery.[ext]",
     outdir: cssDirectory,
@@ -600,6 +601,7 @@ try {
   const verticalDocument = verticalWritingDocument();
   const requestPaths: string[] = [];
   const clientJavaScriptRequests: string[] = [];
+  const fontRequests: string[] = [];
   const clientJavaScriptRequestCount = (): number => clientJavaScriptRequests.length;
   const currentAllReadyState = (): typeof allReadyState => allReadyState;
   let negativeControlRequests = 0;
@@ -631,6 +633,24 @@ try {
       if (pathname === "/dist/stylex.css") {
         return new Response(Bun.file(join(repository, "dist/stylex.css")), {
           headers: { "content-type": "text/css" },
+        });
+      }
+      if (pathname.endsWith(".woff2")) {
+        fontRequests.push(pathname);
+        const fontDirectory = pathname.includes("/fonts/nebula-sans/")
+          ? "nebula-sans"
+          : pathname.includes("/fonts/geist-mono/")
+            ? "geist-mono"
+            : undefined;
+        if (fontDirectory === undefined) {
+          return new Response("Not found", { status: 404 });
+        }
+        const candidate = join(repository, "src/fonts", fontDirectory, basename(pathname));
+        if (!(await Bun.file(candidate).exists())) {
+          return new Response("Not found", { status: 404 });
+        }
+        return new Response(Bun.file(candidate), {
+          headers: { "content-type": "font/woff2" },
         });
       }
       if (pathname.endsWith(".js")) {
@@ -745,6 +765,15 @@ try {
     "The browser did not receive the combined stylesheet as 200 text/css.",
   );
   await page.waitForTimeout(150);
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+  });
+
+  invariant(
+    fontRequests.length > 0
+      && fontRequests.every((pathname) => pathname.includes("NebulaSans-")),
+    `The page requested unexpected font assets: ${JSON.stringify(fontRequests)}.`,
+  );
 
   invariant(currentAllReadyState() === "pending", "The held SSR stream reached allReady before release.");
   invariant(clientJavaScriptRequestCount() === 0, "Client JavaScript was requested before release.");
@@ -851,7 +880,7 @@ try {
   );
   invariant(noticeEvidence.color === "rgb(36, 20, 0)", `The notice color is ${noticeEvidence.color}.`);
   invariant(
-    noticeEvidence.fontFamily.startsWith("ui-sans-serif, system-ui, -apple-system, ")
+    noticeEvidence.fontFamily.startsWith('"Nebula Sans", ui-sans-serif, system-ui, -apple-system, ')
       && noticeEvidence.fontFamily.includes('"Segoe UI"')
       && noticeEvidence.fontFamily.endsWith(", sans-serif"),
     `The notice font-family is ${noticeEvidence.fontFamily}.`,
@@ -1001,9 +1030,12 @@ try {
     await page.locator(`style#${reactAriaPressableStyleId}`).count() === 0,
     "React Aria injected a duplicate permanent pressable style.",
   );
+  const securityPolicyViolations = await page.evaluate(
+    () => window.__hranessSecurityDeliveryViolations ?? [],
+  );
   invariant(
-    (await page.evaluate(() => window.__hranessSecurityDeliveryViolations ?? [])).length === 0,
-    "The page observed a CSP violation.",
+    securityPolicyViolations.length === 0,
+    `The page observed CSP violations: ${JSON.stringify(securityPolicyViolations)}.`,
   );
 
   const trigger = page.locator("#security-canary-dialog-trigger");
@@ -1864,15 +1896,16 @@ try {
     `Security delivery page, console, or resource errors: ${failures.join("; ")}`,
   );
   invariant(
-    requestPaths.every((path) => [
-      "/",
-      "/dist/stylex.css",
-      "/favicon.ico",
-      "/security-delivery.css",
-      "/security-delivery-vertical.css",
-      "/vertical-writing",
-      `/${hydrationFileName}`,
-    ].includes(path)),
+    requestPaths.every((path) => path.startsWith("/fonts/nebula-sans/NebulaSans-")
+      || [
+        "/",
+        "/dist/stylex.css",
+        "/favicon.ico",
+        "/security-delivery.css",
+        "/security-delivery-vertical.css",
+        "/vertical-writing",
+        `/${hydrationFileName}`,
+      ].includes(path)),
     `The fixture requested an unexpected resource: ${JSON.stringify(requestPaths)}.`,
   );
 

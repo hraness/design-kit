@@ -8,7 +8,7 @@ import {
   isDesignTheme,
   motion,
   normalizeDesignTheme
-} from "../chunk-gnpkqyfd.js";
+} from "../chunk-vy764dh1.js";
 import {
   BottomBar,
   DitherSurface,
@@ -2579,6 +2579,7 @@ var designGalleryRecipeCoverage = [
   "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
+  "Nebula Sans typography",
   "procedural effects",
   "production preview notice",
   "syntax highlighting"
@@ -2683,6 +2684,35 @@ function DesignSystemGallery({
                         /* @__PURE__ */ jsx13(Tag, {
                           variant: "outline",
                           children: "public core"
+                        })
+                      ]
+                    })
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsxs11(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs11(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx13(CardTitle, {
+                        children: "Typography roles"
+                      }),
+                      /* @__PURE__ */ jsx13(CardDescription, {
+                        children: "Nebula Sans for proportional text; mono stays explicit."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx13(CardContent, {
+                    children: /* @__PURE__ */ jsxs11("div", {
+                      className: "design-gallery__type-specimen",
+                      children: [
+                        /* @__PURE__ */ jsx13("p", {
+                          "data-gallery-font": "proportional",
+                          children: "More shape, less noise."
+                        }),
+                        /* @__PURE__ */ jsx13("code", {
+                          "data-gallery-font": "mono",
+                          children: 'const role = "mono";'
                         })
                       ]
                     })

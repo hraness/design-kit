@@ -27,7 +27,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-gnpkqyfd.js";
+} from "./chunk-vy764dh1.js";
 import {
   highlightCode,
   resolveSyntaxLanguage,

@@ -426,14 +426,15 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/syntax-highlighting')])",
+    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')])",
   ], neutralConsumer);
   await writeFile(
     join(neutralConsumer, "index.ts"),
     [
       'import * as core from "@hraness/design-kit";',
+      'import { nebulaSansSocialFonts } from "@hraness/design-kit/fonts/nebula-sans/social";',
       'import * as syntax from "@hraness/design-kit/syntax-highlighting";',
-      "void [core, syntax];",
+      "void [core, nebulaSansSocialFonts, syntax];",
       "",
     ].join("\n"),
   );
@@ -620,6 +621,7 @@ try {
   const installed = join(consumer, "node_modules/@hraness/design-kit");
   for (const path of [
     "dist/browser/index.js",
+    "dist/fonts/nebula-sans/social-fonts.generated.js",
     "dist/stylex.css",
     "src/appearance-menu.css",
     "src/components.css",
@@ -632,6 +634,23 @@ try {
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/surfaces.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
+    "src/fonts/nebula-sans/LICENSE.txt",
+    "src/fonts/nebula-sans/NebulaSans-Black.woff2",
+    "src/fonts/nebula-sans/NebulaSans-BlackItalic.woff2",
+    "src/fonts/nebula-sans/NebulaSans-Bold.woff2",
+    "src/fonts/nebula-sans/NebulaSans-BoldItalic.woff2",
+    "src/fonts/nebula-sans/NebulaSans-Bold.otf",
+    "src/fonts/nebula-sans/NebulaSans-Book.woff2",
+    "src/fonts/nebula-sans/NebulaSans-BookItalic.woff2",
+    "src/fonts/nebula-sans/NebulaSans-Book.otf",
+    "src/fonts/nebula-sans/NebulaSans-Light.woff2",
+    "src/fonts/nebula-sans/NebulaSans-LightItalic.woff2",
+    "src/fonts/nebula-sans/NebulaSans-Medium.woff2",
+    "src/fonts/nebula-sans/NebulaSans-MediumItalic.woff2",
+    "src/fonts/nebula-sans/NebulaSans-Semibold.woff2",
+    "src/fonts/nebula-sans/NebulaSans-SemiboldItalic.woff2",
+    "src/fonts/nebula-sans/PROVENANCE.md",
+    "src/fonts/nebula-sans/social-fonts.generated.ts",
     "vendor/evilcharts/LICENSE",
     "vendor/jelly-ui/LICENSE",
   ]) {

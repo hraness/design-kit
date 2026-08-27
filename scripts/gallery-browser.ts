@@ -28,6 +28,7 @@ interface LayoutEvidence {
   readonly galleryPaddingRight: number;
   readonly heading: string;
   readonly headingClipped: boolean;
+  readonly headingFontFamily: string;
   readonly horizontalFaderThumbCentered: boolean;
   readonly layoutBottomDisplay: string;
   readonly layoutDockBottom: string;
@@ -38,6 +39,8 @@ interface LayoutEvidence {
   readonly layoutSurfacesSemantic: boolean;
   readonly layoutTopDisplay: string;
   readonly mobileTriggerDisplay: string;
+  readonly monoFontFamily: string;
+  readonly nebulaLoaded: boolean;
   readonly palette: readonly string[];
   readonly paletteValid: boolean;
   readonly playbackAlignItems: string;
@@ -59,6 +62,7 @@ interface LayoutEvidence {
   readonly plainHeaderWrapped: boolean;
   readonly plainThemeHeight: number;
   readonly plainThemeMinHeight: string;
+  readonly proportionalFontFamily: string;
   readonly proceduralAriaHidden: boolean;
   readonly proceduralCanvasCount: number;
   readonly proceduralCloudCount: number;
@@ -124,6 +128,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const plainNav = plainHeader?.querySelector(".plain-nav");
     const plainTheme = document.querySelector(".design-gallery__plain-theme");
     const plainWordmark = plainHeader?.querySelector(".plain-wordmark");
+    const proportionalSpecimen = document.querySelector('[data-gallery-font="proportional"]');
+    const monoSpecimen = document.querySelector('[data-gallery-font="mono"]');
     const procedural = effect?.querySelector(".hraness-design-procedural-backdrop");
     const horizontalFaderTrack = document.querySelector(
       ".design-gallery__horizontal-fader .hraness-design-fader__track",
@@ -172,6 +178,8 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(plainNav instanceof HTMLElement)
       || !(plainTheme instanceof HTMLElement)
       || !(plainWordmark instanceof HTMLAnchorElement)
+      || !(proportionalSpecimen instanceof HTMLElement)
+      || !(monoSpecimen instanceof HTMLElement)
       || !(procedural instanceof HTMLElement)
       || !(horizontalFaderTrack instanceof HTMLElement)
       || !(horizontalFaderThumb instanceof HTMLElement)
@@ -258,6 +266,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       galleryPaddingRight: Number.parseFloat(galleryStyle.paddingRight),
       heading: heading.textContent?.trim() ?? "",
       headingClipped: heading.scrollWidth > heading.clientWidth + 1,
+      headingFontFamily: getComputedStyle(heading).fontFamily,
       horizontalFaderThumbCentered:
         Math.abs(
           (horizontalFaderThumbBox.top + horizontalFaderThumbBox.bottom) / 2
@@ -301,6 +310,10 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
         && layoutDockContent.dataset.size === "default",
       layoutTopDisplay: getComputedStyle(layoutTop).display,
       mobileTriggerDisplay: getComputedStyle(mobileTrigger).display,
+      monoFontFamily: getComputedStyle(monoSpecimen).fontFamily,
+      nebulaLoaded: Array.from(document.fonts).some(
+        (face) => face.family === "Nebula Sans" && face.status === "loaded",
+      ),
       palette,
       paletteValid: palette.every((value) => value !== "" && CSS.supports("color", value)),
       playbackAlignItems: playbackStyle.alignItems,
@@ -339,6 +352,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       plainHeaderWrapped: Math.abs(plainWordmarkBox.top - plainNavBox.top) > 2,
       plainThemeHeight: plainTheme.getBoundingClientRect().height,
       plainThemeMinHeight: getComputedStyle(plainTheme).minHeight,
+      proportionalFontFamily: getComputedStyle(proportionalSpecimen).fontFamily,
       proceduralAriaHidden: procedural.getAttribute("aria-hidden") === "true",
       proceduralCanvasCount: procedural.querySelectorAll("canvas").length,
       proceduralCloudCount: procedural.querySelectorAll(
@@ -549,6 +563,18 @@ try {
         invariant(state.heading === expectedHeading, `${layout.id}: accessible title changed`);
         invariant(state.copy === expectedCopy, `${layout.id}: explanatory copy changed`);
         invariant(!state.headingClipped, `${layout.id}: title is clipped`);
+        invariant(
+          state.nebulaLoaded
+            && state.proportionalFontFamily.startsWith('"Nebula Sans"')
+            && state.headingFontFamily.startsWith('"Nebula Sans"')
+            && !state.monoFontFamily.includes("Nebula Sans"),
+          `${layout.id}: typography roles are ${JSON.stringify({
+            heading: state.headingFontFamily,
+            mono: state.monoFontFamily,
+            nebulaLoaded: state.nebulaLoaded,
+            proportional: state.proportionalFontFamily,
+          })}`,
+        );
         invariant(state.scrollWidth <= state.clientWidth + 1, `${layout.id}: document overflows horizontally`);
         invariant(
           state.galleryPaddingLeft + 0.5 >= layout.minimumEdgePadding

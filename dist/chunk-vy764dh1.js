@@ -225,19 +225,19 @@ var fontWeights = {
   bold: 700
 };
 var fontFamilies = {
-  heading: "ui-monospace",
+  heading: "Nebula Sans",
   mono: "ui-monospace",
-  text: "ui-sans-serif"
+  text: "Nebula Sans"
 };
 var fontFallbacks = {
   mono: ["SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
   text: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"]
 };
-var webTextStack = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+var webTextStack = '"Nebula Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 var webMonoStack = 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace';
 var typography = {
   fontText: webTextStack,
-  fontHeading: webMonoStack,
+  fontHeading: webTextStack,
   fontMono: webMonoStack,
   fontGeistMono: '"Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace',
   fontSans: webTextStack

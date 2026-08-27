@@ -98,10 +98,17 @@ test("CSS and TypeScript scales stay aligned", () => {
   expect(light.get("--radius-lg")).toBe(rem(radius.lg));
 });
 
-test("the default font roles are system stacks", () => {
+test("default proportional roles use bundled Nebula Sans and mono stays system-owned", () => {
+  expect(css).toContain('@import "./fonts.css";');
   expect(light.get("--font-text")).toBe(typography.fontText);
   expect(light.get("--font-heading")).toBe(typography.fontHeading);
   expect(light.get("--font-mono")).toBe(typography.fontMono);
+  expect(light.get("--font-text")).toStartWith('"Nebula Sans"');
+  expect(light.get("--font-heading")).toBe(light.get("--font-text"));
+  expect(light.get("--font-mono")).toStartWith("ui-monospace");
+  expect(light.get("--ui-font-sans")).toBe("var(--font-text)");
+  expect(light.get("--ui-font-heading")).toBe("var(--font-heading)");
+  expect(light.get("--ui-font-mono")).toBe("var(--font-mono)");
   expect(css).not.toContain("@font-face");
   expect(css).not.toContain("size-adjust");
 });
