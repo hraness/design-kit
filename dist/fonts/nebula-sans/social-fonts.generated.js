@@ -3810,12 +3810,34 @@ var BOLD_BASE64 = [
   "AAEACAABAAb/9gACAAEDXQNmAAAAAQAAAAEACAACAA4ABANnA2gDZwNoAAEABAACABAAHAAqAAEAAAABAAgAAgAMAAMDzAL2AwEA",
   "AQADADMC8wL/AAEAAAABAAgAAQAGAAIAAQABAvMAAQAAAAEACAABAAYAAwABAAIC8wL0AAEAAAABAAgAAQAGAAQAAQABAvQAAA=="
 ].join("");
+var BASE64_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 var cachedFonts;
 function decodeBase64(value) {
-  const binary = globalThis.atob(value);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0;index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index);
+  if (value.length % 4 !== 0)
+    throw new Error("Invalid base64 font payload length.");
+  const padding = value.endsWith("==") ? 2 : value.endsWith("=") ? 1 : 0;
+  const bytes = new Uint8Array(value.length / 4 * 3 - padding);
+  let outputIndex = 0;
+  const sextet = (character) => {
+    const index = BASE64_ALPHABET.indexOf(character);
+    if (index < 0)
+      throw new Error("Invalid base64 font payload character.");
+    return index;
+  };
+  for (let index = 0;index < value.length; index += 4) {
+    const third = value.charAt(index + 2);
+    const fourth = value.charAt(index + 3);
+    const chunk = sextet(value.charAt(index)) << 18 | sextet(value.charAt(index + 1)) << 12 | (third === "=" ? 0 : sextet(third)) << 6 | (fourth === "=" ? 0 : sextet(fourth));
+    bytes[outputIndex] = chunk >>> 16;
+    outputIndex += 1;
+    if (outputIndex < bytes.length) {
+      bytes[outputIndex] = chunk >>> 8 & 255;
+      outputIndex += 1;
+    }
+    if (outputIndex < bytes.length) {
+      bytes[outputIndex] = chunk & 255;
+      outputIndex += 1;
+    }
   }
   return bytes.buffer;
 }

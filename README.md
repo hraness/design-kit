@@ -211,7 +211,7 @@ contract as the React control. Importing the browser module has no side effects.
 Nebula Sans is bundled under the SIL Open Font License and loads through `tokens.css` for ordinary text and headings. Explicit serif treatments remain product-owned, and code and mono roles keep the system monospace stack. Geist Mono remains available as an optional display face:
 
 Content Security Policies must allow same-origin font assets with `font-src 'self'`.
-Bundlers that inline the package assets also require `data:` in that directive.
+Bundlers configured to inline font assets also require `data:` in that directive.
 
 ```css
 @import "@hraness/design-kit/fonts.css";

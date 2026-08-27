@@ -432,8 +432,9 @@ try {
     join(neutralConsumer, "index.ts"),
     [
       'import * as core from "@hraness/design-kit";',
+      'import { nebulaSansSocialFonts } from "@hraness/design-kit/fonts/nebula-sans/social";',
       'import * as syntax from "@hraness/design-kit/syntax-highlighting";',
-      "void [core, syntax];",
+      "void [core, nebulaSansSocialFonts, syntax];",
       "",
     ].join("\n"),
   );
