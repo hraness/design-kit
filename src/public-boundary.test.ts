@@ -89,6 +89,6 @@ test("excluded source and font boundaries stay absent", async () => {
   const restrictedFontDirectory = "mono" + "lisa";
 
   expect(sourceFiles).not.toContain(restrictedEffect);
-  expect(fontDirectories).toEqual(["geist-mono"]);
+  expect(fontDirectories).toEqual(["geist-mono", "nebula-sans"]);
   expect(fontDirectories).not.toContain(restrictedFontDirectory);
 });

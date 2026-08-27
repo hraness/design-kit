@@ -231,9 +231,9 @@ export const fontWeights = {
 } as const;
 
 export const fontFamilies = {
-  heading: "ui-monospace",
+  heading: "Nebula Sans",
   mono: "ui-monospace",
-  text: "ui-sans-serif",
+  text: "Nebula Sans",
 } as const;
 
 export const fontFallbacks = {
@@ -241,12 +241,12 @@ export const fontFallbacks = {
   text: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
 } as const;
 
-const webTextStack = 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+const webTextStack = '"Nebula Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 const webMonoStack = 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace';
 
 export const typography = {
   fontText: webTextStack,
-  fontHeading: webMonoStack,
+  fontHeading: webTextStack,
   fontMono: webMonoStack,
   /** Optional open-source display face shipped by the `fonts.css` entry point. */
   fontGeistMono: '"Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace',

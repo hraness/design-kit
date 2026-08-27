@@ -1,9 +1,10 @@
 <!-- kb:context scopes/repository--cdb4ee2aea69 -->
 # Contents
 
-- `src/index.ts`, `src/*.css`, and component-local `*.stylex.ts` files define framework-neutral tokens, system-font defaults, compiled atomic component presentation, syntax highlighting, charts, effects, site grammar, and the ordered presentation stylesheet.
+- `src/index.ts`, `src/*.css`, and component-local `*.stylex.ts` files define framework-neutral tokens, default typography, compiled atomic component presentation, syntax highlighting, charts, effects, site grammar, and the ordered presentation stylesheet.
 - `src/react/` contains application compositions, appearance persistence, charts, haptics, instruments, decorative effects, optional Jelly paint, and the executable public gallery.
 - `src/fonts/geist-mono/` contains the optional Geist Mono webfont, SIL Open Font License, and provenance.
+- `src/fonts/nebula-sans/` contains the default Nebula Sans proportional webfont family, generated OTF payloads for deterministic social images, SIL Open Font License, and exact upstream provenance.
 - `vendor/jelly-ui/` contains pinned Jelly runtime artifacts and MIT provenance. `vendor/evilcharts/` retains the chart adaptation's MIT provenance.
 - `portfolio-inventory.json` declares the public package, publication, and supported `@hraness/ui` peer edge.
 - `kb/` contains authored repository rationale, maintained synthesis, and durable plans.
@@ -26,7 +27,8 @@
 - Keep every handwritten component rule inside `components.hraness-design-kit.legacy` and compiled recipes inside `components.hraness-design-kit.priority1`, `priority2`, `priority3`, and `priority4`. The complete stylesheet keeps `base` below `components` and freezes the exact UI legacy-to-priority3 order before the design-kit legacy-to-priority4 order. The narrow component entry must preserve the same local order, and package gates must structurally reject bare or unlayered rules.
 - Keep tokens, resets, document grammar, cross-component layout, forced-color/media contracts, and audited vendor fallbacks in the existing global CSS boundary. Verify cross-package ordering against an immutable UI artifact before changing either package's component layers.
 - Keep persistent appearance selection to one icon-menu control at the final/rightmost product-header action. Do not place appearance controls in footers, navigation lists, route-state action rows, or nested gallery content. Fixed-theme, authentication-only, global-error, and non-HTML surfaces may omit the control.
-- Keep default typography on system stacks. Optional open fonts require their exact license, provenance, and integrity evidence.
+- Keep Nebula Sans as the default proportional text and heading family with system fallbacks. Preserve system monospace for explicit mono and code roles. Every vendored open font requires its exact license, provenance, and integrity evidence.
+- Regenerate `social-fonts.generated.ts` only from the vendored official Book and Bold OTF files. Keep its decoded hashes equal to those binaries and its combined payload below the `ImageResponse` bundle ceiling.
 - Preserve native or React Aria semantics as the interactive layer. Jelly may paint a host but never replace the semantic descendant.
 - Keep `PlaybackTransport` as one stable large primary command with an exclusive accessible name, idle-only disablement, pending busy state, play-or-stop callback routing, logical 1.5rem glyph sizing, and its existing caller, id, shortcut, ref, and trailing-control seams. Do not add a public `xstyle` prop without a concrete consumer contract.
 - Keep decorative effects pointer-transparent, reduced-motion aware, forced-color safe, deterministic where seeded, and removable without losing meaningful content.

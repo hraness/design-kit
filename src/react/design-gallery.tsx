@@ -66,6 +66,7 @@ export const designGalleryRecipeCoverage = [
   "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
+  "Nebula Sans typography",
   "procedural effects",
   "production preview notice",
   "syntax highlighting",
@@ -153,6 +154,18 @@ export function DesignSystemGallery({
                 <LinkButton href="#shells">Open shells</LinkButton>
                 <Tag variant="outline">public core</Tag>
               </WrappingRow>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Typography roles</CardTitle>
+              <CardDescription>Nebula Sans for proportional text; mono stays explicit.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="design-gallery__type-specimen">
+                <p data-gallery-font="proportional">More shape, less noise.</p>
+                <code data-gallery-font="mono">const role = "mono";</code>
+              </div>
             </CardContent>
           </Card>
           <JellySurface className="design-gallery__jelly" interaction="press" tone="neutral">

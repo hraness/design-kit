@@ -38,6 +38,26 @@
   gap: var(--space-4);
 }
 
+.design-gallery__type-specimen {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.design-gallery__type-specimen > :where(p, code) {
+  margin: 0;
+}
+
+.design-gallery__type-specimen > p {
+  font-family: var(--font-text);
+  font-size: var(--text-heading);
+  font-weight: var(--font-weight-bold);
+}
+
+.design-gallery__type-specimen > code {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+}
+
 .design-gallery__plain-theme.plain-site.plain-publication {
   display: block;
   min-height: 0;

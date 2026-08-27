@@ -21,6 +21,7 @@ export async function buildPackage(
       conditions: ["production", "browser", "module"],
       entrypoints: [
         join(repository, "src/index.ts"),
+        join(repository, "src/fonts/nebula-sans/social-fonts.generated.ts"),
         join(repository, "src/react/index.ts"),
         join(repository, "src/react/server.ts"),
         join(repository, "src/syntax-highlighting.ts"),

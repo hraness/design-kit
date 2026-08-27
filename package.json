@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -49,6 +49,11 @@
     "./effects.css": "./src/effects.css",
     "./fonts.css": "./src/fonts.css",
     "./fonts/geist-mono/GeistMono[wght].woff2": "./src/fonts/geist-mono/GeistMono[wght].woff2",
+    "./fonts/nebula-sans/*": "./src/fonts/nebula-sans/*",
+    "./fonts/nebula-sans/social": {
+      "types": "./src/fonts/nebula-sans/social-fonts.generated.ts",
+      "import": "./dist/fonts/nebula-sans/social-fonts.generated.js"
+    },
     "./jelly.css": "./src/jelly.css",
     "./plain-publication.css": "./src/plain-publication.css",
     "./plain-site.css": "./src/plain-site.css",
@@ -84,6 +89,7 @@
     "src/effects.css",
     "src/fonts.css",
     "src/fonts/geist-mono",
+    "src/fonts/nebula-sans",
     "src/index.ts",
     "src/jelly.css",
     "src/plain-publication.css",
@@ -139,6 +145,7 @@
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
+    "generate:nebula-social-fonts": "bun run ./scripts/generate-nebula-social-fonts.ts",
     "check:stylex-artifacts": "bun run ./scripts/check-stylex-artifacts.ts",
     "check:stylex-determinism": "bun run ./scripts/check-stylex-determinism.ts",
     "check:publication-ready": "bun run ./scripts/package-smoke.ts --publication",
@@ -177,7 +184,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@hraness/ui": "github:hraness/ui#6a4b0bd474262114356ab79c4ca10b76fe22c9cf",
+    "@hraness/ui": "github:hraness/ui#v0.4.7",
     "@stylexjs/unplugin": "0.19.0",
     "@types/bun": "^1.3.14",
     "@types/react": "^19.2.14",

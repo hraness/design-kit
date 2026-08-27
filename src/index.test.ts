@@ -164,18 +164,17 @@ test("consumer defaults preserve readable type and touch targets", () => {
   expect(fontWeights.bold).toBeGreaterThan(fontWeights.medium);
 });
 
-test("shared typography uses system defaults and keeps Geist Mono opt-in", () => {
+test("shared typography defaults to Nebula Sans and preserves explicit mono roles", () => {
   expect(fontFamilies).toEqual({
-    heading: "ui-monospace",
+    heading: "Nebula Sans",
     mono: "ui-monospace",
-    text: "ui-sans-serif",
+    text: "Nebula Sans",
   });
   expect(fontFallbacks.text).toContain("system-ui");
   expect(fontFallbacks.mono).toContain("SFMono-Regular");
-  expect(typography.fontText).toStartWith(fontFamilies.text);
+  expect(typography.fontText).toStartWith(`"${fontFamilies.text}"`);
   expect(typography.fontText).toContain(fontFallbacks.text[0]);
-  expect(typography.fontHeading).toStartWith(fontFamilies.heading);
-  expect(typography.fontHeading).toContain("ui-monospace");
+  expect(typography.fontHeading).toBe(typography.fontText);
   expect(typography.fontMono).toStartWith(fontFamilies.mono);
   expect(typography.fontMono).toContain(`"${fontFallbacks.mono[0]}"`);
   expect(typography.fontGeistMono).toStartWith('"Geist Mono"');

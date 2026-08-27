@@ -53,7 +53,7 @@ const contentSecurityPolicy = [
   "style-src-attr 'unsafe-inline'",
   "child-src 'none'",
   "connect-src 'none'",
-  "font-src 'none'",
+  "font-src 'self' data:",
   "frame-src 'none'",
   "img-src 'none'",
   "manifest-src 'none'",
@@ -851,7 +851,7 @@ try {
   );
   invariant(noticeEvidence.color === "rgb(36, 20, 0)", `The notice color is ${noticeEvidence.color}.`);
   invariant(
-    noticeEvidence.fontFamily.startsWith("ui-sans-serif, system-ui, -apple-system, ")
+    noticeEvidence.fontFamily.startsWith('"Nebula Sans", ui-sans-serif, system-ui, -apple-system, ')
       && noticeEvidence.fontFamily.includes('"Segoe UI"')
       && noticeEvidence.fontFamily.endsWith(", sans-serif"),
     `The notice font-family is ${noticeEvidence.fontFamily}.`,
@@ -1001,9 +1001,12 @@ try {
     await page.locator(`style#${reactAriaPressableStyleId}`).count() === 0,
     "React Aria injected a duplicate permanent pressable style.",
   );
+  const securityPolicyViolations = await page.evaluate(
+    () => window.__hranessSecurityDeliveryViolations ?? [],
+  );
   invariant(
-    (await page.evaluate(() => window.__hranessSecurityDeliveryViolations ?? [])).length === 0,
-    "The page observed a CSP violation.",
+    securityPolicyViolations.length === 0,
+    `The page observed CSP violations: ${JSON.stringify(securityPolicyViolations)}.`,
   );
 
   const trigger = page.locator("#security-canary-dialog-trigger");
