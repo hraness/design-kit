@@ -17,7 +17,7 @@ export const foilCardSurfaceStyles = stylex.create({
       default: "var(--card, var(--surface, #111217))",
       "@media (forced-colors: active)": "Canvas",
     },
-    borderRadius: "var(--radius-lg, 0.75rem)",
+    borderRadius: "var(--foil-card-radius, var(--radius-lg, 0.75rem))",
     boxShadow: {
       default:
         "0 1.2rem 3.6rem rgb(4 6 12 / 0.24), inset 0 1px 0 rgb(255 255 255 / 0.28)",
@@ -46,11 +46,12 @@ export const foilCardSurfaceStyles = stylex.create({
     },
     transitionProperty: "transform, box-shadow",
     transitionTimingFunction: "cubic-bezier(0.2, 0.75, 0.25, 1)",
-    willChange: {
-      default: "auto",
-      "@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)":
-        "transform",
-    },
+    willChange: "auto",
+  },
+  active: {
+    boxShadow:
+      "0 1.75rem 5rem rgb(4 6 12 / 0.32), 0 0 2.4rem rgb(112 177 255 / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.34)",
+    willChange: "transform",
   },
   static: {
     transform: "none",
@@ -82,14 +83,14 @@ export const foilCardSurfaceStyles = stylex.create({
   spectrumLayer: {
     backgroundPosition: "var(--foil-light-x, 50%) var(--foil-light-y, 50%)",
     backgroundSize: "180% 180%",
-    mixBlendMode: "color-dodge",
+    mixBlendMode: "screen",
     transitionDuration: {
       default: "90ms",
       "@media (prefers-reduced-motion: reduce)": "0ms",
     },
     transitionProperty: "background-position, opacity",
     transitionTimingFunction: "linear",
-    zIndex: 3,
+    zIndex: 1,
   },
   sheenLayer: {
     backgroundImage:
@@ -101,14 +102,22 @@ export const foilCardSurfaceStyles = stylex.create({
     },
     transitionProperty: "background-image, opacity",
     transitionTimingFunction: "linear",
-    zIndex: 4,
+    zIndex: 1,
   },
   textureLayer: {
     backgroundImage:
       "repeating-linear-gradient(calc(var(--foil-spectrum-angle, 0deg) + 24deg), transparent 0 3px, rgb(255 255 255 / 0.42) 3px 4px, transparent 4px 9px)",
     backgroundSize: "18px 18px",
     mixBlendMode: "soft-light",
-    zIndex: 5,
+    backgroundPosition: "var(--foil-light-x, 50%) var(--foil-light-y, 50%)",
+    zIndex: 1,
+  },
+  ornamentLayer: {
+    backgroundRepeat: "no-repeat",
+    borderRadius: "inherit",
+    filter: "drop-shadow(0 0 0.35rem rgb(255 255 255 / 0.22))",
+    mixBlendMode: "screen",
+    zIndex: 3,
   },
 
   prismBase: {
@@ -198,74 +207,120 @@ export const foilCardSurfaceStyles = stylex.create({
 
   baseSubtle: {
     opacity: {
-      default: 0.72,
+      default: "var(--foil-base-opacity, 0.34)",
       "@media (prefers-contrast: more)": 0.14,
     },
   },
   baseStandard: {
     opacity: {
-      default: 0.86,
+      default: "var(--foil-base-opacity, 0.44)",
       "@media (prefers-contrast: more)": 0.18,
     },
   },
   baseVivid: {
     opacity: {
-      default: 1,
+      default: "var(--foil-base-opacity, 0.56)",
       "@media (prefers-contrast: more)": 0.22,
     },
   },
   spectrumSubtle: {
     opacity: {
-      default: 0.26,
+      default: "var(--foil-spectrum-opacity, 0.08)",
       "@media (prefers-contrast: more)": 0.12,
     },
   },
   spectrumStandard: {
     opacity: {
-      default: 0.46,
+      default: "var(--foil-spectrum-opacity, 0.12)",
       "@media (prefers-contrast: more)": 0.18,
     },
   },
   spectrumVivid: {
     opacity: {
-      default: 0.66,
+      default: "var(--foil-spectrum-opacity, 0.18)",
       "@media (prefers-contrast: more)": 0.24,
     },
   },
   sheenSubtle: {
     opacity: {
-      default: 0.22,
+      default: "var(--foil-sheen-opacity, 0.03)",
       "@media (prefers-contrast: more)": 0.1,
     },
   },
   sheenStandard: {
     opacity: {
-      default: 0.38,
+      default: "var(--foil-sheen-opacity, 0.04)",
       "@media (prefers-contrast: more)": 0.14,
     },
   },
   sheenVivid: {
     opacity: {
-      default: 0.56,
+      default: "var(--foil-sheen-opacity, 0.06)",
       "@media (prefers-contrast: more)": 0.2,
     },
   },
   textureSubtle: {
     opacity: {
-      default: 0.1,
+      default: "var(--foil-texture-opacity, 0.04)",
       "@media (prefers-contrast: more)": 0.04,
     },
   },
   textureStandard: {
     opacity: {
-      default: 0.17,
+      default: "var(--foil-texture-opacity, 0.06)",
       "@media (prefers-contrast: more)": 0.05,
     },
   },
   textureVivid: {
     opacity: {
-      default: 0.25,
+      default: "var(--foil-texture-opacity, 0.08)",
       "@media (prefers-contrast: more)": 0.06,
     },
+  },
+  ornamentSubtle: {
+    opacity: "var(--foil-ornament-opacity, 0.14)",
+  },
+  ornamentStandard: {
+    opacity: "var(--foil-ornament-opacity, 0.2)",
+  },
+  ornamentVivid: {
+    opacity: "var(--foil-ornament-opacity, 0.26)",
+  },
+  ornamentNone: {
+    display: "none",
+  },
+  ornamentCorners: {
+    backgroundImage:
+      "linear-gradient(90deg, transparent, rgb(255 255 255 / 0.88)), linear-gradient(180deg, transparent, rgb(255 255 255 / 0.88)), linear-gradient(270deg, transparent, rgb(255 255 255 / 0.88)), linear-gradient(180deg, rgb(255 255 255 / 0.88), transparent), linear-gradient(90deg, rgb(255 255 255 / 0.88), transparent), linear-gradient(0deg, rgb(255 255 255 / 0.88), transparent), linear-gradient(270deg, rgb(255 255 255 / 0.88), transparent), linear-gradient(0deg, transparent, rgb(255 255 255 / 0.88))",
+    backgroundPosition:
+      "left 0.8rem top 0.8rem, left 0.8rem top 0.8rem, right 0.8rem top 0.8rem, right 0.8rem top 0.8rem, left 0.8rem bottom 0.8rem, left 0.8rem bottom 0.8rem, right 0.8rem bottom 0.8rem, right 0.8rem bottom 0.8rem",
+    backgroundSize:
+      "28% 1px, 1px 20%, 28% 1px, 1px 20%, 28% 1px, 1px 20%, 28% 1px, 1px 20%",
+  },
+  ornamentRails: {
+    backgroundImage:
+      "repeating-linear-gradient(90deg, rgb(255 255 255 / 0.84) 0 0.45rem, transparent 0.45rem 0.78rem), repeating-linear-gradient(90deg, rgb(255 255 255 / 0.84) 0 0.45rem, transparent 0.45rem 0.78rem), repeating-linear-gradient(0deg, rgb(255 255 255 / 0.72) 0 0.45rem, transparent 0.45rem 0.8rem), repeating-linear-gradient(0deg, rgb(255 255 255 / 0.72) 0 0.45rem, transparent 0.45rem 0.8rem)",
+    backgroundPosition: "left 1rem top 0.65rem, left 1rem bottom 0.65rem, left 0.65rem top 1rem, right 0.65rem top 1rem",
+    backgroundSize: "calc(100% - 2rem) 1px, calc(100% - 2rem) 1px, 1px calc(100% - 2rem), 1px calc(100% - 2rem)",
+  },
+  ornamentCircuit: {
+    backgroundImage:
+      "radial-gradient(circle, rgb(255 255 255 / 0.96) 0 1px, transparent 1.5px), linear-gradient(90deg, rgb(255 255 255 / 0.78), transparent), radial-gradient(circle, rgb(255 255 255 / 0.96) 0 1px, transparent 1.5px), linear-gradient(270deg, rgb(255 255 255 / 0.78), transparent), radial-gradient(circle, rgb(255 255 255 / 0.86) 0 1px, transparent 1.5px), linear-gradient(0deg, rgb(255 255 255 / 0.68), transparent), radial-gradient(circle, rgb(255 255 255 / 0.86) 0 1px, transparent 1.5px), linear-gradient(180deg, rgb(255 255 255 / 0.68), transparent)",
+    backgroundPosition:
+      "left 0.7rem top 1.4rem, left 0.75rem top 1.45rem, right 0.7rem bottom 1.4rem, right 0.75rem bottom 1.45rem, left 1.35rem bottom 0.7rem, left 1.4rem bottom 0.75rem, right 1.35rem top 0.7rem, right 1.4rem top 0.75rem",
+    backgroundSize:
+      "5px 5px, 34% 1px, 5px 5px, 34% 1px, 5px 5px, 1px 26%, 5px 5px, 1px 26%",
+  },
+  ornamentRadial: {
+    backgroundImage:
+      "repeating-radial-gradient(circle at 0 0, transparent 0 0.38rem, rgb(255 255 255 / 0.7) 0.42rem 0.46rem, transparent 0.5rem 0.84rem), repeating-radial-gradient(circle at 100% 0, transparent 0 0.38rem, rgb(255 255 255 / 0.7) 0.42rem 0.46rem, transparent 0.5rem 0.84rem), repeating-radial-gradient(circle at 0 100%, transparent 0 0.38rem, rgb(255 255 255 / 0.7) 0.42rem 0.46rem, transparent 0.5rem 0.84rem), repeating-radial-gradient(circle at 100% 100%, transparent 0 0.38rem, rgb(255 255 255 / 0.7) 0.42rem 0.46rem, transparent 0.5rem 0.84rem)",
+    backgroundPosition: "left top, right top, left bottom, right bottom",
+    backgroundSize: "30% 24%, 30% 24%, 30% 24%, 30% 24%",
+  },
+  ornamentFacets: {
+    backgroundImage:
+      "conic-gradient(from 270deg at 0 0, transparent 0 24deg, rgb(255 255 255 / 0.82) 25deg 42deg, transparent 43deg), conic-gradient(from 0deg at 100% 0, transparent 0 24deg, rgb(255 255 255 / 0.82) 25deg 42deg, transparent 43deg), conic-gradient(from 180deg at 0 100%, transparent 0 24deg, rgb(255 255 255 / 0.82) 25deg 42deg, transparent 43deg), conic-gradient(from 90deg at 100% 100%, transparent 0 24deg, rgb(255 255 255 / 0.82) 25deg 42deg, transparent 43deg)",
+    backgroundPosition: "left top, right top, left bottom, right bottom",
+    backgroundSize: "34% 24%, 34% 24%, 34% 24%, 34% 24%",
   },
 });

@@ -24,7 +24,7 @@ import { AppShell } from "./app-shell.js";
 import { AuroraDotsBackground } from "./aurora-dots-background.js";
 import { BarListChart, RangePlotChart } from "./charts.js";
 import { Fader } from "./fader.js";
-import { FoilCardSurface } from "./foil-card-surface.js";
+import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
 import { JellySurface } from "./jelly-surface.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
@@ -87,6 +87,14 @@ const barData = [
 const rangeData = [
   { id: "north", label: "North", minimum: 24, median: 51, maximum: 78 },
   { id: "south", label: "South", minimum: 38, median: 64, maximum: 82 },
+] as const;
+
+const foilDeckExamples = [
+  { label: "Corner frame", ornament: "corners", preset: "prism" },
+  { label: "Rail frame", ornament: "rails", preset: "etched" },
+  { label: "Circuit frame", ornament: "circuit", preset: "fast" },
+  { label: "Radial frame", ornament: "radial", preset: "aurora" },
+  { label: "Facet frame", ornament: "facets", preset: "max" },
 ] as const;
 
 /** Product-neutral executable reference for the public composition layer. */
@@ -275,21 +283,30 @@ export function DesignSystemGallery({
 
       <section className="design-gallery__section" id="effects">
         <h2>Decorative effects</h2>
-        <FoilCardSurface
-          className="design-gallery__foil-example"
-          intensity="standard"
-          preset="prism"
-          renderMode="interactive"
-          seed="public-gallery-foil"
+        <FoilCardDeck
+          aria-label="Delegated foil ornament examples"
+          className="design-gallery__foil-deck"
         >
-          <article className="design-gallery__foil-card">
-            <Tag variant="outline">Seeded surface</Tag>
-            <div>
-              <h3>Semantic card content</h3>
-              <p>Pointer paint decorates this ordinary article without replacing it.</p>
-            </div>
-          </article>
-        </FoilCardSurface>
+          {foilDeckExamples.map((example) => (
+            <FoilCardSurface
+              className="design-gallery__foil-example"
+              intensity="standard"
+              key={example.ornament}
+              ornament={example.ornament}
+              preset={example.preset}
+              renderMode="interactive"
+              seed={`public-gallery-foil-${example.ornament}`}
+            >
+              <article className="design-gallery__foil-card">
+                <Tag variant="outline">{example.label}</Tag>
+                <div>
+                  <h3>Semantic card content</h3>
+                  <p>One deck controller decorates ordinary articles.</p>
+                </div>
+              </article>
+            </FoilCardSurface>
+          ))}
+        </FoilCardDeck>
         <div className="design-gallery__effect">
           <AuroraDotsBackground />
           <ProceduralBackdrop seed="public-gallery" variant="composite" />

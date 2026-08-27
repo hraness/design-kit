@@ -7,6 +7,8 @@ export interface FoilCardPose {
   readonly rotateX: number;
   /** Rotation around the vertical axis, in degrees. */
   readonly rotateY: number;
+  /** Direction of the diffracted spectrum, in degrees. */
+  readonly spectrumAngle?: number;
 }
 
 export interface FoilCardSeedPose extends FoilCardPose {
@@ -85,11 +87,14 @@ export function createFoilCardPointerPose(
 ): FoilCardPose {
   const x = finiteUnit(normalizedX, "Foil card pointer x");
   const y = finiteUnit(normalizedY, "Foil card pointer y");
+  const rawSpectrumAngle = Math.atan2(y - 0.5, x - 0.5) * 180 / Math.PI + 90;
+  const spectrumAngle = (rawSpectrumAngle + 360) % 360;
 
   return {
     highlightX: rounded(x * 100),
     highlightY: rounded(y * 100),
     rotateX: rounded((0.5 - y) * 10),
     rotateY: rounded((x - 0.5) * 12),
+    spectrumAngle: rounded(spectrumAngle),
   };
 }

@@ -1105,7 +1105,7 @@ function Fader({
 // src/react/foil-card-surface.tsx
 import * as stylex from "@stylexjs/stylex";
 import { cn as cn7 } from "@hraness/ui";
-import { useEffect as useEffect3, useRef as useRef2 } from "react";
+import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
 
 // src/react/foil-card-math.ts
 function normalizedSeed(seed) {
@@ -1158,11 +1158,14 @@ function finiteUnit(value, label) {
 function createFoilCardPointerPose(normalizedX, normalizedY) {
   const x = finiteUnit(normalizedX, "Foil card pointer x");
   const y = finiteUnit(normalizedY, "Foil card pointer y");
+  const rawSpectrumAngle = Math.atan2(y - 0.5, x - 0.5) * 180 / Math.PI + 90;
+  const spectrumAngle = (rawSpectrumAngle + 360) % 360;
   return {
     highlightX: rounded(x * 100),
     highlightY: rounded(y * 100),
     rotateX: rounded((0.5 - y) * 10),
-    rotateY: rounded((x - 0.5) * 12)
+    rotateY: rounded((x - 0.5) * 12),
+    spectrumAngle: rounded(spectrumAngle)
   };
 }
 
@@ -1170,7 +1173,7 @@ function createFoilCardPointerPose(normalizedX, normalizedY) {
 var foilCardSurfaceStyles = {
   base: {
     kWkggS: "x1scxome x9yvj25",
-    kaIpWk: "xvy3trx",
+    kaIpWk: "x1ec2q3q",
     kGVxlE: "xt1wfgu xwaqzdf",
     kMwMTN: "x1gu5z8g",
     ktR8K2: "x16qrkmw",
@@ -1190,7 +1193,12 @@ var foilCardSurfaceStyles = {
     kIyJzY: "x9dyr19 x12w9bfk",
     k1ekBW: "x16n73rl",
     kAMwcw: "xvxnene",
-    k6sLGO: "x1dwv3re xe5ou9b",
+    k6sLGO: "x1dwv3re",
+    $$css: true
+  },
+  active: {
+    kGVxlE: "xl1q07f",
+    k6sLGO: "x1so62im",
     $$css: true
   },
   static: {
@@ -1227,11 +1235,11 @@ var foilCardSurfaceStyles = {
   spectrumLayer: {
     k1YJky: "xw2ojrw",
     kgSjnq: "x57svv3",
-    k9M9Na: "x6ossdz",
+    k9M9Na: "x19mdvtv",
     kIyJzY: "x6bc4kz x12w9bfk",
     k1ekBW: "x6c7wse",
     kAMwcw: "xcj1dhv",
-    kY2c9j: "xzkaem6",
+    kY2c9j: "x1vjfegm",
     $$css: true
   },
   sheenLayer: {
@@ -1240,14 +1248,23 @@ var foilCardSurfaceStyles = {
     kIyJzY: "x6bc4kz x12w9bfk",
     k1ekBW: "x10lvbrj",
     kAMwcw: "xcj1dhv",
-    kY2c9j: "xoegz02",
+    kY2c9j: "x1vjfegm",
     $$css: true
   },
   textureLayer: {
     kKwaWg: "x1mkn4gm",
     kgSjnq: "xrji9p8",
     k9M9Na: "x1poe65g",
-    kY2c9j: "x1u8a7rm",
+    k1YJky: "xw2ojrw",
+    kY2c9j: "x1vjfegm",
+    $$css: true
+  },
+  ornamentLayer: {
+    kz484i: "xiy17q3",
+    kaIpWk: "x1pjcqnp",
+    ku685b: "xldhu1s",
+    k9M9Na: "x19mdvtv",
+    kY2c9j: "xzkaem6",
     $$css: true
   },
   prismBase: {
@@ -1331,51 +1348,97 @@ var foilCardSurfaceStyles = {
     $$css: true
   },
   baseSubtle: {
-    kSiTet: "xf9vgkq xb083x5",
+    kSiTet: "xi7uqbu xb083x5",
     $$css: true
   },
   baseStandard: {
-    kSiTet: "x1qnzyi6 x1szd8p8",
+    kSiTet: "x10bp2pq x1szd8p8",
     $$css: true
   },
   baseVivid: {
-    kSiTet: "x1hc1fzr xbp4rgc",
+    kSiTet: "x16x8d5k xbp4rgc",
     $$css: true
   },
   spectrumSubtle: {
-    kSiTet: "x1gstqnd xfrgnfc",
+    kSiTet: "x1pnhqfb xfrgnfc",
     $$css: true
   },
   spectrumStandard: {
-    kSiTet: "x1wst0fl x1szd8p8",
+    kSiTet: "x15nu2d2 x1szd8p8",
     $$css: true
   },
   spectrumVivid: {
-    kSiTet: "x1i5mnmd xu6icd1",
+    kSiTet: "xta48a9 xu6icd1",
     $$css: true
   },
   sheenSubtle: {
-    kSiTet: "x1vx7kgm x194v72f",
+    kSiTet: "xuhx63e x194v72f",
     $$css: true
   },
   sheenStandard: {
-    kSiTet: "x5dmra7 xb083x5",
+    kSiTet: "xa69gww xb083x5",
     $$css: true
   },
   sheenVivid: {
-    kSiTet: "x1ktcbtz x1fp9yqv",
+    kSiTet: "xkxdd59 x1fp9yqv",
     $$css: true
   },
   textureSubtle: {
-    kSiTet: "x1ptxcow x17zl6lg",
+    kSiTet: "x1ytbps3 x17zl6lg",
     $$css: true
   },
   textureStandard: {
-    kSiTet: "x17odgkw xfpeqwo",
+    kSiTet: "xjkwg1t xfpeqwo",
     $$css: true
   },
   textureVivid: {
-    kSiTet: "xvpkmg4 x2132ul",
+    kSiTet: "xcwlixh x2132ul",
+    $$css: true
+  },
+  ornamentSubtle: {
+    kSiTet: "x16xcxh8",
+    $$css: true
+  },
+  ornamentStandard: {
+    kSiTet: "x10b34n9",
+    $$css: true
+  },
+  ornamentVivid: {
+    kSiTet: "x1m2aqx4",
+    $$css: true
+  },
+  ornamentNone: {
+    k1xSpc: "x1s85apg",
+    $$css: true
+  },
+  ornamentCorners: {
+    kKwaWg: "xk14mg1",
+    k1YJky: "xhsufdf",
+    kgSjnq: "x160majy",
+    $$css: true
+  },
+  ornamentRails: {
+    kKwaWg: "x10gea7a",
+    k1YJky: "x8owtp4",
+    kgSjnq: "xzvt7yr",
+    $$css: true
+  },
+  ornamentCircuit: {
+    kKwaWg: "x6wo6xk",
+    k1YJky: "x9ylygx",
+    kgSjnq: "xxeqw4r",
+    $$css: true
+  },
+  ornamentRadial: {
+    kKwaWg: "xn77bxw",
+    k1YJky: "x1akr6q6",
+    kgSjnq: "x42se0v",
+    $$css: true
+  },
+  ornamentFacets: {
+    kKwaWg: "x14ln0l",
+    k1YJky: "x1akr6q6",
+    kgSjnq: "x1kza8ck",
     $$css: true
   }
 };
@@ -1385,6 +1448,8 @@ import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
 var foilCardPresets = ["prism", "aurora", "etched", "gold", "fast", "max"];
 var foilCardIntensities = ["subtle", "standard", "vivid"];
 var foilCardRenderModes = ["interactive", "static"];
+var foilCardOrnaments = ["none", "corners", "rails", "circuit", "radial", "facets"];
+var FoilDeckContext = createContext2(null);
 var presetStyles = {
   aurora: {
     base: foilCardSurfaceStyles.auroraBase,
@@ -1422,29 +1487,96 @@ var intensityStyles = {
     base: foilCardSurfaceStyles.baseSubtle,
     sheen: foilCardSurfaceStyles.sheenSubtle,
     spectrum: foilCardSurfaceStyles.spectrumSubtle,
-    texture: foilCardSurfaceStyles.textureSubtle
+    texture: foilCardSurfaceStyles.textureSubtle,
+    ornament: foilCardSurfaceStyles.ornamentSubtle
   },
   standard: {
     base: foilCardSurfaceStyles.baseStandard,
     sheen: foilCardSurfaceStyles.sheenStandard,
     spectrum: foilCardSurfaceStyles.spectrumStandard,
-    texture: foilCardSurfaceStyles.textureStandard
+    texture: foilCardSurfaceStyles.textureStandard,
+    ornament: foilCardSurfaceStyles.ornamentStandard
   },
   vivid: {
     base: foilCardSurfaceStyles.baseVivid,
     sheen: foilCardSurfaceStyles.sheenVivid,
     spectrum: foilCardSurfaceStyles.spectrumVivid,
-    texture: foilCardSurfaceStyles.textureVivid
+    texture: foilCardSurfaceStyles.textureVivid,
+    ornament: foilCardSurfaceStyles.ornamentVivid
   }
 };
-function poseStyle(seed) {
-  const pose = createFoilCardSeedPose(seed);
+var ornamentStyles = {
+  circuit: foilCardSurfaceStyles.ornamentCircuit,
+  corners: foilCardSurfaceStyles.ornamentCorners,
+  facets: foilCardSurfaceStyles.ornamentFacets,
+  none: foilCardSurfaceStyles.ornamentNone,
+  radial: foilCardSurfaceStyles.ornamentRadial,
+  rails: foilCardSurfaceStyles.ornamentRails
+};
+var foilOpacityByIntensity = {
+  subtle: {
+    active: {
+      base: 0.52,
+      ornament: 0.46,
+      sheen: 0.22,
+      spectrum: 0.28,
+      texture: 0.1
+    },
+    idle: {
+      base: 0.34,
+      ornament: 0.14,
+      sheen: 0.03,
+      spectrum: 0.08,
+      texture: 0.04
+    }
+  },
+  standard: {
+    active: {
+      base: 0.68,
+      ornament: 0.66,
+      sheen: 0.35,
+      spectrum: 0.42,
+      texture: 0.16
+    },
+    idle: {
+      base: 0.44,
+      ornament: 0.2,
+      sheen: 0.04,
+      spectrum: 0.12,
+      texture: 0.06
+    }
+  },
+  vivid: {
+    active: {
+      base: 0.84,
+      ornament: 0.88,
+      sheen: 0.52,
+      spectrum: 0.6,
+      texture: 0.24
+    },
+    idle: {
+      base: 0.56,
+      ornament: 0.26,
+      sheen: 0.06,
+      spectrum: 0.18,
+      texture: 0.08
+    }
+  }
+};
+function poseStyle(pose, intensity) {
+  const opacity = foilOpacityByIntensity[intensity].idle;
   return {
+    "--foil-activity": "0",
+    "--foil-base-opacity": String(opacity.base),
     "--foil-light-x": `${String(pose.highlightX)}%`,
     "--foil-light-y": `${String(pose.highlightY)}%`,
     "--foil-rotate-x": `${String(pose.rotateX)}deg`,
     "--foil-rotate-y": `${String(pose.rotateY)}deg`,
-    "--foil-spectrum-angle": `${String(pose.spectrumAngle)}deg`
+    "--foil-ornament-opacity": String(opacity.ornament),
+    "--foil-sheen-opacity": String(opacity.sheen),
+    "--foil-spectrum-opacity": String(opacity.spectrum),
+    "--foil-spectrum-angle": `${String(pose.spectrumAngle ?? 0)}deg`,
+    "--foil-texture-opacity": String(opacity.texture)
   };
 }
 function applyPose(element, pose) {
@@ -1452,6 +1584,284 @@ function applyPose(element, pose) {
   element.style.setProperty("--foil-light-y", `${String(pose.highlightY)}%`);
   element.style.setProperty("--foil-rotate-x", `${String(pose.rotateX)}deg`);
   element.style.setProperty("--foil-rotate-y", `${String(pose.rotateY)}deg`);
+  if (pose.spectrumAngle !== undefined) {
+    element.style.setProperty("--foil-spectrum-angle", `${String(pose.spectrumAngle)}deg`);
+  }
+}
+function focusPose(seedPose) {
+  const pose = {
+    highlightX: seedPose.highlightX,
+    highlightY: seedPose.highlightY,
+    rotateX: 0,
+    rotateY: 0
+  };
+  return seedPose.spectrumAngle === undefined ? pose : {
+    ...pose,
+    spectrumAngle: seedPose.spectrumAngle
+  };
+}
+function setActive(element, activeClassName, active) {
+  const intensity = element.getAttribute("data-foil-intensity");
+  const selectedIntensity = intensity !== null && intensity in foilOpacityByIntensity ? intensity : "standard";
+  const opacity = foilOpacityByIntensity[selectedIntensity][active ? "active" : "idle"];
+  element.style.setProperty("--foil-activity", active ? "1" : "0");
+  element.style.setProperty("--foil-base-opacity", String(opacity.base));
+  element.style.setProperty("--foil-spectrum-opacity", String(opacity.spectrum));
+  element.style.setProperty("--foil-sheen-opacity", String(opacity.sheen));
+  element.style.setProperty("--foil-texture-opacity", String(opacity.texture));
+  element.style.setProperty("--foil-ornament-opacity", String(opacity.ornament));
+  if (active)
+    element.setAttribute("data-foil-active", "true");
+  else
+    element.removeAttribute("data-foil-active");
+  if (activeClassName !== undefined) {
+    element.classList.toggle(activeClassName, active);
+  }
+}
+function motionIsEnabled(finePointer, reducedMotion, forcedColors) {
+  return finePointer.matches && !reducedMotion.matches && !forcedColors.matches;
+}
+function addMediaListener(media, listener) {
+  if (typeof media.addEventListener !== "function")
+    return () => {
+      return;
+    };
+  media.addEventListener("change", listener);
+  return () => media.removeEventListener("change", listener);
+}
+function FoilCardDeck({
+  children,
+  className,
+  ...props2
+}) {
+  const rootRef = useRef2(null);
+  const registrations = useRef2(new Map);
+  const activeElement = useRef2(null);
+  const focusedElement = useRef2(null);
+  const pointerElement = useRef2(null);
+  const activeBounds = useRef2(null);
+  const pendingInteraction = useRef2(null);
+  const frame = useRef2(null);
+  const resizeObserver = useRef2(null);
+  const deactivate = useCallback((element) => {
+    const registration = registrations.current.get(element);
+    if (registration !== undefined) {
+      applyPose(element, registration.seedPose);
+      setActive(element, registration.activeClassName, false);
+    }
+    if (activeElement.current === element) {
+      resizeObserver.current?.unobserve(element);
+      activeElement.current = null;
+      activeBounds.current = null;
+    }
+  }, []);
+  const register = useCallback((element, registration) => {
+    registrations.current.set(element, registration);
+    return () => {
+      if (pendingInteraction.current?.element === element) {
+        pendingInteraction.current = null;
+      }
+      if (focusedElement.current === element)
+        focusedElement.current = null;
+      if (pointerElement.current === element)
+        pointerElement.current = null;
+      deactivate(element);
+      registrations.current.delete(element);
+    };
+  }, [deactivate]);
+  const contextValue = useMemo2(() => ({
+    register
+  }), [register]);
+  useEffect3(() => {
+    const root = rootRef.current;
+    if (root === null || typeof window.matchMedia !== "function" || typeof window.requestAnimationFrame !== "function" || typeof window.cancelAnimationFrame !== "function") {
+      return;
+    }
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const forcedColors = window.matchMedia("(forced-colors: active)");
+    if (typeof window.ResizeObserver === "function") {
+      resizeObserver.current = new window.ResizeObserver(() => {
+        activeBounds.current = null;
+      });
+    }
+    const deactivateCurrent = () => {
+      const current = activeElement.current;
+      if (current !== null)
+        deactivate(current);
+    };
+    const activate = (element) => {
+      if (activeElement.current !== element) {
+        deactivateCurrent();
+        activeElement.current = element;
+        activeBounds.current = null;
+        resizeObserver.current?.observe(element);
+      }
+      const registration = registrations.current.get(element);
+      if (registration !== undefined) {
+        setActive(element, registration.activeClassName, true);
+      }
+    };
+    const activateFocus = (element) => {
+      const registration = registrations.current.get(element);
+      if (registration === undefined)
+        return;
+      activate(element);
+      activeBounds.current = null;
+      applyPose(element, focusPose(registration.seedPose));
+    };
+    const restoreFocus = () => {
+      const focused = focusedElement.current;
+      if (focused !== null && registrations.current.has(focused)) {
+        activateFocus(focused);
+      }
+    };
+    const renderPendingInteraction = () => {
+      frame.current = null;
+      const interaction = pendingInteraction.current;
+      pendingInteraction.current = null;
+      if (interaction === null)
+        return;
+      if (interaction.kind === "reset") {
+        deactivate(interaction.element);
+        restoreFocus();
+        return;
+      }
+      let bounds = activeBounds.current;
+      if (bounds === null) {
+        bounds = interaction.element.getBoundingClientRect();
+        activeBounds.current = bounds;
+      }
+      if (bounds.width <= 0 || bounds.height <= 0)
+        return;
+      applyPose(interaction.element, createFoilCardPointerPose((interaction.clientX - bounds.left) / bounds.width, (interaction.clientY - bounds.top) / bounds.height));
+    };
+    const schedule = (interaction) => {
+      pendingInteraction.current = interaction;
+      if (frame.current === null) {
+        frame.current = window.requestAnimationFrame(renderPendingInteraction);
+      }
+    };
+    const findRegisteredSurface = (target) => {
+      if (!(target instanceof Element))
+        return null;
+      const surface = target.closest(".hraness-design-foil-card-surface[data-foil-controller='deck']");
+      return surface !== null && root.contains(surface) && registrations.current.has(surface) ? surface : null;
+    };
+    const handlePointerMove = (event) => {
+      if (event.pointerType !== "mouse" || !motionIsEnabled(finePointer, reducedMotion, forcedColors))
+        return;
+      const element = findRegisteredSurface(event.target);
+      if (element === null) {
+        pointerElement.current = null;
+        const current = activeElement.current;
+        if (current !== null)
+          schedule({
+            element: current,
+            kind: "reset"
+          });
+        return;
+      }
+      pointerElement.current = element;
+      activate(element);
+      schedule({
+        clientX: event.clientX,
+        clientY: event.clientY,
+        element,
+        kind: "pointer"
+      });
+    };
+    const handlePointerLeave = (event) => {
+      if (event.pointerType !== "mouse")
+        return;
+      pointerElement.current = null;
+      const current = activeElement.current;
+      if (current !== null)
+        schedule({
+          element: current,
+          kind: "reset"
+        });
+    };
+    const handleFocusIn = (event) => {
+      if (forcedColors.matches)
+        return;
+      const element = findRegisteredSurface(event.target);
+      if (element === null)
+        return;
+      focusedElement.current = element;
+      activateFocus(element);
+    };
+    const handleFocusOut = (event) => {
+      const element = findRegisteredSurface(event.target);
+      if (element === null || focusedElement.current !== element)
+        return;
+      const next = findRegisteredSurface(event.relatedTarget);
+      if (next === element)
+        return;
+      focusedElement.current = next;
+      if (next !== null && !forcedColors.matches) {
+        activateFocus(next);
+      } else if (activeElement.current === element && pointerElement.current !== element) {
+        deactivate(element);
+      }
+    };
+    const invalidateBounds = () => {
+      activeBounds.current = null;
+    };
+    const handleMediaChange = () => {
+      if (!motionIsEnabled(finePointer, reducedMotion, forcedColors)) {
+        pendingInteraction.current = null;
+        pointerElement.current = null;
+        deactivateCurrent();
+        if (!forcedColors.matches)
+          restoreFocus();
+      }
+    };
+    root.addEventListener("pointermove", handlePointerMove, {
+      passive: true
+    });
+    root.addEventListener("pointerleave", handlePointerLeave, {
+      passive: true
+    });
+    root.addEventListener("focusin", handleFocusIn);
+    root.addEventListener("focusout", handleFocusOut);
+    window.addEventListener("resize", invalidateBounds, {
+      passive: true
+    });
+    window.addEventListener("scroll", invalidateBounds, {
+      capture: true,
+      passive: true
+    });
+    const removeMediaListeners = [addMediaListener(finePointer, handleMediaChange), addMediaListener(reducedMotion, handleMediaChange), addMediaListener(forcedColors, handleMediaChange)];
+    return () => {
+      root.removeEventListener("pointermove", handlePointerMove);
+      root.removeEventListener("pointerleave", handlePointerLeave);
+      root.removeEventListener("focusin", handleFocusIn);
+      root.removeEventListener("focusout", handleFocusOut);
+      window.removeEventListener("resize", invalidateBounds);
+      window.removeEventListener("scroll", invalidateBounds, true);
+      for (const remove of removeMediaListeners)
+        remove();
+      if (frame.current !== null)
+        window.cancelAnimationFrame(frame.current);
+      pendingInteraction.current = null;
+      focusedElement.current = null;
+      pointerElement.current = null;
+      deactivateCurrent();
+      resizeObserver.current?.disconnect();
+      resizeObserver.current = null;
+    };
+  }, [deactivate]);
+  return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
+    value: contextValue,
+    children: /* @__PURE__ */ jsx9("div", {
+      ...props2,
+      className: cn7("hraness-design-foil-card-deck", className),
+      "data-foil-card-deck": "",
+      ref: rootRef,
+      children
+    })
+  });
 }
 function requirePublicValue(value, supported, label) {
   if (!supported.includes(value)) {
@@ -1462,6 +1872,7 @@ function FoilCardSurface({
   children,
   className,
   intensity,
+  ornament = "none",
   preset,
   renderMode,
   seed
@@ -1469,8 +1880,11 @@ function FoilCardSurface({
   requirePublicValue(intensity, foilCardIntensities, "intensity");
   requirePublicValue(preset, foilCardPresets, "preset");
   requirePublicValue(renderMode, foilCardRenderModes, "render mode");
+  requirePublicValue(ornament, foilCardOrnaments, "ornament");
+  const deck = useContext2(FoilDeckContext);
   const rootRef = useRef2(null);
-  const seededStyle = poseStyle(seed);
+  const seedPose = useMemo2(() => createFoilCardSeedPose(seed), [seed]);
+  const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
   const rootPresentation = stylex.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
@@ -1478,22 +1892,29 @@ function FoilCardSurface({
   const spectrumPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
   const sheenPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
   const texturePresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
   const contentPresentation = stylex.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex.props(foilCardSurfaceStyles.active);
   useEffect3(() => {
     if (renderMode !== "interactive")
       return;
     const root = rootRef.current;
     if (root === null)
       return;
+    if (deck !== null) {
+      return deck.register(root, {
+        activeClassName: activePresentation.className,
+        seedPose
+      });
+    }
     if (typeof window.matchMedia !== "function" || typeof window.requestAnimationFrame !== "function" || typeof window.cancelAnimationFrame !== "function") {
       return;
     }
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const forcedColors = window.matchMedia("(forced-colors: active)");
-    if (!finePointer.matches || reducedMotion.matches || forcedColors.matches)
-      return;
-    const seedPose = createFoilCardSeedPose(seed);
+    let pointerMotionEnabled = motionIsEnabled(finePointer, reducedMotion, forcedColors);
+    let bounds = null;
     let frame = null;
     let pendingInteraction = null;
     const renderPendingInteraction = () => {
@@ -1504,9 +1925,11 @@ function FoilCardSurface({
         return;
       if (interaction.kind === "pose") {
         applyPose(root, interaction.pose);
+        setActive(root, activePresentation.className, false);
+        bounds = null;
         return;
       }
-      const bounds = root.getBoundingClientRect();
+      bounds ??= root.getBoundingClientRect();
       if (bounds.width <= 0 || bounds.height <= 0)
         return;
       applyPose(root, createFoilCardPointerPose((interaction.clientX - bounds.left) / bounds.width, (interaction.clientY - bounds.top) / bounds.height));
@@ -1518,8 +1941,9 @@ function FoilCardSurface({
       }
     };
     const handlePointerMove = (event) => {
-      if (event.pointerType !== "mouse")
+      if (event.pointerType !== "mouse" || !pointerMotionEnabled)
         return;
+      setActive(root, activePresentation.className, true);
       scheduleInteraction({
         clientX: event.clientX,
         clientY: event.clientY,
@@ -1527,11 +1951,41 @@ function FoilCardSurface({
       });
     };
     const handlePointerLeave = (event) => {
-      if (event.pointerType === "mouse") {
+      if (event.pointerType === "mouse" && pointerMotionEnabled) {
         scheduleInteraction({
           kind: "pose",
           pose: seedPose
         });
+      }
+    };
+    const handleFocusIn = () => {
+      if (forcedColors.matches)
+        return;
+      applyPose(root, focusPose(seedPose));
+      setActive(root, activePresentation.className, true);
+    };
+    const handleFocusOut = (event) => {
+      if (event.relatedTarget instanceof Node && root.contains(event.relatedTarget))
+        return;
+      applyPose(root, seedPose);
+      setActive(root, activePresentation.className, false);
+      bounds = null;
+    };
+    const handleMediaChange = () => {
+      const containsFocus = document.activeElement instanceof Node && root.contains(document.activeElement);
+      pointerMotionEnabled = motionIsEnabled(finePointer, reducedMotion, forcedColors);
+      if (pointerMotionEnabled && !forcedColors.matches)
+        return;
+      pendingInteraction = null;
+      if (frame !== null)
+        window.cancelAnimationFrame(frame);
+      frame = null;
+      applyPose(root, seedPose);
+      setActive(root, activePresentation.className, false);
+      bounds = null;
+      if (containsFocus && !forcedColors.matches) {
+        applyPose(root, focusPose(seedPose));
+        setActive(root, activePresentation.className, true);
       }
     };
     root.addEventListener("pointermove", handlePointerMove, {
@@ -1540,17 +1994,27 @@ function FoilCardSurface({
     root.addEventListener("pointerleave", handlePointerLeave, {
       passive: true
     });
+    root.addEventListener("focusin", handleFocusIn);
+    root.addEventListener("focusout", handleFocusOut);
+    const removeMediaListeners = [addMediaListener(finePointer, handleMediaChange), addMediaListener(reducedMotion, handleMediaChange), addMediaListener(forcedColors, handleMediaChange)];
     return () => {
       root.removeEventListener("pointermove", handlePointerMove);
       root.removeEventListener("pointerleave", handlePointerLeave);
+      root.removeEventListener("focusin", handleFocusIn);
+      root.removeEventListener("focusout", handleFocusOut);
+      for (const remove of removeMediaListeners)
+        remove();
       if (frame !== null)
         window.cancelAnimationFrame(frame);
+      setActive(root, activePresentation.className, false);
     };
-  }, [renderMode, seed]);
+  }, [activePresentation.className, deck, renderMode, seedPose]);
   return /* @__PURE__ */ jsxs7("div", {
     ...rootPresentation,
     className: cn7("hraness-design-foil-card-surface", rootPresentation.className, className),
     "data-foil-intensity": intensity,
+    "data-foil-controller": deck === null ? "standalone" : "deck",
+    "data-foil-ornament": ornament,
     "data-foil-preset": preset,
     "data-foil-render-mode": renderMode,
     ref: rootRef,
@@ -1575,6 +2039,10 @@ function FoilCardSurface({
       /* @__PURE__ */ jsx9("span", {
         ...texturePresentation,
         "aria-hidden": "true"
+      }),
+      /* @__PURE__ */ jsx9("span", {
+        ...ornamentPresentation,
+        "aria-hidden": "true"
       })
     ]
   });
@@ -1584,7 +2052,7 @@ function FoilCardSurface({
 import {
   createElement,
   forwardRef,
-  useCallback,
+  useCallback as useCallback2,
   useEffect as useEffect4,
   useRef as useRef3
 } from "react";
@@ -1726,12 +2194,12 @@ var JellySurface = forwardRef(function JellySurface2({
   const hostRef = useRef3(null);
   const activePointer = useRef3(null);
   const activeReleaseListeners = useRef3(null);
-  const setHost = useCallback((host) => {
+  const setHost = useCallback2((host) => {
     hostRef.current = host;
     assignRef(surfaceRef, host);
     assignRef(forwardedRef, host);
   }, [forwardedRef, surfaceRef]);
-  const release = useCallback(() => {
+  const release = useCallback2(() => {
     activeReleaseListeners.current?.();
     activeReleaseListeners.current = null;
     activePointer.current = null;
@@ -2077,6 +2545,13 @@ var rangeData = [
   { id: "north", label: "North", minimum: 24, median: 51, maximum: 78 },
   { id: "south", label: "South", minimum: 38, median: 64, maximum: 82 }
 ];
+var foilDeckExamples = [
+  { label: "Corner frame", ornament: "corners", preset: "prism" },
+  { label: "Rail frame", ornament: "rails", preset: "etched" },
+  { label: "Circuit frame", ornament: "circuit", preset: "fast" },
+  { label: "Radial frame", ornament: "radial", preset: "aurora" },
+  { label: "Facet frame", ornament: "facets", preset: "max" }
+];
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
@@ -2393,31 +2868,36 @@ function DesignSystemGallery({
           /* @__PURE__ */ jsx13("h2", {
             children: "Decorative effects"
           }),
-          /* @__PURE__ */ jsx13(FoilCardSurface, {
-            className: "design-gallery__foil-example",
-            intensity: "standard",
-            preset: "prism",
-            renderMode: "interactive",
-            seed: "public-gallery-foil",
-            children: /* @__PURE__ */ jsxs11("article", {
-              className: "design-gallery__foil-card",
-              children: [
-                /* @__PURE__ */ jsx13(Tag, {
-                  variant: "outline",
-                  children: "Seeded surface"
-                }),
-                /* @__PURE__ */ jsxs11("div", {
-                  children: [
-                    /* @__PURE__ */ jsx13("h3", {
-                      children: "Semantic card content"
-                    }),
-                    /* @__PURE__ */ jsx13("p", {
-                      children: "Pointer paint decorates this ordinary article without replacing it."
-                    })
-                  ]
-                })
-              ]
-            })
+          /* @__PURE__ */ jsx13(FoilCardDeck, {
+            "aria-label": "Delegated foil ornament examples",
+            className: "design-gallery__foil-deck",
+            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx13(FoilCardSurface, {
+              className: "design-gallery__foil-example",
+              intensity: "standard",
+              ornament: example.ornament,
+              preset: example.preset,
+              renderMode: "interactive",
+              seed: `public-gallery-foil-${example.ornament}`,
+              children: /* @__PURE__ */ jsxs11("article", {
+                className: "design-gallery__foil-card",
+                children: [
+                  /* @__PURE__ */ jsx13(Tag, {
+                    variant: "outline",
+                    children: example.label
+                  }),
+                  /* @__PURE__ */ jsxs11("div", {
+                    children: [
+                      /* @__PURE__ */ jsx13("h3", {
+                        children: "Semantic card content"
+                      }),
+                      /* @__PURE__ */ jsx13("p", {
+                        children: "One deck controller decorates ordinary articles."
+                      })
+                    ]
+                  })
+                ]
+              })
+            }, example.ornament))
           }),
           /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__effect",
@@ -2464,7 +2944,7 @@ export const shell = <AppShell rail={null}>Content</AppShell>;`,
   });
 }
 // src/react/haptics.ts
-import { useCallback as useCallback2, useEffect as useEffect5 } from "react";
+import { useCallback as useCallback3, useEffect as useEffect5 } from "react";
 var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
 function isHapticBrowserEnvironment(environment = globalThis) {
   return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
@@ -2592,7 +3072,7 @@ function useHapticFeedback(enabled = true) {
     if (enabled)
       prepareHapticFeedback();
   }, [enabled]);
-  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
+  return useCallback3(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
 }
 // src/react/keyboard-shortcuts.ts
 import { useEffect as useEffect6, useRef as useRef4 } from "react";
@@ -3352,6 +3832,7 @@ export {
   hapticInputForFeedback,
   foilCardRenderModes,
   foilCardPresets,
+  foilCardOrnaments,
   foilCardIntensities,
   disposeHapticFeedback,
   designThemes,
@@ -3392,6 +3873,7 @@ export {
   HAPTIC_FEEDBACK_EVENT_NAME,
   GlobalErrorDocument,
   FoilCardSurface,
+  FoilCardDeck,
   Fader,
   DockedFooter,
   DitherSurface,

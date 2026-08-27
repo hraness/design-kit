@@ -44,6 +44,7 @@ test("property: pointer poses clamp arbitrary finite coordinates", () => {
       expectBetween(pose.highlightY, 0, 100);
       expectBetween(pose.rotateX, -5, 5);
       expectBetween(pose.rotateY, -6, 6);
+      expectBetween(pose.spectrumAngle ?? Number.NaN, 0, 360);
 
       const clamped = createFoilCardPointerPose(
         Math.min(1, Math.max(0, x)),
@@ -52,6 +53,12 @@ test("property: pointer poses clamp arbitrary finite coordinates", () => {
       expect(pose).toEqual(clamped);
     },
   ));
+});
+
+test("directional diffraction follows known pointer quadrants", () => {
+  expect(createFoilCardPointerPose(0.75, 0.75).spectrumAngle).toBe(135);
+  expect(createFoilCardPointerPose(0.25, 0.25).spectrumAngle).toBe(315);
+  expect(createFoilCardPointerPose(0.5, 0.5).spectrumAngle).toBe(90);
 });
 
 test("foil math rejects ambiguous seeds and non-finite pointer geometry", async () => {
