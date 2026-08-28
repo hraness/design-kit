@@ -189,6 +189,10 @@
     align-items: center;
   }
 
+  .xpqajaz {
+    align-items: end;
+  }
+
   .xz687w2 {
     backdrop-filter: blur(18px) saturate(1.08);
   }
@@ -485,6 +489,10 @@
     color: var(--card-foreground, var(--foreground, currentColor));
   }
 
+  .x17j02y5 {
+    color: var(--muted);
+  }
+
   .x16qrkmw {
     contain: paint;
   }
@@ -553,6 +561,14 @@
     grid-row-start: 1;
   }
 
+  .x1rkzygb {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .xju1xpo {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .xsta65m {
     inline-size: 1.5rem;
   }
@@ -603,6 +619,10 @@
 
   .x1xfvgam {
     line-height: 1.35;
+  }
+
+  .x1wf7w3r {
+    margin-block-end: var(--space-1);
   }
 
   .xvc5jky {
@@ -888,6 +908,12 @@
 
     .x1c7sf14.x1c7sf14 {
       display: none;
+    }
+  }
+
+  @media (width <= 48rem) {
+    .x19m6iyc.x19m6iyc {
+      grid-template-columns: 1fr;
     }
   }
 

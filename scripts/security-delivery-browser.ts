@@ -75,6 +75,128 @@ function classSelectorCount(css: string, className: string): number {
   )?.length ?? 0;
 }
 
+interface CssBlockRange {
+  readonly bodyStart: number;
+  readonly closeBrace: number;
+}
+
+interface CssRuleRange {
+  readonly body: string;
+  readonly end: number;
+  readonly start: number;
+}
+
+function matchingCssBrace(source: string, openBrace: number, label: string): number {
+  let depth = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+
+  for (let index = openBrace; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0) throw new Error(`${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "{") depth += 1;
+    else if (character === "}") {
+      depth -= 1;
+      if (depth === 0) return index;
+      if (depth < 0) break;
+    }
+  }
+  throw new Error(`${label} contains an unterminated CSS block.`);
+}
+
+function compactMediaBlocks(css: string, label: string): CssBlockRange[] {
+  return [...css.matchAll(/@media\s*\(width\s*<=\s*48rem\)\s*\{/gu)].map((match) => {
+    invariant(match.index !== undefined, `${label} contains an unlocatable compact media block.`);
+    const openBrace = match.index + match[0].lastIndexOf("{");
+    return {
+      bodyStart: openBrace + 1,
+      closeBrace: matchingCssBrace(css, openBrace, label),
+    };
+  });
+}
+
+function compiledChatBranchClasses(
+  javaScript: string,
+  branch: string,
+  label: string,
+): string[] {
+  const styleMap = javaScript.match(/var chatStyles = \{([\s\S]*?)\n\};/u)?.[1];
+  invariant(styleMap !== undefined, `${label} is missing the compiled chatStyles map.`);
+  const branchMap = styleMap.match(
+    new RegExp(`^  ${branch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  invariant(branchMap !== undefined, `${label} is missing the Chat ${branch} recipe branch.`);
+  return [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+}
+
+function chatBranchRules(
+  css: string,
+  javaScript: string,
+  branch: string,
+  label: string,
+): CssRuleRange[] {
+  return compiledChatBranchClasses(javaScript, branch, label).flatMap((className) => {
+    const escaped = escapeRegularExpression(className);
+    return [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^{}]*)\\}`, "gu"),
+    )].flatMap((match) => match.index === undefined
+      ? []
+      : [{
+          body: match[1] ?? "",
+          end: match.index + match[0].length,
+          start: match.index,
+        }]);
+  });
+}
+
+function requireChatStaticPresentation(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  for (const [pattern, declaration] of chatDeclarationPatterns) {
+    invariant(pattern.test(css), `${label} lost the migrated Chat ${declaration} declaration.`);
+  }
+  const compactRules = chatBranchRules(css, javaScript, "composer", label).filter(({ body }) =>
+    /^\s*grid-template-columns:\s*1fr;?\s*$/u.test(body));
+  const compactBlocks = compactMediaBlocks(css, label);
+  invariant(
+    compactRules.length === 1
+      && compactBlocks.some((block) => {
+        const rule = compactRules[0];
+        return rule !== undefined
+          && rule.start >= block.bodyStart
+          && rule.end <= block.closeBrace;
+      }),
+    `${label} did not structurally bind the ChatComposer one-column class to @media (width <= 48rem).`,
+  );
+  const headerRules = chatBranchRules(css, javaScript, "messageHeader", label);
+  invariant(
+    headerRules.some(({ body }) =>
+      /(?:^|;)\s*margin-block-end:\s*var\(--space-1\);?/u.test(body)),
+    `${label} lost the compiled Chat messageHeader logical margin.`,
+  );
+  invariant(
+    !headerRules.some(({ body }) =>
+      /(?:^|;)\s*margin-bottom:\s*var\(--space-1\);?/u.test(body)),
+    `${label} physicalized a compiled Chat messageHeader declaration.`,
+  );
+}
+
 function layerBlockCount(css: string, layerName: string): number {
   const escaped = escapeRegularExpression(layerName);
   return css.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
@@ -90,6 +212,26 @@ const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])
     /@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?transition:\s*none\s*!important/u,
     "important reduced-motion transition fallback",
   ],
+];
+
+const chatDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/align-items:\s*end/u, "composer end alignment"],
+  [/color:\s*var\(--muted\)/u, "message-header color"],
+  [/display:\s*grid/u, "message and composer grid display"],
+  [/display:\s*flex/u, "message-row flex display"],
+  [/flex-wrap:\s*wrap/u, "message-row wrapping"],
+  [/font-size:\s*var\(--text-caption\)/u, "message-header font size"],
+  [/gap:\s*var\(--space-2\)/u, "composer and message-row gap"],
+  [/gap:\s*var\(--space-3\)/u, "message root gap"],
+  [
+    /grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\)/u,
+    "message grid columns",
+  ],
+  [
+    /grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto/u,
+    "composer desktop grid columns",
+  ],
+  [/min-inline-size:\s*0/u, "message logical inline minimum"],
 ];
 
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
@@ -460,8 +602,15 @@ try {
   invariant(cssOutputs.length === 1, `Expected one combined CSS artifact, received ${String(cssOutputs.length)}.`);
   const cssOutput = cssOutputs[0];
   invariant(cssOutput !== undefined, "The combined CSS artifact is unavailable.");
-  const [combinedCss, designLegacyCss, designStylexCss, uiStylexCss] = await Promise.all([
+  const [
+    combinedCss,
+    designCompiledJavaScript,
+    designLegacyCss,
+    designStylexCss,
+    uiStylexCss,
+  ] = await Promise.all([
     Bun.file(cssOutput.path).text(),
+    Bun.file(join(repository, "dist/react/index.js")).text(),
     Bun.file(join(repository, "src/components.css")).text(),
     Bun.file(join(repository, "dist/stylex.css")).text(),
     Bun.file(join(repository, "node_modules/@hraness/ui/dist/stylex.css")).text(),
@@ -525,6 +674,14 @@ try {
     "The combined CSS artifact lost the matched gallery-only UI legacy AnimatedRailStage conflict.",
   );
   invariant(
+    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-conflict=(?:"true"|true)\]\s+\.hraness-design-chat-message\s*\{(?=[^}]*--design-kit-stylex-chat-message-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the matched gallery-only UI legacy ChatMessage conflict.",
+  );
+  invariant(
+    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-conflict=(?:"true"|true)\]\.hraness-design-chat-composer\s*\{(?=[^}]*--design-kit-stylex-chat-composer-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    "The combined CSS artifact lost the matched gallery-only UI legacy ChatComposer conflict.",
+  );
+  invariant(
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
@@ -548,6 +705,14 @@ try {
     /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only AnimatedRailStage old direct-parent negative control.",
   );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-old-parent=(?:"true"|true)\]\s+\.hraness-design-chat-message\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only ChatMessage old direct-parent negative control.",
+  );
+  invariant(
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-old-parent=(?:"true"|true)\]\.hraness-design-chat-composer\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    "The combined CSS artifact lost the gallery-only ChatComposer old direct-parent negative control.",
+  );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
     invariant(
       pattern.test(combinedCss),
@@ -567,6 +732,20 @@ try {
   invariant(
     !designLegacyCss.includes(".hraness-design-animated-rail-stage"),
     "Legacy design-kit CSS can still satisfy the migrated AnimatedRailStage selector.",
+  );
+  requireChatStaticPresentation(
+    designStylexCss,
+    designCompiledJavaScript,
+    "The packed design-kit StyleX artifact",
+  );
+  requireChatStaticPresentation(
+    combinedCss,
+    designCompiledJavaScript,
+    "The combined CSS artifact",
+  );
+  invariant(
+    !/\.hraness-design-chat-(?:message|composer)/u.test(designLegacyCss),
+    "Legacy design-kit CSS can still satisfy a migrated Chat selector.",
   );
   for (const [pattern, declaration] of ditherDeclarationPatterns) {
     invariant(
@@ -1378,6 +1557,311 @@ try {
       `The served aggregate CSS does not contain rendered DitherSurface class ${className}.`,
     );
   }
+  const chatEvidence = await page.evaluate(() => {
+    const matrix = document.querySelector("[data-security-chat-matrix]");
+    const messageHost = matrix?.querySelector(
+      '[data-design-kit-stylex-chat-message-conflict="true"]',
+    );
+    const message = messageHost?.querySelector(".hraness-design-chat-message");
+    const content = message?.querySelector(".hraness-design-chat-message__content");
+    const header = message?.querySelector(".hraness-design-chat-message__header");
+    const body = message?.querySelector(".hraness-design-chat-message__body");
+    const actions = message?.querySelector(".hraness-design-chat-message__actions");
+    const avatar = message?.querySelector("[data-security-chat-message-avatar]");
+    const meta = message?.querySelector("[data-security-chat-message-meta]");
+    const systemMessage = matrix?.querySelector(
+      '.hraness-design-chat-message[data-role="system"]',
+    );
+    const userMessage = matrix?.querySelector(
+      '.hraness-design-chat-message[data-role="user"]',
+    );
+    const composer = matrix?.querySelector(
+      '[data-security-chat-composer="ready"]',
+    );
+    const textArea = composer?.querySelector("textarea");
+    const submit = composer?.querySelector('button[type="submit"]');
+    const blankComposer = matrix?.querySelector(
+      '[data-security-chat-composer="blank"]',
+    );
+    const blankSubmit = blankComposer?.querySelector('button[type="submit"]');
+    const pendingComposer = matrix?.querySelector(
+      '[data-security-chat-composer="pending"]',
+    );
+    const pendingTextArea = pendingComposer?.querySelector("textarea");
+    const disabledComposer = matrix?.querySelector(
+      '[data-security-chat-composer="disabled"]',
+    );
+    const disabledTextArea = disabledComposer?.querySelector("textarea");
+    const disabledSubmit = disabledComposer?.querySelector('button[type="submit"]');
+    if (!(matrix instanceof HTMLElement)
+      || !(messageHost instanceof HTMLElement)
+      || !(message instanceof HTMLElement)
+      || !(content instanceof HTMLElement)
+      || !(header instanceof HTMLElement)
+      || !(body instanceof HTMLElement)
+      || !(actions instanceof HTMLElement)
+      || !(avatar instanceof HTMLElement)
+      || !(meta instanceof HTMLElement)
+      || !(systemMessage instanceof HTMLElement)
+      || !(userMessage instanceof HTMLElement)
+      || !(composer instanceof HTMLFormElement)
+      || !(textArea instanceof HTMLTextAreaElement)
+      || !(submit instanceof HTMLButtonElement)
+      || !(blankComposer instanceof HTMLFormElement)
+      || !(blankSubmit instanceof HTMLButtonElement)
+      || !(pendingComposer instanceof HTMLFormElement)
+      || !(pendingTextArea instanceof HTMLTextAreaElement)
+      || !(disabledComposer instanceof HTMLFormElement)
+      || !(disabledTextArea instanceof HTMLTextAreaElement)
+      || !(disabledSubmit instanceof HTMLButtonElement)) {
+      throw new Error("The rendered Chat security matrix is incomplete.");
+    }
+    const generatedClasses = (element: Element, stableClass: string, callerClass?: string) =>
+      [...element.classList].filter((className) =>
+        className !== stableClass && className !== callerClass);
+    const normalizedMessageGap = getComputedStyle(message).gap;
+    messageHost.setAttribute("data-design-kit-stylex-chat-message-old-parent", "true");
+    const oldDirectParentMessageGap = getComputedStyle(message).gap;
+    messageHost.removeAttribute("data-design-kit-stylex-chat-message-old-parent");
+    const restoredMessageStyle = getComputedStyle(message);
+    const normalizedComposerGap = getComputedStyle(composer).gap;
+    composer.setAttribute("data-design-kit-stylex-chat-composer-old-parent", "true");
+    const oldDirectParentComposerGap = getComputedStyle(composer).gap;
+    composer.removeAttribute("data-design-kit-stylex-chat-composer-old-parent");
+    const restoredComposerStyle = getComputedStyle(composer);
+    const contentStyle = getComputedStyle(content);
+    const headerStyle = getComputedStyle(header);
+    const bodyStyle = getComputedStyle(body);
+    const actionsStyle = getComputedStyle(actions);
+    return {
+      actionsClasses: generatedClasses(actions, "hraness-design-chat-message__actions"),
+      actionsPresentation: [
+        actionsStyle.display,
+        actionsStyle.flexWrap,
+        actionsStyle.alignItems,
+        actionsStyle.gap,
+      ],
+      avatarText: avatar.textContent?.trim(),
+      blankSubmitDisabled: blankSubmit.disabled,
+      bodyClasses: generatedClasses(body, "hraness-design-chat-message__body"),
+      bodyMinInlineSize: bodyStyle.minInlineSize,
+      bodyText: body.textContent?.trim(),
+      composerAlignItems: restoredComposerStyle.alignItems,
+      composerCallerLast:
+        composer.classList.item(composer.classList.length - 1)
+          === "security-caller-chat-composer",
+      composerClasses: generatedClasses(
+        composer,
+        "hraness-design-chat-composer",
+        "security-caller-chat-composer",
+      ),
+      composerColumns: restoredComposerStyle.gridTemplateColumns,
+      composerConflictSentinel: restoredComposerStyle
+        .getPropertyValue("--design-kit-stylex-chat-composer-conflict")
+        .trim(),
+      composerDisplay: restoredComposerStyle.display,
+      composerHasCallerStyle: composer.hasAttribute("style")
+        && restoredComposerStyle
+          .getPropertyValue("--security-chat-caller-form").trim() === "ready",
+      composerNative: {
+        action: composer.getAttribute("action"),
+        autoComplete: composer.autocomplete,
+        label: composer.getAttribute("aria-label"),
+        method: composer.getAttribute("method"),
+        noValidate: composer.noValidate,
+      },
+      contentClasses: generatedClasses(content, "hraness-design-chat-message__content"),
+      contentMinInlineSize: contentStyle.minInlineSize,
+      disabledSubmitDisabled: disabledSubmit.disabled,
+      disabledTextAreaDisabled: disabledTextArea.disabled,
+      headerClasses: generatedClasses(header, "hraness-design-chat-message__header"),
+      headerPresentation: [
+        headerStyle.display,
+        headerStyle.flexWrap,
+        headerStyle.alignItems,
+        headerStyle.gap,
+        headerStyle.marginBlockEnd,
+        headerStyle.fontSize,
+      ],
+      messageCallerLast:
+        message.classList.item(message.classList.length - 1)
+          === "security-caller-chat-message",
+      messageClasses: generatedClasses(
+        message,
+        "hraness-design-chat-message",
+        "security-caller-chat-message",
+      ),
+      messageColumns: restoredMessageStyle.gridTemplateColumns,
+      messageConflictSentinel: restoredMessageStyle
+        .getPropertyValue("--design-kit-stylex-chat-message-conflict")
+        .trim(),
+      messageDisplay: restoredMessageStyle.display,
+      messageHasInlineStyle: message.hasAttribute("style"),
+      messageRole: message.dataset.role,
+      metaText: meta.textContent?.trim(),
+      normalizedComposerGap,
+      normalizedMessageGap,
+      oldDirectParentComposerGap,
+      oldDirectParentMessageGap,
+      pendingTextAreaDisabled: pendingTextArea.disabled,
+      restoredComposerGap: restoredComposerStyle.gap,
+      restoredMessageGap: restoredMessageStyle.gap,
+      stableFirst: [
+        [message, "hraness-design-chat-message"],
+        [content, "hraness-design-chat-message__content"],
+        [header, "hraness-design-chat-message__header"],
+        [body, "hraness-design-chat-message__body"],
+        [actions, "hraness-design-chat-message__actions"],
+        [composer, "hraness-design-chat-composer"],
+      ].every(([element, stableClass]) =>
+        element instanceof Element
+        && typeof stableClass === "string"
+        && element.classList.item(0) === stableClass),
+      submitLabel: submit.textContent?.trim(),
+      systemMessageHasOnlyBody:
+        systemMessage.querySelector(".hraness-design-chat-message__body") !== null
+        && systemMessage.querySelector(".hraness-design-chat-message__avatar") === null
+        && systemMessage.querySelector(".hraness-design-chat-message__header") === null
+        && systemMessage.querySelector(".hraness-design-chat-message__actions") === null,
+      textArea: {
+        placeholder: textArea.placeholder,
+        rows: textArea.rows,
+        value: textArea.value,
+      },
+      userNullSlots:
+        userMessage.querySelector(".hraness-design-chat-message__avatar") !== null
+        && userMessage.querySelector(".hraness-design-chat-message__header") !== null
+        && userMessage.querySelector(".hraness-design-chat-message__actions") !== null,
+    };
+  });
+  invariant(
+    chatEvidence.normalizedMessageGap === "12px"
+      && chatEvidence.oldDirectParentMessageGap === "88px"
+      && chatEvidence.restoredMessageGap === "12px"
+      && chatEvidence.messageConflictSentinel === "ui-legacy"
+      && chatEvidence.normalizedComposerGap === "8px"
+      && chatEvidence.oldDirectParentComposerGap === "88px"
+      && chatEvidence.restoredComposerGap === "8px"
+      && chatEvidence.composerConflictSentinel === "ui-legacy",
+    `The real Chat family did not distinguish normalized package layers from matched UI legacy conflicts and old direct-parent counterfactuals: ${JSON.stringify(chatEvidence)}.`,
+  );
+  invariant(
+    chatEvidence.messageCallerLast
+      && chatEvidence.composerCallerLast
+      && chatEvidence.stableFirst
+      && chatEvidence.messageClasses.length === 3
+      && chatEvidence.contentClasses.length === 1
+      && chatEvidence.headerClasses.length === 7
+      && chatEvidence.bodyClasses.length === 1
+      && chatEvidence.actionsClasses.length === 4
+      && chatEvidence.composerClasses.length === 5
+      && !chatEvidence.messageHasInlineStyle
+      && chatEvidence.composerHasCallerStyle,
+    `The real Chat family lost stable, atomic, caller-last, or native-style ownership: ${JSON.stringify(chatEvidence)}.`,
+  );
+  invariant(
+    chatEvidence.messageRole === "assistant"
+      && chatEvidence.messageDisplay === "grid"
+      && chatEvidence.messageColumns.trim().split(/\s+/u).length === 2
+      && chatEvidence.contentMinInlineSize === "0px"
+      && chatEvidence.bodyMinInlineSize === "0px"
+      && JSON.stringify(chatEvidence.headerPresentation)
+        === JSON.stringify(["flex", "wrap", "center", "8px", "4px", "12px"])
+      && JSON.stringify(chatEvidence.actionsPresentation)
+        === JSON.stringify(["flex", "wrap", "center", "8px"])
+      && chatEvidence.avatarText === "A"
+      && chatEvidence.metaText === "Now"
+      && chatEvidence.bodyText === "Full assistant message"
+      && chatEvidence.systemMessageHasOnlyBody
+      && chatEvidence.userNullSlots,
+    `The real ChatMessage lost its DOM, slot, role, logical-size, or row presentation contract: ${JSON.stringify(chatEvidence)}.`,
+  );
+  invariant(
+    chatEvidence.composerDisplay === "grid"
+      && chatEvidence.composerAlignItems === "end"
+      && chatEvidence.composerColumns.trim().split(/\s+/u).length === 2
+      && chatEvidence.composerNative.action === "/security-chat-should-not-navigate"
+      && chatEvidence.composerNative.autoComplete === "off"
+      && chatEvidence.composerNative.label === "Ready security chat composer"
+      && chatEvidence.composerNative.method === "post"
+      && chatEvidence.composerNative.noValidate
+      && chatEvidence.textArea.placeholder === "Describe the security finding"
+      && chatEvidence.textArea.rows === 2
+      && chatEvidence.textArea.value === "Ready message"
+      && chatEvidence.submitLabel === "Deliver message"
+      && chatEvidence.blankSubmitDisabled
+      && !chatEvidence.pendingTextAreaDisabled
+      && chatEvidence.disabledTextAreaDisabled
+      && chatEvidence.disabledSubmitDisabled,
+    `The real ChatComposer lost its responsive, native-form, controlled-field, pending, or disabled semantics: ${JSON.stringify(chatEvidence)}.`,
+  );
+  for (const className of new Set([
+    ...chatEvidence.messageClasses,
+    ...chatEvidence.contentClasses,
+    ...chatEvidence.headerClasses,
+    ...chatEvidence.bodyClasses,
+    ...chatEvidence.actionsClasses,
+    ...chatEvidence.composerClasses,
+  ])) {
+    invariant(
+      classSelectorCount(designStylexCss, className) >= 1,
+      `The design-kit StyleX artifact does not contain rendered Chat class ${className}.`,
+    );
+    invariant(
+      classSelectorCount(combinedCss, className) >= 1,
+      `The served aggregate CSS does not contain rendered Chat class ${className}.`,
+    );
+  }
+  const initialViewport = page.viewportSize();
+  invariant(initialViewport !== null, "The Chat security viewport is unavailable.");
+  await page.setViewportSize({ height: 844, width: 390 });
+  const compactChatComposerColumns = await page.locator(
+    '[data-security-chat-composer="ready"]',
+  ).evaluate((form) => getComputedStyle(form).gridTemplateColumns);
+  invariant(
+    compactChatComposerColumns.trim().split(/\s+/u).length === 1,
+    `The compact ChatComposer did not collapse to one column: ${compactChatComposerColumns}.`,
+  );
+  await page.setViewportSize(initialViewport);
+
+  const readyChatComposer = page.locator('[data-security-chat-composer="ready"]');
+  const readyChatTextArea = readyChatComposer.locator("textarea");
+  const chatUrl = page.url();
+  await readyChatTextArea.fill("First line");
+  await readyChatTextArea.press("Enter");
+  invariant(
+    (await readyChatTextArea.inputValue()).includes("\n")
+      && await page.locator("[data-security-chat-submit-count]").textContent() === "0",
+    "ChatComposer textarea Enter submitted the form or lost its newline.",
+  );
+  await readyChatTextArea.fill("Delivered message");
+  await readyChatComposer.getByRole("button", { name: "Deliver message" }).click();
+  await page.waitForFunction(() =>
+    document.querySelector("[data-security-chat-submit-count]")?.textContent === "1");
+  invariant(
+    page.url() === chatUrl
+      && await readyChatTextArea.inputValue() === "Delivered message"
+      && await page.locator("[data-security-chat-submit-capture-count]").textContent() === "1"
+      && await page.locator("[data-security-chat-blocked-submit-count]").textContent() === "0",
+    "ChatComposer did not prevent navigation or preserve its controlled submit callbacks.",
+  );
+  const blockedSubmissionEvidence = await page.evaluate(() => {
+    const forms = ["blank", "pending", "disabled"].map((state) =>
+      document.querySelector(`[data-security-chat-composer="${state}"]`));
+    if (forms.some((form) => !(form instanceof HTMLFormElement))) {
+      throw new Error("A blocked ChatComposer form is missing.");
+    }
+    return forms.map((form) => (form as HTMLFormElement).dispatchEvent(
+      new SubmitEvent("submit", { bubbles: true, cancelable: true }),
+    ));
+  });
+  await page.waitForTimeout(0);
+  invariant(
+    blockedSubmissionEvidence.every((notCancelled) => !notCancelled)
+      && page.url() === chatUrl
+      && await page.locator("[data-security-chat-blocked-submit-count]").textContent() === "0",
+    `A blank, pending, or disabled ChatComposer submitted: ${JSON.stringify(blockedSubmissionEvidence)}.`,
+  );
   const faderEvidence = await page.evaluate(() => {
     const matrix = document.querySelector("[data-security-fader-matrix]");
     const root = matrix?.querySelector(".hraness-design-fader");
@@ -2338,7 +2822,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, AnimatedRailStage semantic/caller/cascade/reduced-motion evidence, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, AnimatedRailStage semantic/caller/cascade/reduced-motion evidence, Chat message/composer semantic/caller/cascade/responsive/form evidence, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
   );
 } finally {
   try {

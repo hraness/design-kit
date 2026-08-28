@@ -89,6 +89,8 @@ Connect routing with `RouterProvider` from `@hraness/ui`. Design-kit rail links 
 
 `AnimatedRailStage` keeps the surrounding shell mounted while one keyed route stage enters and exits through `AnimatePresence` in wait mode. The public `stageKey`, stable class, `data-stage-key`, and caller-last `className` contracts remain unchanged. Its logical minimum and reduced-motion fallback are delivered through extracted StyleX classes. Reduced motion keeps content visible, removes translation and duration from the motion recipe, and forces any Motion-authored transform and transition off in CSS.
 
+`ChatMessage` keeps its article, finite `data-role`, optional avatar, header, and action slots, and caller-last root class while its grid, logical minimum, and metadata-row presentation are delivered through extracted StyleX classes. `ChatComposer` remains a controlled native form composition with a multiline field and submit button. It always prevents native navigation, calls its callback only for an enabled, non-pending, nonblank value, and keeps native form attributes and inline styles caller-controlled. Its two-column layout collapses to one column at the existing compact breakpoint. Neither component exposes a public `xstyle` or ref seam.
+
 `TopBar`, `BottomBar`, `PageCanvas`, and `DockedFooter` keep their native header, footer, main, or div semantics while their product-neutral layout recipes are delivered through extracted StyleX classes. Their stable classes and data attributes remain available for semantic inspection, and native `className` and `style` props remain caller-controlled. `DockedFooter` continues to forward its root footer ref. Its `surface` value remains a stable data hook; only `TopBar` gives `glass` a visual treatment.
 
 `DitherSurface` composes its product-neutral texture through the typed `ThemedSurface` seam from `@hraness/ui`. Its `density` is one of `coarse`, `fine`, or `medium`; the default medium texture uses `4px`, while coarse and fine set the literal public `--hraness-design-dither-size` property to `7px` and `3px`. A caller `xstyle` recipe is applied after the shared texture, and native `style` remains last for deliberate per-instance overrides. Forced-colors mode removes the decorative image without changing the surface's content, native element, tone, shape, or border.
@@ -240,7 +242,7 @@ The audited Jelly UI artifacts and MIT license are under `vendor/jelly-ui`. The 
 
 ## Gallery
 
-`DesignSystemGallery` is an executable, product-neutral reference for the package boundary. Mount it in a development route and import `design-gallery.css` through the complete stylesheet.
+`DesignSystemGallery` is an executable, product-neutral reference for the package boundary. Mount it in a development route and import `design-gallery.css` through the complete stylesheet. The gallery exercises Chat message slots, controlled composer submission, compact responsive layout, extracted class delivery, and caller-last classes alongside the other public compositions.
 
 ## Development
 

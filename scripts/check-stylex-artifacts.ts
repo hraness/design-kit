@@ -210,6 +210,219 @@ function replaceExactlyOnce(
   return `${source.slice(0, firstIndex)}${replacement}${source.slice(firstIndex + target.length)}`;
 }
 
+function appendToNamedLayer(
+  source: string,
+  layerName: string,
+  addition: string,
+  description: string,
+): string {
+  const statements = topLevelStatements(source, description);
+  const layerStatements = statements.filter((statement) =>
+    statement.match(/^@layer\s+([A-Za-z0-9_.-]+)\s*\{/u)?.[1] === layerName);
+  if (layerStatements.length !== 1) {
+    throw new Error(
+      `Cannot build the ${description} mutation because ${layerName} occurs ${String(layerStatements.length)} times`,
+    );
+  }
+  const layerStatement = layerStatements[0];
+  if (layerStatement === undefined) {
+    throw new Error(`Cannot build the ${description} mutation without ${layerName}`);
+  }
+  const statementStart = source.indexOf(layerStatement);
+  if (statementStart < 0 || statementStart !== source.lastIndexOf(layerStatement)) {
+    throw new Error(
+      `Cannot build the ${description} mutation because its parsed layer block is ambiguous`,
+    );
+  }
+  const closingBrace = statementStart + layerStatement.length - 1;
+  if (source[closingBrace] !== "}") {
+    throw new Error(`Cannot build the ${description} mutation because its layer is malformed`);
+  }
+  return `${source.slice(0, closingBrace)}\n\n${addition}\n${source.slice(closingBrace)}`;
+}
+
+function compiledChatStyleMap(javaScript: string, label: string): string {
+  const styleMap = javaScript.match(/var chatStyles = \{([\s\S]*?)\n\};/u)?.[1];
+  if (styleMap === undefined) {
+    throw new Error(`${label} is missing the compiled chatStyles map`);
+  }
+  return styleMap;
+}
+
+function compiledChatBranch(
+  javaScript: string,
+  branch: string,
+  label: string,
+): string {
+  const branchMap = compiledChatStyleMap(javaScript, label).match(
+    new RegExp(`^  ${branch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  if (branchMap === undefined) {
+    throw new Error(`${label} is missing the Chat ${branch} recipe branch`);
+  }
+  return branchMap;
+}
+
+interface CssBlockRange {
+  readonly bodyStart: number;
+  readonly closeBrace: number;
+}
+
+interface CssRuleRange {
+  readonly body: string;
+  readonly end: number;
+  readonly rule: string;
+  readonly start: number;
+}
+
+function matchingCssBrace(source: string, openBrace: number, label: string): number {
+  let depth = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+
+  for (let index = openBrace; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+
+    if (stringQuote !== undefined) {
+      if (escaped) {
+        escaped = false;
+      } else if (character === "\\") {
+        escaped = true;
+      } else if (character === stringQuote) {
+        stringQuote = undefined;
+      }
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0) throw new Error(`${label} contains an unterminated comment`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      stringQuote = character;
+    } else if (character === "{") {
+      depth += 1;
+    } else if (character === "}") {
+      depth -= 1;
+      if (depth === 0) return index;
+      if (depth < 0) break;
+    }
+  }
+  throw new Error(`${label} contains an unterminated CSS block`);
+}
+
+function compactMediaBlocks(css: string, label: string): CssBlockRange[] {
+  return [...css.matchAll(/@media\s*\(width\s*<=\s*48rem\)\s*\{/gu)].map((match) => {
+    if (match.index === undefined) {
+      throw new Error(`${label} contains an unlocatable compact media block`);
+    }
+    const openBrace = match.index + match[0].lastIndexOf("{");
+    return {
+      bodyStart: openBrace + 1,
+      closeBrace: matchingCssBrace(css, openBrace, label),
+    };
+  });
+}
+
+function compiledChatClassNames(
+  javaScript: string,
+  branch: string,
+  label: string,
+): string[] {
+  return [...new Set(
+    compiledChatBranch(javaScript, branch, label).match(/\bx[a-z0-9]+\b/gu) ?? [],
+  )];
+}
+
+function chatBranchRules(
+  css: string,
+  javaScript: string,
+  branch: string,
+  label: string,
+): CssRuleRange[] {
+  return compiledChatClassNames(javaScript, branch, label).flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    return [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^{}]*)\\}`, "gu"),
+    )].flatMap((match) => match.index === undefined
+      ? []
+      : [{
+          body: match[1] ?? "",
+          end: match.index + match[0].length,
+          rule: match[0],
+          start: match.index,
+        }]);
+  });
+}
+
+function compactChatComposerRule(
+  css: string,
+  javaScript: string,
+  label: string,
+): { readonly media: CssBlockRange; readonly rule: CssRuleRange } {
+  const rules = chatBranchRules(css, javaScript, "composer", label).filter(({ body }) =>
+    /^\s*grid-template-columns:\s*1fr;?\s*$/u.test(body));
+  const mediaBlocks = compactMediaBlocks(css, label);
+  const contained = rules.flatMap((rule) => {
+    const media = mediaBlocks.find((block) =>
+      rule.start >= block.bodyStart && rule.end <= block.closeBrace);
+    return media === undefined ? [] : [{ media, rule }];
+  });
+  if (rules.length !== 1 || contained.length !== 1) {
+    throw new Error(
+      `${label} must contain exactly one ChatComposer one-column atomic rule inside @media (width <= 48rem)`,
+    );
+  }
+  const evidence = contained[0];
+  if (evidence === undefined) {
+    throw new Error(`${label} has no bounded ChatComposer compact rule`);
+  }
+  return evidence;
+}
+
+function relocateChatCompactRuleOutsideMedia(
+  css: string,
+  javaScript: string,
+  description: string,
+): string {
+  const { media, rule } = compactChatComposerRule(css, javaScript, description);
+  const withoutRule = `${css.slice(0, rule.start)}${css.slice(rule.end)}`;
+  const relocatedMediaClose = media.closeBrace - (rule.end - rule.start);
+  return `${withoutRule.slice(0, relocatedMediaClose + 1)}\n\n  ${rule.rule}\n${withoutRule.slice(relocatedMediaClose + 1)}`;
+}
+
+function mutateChatDeclaration(
+  css: string,
+  javaScript: string,
+  branch: string,
+  expectedBody: string,
+  replacementBody: string,
+  description: string,
+): string {
+  const classNames = [...new Set(
+    compiledChatBranch(javaScript, branch, description).match(/\bx[a-z0-9]+\b/gu) ?? [],
+  )];
+  const matches = classNames.flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    return [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^}]*)\\}`, "gu"),
+    )].filter((match) => (match[1] ?? "").replace(/\s+/gu, " ").trim() === expectedBody);
+  });
+  if (matches.length !== 1 || matches[0]?.index === undefined) {
+    throw new Error(
+      `Cannot build the ${description} mutation because its Chat ${branch} declaration occurs ${String(matches.length)} times`,
+    );
+  }
+  const match = matches[0];
+  const rule = match[0];
+  const body = match[1] ?? "";
+  const mutatedRule = rule.replace(body, ` ${replacementBody} `);
+  return `${css.slice(0, match.index)}${mutatedRule}${css.slice(match.index + rule.length)}`;
+}
+
 function requireMutationRejected(description: string, validate: () => void): void {
   try {
     validate();
@@ -227,7 +440,6 @@ function requireMutationNegativeContracts(
   aggregateStylesheet: string,
 ): number {
   const localLegacyLayer = "@layer components.hraness-design-kit.legacy {";
-  const localMigrationAnchor = ".hraness-design-app-shell {\n  display: grid;";
   const invertedLocalPrelude =
     "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority2, components.hraness-design-kit.priority1, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
   const invertedPortfolioPrelude =
@@ -235,56 +447,83 @@ function requireMutationNegativeContracts(
   const localMutations = [
     [
       "restored AnimatedRailStage root legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        ".hraness-design-animated-rail-stage { min-inline-size: 0; }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-animated-rail-stage { min-inline-size: 0; }",
         "restored AnimatedRailStage root legacy selector",
       ),
     ],
     [
       "restored AnimatedRailStage reduced-motion legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        "@media (prefers-reduced-motion: reduce) { .hraness-design-animated-rail-stage { transform: none !important; transition: none !important; } }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "components.hraness-design-kit.legacy",
+        "@media (prefers-reduced-motion: reduce) { .hraness-design-animated-rail-stage { transform: none !important; transition: none !important; } }",
         "restored AnimatedRailStage reduced-motion legacy selector",
       ),
     ],
     [
       "restored PlaybackTransport root legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        ".hraness-design-playback-transport { display: flex; }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-playback-transport { display: flex; }",
         "restored PlaybackTransport root legacy selector",
       ),
     ],
     [
       "restored PlaybackTransport descendant legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"]) { inline-size: 1.5rem; }\n\n.hraness-design-app-shell {\n  display: grid;',
+        "components.hraness-design-kit.legacy",
+        '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"]) { inline-size: 1.5rem; }',
         "restored PlaybackTransport descendant legacy selector",
       ),
     ],
     [
       "restored Fader root legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        ".hraness-design-fader { display: grid; }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-fader { display: grid; }",
         "restored Fader root legacy selector",
       ),
     ],
     [
       "restored Fader pseudo legacy selector",
-      replaceExactlyOnce(
+      appendToNamedLayer(
         localComponents,
-        localMigrationAnchor,
-        ".hraness-design-fader__track::before { inline-size: 4px; }\n\n.hraness-design-app-shell {\n  display: grid;",
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-fader__track::before { inline-size: 4px; }",
         "restored Fader pseudo legacy selector",
+      ),
+    ],
+    [
+      "restored ChatMessage root legacy selector",
+      appendToNamedLayer(
+        localComponents,
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-chat-message { display: grid; }",
+        "restored ChatMessage root legacy selector",
+      ),
+    ],
+    [
+      "restored ChatMessage slot legacy selector",
+      appendToNamedLayer(
+        localComponents,
+        "components.hraness-design-kit.legacy",
+        ".hraness-design-chat-message__content { min-inline-size: 0; }",
+        "restored ChatMessage slot legacy selector",
+      ),
+    ],
+    [
+      "restored ChatComposer responsive legacy selector",
+      appendToNamedLayer(
+        localComponents,
+        "components.hraness-design-kit.legacy",
+        "@media (max-width: 48rem) { .hraness-design-chat-composer { grid-template-columns: 1fr; } }",
+        "restored ChatComposer responsive legacy selector",
       ),
     ],
     [
@@ -425,6 +664,36 @@ function requireMutationNegativeContracts(
       ),
     ],
   ] as const;
+
+  const mutatedChatMessageColumns = mutateChatDeclaration(
+    designCompiledCss,
+    designCompiledJavaScript,
+    "message",
+    "grid-template-columns: auto minmax(0, 1fr);",
+    "grid-template-columns: 1fr;",
+    "mutated ChatMessage grid columns",
+  );
+  const physicalChatMessageHeaderMargin = mutateChatDeclaration(
+    designCompiledCss,
+    designCompiledJavaScript,
+    "messageHeader",
+    "margin-block-end: var(--space-1);",
+    "margin-bottom: var(--space-1);",
+    "physical ChatMessage header margin substitution",
+  );
+  const mutatedChatComposerCompactColumns = mutateChatDeclaration(
+    designCompiledCss,
+    designCompiledJavaScript,
+    "composer",
+    "grid-template-columns: 1fr;",
+    "grid-template-columns: auto;",
+    "mutated ChatComposer compact columns",
+  );
+  const relocatedChatComposerCompactRule = relocateChatCompactRuleOutsideMedia(
+    designCompiledCss,
+    designCompiledJavaScript,
+    "relocated ChatComposer compact rule",
+  );
 
   const generatedMutations = [
     [
@@ -687,6 +956,38 @@ function requireMutationNegativeContracts(
         "mutated dist/stylex.css",
       ),
     ],
+    [
+      "mutated ChatMessage grid columns",
+      () => requireChatDeclarationContract(
+        mutatedChatMessageColumns,
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "physical ChatMessage header margin substitution",
+      () => requireChatDeclarationContract(
+        physicalChatMessageHeaderMargin,
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "mutated ChatComposer compact columns",
+      () => requireChatDeclarationContract(
+        mutatedChatComposerCompactColumns,
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
+    [
+      "relocated ChatComposer compact rule",
+      () => requireChatDeclarationContract(
+        relocatedChatComposerCompactRule,
+        designCompiledJavaScript,
+        "mutated dist/stylex.css",
+      ),
+    ],
   ] as const;
 
   for (const [description, mutation] of localMutations) {
@@ -697,6 +998,7 @@ function requireMutationNegativeContracts(
         requireAnimatedRailStageLegacyRemoval(mutation, "mutated src/components.css");
         requirePlaybackTransportLegacyRemoval(mutation, "mutated src/components.css");
         requireFaderLegacyRemoval(mutation, "mutated src/components.css");
+        requireChatLegacyRemoval(mutation, "mutated src/components.css");
       },
     );
   }
@@ -999,6 +1301,104 @@ function requireFaderLegacyRemoval(source: string, label: string): void {
   );
 }
 
+function requireChatLegacyRemoval(source: string, label: string): void {
+  forbid(
+    source,
+    /\.hraness-design-chat-(?:message|composer)/u,
+    `${label} Chat legacy selector`,
+  );
+}
+
+function requireChatDeclarationContract(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const styleMap = compiledChatStyleMap(javaScript, label);
+  const expectedBranches = {
+    composer: [
+      ["align-items: end;", "priority3"],
+      ["display: grid;", "priority3"],
+      ["gap: var(--space-2);", "priority2"],
+      ["grid-template-columns: minmax(0, 1fr) auto;", "priority3"],
+      ["grid-template-columns: 1fr;", "priority3"],
+    ],
+    message: [
+      ["display: grid;", "priority3"],
+      ["gap: var(--space-3);", "priority2"],
+      ["grid-template-columns: auto minmax(0, 1fr);", "priority3"],
+    ],
+    messageHeader: [
+      ["color: var(--muted);", "priority3"],
+      ["font-size: var(--text-caption);", "priority3"],
+      ["margin-block-end: var(--space-1);", "priority3"],
+    ],
+    messageMinInline: [
+      ["min-inline-size: 0;", "priority3"],
+    ],
+    messageRow: [
+      ["align-items: center;", "priority3"],
+      ["display: flex;", "priority3"],
+      ["flex-wrap: wrap;", "priority3"],
+      ["gap: var(--space-2);", "priority2"],
+    ],
+  } as const;
+  const actualBranchNames = [...styleMap.matchAll(
+    /^ {2}([A-Za-z][A-Za-z0-9]*):\s*\{/gmu,
+  )].map((match) => match[1]);
+  if (JSON.stringify(actualBranchNames) !== JSON.stringify(Object.keys(expectedBranches))) {
+    throw new Error(`${label} exposes the wrong Chat recipe branches`);
+  }
+
+  const layerStarts = DESIGN_STYLEX_LAYERS.map((layer) => ({
+    index: css.indexOf(`@layer ${layer} {`),
+    priority: layer.slice(layer.lastIndexOf(".") + 1),
+  }));
+  if (layerStarts.some(({ index }) => index < 0)) {
+    throw new Error(`${label} is missing a design-kit priority layer`);
+  }
+  const priorityFor = (index: number): string | undefined =>
+    layerStarts.find(({ index: start }, layerIndex) => {
+      const next = layerStarts[layerIndex + 1]?.index ?? css.length;
+      return index > start && index < next;
+    })?.priority;
+
+  for (const [branch, expectedDeclarations] of Object.entries(expectedBranches)) {
+    const branchMap = compiledChatBranch(javaScript, branch, label);
+    const classNames = [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+    const expectedClassCount = expectedDeclarations.length;
+    if (classNames.length !== expectedClassCount) {
+      throw new Error(`${label} exposes the wrong Chat ${branch} atomic class count`);
+    }
+    const actual = classNames.flatMap((className) => {
+      const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+      const matches = [...css.matchAll(
+        new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^}]*)\\}`, "gu"),
+      )];
+      if (matches.length === 0 || matches.some((match) => match.index === undefined)) {
+        throw new Error(`${label} is missing a Chat ${branch} rule for ${className}`);
+      }
+      return matches.map((match) =>
+        `${priorityFor(match.index ?? -1) ?? "missing"}\u0000${(match[1] ?? "").replace(/\s+/gu, " ").trim()}`);
+    });
+    const expected = expectedDeclarations.map(
+      ([body, priority]) => `${priority}\u0000${body}`,
+    );
+    if (actual.length !== expected.length
+      || actual.some((declaration) => !expected.includes(declaration))
+      || new Set(actual).size !== expected.length) {
+      throw new Error(`${label} does not preserve the exact Chat ${branch} recipe`);
+    }
+  }
+
+  compactChatComposerRule(css, javaScript, label);
+  if (chatBranchRules(css, javaScript, "messageHeader", label).some(({ body }) =>
+    /(?:^|;)\s*margin-bottom:\s*var\(--space-1\);?/u.test(body))) {
+    throw new Error(`${label} physicalized a compiled Chat messageHeader declaration`);
+  }
+  forbid(css, /min-width:\s*0;/u, `${label} physical Chat minimum inline-size`);
+}
+
 function requireFaderDeclarationContract(
   css: string,
   javaScript: string,
@@ -1256,6 +1656,11 @@ requireAnimatedRailStageDeclarationContract(
   compiledJavaScript,
   "the compiled artifact",
 );
+requireChatDeclarationContract(
+  compiledCss,
+  compiledJavaScript,
+  "the compiled artifact",
+);
 requirePlaybackTransportDeclarationContract(
   compiledCss,
   compiledJavaScript,
@@ -1382,6 +1787,7 @@ for (const stableClass of [
 requireAnimatedRailStageLegacyRemoval(legacyComponents, "src/components.css");
 requirePlaybackTransportLegacyRemoval(legacyComponents, "src/components.css");
 requireFaderLegacyRemoval(legacyComponents, "src/components.css");
+requireChatLegacyRemoval(legacyComponents, "src/components.css");
 requireGeneratedLayerContract(
   compiledCss,
   DESIGN_STYLEX_LAYERS,

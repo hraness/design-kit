@@ -122,6 +122,8 @@ test("composition CSS retains mobile, extracted reduced-motion, and forced-color
   expect(componentsCss).toContain("@media (max-width: 48rem)");
   expect(componentsCss).toContain("@media (forced-colors: active)");
   expect(componentsCss).not.toContain(".hraness-design-animated-rail-stage");
+  expect(componentsCss).not.toContain(".hraness-design-chat-message");
+  expect(componentsCss).not.toContain(".hraness-design-chat-composer");
   expect(componentsCss).toContain(".hraness-design-app-shell");
   expect(componentsCss).not.toContain(".hraness-design-fader");
   expect(componentsCss).not.toContain(".hraness-button");
@@ -133,6 +135,10 @@ test("composition CSS retains mobile, extracted reduced-motion, and forced-color
   expect(stylexCss).toContain("--hraness-design-dither-size: 3px");
   expect(stylexCss).toContain("--hraness-design-dither-size: 7px");
   expect(stylexCss).toContain("min-inline-size: 0");
+  expect(stylexCss).toContain("grid-template-columns: auto minmax(0, 1fr)");
+  expect(stylexCss).toContain("grid-template-columns: minmax(0, 1fr) auto");
+  expect(stylexCss).toContain("grid-template-columns: 1fr");
+  expect(stylexCss).toContain("margin-block-end: var(--space-1)");
   expect(stylexCss).toContain("min-block-size: var(--top-bar-height)");
   expect(stylexCss).toContain("min-block-size: var(--bottom-bar-height)");
   expect(stylexCss).toContain("inline-size: min(100%,var(--page-canvas-width))");
@@ -144,6 +150,7 @@ test("composition CSS retains mobile, extracted reduced-motion, and forced-color
   expect(stylexCss).toContain("border-block-end-color: var(--line)");
   expect(stylexCss).toContain("border-block-start-color: var(--line)");
   expect(stylexCss).not.toContain("min-width: 0");
+  expect(stylexCss).not.toContain("margin-bottom: var(--space-1)");
   expect(stylexCss).not.toContain("min-height: var(--top-bar-height)");
   expect(stylexCss).not.toContain("min-height: var(--bottom-bar-height)");
   expect(stylexCss).not.toContain("width: min(100%,var(--page-canvas-width))");

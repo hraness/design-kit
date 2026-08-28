@@ -34,6 +34,100 @@ function stringField(value: Record<string, unknown>, key: string, label: string)
   return field;
 }
 
+interface CssBlockRange {
+  readonly bodyStart: number;
+  readonly closeBrace: number;
+}
+
+interface CssRuleRange {
+  readonly body: string;
+  readonly end: number;
+  readonly start: number;
+}
+
+function matchingCssBrace(source: string, openBrace: number, label: string): number {
+  let depth = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+
+  for (let index = openBrace; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0) throw new Error(`${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "{") depth += 1;
+    else if (character === "}") {
+      depth -= 1;
+      if (depth === 0) return index;
+      if (depth < 0) break;
+    }
+  }
+  throw new Error(`${label} contains an unterminated CSS block.`);
+}
+
+function compactMediaBlocks(css: string, label: string): CssBlockRange[] {
+  return [...css.matchAll(/@media\s*\(width\s*<=\s*48rem\)\s*\{/gu)].map((match) => {
+    if (match.index === undefined) {
+      throw new Error(`${label} contains an unlocatable compact media block.`);
+    }
+    const openBrace = match.index + match[0].lastIndexOf("{");
+    return {
+      bodyStart: openBrace + 1,
+      closeBrace: matchingCssBrace(css, openBrace, label),
+    };
+  });
+}
+
+function compiledChatBranchClasses(
+  javaScript: string,
+  branch: string,
+  label: string,
+): string[] {
+  const styleMap = javaScript.match(/var chatStyles = \{([\s\S]*?)\n\};/u)?.[1];
+  if (styleMap === undefined) {
+    throw new Error(`${label} is missing the compiled chatStyles map.`);
+  }
+  const branchMap = styleMap.match(
+    new RegExp(`^  ${branch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  if (branchMap === undefined) {
+    throw new Error(`${label} is missing the Chat ${branch} recipe branch.`);
+  }
+  return [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+}
+
+function chatBranchRules(
+  css: string,
+  javaScript: string,
+  branch: string,
+  label: string,
+): CssRuleRange[] {
+  return compiledChatBranchClasses(javaScript, branch, label).flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    return [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^{}]*)\\}`, "gu"),
+    )].flatMap((match) => match.index === undefined
+      ? []
+      : [{
+          body: match[1] ?? "",
+          end: match.index + match[0].length,
+          start: match.index,
+        }]);
+  });
+}
+
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center/u, "align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3)/u, "background-color"],
@@ -135,6 +229,8 @@ const migratedPlaybackLegacySelector =
   /\.hraness-design-playback-transport(?:__button\s+:is\(svg,\s*\[data-slot=["']spinner["']\]\)|\s*\{)/u;
 const migratedFaderLegacySelector =
   /\.hraness-design-fader(?:__[\w-]+)?(?:\[[^\]]+\])?(?:(?:::before|::after)|\s+\.hraness-design-fader__[\w-]+)?\s*(?:\{|,)/u;
+const migratedChatLegacySelector =
+  /\.hraness-design-chat-(?:message|composer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u;
 
 const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/min-inline-size:\s*0/u, "logical minimum inline-size"],
@@ -173,6 +269,24 @@ const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])
     /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
     "priority3 logical block glyph size",
   ],
+];
+
+const chatDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+  [/align-items:\s*end/u, "composer block-end alignment"],
+  [/color:\s*var\(--muted\)/u, "message header color"],
+  [/display:\s*grid/u, "message and composer grid display"],
+  [/font-size:\s*var\(--text-caption\)/u, "message header caption size"],
+  [/gap:\s*var\(--space-2\)/u, "message row and composer gap"],
+  [/gap:\s*var\(--space-3\)/u, "message root gap"],
+  [
+    /grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\)/u,
+    "message grid columns",
+  ],
+  [
+    /grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto/u,
+    "composer grid columns",
+  ],
+  [/min-inline-size:\s*0/u, "message content logical minimum"],
 ];
 
 const faderDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
@@ -300,6 +414,37 @@ function requireFaderPresentation(css: string, label: string): void {
   }
 }
 
+function requireChatPresentation(css: string, javaScript: string, label: string): void {
+  for (const [pattern, declaration] of chatDeclarationPatterns) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated Chat ${declaration} declaration.`);
+    }
+  }
+  const compactRules = chatBranchRules(css, javaScript, "composer", label).filter(({ body }) =>
+    /^\s*grid-template-columns:\s*1fr;?\s*$/u.test(body));
+  const compactBlocks = compactMediaBlocks(css, label);
+  if (compactRules.length !== 1
+    || !compactBlocks.some((block) => {
+      const rule = compactRules[0];
+      return rule !== undefined
+        && rule.start >= block.bodyStart
+        && rule.end <= block.closeBrace;
+    })) {
+    throw new Error(
+      `${label} did not structurally bind the ChatComposer one-column class to @media (width <= 48rem).`,
+    );
+  }
+  const headerRules = chatBranchRules(css, javaScript, "messageHeader", label);
+  if (!headerRules.some(({ body }) =>
+    /(?:^|;)\s*margin-block-end:\s*var\(--space-1\);?/u.test(body))) {
+    throw new Error(`${label} lost the compiled Chat messageHeader logical margin.`);
+  }
+  if (headerRules.some(({ body }) =>
+    /(?:^|;)\s*margin-bottom:\s*var\(--space-1\);?/u.test(body))) {
+    throw new Error(`${label} physicalized a compiled Chat messageHeader declaration.`);
+  }
+}
+
 function requireAtomicSelectorsExactlyOnce(
   css: string,
   classNames: readonly string[],
@@ -418,6 +563,7 @@ try {
   const packedRoot = join(unpacked, "package");
   const packedPackageJsonPath = join(packedRoot, "package.json");
   const packedPackageJson = await Bun.file(packedPackageJsonPath).json();
+  const packedReactJavaScript = await Bun.file(join(packedRoot, "dist/react/index.js")).text();
   const packedStylexCss = await Bun.file(join(packedRoot, "dist/stylex.css")).text();
   const packedComponentsCss = await Bun.file(join(packedRoot, "src/components.css")).text();
   const packedStylesCss = await Bun.file(join(packedRoot, "src/styles.css")).text();
@@ -451,6 +597,11 @@ try {
   requireLayoutSurfacePresentation(packedStylexCss, "Packed stylex.css", true);
   requirePlaybackTransportPresentation(packedStylexCss, "Packed stylex.css");
   requireFaderPresentation(packedStylexCss, "Packed stylex.css");
+  requireChatPresentation(
+    packedStylexCss,
+    packedReactJavaScript,
+    "Packed stylex.css",
+  );
   if (migratedAnimatedRailStageLegacySelector.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained the migrated legacy AnimatedRailStage recipe.");
   }
@@ -465,6 +616,9 @@ try {
   }
   if (migratedFaderLegacySelector.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained a migrated legacy Fader recipe.");
+  }
+  if (migratedChatLegacySelector.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained a migrated legacy Chat recipe.");
   }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
@@ -631,7 +785,7 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { AnimatedRailStage, BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { Children, createElement, isValidElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
@@ -642,12 +796,14 @@ try {
       'for (const layer of ["priority1", "priority2", "priority3", "priority4"]) { if (!stylexCss.includes(`@layer components.hraness-design-kit.${layer}`)) throw new Error(`Packed stylex.css lost design-kit ${layer}.`); }',
       'if (!stylexCss.includes("--hraness-design-dither-size: 3px") || !stylexCss.includes("--hraness-design-dither-size: 7px") || !stylexCss.includes("background-size: var(--hraness-design-dither-size, 4px) var(--hraness-design-dither-size, 4px)") || !stylexCss.includes("@media (forced-colors: active)")) throw new Error("Packed stylex.css lost the DitherSurface declarations.");',
       'if (!stylexCss.includes("transform: none !important") || !stylexCss.includes("transition: none !important") || !stylexCss.includes("@media (prefers-reduced-motion: reduce)")) throw new Error("Packed stylex.css lost the AnimatedRailStage reduced-motion declarations.");',
+      'if (!stylexCss.includes("grid-template-columns: auto minmax(0, 1fr)") || !stylexCss.includes("grid-template-columns: minmax(0, 1fr) auto")) throw new Error("Packed stylex.css lost the Chat message or wide composer declarations.");',
       'const componentsCss = await readFile(new URL(import.meta.resolve("@hraness/design-kit/components.css")), "utf8");',
       'if (componentsCss.includes(".hraness-design-animated-rail-stage")) throw new Error("Legacy CSS still declares the migrated AnimatedRailStage recipe.");',
       'if (componentsCss.includes(".hraness-design-production-data-preview-notice")) throw new Error("Legacy CSS still declares the migrated notice.");',
       'if (componentsCss.includes(".hraness-design-dither-surface")) throw new Error("Legacy CSS still declares the migrated DitherSurface.");',
       'if (componentsCss.includes(".hraness-design-playback-transport {") || componentsCss.includes(`.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"])`)) throw new Error("Legacy CSS still declares the migrated PlaybackTransport recipe.");',
       'if (componentsCss.includes(".hraness-design-fader")) throw new Error("Legacy CSS still declares the migrated Fader recipe.");',
+      'if (componentsCss.includes(".hraness-design-chat-message") || componentsCss.includes(".hraness-design-chat-composer")) throw new Error("Legacy CSS still declares the migrated Chat recipe.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
       'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
       'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
@@ -710,7 +866,24 @@ try {
       'const fader = [];',
       'for (const [variant, markup] of Object.entries(faderMarkup)) { const contract = faderContracts[variant]; const rootTag = faderTag(markup, "hraness-design-fader"); const rootClasses = faderClasses(markup, "hraness-design-fader"); if (rootClasses.at(-1) !== contract.callerClass || !rootTag.includes(`data-density="${contract.density}"`) || !rootTag.includes(`data-orientation="${contract.orientation}"`) || !rootTag.includes(`role="group"`) || rootTag.includes("style=")) throw new Error(`Packed ${variant} Fader lost stable, generated, caller-last, variant, or extracted root presentation.`); const hooks = ["hraness-design-fader", ...(variant === "horizontalCompact" ? ["hraness-design-fader__label-row"] : []), "hraness-design-fader__label", "hraness-design-fader__output", "hraness-design-fader__track", "hraness-design-fader__track-rail", "hraness-design-fader__fill-rail", "hraness-design-fader__thumb"]; for (const hook of hooks) { const generated = faderClasses(markup, hook).filter((name) => name !== contract.callerClass && name !== hook && stylexCss.includes(`.${name} {`)); if (generated.length === 0) throw new Error(`Packed ${variant} Fader ${hook} exposes no generated design-kit class.`); fader.push(...generated); } const labelTag = faderTag(markup, "hraness-design-fader__label"); const outputTag = faderTag(markup, "hraness-design-fader__output"); const trackTag = faderTag(markup, "hraness-design-fader__track"); if (labelTag.includes("style=") || outputTag.includes("style=") || !trackTag.includes(`style="position:relative;touch-action:none"`) || /(?:block-size|inline-size|--hraness-design-fader)/u.test(trackTag)) throw new Error(`Packed ${variant} Fader leaked package-owned inline presentation.`); const range = /<input(?=[^>]*type="range")[^>]*>/u.exec(markup)?.[0]; if (range === undefined || !range.includes(`min="0"`) || !range.includes(`max="100"`) || !range.includes(`step="1"`) || !range.includes(`aria-orientation="${contract.orientation}"`) || !range.includes(`value="${contract.value}"`)) throw new Error(`Packed ${variant} Fader lost native range semantics.`); for (const rail of ["hraness-design-fader__track-rail", "hraness-design-fader__fill-rail"]) { const matches = markup.match(new RegExp(`<span(?=[^>]*aria-hidden="true")(?=[^>]*class="[^"]*${rail}[^"]*")[^>]*>`, "gu")) ?? []; if (matches.length !== 1) throw new Error(`Packed ${variant} Fader lost its single aria-hidden ${rail} hook.`); } }',
       'if (!faderMarkup.defaultVertical.includes(">Gain</label>") || !faderMarkup.defaultVertical.includes(">32</output>") || !faderMarkup.horizontalCompact.includes(">Pan</label>") || !faderMarkup.horizontalCompact.includes(`<span class="hraness-design-fader__label-accessory"><button type="button">Reset</button></span>`) || !faderMarkup.horizontalCompact.includes(">64</output>")) throw new Error("Packed Fader lost its label, accessory, or output contract.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ animatedRailStage: [...new Set(animatedRailStageAtomic)], aside, dither, fader: [...new Set(fader)], icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
+      'const chatTag = (markup, stableClass) => { const classMatch = [...markup.matchAll(/class="([^"]+)"/gu)].find((match) => match[1]?.split(" ").includes(stableClass)); const marker = classMatch?.index ?? -1; const start = markup.lastIndexOf("<", marker); const end = markup.indexOf(">", marker); if (marker < 0 || start < 0 || end < 0) throw new Error(`Packed Chat has no complete ${stableClass} tag.`); return markup.slice(start, end + 1); };',
+      'const chatClasses = (markup, stableClass) => { const classes = /class="([^"]+)"/u.exec(chatTag(markup, stableClass))?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass) throw new Error(`Packed Chat lost its stable-first ${stableClass} class contract.`); return classes; };',
+      'const chatMessageMarkup = renderToStaticMarkup(createElement(ChatMessage, { actions: createElement("button", { type: "button" }, "Copy"), avatar: createElement("span", null, "A"), className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, createElement("p", null, "Ready to help")));',
+      'const chatMessageRootTag = chatTag(chatMessageMarkup, "hraness-design-chat-message");',
+      'const chatMessageRootClasses = chatClasses(chatMessageMarkup, "hraness-design-chat-message");',
+      'if (chatMessageRootClasses.at(-1) !== "consumer-chat-message" || !chatMessageRootTag.includes(`data-role="assistant"`) || chatMessageRootTag.includes("style=") || !chatMessageMarkup.includes("hraness-design-chat-message__avatar") || !chatMessageMarkup.includes(">Assistant</strong>") || !chatMessageMarkup.includes(">Now</span>") || !chatMessageMarkup.includes(">Ready to help</p>") || !chatMessageMarkup.includes(">Copy</button>")) throw new Error("Packed ChatMessage lost stable, caller-last, role, slot, or extracted presentation semantics.");',
+      'const chat = [];',
+      'for (const [hook, atomicCount] of [["hraness-design-chat-message", 3], ["hraness-design-chat-message__content", 1], ["hraness-design-chat-message__header", 7], ["hraness-design-chat-message__body", 1], ["hraness-design-chat-message__actions", 4]]) { const tag = chatTag(chatMessageMarkup, hook); const generated = chatClasses(chatMessageMarkup, hook).filter((name) => name !== hook && name !== "consumer-chat-message" && stylexCss.includes(`.${name}`)); if (generated.length !== atomicCount || tag.includes("style=")) throw new Error(`Packed ChatMessage ${hook} exposes ${String(generated.length)} atoms instead of ${String(atomicCount)} or emitted inline presentation.`); chat.push(...generated); }',
+      'const chatComposerMarkup = renderToStaticMarkup(createElement(ChatComposer, { "aria-label": "Reply composer", "data-consumer-chat-composer": "ready", className: "consumer-chat-composer", id: "consumer-chat-composer", method: "post", onSubmit() {}, onValueChange() {}, placeholder: "Reply", sendLabel: "Reply", value: "Draft" }));',
+      'const chatComposerTag = chatTag(chatComposerMarkup, "hraness-design-chat-composer");',
+      'const chatComposerClasses = chatClasses(chatComposerMarkup, "hraness-design-chat-composer");',
+      'const chatComposerAtomic = chatComposerClasses.filter((name) => name !== "hraness-design-chat-composer" && name !== "consumer-chat-composer" && stylexCss.includes(`.${name}`));',
+      'if (chatComposerClasses.at(-1) !== "consumer-chat-composer" || chatComposerAtomic.length !== 5 || !chatComposerTag.includes(`aria-label="Reply composer"`) || !chatComposerTag.includes(`data-consumer-chat-composer="ready"`) || !chatComposerTag.includes(`id="consumer-chat-composer"`) || !chatComposerTag.includes(`method="post"`) || chatComposerTag.includes("style=") || !chatComposerMarkup.includes("hraness-design-chat-composer__field") || !chatComposerMarkup.includes("hraness-design-chat-composer__send") || !chatComposerMarkup.includes(`type="submit"`) || !chatComposerMarkup.includes(`data-slot="button-label">Reply</span>`)) throw new Error("Packed ChatComposer lost stable, atomic, caller-last, native form, field, send, or extracted presentation semantics.");',
+      'chat.push(...chatComposerAtomic);',
+      'const nativeChatComposerMarkup = renderToStaticMarkup(createElement(ChatComposer, { action: "/reply", "aria-label": "Native reply composer", onSubmit() {}, onValueChange() {}, style: { color: "red" }, title: "Native form", value: "Native draft" }));',
+      'const nativeChatComposerTag = chatTag(nativeChatComposerMarkup, "hraness-design-chat-composer");',
+      'if (!nativeChatComposerTag.includes(`action="/reply"`) || !nativeChatComposerTag.includes(`aria-label="Native reply composer"`) || !nativeChatComposerTag.includes(`style="color:red"`) || !nativeChatComposerTag.includes(`title="Native form"`)) throw new Error("Packed ChatComposer lost caller-owned native form attributes or style.");',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ animatedRailStage: [...new Set(animatedRailStageAtomic)], aside, chat: [...new Set(chat)], dither, fader: [...new Set(fader)], icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
       "",
     ].join("\n"),
   );
@@ -726,6 +899,7 @@ try {
     "src/styles.css",
     "src/browser/artifact-share.ts",
     "src/react/animated-rail-stage.stylex.ts",
+    "src/react/chat.stylex.ts",
     "src/react/foil-card-math.ts",
     "src/react/foil-card-surface.tsx",
     "src/react/foil-card-surface.stylex.ts",
@@ -811,12 +985,18 @@ try {
       'import * as core from "@hraness/design-kit";',
       'import * as browser from "@hraness/design-kit/browser";',
       'import * as react from "@hraness/design-kit/react";',
-      'import type { AnimatedRailStageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
       'const animatedRailStage: AnimatedRailStageProps = { children: "Detail", className: "consumer-stage", stageKey: "/workspace/detail" };',
       '// @ts-expect-error AnimatedRailStage intentionally exposes no public xstyle seam.',
       'const animatedRailStageWithXstyle: AnimatedRailStageProps = { children: "Detail", stageKey: "/workspace/detail", xstyle: {} };',
+      'const chatMessage: ChatMessageProps = { children: "Ready", className: "consumer-chat-message", role: "assistant" };',
+      '// @ts-expect-error ChatMessage intentionally exposes no public xstyle seam.',
+      'const chatMessageWithXstyle: ChatMessageProps = { children: "Ready", role: "assistant", xstyle: {} };',
+      'const chatComposer: ChatComposerProps = { action: "/reply", "aria-label": "Reply composer", className: "consumer-chat-composer", method: "post", onSubmit() {}, onValueChange() {}, style: { color: "red" }, value: "Draft" };',
+      '// @ts-expect-error ChatComposer intentionally exposes no public xstyle seam.',
+      'const chatComposerWithXstyle: ChatComposerProps = { onSubmit() {}, onValueChange() {}, value: "Draft", xstyle: {} };',
       'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
       'const playbackByLabelledby: PlaybackTransportProps = { "aria-labelledby": "preview-label", ...callbacks };',
       '// @ts-expect-error PlaybackTransport requires exactly one accessible naming strategy.',
@@ -831,7 +1011,7 @@ try {
       'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
       '// @ts-expect-error Fader owns its children structure.',
       'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
-      "void [animatedRailStage, animatedRailStageWithXstyle, browser, compactHorizontalFader, core, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
+      "void [animatedRailStage, animatedRailStageWithXstyle, browser, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, compactHorizontalFader, core, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
       "",
     ].join("\n"),
   );
@@ -876,10 +1056,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { AnimatedRailStage, BottomBar, DitherSurface, DockedFooter, Fader, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-aggregate" }, "Stage"), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-aggregate" }, "Stage"), createElement(ChatMessage, { actions: "Copy", avatar: "A", className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, "Message"), createElement(ChatComposer, { "aria-label": "Aggregate composer", className: "consumer-chat-composer", onSubmit() {}, onValueChange() {}, value: "Draft" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
       "",
     ].join("\n"),
   );
@@ -899,6 +1079,7 @@ try {
   const noticeClasses = await Bun.file(join(consumer, "notice-classes.json")).json() as {
     readonly animatedRailStage: readonly string[];
     readonly aside: readonly string[];
+    readonly chat: readonly string[];
     readonly dither: readonly string[];
     readonly fader: readonly string[];
     readonly icon: readonly string[];
@@ -920,6 +1101,7 @@ try {
     "Packed aggregate Vite CSS",
   );
   requireAtomicSelectorsPresent(builtCss, noticeClasses.dither, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.chat, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.fader, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.icon, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.layout, "Packed aggregate Vite CSS");
@@ -943,6 +1125,11 @@ try {
   requireLayoutSurfacePresentation(builtCss, "Packed aggregate Vite CSS");
   requirePlaybackTransportPresentation(builtCss, "Packed aggregate Vite CSS");
   requireFaderPresentation(builtCss, "Packed aggregate Vite CSS");
+  requireChatPresentation(
+    builtCss,
+    packedReactJavaScript,
+    "Packed aggregate Vite CSS",
+  );
   if (migratedAnimatedRailStageLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy AnimatedRailStage recipe.");
   }
@@ -961,6 +1148,9 @@ try {
   if (migratedFaderLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy Fader recipe.");
   }
+  if (migratedChatLegacySelector.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained a migrated legacy Chat recipe.");
+  }
 
   await writeFile(
     join(consumer, "src/main.tsx"),
@@ -968,10 +1158,10 @@ try {
       'import { createElement } from "react";',
       'import { createRoot } from "react-dom/client";',
       'import "@hraness/design-kit/components.css";',
-      'import { AnimatedRailStage, BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-narrow" }, "Stage"), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })));',
+      'createRoot(target).render(createElement("div", null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-narrow" }, "Stage"), createElement(ChatMessage, { actions: "Copy", avatar: "A", className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, "Message"), createElement(ChatComposer, { "aria-label": "Narrow composer", className: "consumer-chat-composer", onSubmit() {}, onValueChange() {}, value: "Draft" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })));',
       "",
     ].join("\n"),
   );
@@ -1008,6 +1198,11 @@ try {
     noticeClasses.dither,
     "Packed narrow components.css Vite CSS",
   );
+  requireAtomicSelectorsPresent(
+    narrowBuiltCss,
+    noticeClasses.chat,
+    "Packed narrow components.css Vite CSS",
+  );
   requireAtomicSelectorsExactlyOnce(
     narrowBuiltCss,
     noticeClasses.fader,
@@ -1037,6 +1232,11 @@ try {
   requireLayoutSurfacePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requirePlaybackTransportPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireFaderPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requireChatPresentation(
+    narrowBuiltCss,
+    packedReactJavaScript,
+    "Packed narrow components.css Vite CSS",
+  );
   if (migratedAnimatedRailStageLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy AnimatedRailStage recipe.");
   }
@@ -1054,6 +1254,9 @@ try {
   }
   if (migratedFaderLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy Fader recipe.");
+  }
+  if (migratedChatLegacySelector.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy Chat recipe.");
   }
 
   const react18Consumer = join(work, "consumer-react18");
@@ -1088,7 +1291,7 @@ try {
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
     [
-      'import { AnimatedRailStage, BottomBar, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
@@ -1101,6 +1304,16 @@ try {
       'const animatedRailStage = renderToStaticMarkup(createElement(AnimatedRailStage, { className: "consumer-animated-rail-stage", stageKey: "/workspace/detail" }, "Detail"));',
       'const animatedRailStageClasses = /<div[^>]*class="([^"]+)"/u.exec(animatedRailStage)?.[1]?.split(" ").filter(Boolean);',
       'if (animatedRailStageClasses === undefined || animatedRailStageClasses[0] !== "hraness-design-animated-rail-stage" || animatedRailStageClasses.at(-1) !== "consumer-animated-rail-stage" || animatedRailStageClasses.length !== 5 || !animatedRailStage.includes(`data-stage-key="/workspace/detail"`) || !animatedRailStage.includes(`style="opacity:1;transform:none"`)) throw new Error("React 18 packed AnimatedRailStage lost stable, atomic, caller-last, stage identity, or wait-mode render behavior.");',
+      'const chatTag = (markup, stableClass) => { const classMatch = [...markup.matchAll(/class="([^"]+)"/gu)].find((match) => match[1]?.split(" ").includes(stableClass)); const marker = classMatch?.index ?? -1; const start = markup.lastIndexOf("<", marker); const end = markup.indexOf(">", marker); if (marker < 0 || start < 0 || end < 0) throw new Error(`React 18 packed Chat has no complete ${stableClass} tag.`); return markup.slice(start, end + 1); };',
+      'const chatClasses = (markup, stableClass) => { const classes = /class="([^"]+)"/u.exec(chatTag(markup, stableClass))?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== stableClass) throw new Error(`React 18 packed Chat lost stable-first ${stableClass} classes.`); return classes; };',
+      'const chatMessage = renderToStaticMarkup(createElement(ChatMessage, { actions: createElement("button", { type: "button" }, "Copy"), avatar: "A", className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, "Ready"));',
+      'const chatMessageContracts = [["hraness-design-chat-message", 5], ["hraness-design-chat-message__content", 2], ["hraness-design-chat-message__header", 8], ["hraness-design-chat-message__body", 2], ["hraness-design-chat-message__actions", 5]];',
+      'for (const [hook, count] of chatMessageContracts) { const tag = chatTag(chatMessage, hook); const classes = chatClasses(chatMessage, hook); if (classes.length !== count || tag.includes("style=")) throw new Error(`React 18 packed ChatMessage ${hook} lost its exact atomic or extracted presentation contract.`); }',
+      'if (chatClasses(chatMessage, "hraness-design-chat-message").at(-1) !== "consumer-chat-message" || !chatTag(chatMessage, "hraness-design-chat-message").includes(`data-role="assistant"`) || !chatMessage.includes("hraness-design-chat-message__avatar") || !chatMessage.includes(">Assistant</strong>") || !chatMessage.includes(">Now</span>") || !chatMessage.includes(">Ready</div>") || !chatMessage.includes(">Copy</button>")) throw new Error("React 18 packed ChatMessage lost role, slot, or caller-last behavior.");',
+      'const chatComposer = renderToStaticMarkup(createElement(ChatComposer, { action: "/reply", "aria-label": "Reply composer", className: "consumer-chat-composer", "data-react18-chat": "ready", method: "post", onSubmit() {}, onValueChange() {}, placeholder: "Reply", sendLabel: "Send reply", style: { color: "red" }, title: "Native form", value: "Draft" }));',
+      'const chatComposerTag = chatTag(chatComposer, "hraness-design-chat-composer");',
+      'const chatComposerClasses = chatClasses(chatComposer, "hraness-design-chat-composer");',
+      'if (chatComposerClasses.length !== 7 || chatComposerClasses.at(-1) !== "consumer-chat-composer" || !chatComposerTag.includes(`action="/reply"`) || !chatComposerTag.includes(`aria-label="Reply composer"`) || !chatComposerTag.includes(`data-react18-chat="ready"`) || !chatComposerTag.includes(`method="post"`) || !chatComposerTag.includes(`style="color:red"`) || !chatComposerTag.includes(`title="Native form"`) || !chatComposer.includes("hraness-design-chat-composer__field") || !chatComposer.includes("hraness-design-chat-composer__send") || !chatComposer.includes(`rows="2"`) || !chatComposer.includes(`>Draft</textarea>`) || !chatComposer.includes(`type="submit"`) || !chatComposer.includes(`data-slot="button-label">Send reply</span>`)) throw new Error("React 18 packed ChatComposer lost atomic, caller-last, native form, controlled field, or submit semantics.");',
       'for (const density of ["coarse", "fine", "medium"]) { const dither = renderToStaticMarkup(createElement(DitherSurface, { as: "article", density, tone: "secondary" }, density)); if (!dither.includes(`data-density="${density}"`) || !dither.includes("hraness-themed-surface") || !dither.includes("hraness-design-dither-surface") || !dither.includes(`data-slot="themed-surface"`) || dither.includes("style=")) throw new Error(`React 18 packed DitherSurface lost its ${density} semantic or extracted presentation contract.`); }',
       'const callerDither = renderToStaticMarkup(createElement(DitherSurface, { density: "fine", style: { "--hraness-design-dither-size": "11px", backgroundImage: "none", backgroundSize: "11px 11px" } }));',
       'if (!callerDither.includes("--hraness-design-dither-size:11px") || !callerDither.includes("background-image:none") || !callerDither.includes("background-size:11px 11px")) throw new Error("React 18 packed DitherSurface lost caller-last native presentation.");',
@@ -1127,12 +1340,18 @@ try {
     join(react18Consumer, "index.ts"),
     [
       'import * as clientReact from "@hraness/design-kit/react";',
-      'import type { AnimatedRailStageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
       'const animatedRailStage: AnimatedRailStageProps = { children: "Detail", className: "consumer-stage", stageKey: "/workspace/detail" };',
       '// @ts-expect-error AnimatedRailStage intentionally exposes no public xstyle seam.',
       'const animatedRailStageWithXstyle: AnimatedRailStageProps = { children: "Detail", stageKey: "/workspace/detail", xstyle: {} };',
+      'const chatMessage: ChatMessageProps = { children: "Ready", className: "consumer-chat-message", role: "assistant" };',
+      '// @ts-expect-error ChatMessage intentionally exposes no public xstyle seam.',
+      'const chatMessageWithXstyle: ChatMessageProps = { children: "Ready", role: "assistant", xstyle: {} };',
+      'const chatComposer: ChatComposerProps = { action: "/reply", "aria-label": "Reply composer", className: "consumer-chat-composer", method: "post", onSubmit() {}, onValueChange() {}, style: { color: "red" }, value: "Draft" };',
+      '// @ts-expect-error ChatComposer intentionally exposes no public xstyle seam.',
+      'const chatComposerWithXstyle: ChatComposerProps = { onSubmit() {}, onValueChange() {}, value: "Draft", xstyle: {} };',
       'const playbackByLabel: PlaybackTransportProps = { "aria-label": "Preview", buttonAriaKeyShortcuts: "Space", buttonId: "preview", buttonRef: { current: null }, className: "consumer", ...callbacks };',
       'const playbackByLabelledby: PlaybackTransportProps = { "aria-labelledby": "preview-label", ...callbacks };',
       '// @ts-expect-error PlaybackTransport requires exactly one accessible naming strategy.',
@@ -1147,7 +1366,7 @@ try {
       'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
       '// @ts-expect-error Fader owns its children structure.',
       'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
-      "void [animatedRailStage, animatedRailStageWithXstyle, clientReact, compactHorizontalFader, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
+      "void [animatedRailStage, animatedRailStageWithXstyle, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, clientReact, compactHorizontalFader, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
       "",
     ].join("\n"),
   );
