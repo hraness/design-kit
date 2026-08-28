@@ -466,7 +466,12 @@ function requireChatRuleAncestry(
         && conditions[0]?.name === "media"
         && /^\(width\s*<=\s*48rem\)$/u.test(conditions[0].prelude)
       : conditions.length === 0,
-    `${label} placed a Chat declaration under the wrong conditional ancestry.`,
+    `${label} placed a Chat declaration under the wrong conditional ancestry: ${JSON.stringify({
+      ancestry: rule.ancestry,
+      body: rule.body.trim(),
+      compact,
+      selector: rule.selector,
+    })}`,
   );
 }
 
