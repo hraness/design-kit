@@ -546,7 +546,7 @@ function requireChatStaticPresentation(
   const wideMessageRules = messageGridRules.filter(({ body }) =>
     /^\s*grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\);?\s*$/u.test(body));
   const wideComposerRules = composerGridRules.filter(({ body }) =>
-    /^\s*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto;?\s*$/u.test(body));
+    /^\s*grid-template-columns:\s*minmax\(0,\s*1fr\)\s*auto;?\s*$/u.test(body));
   const compactRules = composerGridRules.filter(({ body }) =>
     /^\s*grid-template-columns:\s*1fr;?\s*$/u.test(body));
   const wideMessageRule = wideMessageRules[0];

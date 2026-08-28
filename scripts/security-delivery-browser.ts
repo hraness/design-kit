@@ -228,7 +228,7 @@ const chatDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
     "message grid columns",
   ],
   [
-    /grid-template-columns:\s*minmax\(0,\s*1fr\)\s+auto/u,
+    /grid-template-columns:\s*minmax\(0,\s*1fr\)\s*auto/u,
     "composer desktop grid columns",
   ],
   [/min-inline-size:\s*0/u, "message logical inline minimum"],
