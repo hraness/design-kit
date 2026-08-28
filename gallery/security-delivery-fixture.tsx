@@ -11,6 +11,7 @@ import {
   Suspense,
   useEffect,
   useRef,
+  useState,
 } from "react";
 
 import { builtDesignKitReact } from "./built-react.js";
@@ -18,6 +19,8 @@ import { builtDesignKitReact } from "./built-react.js";
 const {
   AnimatedRailStage,
   BottomBar,
+  ChatComposer,
+  ChatMessage,
   DesignPortalThemeProvider,
   DesignThemeProvider,
   DitherSurface,
@@ -44,6 +47,10 @@ const callerFaderStyle = {
   "--hraness-design-fader-thumb-block-size": "20px",
   "--hraness-design-fader-thumb-inline-size": "30px",
   "--hraness-design-fader-track-length": "7rem",
+} as CSSProperties;
+
+const callerChatComposerStyle = {
+  "--security-chat-caller-form": "ready",
 } as CSSProperties;
 
 export interface SecurityDeliveryResource {
@@ -276,6 +283,106 @@ function PlaybackTransportDeliveryMatrix() {
   );
 }
 
+function ChatDeliveryMatrix() {
+  const [blockedSubmitCount, setBlockedSubmitCount] = useState(0);
+  const [pendingValue, setPendingValue] = useState("Pending message");
+  const [readySubmitCaptureCount, setReadySubmitCaptureCount] = useState(0);
+  const [readySubmitCount, setReadySubmitCount] = useState(0);
+  const [readyValue, setReadyValue] = useState("Ready message");
+
+  const recordBlockedSubmit = (): void => {
+    setBlockedSubmitCount((count) => count + 1);
+  };
+
+  return (
+    <section aria-labelledby="security-chat-title" data-security-chat-matrix="">
+      <h2 id="security-chat-title">Chat delivery matrix</h2>
+      <div data-security-chat-messages="">
+        <div data-design-kit-stylex-chat-message-conflict="true">
+          <ChatMessage
+            actions={<span data-security-chat-message-actions="">Archive</span>}
+            avatar={<span data-security-chat-message-avatar="">A</span>}
+            className="security-caller-chat-message"
+            meta={<span data-security-chat-message-meta="">Now</span>}
+            name="Assistant"
+            role="assistant"
+          >
+            <p data-security-chat-message-body="">Full assistant message</p>
+          </ChatMessage>
+        </div>
+        <ChatMessage role="system">Minimal system message</ChatMessage>
+        <ChatMessage
+          actions={null}
+          avatar={null}
+          meta={null}
+          name={null}
+          role="user"
+        >
+          Null-slot user message
+        </ChatMessage>
+      </div>
+      <div data-security-chat-composers="">
+        <ChatComposer
+          action="/security-chat-should-not-navigate"
+          aria-label="Ready security chat composer"
+          autoComplete="off"
+          className="security-caller-chat-composer"
+          data-design-kit-stylex-chat-composer-conflict="true"
+          data-security-chat-composer="ready"
+          id="security-chat-ready"
+          label="Security message"
+          method="post"
+          noValidate
+          onSubmit={() => {
+            setReadySubmitCount((count) => count + 1);
+          }}
+          onSubmitCapture={() => {
+            setReadySubmitCaptureCount((count) => count + 1);
+          }}
+          onValueChange={setReadyValue}
+          placeholder="Describe the security finding"
+          sendLabel="Deliver message"
+          style={callerChatComposerStyle}
+          value={readyValue}
+        />
+        <ChatComposer
+          aria-label="Blank security chat composer"
+          data-security-chat-composer="blank"
+          label="Blank message"
+          onSubmit={recordBlockedSubmit}
+          onValueChange={() => undefined}
+          value="   "
+        />
+        <ChatComposer
+          aria-label="Pending security chat composer"
+          data-security-chat-composer="pending"
+          isPending
+          label="Pending message"
+          onSubmit={recordBlockedSubmit}
+          onValueChange={setPendingValue}
+          value={pendingValue}
+        />
+        <ChatComposer
+          aria-label="Disabled security chat composer"
+          data-security-chat-composer="disabled"
+          isDisabled
+          label="Disabled message"
+          onSubmit={recordBlockedSubmit}
+          onValueChange={() => undefined}
+          value="Disabled message"
+        />
+      </div>
+      <output data-security-chat-submit-capture-count="">
+        {readySubmitCaptureCount}
+      </output>
+      <output data-security-chat-submit-count="">{readySubmitCount}</output>
+      <output data-security-chat-blocked-submit-count="">
+        {blockedSubmitCount}
+      </output>
+    </section>
+  );
+}
+
 function FaderDeliveryMatrix() {
   const faderRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -344,6 +451,7 @@ function ReleasedContent({ resource }: Readonly<{ resource: SecurityDeliveryReso
         </div>
         <AnimatedRailStageDeliveryMatrix />
         <LayoutSurfaceDeliveryMatrix />
+        <ChatDeliveryMatrix />
         <FaderDeliveryMatrix />
         <PlaybackTransportDeliveryMatrix />
       </DesignPortalThemeProvider>

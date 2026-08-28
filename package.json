@@ -99,6 +99,7 @@
     "src/react/app-shell.tsx",
     "src/react/aurora-dots-background.tsx",
     "src/react/charts.tsx",
+    "src/react/chat.stylex.ts",
     "src/react/chat.tsx",
     "src/react/design-gallery.tsx",
     "src/react/design-theme-context.tsx",

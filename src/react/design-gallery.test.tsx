@@ -19,6 +19,7 @@ test("the public gallery covers the composition boundary", () => {
   ]);
   expect(designGalleryRecipeCoverage).toContain("@hraness/ui primitives");
   expect(designGalleryRecipeCoverage).toContain("animated rail stage");
+  expect(designGalleryRecipeCoverage).toContain("chat message and composer");
   expect(designGalleryRecipeCoverage).toContain("foil card surface");
   expect(designGalleryRecipeCoverage).toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
@@ -57,6 +58,23 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-position="absolute"');
   expect(html).toContain('data-density="compact"');
   expect(html).toContain("hraness-design-bar-list-chart");
+  expect(html).toMatch(
+    /class="hraness-design-chat-message x[^"]+ design-gallery__chat-message"/u,
+  );
+  expect(html).toContain('data-role="assistant"');
+  expect(html).toContain('data-role="user"');
+  expect(html).toContain("hraness-design-chat-message__avatar");
+  expect(html).toContain("hraness-design-chat-message__header");
+  expect(html).toContain("hraness-design-chat-message__body");
+  expect(html).toContain("hraness-design-chat-message__actions");
+  expect(html).toMatch(
+    /class="hraness-design-chat-composer x[^"]+ design-gallery__chat-composer"/u,
+  );
+  expect(html).toContain('action="/gallery-chat-submit"');
+  expect(html).toContain('aria-label="Gallery message composer"');
+  expect(html).toContain('data-gallery-chat-submission=""');
+  expect(html).toContain(">Review the presentation contract</textarea>");
+  expect(html).toContain("Send message");
   expect(html).toContain("hraness-design-production-data-preview-notice");
   expect(html).toContain("hraness-design-dither-surface");
   expect(html).toContain('data-density="medium"');

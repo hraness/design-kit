@@ -23,6 +23,7 @@ import { AnimatedRailStage } from "./animated-rail-stage.js";
 import { AppShell } from "./app-shell.js";
 import { AuroraDotsBackground } from "./aurora-dots-background.js";
 import { BarListChart, RangePlotChart } from "./charts.js";
+import { ChatComposer, ChatMessage } from "./chat.js";
 import { Fader } from "./fader.js";
 import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
 import { JellySurface } from "./jelly-surface.js";
@@ -61,6 +62,7 @@ export const designGalleryRecipeCoverage = [
   "animated rail stage",
   "application shells",
   "charts",
+  "chat message and composer",
   "dither surface",
   "fader",
   "foil card surface",
@@ -106,6 +108,8 @@ export function DesignSystemGallery({
   isNestedInMain = false,
 }: Readonly<{ isNestedInMain?: boolean }>) {
   const [density, setDensity] = useState<"compact" | "default">("default");
+  const [chatDraft, setChatDraft] = useState("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState("");
   const [faderValue, setFaderValue] = useState(64);
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackTransportStatus>("idle");
   const Root = isNestedInMain ? "div" : "main";
@@ -303,6 +307,38 @@ export function DesignSystemGallery({
               status={playbackStatus}
             />
           </div>
+        </div>
+        <div
+          className="design-gallery__chat"
+          data-gallery-chat=""
+          data-gallery-chat-submission={chatSubmission}
+        >
+          <ChatMessage
+            actions={<Button variant="quiet">Copy response</Button>}
+            avatar={<span aria-hidden="true" className="design-gallery__chat-avatar">AI</span>}
+            className="design-gallery__chat-message"
+            meta="Now"
+            name="Assistant"
+            role="assistant"
+          >
+            <p>A complete message keeps its ordinary article and slot semantics.</p>
+          </ChatMessage>
+          <ChatMessage role="user">
+            <p>Responsive composition belongs to the extracted package recipe.</p>
+          </ChatMessage>
+          <ChatComposer
+            action="/gallery-chat-submit"
+            aria-label="Gallery message composer"
+            className="design-gallery__chat-composer"
+            onSubmit={() => {
+              setChatSubmission(chatDraft);
+              setChatDraft("");
+            }}
+            onValueChange={setChatDraft}
+            placeholder="Write a message"
+            sendLabel="Send message"
+            value={chatDraft}
+          />
         </div>
       </section>
 

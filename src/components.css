@@ -156,38 +156,6 @@
   font-size: var(--text-caption);
 }
 
-.hraness-design-chat-message {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--space-3);
-}
-
-.hraness-design-chat-message__content,
-.hraness-design-chat-message__body {
-  min-inline-size: 0;
-}
-
-.hraness-design-chat-message__header,
-.hraness-design-chat-message__actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.hraness-design-chat-message__header {
-  margin-block-end: var(--space-1);
-  color: var(--muted);
-  font-size: var(--text-caption);
-}
-
-.hraness-design-chat-composer {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: var(--space-2);
-}
-
 .hraness-design-route-state {
   display: grid;
   min-block-size: 100%;
@@ -258,9 +226,6 @@
     border-block-end: 1px solid var(--line);
   }
 
-  .hraness-design-chat-composer {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (forced-colors: active) {

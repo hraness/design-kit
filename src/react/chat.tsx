@@ -1,7 +1,10 @@
 "use client";
 
 import { Button, TextAreaField, cn } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
 import type { FormEvent, FormHTMLAttributes, ReactNode } from "react";
+
+import { chatStyles } from "./chat.stylex.js";
 
 export type ChatMessageRole = "assistant" | "system" | "user";
 
@@ -24,18 +27,64 @@ export function ChatMessage({
   name,
   role,
 }: ChatMessageProps) {
+  const messagePresentation = stylex.props(chatStyles.message);
+  const minInlinePresentation = stylex.props(chatStyles.messageMinInline);
+  const rowPresentation = stylex.props(chatStyles.messageRow);
+  const headerPresentation = stylex.props(
+    chatStyles.messageRow,
+    chatStyles.messageHeader,
+  );
+
   return (
-    <article className={cn("hraness-design-chat-message", className)} data-role={role}>
+    <article
+      {...messagePresentation}
+      className={cn(
+        "hraness-design-chat-message",
+        messagePresentation.className,
+        className,
+      )}
+      data-role={role}
+    >
       {avatar === undefined ? null : <div className="hraness-design-chat-message__avatar">{avatar}</div>}
-      <div className="hraness-design-chat-message__content">
+      <div
+        {...minInlinePresentation}
+        className={cn(
+          "hraness-design-chat-message__content",
+          minInlinePresentation.className,
+        )}
+      >
         {name === undefined && meta === undefined ? null : (
-          <header className="hraness-design-chat-message__header">
+          <header
+            {...headerPresentation}
+            className={cn(
+              "hraness-design-chat-message__header",
+              headerPresentation.className,
+            )}
+          >
             {name === undefined ? null : <strong>{name}</strong>}
             {meta === undefined ? null : <span>{meta}</span>}
           </header>
         )}
-        <div className="hraness-design-chat-message__body">{children}</div>
-        {actions === undefined ? null : <footer className="hraness-design-chat-message__actions">{actions}</footer>}
+        <div
+          {...minInlinePresentation}
+          className={cn(
+            "hraness-design-chat-message__body",
+            minInlinePresentation.className,
+          )}
+        >
+          {children}
+        </div>
+        {actions === undefined ? null : (
+          <footer
+            {...rowPresentation}
+            className={cn(
+              "hraness-design-chat-message__actions",
+              rowPresentation.className,
+            )}
+          >
+            {actions}
+          </footer>
+        )}
       </div>
     </article>
   );
@@ -64,13 +113,23 @@ export function ChatComposer({
   value,
   ...props
 }: ChatComposerProps) {
+  const presentation = stylex.props(chatStyles.composer);
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (isDisabled || isPending || value.trim().length === 0) return;
     onSubmit();
   };
   return (
-    <form {...props} className={cn("hraness-design-chat-composer", className)} onSubmit={handleSubmit}>
+    <form
+      {...presentation}
+      {...props}
+      className={cn(
+        "hraness-design-chat-composer",
+        presentation.className,
+        className,
+      )}
+      onSubmit={handleSubmit}
+    >
       <TextAreaField
         {...(placeholder === undefined ? {} : { placeholder })}
         className="hraness-design-chat-composer__field"

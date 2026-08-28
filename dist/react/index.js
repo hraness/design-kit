@@ -930,6 +930,43 @@ function RangePlotChart({
 }
 // src/react/chat.tsx
 import { Button, TextAreaField, cn as cn5 } from "@hraness/ui";
+import * as stylex2 from "@stylexjs/stylex";
+
+// src/react/chat.stylex.ts
+var chatStyles = {
+  composer: {
+    kGNEyG: "xpqajaz",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xmgkybt",
+    kumcoG: "xju1xpo x19m6iyc",
+    $$css: true
+  },
+  message: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x96y02u",
+    kumcoG: "x1rkzygb",
+    $$css: true
+  },
+  messageHeader: {
+    kMwMTN: "x17j02y5",
+    kGuDYH: "xaasd0c",
+    klAkkO: "x1wf7w3r",
+    $$css: true
+  },
+  messageMinInline: {
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  messageRow: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kOIVth: "xmgkybt",
+    $$css: true
+  }
+};
+
+// src/react/chat.tsx
 import { jsx as jsx6, jsxs as jsxs5 } from "react/jsx-runtime";
 function ChatMessage({
   actions,
@@ -940,8 +977,13 @@ function ChatMessage({
   name,
   role
 }) {
+  const messagePresentation = stylex2.props(chatStyles.message);
+  const minInlinePresentation = stylex2.props(chatStyles.messageMinInline);
+  const rowPresentation = stylex2.props(chatStyles.messageRow);
+  const headerPresentation = stylex2.props(chatStyles.messageRow, chatStyles.messageHeader);
   return /* @__PURE__ */ jsxs5("article", {
-    className: cn5("hraness-design-chat-message", className),
+    ...messagePresentation,
+    className: cn5("hraness-design-chat-message", messagePresentation.className, className),
     "data-role": role,
     children: [
       avatar === undefined ? null : /* @__PURE__ */ jsx6("div", {
@@ -949,10 +991,12 @@ function ChatMessage({
         children: avatar
       }),
       /* @__PURE__ */ jsxs5("div", {
-        className: "hraness-design-chat-message__content",
+        ...minInlinePresentation,
+        className: cn5("hraness-design-chat-message__content", minInlinePresentation.className),
         children: [
           name === undefined && meta === undefined ? null : /* @__PURE__ */ jsxs5("header", {
-            className: "hraness-design-chat-message__header",
+            ...headerPresentation,
+            className: cn5("hraness-design-chat-message__header", headerPresentation.className),
             children: [
               name === undefined ? null : /* @__PURE__ */ jsx6("strong", {
                 children: name
@@ -963,11 +1007,13 @@ function ChatMessage({
             ]
           }),
           /* @__PURE__ */ jsx6("div", {
-            className: "hraness-design-chat-message__body",
+            ...minInlinePresentation,
+            className: cn5("hraness-design-chat-message__body", minInlinePresentation.className),
             children
           }),
           actions === undefined ? null : /* @__PURE__ */ jsx6("footer", {
-            className: "hraness-design-chat-message__actions",
+            ...rowPresentation,
+            className: cn5("hraness-design-chat-message__actions", rowPresentation.className),
             children: actions
           })
         ]
@@ -985,8 +1031,9 @@ function ChatComposer({
   placeholder,
   sendLabel = "Send",
   value,
-  ...props2
+  ...props3
 }) {
+  const presentation = stylex2.props(chatStyles.composer);
   const handleSubmit = (event) => {
     event.preventDefault();
     if (isDisabled || isPending || value.trim().length === 0)
@@ -994,19 +1041,24 @@ function ChatComposer({
     onSubmit();
   };
   return /* @__PURE__ */ jsxs5("form", {
-    ...props2,
-    className: cn5("hraness-design-chat-composer", className),
+    ...presentation,
+    ...props3,
+    className: cn5("hraness-design-chat-composer", presentation.className, className),
     onSubmit: handleSubmit,
     children: [
       /* @__PURE__ */ jsx6(TextAreaField, {
-        ...placeholder === undefined ? {} : { placeholder },
+        ...placeholder === undefined ? {} : {
+          placeholder
+        },
         className: "hraness-design-chat-composer__field",
         isDisabled,
         label,
         onChange: onValueChange,
         showLabel: false,
         surface: "pane",
-        textAreaProps: { rows: 2 },
+        textAreaProps: {
+          rows: 2
+        },
         value
       }),
       /* @__PURE__ */ jsx6(Button, {
@@ -1066,7 +1118,7 @@ import { useState as useState2 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
-import * as stylex2 from "@stylexjs/stylex";
+import * as stylex3 from "@stylexjs/stylex";
 import { cn as cn6 } from "@hraness/ui";
 
 // src/react/fader.stylex.ts
@@ -1164,16 +1216,16 @@ function Fader({
   orientation = "vertical",
   showLabel = false,
   showOutput = false,
-  ...props3
+  ...props4
 }) {
-  const rootPresentation = stylex2.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
-  const labelRowPresentation = stylex2.props(faderStyles.labelRow);
-  const captionPresentation = stylex2.props(faderStyles.caption);
-  const trackPresentation = stylex2.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
-  const trackRailPresentation = stylex2.props(faderStyles.rail, faderStyles.trackRail);
-  const fillRailPresentation = stylex2.props(faderStyles.rail, faderStyles.fillRail);
+  const rootPresentation = stylex3.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
+  const labelRowPresentation = stylex3.props(faderStyles.labelRow);
+  const captionPresentation = stylex3.props(faderStyles.caption);
+  const trackPresentation = stylex3.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
+  const trackRailPresentation = stylex3.props(faderStyles.rail, faderStyles.trackRail);
+  const fillRailPresentation = stylex3.props(faderStyles.rail, faderStyles.fillRail);
   return /* @__PURE__ */ jsxs6(AriaSlider, {
-    ...props3,
+    ...props4,
     className: cn6("hraness-design-fader", rootPresentation.className, className),
     "data-density": density,
     orientation,
@@ -1219,7 +1271,7 @@ function Fader({
             className: ({
               isFocusVisible
             }) => {
-              const thumbPresentation = stylex2.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
+              const thumbPresentation = stylex3.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
               return cn6("hraness-design-fader__thumb", thumbPresentation.className);
             },
             ...inputRef === undefined ? {} : {
@@ -1233,7 +1285,7 @@ function Fader({
 }
 
 // src/react/foil-card-surface.tsx
-import * as stylex3 from "@stylexjs/stylex";
+import * as stylex4 from "@stylexjs/stylex";
 import { cn as cn7 } from "@hraness/ui";
 import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
 
@@ -1766,7 +1818,7 @@ function addMediaListener(media, listener) {
 function FoilCardDeck({
   children,
   className,
-  ...props4
+  ...props5
 }) {
   const rootRef = useRef2(null);
   const registrations = useRef2(new Map);
@@ -2005,7 +2057,7 @@ function FoilCardDeck({
   return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
     value: contextValue,
     children: /* @__PURE__ */ jsx9("div", {
-      ...props4,
+      ...props5,
       className: cn7("hraness-design-foil-card-deck", className),
       "data-foil-card-deck": "",
       ref: rootRef,
@@ -2037,14 +2089,14 @@ function FoilCardSurface({
   const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
-  const rootPresentation = stylex3.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
-  const basePresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
-  const spectrumPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
-  const sheenPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
-  const texturePresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
-  const ornamentPresentation = stylex3.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
-  const contentPresentation = stylex3.props(foilCardSurfaceStyles.content);
-  const activePresentation = stylex3.props(foilCardSurfaceStyles.active);
+  const rootPresentation = stylex4.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
+  const basePresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
+  const spectrumPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
+  const sheenPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
+  const texturePresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
+  const contentPresentation = stylex4.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex4.props(foilCardSurfaceStyles.active);
   useEffect3(() => {
     if (renderMode !== "interactive")
       return;
@@ -2339,7 +2391,7 @@ var JellySurface = forwardRef(function JellySurface2({
   onPointerMoveCapture,
   surfaceRef,
   tone = "neutral",
-  ...props4
+  ...props5
 }, forwardedRef) {
   const hostRef = useRef3(null);
   const activePointer = useRef3(null);
@@ -2376,7 +2428,7 @@ var JellySurface = forwardRef(function JellySurface2({
     }
   };
   return createElement(JellyCard, {
-    ...props4,
+    ...props5,
     className: cn8("hraness-design-jelly-surface", className),
     "data-disabled": isDisabled ? "true" : undefined,
     "data-pending": isPending ? "true" : undefined,
@@ -2444,10 +2496,10 @@ function NavigationRail({
   className,
   footer,
   header,
-  ...props4
+  ...props5
 }) {
   return /* @__PURE__ */ jsxs8("aside", {
-    ...props4,
+    ...props5,
     "aria-label": ariaLabel,
     className: cn9("hraness-design-navigation-rail", className),
     children: [
@@ -2472,11 +2524,11 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props4
+  ...props5
 }) {
   const Heading = titleAs;
   return /* @__PURE__ */ jsxs8("section", {
-    ...props4,
+    ...props5,
     className: cn9("hraness-design-rail-section", className),
     children: [
       title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
@@ -2498,10 +2550,10 @@ function RailItem({
   icon,
   isActive = false,
   label,
-  ...props4
+  ...props5
 }) {
   return /* @__PURE__ */ jsxs8(Link, {
-    ...props4,
+    ...props5,
     "aria-current": isActive ? "page" : undefined,
     className: cn9("hraness-design-rail-item", className),
     href,
@@ -2535,7 +2587,7 @@ function RailItem({
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex4 from "@stylexjs/stylex";
+import * as stylex5 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -2573,8 +2625,8 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex4.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex4.props(playbackTransportStyles.glyph);
+  const rootPresentation = stylex5.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex5.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs9(Toolbar, {
     ...accessibleName,
     className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
@@ -2621,7 +2673,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex5 from "@stylexjs/stylex";
+import * as stylex6 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2665,8 +2717,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex5.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex5.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex6.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex6.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs10("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -2704,6 +2756,7 @@ var designGalleryRecipeCoverage = [
   "animated rail stage",
   "application shells",
   "charts",
+  "chat message and composer",
   "dither surface",
   "fader",
   "foil card surface",
@@ -2739,6 +2792,8 @@ function DesignSystemGallery({
   isNestedInMain = false
 }) {
   const [density, setDensity] = useState2("default");
+  const [chatDraft, setChatDraft] = useState2("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState2("");
   const [faderValue, setFaderValue] = useState2(64);
   const [playbackStatus, setPlaybackStatus] = useState2("idle");
   const Root = isNestedInMain ? "div" : "main";
@@ -3078,6 +3133,50 @@ function DesignSystemGallery({
                     status: playbackStatus
                   })
                 ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs11("div", {
+            className: "design-gallery__chat",
+            "data-gallery-chat": "",
+            "data-gallery-chat-submission": chatSubmission,
+            children: [
+              /* @__PURE__ */ jsx13(ChatMessage, {
+                actions: /* @__PURE__ */ jsx13(Button2, {
+                  variant: "quiet",
+                  children: "Copy response"
+                }),
+                avatar: /* @__PURE__ */ jsx13("span", {
+                  "aria-hidden": "true",
+                  className: "design-gallery__chat-avatar",
+                  children: "AI"
+                }),
+                className: "design-gallery__chat-message",
+                meta: "Now",
+                name: "Assistant",
+                role: "assistant",
+                children: /* @__PURE__ */ jsx13("p", {
+                  children: "A complete message keeps its ordinary article and slot semantics."
+                })
+              }),
+              /* @__PURE__ */ jsx13(ChatMessage, {
+                role: "user",
+                children: /* @__PURE__ */ jsx13("p", {
+                  children: "Responsive composition belongs to the extracted package recipe."
+                })
+              }),
+              /* @__PURE__ */ jsx13(ChatComposer, {
+                action: "/gallery-chat-submit",
+                "aria-label": "Gallery message composer",
+                className: "design-gallery__chat-composer",
+                onSubmit: () => {
+                  setChatSubmission(chatDraft);
+                  setChatDraft("");
+                },
+                onValueChange: setChatDraft,
+                placeholder: "Write a message",
+                sendLabel: "Send message",
+                value: chatDraft
               })
             ]
           })
@@ -3789,9 +3888,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props6) {
+function ThemeMenuButton(props7) {
   return /* @__PURE__ */ jsx14(ThemeToggle, {
-    ...props6,
+    ...props7,
     presentation: "menu"
   });
 }
@@ -3974,13 +4073,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props6
+  ...props7
 }) {
   const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx15(RouteErrorPage, {
-        ...props6,
+        ...props7,
         showThemeToggle: false
       })
     ]

@@ -22,6 +22,18 @@ interface LayoutEvidence {
   readonly appearanceTriggerLabel: string;
   readonly auroraContained: boolean;
   readonly auroraPosition: string;
+  readonly chatAtomic: boolean;
+  readonly chatCallerLast: boolean;
+  readonly chatComposerAlignItems: string;
+  readonly chatComposerColumnCount: number;
+  readonly chatComposerDisplay: string;
+  readonly chatComposerGap: string;
+  readonly chatMessageDisplay: string;
+  readonly chatMessageGap: string;
+  readonly chatMessageColumnCount: number;
+  readonly chatNoOwnedInlinePresentation: boolean;
+  readonly chatRowsPresentation: boolean;
+  readonly chatSemantic: boolean;
   readonly clientWidth: number;
   readonly copy: string;
   readonly dotsContained: boolean;
@@ -115,6 +127,478 @@ function invariant(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
 }
 
+interface CssAtRule {
+  readonly name: string;
+  readonly prelude: string;
+}
+
+interface CssRuleRange {
+  readonly ancestry: readonly CssAtRule[];
+  readonly body: string;
+  readonly end: number;
+  readonly selector: string;
+  readonly start: number;
+}
+
+interface CssDeclaration {
+  readonly name: string;
+  readonly value: string;
+}
+
+function matchingCssBrace(source: string, openBrace: number, label: string): number {
+  let depth = 0;
+  let escaped = false;
+  let bracketDepth = 0;
+  let parenthesisDepth = 0;
+  let stringQuote: '"' | "'" | undefined;
+
+  for (let index = openBrace; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      if (commentEnd < 0) throw new Error(`${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === "\\") {
+      index += 1;
+      continue;
+    }
+    if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "(") parenthesisDepth += 1;
+    else if (character === ")") parenthesisDepth = Math.max(0, parenthesisDepth - 1);
+    else if (character === "[") bracketDepth += 1;
+    else if (character === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+    else if (character === "{" && parenthesisDepth === 0 && bracketDepth === 0) depth += 1;
+    else if (character === "}" && parenthesisDepth === 0 && bracketDepth === 0) {
+      depth -= 1;
+      if (depth === 0) return index;
+      if (depth < 0) break;
+    }
+  }
+  throw new Error(`${label} contains an unterminated CSS block.`);
+}
+
+function removeCssComments(source: string, label: string): string {
+  let result = "";
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      result += character;
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      invariant(commentEnd >= 0, `${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    result += character;
+    if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "\\" && nextCharacter !== undefined) {
+      result += nextCharacter;
+      index += 1;
+    }
+  }
+  invariant(stringQuote === undefined, `${label} contains an unterminated string.`);
+  return result;
+}
+
+function decodeCssEscapes(source: string, label: string): string {
+  let result = "";
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    if (character !== "\\") {
+      result += character ?? "";
+      continue;
+    }
+    const nextCharacter = source[index + 1];
+    if (nextCharacter === undefined) {
+      result += "\uFFFD";
+      continue;
+    }
+    if (/[0-9A-Fa-f]/u.test(nextCharacter)) {
+      let hexadecimal = "";
+      let cursor = index + 1;
+      while (cursor < source.length
+        && hexadecimal.length < 6
+        && /[0-9A-Fa-f]/u.test(source[cursor] ?? "")) {
+        hexadecimal += source[cursor];
+        cursor += 1;
+      }
+      const codePoint = Number.parseInt(hexadecimal, 16);
+      result += codePoint === 0 || codePoint > 0x10_FFFF
+        || (codePoint >= 0xD800 && codePoint <= 0xDFFF)
+        ? "\uFFFD"
+        : String.fromCodePoint(codePoint);
+      if (source[cursor] === "\r" && source[cursor + 1] === "\n") cursor += 2;
+      else if (/[\t\n\f\r ]/u.test(source[cursor] ?? "")) cursor += 1;
+      index = cursor - 1;
+      continue;
+    }
+    invariant(
+      !/[\n\f\r]/u.test(nextCharacter),
+      `${label} contains an invalid escaped newline in a CSS identifier.`,
+    );
+    result += nextCharacter;
+    index += 1;
+  }
+  return result;
+}
+
+function cssTopLevelSegments(
+  source: string,
+  separator: "," | ";",
+  label: string,
+): string[] {
+  const segments: string[] = [];
+  let bracketDepth = 0;
+  let parenthesisDepth = 0;
+  let segmentStart = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      invariant(commentEnd >= 0, `${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === "\\") index += 1;
+    else if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "(") parenthesisDepth += 1;
+    else if (character === ")") parenthesisDepth = Math.max(0, parenthesisDepth - 1);
+    else if (character === "[") bracketDepth += 1;
+    else if (character === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+    else if (character === separator && parenthesisDepth === 0 && bracketDepth === 0) {
+      segments.push(source.slice(segmentStart, index));
+      segmentStart = index + 1;
+    } else if ((character === "{" || character === "}")
+      && parenthesisDepth === 0
+      && bracketDepth === 0) {
+      throw new Error(`${label} nests an unexpected CSS block.`);
+    }
+  }
+  invariant(stringQuote === undefined, `${label} contains an unterminated string.`);
+  invariant(parenthesisDepth === 0 && bracketDepth === 0, `${label} is unbalanced.`);
+  segments.push(source.slice(segmentStart));
+  return segments;
+}
+
+function cssTopLevelColon(source: string, label: string): number {
+  let bracketDepth = 0;
+  let parenthesisDepth = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      invariant(commentEnd >= 0, `${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === "\\") index += 1;
+    else if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "(") parenthesisDepth += 1;
+    else if (character === ")") parenthesisDepth = Math.max(0, parenthesisDepth - 1);
+    else if (character === "[") bracketDepth += 1;
+    else if (character === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+    else if (character === ":" && parenthesisDepth === 0 && bracketDepth === 0) return index;
+  }
+  return -1;
+}
+
+function cssDeclarations(body: string, label: string): CssDeclaration[] {
+  return cssTopLevelSegments(body, ";", label).flatMap((rawDeclaration) => {
+    const declaration = removeCssComments(rawDeclaration, label).trim();
+    if (declaration.length === 0) return [];
+    const colon = cssTopLevelColon(declaration, label);
+    invariant(colon > 0, `${label} contains a malformed CSS declaration.`);
+    return [{
+      name: decodeCssEscapes(
+        declaration.slice(0, colon).trim(),
+        label,
+      ).toLowerCase(),
+      value: declaration.slice(colon + 1).trim(),
+    }];
+  });
+}
+
+function nextCssStatementDelimiter(
+  source: string,
+  start: number,
+  end: number,
+  label: string,
+): { readonly character: "{" | ";"; readonly index: number } | undefined {
+  let bracketDepth = 0;
+  let parenthesisDepth = 0;
+  let escaped = false;
+  let stringQuote: '"' | "'" | undefined;
+  for (let index = start; index < end; index += 1) {
+    const character = source[index];
+    const nextCharacter = source[index + 1];
+    if (character === undefined) continue;
+    if (stringQuote !== undefined) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === stringQuote) stringQuote = undefined;
+      continue;
+    }
+    if (character === "/" && nextCharacter === "*") {
+      const commentEnd = source.indexOf("*/", index + 2);
+      invariant(commentEnd >= 0 && commentEnd < end, `${label} contains an unterminated comment.`);
+      index = commentEnd + 1;
+      continue;
+    }
+    if (character === "\\") index += 1;
+    else if (character === '"' || character === "'") stringQuote = character;
+    else if (character === "(") parenthesisDepth += 1;
+    else if (character === ")") parenthesisDepth = Math.max(0, parenthesisDepth - 1);
+    else if (character === "[") bracketDepth += 1;
+    else if (character === "]") bracketDepth = Math.max(0, bracketDepth - 1);
+    else if ((character === "{" || character === ";")
+      && parenthesisDepth === 0
+      && bracketDepth === 0) {
+      return { character, index };
+    }
+  }
+  invariant(stringQuote === undefined, `${label} contains an unterminated string.`);
+  return undefined;
+}
+
+function cssLeafRules(css: string, label: string): CssRuleRange[] {
+  const rules: CssRuleRange[] = [];
+  const scanBlock = (
+    bodyStart: number,
+    bodyEnd: number,
+    ancestry: readonly CssAtRule[],
+  ): void => {
+    let cursor = bodyStart;
+    while (cursor < bodyEnd) {
+      const remainder = css.slice(cursor, bodyEnd);
+      const trivia = remainder.match(/^(?:\s|\/\*[\s\S]*?\*\/)+/u)?.[0] ?? "";
+      cursor += trivia.length;
+      if (cursor >= bodyEnd) return;
+      const delimiter = nextCssStatementDelimiter(css, cursor, bodyEnd, label);
+      if (delimiter === undefined) return;
+      if (delimiter.character === ";") {
+        cursor = delimiter.index + 1;
+        continue;
+      }
+      const prelude = removeCssComments(css.slice(cursor, delimiter.index), label).trim();
+      invariant(prelude.length > 0, `${label} contains an empty CSS block prelude.`);
+      const closeBrace = matchingCssBrace(css, delimiter.index, label);
+      invariant(closeBrace <= bodyEnd, `${label} closes a CSS block outside its parent.`);
+      if (prelude.startsWith("@")) {
+        const atRule = prelude.match(/^@([A-Za-z-]+)\s*([\s\S]*)$/u);
+        invariant(atRule !== null, `${label} contains a malformed at-rule prelude.`);
+        scanBlock(delimiter.index + 1, closeBrace, [
+          ...ancestry,
+          {
+            name: (atRule[1] ?? "").toLowerCase(),
+            prelude: (atRule[2] ?? "").trim(),
+          },
+        ]);
+      } else {
+        rules.push({
+          ancestry,
+          body: css.slice(delimiter.index + 1, closeBrace),
+          end: closeBrace + 1,
+          selector: prelude,
+          start: cursor,
+        });
+      }
+      cursor = closeBrace + 1;
+    }
+  };
+  scanBlock(0, css.length, []);
+  return rules;
+}
+
+function requireChatRuleAncestry(
+  rule: CssRuleRange,
+  label: string,
+  compact: boolean,
+): void {
+  const layers = rule.ancestry.filter(({ name }) => name === "layer");
+  const conditions = rule.ancestry.filter(({ name }) => name !== "layer");
+  invariant(
+    layers.length === 1
+      && layers[0]?.prelude === "components.hraness-design-kit.priority3",
+    `${label} placed a Chat declaration outside the sole design-kit priority3 layer.`,
+  );
+  invariant(
+    compact
+      ? conditions.length === 1
+        && conditions[0]?.name === "media"
+        && /^\((?:max-width\s*:\s*48rem|width\s*<=\s*48rem)\)$/u.test(
+          conditions[0].prelude,
+        )
+      : conditions.length === 0,
+    `${label} placed a Chat declaration under the wrong conditional ancestry: ${JSON.stringify({
+      ancestry: rule.ancestry,
+      body: rule.body.trim(),
+      compact,
+      selector: rule.selector,
+    })}`,
+  );
+}
+
+function compiledChatBranchClasses(
+  javaScript: string,
+  branch: string,
+  label: string,
+): string[] {
+  const styleMap = javaScript.match(/var chatStyles = \{([\s\S]*?)\n\};/u)?.[1];
+  invariant(styleMap !== undefined, `${label} is missing the compiled chatStyles map.`);
+  const branchMap = styleMap.match(
+    new RegExp(`^  ${branch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  invariant(branchMap !== undefined, `${label} is missing the Chat ${branch} recipe branch.`);
+  return [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+}
+
+function chatBranchRules(
+  cssRules: readonly CssRuleRange[],
+  javaScript: string,
+  branch: string,
+  label: string,
+): CssRuleRange[] {
+  const rules = compiledChatBranchClasses(javaScript, branch, label).flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const classToken = new RegExp(
+      `(?:^|[^\\w-])\\.${escaped}(?:\\.${escaped})?(?![\\w-])`,
+      "u",
+    );
+    const exactClassSelector = new RegExp(`^\\.${escaped}(?:\\.${escaped})?$`, "u");
+    return cssRules.flatMap((rule) => {
+      const members = cssTopLevelSegments(rule.selector, ",", label)
+        .map((member) =>
+          decodeCssEscapes(removeCssComments(member, label), label).trim());
+      const membersWithClass = members.filter((member) => classToken.test(member));
+      invariant(
+        membersWithClass.every((member) => exactClassSelector.test(member)),
+        `${label} scopes Chat class ${className} through a non-atomic selector.`,
+      );
+      return membersWithClass.some((member) => exactClassSelector.test(member))
+        ? [rule]
+        : [];
+    });
+  });
+  return [...new Map(rules.map((rule) => [`${String(rule.start)}:${String(rule.end)}`, rule])).values()];
+}
+
+function chatRulesAffectingProperties(
+  rules: readonly CssRuleRange[],
+  properties: ReadonlySet<string>,
+  label: string,
+): CssRuleRange[] {
+  return rules.filter((rule) =>
+    cssDeclarations(rule.body, label).some(({ name }) => properties.has(name)));
+}
+
+function requireChatStaticPresentation(
+  css: string,
+  javaScript: string,
+  label: string,
+): void {
+  const cssRules = cssLeafRules(css, label);
+  const messageRules = chatBranchRules(cssRules, javaScript, "message", label);
+  const composerRules = chatBranchRules(cssRules, javaScript, "composer", label);
+  const headerRules = chatBranchRules(cssRules, javaScript, "messageHeader", label);
+  const gridProperties = new Set(["all", "grid", "grid-template", "grid-template-columns"]);
+  const messageGridRules = chatRulesAffectingProperties(
+    messageRules,
+    gridProperties,
+    label,
+  );
+  const composerGridRules = chatRulesAffectingProperties(
+    composerRules,
+    gridProperties,
+    label,
+  );
+  const wideMessageRules = messageGridRules.filter(({ body }) =>
+    /^\s*grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\);?\s*$/u.test(body));
+  const wideComposerRules = composerGridRules.filter(({ body }) =>
+    /^\s*grid-template-columns:\s*minmax\(0,\s*1fr\)\s*auto;?\s*$/u.test(body));
+  const compactRules = composerGridRules.filter(({ body }) =>
+    /^\s*grid-template-columns:\s*1fr;?\s*$/u.test(body));
+  const wideMessageRule = wideMessageRules[0];
+  const wideComposerRule = wideComposerRules[0];
+  const compactRule = compactRules[0];
+  invariant(
+    messageGridRules.length === 1
+      && wideMessageRules.length === 1
+      && wideMessageRule !== undefined
+      && composerGridRules.length === 2
+      && wideComposerRules.length === 1
+      && wideComposerRule !== undefined
+      && compactRules.length === 1
+      && compactRule !== undefined,
+    `${label} lost the class-bound Chat message or wide composer grid: ${JSON.stringify({
+      composer: composerGridRules.map(({ body, selector }) => ({
+        body: body.trim(),
+        selector,
+      })),
+      message: messageGridRules.map(({ body, selector }) => ({
+        body: body.trim(),
+        selector,
+      })),
+    })}`,
+  );
+  requireChatRuleAncestry(wideMessageRule, label, false);
+  requireChatRuleAncestry(wideComposerRule, label, false);
+  requireChatRuleAncestry(compactRule, label, true);
+  const headerMarginRules = chatRulesAffectingProperties(
+    headerRules,
+    new Set(["all", "margin", "margin-block", "margin-block-end", "margin-bottom"]),
+    label,
+  );
+  const headerMarginRule = headerMarginRules[0];
+  invariant(
+    headerMarginRules.length === 1
+      && headerMarginRule !== undefined
+      && /^\s*margin-block-end:\s*var\(--space-1\);?\s*$/u.test(
+        headerMarginRule.body,
+    ),
+    `${label} lost the compiled Chat messageHeader logical margin.`,
+  );
+  requireChatRuleAncestry(headerMarginRule, label, false);
+}
+
 async function firstExecutable(paths: readonly string[]): Promise<string> {
   for (const path of paths) {
     try {
@@ -140,6 +624,15 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const aurora = effect?.querySelector(".hraness-design-aurora-background");
     const dots = effect?.querySelector(".hraness-design-aurora-dots");
     const dither = document.querySelector("[data-gallery-dither]");
+    const chat = document.querySelector("[data-gallery-chat]");
+    const chatMessage = chat?.querySelector(".design-gallery__chat-message");
+    const chatContent = chatMessage?.querySelector(".hraness-design-chat-message__content");
+    const chatHeader = chatMessage?.querySelector(".hraness-design-chat-message__header");
+    const chatBody = chatMessage?.querySelector(".hraness-design-chat-message__body");
+    const chatActions = chatMessage?.querySelector(".hraness-design-chat-message__actions");
+    const chatComposer = chat?.querySelector(".design-gallery__chat-composer");
+    const chatTextArea = chatComposer?.querySelector("textarea");
+    const chatSubmit = chatComposer?.querySelector('button[type="submit"]');
     const plainLink = document.querySelector(".design-gallery__plain-link-example a");
     const plainHeader = document.querySelector(".plain-header__inner");
     const plainNav = plainHeader?.querySelector(".plain-nav");
@@ -221,6 +714,15 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
       || !(aurora instanceof HTMLElement)
       || !(dots instanceof HTMLElement)
       || !(dither instanceof HTMLElement)
+      || !(chat instanceof HTMLElement)
+      || !(chatMessage instanceof HTMLElement)
+      || !(chatContent instanceof HTMLElement)
+      || !(chatHeader instanceof HTMLElement)
+      || !(chatBody instanceof HTMLElement)
+      || !(chatActions instanceof HTMLElement)
+      || !(chatComposer instanceof HTMLFormElement)
+      || !(chatTextArea instanceof HTMLTextAreaElement)
+      || !(chatSubmit instanceof HTMLButtonElement)
       || !(plainLink instanceof HTMLAnchorElement)
       || !(plainHeader instanceof HTMLElement)
       || !(plainNav instanceof HTMLElement)
@@ -267,6 +769,12 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
     const galleryStyle = getComputedStyle(gallery);
     const proceduralStyle = getComputedStyle(procedural);
     const ditherStyle = getComputedStyle(dither);
+    const chatMessageStyle = getComputedStyle(chatMessage);
+    const chatContentStyle = getComputedStyle(chatContent);
+    const chatHeaderStyle = getComputedStyle(chatHeader);
+    const chatBodyStyle = getComputedStyle(chatBody);
+    const chatActionsStyle = getComputedStyle(chatActions);
+    const chatComposerStyle = getComputedStyle(chatComposer);
     const effectBox = effect.getBoundingClientRect();
     const auroraBox = aurora.getBoundingClientRect();
     const dotsBox = dots.getBoundingClientRect();
@@ -329,6 +837,63 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
         && Math.abs(auroraBox.top - effectBox.top) <= 1
         && Math.abs(auroraBox.bottom - effectBox.bottom) <= 1,
       auroraPosition: getComputedStyle(aurora).position,
+      chatAtomic: [
+        [chatMessage, "hraness-design-chat-message"],
+        [chatContent, "hraness-design-chat-message__content"],
+        [chatHeader, "hraness-design-chat-message__header"],
+        [chatBody, "hraness-design-chat-message__body"],
+        [chatActions, "hraness-design-chat-message__actions"],
+        [chatComposer, "hraness-design-chat-composer"],
+      ].every(([element, stableClass]) =>
+        element instanceof HTMLElement
+        && typeof stableClass === "string"
+        && element.classList.contains(stableClass)
+        && [...element.classList].some((className) => className.startsWith("x"))),
+      chatCallerLast:
+        chatMessage.classList.item(chatMessage.classList.length - 1)
+          === "design-gallery__chat-message"
+        && chatComposer.classList.item(chatComposer.classList.length - 1)
+          === "design-gallery__chat-composer",
+      chatComposerAlignItems: chatComposerStyle.alignItems,
+      chatComposerColumnCount: chatComposerStyle.gridTemplateColumns
+        .trim().split(/\s+/u).filter(Boolean).length,
+      chatComposerDisplay: chatComposerStyle.display,
+      chatComposerGap: chatComposerStyle.gap,
+      chatMessageColumnCount: chatMessageStyle.gridTemplateColumns
+        .trim().split(/\s+/u).filter(Boolean).length,
+      chatMessageDisplay: chatMessageStyle.display,
+      chatMessageGap: chatMessageStyle.gap,
+      chatNoOwnedInlinePresentation: [
+        chatMessage,
+        chatContent,
+        chatHeader,
+        chatBody,
+        chatActions,
+        chatComposer,
+      ].every((element) => !element.hasAttribute("style")),
+      chatRowsPresentation:
+        chatContentStyle.minInlineSize === "0px"
+        && chatBodyStyle.minInlineSize === "0px"
+        && chatHeaderStyle.display === "flex"
+        && chatHeaderStyle.flexWrap === "wrap"
+        && chatHeaderStyle.alignItems === "center"
+        && chatHeaderStyle.gap === "8px"
+        && chatHeaderStyle.marginBlockEnd === "4px"
+        && chatActionsStyle.display === "flex"
+        && chatActionsStyle.flexWrap === "wrap"
+        && chatActionsStyle.alignItems === "center"
+        && chatActionsStyle.gap === "8px",
+      chatSemantic:
+        chatMessage.tagName === "ARTICLE"
+        && chatMessage.dataset.role === "assistant"
+        && chatHeader.tagName === "HEADER"
+        && chatActions.tagName === "FOOTER"
+        && chatComposer.getAttribute("action") === "/gallery-chat-submit"
+        && chatComposer.getAttribute("aria-label") === "Gallery message composer"
+        && chatTextArea.rows === 2
+        && chatTextArea.value === "Review the presentation contract"
+        && chatSubmit.type === "submit"
+        && chatSubmit.textContent?.trim() === "Send message",
       clientWidth: document.documentElement.clientWidth,
       copy: copy.textContent?.replace(/\s+/gu, " ").trim() ?? "",
       dotsContained:
@@ -657,9 +1222,10 @@ try {
   const stylesheet = files.find((file) => file.endsWith(".css"));
   invariant(script !== undefined, "Gallery build did not emit JavaScript.");
   invariant(stylesheet !== undefined, "Gallery build did not emit CSS.");
-  const [builtCss, stylexCss] = await Promise.all([
+  const [builtCss, stylexCss, compiledReactJavaScript] = await Promise.all([
     Bun.file(join(work, stylesheet)).text(),
     Bun.file(join(repository, "dist/stylex.css")).text(),
+    Bun.file(join(repository, "dist/react/index.js")).text(),
   ]);
   const stylexClasses = [...stylexCss.matchAll(/^\s*\.([\w-]+)\s*\{/gmu)]
     .map((match) => match[1])
@@ -711,6 +1277,12 @@ try {
       && !/@layer\s+components\.hraness-design-kit\.priority(?:5|6)/u.test(builtCss),
     "Gallery CSS lost the Fader default, compact, rail, or focus recipe.",
   );
+  requireChatStaticPresentation(
+    stylexCss,
+    compiledReactJavaScript,
+    "Gallery design-kit StyleX CSS",
+  );
+  requireChatStaticPresentation(builtCss, compiledReactJavaScript, "Gallery CSS");
   await writeFile(
     join(work, "index.html"),
     [
@@ -825,6 +1397,34 @@ try {
             stageKey: state.animatedRailStageStageKey,
             transform: state.animatedRailStageTransform,
             transitionProperty: state.animatedRailStageTransitionProperty,
+          })}`,
+        );
+        invariant(
+          state.chatAtomic
+            && state.chatCallerLast
+            && state.chatMessageDisplay === "grid"
+            && state.chatMessageColumnCount === 2
+            && state.chatMessageGap === "12px"
+            && state.chatComposerDisplay === "grid"
+            && state.chatComposerAlignItems === "end"
+            && state.chatComposerGap === "8px"
+            && state.chatComposerColumnCount === (layout.id === "compact" ? 1 : 2)
+            && state.chatRowsPresentation
+            && state.chatSemantic
+            && state.chatNoOwnedInlinePresentation,
+          `${layout.id}: Chat delivery is ${JSON.stringify({
+            atomic: state.chatAtomic,
+            callerLast: state.chatCallerLast,
+            composerAlignItems: state.chatComposerAlignItems,
+            composerColumns: state.chatComposerColumnCount,
+            composerDisplay: state.chatComposerDisplay,
+            composerGap: state.chatComposerGap,
+            messageColumns: state.chatMessageColumnCount,
+            messageDisplay: state.chatMessageDisplay,
+            messageGap: state.chatMessageGap,
+            noOwnedInlinePresentation: state.chatNoOwnedInlinePresentation,
+            rowsPresentation: state.chatRowsPresentation,
+            semantic: state.chatSemantic,
           })}`,
         );
         invariant(state.proceduralVariant === "composite", `${layout.id}: procedural variant changed`);
@@ -1076,6 +1676,25 @@ try {
             && await playbackCommand.getAttribute("data-playback-command") === "play"
             && await playbackCommand.locator('[data-slot="icon"]').count() === 1,
           `${layout.id}: Stop did not restore the stable Play command`,
+        );
+
+        const chatComposer = page.locator(".design-gallery__chat-composer");
+        const chatTextArea = chatComposer.locator("textarea");
+        const chatUrl = page.url();
+        await chatTextArea.fill("First line");
+        await chatTextArea.press("Enter");
+        invariant(
+          (await chatTextArea.inputValue()).includes("\n")
+            && await page.locator("[data-gallery-chat]")
+              .getAttribute("data-gallery-chat-submission") === "",
+          `${layout.id}: multiline Enter submitted or lost its newline`,
+        );
+        await chatTextArea.fill("Verified message");
+        await chatComposer.getByRole("button", { name: "Send message" }).click();
+        await page.locator('[data-gallery-chat-submission="Verified message"]').waitFor();
+        invariant(
+          page.url() === chatUrl && await chatTextArea.inputValue() === "",
+          `${layout.id}: ChatComposer did not prevent navigation or clear through its controlled callback`,
         );
 
         const plainLink = page.locator(".design-gallery__plain-link-example a");
