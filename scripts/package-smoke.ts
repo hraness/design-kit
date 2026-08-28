@@ -78,7 +78,9 @@ function matchingCssBrace(source: string, openBrace: number, label: string): num
 }
 
 function compactMediaBlocks(css: string, label: string): CssBlockRange[] {
-  return [...css.matchAll(/@media\s*\(width\s*<=\s*48rem\)\s*\{/gu)].map((match) => {
+  return [...css.matchAll(
+    /@media\s*\((?:max-width\s*:\s*48rem|width\s*<=\s*48rem)\)\s*\{/gu,
+  )].map((match) => {
     if (match.index === undefined) {
       throw new Error(`${label} contains an unlocatable compact media block.`);
     }
