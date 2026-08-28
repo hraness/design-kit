@@ -696,23 +696,23 @@ try {
     "The combined CSS artifact lost the gallery-only TopBar old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only PlaybackTransport old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only Fader old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only AnimatedRailStage old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-old-parent=(?:"true"|true)\]\s+\.hraness-design-chat-message\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-old-parent=(?:"true"|true)\]\s+\.hraness-design-chat-message(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only ChatMessage old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-old-parent=(?:"true"|true)\]\.hraness-design-chat-composer\s*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-old-parent=(?:"true"|true)\]\.hraness-design-chat-composer(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
     "The combined CSS artifact lost the gallery-only ChatComposer old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
