@@ -45,3 +45,7 @@
 - Keep mandatory rules in the closest `AGENTS.md`, current procedures in `docs/` when needed, executable contracts in types and tests, and pull-based rationale and plans in `kb/`.
 - Run `bun run kb:check:lane` in an independent KB lane. The integrating agent runs `bun run kb:refresh` and `bun run kb:check`.
 - Scheduled dependency discovery may regenerate the Bun lock only inside its ephemeral checkout and upload a bounded diff for one immutable release. It must never push, open or approve a pull request, merge, move tags, publish, or mutate provider state.
+
+<!-- hra-local-efficiency:start -->
+- Preserve useful agent fan-out. Give each expensive focused validation command and external wait one owner; the integration owner reviews that evidence and runs the repository-required aggregate or final gate once after convergence. Reuse evidence only for the exact Git tree, command, lockfiles, toolchain, relevant environment, and validity period, and never to skip a required final integration, merge, release, deployment, or production-verification gate. On Hraness development machines, use `$hra-local-efficiency` and the installed host scheduler for heavyweight top-level commands when available.
+<!-- hra-local-efficiency:end -->
