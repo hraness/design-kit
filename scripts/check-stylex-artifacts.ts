@@ -183,6 +183,7 @@ function requireAggregateContract(source: string): void {
     '@import "./jelly.css";',
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
+    '@import "./product-marketing.css";',
     '@import "./design-gallery.css";',
   ];
   const statements = topLevelStatements(source, "src/styles.css");

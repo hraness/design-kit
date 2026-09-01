@@ -284,6 +284,486 @@ function ProceduralBackdrop({
   });
 }
 
+// src/react/product-marketing.tsx
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+function classNames(...values) {
+  return values.filter((value) => value !== undefined && value.length > 0).join(" ");
+}
+function Heading({
+  children,
+  className,
+  id,
+  level
+}) {
+  const properties = { children, className, id };
+  switch (level) {
+    case 1:
+      return /* @__PURE__ */ jsx2("h1", {
+        ...properties
+      });
+    case 2:
+      return /* @__PURE__ */ jsx2("h2", {
+        ...properties
+      });
+    case 3:
+      return /* @__PURE__ */ jsx2("h3", {
+        ...properties
+      });
+    case 4:
+      return /* @__PURE__ */ jsx2("h4", {
+        ...properties
+      });
+    case 5:
+      return /* @__PURE__ */ jsx2("h5", {
+        ...properties
+      });
+    case 6:
+      return /* @__PURE__ */ jsx2("h6", {
+        ...properties
+      });
+  }
+  throw new TypeError("Marketing heading level must be between one and six.");
+}
+function childHeadingLevel(level) {
+  return Math.min(level + 1, 6);
+}
+function MarketingActions({ actions }) {
+  if (actions.length === 0)
+    return null;
+  return /* @__PURE__ */ jsx2("div", {
+    className: "hraness-marketing-hero__actions",
+    children: actions.map((action, index) => /* @__PURE__ */ jsx2("a", {
+      className: "hraness-marketing-action",
+      "data-emphasis": action.emphasis ?? (index === 0 ? "primary" : "secondary"),
+      href: action.href,
+      children: action.label
+    }, `${action.href}-${action.label}`))
+  });
+}
+function MarketingFlow({
+  ariaLabel,
+  className,
+  steps
+}) {
+  return /* @__PURE__ */ jsx2("ol", {
+    "aria-label": ariaLabel,
+    className: classNames("hraness-marketing-flow", className),
+    "data-hraness-marketing": "flow",
+    children: steps.map((step, index) => /* @__PURE__ */ jsxs2("li", {
+      className: "hraness-marketing-flow__step",
+      children: [
+        /* @__PURE__ */ jsx2("span", {
+          "aria-hidden": "true",
+          className: "hraness-marketing-flow__number",
+          children: String(index + 1).padStart(2, "0")
+        }),
+        /* @__PURE__ */ jsxs2("div", {
+          className: "hraness-marketing-flow__body",
+          children: [
+            /* @__PURE__ */ jsx2("strong", {
+              className: "hraness-marketing-flow__label",
+              children: step.label
+            }),
+            step.code === undefined ? null : /* @__PURE__ */ jsx2("code", {
+              className: "hraness-marketing-flow__code",
+              children: step.code
+            }),
+            step.detail === undefined ? null : /* @__PURE__ */ jsx2("p", {
+              className: "hraness-marketing-flow__detail",
+              children: step.detail
+            })
+          ]
+        })
+      ]
+    }, `${String(index)}-${step.label}`))
+  });
+}
+function MarketingFacts({
+  className,
+  facts
+}) {
+  if (facts.length === 0)
+    return null;
+  return /* @__PURE__ */ jsx2("dl", {
+    className: classNames("hraness-marketing-facts", className),
+    "data-hraness-marketing": "facts",
+    children: facts.map((fact) => /* @__PURE__ */ jsxs2("div", {
+      children: [
+        /* @__PURE__ */ jsx2("dt", {
+          children: fact.label
+        }),
+        /* @__PURE__ */ jsxs2("dd", {
+          children: [
+            /* @__PURE__ */ jsx2("strong", {
+              children: fact.value
+            }),
+            fact.detail === undefined ? null : /* @__PURE__ */ jsx2("span", {
+              children: fact.detail
+            })
+          ]
+        })
+      ]
+    }, `${fact.label}-${fact.value}`))
+  });
+}
+function ProductHero({
+  actions = [],
+  boundary,
+  className,
+  eyebrow,
+  facts = [],
+  heading,
+  headingId,
+  headingLevel = 1,
+  name,
+  proof,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("header", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-hero", className),
+    "data-hraness-marketing": "hero",
+    children: [
+      /* @__PURE__ */ jsxs2("div", {
+        className: "hraness-marketing-hero__copy",
+        children: [
+          /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-hero__eyebrow",
+            children: eyebrow
+          }),
+          /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-hero__name",
+            children: name
+          }),
+          /* @__PURE__ */ jsx2(Heading, {
+            className: "hraness-marketing-hero__heading",
+            id: headingId,
+            level: headingLevel,
+            children: heading
+          }),
+          /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-hero__summary",
+            children: summary
+          }),
+          /* @__PURE__ */ jsx2(MarketingActions, {
+            actions
+          }),
+          boundary === undefined ? null : /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-hero__boundary",
+            children: boundary
+          })
+        ]
+      }),
+      proof === undefined ? null : /* @__PURE__ */ jsxs2("aside", {
+        className: "hraness-marketing-proof",
+        "aria-labelledby": `${headingId}-proof`,
+        children: [
+          proof.kicker === undefined ? null : /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-proof__kicker",
+            children: proof.kicker
+          }),
+          /* @__PURE__ */ jsx2(Heading, {
+            className: "hraness-marketing-proof__heading",
+            id: `${headingId}-proof`,
+            level: childHeadingLevel(headingLevel),
+            children: proof.heading
+          }),
+          proof.content
+        ]
+      }),
+      /* @__PURE__ */ jsx2(MarketingFacts, {
+        facts
+      })
+    ]
+  });
+}
+function MarketingInstallPanel({
+  children,
+  className,
+  eyebrow,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-install", className),
+    "data-hraness-marketing": "install",
+    id,
+    children: [
+      /* @__PURE__ */ jsxs2("div", {
+        className: "hraness-marketing-install__heading-group",
+        children: [
+          /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-install__eyebrow",
+            children: eyebrow
+          }),
+          /* @__PURE__ */ jsx2(Heading, {
+            className: "hraness-marketing-install__heading",
+            id: headingId,
+            level: headingLevel,
+            children: heading
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-install__commands",
+        children
+      })
+    ]
+  });
+}
+function MarketingProofFrame({
+  caption,
+  children,
+  className,
+  credit
+}) {
+  return /* @__PURE__ */ jsxs2("figure", {
+    className: classNames("hraness-marketing-proof-frame", className),
+    "data-hraness-marketing": "proof-frame",
+    children: [
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-proof-frame__content",
+        children
+      }),
+      /* @__PURE__ */ jsxs2("figcaption", {
+        className: "hraness-marketing-proof-frame__caption",
+        children: [
+          /* @__PURE__ */ jsx2("span", {
+            children: caption
+          }),
+          credit === undefined ? null : /* @__PURE__ */ jsx2("small", {
+            children: credit
+          })
+        ]
+      })
+    ]
+  });
+}
+function MarketingSection({
+  children,
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  label
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-section", className),
+    "data-hraness-marketing": "section",
+    id,
+    children: [
+      /* @__PURE__ */ jsxs2("div", {
+        className: "hraness-marketing-section__heading-group",
+        children: [
+          /* @__PURE__ */ jsx2("p", {
+            className: "hraness-marketing-section__label",
+            children: label
+          }),
+          /* @__PURE__ */ jsx2(Heading, {
+            className: "hraness-marketing-section__heading",
+            id: headingId,
+            level: headingLevel,
+            children: heading
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-section__body",
+        children
+      })
+    ]
+  });
+}
+function MarketingCollectionHeader({
+  heading,
+  headingId,
+  headingLevel,
+  label,
+  prefix,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("header", {
+    className: `hraness-marketing-${prefix}__header`,
+    children: [
+      /* @__PURE__ */ jsx2("p", {
+        className: `hraness-marketing-${prefix}__label`,
+        children: label
+      }),
+      /* @__PURE__ */ jsx2(Heading, {
+        className: `hraness-marketing-${prefix}__heading`,
+        id: headingId,
+        level: headingLevel,
+        children: heading
+      }),
+      summary === undefined ? null : /* @__PURE__ */ jsx2("p", {
+        children: summary
+      })
+    ]
+  });
+}
+function MarketingInterfaceGrid({
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  interfaces,
+  label,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-interfaces", className),
+    "data-hraness-marketing": "interfaces",
+    id,
+    children: [
+      /* @__PURE__ */ jsx2(MarketingCollectionHeader, {
+        ...{ heading, headingId, headingLevel, label, summary },
+        prefix: "interfaces"
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-interface-grid",
+        children: interfaces.map((entry) => /* @__PURE__ */ jsxs2("article", {
+          className: "hraness-marketing-interface",
+          children: [
+            /* @__PURE__ */ jsx2(Heading, {
+              className: "hraness-marketing-interface__heading",
+              level: childHeadingLevel(headingLevel),
+              children: entry.label
+            }),
+            /* @__PURE__ */ jsx2("p", {
+              children: entry.summary
+            }),
+            entry.example
+          ]
+        }, entry.label))
+      })
+    ]
+  });
+}
+function MarketingTrustBoundary({
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  items,
+  label,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-trust", className),
+    "data-hraness-marketing": "trust",
+    id,
+    children: [
+      /* @__PURE__ */ jsx2(MarketingCollectionHeader, {
+        ...{ heading, headingId, headingLevel, label, summary },
+        prefix: "trust"
+      }),
+      /* @__PURE__ */ jsx2("dl", {
+        className: "hraness-marketing-trust-grid",
+        children: items.map((item) => /* @__PURE__ */ jsxs2("div", {
+          className: "hraness-marketing-trust-item",
+          children: [
+            /* @__PURE__ */ jsx2("dt", {
+              children: item.label
+            }),
+            /* @__PURE__ */ jsx2("dd", {
+              children: item.detail
+            })
+          ]
+        }, item.label))
+      })
+    ]
+  });
+}
+function MarketingQuestionList({
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  label,
+  questions,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-questions", className),
+    "data-hraness-marketing": "questions",
+    id,
+    children: [
+      /* @__PURE__ */ jsx2(MarketingCollectionHeader, {
+        ...{ heading, headingId, headingLevel, label, summary },
+        prefix: "questions"
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-question-list",
+        children: questions.map((question) => /* @__PURE__ */ jsxs2("details", {
+          className: "hraness-marketing-question",
+          children: [
+            /* @__PURE__ */ jsx2("summary", {
+              children: question.question
+            }),
+            /* @__PURE__ */ jsx2("div", {
+              className: "hraness-marketing-question__answer",
+              children: question.answer
+            })
+          ]
+        }, question.question))
+      })
+    ]
+  });
+}
+function MarketingCallToAction({
+  actions,
+  className,
+  eyebrow,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs2("section", {
+    "aria-labelledby": headingId,
+    className: classNames("hraness-marketing-cta", className),
+    "data-hraness-marketing": "cta",
+    id,
+    children: [
+      /* @__PURE__ */ jsx2("p", {
+        className: "hraness-marketing-cta__eyebrow",
+        children: eyebrow
+      }),
+      /* @__PURE__ */ jsx2(Heading, {
+        className: "hraness-marketing-cta__heading",
+        id: headingId,
+        level: headingLevel,
+        children: heading
+      }),
+      summary === undefined ? null : /* @__PURE__ */ jsx2("p", {
+        className: "hraness-marketing-cta__summary",
+        children: summary
+      }),
+      /* @__PURE__ */ jsx2("div", {
+        className: "hraness-marketing-cta__actions",
+        children: actions.map((action, index) => /* @__PURE__ */ jsx2("a", {
+          className: "hraness-marketing-action",
+          "data-emphasis": action.emphasis ?? (index === 0 ? "primary" : "secondary"),
+          href: action.href,
+          children: action.label
+        }, `${action.href}-${action.label}`))
+      })
+    ]
+  });
+}
+
 // src/react/surfaces.tsx
 import { forwardRef } from "react";
 import * as stylex from "@stylexjs/stylex";
@@ -454,7 +934,7 @@ var layoutSurfaceStyles = {
 };
 
 // src/react/surfaces.tsx
-import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
 var ditherSurfaceDensityStyles = {
   coarse: ditherSurfaceStyles.coarse,
   fine: ditherSurfaceStyles.fine,
@@ -466,7 +946,7 @@ function DitherSurface({
   xstyle,
   ...props2
 }) {
-  return /* @__PURE__ */ jsx2(ThemedSurface, {
+  return /* @__PURE__ */ jsx3(ThemedSurface, {
     ...props2,
     className: cn2("hraness-design-dither-surface", className),
     "data-density": density,
@@ -492,31 +972,31 @@ function TopBar({
   const titlePresentation = stylex.props(layoutSurfaceStyles.topBarTitle);
   const contentPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
   const actionsPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.topBarActions);
-  return /* @__PURE__ */ jsxs2("header", {
+  return /* @__PURE__ */ jsxs3("header", {
     ...rootPresentation,
     ...props2,
     className: cn2("hraness-design-top-bar", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     children: [
-      /* @__PURE__ */ jsxs2("div", {
+      /* @__PURE__ */ jsxs3("div", {
         ...leadingPresentation,
         className: cn2("hraness-design-top-bar__leading", leadingPresentation.className),
         children: [
           leading,
-          title === undefined ? null : /* @__PURE__ */ jsx2("div", {
+          title === undefined ? null : /* @__PURE__ */ jsx3("div", {
             ...titlePresentation,
             className: cn2("hraness-design-top-bar__title", titlePresentation.className),
             children: title
           })
         ]
       }),
-      children === undefined ? null : /* @__PURE__ */ jsx2("div", {
+      children === undefined ? null : /* @__PURE__ */ jsx3("div", {
         ...contentPresentation,
         className: cn2("hraness-design-top-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx3("div", {
         ...actionsPresentation,
         className: cn2("hraness-design-top-bar__actions", actionsPresentation.className),
         children: actions
@@ -535,22 +1015,22 @@ function BottomBar({
   const leadingPresentation = stylex.props(layoutSurfaceStyles.barPart);
   const contentPresentation = stylex.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
   const actionsPresentation = stylex.props(layoutSurfaceStyles.barPart);
-  return /* @__PURE__ */ jsxs2("footer", {
+  return /* @__PURE__ */ jsxs3("footer", {
     ...rootPresentation,
     ...props2,
     className: cn2("hraness-design-bottom-bar", rootPresentation.className, className),
     children: [
-      leading === undefined ? null : /* @__PURE__ */ jsx2("div", {
+      leading === undefined ? null : /* @__PURE__ */ jsx3("div", {
         ...leadingPresentation,
         className: cn2("hraness-design-bottom-bar__leading", leadingPresentation.className),
         children: leading
       }),
-      /* @__PURE__ */ jsx2("div", {
+      /* @__PURE__ */ jsx3("div", {
         ...contentPresentation,
         className: cn2("hraness-design-bottom-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx2("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx3("div", {
         ...actionsPresentation,
         className: cn2("hraness-design-bottom-bar__actions", actionsPresentation.className),
         children: actions
@@ -567,7 +1047,7 @@ function PageCanvas({
 }) {
   const Element = as;
   const presentation = stylex.props(layoutSurfaceStyles.pageCanvas, inset === "content" ? layoutSurfaceStyles.pageContentInset : layoutSurfaceStyles.pageNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx2(Element, {
+  return /* @__PURE__ */ jsx3(Element, {
     ...presentation,
     ...props2,
     className: cn2("hraness-design-page-canvas", presentation.className, className),
@@ -588,14 +1068,14 @@ var DockedFooter = forwardRef(function DockedFooter2({
 }, ref) {
   const rootPresentation = stylex.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.dockedFooter, position === "absolute" ? layoutSurfaceStyles.dockedAbsolute : position === "sticky" ? layoutSurfaceStyles.dockedSticky : layoutSurfaceStyles.dockedFixed);
   const contentPresentation = stylex.props(layoutSurfaceStyles.dockedContent, density === "compact" ? inset === "content" ? layoutSurfaceStyles.dockedContentCompactInset : layoutSurfaceStyles.dockedContentCompactNoInset : inset === "content" ? layoutSurfaceStyles.dockedContentDefaultInset : layoutSurfaceStyles.dockedContentDefaultNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx2("footer", {
+  return /* @__PURE__ */ jsx3("footer", {
     ...rootPresentation,
     ...props2,
     className: cn2("hraness-design-docked-footer", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     ref,
-    children: /* @__PURE__ */ jsx2("div", {
+    children: /* @__PURE__ */ jsx3("div", {
       ...contentPresentation,
       className: cn2("hraness-design-docked-footer__content", contentPresentation.className, contentClassName),
       "data-density": density,
@@ -607,7 +1087,7 @@ var DockedFooter = forwardRef(function DockedFooter2({
 });
 
 // src/react/syntax-code.tsx
-import { jsx as jsx3 } from "react/jsx-runtime";
+import { jsx as jsx4 } from "react/jsx-runtime";
 function SyntaxCode({
   className,
   code,
@@ -615,7 +1095,7 @@ function SyntaxCode({
 }) {
   const highlighted = highlightCode(code, language);
   const classes = className === undefined ? highlighted.className : `${highlighted.className} ${className}`;
-  return /* @__PURE__ */ jsx3("code", {
+  return /* @__PURE__ */ jsx4("code", {
     className: classes,
     "data-language": highlighted.language,
     dangerouslySetInnerHTML: { __html: highlighted.html }
@@ -624,7 +1104,7 @@ function SyntaxCode({
 
 // src/react/particle-halo.tsx
 import { cn as cn3 } from "@hraness/ui";
-import { jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
 var colorVariables2 = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -652,14 +1132,14 @@ function ParticleHalo({
     "--hraness-design-procedural-shadow": recipe.palette.shadow,
     "--hraness-design-procedural-support": recipe.palette.support
   };
-  return /* @__PURE__ */ jsxs3("div", {
+  return /* @__PURE__ */ jsxs4("div", {
     ...props2,
     className: cn3("hraness-design-particle-halo", className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,
     style: rootStyle,
     children: [
-      /* @__PURE__ */ jsx4("span", {
+      /* @__PURE__ */ jsx5("span", {
         "aria-hidden": "true",
         className: "hraness-design-particle-halo__particles",
         role: "presentation",
@@ -675,13 +1155,13 @@ function ParticleHalo({
             "--hraness-design-particle-x": `${particle.x}%`,
             "--hraness-design-particle-y": `${particle.y}%`
           };
-          return /* @__PURE__ */ jsx4("i", {
+          return /* @__PURE__ */ jsx5("i", {
             className: "hraness-design-particle-halo__particle",
             style: particleStyle
           }, index);
         })
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx5("div", {
         className: "hraness-design-particle-halo__content",
         children
       })
@@ -689,4 +1169,4 @@ function ParticleHalo({
   });
 }
 
-export { proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };
+export { proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingFlow, MarketingFacts, ProductHero, MarketingInstallPanel, MarketingProofFrame, MarketingSection, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuestionList, MarketingCallToAction, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };

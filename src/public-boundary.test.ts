@@ -77,6 +77,13 @@ test("the package exposes compositions without a second primitive barrel", async
     types: "./src/react/server.ts",
     import: "./dist/react/server.js",
   });
+  expect(packageJson.exports["./product-marketing.css"]).toBe(
+    "./src/product-marketing.css",
+  );
+  expect(reactBarrel).toContain('./product-marketing.js');
+  expect(
+    await Bun.file(new URL("./react/server.ts", import.meta.url)).text(),
+  ).toContain('./product-marketing.js');
   for (const module of excludedPrimitiveModules) {
     expect(reactBarrel).not.toContain(`./${module}`);
   }

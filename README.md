@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.2.1",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.3.0",
     "@hraness/ui": "github:hraness/ui#v0.4.7"
   }
 }
@@ -44,6 +44,65 @@ Import narrower layers when the application does not need the full presentation 
 ```
 
 `plain-site.css` provides a compact site shell. `plain-publication.css` adds sourced article, citation, table, callout, and related-reading structure.
+
+## Explain a technical product
+
+`product-marketing.css` is an opt-in narrative grammar for technical product
+sites. It supplies outcome-led hero, ordered workflow, fact strip, install,
+proof frame, narrative section, interface, trust-boundary, native question, and
+call-to-action roles. The classes own responsive structure and semantics-facing
+presentation. Products bind the `--hraness-marketing-*` roles to their own
+palette, type, content, evidence, and action.
+
+Static sites may render the documented classes directly. React sites can use
+the server-safe compositions from either React entry:
+
+```tsx
+import {
+  MarketingFlow,
+  ProductHero,
+} from "@hraness/design-kit/react/server";
+
+<ProductHero
+  actions={[
+    { href: "#install", label: "Install Relay" },
+    { href: "#workflow", label: "See the workflow" },
+  ]}
+  boundary="Local CLI · version 1.2.3 · sync optional"
+  eyebrow="A reference developer tool"
+  facts={[
+    { detail: "One exact source.", label: "Input", value: "Repository" },
+    { detail: "One inspectable result.", label: "Output", value: "Receipt" },
+  ]}
+  heading="Move one exact job across every interface."
+  headingId="relay-title"
+  name="Relay"
+  proof={{
+    heading: "One job, two observable transitions",
+    kicker: "Working model",
+    content: (
+      <MarketingFlow
+        ariaLabel="First Relay job"
+        steps={[
+          { code: "relay init", detail: "Create one exact workspace.", label: "Initialize" },
+          { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
+        ]}
+      />
+    ),
+  }}
+  summary="The same owned job can be initialized, run, and inspected from a human or agent surface."
+/>
+```
+
+Import only the grammar when a site owns its reset and tokens:
+
+```css
+@import "@hraness/design-kit/product-marketing.css";
+```
+
+The components render complete server HTML and add no clipboard, animation, or
+analytics runtime. A product may enhance a command with its own accessible copy
+control while keeping selectable text as the fallback.
 
 ## Use application compositions
 
@@ -253,7 +312,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.2.1`. The previous rollback pair remains `@hraness/ui` `v0.4.6` with `@hraness/design-kit` `v0.1.9`.
+The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.0`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.2.1`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

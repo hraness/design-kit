@@ -2,16 +2,26 @@ import {
   BottomBar,
   DitherSurface,
   DockedFooter,
+  MarketingCallToAction,
+  MarketingFacts,
+  MarketingFlow,
+  MarketingInstallPanel,
+  MarketingInterfaceGrid,
+  MarketingProofFrame,
+  MarketingQuestionList,
+  MarketingSection,
+  MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
   ProceduralBackdrop,
+  ProductHero,
   SyntaxCode,
   TopBar,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-cdje4gw1.js";
+} from "../chunk-hh1k4jwx.js";
 import"../chunk-djxa5bgc.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -21,9 +31,19 @@ export {
   createParticleHaloRecipe,
   TopBar,
   SyntaxCode,
+  ProductHero,
   ProceduralBackdrop,
   ParticleHalo,
   PageCanvas,
+  MarketingTrustBoundary,
+  MarketingSection,
+  MarketingQuestionList,
+  MarketingProofFrame,
+  MarketingInterfaceGrid,
+  MarketingInstallPanel,
+  MarketingFlow,
+  MarketingFacts,
+  MarketingCallToAction,
   DockedFooter,
   DitherSurface,
   BottomBar

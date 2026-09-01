@@ -13,16 +13,26 @@ import {
   BottomBar,
   DitherSurface,
   DockedFooter,
+  MarketingCallToAction,
+  MarketingFacts,
+  MarketingFlow,
+  MarketingInstallPanel,
+  MarketingInterfaceGrid,
+  MarketingProofFrame,
+  MarketingQuestionList,
+  MarketingSection,
+  MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
   ProceduralBackdrop,
+  ProductHero,
   SyntaxCode,
   TopBar,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-cdje4gw1.js";
+} from "../chunk-hh1k4jwx.js";
 import"../chunk-djxa5bgc.js";
 import {
   __require
@@ -2740,6 +2750,7 @@ function ProductionDataPreviewNotice({
 import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
 var designGallerySections = [
   { id: "foundation", label: "Foundation" },
+  { id: "marketing", label: "Marketing" },
   { id: "shells", label: "Shells" },
   { id: "data", label: "Data" },
   { id: "effects", label: "Effects" },
@@ -2764,6 +2775,7 @@ var designGalleryRecipeCoverage = [
   "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
+  "product-marketing grammar",
   "Nebula Sans typography",
   "procedural effects",
   "production preview notice",
@@ -2961,6 +2973,64 @@ function DesignSystemGallery({
                     }),
                     " stay quiet until interaction."
                   ]
+                })
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs11("section", {
+        className: "design-gallery__section",
+        id: "marketing",
+        children: [
+          /* @__PURE__ */ jsx13("h2", {
+            children: "Product-marketing grammar"
+          }),
+          /* @__PURE__ */ jsxs11("div", {
+            className: "design-gallery__marketing",
+            children: [
+              /* @__PURE__ */ jsx13(ProductHero, {
+                actions: [
+                  { href: "#gallery-install", label: "Install Relay" },
+                  { href: "#shells", label: "See the workspace" }
+                ],
+                boundary: "Local CLI · version 1.2.3 · sync optional",
+                className: "design-gallery__marketing-hero",
+                eyebrow: "Reference developer tool",
+                facts: [
+                  { detail: "One exact source.", label: "Input", value: "Repository" },
+                  { detail: "One inspectable result.", label: "Output", value: "Receipt" },
+                  { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" }
+                ],
+                heading: "Move one exact job across every interface.",
+                headingId: "design-gallery-marketing-title",
+                headingLevel: 3,
+                name: "Relay",
+                proof: {
+                  content: /* @__PURE__ */ jsx13(MarketingFlow, {
+                    ariaLabel: "First Relay job",
+                    steps: [
+                      { code: "relay init", detail: "Create one exact workspace.", label: "Initialize" },
+                      { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
+                      { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" }
+                    ]
+                  }),
+                  heading: "One job, three observable transitions",
+                  kicker: "Working model"
+                },
+                summary: "The same owned job can be initialized, run, and inspected from a human or agent surface."
+              }),
+              /* @__PURE__ */ jsx13(MarketingInstallPanel, {
+                eyebrow: "Local release",
+                heading: "Install the verified tool.",
+                headingId: "design-gallery-install-title",
+                headingLevel: 3,
+                id: "gallery-install",
+                children: /* @__PURE__ */ jsx13("pre", {
+                  className: "design-gallery__marketing-command",
+                  children: /* @__PURE__ */ jsx13("code", {
+                    children: "bun add --global relay@1.2.3"
+                  })
                 })
               })
             ]
@@ -4184,12 +4254,22 @@ export {
   RailItem,
   RadarProfileChart,
   ProductionDataPreviewNotice,
+  ProductHero,
   ProceduralBackdrop,
   PlaybackTransport,
   PhaserDots,
   ParticleHalo,
   PageCanvas,
   NavigationRail,
+  MarketingTrustBoundary,
+  MarketingSection,
+  MarketingQuestionList,
+  MarketingProofFrame,
+  MarketingInterfaceGrid,
+  MarketingInstallPanel,
+  MarketingFlow,
+  MarketingFacts,
+  MarketingCallToAction,
   JellySurface,
   HAPTIC_FEEDBACK_EVENT_NAME,
   GlobalErrorDocument,

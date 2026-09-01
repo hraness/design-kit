@@ -18,6 +18,7 @@ export * from "./playback-transport.js";
 export * from "./procedural-backdrop.js";
 export * from "./procedural-recipe.js";
 export * from "./production-data-preview-notice.js";
+export * from "./product-marketing.js";
 export * from "./route-state.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";

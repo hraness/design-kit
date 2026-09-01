@@ -84,6 +84,23 @@
   padding: var(--space-4);
 }
 
+.design-gallery__marketing {
+  display: grid;
+  gap: var(--space-8);
+  padding: clamp(var(--space-4), 3vw, var(--space-8));
+  border: 1px solid var(--line);
+  background: var(--background);
+}
+
+.design-gallery__marketing-command {
+  max-inline-size: 100%;
+  margin: 0;
+  padding: var(--space-4);
+  overflow: auto;
+  background: var(--inverse);
+  color: var(--inverse-foreground);
+}
+
 .design-gallery__shell-preview {
   block-size: min(42rem, 72vh);
   min-block-size: 26rem;
@@ -224,6 +241,7 @@
   .design-gallery__instrument,
   .design-gallery__chat,
   .design-gallery__effect,
+  .design-gallery__marketing,
   .design-gallery__syntax {
     border-color: CanvasText;
   }
