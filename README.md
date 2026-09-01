@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.3.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.3.1",
     "@hraness/ui": "github:hraness/ui#v0.4.7"
   }
 }
@@ -312,7 +312,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.0`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.2.1`.
+The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.1`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.0`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

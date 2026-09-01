@@ -286,6 +286,14 @@ function ProceduralBackdrop({
 
 // src/react/product-marketing.tsx
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+var MARKETING_HEADING_TAGS = {
+  1: "h1",
+  2: "h2",
+  3: "h3",
+  4: "h4",
+  5: "h5",
+  6: "h6"
+};
 function classNames(...values) {
   return values.filter((value) => value !== undefined && value.length > 0).join(" ");
 }
@@ -296,33 +304,10 @@ function Heading({
   level
 }) {
   const properties = { children, className, id };
-  switch (level) {
-    case 1:
-      return /* @__PURE__ */ jsx2("h1", {
-        ...properties
-      });
-    case 2:
-      return /* @__PURE__ */ jsx2("h2", {
-        ...properties
-      });
-    case 3:
-      return /* @__PURE__ */ jsx2("h3", {
-        ...properties
-      });
-    case 4:
-      return /* @__PURE__ */ jsx2("h4", {
-        ...properties
-      });
-    case 5:
-      return /* @__PURE__ */ jsx2("h5", {
-        ...properties
-      });
-    case 6:
-      return /* @__PURE__ */ jsx2("h6", {
-        ...properties
-      });
-  }
-  throw new TypeError("Marketing heading level must be between one and six.");
+  const HeadingTag = MARKETING_HEADING_TAGS[level];
+  return /* @__PURE__ */ jsx2(HeadingTag, {
+    ...properties
+  });
 }
 function childHeadingLevel(level) {
   return Math.min(level + 1, 6);
