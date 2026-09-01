@@ -147,3 +147,22 @@ test("an embedded hero advances its proof heading without adding another h1", ()
   expect(html).toContain('<h2 class="hraness-marketing-hero__heading" id="embedded-title">');
   expect(html).toContain('<h3 class="hraness-marketing-proof__heading" id="embedded-title-proof">');
 });
+
+test("every public heading level renders its matching native element", () => {
+  for (const headingLevel of [1, 2, 3, 4, 5, 6] as const) {
+    const html = renderToStaticMarkup(
+      <MarketingSection
+        heading={`Level ${String(headingLevel)}`}
+        headingId={`level-${String(headingLevel)}`}
+        headingLevel={headingLevel}
+        label="Heading contract"
+      >
+        <p>Consumer-owned content.</p>
+      </MarketingSection>,
+    );
+
+    expect(html).toContain(
+      `<h${String(headingLevel)} class="hraness-marketing-section__heading" id="level-${String(headingLevel)}">`,
+    );
+  }
+});
