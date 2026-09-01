@@ -12,6 +12,7 @@ import {
 test("the public gallery covers the composition boundary", () => {
   expect(designGallerySections.map(({ id }) => id)).toEqual([
     "foundation",
+    "marketing",
     "shells",
     "data",
     "effects",
@@ -27,6 +28,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("layout surfaces");
   expect(designGalleryRecipeCoverage).toContain("playback transport");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
+  expect(designGalleryRecipeCoverage).toContain("product-marketing grammar");
   expect(designGalleryRecipeCoverage).toContain("Nebula Sans typography");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
@@ -106,6 +108,12 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-gallery-font="proportional"');
   expect(html).toContain('data-gallery-font="mono"');
   expect(html).toContain("More shape, less noise.");
+  expect(html).toContain('data-hraness-marketing="hero"');
+  expect(html).toContain('data-hraness-marketing="flow"');
+  expect(html).toContain('data-hraness-marketing="facts"');
+  expect(html).toContain('data-hraness-marketing="install"');
+  expect(html).toContain("Move one exact job across every interface.");
+  expect(html).toContain("bun add --global relay@1.2.3");
 });
 
 test("a nested gallery identifies itself and defers appearance to the product header", () => {

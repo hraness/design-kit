@@ -32,6 +32,11 @@ import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-tran
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import {
+  MarketingFlow,
+  MarketingInstallPanel,
+  ProductHero,
+} from "./product-marketing.js";
+import {
   BottomBar,
   DitherSurface,
   DockedFooter,
@@ -43,6 +48,7 @@ import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
 export const designGallerySections = [
   { id: "foundation", label: "Foundation" },
+  { id: "marketing", label: "Marketing" },
   { id: "shells", label: "Shells" },
   { id: "data", label: "Data" },
   { id: "effects", label: "Effects" },
@@ -70,6 +76,7 @@ export const designGalleryRecipeCoverage = [
   "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
+  "product-marketing grammar",
   "Nebula Sans typography",
   "procedural effects",
   "production preview notice",
@@ -196,6 +203,54 @@ export function DesignSystemGallery({
               Ordinary <a href="#foundation">blue links</a> stay quiet until interaction.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="design-gallery__section" id="marketing">
+        <h2>Product-marketing grammar</h2>
+        <div className="design-gallery__marketing">
+          <ProductHero
+            actions={[
+              { href: "#gallery-install", label: "Install Relay" },
+              { href: "#shells", label: "See the workspace" },
+            ]}
+            boundary="Local CLI · version 1.2.3 · sync optional"
+            className="design-gallery__marketing-hero"
+            eyebrow="Reference developer tool"
+            facts={[
+              { detail: "One exact source.", label: "Input", value: "Repository" },
+              { detail: "One inspectable result.", label: "Output", value: "Receipt" },
+              { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" },
+            ]}
+            heading="Move one exact job across every interface."
+            headingId="design-gallery-marketing-title"
+            headingLevel={3}
+            name="Relay"
+            proof={{
+              content: (
+                <MarketingFlow
+                  ariaLabel="First Relay job"
+                  steps={[
+                    { code: "relay init", detail: "Create one exact workspace.", label: "Initialize" },
+                    { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
+                    { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" },
+                  ]}
+                />
+              ),
+              heading: "One job, three observable transitions",
+              kicker: "Working model",
+            }}
+            summary="The same owned job can be initialized, run, and inspected from a human or agent surface."
+          />
+          <MarketingInstallPanel
+            eyebrow="Local release"
+            heading="Install the verified tool."
+            headingId="design-gallery-install-title"
+            headingLevel={3}
+            id="gallery-install"
+          >
+            <pre className="design-gallery__marketing-command"><code>bun add --global relay@1.2.3</code></pre>
+          </MarketingInstallPanel>
         </div>
       </section>
 
