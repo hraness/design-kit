@@ -31,3 +31,9 @@ test("the marketing grammar keeps compact, coarse-pointer, and forced-color cont
   expect(css).not.toContain("transition:");
   expect(css).not.toContain("animation:");
 });
+
+test("the soft-accent hero eyebrow keeps readable label ink", () => {
+  expect(css).toMatch(
+    /\.hraness-marketing-hero__eyebrow\s*\{[^}]*background: var\(--hraness-marketing-accent-soft\);[^}]*color: var\(--hraness-marketing-muted\);[^}]*\}/u,
+  );
+});

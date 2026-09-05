@@ -381,7 +381,7 @@
   border: 1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent);
   border-radius: 999px;
   background: var(--hraness-marketing-accent-soft);
-  color: var(--hraness-marketing-accent);
+  color: var(--hraness-marketing-muted);
 }
 
 .hraness-marketing-hero__name {
