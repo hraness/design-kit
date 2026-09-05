@@ -112,7 +112,10 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-hraness-marketing="flow"');
   expect(html).toContain('data-hraness-marketing="facts"');
   expect(html).toContain('data-hraness-marketing="install"');
-  expect(html).toContain("Move one exact job across every interface.");
+  expect(html).toContain("Move one job across every interface");
+  expect(html).toContain('data-hraness-marketing="pillars"');
+  expect(html).toContain('data-hraness-marketing="pricing"');
+  expect(html).toContain('data-hraness-marketing="maker"');
   expect(html).toContain("bun add --global relay@1.2.3");
 });
 

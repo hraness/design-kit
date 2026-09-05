@@ -6,9 +6,17 @@ import {
   MarketingFlow,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
+  MarketingMaker,
+  MarketingPage,
+  MarketingPillars,
+  MarketingPricing,
+  MarketingPrimitives,
   MarketingProofFrame,
   MarketingQuestionList,
+  MarketingQuoteGrid,
   MarketingSection,
+  MarketingSiteHeader,
+  MarketingStatStrip,
   MarketingTrustBoundary,
   ProductHero,
 } from "./product-marketing";
@@ -165,4 +173,133 @@ test("every public heading level renders its matching native element", () => {
       `<h${String(headingLevel)} class="hraness-marketing-section__heading" id="level-${String(headingLevel)}">`,
     );
   }
+});
+
+test("the premium roles render semantic, server-only HTML with the shared data hooks", () => {
+  const html = renderToStaticMarkup(
+    <MarketingPage>
+      <MarketingSiteHeader
+        action={{ href: "#install", label: "Install Relay" }}
+        brand="Relay"
+        links={[
+          { current: true, href: "#how", label: "How it works" },
+          { href: "#pricing", label: "Pricing" },
+        ]}
+      />
+      <ProductHero
+        actions={[{ href: "#install", label: "Install Relay" }]}
+        example="Ask your agent to run the nightly job."
+        eyebrow="A reference developer tool"
+        frame={(
+          <MarketingProofFrame caption="One receipt." title="relay run job-01">
+            <pre><code>{'{"status":"complete"}'}</code></pre>
+          </MarketingProofFrame>
+        )}
+        heading="Move one job across every interface"
+        headingId="relay-title"
+        name="Relay"
+        summary="Relay runs the same job from a terminal, typed code, or a coding agent."
+        tone="accent"
+      />
+      <MarketingPillars
+        ariaLabel="Relay in three points"
+        pillars={[
+          { label: "Fast", summary: "Runs locally." },
+          { label: "Legible", summary: "Leaves a receipt." },
+          { label: "Yours", summary: "Stays on your machine." },
+        ]}
+      />
+      <MarketingSection heading="Split layout." headingId="split-title" label="Layout" layout="split" summary="A lead.">
+        <p>Body.</p>
+      </MarketingSection>
+      <MarketingPrimitives
+        heading="Small building blocks."
+        headingId="primitives-title"
+        items={[
+          { label: "Jobs", summary: "A named unit of work." },
+          { label: "Receipts", summary: "The record of one run." },
+        ]}
+        label="Primitives"
+      />
+      <MarketingStatStrip
+        ariaLabel="Relay usage"
+        source="Counted on 5 September 2026."
+        stats={[
+          { label: "Example jobs", value: "12" },
+          { label: "Accounts required", value: "0" },
+        ]}
+      />
+      <MarketingQuoteGrid
+        heading="From people building with it."
+        headingId="quotes-title"
+        label="Quotes"
+        quotes={[{ href: "https://example.com/a", name: "A. Example", quote: "It works.", role: "@example" }]}
+      />
+      <MarketingPricing
+        heading="Free for local use."
+        headingId="pricing-title"
+        label="Pricing"
+        plans={[
+          {
+            action: { href: "#install", label: "Install Relay" },
+            emphasis: "primary",
+            features: ["Every feature"],
+            name: "Local",
+            period: "forever",
+            price: "$0",
+          },
+        ]}
+      />
+      <MarketingMaker
+        heading="Built by a maker."
+        headingId="maker-title"
+        label="Built by"
+        links={[{ href: "https://example.com", label: "Personal site" }]}
+      >
+        <p>A short bio.</p>
+      </MarketingMaker>
+      <MarketingCallToAction
+        actions={[{ href: "#install", label: "Install Relay" }]}
+        footnote="Free for local use."
+        heading="Give every job the same room."
+        headingId="cta-title"
+        tone="accent"
+      />
+    </MarketingPage>,
+  );
+
+  expect(html).toContain('class="hraness-marketing-page"');
+  expect(html).toContain('data-hraness-marketing="header"');
+  expect(html).toContain('<nav aria-label="Site" class="hraness-marketing-header__nav">');
+  expect(html).toContain('aria-current="page"');
+  expect(html).toContain('data-hraness-marketing="hero" data-tone="accent"');
+  expect(html).toContain('<p class="hraness-marketing-hero__example">Ask your agent to run the nightly job.</p>');
+  expect(html).toContain('<div class="hraness-marketing-hero__frame">');
+  expect(html).toContain('<span class="hraness-marketing-proof-frame__title">relay run job-01</span>');
+  expect(html).toContain('data-hraness-marketing="pillars"');
+  expect(html).toContain("--hraness-marketing-pillar-columns:3");
+  expect(html).toContain('data-layout="split"');
+  expect(html).toContain('<p class="hraness-marketing-section__summary">A lead.</p>');
+  expect(html).toContain('data-hraness-marketing="primitives"');
+  expect(html).toContain('<h3 class="hraness-marketing-primitive__heading">Jobs</h3>');
+  expect(html).toContain('data-hraness-marketing="stats"');
+  expect(html).toContain('<p class="hraness-marketing-stats__source">Counted on 5 September 2026.</p>');
+  expect(html).toContain('data-hraness-marketing="quotes"');
+  expect(html).toContain('<a href="https://example.com/a">@example</a>');
+  expect(html).toContain('data-hraness-marketing="pricing"');
+  expect(html).toContain('<li class="hraness-marketing-plan" data-emphasis="primary">');
+  expect(html).toContain("<strong>$0</strong><span>forever</span>");
+  expect(html).toContain('data-hraness-marketing="maker"');
+  expect(html).toContain('<ul class="hraness-marketing-maker__links">');
+  expect(html).toContain('data-hraness-marketing="cta" data-tone="accent"');
+  expect(html).toContain('<p class="hraness-marketing-cta__footnote">Free for local use.</p>');
+  expect(html.match(/<h1\b/gu)).toHaveLength(1);
+  expect(html).not.toMatch(/onClick|<script\b/iu);
+});
+
+test("empty quote and pillar collections render nothing", () => {
+  expect(renderToStaticMarkup(
+    <MarketingQuoteGrid heading="Quotes." headingId="q" label="Quotes" quotes={[]} />,
+  )).toBe("");
+  expect(renderToStaticMarkup(<MarketingPillars ariaLabel="Pillars" pillars={[]} />)).toBe("");
 });

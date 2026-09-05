@@ -1,95 +1,238 @@
 @layer components.hraness-design-kit.legacy {
 
+/**
+ * Product-marketing grammar
+ *
+ * An opt-in narrative grammar for technical product sites. One typeface, one
+ * measured type scale, sentence-case labels, hairline chrome, soft radii, and
+ * one accent per product. Roles: site header, hero with optional product
+ * frame, pillars, install, ordered flow, fact and stat strips, narrative
+ * section, primitives, interfaces, trust boundary, quotes, pricing, native
+ * questions, maker, and closing call to action.
+ *
+ * Products bind the `--hraness-marketing-*` custom properties on the marketing
+ * root (`.hraness-marketing-page`) or on any role element. Every role reads
+ * the same properties, so a site sets its accent once.
+ */
+
 :where(
+  .hraness-marketing-page,
+  .hraness-marketing-header,
   .hraness-marketing-hero,
+  .hraness-marketing-pillars,
   .hraness-marketing-install,
   .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-stats,
   .hraness-marketing-interfaces,
   .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
   .hraness-marketing-questions,
-  .hraness-marketing-cta
+  .hraness-marketing-maker,
+  .hraness-marketing-cta,
+  .hraness-marketing-proof-frame
 ) {
   --hraness-marketing-ink: var(--foreground, CanvasText);
   --hraness-marketing-muted: var(--muted, GrayText);
-  --hraness-marketing-line: var(--line, currentColor);
+  --hraness-marketing-background: var(--background, Canvas);
   --hraness-marketing-surface: var(--surface, Canvas);
+  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 12%, transparent);
+  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-ink) 22%, transparent);
   --hraness-marketing-inverse: var(--inverse, CanvasText);
   --hraness-marketing-inverse-ink: var(--inverse-foreground, Canvas);
-  --hraness-marketing-accent: var(--primary, currentColor);
+  --hraness-marketing-accent: var(--hraness-site-accent, oklch(0.55 0.21 262));
+  --hraness-marketing-accent-ink: var(--hraness-site-accent-ink, white);
+  --hraness-marketing-accent-soft: color-mix(in oklch, var(--hraness-marketing-accent) 10%, transparent);
   --hraness-marketing-text-font: var(--font-text, ui-sans-serif, system-ui, sans-serif);
   --hraness-marketing-heading-font: var(--font-heading, var(--hraness-marketing-text-font));
   --hraness-marketing-mono-font: var(--font-mono, ui-monospace, monospace);
-  --hraness-marketing-measure: 74rem;
-  --hraness-marketing-copy-measure: 68ch;
+  --hraness-marketing-measure: 72rem;
+  --hraness-marketing-copy-measure: 40rem;
+  --hraness-marketing-prose-measure: 62ch;
+  --hraness-marketing-gutter: clamp(1.25rem, 4vw, 3rem);
+  --hraness-marketing-radius: 0.625rem;
+  --hraness-marketing-frame-radius: 0.875rem;
   --hraness-marketing-rule: 1px solid var(--hraness-marketing-line);
+  --hraness-marketing-shadow:
+    0 1px 2px oklch(0 0 0 / 0.06),
+    0 24px 48px -24px oklch(0 0 0 / 0.28);
+  --hraness-marketing-section-space: clamp(4rem, 9vw, 7.5rem);
+  --hraness-marketing-heading-weight: 500;
+  --hraness-marketing-heading-tracking: -0.022em;
+  --hraness-marketing-action-height: 2.75rem;
   color: var(--hraness-marketing-ink);
+  font-family: var(--hraness-marketing-text-font);
 }
 
-.hraness-marketing-hero {
-  display: grid;
-  inline-size: min(100%, var(--hraness-marketing-measure));
-  min-inline-size: 0;
-  margin-inline: auto;
-  gap: clamp(2rem, 5vw, 4.5rem);
-  grid-template-columns: minmax(0, 1.04fr) minmax(min(100%, 22rem), 0.96fr);
+.hraness-marketing-page {
+  background: var(--hraness-marketing-background);
+  color: var(--hraness-marketing-ink);
+  font-size: 1rem;
+  line-height: 1.55;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
 }
 
-.hraness-marketing-hero__copy {
-  min-inline-size: 0;
-  align-self: center;
-  padding-block: clamp(1rem, 5vw, 4rem);
+.hraness-marketing-page :where(p, li, dd) {
+  text-wrap: pretty;
 }
 
+.hraness-marketing-page :where(a) {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.hraness-marketing-page :where(code, kbd, pre) {
+  font-family: var(--hraness-marketing-mono-font);
+}
+
+.hraness-marketing-page :where(pre) {
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 1rem 1.15rem;
+  overflow: auto;
+  border-radius: var(--hraness-marketing-radius);
+  background: var(--hraness-marketing-inverse);
+  color: var(--hraness-marketing-inverse-ink);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.hraness-marketing-page :where(:not(pre) > code) {
+  padding: 0.08em 0.38em;
+  border-radius: 0.3em;
+  background: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
+  font-size: 0.9em;
+}
+
+/* Labels: sentence case in the text face. Monospace stays with code. */
 :where(
   .hraness-marketing-hero__eyebrow,
   .hraness-marketing-hero__name,
-  .hraness-marketing-hero__boundary,
   .hraness-marketing-proof__kicker,
   .hraness-marketing-install__eyebrow,
   .hraness-marketing-facts dt,
+  .hraness-marketing-stats dt,
   .hraness-marketing-section__label,
+  .hraness-marketing-primitives__label,
   .hraness-marketing-interfaces__label,
   .hraness-marketing-trust__label,
+  .hraness-marketing-quotes__label,
+  .hraness-marketing-pricing__label,
   .hraness-marketing-questions__label,
+  .hraness-marketing-maker__label,
   .hraness-marketing-cta__eyebrow
 ) {
-  font-family: var(--hraness-marketing-mono-font);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.hraness-marketing-hero__eyebrow {
-  margin: 0 0 clamp(2rem, 5vw, 4rem);
-  color: var(--hraness-marketing-accent);
-}
-
-.hraness-marketing-hero__name {
-  margin: 0 0 0.65rem;
-}
-
-.hraness-marketing-hero__heading {
-  max-inline-size: 11ch;
   margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-family: var(--hraness-marketing-text-font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-transform: none;
+}
+
+/* Shared heading recipe. */
+:where(
+  .hraness-marketing-hero__heading,
+  .hraness-marketing-proof__heading,
+  .hraness-marketing-install__heading,
+  .hraness-marketing-section__heading,
+  .hraness-marketing-primitives__heading,
+  .hraness-marketing-interfaces__heading,
+  .hraness-marketing-trust__heading,
+  .hraness-marketing-quotes__heading,
+  .hraness-marketing-pricing__heading,
+  .hraness-marketing-questions__heading,
+  .hraness-marketing-maker__heading,
+  .hraness-marketing-cta__heading
+) {
+  margin: 0;
+  color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-heading-font);
-  font-size: clamp(3.25rem, 7.6vw, 6.6rem);
-  font-weight: 700;
-  letter-spacing: -0.065em;
-  line-height: 0.92;
+  font-weight: var(--hraness-marketing-heading-weight);
+  letter-spacing: -0.012em;
+  line-height: 1.15;
   text-wrap: balance;
 }
 
-.hraness-marketing-hero__summary {
-  max-inline-size: 38rem;
-  margin: 1.75rem 0 0;
+:where(
+  .hraness-marketing-section__heading,
+  .hraness-marketing-primitives__heading,
+  .hraness-marketing-interfaces__heading,
+  .hraness-marketing-trust__heading,
+  .hraness-marketing-quotes__heading,
+  .hraness-marketing-pricing__heading,
+  .hraness-marketing-questions__heading,
+  .hraness-marketing-maker__heading
+) {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+/* Lead and summary paragraphs under a heading. */
+:where(
+  .hraness-marketing-hero__summary,
+  .hraness-marketing-hero__example,
+  .hraness-marketing-section__summary,
+  .hraness-marketing-primitives__header > p:last-child,
+  .hraness-marketing-interfaces__header > p:last-child,
+  .hraness-marketing-trust__header > p:last-child,
+  .hraness-marketing-quotes__header > p:last-child,
+  .hraness-marketing-pricing__header > p:last-child,
+  .hraness-marketing-questions__header > p:last-child,
+  .hraness-marketing-cta__summary
+) {
+  margin: 0;
   color: var(--hraness-marketing-muted);
   font-family: var(--hraness-marketing-text-font);
-  font-size: clamp(1.1rem, 2.25vw, 1.55rem);
-  line-height: 1.4;
-  text-wrap: pretty;
+  font-size: 1.125rem;
+  line-height: 1.5;
 }
+
+/* Container rhythm shared by every full-width role. */
+:where(
+  .hraness-marketing-hero,
+  .hraness-marketing-pillars,
+  .hraness-marketing-install,
+  .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-stats,
+  .hraness-marketing-interfaces,
+  .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
+  .hraness-marketing-questions,
+  .hraness-marketing-maker,
+  .hraness-marketing-cta
+) {
+  inline-size: min(100%, var(--hraness-marketing-measure));
+  min-inline-size: 0;
+  margin-inline: auto;
+}
+
+.hraness-marketing-page > :where(
+  .hraness-marketing-hero,
+  .hraness-marketing-pillars,
+  .hraness-marketing-install,
+  .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-stats,
+  .hraness-marketing-interfaces,
+  .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
+  .hraness-marketing-questions,
+  .hraness-marketing-maker,
+  .hraness-marketing-cta
+) {
+  padding-inline: var(--hraness-marketing-gutter);
+}
+
+/* Actions */
 
 .hraness-marketing-hero__actions,
 .hraness-marketing-cta__actions {
@@ -99,72 +242,263 @@
   gap: 0.65rem;
 }
 
-.hraness-marketing-hero__actions {
-  margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
-}
-
 .hraness-marketing-action {
   display: inline-flex;
-  min-block-size: 2.75rem;
+  min-block-size: var(--hraness-marketing-action-height);
   align-items: center;
   justify-content: center;
-  padding: 0.7rem 1rem;
-  border: var(--hraness-marketing-rule);
-  border-radius: var(--hraness-marketing-action-radius, 0);
+  gap: 0.45rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--hraness-marketing-line-strong);
+  border-radius: var(--hraness-marketing-radius);
+  background: var(--hraness-marketing-surface);
   color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-text-font);
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.2;
   text-decoration: none;
 }
 
 .hraness-marketing-action:hover {
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 8%, transparent);
+  background: color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface));
   text-decoration: none;
 }
 
+.hraness-marketing-action:focus-visible {
+  outline: 2px solid var(--hraness-marketing-accent);
+  outline-offset: 2px;
+}
+
 .hraness-marketing-action[data-emphasis="primary"] {
-  background: var(--hraness-marketing-ink);
-  color: var(--hraness-marketing-surface);
+  border-color: var(--hraness-marketing-accent);
+  background: var(--hraness-marketing-accent);
+  color: var(--hraness-marketing-accent-ink);
 }
 
 .hraness-marketing-action[data-emphasis="primary"]:hover {
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 88%, var(--hraness-marketing-surface));
+  border-color: color-mix(in oklch, var(--hraness-marketing-accent) 84%, black);
+  background: color-mix(in oklch, var(--hraness-marketing-accent) 84%, black);
+}
+
+/* Site header */
+
+.hraness-marketing-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
+  border-block-end: var(--hraness-marketing-rule);
+  background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+
+.hraness-marketing-header__inner {
+  display: flex;
+  inline-size: min(100%, var(--hraness-marketing-measure));
+  min-block-size: 3.5rem;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-inline: auto;
+  padding-inline: var(--hraness-marketing-gutter);
+}
+
+.hraness-marketing-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--hraness-marketing-ink);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.hraness-marketing-header__brand :where(img, svg) {
+  block-size: 1.375rem;
+  inline-size: auto;
+}
+
+.hraness-marketing-header__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 1.35rem;
+  margin-inline-start: auto;
+}
+
+.hraness-marketing-header__nav a {
+  color: var(--hraness-marketing-muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.hraness-marketing-header__nav a:hover,
+.hraness-marketing-header__nav a[aria-current="page"] {
+  color: var(--hraness-marketing-ink);
+}
+
+.hraness-marketing-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hraness-marketing-header .hraness-marketing-action {
+  min-block-size: 2.25rem;
+  padding-block: 0.4rem;
+  padding-inline: 0.9rem;
+  font-size: 0.9rem;
+}
+
+/* Hero */
+
+.hraness-marketing-hero {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.hraness-marketing-hero__copy {
+  display: grid;
+  min-inline-size: 0;
+  justify-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.hraness-marketing-hero[data-align="start"] .hraness-marketing-hero__copy {
+  justify-items: start;
+  text-align: start;
+}
+
+.hraness-marketing-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent);
+  border-radius: 999px;
+  background: var(--hraness-marketing-accent-soft);
+  color: var(--hraness-marketing-accent);
+}
+
+.hraness-marketing-hero__name {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hraness-marketing-hero__heading {
+  max-inline-size: 18ch;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  letter-spacing: var(--hraness-marketing-heading-tracking);
+  line-height: 1.05;
+}
+
+.hraness-marketing-hero__summary {
+  max-inline-size: var(--hraness-marketing-copy-measure);
+  font-size: clamp(1.125rem, 1.6vw, 1.3rem);
+  line-height: 1.45;
+}
+
+.hraness-marketing-hero__example {
+  max-inline-size: var(--hraness-marketing-copy-measure);
+  margin-block-start: -0.35rem;
+  color: var(--hraness-marketing-ink);
+  font-size: 1.05rem;
+}
+
+.hraness-marketing-hero__actions {
+  justify-content: center;
+  margin-block-start: 0.5rem;
+}
+
+.hraness-marketing-hero[data-align="start"] .hraness-marketing-hero__actions {
+  justify-content: flex-start;
 }
 
 .hraness-marketing-hero__boundary {
-  max-inline-size: 48rem;
-  margin: 1.1rem 0 0;
+  max-inline-size: var(--hraness-marketing-copy-measure);
+  margin: 0;
   color: var(--hraness-marketing-muted);
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.hraness-marketing-proof {
+.hraness-marketing-hero__frame {
   min-inline-size: 0;
-  align-self: stretch;
-  padding: clamp(1.25rem, 3.5vw, 2.4rem);
-  border: 1px solid color-mix(in oklch, var(--hraness-marketing-inverse-ink) 24%, transparent);
+}
+
+/* Accent band: the hero paints edge to edge in the product accent. */
+.hraness-marketing-hero[data-tone="accent"] {
+  --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
+  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-accent-ink) 22%, transparent);
+  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-surface: color-mix(in oklch, var(--hraness-marketing-accent-ink) 12%, transparent);
   background:
-    linear-gradient(color-mix(in oklch, var(--hraness-marketing-inverse-ink) 6%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--hraness-marketing-inverse-ink) 6%, transparent) 1px, transparent 1px),
-    var(--hraness-marketing-inverse);
-  background-size: 2.5rem 2.5rem;
-  color: var(--hraness-marketing-inverse-ink);
+    linear-gradient(color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
+    var(--hraness-marketing-accent);
+  background-size: 3.5rem 3.5rem, 3.5rem 3.5rem, auto;
+  box-shadow: 0 0 0 100vmax var(--hraness-marketing-accent);
+  clip-path: inset(0 -100vmax);
+  color: var(--hraness-marketing-accent-ink);
+}
+
+.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-hero__eyebrow {
+  border-color: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
+  background: color-mix(in oklch, var(--hraness-marketing-accent-ink) 14%, transparent);
+  color: var(--hraness-marketing-accent-ink);
+}
+
+.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"] {
+  border-color: var(--hraness-marketing-accent-ink);
+  background: var(--hraness-marketing-accent-ink);
+  color: var(--hraness-marketing-accent);
+}
+
+.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"]:hover {
+  background: color-mix(in oklch, var(--hraness-marketing-accent-ink) 90%, var(--hraness-marketing-accent));
+}
+
+.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="secondary"] {
+  border-color: var(--hraness-marketing-line-strong);
+  background: transparent;
+  color: var(--hraness-marketing-accent-ink);
+}
+
+/* Legacy proof aside: now a light card beneath the copy. */
+.hraness-marketing-proof {
+  display: grid;
+  min-inline-size: 0;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
+  background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-shadow);
 }
 
 .hraness-marketing-proof__kicker {
-  margin: 0 0 0.6rem;
-  color: color-mix(in oklch, var(--hraness-marketing-inverse-ink) 64%, transparent);
+  margin: 0;
 }
 
 .hraness-marketing-proof__heading {
-  max-inline-size: 16ch;
-  margin: 0 0 clamp(1.75rem, 4vw, 3.5rem);
-  font-family: var(--hraness-marketing-heading-font);
-  font-size: clamp(1.55rem, 3vw, 2.2rem);
-  line-height: 1.1;
-  text-wrap: balance;
+  max-inline-size: 24ch;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
 }
+
+/* Ordered flow */
 
 .hraness-marketing-flow {
   display: grid;
@@ -179,20 +513,27 @@
   min-inline-size: 0;
   margin: 0;
   padding-block: 1rem;
-  border-block-start: 1px solid color-mix(in oklch, currentColor 24%, transparent);
+  border-block-start: var(--hraness-marketing-rule);
   gap: 0.85rem;
   grid-template-columns: 2.25rem minmax(0, 1fr);
 }
 
+.hraness-marketing-flow__step:first-child {
+  border-block-start: 0;
+}
+
 .hraness-marketing-flow__number {
-  padding-block-start: 0.16rem;
-  color: color-mix(in oklch, currentColor 58%, transparent);
+  padding-block-start: 0.2rem;
+  color: var(--hraness-marketing-accent);
   font-family: var(--hraness-marketing-mono-font);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .hraness-marketing-flow__body {
+  display: grid;
   min-inline-size: 0;
+  gap: 0.4rem;
 }
 
 .hraness-marketing-flow__label,
@@ -202,128 +543,174 @@
 }
 
 .hraness-marketing-flow__label {
-  margin-block-end: 0.35rem;
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.84rem;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .hraness-marketing-flow__code {
-  padding: 0;
-  background: transparent;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.4rem;
+  background: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
   color: inherit;
   font-family: var(--hraness-marketing-mono-font);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   overflow-wrap: anywhere;
 }
 
 .hraness-marketing-flow__detail {
-  margin: 0.45rem 0 0;
-  color: color-mix(in oklch, currentColor 72%, transparent);
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.78rem;
-  line-height: 1.45;
+  margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.hraness-marketing-facts {
+/* Facts and stats */
+
+.hraness-marketing-facts,
+.hraness-marketing-stats__list {
   display: grid;
   margin: 0;
   border-block: var(--hraness-marketing-rule);
-  grid-column: 1 / -1;
   grid-template-columns: repeat(var(--hraness-marketing-fact-columns, 4), minmax(0, 1fr));
 }
 
-.hraness-marketing-facts > div {
+.hraness-marketing-facts > div,
+.hraness-marketing-stats__list > div {
   min-inline-size: 0;
   padding: 1.25rem clamp(0.8rem, 2vw, 1.5rem);
 }
 
-.hraness-marketing-facts > div + div {
+.hraness-marketing-facts > div + div,
+.hraness-marketing-stats__list > div + div {
   border-inline-start: var(--hraness-marketing-rule);
 }
 
-.hraness-marketing-facts dt {
-  margin-block-end: 0.55rem;
-  color: var(--hraness-marketing-muted);
+.hraness-marketing-facts dt,
+.hraness-marketing-stats dt {
+  margin-block-end: 0.4rem;
 }
 
-.hraness-marketing-facts dd {
+.hraness-marketing-facts dd,
+.hraness-marketing-stats dd {
   margin: 0;
 }
 
-.hraness-marketing-facts :where(strong, span) {
+.hraness-marketing-facts :where(strong, span),
+.hraness-marketing-stats :where(strong, span) {
   display: block;
 }
 
 .hraness-marketing-facts strong {
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
-.hraness-marketing-facts span {
-  margin-block-start: 0.25rem;
+.hraness-marketing-stats strong {
+  font-family: var(--hraness-marketing-heading-font);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.hraness-marketing-facts span,
+.hraness-marketing-stats span {
+  margin-block-start: 0.3rem;
   color: var(--hraness-marketing-muted);
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   line-height: 1.45;
 }
 
-.hraness-marketing-install,
-.hraness-marketing-section,
-.hraness-marketing-interfaces,
-.hraness-marketing-trust,
-.hraness-marketing-questions,
-.hraness-marketing-cta {
-  inline-size: min(100%, var(--hraness-marketing-measure));
-  min-inline-size: 0;
-  margin-inline: auto;
-}
-
-.hraness-marketing-install {
+.hraness-marketing-stats {
   display: grid;
-  padding: clamp(1.25rem, 4vw, 2.5rem);
-  border: var(--hraness-marketing-rule);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  grid-template-columns: minmax(11rem, 0.55fr) minmax(0, 1.45fr);
-  scroll-margin-block-start: 1rem;
+  gap: 0.75rem;
+  padding-block: clamp(1.5rem, 4vw, 3rem);
 }
 
-.hraness-marketing-install__eyebrow {
-  margin: 0 0 0.6rem;
-  color: var(--hraness-marketing-muted);
-}
-
-.hraness-marketing-install__heading,
-.hraness-marketing-section__heading,
-.hraness-marketing-interfaces__heading,
-.hraness-marketing-trust__heading,
-.hraness-marketing-questions__heading,
-.hraness-marketing-cta__heading {
+.hraness-marketing-stats__source {
   margin: 0;
-  font-family: var(--hraness-marketing-heading-font);
-  line-height: 1.08;
-  text-wrap: balance;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.85rem;
 }
 
-.hraness-marketing-install__heading {
-  max-inline-size: 10ch;
-  font-size: clamp(1.65rem, 3.4vw, 2.65rem);
+/* Pillars */
+
+.hraness-marketing-pillars {
+  display: grid;
+  margin-block: 0;
+  padding-block: 0;
+  border-block: var(--hraness-marketing-rule);
+  grid-template-columns: repeat(var(--hraness-marketing-pillar-columns, 3), minmax(0, 1fr));
 }
 
-.hraness-marketing-install__commands,
-.hraness-marketing-section__body {
+.hraness-marketing-pillars > div {
+  display: grid;
   min-inline-size: 0;
+  align-content: start;
+  gap: 0.45rem;
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 2.5vw, 1.75rem);
 }
 
-.hraness-marketing-install__commands :where(pre) {
-  max-inline-size: 100%;
-  overflow: auto;
+.hraness-marketing-pillars > div + div {
+  border-inline-start: var(--hraness-marketing-rule);
 }
+
+.hraness-marketing-pillars dt {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.hraness-marketing-pillars dd {
+  margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Product frame */
 
 .hraness-marketing-proof-frame {
   min-inline-size: 0;
   margin: 0;
+  overflow: clip;
   border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-shadow);
+}
+
+.hraness-marketing-proof-frame__chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border-block-end: var(--hraness-marketing-rule);
+  color: var(--hraness-marketing-muted);
+  font-size: 0.78rem;
+}
+
+.hraness-marketing-proof-frame__lights {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.hraness-marketing-proof-frame__lights span {
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--hraness-marketing-ink) 18%, transparent);
+}
+
+.hraness-marketing-proof-frame__title {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .hraness-marketing-proof-frame__content {
@@ -331,49 +718,115 @@
   overflow: auto;
 }
 
+.hraness-marketing-proof-frame__content > :where(img, video) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.hraness-marketing-proof-frame__content > :where(pre) {
+  border-radius: 0;
+}
+
 .hraness-marketing-proof-frame__caption {
-  display: grid;
-  padding: 0.75rem 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.75rem 0.95rem;
   border-block-start: var(--hraness-marketing-rule);
   color: var(--hraness-marketing-muted);
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.78rem;
-  gap: 0.2rem;
+  font-size: 0.82rem;
   line-height: 1.45;
 }
 
 .hraness-marketing-proof-frame__caption small {
-  font-family: var(--hraness-marketing-mono-font);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
 }
 
-.hraness-marketing-section {
+/* Install */
+
+.hraness-marketing-install {
   display: grid;
-  padding-block: clamp(2.5rem, 7vw, 6rem);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
+  background: var(--hraness-marketing-surface);
+  gap: clamp(1.25rem, 4vw, 3rem);
+  grid-template-columns: minmax(12rem, 0.6fr) minmax(0, 1.4fr);
+  scroll-margin-block-start: 5rem;
+}
+
+.hraness-marketing-page > .hraness-marketing-install {
+  inline-size: min(100% - 2 * var(--hraness-marketing-gutter), var(--hraness-marketing-measure));
+  padding-inline: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.hraness-marketing-install__heading-group {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+}
+
+.hraness-marketing-install__heading {
+  max-inline-size: 14ch;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+
+.hraness-marketing-install__commands,
+.hraness-marketing-section__body {
+  min-inline-size: 0;
+}
+
+.hraness-marketing-install__commands {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* Narrative section */
+
+.hraness-marketing-section,
+.hraness-marketing-primitives,
+.hraness-marketing-interfaces,
+.hraness-marketing-trust,
+.hraness-marketing-quotes,
+.hraness-marketing-pricing,
+.hraness-marketing-questions,
+.hraness-marketing-maker {
+  padding-block: var(--hraness-marketing-section-space);
   border-block-start: var(--hraness-marketing-rule);
-  gap: clamp(2rem, 5vw, 6rem);
-  grid-template-columns: minmax(10rem, 0.55fr) minmax(0, 1.45fr);
+  scroll-margin-block-start: 4rem;
 }
 
-.hraness-marketing-section__label,
-.hraness-marketing-interfaces__label,
-.hraness-marketing-trust__label,
-.hraness-marketing-questions__label {
-  margin: 0;
-  color: var(--hraness-marketing-muted);
+.hraness-marketing-section,
+.hraness-marketing-interfaces,
+.hraness-marketing-trust,
+.hraness-marketing-questions {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
 }
 
-.hraness-marketing-section__heading,
-.hraness-marketing-interfaces__heading,
-.hraness-marketing-trust__heading,
-.hraness-marketing-questions__heading {
-  font-size: clamp(1.75rem, 4vw, 3rem);
+.hraness-marketing-section__heading-group,
+.hraness-marketing-primitives__header,
+.hraness-marketing-interfaces__header,
+.hraness-marketing-trust__header,
+.hraness-marketing-quotes__header,
+.hraness-marketing-pricing__header,
+.hraness-marketing-questions__header,
+.hraness-marketing-maker__header {
+  display: grid;
+  max-inline-size: var(--hraness-marketing-copy-measure);
+  gap: 0.75rem;
 }
 
 .hraness-marketing-section__body {
   display: grid;
-  max-inline-size: var(--hraness-marketing-copy-measure);
   gap: 1rem;
+}
+
+.hraness-marketing-section__body > :where(p) {
+  max-inline-size: var(--hraness-marketing-prose-measure);
+  margin: 0;
 }
 
 .hraness-marketing-section__body > :first-child {
@@ -384,43 +837,92 @@
   margin-block-end: 0;
 }
 
-.hraness-marketing-interfaces,
-.hraness-marketing-trust,
-.hraness-marketing-questions {
-  padding-block: clamp(2.5rem, 7vw, 6rem);
-  border-block-start: var(--hraness-marketing-rule);
+.hraness-marketing-section[data-layout="split"],
+.hraness-marketing-section[data-layout="split-reverse"] {
+  align-items: center;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
 }
 
-.hraness-marketing-interfaces__header,
-.hraness-marketing-trust__header,
-.hraness-marketing-questions__header {
+.hraness-marketing-section[data-layout="split-reverse"] > .hraness-marketing-section__heading-group {
+  order: 2;
+}
+
+.hraness-marketing-section[data-layout="split"] > .hraness-marketing-section__heading-group,
+.hraness-marketing-section[data-layout="split-reverse"] > .hraness-marketing-section__heading-group {
+  max-inline-size: none;
+}
+
+/* Primitives: numbered building blocks */
+
+.hraness-marketing-primitives {
   display: grid;
-  max-inline-size: var(--hraness-marketing-copy-measure);
-  margin-block-end: clamp(1.5rem, 4vw, 3rem);
-  gap: 0.65rem;
+  gap: clamp(1.5rem, 4vw, 3rem);
 }
 
-.hraness-marketing-interfaces__header > p:last-child,
-.hraness-marketing-trust__header > p:last-child,
-.hraness-marketing-questions__header > p:last-child {
+.hraness-marketing-primitives__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.hraness-marketing-primitive {
+  display: grid;
+  min-inline-size: 0;
+  align-content: start;
+  gap: 0.6rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
+  background: var(--hraness-marketing-surface);
+}
+
+.hraness-marketing-primitive__number {
+  color: var(--hraness-marketing-accent);
+  font-family: var(--hraness-marketing-mono-font);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.hraness-marketing-primitive__heading {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.hraness-marketing-primitive p {
   margin: 0;
   color: var(--hraness-marketing-muted);
-  font-family: var(--hraness-marketing-text-font);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
+
+.hraness-marketing-primitive > :where(pre, figure) {
+  margin-block-start: 0.5rem;
+}
+
+/* Interfaces and trust: cards */
 
 .hraness-marketing-interface-grid,
 .hraness-marketing-trust-grid {
   display: grid;
-  gap: 1px;
-  border: var(--hraness-marketing-rule);
-  background: var(--hraness-marketing-line);
+  margin: 0;
+  gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 }
 
 .hraness-marketing-interface,
 .hraness-marketing-trust-item {
+  display: grid;
   min-inline-size: 0;
-  padding: clamp(1rem, 2.5vw, 1.5rem);
+  align-content: start;
+  gap: 0.5rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
 }
 
@@ -431,24 +933,187 @@
 
 .hraness-marketing-interface__heading,
 .hraness-marketing-trust-item dt {
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .hraness-marketing-interface p,
 .hraness-marketing-trust-item dd {
-  margin-block-start: 0.5rem;
   color: var(--hraness-marketing-muted);
-  font-family: var(--hraness-marketing-text-font);
-  font-size: 0.84rem;
+  font-size: 0.95rem;
   line-height: 1.5;
 }
 
 .hraness-marketing-interface pre {
-  max-inline-size: 100%;
-  margin-block: 1rem 0;
-  overflow: auto;
+  margin-block-start: 0.5rem;
+}
+
+/* Quotes */
+
+.hraness-marketing-quotes {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.hraness-marketing-quote-grid {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+.hraness-marketing-quote {
+  display: grid;
+  min-inline-size: 0;
+  align-content: space-between;
+  gap: 1.25rem;
+  margin: 0;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
+  background: var(--hraness-marketing-surface);
+}
+
+.hraness-marketing-quote blockquote {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.hraness-marketing-quote blockquote p {
+  margin: 0;
+}
+
+.hraness-marketing-quote figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.88rem;
+}
+
+.hraness-marketing-quote figcaption strong {
+  color: var(--hraness-marketing-ink);
+  font-weight: 600;
+}
+
+.hraness-marketing-quote figcaption a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hraness-marketing-quote figcaption a:hover {
+  text-decoration: underline;
+}
+
+/* Pricing */
+
+.hraness-marketing-pricing {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.hraness-marketing-plan-grid {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+}
+
+.hraness-marketing-plan {
+  display: grid;
+  min-inline-size: 0;
+  align-content: start;
+  gap: 1rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: var(--hraness-marketing-rule);
+  border-radius: var(--hraness-marketing-frame-radius);
+  background: var(--hraness-marketing-surface);
+}
+
+.hraness-marketing-plan[data-emphasis="primary"] {
+  border-color: color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 35%, transparent);
+}
+
+.hraness-marketing-plan__name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.hraness-marketing-plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.hraness-marketing-plan__price strong {
+  font-family: var(--hraness-marketing-heading-font);
+  font-size: 2.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hraness-marketing-plan__price span {
+  color: var(--hraness-marketing-muted);
+  font-size: 0.95rem;
+}
+
+.hraness-marketing-plan__summary {
+  margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.95rem;
+}
+
+.hraness-marketing-plan__features {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.hraness-marketing-plan__features li {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: 1rem minmax(0, 1fr);
+}
+
+.hraness-marketing-plan__features li::before {
+  content: "";
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin-block-start: 0.2rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--hraness-marketing-accent), var(--hraness-marketing-accent)) center / 0.4rem 0.4rem no-repeat,
+    var(--hraness-marketing-accent-soft);
+}
+
+.hraness-marketing-plan__note {
+  margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.85rem;
+}
+
+.hraness-marketing-plan .hraness-marketing-action {
+  justify-self: start;
+}
+
+/* Questions */
+
+.hraness-marketing-question-list {
+  display: grid;
 }
 
 .hraness-marketing-question {
@@ -460,82 +1125,213 @@
 }
 
 .hraness-marketing-question summary {
-  min-block-size: 3rem;
+  display: flex;
+  min-block-size: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   padding-block: 1rem;
   color: var(--hraness-marketing-ink);
   cursor: pointer;
-  font-family: var(--hraness-marketing-text-font);
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 500;
+  list-style: none;
+}
+
+.hraness-marketing-question summary::-webkit-details-marker {
+  display: none;
+}
+
+.hraness-marketing-question summary::after {
+  content: "+";
+  flex: 0 0 auto;
+  color: var(--hraness-marketing-muted);
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.hraness-marketing-question[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.hraness-marketing-question summary:focus-visible {
+  outline: 2px solid var(--hraness-marketing-accent);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
 }
 
 .hraness-marketing-question__answer {
-  max-inline-size: var(--hraness-marketing-copy-measure);
-  padding-block: 0 1.25rem;
+  max-inline-size: var(--hraness-marketing-prose-measure);
+  padding-block: 0 1.5rem;
   color: var(--hraness-marketing-muted);
-  font-family: var(--hraness-marketing-text-font);
+  line-height: 1.6;
 }
 
 .hraness-marketing-question__answer > :first-child {
   margin-block-start: 0;
 }
 
-.hraness-marketing-cta {
+.hraness-marketing-question__answer > :last-child {
+  margin-block-end: 0;
+}
+
+/* Maker */
+
+.hraness-marketing-maker {
   display: grid;
-  padding: clamp(2rem, 6vw, 5rem);
-  background: var(--hraness-marketing-inverse);
-  color: var(--hraness-marketing-inverse-ink);
+  align-items: start;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+
+.hraness-marketing-maker__portrait {
+  inline-size: 4.5rem;
+  block-size: 4.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--hraness-marketing-accent-soft);
+}
+
+.hraness-marketing-maker__portrait :where(img, svg) {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.hraness-marketing-maker__body {
+  display: grid;
+  min-inline-size: 0;
   gap: 1rem;
 }
 
-.hraness-marketing-cta__eyebrow,
-.hraness-marketing-cta__summary {
+.hraness-marketing-maker__body > p {
+  max-inline-size: var(--hraness-marketing-prose-measure);
   margin: 0;
-  color: color-mix(in oklch, currentColor 72%, transparent);
+  color: var(--hraness-marketing-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.hraness-marketing-maker__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Closing call to action */
+
+.hraness-marketing-cta {
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  padding-block: var(--hraness-marketing-section-space);
+  border-block-start: var(--hraness-marketing-rule);
+  text-align: center;
 }
 
 .hraness-marketing-cta__heading {
-  max-inline-size: 18ch;
-  font-size: clamp(2rem, 5vw, 4.5rem);
+  max-inline-size: 20ch;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: var(--hraness-marketing-heading-tracking);
+  line-height: 1.08;
 }
 
 .hraness-marketing-cta__summary {
   max-inline-size: var(--hraness-marketing-copy-measure);
-  font-family: var(--hraness-marketing-text-font);
-  text-wrap: pretty;
 }
 
-.hraness-marketing-cta .hraness-marketing-action {
-  border-color: currentColor;
-  color: inherit;
+.hraness-marketing-cta__actions {
+  justify-content: center;
+  margin-block-start: 0.5rem;
 }
 
-.hraness-marketing-cta .hraness-marketing-action[data-emphasis="primary"] {
-  background: var(--hraness-marketing-inverse-ink);
-  color: var(--hraness-marketing-inverse);
+.hraness-marketing-cta__footnote {
+  margin: 0;
+  color: var(--hraness-marketing-muted);
+  font-size: 0.9rem;
 }
+
+.hraness-marketing-cta[data-tone="accent"] {
+  --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
+  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-surface: transparent;
+  border-block-start: 0;
+  background: var(--hraness-marketing-accent);
+  box-shadow: 0 0 0 100vmax var(--hraness-marketing-accent);
+  clip-path: inset(0 -100vmax);
+  color: var(--hraness-marketing-accent-ink);
+}
+
+.hraness-marketing-cta[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"] {
+  border-color: var(--hraness-marketing-accent-ink);
+  background: var(--hraness-marketing-accent-ink);
+  color: var(--hraness-marketing-accent);
+}
+
+.hraness-marketing-cta[data-tone="accent"] .hraness-marketing-action[data-emphasis="secondary"] {
+  background: transparent;
+  color: var(--hraness-marketing-accent-ink);
+}
+
+/* Responsive */
 
 @media (max-width: 48rem) {
-  .hraness-marketing-hero,
-  .hraness-marketing-install,
-  .hraness-marketing-section {
-    grid-template-columns: minmax(0, 1fr);
+  .hraness-marketing-header__inner {
+    flex-wrap: wrap;
+    padding-block: 0.6rem;
   }
 
-  .hraness-marketing-hero__copy {
-    padding-block-end: 0;
+  .hraness-marketing-header__nav {
+    order: 3;
+    inline-size: 100%;
+    gap: 0.15rem 1rem;
   }
 
   .hraness-marketing-hero__heading {
-    max-inline-size: 12ch;
+    max-inline-size: 14ch;
   }
 
-  .hraness-marketing-facts {
+  .hraness-marketing-install,
+  .hraness-marketing-section[data-layout="split"],
+  .hraness-marketing-section[data-layout="split-reverse"],
+  .hraness-marketing-maker {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .hraness-marketing-facts > div + div {
-    border-block-start: var(--hraness-marketing-rule);
+  .hraness-marketing-section[data-layout="split-reverse"] > .hraness-marketing-section__heading-group {
+    order: 0;
+  }
+
+  .hraness-marketing-facts,
+  .hraness-marketing-stats__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hraness-marketing-facts > div:nth-child(odd),
+  .hraness-marketing-stats__list > div:nth-child(odd) {
     border-inline-start: 0;
+  }
+
+  .hraness-marketing-facts > div:nth-child(n + 3),
+  .hraness-marketing-stats__list > div:nth-child(n + 3) {
+    border-block-start: var(--hraness-marketing-rule);
+  }
+
+  .hraness-marketing-pillars {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hraness-marketing-pillars > div + div {
+    border-inline-start: 0;
+    border-block-start: var(--hraness-marketing-rule);
   }
 
   .hraness-marketing-install__heading {
@@ -551,16 +1347,33 @@
 }
 
 @media (forced-colors: active) {
+  .hraness-marketing-header,
+  .hraness-marketing-hero[data-tone="accent"],
+  .hraness-marketing-cta[data-tone="accent"],
   .hraness-marketing-proof,
-  .hraness-marketing-cta {
+  .hraness-marketing-proof-frame,
+  .hraness-marketing-install,
+  .hraness-marketing-primitive,
+  .hraness-marketing-interface,
+  .hraness-marketing-trust-item,
+  .hraness-marketing-quote,
+  .hraness-marketing-plan {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    color: CanvasText;
+  }
+
+  .hraness-marketing-action,
+  .hraness-marketing-hero__eyebrow {
     border: 1px solid CanvasText;
     background: Canvas;
     color: CanvasText;
   }
 
-  .hraness-marketing-interface-grid,
-  .hraness-marketing-trust-grid {
+  .hraness-marketing-action[data-emphasis="primary"] {
     background: CanvasText;
+    color: Canvas;
   }
 }
 

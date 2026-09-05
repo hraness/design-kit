@@ -18,9 +18,17 @@ import {
   MarketingFlow,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
+  MarketingMaker,
+  MarketingPage,
+  MarketingPillars,
+  MarketingPricing,
+  MarketingPrimitives,
   MarketingProofFrame,
   MarketingQuestionList,
+  MarketingQuoteGrid,
   MarketingSection,
+  MarketingSiteHeader,
+  MarketingStatStrip,
   MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
@@ -32,7 +40,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-qaq1t8y3.js";
+} from "../chunk-5ggeyw1q.js";
 import"../chunk-djxa5bgc.js";
 import {
   __require
@@ -2987,51 +2995,165 @@ function DesignSystemGallery({
             children: "Product-marketing grammar"
           }),
           /* @__PURE__ */ jsxs11("div", {
-            className: "design-gallery__marketing",
+            className: "design-gallery__marketing hraness-marketing-page",
             children: [
+              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+                action: { href: "#gallery-install", label: "Install Relay" },
+                brand: "Relay",
+                links: [
+                  { current: true, href: "#marketing", label: "How it works" },
+                  { href: "#gallery-install", label: "Install" },
+                  { href: "#shells", label: "Docs" }
+                ]
+              }),
               /* @__PURE__ */ jsx13(ProductHero, {
                 actions: [
                   { href: "#gallery-install", label: "Install Relay" },
                   { href: "#shells", label: "See the workspace" }
                 ],
-                boundary: "Local CLI · version 1.2.3 · sync optional",
+                boundary: "Free for local use on macOS and Linux · version 1.2.3",
                 className: "design-gallery__marketing-hero",
-                eyebrow: "Reference developer tool",
+                example: "Ask your agent to run the nightly job and show you the receipt.",
+                eyebrow: "A reference developer tool",
                 facts: [
                   { detail: "One exact source.", label: "Input", value: "Repository" },
                   { detail: "One inspectable result.", label: "Output", value: "Receipt" },
                   { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" }
                 ],
-                heading: "Move one exact job across every interface.",
+                frame: /* @__PURE__ */ jsx13(MarketingProofFrame, {
+                  caption: "Receipt produced by the checked example.",
+                  credit: "Captured 5 September 2026",
+                  title: "relay run job-01",
+                  children: /* @__PURE__ */ jsx13("pre", {
+                    className: "design-gallery__marketing-command",
+                    children: /* @__PURE__ */ jsx13("code", {
+                      children: '{"status":"complete","job":"job-01","durationMs":412}'
+                    })
+                  })
+                }),
+                heading: "Move one job across every interface",
                 headingId: "design-gallery-marketing-title",
                 headingLevel: 3,
                 name: "Relay",
-                proof: {
-                  content: /* @__PURE__ */ jsx13(MarketingFlow, {
-                    ariaLabel: "First Relay job",
-                    steps: [
-                      { code: "relay init", detail: "Create one exact workspace.", label: "Initialize" },
-                      { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
-                      { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" }
-                    ]
-                  }),
-                  heading: "One job, three observable transitions",
-                  kicker: "Working model"
-                },
-                summary: "The same owned job can be initialized, run, and inspected from a human or agent surface."
+                summary: "Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
               }),
-              /* @__PURE__ */ jsx13(MarketingInstallPanel, {
+              /* @__PURE__ */ jsx13(MarketingPillars, {
+                ariaLabel: "Relay in three points",
+                pillars: [
+                  { label: "Fast", summary: "Runs locally with no service in the loop." },
+                  { label: "Legible", summary: "Every run leaves a receipt you can open." },
+                  { label: "Yours", summary: "Source files and credentials stay on your machine." }
+                ]
+              }),
+              /* @__PURE__ */ jsxs11(MarketingInstallPanel, {
                 eyebrow: "Local release",
                 heading: "Install the verified tool.",
                 headingId: "design-gallery-install-title",
                 headingLevel: 3,
                 id: "gallery-install",
-                children: /* @__PURE__ */ jsx13("pre", {
-                  className: "design-gallery__marketing-command",
-                  children: /* @__PURE__ */ jsx13("code", {
-                    children: "bun add --global relay@1.2.3"
+                children: [
+                  /* @__PURE__ */ jsx13("pre", {
+                    className: "design-gallery__marketing-command",
+                    children: /* @__PURE__ */ jsx13("code", {
+                      children: "bun add --global relay@1.2.3"
+                    })
+                  }),
+                  /* @__PURE__ */ jsx13(MarketingFlow, {
+                    ariaLabel: "First Relay job",
+                    steps: [
+                      { code: "relay init", detail: "Create one workspace.", label: "Initialize" },
+                      { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
+                      { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" }
+                    ]
                   })
+                ]
+              }),
+              /* @__PURE__ */ jsx13(MarketingPrimitives, {
+                heading: "Small building blocks for serious workflows.",
+                headingId: "design-gallery-primitives-title",
+                headingLevel: 3,
+                items: [
+                  { label: "Jobs", summary: "A named unit of work with declared inputs and outputs." },
+                  { label: "Receipts", summary: "The durable record of one run, readable by people and agents." },
+                  { label: "Schedules", summary: "Run a job on a cadence without another daemon." }
+                ],
+                label: "Primitives",
+                summary: "Relay gives agents a few durable objects to compose around the work in front of them."
+              }),
+              /* @__PURE__ */ jsx13(MarketingStatStrip, {
+                ariaLabel: "Relay usage",
+                source: "Counted from the public example repository on 5 September 2026.",
+                stats: [
+                  { label: "Example jobs", value: "12" },
+                  { label: "Interfaces", detail: "CLI, SDK, Agent Skill", value: "3" },
+                  { label: "Accounts required", value: "0" }
+                ]
+              }),
+              /* @__PURE__ */ jsx13(MarketingQuoteGrid, {
+                heading: "From the people building with it.",
+                headingId: "design-gallery-quotes-title",
+                headingLevel: 3,
+                label: "Quotes",
+                quotes: [
+                  { name: "A. Example", quote: "A placeholder quote for the gallery only. Product sites render real, attributed quotes or none.", role: "@example" }
+                ]
+              }),
+              /* @__PURE__ */ jsx13(MarketingPricing, {
+                heading: "Free for local use.",
+                headingId: "design-gallery-pricing-title",
+                headingLevel: 3,
+                label: "Pricing",
+                plans: [
+                  {
+                    action: { href: "#gallery-install", label: "Install Relay" },
+                    emphasis: "primary",
+                    features: ["Every feature", "Unlimited local jobs", "All future updates"],
+                    name: "Local",
+                    period: "forever",
+                    price: "$0",
+                    summary: "Full-featured, with no trial or expiration."
+                  },
+                  {
+                    action: { href: "#shells", label: "Read about sync" },
+                    features: ["Everything in Local", "Encrypted sync", "Priority email support"],
+                    name: "Sync",
+                    note: "Cancel any time.",
+                    period: "per year",
+                    price: "$49",
+                    summary: "Keep receipts in step across your machines."
+                  }
+                ]
+              }),
+              /* @__PURE__ */ jsx13(MarketingQuestionList, {
+                heading: "Questions before installing.",
+                headingId: "design-gallery-questions-title",
+                headingLevel: 3,
+                label: "Questions",
+                questions: [
+                  { answer: /* @__PURE__ */ jsx13("p", {
+                    children: "No. The local workflow works without one."
+                  }), question: "Does it require an account?" },
+                  { answer: /* @__PURE__ */ jsx13("p", {
+                    children: "Nothing leaves your machine unless you turn on sync."
+                  }), question: "Does it phone home?" }
+                ]
+              }),
+              /* @__PURE__ */ jsx13(MarketingMaker, {
+                heading: "Built by a reference maker.",
+                headingId: "design-gallery-maker-title",
+                headingLevel: 3,
+                label: "Built by",
+                links: [{ href: "#marketing", label: "Personal site" }],
+                children: /* @__PURE__ */ jsx13("p", {
+                  children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
                 })
+              }),
+              /* @__PURE__ */ jsx13(MarketingCallToAction, {
+                actions: [{ href: "#gallery-install", label: "Install Relay" }],
+                footnote: "Free for local use on macOS and Linux.",
+                heading: "Give every job the same room to run in.",
+                headingId: "design-gallery-cta-title",
+                headingLevel: 3
               })
             ]
           })
@@ -4262,9 +4384,17 @@ export {
   PageCanvas,
   NavigationRail,
   MarketingTrustBoundary,
+  MarketingStatStrip,
+  MarketingSiteHeader,
   MarketingSection,
+  MarketingQuoteGrid,
   MarketingQuestionList,
   MarketingProofFrame,
+  MarketingPrimitives,
+  MarketingPricing,
+  MarketingPillars,
+  MarketingPage,
+  MarketingMaker,
   MarketingInterfaceGrid,
   MarketingInstallPanel,
   MarketingFlow,

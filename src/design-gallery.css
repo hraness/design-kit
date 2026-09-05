@@ -85,20 +85,21 @@
 }
 
 .design-gallery__marketing {
-  display: grid;
-  gap: var(--space-8);
-  padding: clamp(var(--space-4), 3vw, var(--space-8));
+  display: block;
+  overflow: clip;
   border: 1px solid var(--line);
+  border-radius: 0.875rem;
   background: var(--background);
+}
+
+.design-gallery__marketing > .hraness-marketing-header {
+  position: static;
 }
 
 .design-gallery__marketing-command {
   max-inline-size: 100%;
   margin: 0;
-  padding: var(--space-4);
   overflow: auto;
-  background: var(--inverse);
-  color: var(--inverse-foreground);
 }
 
 .design-gallery__shell-preview {

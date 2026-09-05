@@ -7,9 +7,17 @@ import {
   MarketingFlow,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
+  MarketingMaker,
+  MarketingPage,
+  MarketingPillars,
+  MarketingPricing,
+  MarketingPrimitives,
   MarketingProofFrame,
   MarketingQuestionList,
+  MarketingQuoteGrid,
   MarketingSection,
+  MarketingSiteHeader,
+  MarketingStatStrip,
   MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
@@ -21,7 +29,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-qaq1t8y3.js";
+} from "../chunk-5ggeyw1q.js";
 import"../chunk-djxa5bgc.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -36,9 +44,17 @@ export {
   ParticleHalo,
   PageCanvas,
   MarketingTrustBoundary,
+  MarketingStatStrip,
+  MarketingSiteHeader,
   MarketingSection,
+  MarketingQuoteGrid,
   MarketingQuestionList,
   MarketingProofFrame,
+  MarketingPrimitives,
+  MarketingPricing,
+  MarketingPillars,
+  MarketingPage,
+  MarketingMaker,
   MarketingInterfaceGrid,
   MarketingInstallPanel,
   MarketingFlow,
