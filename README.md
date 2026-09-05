@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.3.1",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.4.0",
     "@hraness/ui": "github:hraness/ui#v0.4.7"
   }
 }
@@ -48,51 +48,95 @@ Import narrower layers when the application does not need the full presentation 
 ## Explain a technical product
 
 `product-marketing.css` is an opt-in narrative grammar for technical product
-sites. It supplies outcome-led hero, ordered workflow, fact strip, install,
-proof frame, narrative section, interface, trust-boundary, native question, and
-call-to-action roles. The classes own responsive structure and semantics-facing
-presentation. Products bind the `--hraness-marketing-*` roles to their own
-palette, type, content, evidence, and action.
+sites. It gives every Hraness product one typeface, one measured type scale,
+sentence-case labels, hairline chrome, soft radii, and one accent color, so the
+portfolio reads as one studio's work. The roles are a sticky site header, an
+outcome-led hero with an optional product frame, three pillars, an install
+panel, an ordered flow, fact and stat strips, narrative sections, numbered
+primitives, interface and trust cards, attributed quotes, pricing, native
+questions, a maker section, and a closing call to action. The classes own
+responsive structure and semantics-facing presentation. Products bind the
+`--hraness-marketing-*` roles to their own content and set one accent:
+
+```css
+@import "@hraness/design-kit/styles.css";
+
+.hraness-marketing-page {
+  --hraness-site-accent: oklch(0.55 0.21 262);
+  --hraness-site-accent-ink: #ffffff;
+}
+```
 
 Static sites may render the documented classes directly. React sites can use
 the server-safe compositions from either React entry:
 
 ```tsx
 import {
-  MarketingFlow,
+  MarketingCallToAction,
+  MarketingPage,
+  MarketingPillars,
+  MarketingProofFrame,
+  MarketingSiteHeader,
   ProductHero,
 } from "@hraness/design-kit/react/server";
 
-<ProductHero
-  actions={[
-    { href: "#install", label: "Install Relay" },
-    { href: "#workflow", label: "See the workflow" },
-  ]}
-  boundary="Local CLI · version 1.2.3 · sync optional"
-  eyebrow="A reference developer tool"
-  facts={[
-    { detail: "One exact source.", label: "Input", value: "Repository" },
-    { detail: "One inspectable result.", label: "Output", value: "Receipt" },
-  ]}
-  heading="Move one exact job across every interface."
-  headingId="relay-title"
-  name="Relay"
-  proof={{
-    heading: "One job, two observable transitions",
-    kicker: "Working model",
-    content: (
-      <MarketingFlow
-        ariaLabel="First Relay job"
-        steps={[
-          { code: "relay init", detail: "Create one exact workspace.", label: "Initialize" },
-          { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
-        ]}
-      />
-    ),
-  }}
-  summary="The same owned job can be initialized, run, and inspected from a human or agent surface."
-/>
+<MarketingPage>
+  <MarketingSiteHeader
+    action={{ href: "#install", label: "Install Relay" }}
+    brand="Relay"
+    links={[{ href: "#how", label: "How it works" }, { href: "#pricing", label: "Pricing" }]}
+  />
+  <ProductHero
+    actions={[
+      { href: "#install", label: "Install Relay" },
+      { href: "#how", label: "See how it works" },
+    ]}
+    boundary="Free for local use on macOS and Linux · version 1.2.3"
+    example="Ask your agent to run the nightly job and show you the receipt."
+    eyebrow="A reference developer tool"
+    frame={(
+      <MarketingProofFrame caption="Receipt from the checked example." credit="Captured 5 September 2026" title="relay run job-01">
+        <img alt="Relay printing one receipt in a terminal" src="/relay-receipt.png" />
+      </MarketingProofFrame>
+    )}
+    heading="Move one job across every interface"
+    headingId="relay-title"
+    name="Relay"
+    summary="Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
+  />
+  <MarketingPillars
+    ariaLabel="Relay in three points"
+    pillars={[
+      { label: "Fast", summary: "Runs locally with no service in the loop." },
+      { label: "Legible", summary: "Every run leaves a receipt you can open." },
+      { label: "Yours", summary: "Source files and credentials stay on your machine." },
+    ]}
+  />
+  <MarketingCallToAction
+    actions={[{ href: "#install", label: "Install Relay" }]}
+    footnote="Free for local use on macOS and Linux."
+    heading="Give every job the same room to run in."
+    headingId="cta-title"
+  />
+</MarketingPage>
 ```
+
+`tone="accent"` on the hero or the call to action paints that role edge to
+edge in the product accent. `layout="split"` or `"split-reverse"` on a
+section places its heading group beside its body. `MarketingQuoteGrid` and
+`MarketingPillars` render nothing for an empty list, so a site adds quotes
+only when it has real, attributed ones.
+
+Homepage copy on this grammar follows a few rules on top of `STYLE.md`. The
+headline is the reader's outcome in eight words or fewer, sentence case, no
+period. The summary says what the product is, who it is for, and the one thing
+it does differently in 40 words or fewer, in the second person. The `example`
+is a concrete request a reader could make. Section headings are sentences with
+periods. Limits stay, written the way a person would say them, and release
+caveats move to the questions list. Words such as "bounded", "exact",
+"authority", "custody", "immutable", and "inspectable" stay out of the hero and
+leads. Every number has a date or a source, and no quote appears without an
+attributed author who agreed to it.
 
 Import only the grammar when a site owns its reset and tokens:
 
@@ -101,8 +145,9 @@ Import only the grammar when a site owns its reset and tokens:
 ```
 
 The components render complete server HTML and add no clipboard, animation, or
-analytics runtime. A product may enhance a command with its own accessible copy
-control while keeping selectable text as the fallback.
+analytics runtime. A
+product may enhance a command with its own accessible copy control while
+keeping selectable text as the fallback.
 
 ## Use application compositions
 
