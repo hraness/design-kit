@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.4.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.4.1",
     "@hraness/ui": "github:hraness/ui#v0.4.7"
   }
 }
