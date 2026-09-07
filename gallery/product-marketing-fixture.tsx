@@ -11,6 +11,7 @@ export const productMarketingCoverage = [
   ["MarketingInstallPanel", ".hraness-marketing-install", 1],
   ["MarketingProofFrame", ".hraness-marketing-proof-frame", 6],
   ["MarketingSection", ".hraness-marketing-section", 4],
+  ["body section label", '.hraness-marketing-section__label[data-size="body"]', 1],
   ["MarketingPrimitives", ".hraness-marketing-primitives", 1],
   ["MarketingStatStrip", ".hraness-marketing-stats", 1],
   ["MarketingInterfaceGrid", ".hraness-marketing-interfaces", 1],
@@ -45,6 +46,7 @@ export const productMarketingConsumerCoverage = [
   "section-first-split-reverse", "section-last-split-reverse", "section-link-split-reverse", "section-code-split-reverse",
   "primitive-pre", "primitive-code", "primitive-paragraph", "interface-paragraph", "interface-pre", "interface-code",
   "question-first", "question-last", "question-single", "maker-portrait", "maker-first", "maker-last", "stats-strong", "stats-span",
+  "hero-notice", "install-note",
 ] as const;
 
 /** The verifier passes the built server entry. Unit tests pass the source entry. */
@@ -53,7 +55,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
     MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSection,
     MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary,
     MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker,
-    MarketingCallToAction } = api;
+    MarketingCallToAction, MarketingSectionLabel } = api;
   const actions = [{ href: "#install", label: "Install" }, { href: "#interfaces", label: "Explore" }] as const;
   const facts = Array.from({ length: 4 }, (_, index) => ({
     label: `Fact ${index + 1}`, value: `${index + 1}`, detail: "An exact observation.",
@@ -68,6 +70,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       {(["paper", "accent"] as const).flatMap((tone) => (["center", "start"] as const).map((align) => (
         <ProductHero actions={actions} align={align} boundary="Local, optional sync." eyebrow="Reference tool"
           className={tone === "paper" && align === "start" ? "fixture-role-tokens" : ""}
+          notice={tone === "paper" && align === "start" ? <p data-marketing-oracle="hero-notice">Consumer-owned notice.</p> : undefined}
           example="Ask for one inspectable receipt." facts={facts} heading="Keep every result visible."
           headingId={`hero-${tone}-${align}`} headingLevel={2} key={`${tone}-${align}`} name="Relay"
           proof={{ kicker: "Working model", heading: "Two native steps", content: <MarketingFlow ariaLabel="Proof flow" steps={steps} /> }}
@@ -77,7 +80,8 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       <MarketingProofFrame caption="Image content."><img data-marketing-oracle="proof-image" alt="A square fixture" width={120} height={60} src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%2760%27%3E%3Crect width=%27120%27 height=%2760%27 fill=%27%23555%27/%3E%3C/svg%3E" /></MarketingProofFrame>
       <MarketingProofFrame caption="Native media sizing."><video data-marketing-oracle="proof-video" aria-label="No-source sizing fixture" width={120} height={60} /></MarketingProofFrame>
       <MarketingPillars ariaLabel="Three pillars" pillars={facts.slice(0, 3).map(({ label, detail }) => ({ label, summary: detail }))} />
-      <MarketingInstallPanel eyebrow="Install" heading="Run locally." headingId="install-title" id="install">
+      <MarketingInstallPanel eyebrow="Install" heading="Run locally." headingId="install-title" id="install"
+        note={<p data-marketing-oracle="install-note">Choose the release for your platform.</p>}>
         <pre data-marketing-oracle="install-pre"><code data-marketing-oracle="install-code">bun add relay</code></pre>
         <MarketingFlow ariaLabel="Installation steps" steps={steps} />
         <MarketingFacts facts={facts.slice(0, 1)} />
@@ -111,7 +115,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         { question: "Does it stay local?", answer: <><p data-marketing-oracle="question-first">Yes, unless you choose to share.</p><p data-marketing-oracle="question-last">Last paragraph.</p></> },
         { question: "Does it need JavaScript?", answer: <p data-marketing-oracle="question-single">The disclosure uses native details.</p> },
       ]} />
-      <MarketingMaker heading="Built by a maker." headingId="maker" label="Maker" links={[{ href: "#fixture", label: "About" }]}
+      <MarketingMaker heading="Built by a maker." headingId="maker" label="Maker" links={[{ href: "#fixture", label: "About" }]} linkClassName="fixture-maker-link"
         portrait={<svg data-marketing-oracle="maker-portrait" viewBox="0 0 24 24" aria-label="Illustrated portrait"><circle cx="12" cy="12" r="10" /></svg>}>
         <p data-marketing-oracle="maker-first">First biography paragraph.</p><p data-marketing-oracle="maker-last">Last biography paragraph.</p>
       </MarketingMaker>
@@ -119,7 +123,10 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         <MarketingCallToAction actions={actions} eyebrow="Ready" heading="Keep the next result." headingId={`cta-${tone}`} key={tone}
           summary="Run one exact job." footnote="Local use remains available." tone={tone} />
       ))}
-      <MarketingSection className="fixture-caller-last" heading="Caller presentation." headingId="caller" label="Caller"><p>Unlayered caller styles win.</p></MarketingSection>
+      <MarketingSection className="fixture-caller-last" heading="Caller presentation." headingId="caller" label="Caller">
+        <MarketingSectionLabel className="fixture-body-label" size="body">Body-sized label</MarketingSectionLabel>
+        <p>Unlayered caller styles win.</p>
+      </MarketingSection>
     </MarketingPage>
   );
 }

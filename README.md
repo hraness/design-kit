@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.5.1",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.5.2",
     "@hraness/ui": "github:hraness/ui#v0.5.4"
   }
 }
@@ -140,6 +140,19 @@ still use two columns and pillars use one. Omitting the prop preserves the
 existing item-count custom property, including its inline style and arbitrary
 collection length. Use the compiled standalone stylesheet or the finalized
 compiler-adopter stylesheet with the finite choices.
+
+`ProductHero.notice` renders product-owned content after the boundary text in
+the hero's copy group. `MarketingInstallPanel.note` renders after its heading,
+before the separate command group. Both accept React nodes without adding a
+wrapper. Omit them to preserve the existing markup. `MarketingMaker.linkClassName`
+adds a caller class to its listed links only; it does not style biography links.
+
+Use `MarketingSectionLabel` for a native paragraph with the same label recipe
+as `MarketingSection`. Its default preserves the existing label presentation;
+`size="body"` selects the compiled 1rem variant. Override
+`--hraness-marketing-example-measure` in a product stylesheet to change only
+the hero example's maximum inline size. When absent, it uses
+`--hraness-marketing-copy-measure`; the summary's measure is unchanged.
 
 Homepage copy on this grammar follows a few rules on top of `STYLE.md`. The
 headline is the reader's outcome in eight words or fewer, sentence case, no
@@ -371,7 +384,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.1`. The previous rollback pair remains `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.0`.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.2`. The previous rollback pair remains `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.1`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

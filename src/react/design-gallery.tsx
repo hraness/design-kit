@@ -45,6 +45,7 @@ import {
   MarketingQuestionList,
   MarketingQuoteGrid,
   MarketingSection,
+  MarketingSectionLabel,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -261,6 +262,7 @@ export function DesignSystemGallery({
             headingId="design-gallery-marketing-title"
             headingLevel={3}
             name="Relay"
+            notice={<p data-gallery-marketing-slot="notice">This example release runs locally.</p>}
             summary="Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
           />
           <MarketingPillars
@@ -278,6 +280,7 @@ export function DesignSystemGallery({
             headingId="design-gallery-install-title"
             headingLevel={3}
             id="gallery-install"
+            note={<p data-gallery-marketing-slot="note">Requires Bun 1.3.14.</p>}
           >
             <pre className="design-gallery__marketing-command"><code>bun add --global relay@1.2.3</code></pre>
             <MarketingFlow
@@ -302,6 +305,7 @@ export function DesignSystemGallery({
             summary="Relay gives agents a few durable objects to compose around the work in front of them."
           />
           <MarketingSection heading="One durable object." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Interfaces share the same identity.">
+            <MarketingSectionLabel size="body">Reference</MarketingSectionLabel>
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>
           <MarketingInterfaceGrid heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
@@ -372,6 +376,7 @@ export function DesignSystemGallery({
             headingId="design-gallery-maker-title"
             headingLevel={3}
             label="Built by"
+            linkClassName="design-gallery__maker-link"
             links={[{ href: "#marketing", label: "Personal site" }]}
           >
             <p>A short, plain-words bio: who made it, what they did before, where they are, and why this product exists.</p>

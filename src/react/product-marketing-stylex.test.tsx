@@ -81,6 +81,11 @@ test("the public strict-CSP fixture renders four hero facts, three pillars, and 
   expect(document.querySelectorAll("details > summary")).toHaveLength(1);
   expect(document.querySelector("details")?.hasAttribute("open")).toBe(false);
   expect(document.querySelector("[style], style, script")).toBeNull();
+  expect(document.querySelector('.hraness-marketing-hero__copy > [data-strict-slot="notice"]')?.tagName).toBe("P");
+  expect(document.querySelector('.hraness-marketing-install__heading-group > [data-strict-slot="note"]')?.tagName).toBe("P");
+  expect(document.querySelector('.hraness-marketing-maker__links > li > a')?.className).toBe("strict-maker-link");
+  expect(document.querySelector('.hraness-marketing-maker__body > p > a')?.hasAttribute("class")).toBe(false);
+  expect(document.querySelector('.hraness-marketing-section__label[data-size="body"]')?.textContent).toBe("Reference");
 });
 
 test("omitted columns preserve arbitrary collection counts and all existing root classes", () => {
@@ -133,10 +138,10 @@ test("invalid explicit columns fail closed before rendering even empty collectio
   fc.assert(fc.property(fc.anything().filter((value) => value !== undefined && value !== 1 && value !== 2 && value !== 3 && value !== 4), reject), { numRuns: 50, seed: 41203 });
 });
 
-test("all 18 marketing compositions render real owned atoms with native server-only semantics", () => {
+test("all 19 marketing compositions render real owned atoms with native server-only semantics", () => {
   const html = renderToStaticMarkup(<ProductMarketingFixture api={api} />);
   const { document } = parseHTML(html);
-  expect(Object.keys(api).filter((name) => name.startsWith("Marketing") || name === "ProductHero")).toHaveLength(18);
+  expect(Object.keys(api).filter((name) => name.startsWith("Marketing") || name === "ProductHero")).toHaveLength(19);
   const owned = [...document.querySelectorAll('[class*="hraness-marketing-"]')];
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {
@@ -194,7 +199,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("f2437b977ddb764d9648e5a22fff9d376022b3606a225fe54d38f30a536e57e4");
+    .toBe("13e248b43c4ee2d29651cc27d45740d76ff0f74589f1cf8c82b1da6693bf20ff");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));

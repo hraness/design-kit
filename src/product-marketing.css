@@ -136,6 +136,10 @@
   text-transform: none;
 }
 
+.hraness-marketing-section__label[data-size="body"] {
+  font-size: 1rem;
+}
+
 /* Shared heading recipe. */
 :where(
   .hraness-marketing-hero__heading,
@@ -411,7 +415,7 @@
 }
 
 .hraness-marketing-hero__example {
-  max-inline-size: var(--hraness-marketing-copy-measure);
+  max-inline-size: var(--hraness-marketing-example-measure, var(--hraness-marketing-copy-measure));
   margin-block-start: -0.35rem;
   color: var(--hraness-marketing-ink);
   font-size: 1.05rem;
