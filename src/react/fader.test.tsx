@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test";
 import * as stylex from "@stylexjs/stylex";
+import { readStylexPackageManifest } from "@hraness/ui/stylex-build";
+import { fileURLToPath } from "node:url";
 import {
   Children,
   createRef,
@@ -25,6 +27,25 @@ function classesFor(html: string, stableClass: string): string[] {
   const className = tagWithClass(html, stableClass).match(/class="([^"]+)"/u)?.[1];
   if (className === undefined) throw new Error(`Rendered ${stableClass} has no class`);
   return className.split(" ").filter(Boolean);
+}
+
+function atomicRules(
+  css: string,
+  classNames: readonly string[],
+  label: string,
+): string {
+  return [...new Set(classNames)].flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const matches = [...css.matchAll(
+      new RegExp(
+        `\\.${escaped}(?:\\.${escaped})?(?=\\s|\\{|,|:|\\[)[^{}]*\\{[^{}]*\\}`,
+        "gu",
+      ),
+    )];
+    expect(matches.length, `Missing emitted rule for ${label} class ${className}`)
+      .toBeGreaterThan(0);
+    return matches.map((match) => match[0] ?? "");
+  }).join("\n");
 }
 
 test("Fader preserves slider semantics, public hooks, and native caller props", () => {
@@ -201,10 +222,15 @@ test("Fader keeps refs and applies focus presentation from React Aria state", ()
 });
 
 test("Fader owns extracted logical presentation with no legacy or pseudo selector", async () => {
-  const [components, source, compiled] = await Promise.all([
+  const manifestPath = fileURLToPath(
+    new URL("../../dist/stylex-manifest.json", import.meta.url),
+  );
+  const repository = fileURLToPath(new URL("../..", import.meta.url));
+  const [components, source, compiled, manifest] = await Promise.all([
     Bun.file(new URL("../components.css", import.meta.url)).text(),
     Bun.file(new URL("./fader.stylex.ts", import.meta.url)).text(),
     Bun.file(new URL("../../dist/stylex.css", import.meta.url)).text(),
+    readStylexPackageManifest(manifestPath, repository),
   ]);
 
   expect(components).not.toContain(".hraness-design-fader");
@@ -216,7 +242,29 @@ test("Fader owns extracted logical presentation with no legacy or pseudo selecto
   expect(source).toContain('"inset-block-end": 0');
   expect(source).toContain('left: "50%"');
   expect(source).toContain('top: "50%"');
-  expect(compiled).not.toMatch(
-    /@layer components\.hraness-design-kit\.priority(?:5|6|7|8|9|[1-9][0-9]+)/u,
+  const faderClasses = new Set(
+    Object.values(faderStyles).flatMap((recipe) =>
+      stylex.props(recipe).className?.split(" ").filter(Boolean) ?? []),
   );
+  const faderRules = manifest.rules.filter(([key]) => faderClasses.has(key));
+  expect(
+    [...new Set(faderRules.map(([key]) => key))].sort(),
+  ).toEqual([...faderClasses].sort());
+
+  const rawPriorityLevels = [...new Set(
+    manifest.rules
+      .filter(([, rule]) => rule.constKey === undefined)
+      .map(([, , priority]) => Math.floor(priority / 1000)),
+  )].sort((left, right) => left - right);
+  for (const [key, rule, priority] of faderRules) {
+    const serializedRank = rawPriorityLevels.indexOf(Math.floor(priority / 1000)) + 1;
+    expect(serializedRank, `${key} moved outside Fader's reviewed priority1-priority5 range`)
+      .toBeGreaterThan(0);
+    expect(serializedRank, `${key} moved outside Fader's reviewed priority1-priority5 range`)
+      .toBeLessThan(6);
+    expect(rule.ltr).not.toMatch(/::(?:before|after)/u);
+    expect(rule.rtl ?? "").not.toMatch(/::(?:before|after)/u);
+  }
+  expect(atomicRules(compiled, [...faderClasses], "Fader"))
+    .not.toMatch(/::(?:before|after)/u);
 });

@@ -35,15 +35,19 @@ import {
   MarketingCallToAction,
   MarketingFlow,
   MarketingInstallPanel,
+  MarketingInterfaceGrid,
   MarketingMaker,
+  MarketingPage,
   MarketingPillars,
   MarketingPricing,
   MarketingPrimitives,
   MarketingProofFrame,
   MarketingQuestionList,
   MarketingQuoteGrid,
+  MarketingSection,
   MarketingSiteHeader,
   MarketingStatStrip,
+  MarketingTrustBoundary,
   ProductHero,
 } from "./product-marketing.js";
 import {
@@ -218,10 +222,11 @@ export function DesignSystemGallery({
 
       <section className="design-gallery__section" id="marketing">
         <h2>Product-marketing grammar</h2>
-        <div className="design-gallery__marketing hraness-marketing-page">
+        <MarketingPage className="design-gallery__marketing">
           <MarketingSiteHeader
             action={{ href: "#gallery-install", label: "Install Relay" }}
             brand="Relay"
+            sticky={false}
             links={[
               { current: true, href: "#marketing", label: "How it works" },
               { href: "#gallery-install", label: "Install" },
@@ -294,6 +299,17 @@ export function DesignSystemGallery({
             label="Primitives"
             summary="Relay gives agents a few durable objects to compose around the work in front of them."
           />
+          <MarketingSection heading="One durable object." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Interfaces share the same identity.">
+            <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
+          </MarketingSection>
+          <MarketingInterfaceGrid heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
+            { label: "CLI", summary: "Run a named job.", example: <pre><code>relay run job-01</code></pre> },
+            { label: "SDK", summary: "Use typed application code." },
+          ]} />
+          <MarketingTrustBoundary heading="Keep authority visible." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
+            { label: "Local", detail: "Source files and credentials." },
+            { label: "Shared", detail: "Only the chosen receipt." },
+          ]} />
           <MarketingStatStrip
             ariaLabel="Relay usage"
             source="Counted from the public example repository on 5 September 2026."
@@ -364,7 +380,7 @@ export function DesignSystemGallery({
             headingId="design-gallery-cta-title"
             headingLevel={3}
           />
-        </div>
+        </MarketingPage>
       </section>
 
       <section className="design-gallery__section" id="shells">

@@ -65,7 +65,7 @@ test("playback transport renders one stable icon command through every lifecycle
     expect(html).toContain('aria-label="Preview controls"');
     expect(html).toContain(`data-playback-status="${status}"`);
     expect(buttons).toHaveLength(1);
-    expect(buttons[0]).toContain('class="hraness-icon-button__control"');
+    expect(buttons[0]).toMatch(/class="hraness-icon-button__control(?:\s|")/u);
     expect(html).toContain("hraness-design-playback-transport__button");
     expect(html).toContain('data-size="large"');
     expect(html).toContain('data-variant="primary"');
@@ -178,7 +178,7 @@ test("accessible naming, caller classes, and button targeting hooks remain exact
   expect(toolbar).toContain('aria-labelledby="transport-label"');
   expect(toolbar).not.toContain('aria-label="Preview controls"');
   expect(classes[0]).toBe("hraness-toolbar");
-  expect(classes[1]).toBe("hraness-design-playback-transport");
+  expect(classes).toContain("hraness-design-playback-transport");
   expect(classes.at(-1)).toBe("consumer-transport");
   expect(classes.some((className) => /^x[a-z0-9]+$/u.test(className))).toBe(true);
   expect(toolbar).not.toContain("style=");

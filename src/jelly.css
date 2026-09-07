@@ -36,93 +36,18 @@
   --jelly-shadow-raised: 0 20px 48px -26px rgb(0 0 0 / 72%);
 }
 
-.hraness-design-jelly-surface {
-  --jelly-card-padding-block: 0;
-  --jelly-card-padding-inline: 0;
-  --jelly-card-font-size: inherit;
-  --jelly-radius: var(--jelly-radius-card);
-  --jelly-fill: var(--surface-raised);
-  --jelly-label: var(--foreground);
-  --jelly-color-border-default: transparent;
-  position: relative;
-  isolation: isolate;
-  display: block;
-  box-sizing: border-box;
-  border-radius: var(--jelly-radius);
-  color: var(--jelly-label);
-  font: inherit;
-}
-
-.hraness-design-jelly-surface[data-tone="primary"] {
-  --jelly-fill: var(--primary);
-  --jelly-label: var(--primary-foreground);
-}
-
-.hraness-design-jelly-surface[data-tone="quiet"] {
-  --jelly-fill: color-mix(in oklch, var(--surface) 64%, transparent);
-  --jelly-label: var(--muted);
-}
-
-.hraness-design-jelly-surface[data-tone="danger"] {
-  --jelly-fill: var(--danger);
-  --jelly-label: var(--background);
-}
-
-.hraness-design-jelly-surface[data-tone="field"] {
-  --jelly-fill: color-mix(in oklch, var(--surface-raised) 88%, var(--background));
-  --jelly-radius: var(--jelly-radius-control);
-}
-
-.hraness-design-jelly-surface[data-tone="overlay"] {
-  --jelly-fill: var(--popover);
-  --jelly-label: var(--popover-foreground);
-  --jelly-radius: var(--jelly-radius-overlay);
-}
-
-.hraness-design-jelly-surface[data-hovered][data-tone="neutral"] {
-  --jelly-fill: var(--surface-hover);
-}
-
-.hraness-design-jelly-surface[data-hovered][data-tone="primary"] {
-  --jelly-fill: color-mix(in oklch, var(--primary) 88%, var(--background));
-}
-
-.hraness-design-jelly-surface[data-disabled],
-.hraness-design-jelly-surface[data-pending] {
-  --jelly-fill: color-mix(in oklch, var(--surface-raised) 86%, var(--background));
-  --jelly-label: var(--disabled-foreground);
-  cursor: not-allowed;
-}
-
-.hraness-design-jelly-surface:not(:defined) {
-  border: 1px solid var(--line);
-  background: var(--jelly-fill);
-  box-shadow: var(--jelly-shadow-raised);
-}
-
-.hraness-design-jelly-surface:defined {
-  border-color: transparent;
-  background: transparent;
-  box-shadow: none;
-}
-
-jelly-card.hraness-design-jelly-surface[data-interaction="passive"],
-jelly-card.hraness-design-jelly-surface[data-interaction="field"] {
-  user-select: text;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hraness-design-jelly-surface {
-    transition: none;
+/* The vendor upgrades this custom element asynchronously. Only its native
+   :defined lifecycle remains selector-driven; React recipes live in StyleX. */
+@layer components.hraness-design-kit.legacy {
+  .hraness-design-jelly-surface:not(:defined) {
+    border: 1px solid var(--line);
+    background: var(--jelly-fill);
+    box-shadow: var(--jelly-shadow-raised);
   }
-}
 
-@media (forced-colors: active) {
-  .hraness-design-jelly-surface,
   .hraness-design-jelly-surface:defined {
-    border: 1px solid CanvasText;
-    background: Canvas;
-    color: CanvasText;
+    border-color: transparent;
+    background: transparent;
     box-shadow: none;
   }
 }

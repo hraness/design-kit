@@ -1,6 +1,33 @@
-import { mkdir, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import assert from "node:assert/strict";
+import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
+
+import {
+  STYLEX_COMPLETE_RECORD_SCHEMA_VERSION,
+  STYLEX_GENERATION_SCHEMA_VERSION,
+  STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION,
+  STYLEX_TEMPLATE_CSS_PLACEHOLDER,
+  artifactForFile,
+  auditCssWithoutStylexUnionNamespace,
+  canonicalJson,
+  compilerContract,
+  compilerSha256,
+  createStylexGeneration,
+  finalizeStylexGeneration,
+  prepareStylexProducedTemplate,
+  readStylexPackageManifest,
+  sealStylexProducedTemplate,
+  serializeStylexPackageRules,
+  serializeStylexRuleUnionV1,
+  stylexRulesSha256,
+  stylexUnionPolicy,
+  stylexUnionPolicySha256,
+  validateStylexPackageManifest,
+  type StylexPackageManifestV1,
+  type StylexStandaloneSerializerV1,
+} from "@hraness/ui/stylex-build";
+import { collectBunStylexGraph } from "@hraness/ui/stylex-build/bun";
 
 async function run(command: string[], cwd: string): Promise<void> {
   const child = Bun.spawn(command, { cwd, stdout: "inherit", stderr: "inherit" });
@@ -8,6 +35,37 @@ async function run(command: string[], cwd: string): Promise<void> {
   if (exitCode !== 0) {
     throw new Error(`Command failed (${String(exitCode)}): ${command.join(" ")}`);
   }
+}
+
+async function expectRejected(
+  operation: () => Promise<unknown>,
+  pattern: RegExp,
+  label: string,
+): Promise<void> {
+  try {
+    await operation();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (!pattern.test(message)) {
+      throw new Error(`${label} failed for an unexpected reason: ${message}`, {
+        cause: error,
+      });
+    }
+    return;
+  }
+  throw new Error(`${label} unexpectedly succeeded.`);
+}
+
+function logicalPath(root: string, path: string, label: string): string {
+  const logical = relative(root, resolve(path)).split(sep).join("/");
+  assert.ok(
+    logical.length > 0
+      && logical !== ".."
+      && !logical.startsWith("../")
+      && !logical.startsWith("/"),
+    `${label} must remain below its root.`,
+  );
+  return logical;
 }
 
 async function filesBelow(directory: string): Promise<string[]> {
@@ -110,6 +168,33 @@ function compiledChatBranchClasses(
   return [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
 }
 
+function compiledStyleBranchClasses(
+  javaScript: string,
+  styleMapName: string,
+  branch: string,
+  label: string,
+): string[] {
+  const escapedMapName = styleMapName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const styleMap = javaScript.match(
+    new RegExp(`var ${escapedMapName} = \\{([\\s\\S]*?)\\n\\};`, "u"),
+  )?.[1];
+  if (styleMap === undefined) {
+    throw new Error(`${label} is missing the compiled ${styleMapName} map.`);
+  }
+  const escapedBranch = branch.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const branchMap = styleMap.match(
+    new RegExp(`^  ${escapedBranch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  if (branchMap === undefined) {
+    throw new Error(`${label} is missing the ${styleMapName}.${branch} recipe branch.`);
+  }
+  const classes = [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+  if (classes.length === 0) {
+    throw new Error(`${label} compiled ${styleMapName}.${branch} to no atomic classes.`);
+  }
+  return classes;
+}
+
 function chatBranchRules(
   css: string,
   javaScript: string,
@@ -130,12 +215,35 @@ function chatBranchRules(
   });
 }
 
+function atomicClassRules(
+  css: string,
+  classNames: readonly string[],
+  label: string,
+): CssRuleRange[] {
+  return [...new Set(classNames)].flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const rules = [...css.matchAll(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?\\s*\\{([^{}]*)\\}`, "gu"),
+    )].flatMap((match) => match.index === undefined
+      ? []
+      : [{
+          body: match[1] ?? "",
+          end: match.index + match[0].length,
+          start: match.index,
+        }]);
+    if (rules.length === 0) {
+      throw new Error(`${label} is missing the emitted atomic class ${className}.`);
+    }
+    return rules;
+  });
+}
+
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center/u, "align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3)/u, "background-color"],
-  [/border-bottom-color:\s*#5c1906/u, "border-block-end color"],
-  [/border-bottom-style:\s*solid/u, "border-block-end style"],
-  [/border-bottom-width:\s*2px/u, "border-block-end width"],
+  [/border-block-end-color:\s*#5c1906/u, "border-block-end color"],
+  [/border-block-end-style:\s*solid/u, "border-block-end style"],
+  [/border-block-end-width:\s*2px/u, "border-block-end width"],
   [/box-shadow:\s*0\s+3px\s+12px\s+#24140059/u, "box-shadow"],
   [/color:\s*#241400/u, "color"],
   [/display:\s*flex/u, "display"],
@@ -143,7 +251,7 @@ const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/font-family:\s*var\(--font-text,\s*system-ui,\s*sans-serif\)/u, "font-family"],
   [/font-size:\s*var\(--text-label,\s*0?\.875rem\)/u, "font-size"],
   [/gap:\s*var\(--space-1,\s*0?\.25rem\)\s+var\(--space-3,\s*0?\.75rem\)/u, "gap"],
-  [/top:\s*0/u, "logical block-start inset"],
+  [/inset-block-start:\s*0/u, "logical block-start inset"],
   [/justify-content:\s*center/u, "justify-content"],
   [/line-height:\s*1\.35/u, "line-height"],
   [/min-height:\s*3rem/u, "min-height"],
@@ -233,6 +341,74 @@ const migratedFaderLegacySelector =
   /\.hraness-design-fader(?:__[\w-]+)?(?:\[[^\]]+\])?(?:(?:::before|::after)|\s+\.hraness-design-fader__[\w-]+)?\s*(?:\{|,)/u;
 const migratedChatLegacySelector =
   /\.hraness-design-chat-(?:message|composer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u;
+const migratedShellNavigationRouteLegacySelector =
+  /\.hraness-design-(?:app-shell|navigation-rail|rail-section|rail-item|route-state)(?:__[\w-]+)?(?:\[[^\]]+\])?\s*(?:\{|,|:)/u;
+const migratedThemeRootLegacySelector =
+  /\.hraness-design-theme-toggle(?:\s*\{|\[data-ready=["']false["']\]\s*\{)/u;
+
+const shellStyleBranches = {
+  appShellStyles: [
+    "bottom",
+    "drawer",
+    "mobileTrigger",
+    "page",
+    "rail",
+    "root",
+    "top",
+  ],
+  navigationRailStyles: [
+    "item",
+    "itemActive",
+    "itemCopy",
+    "itemDescription",
+    "itemIcon",
+    "itemLabel",
+    "itemNativeInteractionFallbacks",
+    "navigation",
+    "rail",
+    "railEdge",
+    "section",
+    "sectionItems",
+    "sectionTitle",
+  ],
+  routeStateStyles: [
+    "content",
+    "header",
+    "loading",
+    "root",
+    "row",
+    "skeletons",
+  ],
+  themeStyles: ["notReady", "root"],
+} as const;
+
+const layoutSurfaceStyleBranches = [
+  "bar",
+  "barContent",
+  "barPart",
+  "bottomBar",
+  "dockedAbsolute",
+  "dockedContent",
+  "dockedContentCompactInset",
+  "dockedContentCompactNoInset",
+  "dockedContentDefaultInset",
+  "dockedContentDefaultNoInset",
+  "dockedFixed",
+  "dockedFooter",
+  "dockedSticky",
+  "fullSize",
+  "pageCanvas",
+  "pageContentInset",
+  "pageNoInset",
+  "surface",
+  "topBar",
+  "topBarActions",
+  "topBarGlass",
+  "topBarSticky",
+  "topBarStatic",
+  "topBarTitle",
+  "wideSize",
+] as const;
 
 const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/min-inline-size:\s*0/u, "logical minimum inline-size"],
@@ -248,28 +424,28 @@ const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])
 
 const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [
-    /@layer components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
-    "priority2 gap",
+    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
+    "priority3 gap",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?align-items:\s*center/u,
-    "priority3 alignment",
+    /@layer components\.hraness-design-kit\.priority4\s*\{[\s\S]*?align-items:\s*center/u,
+    "priority4 alignment",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?display:\s*flex/u,
-    "priority3 flex display",
+    /@layer components\.hraness-design-kit\.priority4\s*\{[\s\S]*?display:\s*flex/u,
+    "priority4 flex display",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?flex-wrap:\s*wrap/u,
-    "priority3 wrapping",
+    /@layer components\.hraness-design-kit\.priority4\s*\{[\s\S]*?flex-wrap:\s*wrap/u,
+    "priority4 wrapping",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?inline-size:\s*1\.5rem/u,
-    "priority3 logical inline glyph size",
+    /@layer components\.hraness-design-kit\.priority4\s*\{[\s\S]*?inline-size:\s*1\.5rem/u,
+    "priority4 logical inline glyph size",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
-    "priority3 logical block glyph size",
+    /@layer components\.hraness-design-kit\.priority4\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
+    "priority4 logical block glyph size",
   ],
 ];
 
@@ -354,7 +530,7 @@ function requireAnimatedRailStagePresentation(css: string, label: string): void 
 }
 
 function requireDitherPresentation(css: string, label: string): void {
-  for (const layer of ["priority1", "priority2", "priority3", "priority4"]) {
+  for (const layer of ["priority2", "priority3", "priority4", "priority5", "priority6", "priority7", "priority8"]) {
     if (!css.includes(`@layer components.hraness-design-kit.${layer}`)) {
       throw new Error(`${label} lost the package-owned ${layer} StyleX layer.`);
     }
@@ -368,17 +544,28 @@ function requireDitherPresentation(css: string, label: string): void {
 
 function requireLayoutSurfacePresentation(
   css: string,
+  javaScript: string,
   label: string,
   isolated = false,
 ): void {
+  const layoutClasses = layoutSurfaceStyleBranches.flatMap((branch) =>
+    compiledStyleBranchClasses(
+      javaScript,
+      "layoutSurfaceStyles",
+      branch,
+      label,
+    ));
+  const layoutCss = atomicClassRules(css, layoutClasses, label)
+    .map(({ body }) => body)
+    .join("\n");
   for (const [pattern, declaration] of layoutSurfaceDeclarationPatterns) {
-    if (!pattern.test(css)) {
+    if (!pattern.test(layoutCss)) {
       throw new Error(`${label} lost the migrated layout-surface ${declaration} declaration.`);
     }
   }
   if (isolated) {
     for (const [pattern, declaration] of layoutSurfaceIsolatedDeclarationPatterns) {
-      if (!pattern.test(css)) {
+      if (!pattern.test(layoutCss)) {
         throw new Error(
           `${label} lost the migrated layout-surface ${declaration} declaration.`,
         );
@@ -389,7 +576,7 @@ function requireLayoutSurfacePresentation(
     ? [...layoutSurfaceTokenPhysicalSubstitutions, ...layoutSurfaceIsolatedPhysicalSubstitutions]
     : layoutSurfaceTokenPhysicalSubstitutions;
   for (const [pattern, substitution] of forbidden) {
-    if (pattern.test(css)) {
+    if (pattern.test(layoutCss)) {
       throw new Error(`${label} contains a migrated layout-surface ${substitution}.`);
     }
   }
@@ -402,9 +589,6 @@ function requirePlaybackTransportPresentation(css: string, label: string): void 
         `${label} lost the migrated PlaybackTransport ${declaration} declaration.`,
       );
     }
-  }
-  if (/@layer\s+components\.hraness-design-kit\.priority5/u.test(css)) {
-    throw new Error(`${label} leaked a design-kit priority5 layer.`);
   }
 }
 
@@ -447,6 +631,43 @@ function requireChatPresentation(css: string, javaScript: string, label: string)
   }
 }
 
+function requireShellNavigationRouteThemePresentation(
+  css: string,
+  javaScript: string,
+  label: string,
+): string[] {
+  const classes: string[] = [];
+  for (const [styleMapName, branches] of Object.entries(shellStyleBranches)) {
+    for (const branch of branches) {
+      classes.push(...compiledStyleBranchClasses(
+        javaScript,
+        styleMapName,
+        branch,
+        label,
+      ));
+    }
+  }
+  requireAtomicSelectorsPresent(css, classes, label);
+  for (const [pattern, declaration] of [
+    [/grid-template:\s*["']rail top["']/u, "desktop AppShell grid"],
+    [/@media\s*\((?:max-width:\s*48rem|width\s*<=\s*48rem)\)/u, "compact AppShell query"],
+    [/grid-template-columns:\s*auto\s+minmax\(0,\s*1fr\)\s+auto/u, "RailItem grid"],
+    [/background-color:\s*var\(--surface-hover\)/u, "RailItem native hover background"],
+    [/background-color:\s*var\(--secondary\)/u, "RailItem active background"],
+    [/background-color:\s*canvas/iu, "AppShell forced-color rail background"],
+    [/color:\s*var\(--secondary-foreground\)/u, "RailItem active foreground"],
+    [/outline-color:\s*var\(--focus\)/u, "RailItem native focus fallback"],
+    [/grid-template-rows:\s*auto\s+minmax\(0,\s*1fr\)/u, "route-state rows"],
+    [/inline-size:\s*min\(100%,\s*36rem\)/u, "route loading width"],
+    [/opacity:\s*0?\.64/u, "ThemeToggle not-ready state"],
+  ] as const) {
+    if (!pattern.test(css)) {
+      throw new Error(`${label} lost the migrated ${declaration} declaration.`);
+    }
+  }
+  return [...new Set(classes)];
+}
+
 function requireAtomicSelectorsExactlyOnce(
   css: string,
   classNames: readonly string[],
@@ -454,7 +675,9 @@ function requireAtomicSelectorsExactlyOnce(
 ): void {
   for (const className of new Set(classNames)) {
     const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-    const count = css.match(new RegExp(`\\.${escaped}\\s*(?:\\{|,)`, "gu"))?.length ?? 0;
+    const count = css.match(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?(?=\\s|\\{|,|:|\\[)`, "gu"),
+    )?.length ?? 0;
     if (count !== 1) {
       throw new Error(`${label} contains ${String(count)} selectors for rendered atomic class ${className}.`);
     }
@@ -468,7 +691,9 @@ function requireAtomicSelectorsPresent(
 ): void {
   for (const className of new Set(classNames)) {
     const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-    const count = css.match(new RegExp(`\\.${escaped}\\s*(?:\\{|,)`, "gu"))?.length ?? 0;
+    const count = css.match(
+      new RegExp(`\\.${escaped}(?:\\.${escaped})?(?=\\s|\\{|,|:|\\[)`, "gu"),
+    )?.length ?? 0;
     if (count < 1) {
       throw new Error(`${label} does not contain rendered atomic class ${className}.`);
     }
@@ -485,6 +710,81 @@ function requireLayerBlockExactlyOnce(
   if (count !== 1) {
     throw new Error(`${label} contains ${String(count)} ${layerName} blocks instead of one.`);
   }
+}
+
+const publicCollectorToolchain = {
+  "@babel/core": "7.29.7",
+  "@stylexjs/babel-plugin": "0.19.0",
+  "@types/babel__core": "7.20.5",
+  "@types/bun": "1.3.14",
+  lightningcss: "1.33.0",
+} as const;
+
+const compilerStylesheetPaths = [
+  "src/appearance-menu.css",
+  "src/charts.css",
+  "src/compiler-components.css",
+  "src/compiler-foundation.css",
+  "src/compiler-tokens.css",
+  "src/components.css",
+  "src/design-gallery.css",
+  "src/effects.css",
+  "src/fonts.css",
+  "src/jelly.css",
+  "src/plain-publication.css",
+  "src/plain-site.css",
+  "src/product-marketing-foundation.css",
+  "src/product-marketing.css",
+  "src/reset.css",
+  "src/styles.css",
+  "src/syntax-highlighting.css",
+  "src/tokens.css",
+  "src/typography.css",
+] as const;
+
+const designKitStandaloneSerializer = {
+  before: ["components.hraness-design-kit.legacy"],
+  prefix: "components.hraness-design-kit",
+} as const satisfies StylexStandaloneSerializerV1;
+
+function requireDesignKitManifest(
+  manifest: StylexPackageManifestV1,
+  runtimePaths: readonly string[],
+  label: string,
+): void {
+  assert.equal(manifest.kind, "hraness-stylex-package-manifest");
+  assert.deepEqual(
+    manifest.package,
+    { name: "@hraness/design-kit", version: "0.5.0" },
+    `${label} package identity changed`,
+  );
+  assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
+  assert.deepEqual(manifest.compiler, compilerContract, `${label} compiler contract changed`);
+  assert.equal(manifest.compilerSha256, compilerSha256, `${label} compiler hash changed`);
+  assert.equal(manifest.rulesSha256, stylexRulesSha256(manifest.rules));
+  assert.deepEqual(manifest.buildTools, [], `${label} must not publish build tools`);
+  assert.deepEqual(
+    manifest.runtime.map(({ path }) => path),
+    [...runtimePaths].sort(),
+    `${label} runtime inventory is incomplete`,
+  );
+  assert.equal(manifest.compilerFoundation, "src/compiler-foundation.css");
+  assert.deepEqual(
+    manifest.stylesheets.map(({ path }) => path),
+    [...compilerStylesheetPaths].sort(),
+    `${label} compiler stylesheet inventory is incomplete`,
+  );
+  assert.equal(
+    manifest.stylesheets.filter(({ path }) => path === manifest.compilerFoundation).length,
+    1,
+    `${label} must bind exactly one compiler foundation`,
+  );
+  assert.equal(manifest.standaloneCss.path, "dist/stylex.css");
+  assert.deepEqual(
+    manifest.standaloneSerializer,
+    designKitStandaloneSerializer,
+    `${label} standalone namespace or legacy boundary changed`,
+  );
 }
 
 const repository = process.cwd();
@@ -517,6 +817,11 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
     "The @hraness/ui development dependency must use an exact immutable release tag or full reviewed commit.",
   );
 }
+if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.4") {
+  throw new Error(
+    "Design-kit v0.5.0 must build and publish against the immutable @hraness/ui v0.5.4 release.",
+  );
+}
 if (process.argv.includes("--publication")) {
   if (!immutableUiRelease.test(uiDevelopmentSpecifier)) {
     throw new Error(
@@ -531,18 +836,26 @@ const uiPeerRange = stringField(
   "@hraness/ui",
   "package.json peerDependencies",
 );
+if (uiPeerRange !== ">=0.5.4 <0.6.0") {
+  throw new Error("Design-kit v0.5.0 must declare the exact @hraness/ui v0.5 peer range.");
+}
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
 }
-if (stringField(rootDevDependencies, "@stylexjs/unplugin", "package.json devDependencies") !== "0.19.0") {
-  throw new Error("The StyleX compiler adapter must be pinned to 0.19.0.");
+for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
+  if (stringField(rootDevDependencies, dependency, "package.json devDependencies") !== version) {
+    throw new Error(`The public StyleX collector peer ${dependency} must be pinned to ${version}.`);
+  }
 }
-if (stringField(rootDevDependencies, "unplugin", "package.json devDependencies") !== "2.3.11") {
-  throw new Error("The StyleX compiler family must pin unplugin 2.3.11.");
+if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
+  || rootDevDependencies.unplugin !== undefined) {
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.5.0.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
-const work = await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-"));
+const work = await realpath(
+  await mkdtemp(join(tmpdir(), "hraness-design-kit-smoke-")),
+);
 
 try {
   const archive = join(work, "package.tgz");
@@ -567,8 +880,124 @@ try {
   const packedPackageJson = await Bun.file(packedPackageJsonPath).json();
   const packedReactJavaScript = await Bun.file(join(packedRoot, "dist/react/index.js")).text();
   const packedStylexCss = await Bun.file(join(packedRoot, "dist/stylex.css")).text();
+  const packedManifestPath = join(packedRoot, "dist/stylex-manifest.json");
+  const packedManifestSource = await readFile(packedManifestPath, "utf8");
+  const packedCompilerFoundationCss = await readFile(
+    join(packedRoot, "src/compiler-foundation.css"),
+    "utf8",
+  );
+  const packedCompilerComponentsCss = await readFile(
+    join(packedRoot, "src/compiler-components.css"),
+    "utf8",
+  );
+  const packedAppearanceMenuCss = await readFile(
+    join(packedRoot, "src/appearance-menu.css"),
+    "utf8",
+  );
   const packedComponentsCss = await Bun.file(join(packedRoot, "src/components.css")).text();
   const packedStylesCss = await Bun.file(join(packedRoot, "src/styles.css")).text();
+  const packedRuntimePaths = (await filesBelow(join(packedRoot, "dist")))
+    .filter((path) => path.endsWith(".js"))
+    .map((path) => logicalPath(packedRoot, path, "packed runtime"))
+    .sort();
+  const packedStylexJavaScript = (await Promise.all(
+    packedRuntimePaths.map((path) => readFile(join(packedRoot, path), "utf8")),
+  )).join("\n");
+  const packedManifest = await readStylexPackageManifest(packedManifestPath, packedRoot);
+  assert.equal(
+    packedManifestSource,
+    `${canonicalJson(packedManifest)}\n`,
+    "Packed StyleX manifest must be canonical JSON with one trailing newline.",
+  );
+  requireDesignKitManifest(packedManifest, packedRuntimePaths, "Packed StyleX manifest");
+  assert.equal(
+    packedStylexCss,
+    serializeStylexPackageRules(
+      packedManifest.rules,
+      packedManifest.standaloneSerializer,
+    ),
+    "Packed standalone StyleX CSS must be the canonical manifest-rule serialization.",
+  );
+  assert.equal(
+    packedPackageJson.exports?.["./compiler-foundation.css"],
+    "./src/compiler-foundation.css",
+    "Packed package must export its compiler foundation.",
+  );
+  assert.equal(
+    packedPackageJson.exports?.["./stylex-manifest.json"],
+    "./dist/stylex-manifest.json",
+    "Packed package must export its StyleX manifest.",
+  );
+  for (const internalExport of [
+    "./compiler-components.css",
+    "./compiler-tokens.css",
+    "./product-marketing-foundation.css",
+    "./stylex-build",
+    "./stylex-build/bun",
+  ]) {
+    assert.equal(
+      packedPackageJson.exports?.[internalExport],
+      undefined,
+      `Packed package must keep ${internalExport} internal or UI-owned.`,
+    );
+  }
+  if (!packedCompilerFoundationCss.includes('@import "@hraness/ui/compiler-foundation.css";')
+    || !packedCompilerFoundationCss.includes('@import "./compiler-tokens.css";')
+    || !packedCompilerFoundationCss.includes('@import "./compiler-components.css";')
+    || !packedCompilerFoundationCss.includes('@import "./appearance-menu.css";')
+    || !packedCompilerFoundationCss.includes('@import "./product-marketing-foundation.css";')) {
+    throw new Error("Packed compiler foundation lost its UI, token, legacy, or appearance foundation imports.");
+  }
+  if (/(?:^|\/)stylex\.css|(?:^|\/)styles\.css/u.test(packedCompilerFoundationCss)) {
+    throw new Error("Packed compiler foundation imports a standalone or aggregate stylesheet route.");
+  }
+  assert.ok(!packedCompilerFoundationCss.includes('@import "./product-marketing.css";'),
+    "Packed compiler foundation must not import the raw HTML marketing recipes.");
+  assert.ok(packedStylesCss.includes('@import "./product-marketing.css";\n@import "./product-marketing-foundation.css";'),
+    "Packed standalone aggregate must preserve the raw HTML marketing sheet before its compiler-compatible foundation.");
+  if (migratedShellNavigationRouteLegacySelector.test(packedCompilerComponentsCss)
+    || migratedThemeRootLegacySelector.test(packedCompilerComponentsCss)) {
+    throw new Error("Packed compiler components retained a migrated shell, navigation, route, or theme recipe.");
+  }
+  for (const expectedAppearanceContract of [
+    '.hraness-design-theme-toggle[data-hraness-appearance-menu][data-presentation="menu"]:not([data-hraness-theme-toggle-stylex])',
+    ".hraness-design-theme-toggle__trigger",
+    "@media (pointer: coarse)",
+    "@media (prefers-reduced-motion: reduce)",
+    "@media (forced-colors: active)",
+  ]) {
+    if (!packedAppearanceMenuCss.includes(expectedAppearanceContract)) {
+      throw new Error(`Packed standards-only appearance asset lost ${expectedAppearanceContract}.`);
+    }
+  }
+  if (/@stylexjs\/stylex|stylex\.create|stylex-manifest|stylex-build/u.test(packedAppearanceMenuCss)) {
+    throw new Error("Packed standards-only appearance asset acquired a StyleX compiler dependency.");
+  }
+  assert.throws(
+    () => requireDesignKitManifest({
+      ...packedManifest,
+      standaloneSerializer: {
+        ...packedManifest.standaloneSerializer,
+        prefix: "components.hraness-ui",
+      },
+    }, packedRuntimePaths, "Wrong-prefix manifest"),
+    /standalone namespace/u,
+    "Design-kit manifest validation must reject the UI standalone prefix.",
+  );
+  assert.throws(
+    () => requireDesignKitManifest({
+      ...packedManifest,
+      standaloneSerializer: {
+        ...packedManifest.standaloneSerializer,
+        before: [
+          "components.hraness-design-kit.legacy.nested",
+          "components.hraness-design-kit.legacy",
+        ],
+      },
+    }, packedRuntimePaths, "Wrong-order manifest"),
+    /standalone namespace/u,
+    "Design-kit manifest validation must reject a reordered legacy boundary.",
+  );
   const stylexImport = '@import "../dist/stylex.css";';
   const componentStylexImports = packedComponentsCss
     .split("\n")
@@ -576,8 +1005,8 @@ try {
   const aggregateStylexImports = packedStylesCss
     .split("\n")
     .filter((line) => line.trim() === stylexImport);
-  const localLayerPrelude = "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
-  const portfolioLayerPrelude = "@layer components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4;";
+  const localLayerPrelude = "@layer components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4, components.hraness-design-kit.priority5, components.hraness-design-kit.priority6, components.hraness-design-kit.priority7, components.hraness-design-kit.priority8;";
+  const portfolioLayerPrelude = "@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-ui.priority1, components.hraness-ui.priority2, components.hraness-ui.priority3, components.hraness-ui.priority4, components.hraness-ui.priority5, components.hraness-ui.priority6, components.hraness-ui.priority7, components.hraness-design-kit.legacy, components.hraness-design-kit.priority1, components.hraness-design-kit.priority2, components.hraness-design-kit.priority3, components.hraness-design-kit.priority4, components.hraness-design-kit.priority5, components.hraness-design-kit.priority6, components.hraness-design-kit.priority7, components.hraness-design-kit.priority8;";
   if (componentStylexImports.length !== 1
     || !packedComponentsCss.startsWith(`${localLayerPrelude}\n${stylexImport}\n`)) {
     throw new Error("Packed components.css does not freeze the local layers and deliver dist/stylex.css exactly once before legacy recipes.");
@@ -596,10 +1025,20 @@ try {
   requireNoticePresentation(packedStylexCss, "Packed stylex.css");
   requireAnimatedRailStagePresentation(packedStylexCss, "Packed stylex.css");
   requireDitherPresentation(packedStylexCss, "Packed stylex.css");
-  requireLayoutSurfacePresentation(packedStylexCss, "Packed stylex.css", true);
+  requireLayoutSurfacePresentation(
+    packedStylexCss,
+    packedStylexJavaScript,
+    "Packed stylex.css",
+    true,
+  );
   requirePlaybackTransportPresentation(packedStylexCss, "Packed stylex.css");
   requireFaderPresentation(packedStylexCss, "Packed stylex.css");
   requireChatPresentation(
+    packedStylexCss,
+    packedReactJavaScript,
+    "Packed stylex.css",
+  );
+  const packedShellClasses = requireShellNavigationRouteThemePresentation(
     packedStylexCss,
     packedReactJavaScript,
     "Packed stylex.css",
@@ -622,6 +1061,10 @@ try {
   if (migratedChatLegacySelector.test(packedComponentsCss)) {
     throw new Error("Packed components.css retained a migrated legacy Chat recipe.");
   }
+  if (migratedShellNavigationRouteLegacySelector.test(packedComponentsCss)
+    || migratedThemeRootLegacySelector.test(packedComponentsCss)) {
+    throw new Error("Packed components.css retained a migrated shell, navigation, route, or theme recipe.");
+  }
   if (packedPackageJson.dependencies?.["@hraness/ui"] !== undefined) {
     throw new Error("Packed package nests @hraness/ui as a runtime dependency.");
   }
@@ -637,11 +1080,14 @@ try {
   if (packedPackageJson.dependencies?.["@stylexjs/stylex"] !== "0.19.0") {
     throw new Error("Packed package lost the exact StyleX runtime dependency.");
   }
-  if (
-    packedPackageJson.devDependencies?.["@stylexjs/unplugin"] !== "0.19.0"
-    || packedPackageJson.devDependencies?.unplugin !== "2.3.11"
-  ) {
-    throw new Error("Packed package lost the exact StyleX 0.19.0/unplugin 2.3.11 compiler family.");
+  for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
+    if (packedPackageJson.devDependencies?.[dependency] !== version) {
+      throw new Error(`Packed package lost public StyleX collector peer ${dependency}@${version}.`);
+    }
+  }
+  if (packedPackageJson.devDependencies?.["@stylexjs/unplugin"] !== undefined
+    || packedPackageJson.devDependencies?.unplugin !== undefined) {
+    throw new Error("Packed package retained the private unplugin compiler adapter.");
   }
   await writeFile(
     join(neutralConsumer, "package.json"),
@@ -751,7 +1197,6 @@ try {
     "react@19.2.3",
     "react-dom@19.2.3",
     "typescript@^6.0.3",
-    "vite@8.1.5",
     "--ignore-scripts",
   ], consumer);
   await run([process.execPath, "add", archive, "--ignore-scripts"], consumer);
@@ -787,7 +1232,7 @@ try {
       'import { readFile, writeFile } from "node:fs/promises";',
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon, QuietSiteFooter } from "@hraness/ui";',
-      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BarListChart, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { Children, createElement, isValidElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
@@ -795,7 +1240,7 @@ try {
       'const stylexCss = await readFile(new URL(stylexUrl), "utf8");',
       'if (!stylexCss.includes("@layer components.hraness-design-kit.priority")) throw new Error("Packed stylex.css lost its package layer.");',
       'if (!stylexCss.includes("position: sticky") || !stylexCss.includes("text-transform: uppercase")) throw new Error("Packed stylex.css lost the notice declarations.");',
-      'for (const layer of ["priority1", "priority2", "priority3", "priority4"]) { if (!stylexCss.includes(`@layer components.hraness-design-kit.${layer}`)) throw new Error(`Packed stylex.css lost design-kit ${layer}.`); }',
+      'for (const layer of ["priority2", "priority3", "priority4", "priority5", "priority6", "priority7", "priority8"]) { if (!stylexCss.includes(`@layer components.hraness-design-kit.${layer} {`)) throw new Error(`Packed stylex.css lost design-kit ${layer}.`); }',
       'if (!stylexCss.includes("--hraness-design-dither-size: 3px") || !stylexCss.includes("--hraness-design-dither-size: 7px") || !stylexCss.includes("background-size: var(--hraness-design-dither-size, 4px) var(--hraness-design-dither-size, 4px)") || !stylexCss.includes("@media (forced-colors: active)")) throw new Error("Packed stylex.css lost the DitherSurface declarations.");',
       'if (!stylexCss.includes("transform: none !important") || !stylexCss.includes("transition: none !important") || !stylexCss.includes("@media (prefers-reduced-motion: reduce)")) throw new Error("Packed stylex.css lost the AnimatedRailStage reduced-motion declarations.");',
       'if (!stylexCss.includes("grid-template-columns: auto minmax(0, 1fr)") || !stylexCss.includes("grid-template-columns: minmax(0, 1fr) auto")) throw new Error("Packed stylex.css lost the Chat message or wide composer declarations.");',
@@ -808,10 +1253,16 @@ try {
       'if (componentsCss.includes(".hraness-design-chat-message") || componentsCss.includes(".hraness-design-chat-composer")) throw new Error("Legacy CSS still declares the migrated Chat recipe.");',
       'if (componentsCss.split("\\n").filter((line) => line.trim() === `@import "../dist/stylex.css";`).length !== 1) throw new Error("Packed components.css lost its single StyleX import.");',
       'const uiStylexCss = await readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8");',
-      'const uiPriority3Marker = "@layer components.hraness-ui.priority3";',
-      'const uiPriority3Index = uiStylexCss.indexOf(uiPriority3Marker);',
-      'if (uiPriority3Index < 0) throw new Error("Packed UI stylex.css lost its emitted priority3 layer.");',
-      'const uiPriority3Css = uiStylexCss.slice(uiPriority3Index);',
+      'const uiPriority5Marker = "@layer components.hraness-ui.priority5 {";',
+      'const uiPriority6Marker = "@layer components.hraness-ui.priority6 {";',
+      'const uiPriority5Index = uiStylexCss.indexOf(uiPriority5Marker);',
+      'const uiPriority6Index = uiStylexCss.indexOf(uiPriority6Marker);',
+      'if (uiStylexCss.split(uiPriority5Marker).length !== 2 || uiStylexCss.split(uiPriority6Marker).length !== 2 || uiPriority5Index < 0 || uiPriority6Index <= uiPriority5Index) throw new Error("Packed UI stylex.css lost its single structural priority5 boundary.");',
+      'const uiPriority5Css = uiStylexCss.slice(uiPriority5Index, uiPriority6Index);',
+      'const uiManifest = JSON.parse(await readFile(new URL(import.meta.resolve("@hraness/ui/stylex-manifest.json")), "utf8"));',
+      'const quietFooterPaddingRules = uiManifest.rules.filter(([, rule]) => /padding-top:var\\(--space-5,\\s*1\\.25rem\\)/u.test(rule.ltr));',
+      'if (quietFooterPaddingRules.length !== 1 || quietFooterPaddingRules[0][2] !== 4000) throw new Error("Packed UI manifest changed its exact QuietSiteFooter padding atom.");',
+      'const quietFooterPaddingClass = quietFooterPaddingRules[0][0];',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
       'const aside = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
       'const strong = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
@@ -827,12 +1278,14 @@ try {
       'const icon = /<svg[^>]*class="([^"]+)"/u.exec(iconHtml)?.[1]?.split(" ").filter((name) => name !== "hraness-icon" && name.length > 0);',
       'if (icon === undefined || icon.length === 0 || iconHtml.includes("style=")) throw new Error("Packed UI Icon lost extracted StyleX classes.");',
       'for (const className of new Set(icon)) { const escaped = className.replace(/[.*+?^${}()|[\\]\\\\]/gu, "\\\\$&"); const count = uiStylexCss.match(new RegExp(`\\\\.${escaped}\\\\s*(?:\\\\{|,)`, "gu"))?.length ?? 0; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered Icon class ${className}.`); }',
-      'const footerHtml = renderToStaticMarkup(createElement(QuietSiteFooter, null, "UI priority3 canary"));',
+      'const footerHtml = renderToStaticMarkup(createElement(QuietSiteFooter, null, "UI priority5 canary"));',
       'const footer = /<footer[^>]*class="([^"]+)"/u.exec(footerHtml)?.[1]?.split(" ").filter((name) => name !== "hraness-quiet-site-footer" && name.length > 0);',
       'if (footer === undefined || footer.length === 0 || footerHtml.includes("style=")) throw new Error("Packed UI QuietSiteFooter lost extracted StyleX classes.");',
-      'const uiPriority3 = footer.filter((className) => uiPriority3Css.includes(`.${className} {`));',
-      'if (uiPriority3.length === 0) throw new Error("Packed UI QuietSiteFooter exposes no class from the emitted priority3 layer.");',
-      'for (const className of new Set(uiPriority3)) { const count = uiStylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered priority3 class ${className}.`); }',
+      'const uiPriority5 = footer.filter((className) => uiPriority5Css.includes(`.${className} {`));',
+      'if (!uiPriority5.includes(quietFooterPaddingClass)) throw new Error("Packed UI QuietSiteFooter does not bind its exact padding atom to priority5.");',
+      'for (const className of new Set(uiPriority5)) { const count = uiStylexCss.split(`.${className} {`).length - 1; if (count !== 1) throw new Error(`Packed UI stylex.css contains ${String(count)} selectors for rendered priority5 class ${className}.`); }',
+      'const chartMarkup = renderToStaticMarkup(createElement(BarListChart, { "aria-label": "Packed chart", data: [{ id: "one", label: "Model one", value: 72.4 }], domain: [0, 100], formatValue: (value) => value.toFixed(1) }));',
+      'if (!chartMarkup.includes("hraness-design-bar-list-chart") || !chartMarkup.includes("Packed chart") || !chartMarkup.includes("Model one") || !chartMarkup.includes("72.4") || !chartMarkup.includes("--hraness-design-chart-value:72.4%")) throw new Error("Packed aggregate React entry lost its public chart exports or render contract.");',
       'const ditherMarkup = Object.fromEntries(["coarse", "fine", "medium"].map((density) => [density, renderToStaticMarkup(createElement(DitherSurface, { as: "article", density, tone: "secondary" }, density))]));',
       'for (const [density, markup] of Object.entries(ditherMarkup)) { if (!markup.includes(`data-density="${density}"`) || !markup.includes("hraness-themed-surface") || !markup.includes("hraness-design-dither-surface") || !markup.includes(`data-slot="themed-surface"`) || markup.includes("style=")) throw new Error(`Packed DitherSurface lost its ${density} semantic or extracted presentation contract.`); }',
       'const dither = /<article[^>]*class="([^"]+)"/u.exec(ditherMarkup.coarse)?.[1]?.split(" ").filter((name) => name !== "hraness-themed-surface" && name !== "hraness-design-dither-surface" && name.length > 0 && stylexCss.includes(`.${name} {`));',
@@ -851,7 +1304,7 @@ try {
       'if (new Set(layout).size < 12) throw new Error("Packed layout surfaces expose too few distinct atomic classes.");',
       'const playbackMarkup = Object.fromEntries(["idle", "pending", "playing"].map((status) => [status, renderToStaticMarkup(createElement(PlaybackTransport, { "aria-label": "Preview transport", className: "consumer-playback", onPlay() {}, onStop() {}, status }))]));',
       'const playback = [];',
-      'for (const [status, markup] of Object.entries(playbackMarkup)) { const root = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup); const classes = root?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || classes[1] !== "hraness-design-playback-transport" || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || !markup.includes(`data-size="large"`) || !markup.includes(`data-variant="primary"`) || markup.includes("<jelly-card")) throw new Error(`Packed PlaybackTransport lost its ${status} semantic or class contract.`); playback.push(...classes.filter((name) => stylexCss.includes(`.${name} {`))); }',
+      'for (const [status, markup] of Object.entries(playbackMarkup)) { const root = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup); const classes = root?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || !classes.includes("hraness-design-playback-transport") || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || !markup.includes(`data-size="large"`) || !markup.includes(`data-variant="primary"`) || markup.includes("<jelly-card")) throw new Error(`Packed PlaybackTransport lost its ${status} semantic or class contract.`); playback.push(...classes.filter((name) => stylexCss.includes(`.${name} {`))); }',
       'if (!playbackMarkup.idle.includes(`aria-label="Play"`) || !playbackMarkup.idle.includes(`data-playback-command="play"`) || !playbackMarkup.idle.includes(`data-slot="icon"`) || playbackMarkup.idle.includes(`aria-busy="true"`)) throw new Error("Packed idle PlaybackTransport lost its label, command, glyph, or busy contract.");',
       'if (!playbackMarkup.pending.includes(`aria-label="Cancel playback start"`) || !playbackMarkup.pending.includes(`data-playback-command="stop"`) || !playbackMarkup.pending.includes(`data-slot="spinner"`) || !playbackMarkup.pending.includes(`aria-busy="true"`)) throw new Error("Packed pending PlaybackTransport lost its label, command, spinner, or busy contract.");',
       'if (!playbackMarkup.playing.includes(`aria-label="Stop"`) || !playbackMarkup.playing.includes(`data-playback-command="stop"`) || !playbackMarkup.playing.includes(`data-slot="icon"`) || playbackMarkup.playing.includes(`aria-busy="true"`)) throw new Error("Packed playing PlaybackTransport lost its label, command, glyph, or busy contract.");',
@@ -885,30 +1338,60 @@ try {
       'const nativeChatComposerMarkup = renderToStaticMarkup(createElement(ChatComposer, { action: "/reply", "aria-label": "Native reply composer", onSubmit() {}, onValueChange() {}, style: { color: "red" }, title: "Native form", value: "Native draft" }));',
       'const nativeChatComposerTag = chatTag(nativeChatComposerMarkup, "hraness-design-chat-composer");',
       'if (!nativeChatComposerTag.includes(`action="/reply"`) || !nativeChatComposerTag.includes(`aria-label="Native reply composer"`) || !nativeChatComposerTag.includes(`style="color:red"`) || !nativeChatComposerTag.includes(`title="Native form"`)) throw new Error("Packed ChatComposer lost caller-owned native form attributes or style.");',
-      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ animatedRailStage: [...new Set(animatedRailStageAtomic)], aside, chat: [...new Set(chat)], dither, fader: [...new Set(fader)], icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority3 }));',
+      'await writeFile(new URL("./notice-classes.json", import.meta.url), JSON.stringify({ animatedRailStage: [...new Set(animatedRailStageAtomic)], aside, chat: [...new Set(chat)], dither, fader: [...new Set(fader)], icon, layout: [...new Set(layout)], playback: [...new Set(playback)], playbackGlyph, strong, uiPriority5 }));',
       "",
     ].join("\n"),
   );
   await run(["node", "./stylex-notice.mjs"], consumer);
+
+  for (const compilerOnlyPackage of [
+    "@babel/core",
+    "@stylexjs/babel-plugin",
+    "lightningcss",
+  ]) {
+    if (await Bun.file(join(
+      consumer,
+      "node_modules",
+      ...compilerOnlyPackage.split("/"),
+      "package.json",
+    )).exists()) {
+      throw new Error(
+        `Standalone consumer unexpectedly installed compiler-only peer ${compilerOnlyPackage}.`,
+      );
+    }
+  }
 
   const installed = join(consumer, "node_modules/@hraness/design-kit");
   for (const path of [
     "dist/browser/index.js",
     "dist/fonts/nebula-sans/social-fonts.generated.js",
     "dist/stylex.css",
+    "dist/stylex-manifest.json",
     "src/appearance-menu.css",
+    "src/compiler-components.css",
+    "src/compiler-foundation.css",
+    "src/compiler-tokens.css",
     "src/components.css",
+    "src/product-marketing-foundation.css",
     "src/styles.css",
     "src/browser/artifact-share.ts",
     "src/react/animated-rail-stage.stylex.ts",
+    "src/react/app-shell.stylex.ts",
+    "src/react/charts.stylex.ts",
     "src/react/chat.stylex.ts",
+    "src/react/effects.stylex.ts",
     "src/react/foil-card-math.ts",
     "src/react/foil-card-surface.tsx",
     "src/react/foil-card-surface.stylex.ts",
     "src/react/fader.stylex.ts",
+    "src/react/jelly-surface.stylex.ts",
     "src/react/playback-transport.stylex.ts",
     "src/react/production-data-preview-notice.stylex.ts",
+    "src/react/product-marketing.stylex.ts",
+    "src/react/navigation-rail.stylex.ts",
+    "src/react/route-state.stylex.ts",
     "src/react/surfaces.stylex.ts",
+    "src/react/theme.stylex.ts",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
     "src/fonts/nebula-sans/LICENSE.txt",
     "src/fonts/nebula-sans/NebulaSans-Black.woff2",
@@ -934,6 +1417,83 @@ try {
       throw new Error(`Packed package is missing ${path}`);
     }
   }
+  const installedManifestPath = join(installed, "dist/stylex-manifest.json");
+  const installedManifest = await readStylexPackageManifest(installedManifestPath, installed);
+  requireDesignKitManifest(installedManifest, packedRuntimePaths, "Installed StyleX manifest");
+  assert.deepEqual(
+    installedManifest,
+    packedManifest,
+    "Installed and archive-inspected design-kit manifests must be identical.",
+  );
+  const installedUi = join(consumer, "node_modules/@hraness/ui");
+  const installedUiManifestPath = join(installedUi, "dist/stylex-manifest.json");
+  const installedUiManifest = await readStylexPackageManifest(
+    installedUiManifestPath,
+    installedUi,
+  );
+  assert.deepEqual(
+    installedUiManifest.package,
+    { name: "@hraness/ui", version: "0.5.4" },
+    "Compiler consumer must install the immutable UI v0.5.4 manifest.",
+  );
+  assert.notEqual(
+    installedUiManifest.standaloneSerializer.prefix,
+    installedManifest.standaloneSerializer.prefix,
+    "UI and design-kit must own distinct standalone StyleX prefixes.",
+  );
+  assert.deepEqual(
+    installedUiManifest.standaloneSerializer,
+    {
+      before: [
+        "components.hraness-ui.legacy.base",
+        "components.hraness-ui.legacy",
+      ],
+      prefix: "components.hraness-ui",
+    },
+    "UI v0.5.4 standalone serialization contract changed.",
+  );
+  assert.equal(
+    installedUiManifest.compilerSha256,
+    installedManifest.compilerSha256,
+    "UI and design-kit manifests must share one public compiler contract.",
+  );
+  assert.equal(installedUiManifest.compilerSha256, compilerSha256);
+  assert.equal(
+    (await artifactForFile(installedUi, "dist/stylex-manifest.json")).sha256,
+    "cf7598b3f9e4f39842520c1a9c3d6327c6df53e787c98db17f705ee233a46a94",
+    "Installed UI manifest does not match the immutable v0.5.4 release.",
+  );
+  assert.equal(
+    (await artifactForFile(installedUi, "src/compiler-foundation.css")).sha256,
+    "2b9b3f7d23856b10357599793c649a3af41f83ac7d58f7a1ffae91a03f322e4e",
+    "Installed UI compiler foundation does not match the immutable v0.5.4 release.",
+  );
+  assert.equal(
+    (await artifactForFile(installedUi, "dist/stylex.css")).sha256,
+    "10fefdbe5809b66c863ed08cedac55222b1788f1c444e072e1b08c82a88fbc74",
+    "Installed UI standalone StyleX CSS does not match the immutable v0.5.4 release.",
+  );
+  assert.deepEqual(
+    stylexUnionPolicy,
+    {
+      foundationOrder: "all-package-foundations-before-union",
+      kind: "hraness-stylex-rule-union-policy",
+      legacyLayerOrder: "canonical-package-prefix-then-declared",
+      policyVersion: "hraness-stylex-rule-union-v1",
+      prefix: "components.hraness-stylex",
+      priorityLayers: "complete-finite",
+      ruleUnion: "dedupe-identical-reject-conflicts",
+      schemaVersion: 1,
+    },
+    "Installed UI union policy changed.",
+  );
+  assert.equal(
+    stylexUnionPolicySha256,
+    "1ceced1f1bf6359413ca6425ede61e1fdae272b897f4455c2347e2431d75caa1",
+    "Installed UI union policy digest changed.",
+  );
+  assert.equal(STYLEX_GENERATION_SCHEMA_VERSION, 2);
+  assert.equal(STYLEX_COMPLETE_RECORD_SCHEMA_VERSION, 2);
   const packedFiles = await filesBelow(installed);
   if (packedFiles.some((path) => path.includes(".test."))) {
     throw new Error("Packed package contains test sources");
@@ -987,9 +1547,14 @@ try {
       'import * as core from "@hraness/design-kit";',
       'import * as browser from "@hraness/design-kit/browser";',
       'import * as react from "@hraness/design-kit/react";',
-      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps, RailItemProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
+      'import * as stylex from "@stylexjs/stylex";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
+      'const railItemStyles = stylex.create({ root: { color: "rebeccapurple" } });',
+      'const typedRailItem: RailItemProps = { href: "/library", label: "Library", xstyle: railItemStyles.root };',
+      '// @ts-expect-error RailItem xstyle rejects uncompiled raw style objects.',
+      'const rawRailItem: RailItemProps = { href: "/library", label: "Library", xstyle: { color: "rebeccapurple" } };',
       'const animatedRailStage: AnimatedRailStageProps = { children: "Detail", className: "consumer-stage", stageKey: "/workspace/detail" };',
       '// @ts-expect-error AnimatedRailStage intentionally exposes no public xstyle seam.',
       'const animatedRailStageWithXstyle: AnimatedRailStageProps = { children: "Detail", stageKey: "/workspace/detail", xstyle: {} };',
@@ -1013,7 +1578,7 @@ try {
       'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
       '// @ts-expect-error Fader owns its children structure.',
       'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
-      "void [animatedRailStage, animatedRailStageWithXstyle, browser, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, compactHorizontalFader, core, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, react, serverReact];",
+      "void [animatedRailStage, animatedRailStageWithXstyle, browser, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, compactHorizontalFader, core, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, rawRailItem, react, serverReact, stylex, typedRailItem];",
       "",
     ].join("\n"),
   );
@@ -1044,6 +1609,12 @@ try {
     ], consumer);
   }
 
+  await run([
+    process.execPath,
+    "add",
+    "vite@8.1.5",
+    "--ignore-scripts",
+  ], consumer);
   await mkdir(join(consumer, "src"));
   await writeFile(
     join(consumer, "index.html"),
@@ -1089,7 +1660,7 @@ try {
     readonly playback: readonly string[];
     readonly playbackGlyph: readonly string[];
     readonly strong: readonly string[];
-    readonly uiPriority3: readonly string[];
+    readonly uiPriority5: readonly string[];
   };
   const generatedNoticeClasses = [...noticeClasses.aside, ...noticeClasses.strong]
     .filter((name) => name !== "hraness-design-production-data-preview-notice");
@@ -1109,25 +1680,41 @@ try {
   requireAtomicSelectorsPresent(builtCss, noticeClasses.layout, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.playback, "Packed aggregate Vite CSS");
   requireAtomicSelectorsPresent(builtCss, noticeClasses.playbackGlyph, "Packed aggregate Vite CSS");
-  requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority3, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, noticeClasses.uiPriority5, "Packed aggregate Vite CSS");
+  requireAtomicSelectorsPresent(builtCss, packedShellClasses, "Packed aggregate Vite CSS");
   for (const layerName of [
-    "components.hraness-ui.priority1",
     "components.hraness-ui.priority2",
     "components.hraness-ui.priority3",
-    "components.hraness-design-kit.priority1",
+    "components.hraness-ui.priority4",
+    "components.hraness-ui.priority5",
+    "components.hraness-ui.priority6",
+    "components.hraness-ui.priority7",
     "components.hraness-design-kit.priority2",
     "components.hraness-design-kit.priority3",
     "components.hraness-design-kit.priority4",
+    "components.hraness-design-kit.priority5",
+    "components.hraness-design-kit.priority6",
+    "components.hraness-design-kit.priority7",
+    "components.hraness-design-kit.priority8",
   ]) {
     requireLayerBlockExactlyOnce(builtCss, layerName, "Packed aggregate Vite CSS");
   }
   requireNoticePresentation(builtCss, "Packed aggregate Vite CSS");
   requireAnimatedRailStagePresentation(builtCss, "Packed aggregate Vite CSS");
   requireDitherPresentation(builtCss, "Packed aggregate Vite CSS");
-  requireLayoutSurfacePresentation(builtCss, "Packed aggregate Vite CSS");
+  requireLayoutSurfacePresentation(
+    builtCss,
+    packedJavaScript,
+    "Packed aggregate Vite CSS",
+  );
   requirePlaybackTransportPresentation(builtCss, "Packed aggregate Vite CSS");
   requireFaderPresentation(builtCss, "Packed aggregate Vite CSS");
   requireChatPresentation(
+    builtCss,
+    packedReactJavaScript,
+    "Packed aggregate Vite CSS",
+  );
+  requireShellNavigationRouteThemePresentation(
     builtCss,
     packedReactJavaScript,
     "Packed aggregate Vite CSS",
@@ -1152,6 +1739,10 @@ try {
   }
   if (migratedChatLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy Chat recipe.");
+  }
+  if (migratedShellNavigationRouteLegacySelector.test(builtCss)
+    || migratedThemeRootLegacySelector.test(builtCss)) {
+    throw new Error("Packed aggregate Vite CSS retained a migrated shell, navigation, route, or theme recipe.");
   }
 
   await writeFile(
@@ -1225,16 +1816,30 @@ try {
     noticeClasses.playbackGlyph,
     "Packed narrow components.css Vite CSS",
   );
+  requireAtomicSelectorsExactlyOnce(
+    narrowBuiltCss,
+    packedShellClasses,
+    "Packed narrow components.css Vite CSS",
+  );
   requireNoticePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireAnimatedRailStagePresentation(
     narrowBuiltCss,
     "Packed narrow components.css Vite CSS",
   );
   requireDitherPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
-  requireLayoutSurfacePresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
+  requireLayoutSurfacePresentation(
+    narrowBuiltCss,
+    packedJavaScript,
+    "Packed narrow components.css Vite CSS",
+  );
   requirePlaybackTransportPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireFaderPresentation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   requireChatPresentation(
+    narrowBuiltCss,
+    packedReactJavaScript,
+    "Packed narrow components.css Vite CSS",
+  );
+  requireShellNavigationRouteThemePresentation(
     narrowBuiltCss,
     packedReactJavaScript,
     "Packed narrow components.css Vite CSS",
@@ -1260,6 +1865,529 @@ try {
   if (migratedChatLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy Chat recipe.");
   }
+  if (migratedShellNavigationRouteLegacySelector.test(narrowBuiltCss)
+    || migratedThemeRootLegacySelector.test(narrowBuiltCss)) {
+    throw new Error("Packed narrow components.css Vite CSS retained a migrated shell, navigation, route, or theme recipe.");
+  }
+
+  await run([
+    process.execPath,
+    "add",
+    ...Object.entries(publicCollectorToolchain).map(
+      ([dependency, version]) => `${dependency}@${version}`,
+    ),
+    "--ignore-scripts",
+  ], consumer);
+  for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
+    const manifest = record(
+      await Bun.file(join(
+        consumer,
+        "node_modules",
+        ...dependency.split("/"),
+        "package.json",
+      )).json() as unknown,
+      `${dependency} package.json`,
+    );
+    assert.equal(
+      manifest.version,
+      version,
+      `Compiler consumer resolved ${dependency} to the wrong version.`,
+    );
+  }
+  for (const retiredCompilerPackage of ["@stylexjs/unplugin", "unplugin"]) {
+    if (await Bun.file(join(
+      consumer,
+      "node_modules",
+      ...retiredCompilerPackage.split("/"),
+      "package.json",
+    )).exists()) {
+      throw new Error(
+        `Compiler consumer installed retired private adapter ${retiredCompilerPackage}.`,
+      );
+    }
+  }
+
+  await writeFile(
+    join(consumer, "package-author.ts"),
+    [
+      'import * as stylex from "@stylexjs/stylex";',
+      'import type { RailItemProps } from "@hraness/design-kit/react";',
+      'import { STYLEX_COMPLETE_RECORD_SCHEMA_VERSION, STYLEX_GENERATION_SCHEMA_VERSION, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION, auditCssWithoutStylexUnionNamespace, compilerContract, createStylexGeneration, createStylexTransformCollector, finalizeStylexGeneration, prepareStylexProducedTemplate, readStylexPackageManifest, sealStylexProducedTemplate, serializeStylexPackageRules, serializeStylexRuleUnionV1, stylexUnionPolicy, stylexUnionPolicySha256, type StylexCompleteRecordV2, type StylexGenerationPlanV2, type StylexPackageManifestV1, type StylexStandaloneSerializerV1 } from "@hraness/ui/stylex-build";',
+      'import { collectBunStylexGraph } from "@hraness/ui/stylex-build/bun";',
+      'const styles = stylex.create({ railItem: { color: "rebeccapurple" } });',
+      'const typedRailItem: RailItemProps = { href: "/package-author", label: "Package author", xstyle: styles.railItem };',
+      '// @ts-expect-error Packed RailItem declarations reject uncompiled raw style objects.',
+      'const rawRailItem: RailItemProps = { href: "/package-author", label: "Package author", xstyle: { color: "rebeccapurple" } };',
+      'const serializer = { before: ["components.fixture.legacy"], prefix: "components.fixture" } as const satisfies StylexStandaloneSerializerV1;',
+      'const schemaVersion: StylexPackageManifestV1["schemaVersion"] = STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION;',
+      'const generationSchemaVersion: StylexGenerationPlanV2["schemaVersion"] = STYLEX_GENERATION_SCHEMA_VERSION;',
+      'const completeSchemaVersion: StylexCompleteRecordV2["schemaVersion"] = STYLEX_COMPLETE_RECORD_SCHEMA_VERSION;',
+      'const generationPolicyDigest: StylexGenerationPlanV2["unionPolicySha256"] = stylexUnionPolicySha256;',
+      'const completePolicyDigest: StylexCompleteRecordV2["unionPolicySha256"] = stylexUnionPolicySha256;',
+      'const collector = createStylexTransformCollector(process.cwd());',
+      'const css: string = serializeStylexPackageRules([], serializer);',
+      'const unionCss: string = serializeStylexRuleUnionV1([], [serializer]);',
+      'auditCssWithoutStylexUnionNamespace("@layer components.fixture.legacy;", "typed package-author foundation");',
+      'if (stylexUnionPolicy.prefix !== "components.hraness-stylex") throw new Error("StyleX union policy prefix changed");',
+      'void [collectBunStylexGraph, collector, compilerContract, completePolicyDigest, completeSchemaVersion, createStylexGeneration, css, finalizeStylexGeneration, generationPolicyDigest, generationSchemaVersion, prepareStylexProducedTemplate, rawRailItem, readStylexPackageManifest, schemaVersion, sealStylexProducedTemplate, typedRailItem, unionCss];',
+      "",
+    ].join("\n"),
+  );
+  for (const mode of ["Bundler", "NodeNext"] as const) {
+    await writeFile(
+      join(consumer, `tsconfig.package-author-${mode.toLowerCase()}.json`),
+      JSON.stringify({
+        compilerOptions: {
+          exactOptionalPropertyTypes: true,
+          jsx: "react-jsx",
+          lib: ["ES2023", "DOM", "DOM.Iterable"],
+          module: mode === "Bundler" ? "Preserve" : "NodeNext",
+          moduleResolution: mode,
+          noEmit: true,
+          skipLibCheck: true,
+          strict: true,
+          target: "ES2023",
+          types: ["bun"],
+        },
+        include: ["package-author.ts"],
+      }, null, 2),
+    );
+    await run([
+      process.execPath,
+      "x",
+      "tsc",
+      "-p",
+      `./tsconfig.package-author-${mode.toLowerCase()}.json`,
+    ], consumer);
+  }
+
+  await writeFile(
+    join(consumer, "final-app.tsx"),
+    [
+      'import * as stylex from "@stylexjs/stylex";',
+      'import { Link } from "@hraness/ui";',
+      'import { RailItem } from "@hraness/design-kit/react";',
+      'import { createElement } from "react";',
+      'const styles = stylex.create({ root: { display: "grid", gap: "1rem" }, railItem: { color: "rebeccapurple" } });',
+      'export function FinalApp() { const presentation = stylex.props(styles.root); return createElement("main", { className: presentation.className, "data-final-app": "ready" }, createElement(Link, { href: "/ui" }, "UI"), createElement(RailItem, { href: "/design-kit", label: "Design kit", xstyle: styles.railItem })); }',
+      "",
+    ].join("\n"),
+  );
+  await writeFile(
+    join(consumer, "final-client.tsx"),
+    [
+      'import "@hraness/design-kit/compiler-foundation.css";',
+      'import { createElement } from "react";',
+      'import { createRoot } from "react-dom/client";',
+      'import { FinalApp } from "./final-app.js";',
+      'const target = document.getElementById("root");',
+      'if (target === null) throw new Error("Final application root is missing");',
+      'createRoot(target).render(createElement(FinalApp));',
+      "",
+    ].join("\n"),
+  );
+  await writeFile(
+    join(consumer, "final-render.tsx"),
+    [
+      'import { writeFile } from "node:fs/promises";',
+      'import { createElement } from "react";',
+      'import { renderToString } from "react-dom/server";',
+      'import { FinalApp } from "./final-app.js";',
+      'const outputPath = process.argv[2];',
+      'const clientHref = process.argv[3];',
+      'const foundationHref = process.argv[4];',
+      'if (outputPath === undefined) throw new Error("Final application output path is required");',
+      'if (clientHref === undefined || !clientHref.startsWith("/graphs/client/")) throw new Error("Final application client href is invalid");',
+      'if (foundationHref === undefined || !foundationHref.startsWith("/graphs/client/")) throw new Error("Final application foundation href is invalid");',
+      `const html = '<!doctype html><html><head><link rel="stylesheet" href="' + foundationHref + '"><link rel="stylesheet" href="${STYLEX_TEMPLATE_CSS_PLACEHOLDER}"></head><body><div id="root">' + renderToString(createElement(FinalApp)) + '</div><script type="module" src="' + clientHref + '"></script></body></html>';`,
+      'await writeFile(outputPath, html, { flag: "wx" });',
+      "",
+    ].join("\n"),
+  );
+  const compilerOutputDirectory = join(consumer, "stylex-generations");
+  await mkdir(compilerOutputDirectory);
+  const compilerManifestPaths = [
+    logicalPath(consumer, installedUiManifestPath, "UI manifest locator"),
+    logicalPath(consumer, installedManifestPath, "design-kit manifest locator"),
+  ];
+  const finalGeneration = await createStylexGeneration({
+    expectedGraphs: [
+      {
+        adapter: "bun",
+        entrypoints: ["final-client.tsx"],
+        id: "client",
+        kind: "client",
+      },
+      {
+        adapter: "bun",
+        entrypoints: ["final-render.tsx"],
+        id: "ssr",
+        kind: "ssr",
+      },
+    ],
+    finalCssPath: "stylex.css",
+    generationId: "mixed-final-app",
+    outputDirectory: compilerOutputDirectory,
+    packageManifests: compilerManifestPaths,
+    rootDirectory: consumer,
+    templates: [{
+      cssHref: "/stylex.css",
+      graphId: "ssr",
+      outputPath: "index.html",
+      sourcePath: "index.html",
+      stylesheetGraphId: "client",
+    }],
+  });
+  const clientReceipt = await collectBunStylexGraph({
+    build: { minify: true },
+    generation: finalGeneration,
+    graphId: "client",
+    rootDirectory: consumer,
+  });
+  const clientEntries = clientReceipt.outputs.filter(
+    ({ path }) => /(?:^|\/)entries\/final-client-[^/]+\.js$/u.test(path),
+  );
+  const foundationOutputs = clientReceipt.outputs.filter(({ path }) => path.endsWith(".css"));
+  assert.equal(clientEntries.length, 1, "Final client graph must emit one client entry.");
+  assert.equal(
+    foundationOutputs.length,
+    1,
+    "Final client graph must emit one combined compiler-foundation stylesheet.",
+  );
+  const clientEntry = clientEntries[0];
+  const foundationOutput = foundationOutputs[0];
+  assert.ok(clientEntry !== undefined && foundationOutput !== undefined);
+  for (const manifest of [installedUiManifest, installedManifest]) {
+    const expectedFoundation = manifest.stylesheets.find(
+      ({ path }) => path === manifest.compilerFoundation,
+    );
+    assert.ok(expectedFoundation !== undefined);
+    const suffix = `${manifest.package.name}/${manifest.compilerFoundation}`;
+    const matches = clientReceipt.inputs.filter(({ bytes, path, sha256 }) =>
+      path.endsWith(suffix)
+        && bytes === expectedFoundation.bytes
+        && sha256 === expectedFoundation.sha256);
+    assert.equal(
+      matches.length,
+      1,
+      `Final client graph must bind ${manifest.package.name}'s exact compiler foundation once.`,
+    );
+  }
+  if (clientReceipt.inputs.some(({ path }) => /(?:^|\/)dist\/stylex\.css$/u.test(path))) {
+    throw new Error("Compiler consumer mixed a standalone package StyleX stylesheet into its graph.");
+  }
+  const foundationCssPath = join(
+    finalGeneration.directory,
+    ...clientReceipt.outputRoot.split("/"),
+    ...foundationOutput.path.split("/"),
+  );
+  const finalFoundationCss = await readFile(foundationCssPath, "utf8");
+  if (!finalFoundationCss.includes("components.hraness-design-kit.legacy")
+    || !finalFoundationCss.includes("--navigation-rail-width")) {
+    throw new Error("Final client foundation lost design-kit legacy or token content.");
+  }
+  auditCssWithoutStylexUnionNamespace(
+    finalFoundationCss,
+    "Final client foundation",
+  );
+  assert.throws(
+    () => auditCssWithoutStylexUnionNamespace(
+      '@import "./fixture.css" layer(components.hraness-stylex.priority99);',
+      "Reserved-union import control",
+    ),
+    /reserved StyleX rule-union namespace/u,
+  );
+  if (/@layer\s+components\.hraness-(?:ui|design-kit)\.priority/u.test(finalFoundationCss)
+    || /(?:^|\/)stylex\.css/iu.test(finalFoundationCss)) {
+    throw new Error("Final client foundation contains package recipe output.");
+  }
+  const ssrReceipt = await collectBunStylexGraph({
+    build: { minify: true },
+    generation: finalGeneration,
+    graphId: "ssr",
+    rootDirectory: consumer,
+  });
+  assert.equal(
+    ssrReceipt.outputs.filter(({ path }) => path.endsWith(".css")).length,
+    0,
+    "Final SSR graph must not emit a second foundation stylesheet.",
+  );
+  assert.deepEqual(clientReceipt.packages, ssrReceipt.packages);
+  assert.deepEqual(
+    clientReceipt.packages.map(({ name }) => name).sort(),
+    ["@hraness/design-kit", "@hraness/ui"],
+    "Final graphs must bind exactly the UI and design-kit manifests.",
+  );
+  const rendererOutputs = ssrReceipt.outputs.filter(
+    ({ path }) => /(?:^|\/)entries\/final-render-[^/]+\.js$/u.test(path),
+  );
+  assert.equal(rendererOutputs.length, 1, "Final SSR graph must emit one renderer entry.");
+  const rendererOutput = rendererOutputs[0];
+  assert.ok(rendererOutput !== undefined);
+  const preparedTemplate = await prepareStylexProducedTemplate(
+    finalGeneration,
+    "index.html",
+  );
+  const rendererPath = join(
+    finalGeneration.directory,
+    ...ssrReceipt.outputRoot.split("/"),
+    ...rendererOutput.path.split("/"),
+  );
+  const clientHref = `/graphs/client/${clientEntry.path}`;
+  const foundationHref = `/graphs/client/${foundationOutput.path}`;
+  await run([
+    process.execPath,
+    rendererPath,
+    preparedTemplate.sourcePath,
+    clientHref,
+    foundationHref,
+  ], consumer);
+  await sealStylexProducedTemplate(finalGeneration, "index.html");
+  const finalDirectory = await finalizeStylexGeneration({
+    generation: finalGeneration,
+    outputDirectory: compilerOutputDirectory,
+    rootDirectory: consumer,
+  });
+  assert.equal(finalDirectory, join(compilerOutputDirectory, "mixed-final-app"));
+  const finalCss = await readFile(join(finalDirectory, "stylex.css"), "utf8");
+  assert.equal(
+    finalCss,
+    serializeStylexRuleUnionV1(
+      [
+        ...installedUiManifest.rules,
+        ...installedManifest.rules,
+        ...clientReceipt.rules,
+        ...ssrReceipt.rules,
+      ],
+      [
+        installedUiManifest.standaloneSerializer,
+        installedManifest.standaloneSerializer,
+      ],
+    ),
+    "Final application CSS must be one canonical package-and-application rule union.",
+  );
+  requireAtomicSelectorsPresent(
+    finalCss,
+    packedShellClasses,
+    "Final application StyleX CSS",
+  );
+  const finalLayerNames = [
+    "components.hraness-stylex.priority2",
+    "components.hraness-stylex.priority3",
+    "components.hraness-stylex.priority4",
+    "components.hraness-stylex.priority5",
+    "components.hraness-stylex.priority6",
+    "components.hraness-stylex.priority7",
+    "components.hraness-stylex.priority8",
+  ];
+  for (const layerName of finalLayerNames) {
+    requireLayerBlockExactlyOnce(finalCss, layerName, "Final application StyleX CSS");
+  }
+  const finalLayerIndexes = finalLayerNames.map((layerName) =>
+    finalCss.indexOf(`@layer ${layerName}`));
+  assert.ok(
+    finalLayerIndexes.every((index, position) =>
+      index >= 0 && (position === 0 || index > (finalLayerIndexes[position - 1] ?? -1))),
+    "Final application priority layers must remain in ascending canonical order.",
+  );
+  if (/components\.hraness-(?:ui|design-kit)\.priority/u.test(finalCss)) {
+    throw new Error("Final application CSS retained a package-local standalone priority namespace.");
+  }
+  const finalHtml = await readFile(join(finalDirectory, "index.html"), "utf8");
+  assert.equal(finalHtml.split(foundationHref).length - 1, 1);
+  assert.equal(finalHtml.split('/stylex.css').length - 1, 1);
+  assert.ok(
+    finalHtml.indexOf(foundationHref) < finalHtml.indexOf('/stylex.css'),
+    "Compiler foundation must precede the one final application StyleX stylesheet.",
+  );
+  const complete = record(
+    JSON.parse(await readFile(join(finalDirectory, "stylex-complete.json"), "utf8")) as unknown,
+    "stylex-complete.json",
+  );
+  assert.equal(complete.state, "complete");
+  assert.deepEqual(
+    (complete.graphs as readonly { readonly id: string }[]).map(({ id }) => id).sort(),
+    ["client", "ssr"],
+  );
+  assert.deepEqual(
+    (complete.packages as readonly { readonly name: string }[])
+      .map(({ name }) => name)
+      .sort(),
+    ["@hraness/design-kit", "@hraness/ui"],
+  );
+  assert.equal((complete.finalCss as { readonly path: string }).path, "stylex.css");
+  assert.equal(complete.schemaVersion, STYLEX_COMPLETE_RECORD_SCHEMA_VERSION);
+  assert.equal(complete.unionPolicySha256, stylexUnionPolicySha256);
+  assert.equal(complete.planSha256, finalGeneration.planSha256);
+
+  await writeFile(
+    join(consumer, "negative-template.html"),
+    `<!doctype html><link rel="stylesheet" href="${STYLEX_TEMPLATE_CSS_PLACEHOLDER}"><main></main>\n`,
+  );
+  await writeFile(
+    join(consumer, "missing-foundation.ts"),
+    'import "@hraness/ui/compiler-foundation.css"; export const value = true;\n',
+  );
+  await writeFile(
+    join(consumer, "mixed-standalone.ts"),
+    'import "@hraness/design-kit/compiler-foundation.css"; import "@hraness/design-kit/stylex.css"; export const value = true;\n',
+  );
+  const createNegativeGeneration = async (
+    generationId: string,
+    entrypoint: string,
+  ) => createStylexGeneration({
+    expectedGraphs: [{
+      adapter: "bun",
+      entrypoints: [entrypoint],
+      id: "client",
+      kind: "client",
+    }],
+    finalCssPath: "stylex.css",
+    generationId,
+    outputDirectory: compilerOutputDirectory,
+    packageManifests: compilerManifestPaths,
+    rootDirectory: consumer,
+    templates: [{
+      cssHref: "/stylex.css",
+      outputPath: "index.html",
+      sourcePath: "negative-template.html",
+      stylesheetGraphId: "client",
+    }],
+  });
+  const missingFoundationGeneration = await createNegativeGeneration(
+    "missing-foundation",
+    "missing-foundation.ts",
+  );
+  await expectRejected(
+    () => collectBunStylexGraph({
+      generation: missingFoundationGeneration,
+      graphId: "client",
+      rootDirectory: consumer,
+    }),
+    /must include the compiler foundation for @hraness\/design-kit/u,
+    "Missing design-kit foundation control",
+  );
+  const mixedStandaloneGeneration = await createNegativeGeneration(
+    "mixed-standalone",
+    "mixed-standalone.ts",
+  );
+  await expectRejected(
+    () => collectBunStylexGraph({
+      generation: mixedStandaloneGeneration,
+      graphId: "client",
+      rootDirectory: consumer,
+    }),
+    /standalone recipe|independently serialized recipe/iu,
+    "Mixed standalone/compiler route control",
+  );
+  await expectRejected(
+    () => createStylexGeneration({
+      expectedGraphs: [{
+        adapter: "bun",
+        entrypoints: ["missing-foundation.ts"],
+        id: "client",
+        kind: "client",
+      }],
+      generationId: "duplicate-manifest",
+      outputDirectory: compilerOutputDirectory,
+      packageManifests: [installedManifestPath, installedManifestPath],
+      rootDirectory: consumer,
+    }),
+    /packageManifests must be unique/u,
+    "Duplicate package-manifest control",
+  );
+
+  const overlapPackageRoot = join(consumer, "overlap-package");
+  await mkdir(join(overlapPackageRoot, "src"), { recursive: true });
+  await mkdir(join(overlapPackageRoot, "dist"), { recursive: true });
+  await writeFile(
+    join(overlapPackageRoot, "package.json"),
+    `${JSON.stringify({ name: "@fixture/overlap", type: "module", version: "1.0.0" }, null, 2)}\n`,
+  );
+  const overlapFoundationPath = join(overlapPackageRoot, "src/compiler-foundation.css");
+  const overlapFoundation = "@layer base, components;\n@layer components.hraness-design-kit.nested.legacy { .fixture { display: block; } }\n";
+  await writeFile(overlapFoundationPath, overlapFoundation);
+  const overlapSerializer = {
+    before: ["components.hraness-design-kit.nested.legacy"],
+    prefix: "components.hraness-design-kit.nested",
+  } as const satisfies StylexStandaloneSerializerV1;
+  await writeFile(
+    join(overlapPackageRoot, "dist/stylex.css"),
+    serializeStylexPackageRules([], overlapSerializer),
+  );
+  const overlapManifest = validateStylexPackageManifest({
+    buildTools: [],
+    compiler: compilerContract,
+    compilerFoundation: "src/compiler-foundation.css",
+    compilerSha256,
+    kind: "hraness-stylex-package-manifest",
+    package: { name: "@fixture/overlap", version: "1.0.0" },
+    rules: [],
+    rulesSha256: stylexRulesSha256([]),
+    runtime: [],
+    schemaVersion: STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION,
+    standaloneCss: await artifactForFile(overlapPackageRoot, "dist/stylex.css"),
+    standaloneSerializer: overlapSerializer,
+    stylesheets: [await artifactForFile(overlapPackageRoot, "src/compiler-foundation.css")],
+  });
+  const overlapManifestPath = join(overlapPackageRoot, "dist/stylex-manifest.json");
+  await writeFile(overlapManifestPath, `${canonicalJson(overlapManifest)}\n`);
+  await readStylexPackageManifest(overlapManifestPath, overlapPackageRoot);
+  await expectRejected(
+    () => createStylexGeneration({
+      expectedGraphs: [{
+        adapter: "bun",
+        entrypoints: ["missing-foundation.ts"],
+        id: "client",
+        kind: "client",
+      }],
+      generationId: "overlapping-namespace",
+      outputDirectory: compilerOutputDirectory,
+      packageManifests: [installedManifestPath, overlapManifestPath],
+      rootDirectory: consumer,
+    }),
+    /overlapping standalone StyleX namespaces/u,
+    "Overlapping standalone namespace control",
+  );
+  await writeFile(overlapFoundationPath, overlapFoundation.replace("block", "grid "));
+  await expectRejected(
+    () => readStylexPackageManifest(overlapManifestPath, overlapPackageRoot),
+    /Artifact hash changed: src\/compiler-foundation\.css/u,
+    "Tampered compiler-foundation control",
+  );
+
+  const wrongPrefixSerializer = {
+    before: ["components.hraness-design-kit-tampered.legacy"],
+    prefix: "components.hraness-design-kit-tampered",
+  } as const satisfies StylexStandaloneSerializerV1;
+  const wrongPrefixManifest = validateStylexPackageManifest({
+    ...installedManifest,
+    standaloneSerializer: wrongPrefixSerializer,
+  });
+  const wrongPrefixManifestPath = join(installed, "dist/stylex-manifest-wrong-prefix.json");
+  await writeFile(wrongPrefixManifestPath, `${canonicalJson(wrongPrefixManifest)}\n`);
+  await expectRejected(
+    () => readStylexPackageManifest(wrongPrefixManifestPath, installed),
+    /Standalone StyleX CSS differs from its declared rules and serializer/u,
+    "Wrong standalone prefix control",
+  );
+  const wrongOrderManifest = validateStylexPackageManifest({
+    ...installedManifest,
+    standaloneSerializer: {
+      before: [
+        "components.hraness-design-kit.legacy.nested",
+        "components.hraness-design-kit.legacy",
+      ],
+      prefix: "components.hraness-design-kit",
+    },
+  });
+  const wrongOrderManifestPath = join(installed, "dist/stylex-manifest-wrong-order.json");
+  await writeFile(wrongOrderManifestPath, `${canonicalJson(wrongOrderManifest)}\n`);
+  await expectRejected(
+    () => readStylexPackageManifest(wrongOrderManifestPath, installed),
+    /Standalone StyleX CSS differs from its declared rules and serializer/u,
+    "Wrong standalone legacy-order control",
+  );
 
   const react18Consumer = join(work, "consumer-react18");
   await mkdir(react18Consumer);
@@ -1326,7 +2454,7 @@ try {
       'if (!layout[2].startsWith(`<div`) || !layout[2].includes(`data-inset="none"`) || !layout[2].includes(`data-size="wide"`)) throw new Error("React 18 packed PageCanvas lost native semantics or variants.");',
       'if (!layout[3].includes(`data-position="absolute"`) || !layout[3].includes(`data-surface="glass"`) || !layout[3].includes(`data-density="compact"`) || !layout[3].includes("consumer-docked-content")) throw new Error("React 18 packed DockedFooter lost root or content behavior.");',
       'const playback = Object.fromEntries(["idle", "pending", "playing"].map((status) => [status, renderToStaticMarkup(createElement(PlaybackTransport, { "aria-label": "Preview", className: "consumer-playback", onPlay() {}, onStop() {}, status }))]));',
-      'for (const [status, markup] of Object.entries(playback)) { const classes = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup)?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || classes[1] !== "hraness-design-playback-transport" || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || markup.includes("style=")) throw new Error(`React 18 packed PlaybackTransport lost its ${status} semantic or extracted presentation contract.`); }',
+      'for (const [status, markup] of Object.entries(playback)) { const classes = /<div(?=[^>]*role="toolbar")(?=[^>]*class="([^"]+)")[^>]*>/u.exec(markup)?.[1]?.split(" ").filter(Boolean); if (classes === undefined || classes[0] !== "hraness-toolbar" || !classes.includes("hraness-design-playback-transport") || classes.at(-1) !== "consumer-playback" || !markup.includes(`data-playback-status="${status}"`) || !markup.includes("hraness-design-playback-transport__button") || markup.includes("style=")) throw new Error(`React 18 packed PlaybackTransport lost its ${status} semantic or extracted presentation contract.`); }',
       'if (!playback.idle.includes(`aria-label="Play"`) || !playback.idle.includes(`data-slot="icon"`) || !playback.pending.includes(`aria-label="Cancel playback start"`) || !playback.pending.includes(`data-slot="spinner"`) || !playback.pending.includes(`aria-busy="true"`) || !playback.playing.includes(`aria-label="Stop"`) || !playback.playing.includes(`data-slot="icon"`)) throw new Error("React 18 packed PlaybackTransport lost its lifecycle command contract.");',
       'const faderMarkup = { defaultVertical: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 })), horizontalCompact: renderToStaticMarkup(createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("button", { type: "button" }, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 })) };',
       'const faderContracts = { defaultVertical: { callerClass: "consumer-fader-default", density: "default", orientation: "vertical", value: "32" }, horizontalCompact: { callerClass: "consumer-fader-compact", density: "compact", orientation: "horizontal", value: "64" } };',
@@ -1342,9 +2470,14 @@ try {
     join(react18Consumer, "index.ts"),
     [
       'import * as clientReact from "@hraness/design-kit/react";',
-      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps } from "@hraness/design-kit/react";',
+      'import type { AnimatedRailStageProps, ChatComposerProps, ChatMessageProps, FaderProps, PlaybackTransportProps, RailItemProps } from "@hraness/design-kit/react";',
       'import * as serverReact from "@hraness/design-kit/react/server";',
+      'import * as stylex from "@stylexjs/stylex";',
       'const callbacks = { onPlay() {}, onStop() {}, status: "idle" } as const;',
+      'const railItemStyles = stylex.create({ root: { color: "rebeccapurple" } });',
+      'const typedRailItem: RailItemProps = { href: "/library", label: "Library", xstyle: railItemStyles.root };',
+      '// @ts-expect-error RailItem xstyle rejects uncompiled raw style objects.',
+      'const rawRailItem: RailItemProps = { href: "/library", label: "Library", xstyle: { color: "rebeccapurple" } };',
       'const animatedRailStage: AnimatedRailStageProps = { children: "Detail", className: "consumer-stage", stageKey: "/workspace/detail" };',
       '// @ts-expect-error AnimatedRailStage intentionally exposes no public xstyle seam.',
       'const animatedRailStageWithXstyle: AnimatedRailStageProps = { children: "Detail", stageKey: "/workspace/detail", xstyle: {} };',
@@ -1368,7 +2501,7 @@ try {
       'const faderWithXstyle: FaderProps = { label: "Gain", xstyle: {} };',
       '// @ts-expect-error Fader owns its children structure.',
       'const faderWithChildren: FaderProps = { children: "Unsupported", label: "Gain" };',
-      "void [animatedRailStage, animatedRailStageWithXstyle, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, clientReact, compactHorizontalFader, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, serverReact];",
+      "void [animatedRailStage, animatedRailStageWithXstyle, chatComposer, chatComposerWithXstyle, chatMessage, chatMessageWithXstyle, clientReact, compactHorizontalFader, defaultFader, faderWithChildren, faderWithXstyle, playbackByLabel, playbackByLabelledby, playbackWithBothNames, playbackWithoutName, playbackWithXstyle, rawRailItem, serverReact, stylex, typedRailItem];",
       "",
     ].join("\n"),
   );

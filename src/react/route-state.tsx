@@ -6,12 +6,15 @@ import {
   LinkButton,
   Skeleton,
   Spinner,
+  cn,
   type ContentHeadingLevel,
 } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
 import { useEffect, useId, type ReactNode } from "react";
 
 import { colors } from "../index.js";
 import { PageCanvas } from "./surfaces.js";
+import { routeStateStyles } from "./route-state.stylex.js";
 import {
   defaultDesignTheme,
   DesignThemeProvider,
@@ -58,7 +61,18 @@ export interface GlobalErrorDocumentProps extends RouteErrorPageProps {
 }
 
 function RouteActions({ children }: Readonly<{ children: ReactNode }>) {
-  return <div className="hraness-design-route-state__actions">{children}</div>;
+  const presentation = stylex.props(routeStateStyles.row);
+  return (
+    <div
+      {...presentation}
+      className={cn(
+        "hraness-design-route-state__actions",
+        presentation.className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
 /** Shared root-segment 404 treatment for Next products. */
@@ -67,14 +81,36 @@ export function RouteNotFoundPage({
   showThemeToggle = false,
   titleAs = "h1",
 }: RouteNotFoundPageProps = {}) {
+  const rootPresentation = stylex.props(routeStateStyles.root);
+  const headerPresentation = stylex.props(routeStateStyles.header);
+  const contentPresentation = stylex.props(routeStateStyles.content);
+
   return (
-    <PageCanvas as={canvasAs} className="hraness-design-route-state">
+    <PageCanvas
+      as={canvasAs}
+      className={cn(
+        "hraness-design-route-state",
+        rootPresentation.className,
+      )}
+    >
       {showThemeToggle ? (
-        <header className="hraness-design-route-state__header">
+        <header
+          {...headerPresentation}
+          className={cn(
+            "hraness-design-route-state__header",
+            headerPresentation.className,
+          )}
+        >
           <ThemeMenuButton />
         </header>
       ) : null}
-      <div className="hraness-design-route-state__content">
+      <div
+        {...contentPresentation}
+        className={cn(
+          "hraness-design-route-state__content",
+          contentPresentation.className,
+        )}
+      >
         <EmptyState
           action={<LinkButton href="/" variant="primary">Return home</LinkButton>}
           description="The address may be out of date, or this page may have moved."
@@ -98,6 +134,9 @@ export function RouteErrorPage({
   titleAs = "h1",
 }: RouteErrorPageProps) {
   const focusId = `${useId()}-route-error`;
+  const rootPresentation = stylex.props(routeStateStyles.root);
+  const headerPresentation = stylex.props(routeStateStyles.header);
+  const contentPresentation = stylex.props(routeStateStyles.content);
   useEffect(() => {
     if (autoFocus) document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
@@ -107,16 +146,31 @@ export function RouteErrorPage({
       aria-label="This view could not load"
       aria-live={announce ? "assertive" : undefined}
       as={canvasAs}
-      className="hraness-design-route-state"
+      className={cn(
+        "hraness-design-route-state",
+        rootPresentation.className,
+      )}
       id={focusId}
       tabIndex={-1}
     >
       {showThemeToggle ? (
-        <header className="hraness-design-route-state__header">
+        <header
+          {...headerPresentation}
+          className={cn(
+            "hraness-design-route-state__header",
+            headerPresentation.className,
+          )}
+        >
           <ThemeMenuButton />
         </header>
       ) : null}
-      <div className="hraness-design-route-state__content">
+      <div
+        {...contentPresentation}
+        className={cn(
+          "hraness-design-route-state__content",
+          contentPresentation.className,
+        )}
+      >
         <EmptyState
           action={(
             <RouteActions>
@@ -139,18 +193,46 @@ export function RouteLoadingPage({
   announce = true,
   canvasAs = "main",
 }: RouteLoadingPageProps = {}) {
+  const rootPresentation = stylex.props(routeStateStyles.root);
+  const loadingPresentation = stylex.props(routeStateStyles.loading);
+  const titlePresentation = stylex.props(routeStateStyles.row);
+  const skeletonPresentation = stylex.props(routeStateStyles.skeletons);
+
   return (
     <PageCanvas
       aria-busy={announce ? "true" : undefined}
       as={canvasAs}
-      className="hraness-design-route-state"
+      className={cn(
+        "hraness-design-route-state",
+        rootPresentation.className,
+      )}
     >
-      <section className="hraness-design-route-state__loading" role={announce ? "status" : undefined}>
-        <div className="hraness-design-route-state__loading-title">
+      <section
+        {...loadingPresentation}
+        className={cn(
+          "hraness-design-route-state__loading",
+          loadingPresentation.className,
+        )}
+        role={announce ? "status" : undefined}
+      >
+        <div
+          {...titlePresentation}
+          className={cn(
+            "hraness-design-route-state__loading-title",
+            titlePresentation.className,
+          )}
+        >
           <Spinner />
           <strong>Loading page</strong>
         </div>
-        <div aria-hidden="true" className="hraness-design-route-state__skeletons">
+        <div
+          {...skeletonPresentation}
+          aria-hidden="true"
+          className={cn(
+            "hraness-design-route-state__skeletons",
+            skeletonPresentation.className,
+          )}
+        >
           <Skeleton height="1rem" isText width="88%" />
           <Skeleton height="1rem" isText width="64%" />
           <Skeleton height="8rem" width="100%" />

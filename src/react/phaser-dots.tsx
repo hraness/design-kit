@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
+
+import { effectsStyles } from "./effects.stylex.js";
 
 export interface PhaserDotsProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -22,16 +25,6 @@ export interface PhaserDotsProps extends Omit<
 }
 
 const DOT_PATTERN = "hraness-design-phaser-dots__static";
-
-const DEFAULT_DOT_STYLE: CSSProperties = {
-  color: "var(--phaser-dots-static-color, var(--foreground))",
-  opacity: "var(--phaser-dots-static-opacity, 0.025)",
-};
-
-const DEFAULT_TRAIL_STYLE: CSSProperties = {
-  color: "var(--phaser-dots-trail-color, var(--foreground))",
-  opacity: "var(--phaser-dots-trail-opacity, 0.25)",
-};
 
 const INERT_PROPS = { inert: true } as unknown as HTMLAttributes<HTMLDivElement>;
 
@@ -452,11 +445,25 @@ export function PhaserDots({
 
   const mergedStyle: CSSProperties | undefined = maskGradient
     ? {
-        ...style,
         WebkitMaskImage: maskGradient,
         maskImage: maskGradient,
+        ...style,
       }
     : style;
+  const rootPresentation = stylex.props(
+    effectsStyles.phaserSlot,
+    effectsStyles.phaserRoot,
+  );
+  const staticPresentation = stylex.props(
+    effectsStyles.phaserSlot,
+    effectsStyles.phaserStatic,
+    !dotClassName && effectsStyles.phaserStaticDefault,
+  );
+  const trailPresentation = stylex.props(
+    effectsStyles.phaserSlot,
+    effectsStyles.phaserTrail,
+    !trailClassName && effectsStyles.phaserTrailDefault,
+  );
 
   return (
     <div
@@ -465,18 +472,28 @@ export function PhaserDots({
       ref={containerRef}
       role="presentation"
       aria-hidden="true"
-      className={cn("hraness-design-phaser-dots", className)}
+      className={cn(
+        "hraness-design-phaser-dots",
+        rootPresentation.className,
+        className,
+      )}
       style={mergedStyle}
     >
       <div
-        className={cn(DOT_PATTERN, dotClassName)}
-        style={dotClassName ? undefined : DEFAULT_DOT_STYLE}
+        className={cn(
+          DOT_PATTERN,
+          staticPresentation.className,
+          dotClassName,
+        )}
       />
       {mouseGlow && (
         <canvas
           ref={canvasRef}
-          className={cn("hraness-design-phaser-dots__trail", trailClassName)}
-          style={trailClassName ? undefined : DEFAULT_TRAIL_STYLE}
+          className={cn(
+            "hraness-design-phaser-dots__trail",
+            trailPresentation.className,
+            trailClassName,
+          )}
         />
       )}
     </div>

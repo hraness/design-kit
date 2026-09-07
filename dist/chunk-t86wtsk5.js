@@ -1,40 +1,8 @@
 // src/syntax-highlighting.ts
 import { highlight } from "sugar-high";
-var syntaxLanguages = [
-  "css",
-  "html",
-  "json",
-  "markdown",
-  "shell",
-  "text",
-  "typescript"
-];
-var shellKeywords = new Set([
-  "case",
-  "do",
-  "done",
-  "elif",
-  "else",
-  "esac",
-  "fi",
-  "for",
-  "function",
-  "if",
-  "in",
-  "select",
-  "then",
-  "time",
-  "until",
-  "while"
-]);
-var shellKeywordsFollowedByCommand = new Set([
-  "do",
-  "elif",
-  "if",
-  "then",
-  "until",
-  "while"
-]);
+var syntaxLanguages = ["css", "html", "json", "markdown", "shell", "text", "typescript"];
+var shellKeywords = new Set(["case", "do", "done", "elif", "else", "esac", "fi", "for", "function", "if", "in", "select", "then", "time", "until", "while"]);
+var shellKeywordsFollowedByCommand = new Set(["do", "elif", "if", "then", "until", "while"]);
 function languageToken(input) {
   const tokens = input.trim().toLowerCase().split(/\s+/u);
   const languageClass = tokens.find((token) => token.startsWith("language-"));

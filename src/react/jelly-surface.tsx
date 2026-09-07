@@ -15,10 +15,12 @@ import {
   useEffect,
   useRef,
 } from "react";
+import * as stylex from "@stylexjs/stylex";
 import type { JellyElement } from "../../vendor/jelly-ui/jelly.js";
 
 import { cn } from "@hraness/ui";
 import { ensureJellyRuntime } from "./jelly-runtime.js";
+import { jellySurfaceStyles } from "./jelly-surface.stylex.js";
 
 export type JellySurfaceElement = JellyElement;
 export type JellySurfaceInteraction = "field" | "passive" | "press";
@@ -193,7 +195,18 @@ export const JellySurface = forwardRef<JellySurfaceElement, JellySurfaceProps>(
       JellyCard,
       {
         ...props,
-        className: cn("hraness-design-jelly-surface", className),
+        className: cn("hraness-design-jelly-surface", stylex.props(
+          jellySurfaceStyles.root,
+          tone === "danger" && jellySurfaceStyles.danger,
+          tone === "field" && jellySurfaceStyles.field,
+          tone === "overlay" && jellySurfaceStyles.overlay,
+          tone === "primary" && jellySurfaceStyles.primary,
+          tone === "quiet" && jellySurfaceStyles.quiet,
+          tone === "neutral" && jellySurfaceStyles.neutralHovered,
+          tone === "primary" && jellySurfaceStyles.primaryHovered,
+          (isDisabled || isPending) && jellySurfaceStyles.disabled,
+          interaction !== "press" && jellySurfaceStyles.selectableText,
+        ).className, className),
         "data-disabled": isDisabled ? "true" : undefined,
         "data-pending": isPending ? "true" : undefined,
         "data-interaction": interaction,

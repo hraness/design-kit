@@ -1,10 +1,70 @@
 import { expect, test } from "bun:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import * as stylex from "@stylexjs/stylex";
 
 import {
   bindJellyPointerRelease,
   composeJellyCapture,
   isJellySurfaceDisabled,
+  JellySurface,
 } from "./jelly-surface";
+import { jellySurfaceStyles } from "./jelly-surface.stylex";
+
+test("Jelly composes compiled tone, disabled, and interaction recipes without changing native seams", () => {
+  for (const tone of ["neutral", "primary", "quiet", "danger", "field", "overlay"] as const) {
+    for (const interaction of ["passive", "field", "press"] as const) {
+      for (const state of ["enabled", "disabled", "pending"] as const) {
+        const markup = renderToStaticMarkup(createElement(JellySurface, {
+          className: "consumer-surface",
+          id: "surface-id",
+          interaction,
+          isDisabled: state === "disabled",
+          isPending: state === "pending",
+          style: { opacity: 0.7 },
+          tone,
+          children: createElement("button", { type: "button" }, "Meaningful action"),
+        }));
+        const classes = markup.match(/class="([^"]+)"/u)?.[1]?.split(" ") ?? [];
+        expect(classes[0]).toBe("hraness-design-jelly-surface");
+        expect(classes.at(-1)).toBe("consumer-surface");
+        const expected = stylex.props(
+          jellySurfaceStyles.root,
+          tone === "danger" && jellySurfaceStyles.danger,
+          tone === "field" && jellySurfaceStyles.field,
+          tone === "overlay" && jellySurfaceStyles.overlay,
+          tone === "primary" && jellySurfaceStyles.primary,
+          tone === "quiet" && jellySurfaceStyles.quiet,
+          tone === "neutral" && jellySurfaceStyles.neutralHovered,
+          tone === "primary" && jellySurfaceStyles.primaryHovered,
+          state !== "enabled" && jellySurfaceStyles.disabled,
+          interaction !== "press" && jellySurfaceStyles.selectableText,
+        ).className?.split(" ") ?? [];
+        expect(expected.length).toBeGreaterThan(12);
+        for (const name of expected) expect(classes).toContain(name);
+        expect(markup).toContain(`data-tone="${tone}"`);
+        expect(markup).toContain(`data-interaction="${interaction}"`);
+        expect(markup).toContain('id="surface-id"');
+        expect(markup).toContain('style="opacity:0.7"');
+        expect(markup).toContain('<button type="button">Meaningful action</button>');
+        expect(markup.includes('data-disabled="true"')).toBe(state === "disabled");
+        expect(markup.includes('data-pending="true"')).toBe(state === "pending");
+        expect(markup).not.toContain("tabindex");
+      }
+    }
+  }
+});
+
+test("Jelly keeps only vendor lifecycle selectors outside the compiled recipes", async () => {
+  const css = await Bun.file(new URL("../jelly.css", import.meta.url)).text();
+  expect(css).toContain("@layer components.hraness-design-kit.legacy");
+  expect(css).toContain(".hraness-design-jelly-surface:not(:defined)");
+  expect(css).toContain(".hraness-design-jelly-surface:defined");
+  expect(css).not.toContain("[data-tone=");
+  expect(css).not.toContain("[data-hovered]");
+  expect(css).not.toContain("[data-disabled]");
+  expect(css).not.toContain("position:");
+});
 
 class ListenerTarget {
   readonly listeners = new Map<string, Set<EventListener>>();

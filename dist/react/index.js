@@ -8,7 +8,12 @@ import {
   isDesignTheme,
   motion,
   normalizeDesignTheme
-} from "../chunk-vy764dh1.js";
+} from "../chunk-qdnj4qfx.js";
+import {
+  BarListChart,
+  RadarProfileChart,
+  RangePlotChart
+} from "../chunk-y6dcd8h8.js";
 import {
   BottomBar,
   DitherSurface,
@@ -38,10 +43,11 @@ import {
   TopBar,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
+  effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-5ggeyw1q.js";
-import"../chunk-djxa5bgc.js";
+} from "../chunk-wtyxv7k6.js";
+import"../chunk-t86wtsk5.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -109,7 +115,83 @@ function AnimatedRailStage({
 // src/react/app-shell.tsx
 import { Menu01Icon } from "@hugeicons/core-free-icons";
 import { DialogContent, DialogTrigger, Icon, IconButton, cn as cn2 } from "@hraness/ui";
+import * as stylex2 from "@stylexjs/stylex";
 import { useEffect, useState } from "react";
+
+// src/react/app-shell.stylex.ts
+var appShellStyles = {
+  bottom: {
+    kJuA4N: "x5qop9b",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  drawer: {
+    kLWsYc: "xuxy95z",
+    $$css: true
+  },
+  mobileTrigger: {
+    k4V0xq: "xh0wz1u",
+    krFJ6x: "x8l168h",
+    kP1A0P: "x1eeafzw",
+    k1xSpc: "x1s85apg xhhrn6j",
+    kJuA4N: "x1u8reri",
+    kmVPX3: "x1bmall5",
+    kgQiWS: "x1e98eu2",
+    $$css: true
+  },
+  page: {
+    kJuA4N: "x3jjhf5",
+    kVQ08L: "x159srwy",
+    kdYMnH: "xesnm00",
+    kVQacm: "xysyzu8",
+    $$css: true
+  },
+  rail: {
+    ku1ltF: "xcrev8p",
+    kHypHr: "x1tzqu68",
+    kKwaWg: "xhobzj1",
+    kl9DO0: "xzln6ae",
+    k1YJky: "x2c5uud",
+    kz484i: "x1pjo12s",
+    kgSjnq: "x1ug5rqp",
+    kWkggS: "x9yvj25",
+    kpvK8V: "x108usdd",
+    k4V0xq: "x14bdpvh",
+    kEreRy: "xjslfuv",
+    kffDkL: "x1j8yxcv x1x0u81l",
+    kgBrHk: "x18b5jzi",
+    k7sjHc: "x1lun4ml",
+    k1xSpc: "x8iw86j",
+    kJuA4N: "x1c6xfxh",
+    kVQ08L: "x159srwy",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  root: {
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x103pssi",
+    kWkggS: "x11gw9ax",
+    kLWsYc: "xuxy95z",
+    k1xSpc: "xrvj5dj",
+    k52YG4: "x17vz68e x5m4t22",
+    kULEZF: "xiuoait",
+    kVQ08L: "x159srwy",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  top: {
+    kJuA4N: "x1njhr7p",
+    kdYMnH: "xesnm00",
+    $$css: true
+  }
+};
+
+// src/react/app-shell.tsx
 import { jsx as jsx2, jsxs } from "react/jsx-runtime";
 function AppShell({
   bottomBar,
@@ -122,22 +204,33 @@ function AppShell({
   topBar
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const rootPresentation = stylex2.props(appShellStyles.root);
+  const topPresentation = stylex2.props(appShellStyles.top);
+  const railPresentation = stylex2.props(appShellStyles.rail);
+  const mobileTriggerPresentation = stylex2.props(appShellStyles.mobileTrigger);
+  const drawerPresentation = stylex2.props(appShellStyles.drawer);
+  const pagePresentation = stylex2.props(appShellStyles.page);
+  const bottomPresentation = stylex2.props(appShellStyles.bottom);
   useEffect(() => {
     setMobileOpen(false);
   }, [navigationKey]);
   return /* @__PURE__ */ jsxs("div", {
-    className: cn2("hraness-design-app-shell", className),
+    ...rootPresentation,
+    className: cn2("hraness-design-app-shell", rootPresentation.className, className),
     children: [
       /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-app-shell__top",
+        ...topPresentation,
+        className: cn2("hraness-design-app-shell__top", topPresentation.className),
         children: topBar
       }),
       /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-app-shell__rail",
+        ...railPresentation,
+        className: cn2("hraness-design-app-shell__rail", railPresentation.className),
         children: rail
       }),
       /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-app-shell__mobile-trigger",
+        ...mobileTriggerPresentation,
+        className: cn2("hraness-design-app-shell__mobile-trigger", mobileTriggerPresentation.className),
         children: /* @__PURE__ */ jsxs(DialogTrigger, {
           isOpen: mobileOpen,
           onOpenChange: setMobileOpen,
@@ -150,7 +243,7 @@ function AppShell({
               })
             }),
             /* @__PURE__ */ jsx2(DialogContent, {
-              className: "hraness-design-app-shell__drawer",
+              className: cn2("hraness-design-app-shell__drawer", drawerPresentation.className),
               size: "small",
               title: mobileNavigationLabel,
               children: rail
@@ -159,30 +252,31 @@ function AppShell({
         })
       }),
       /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-app-shell__page",
+        ...pagePresentation,
+        className: cn2("hraness-design-app-shell__page", pagePresentation.className),
         children
       }),
       bottomBar === undefined ? null : /* @__PURE__ */ jsx2("div", {
-        className: "hraness-design-app-shell__bottom",
+        ...bottomPresentation,
+        className: cn2("hraness-design-app-shell__bottom", bottomPresentation.className),
         children: bottomBar
       })
     ]
   });
 }
+// src/react/aurora-dots-background.tsx
+import { cn as cn4 } from "@hraness/ui";
+import * as stylex4 from "@stylexjs/stylex";
+
 // src/react/phaser-dots.tsx
 import { useEffect as useEffect2, useRef } from "react";
 import { cn as cn3 } from "@hraness/ui";
+import * as stylex3 from "@stylexjs/stylex";
 import { jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
 var DOT_PATTERN = "hraness-design-phaser-dots__static";
-var DEFAULT_DOT_STYLE = {
-  color: "var(--phaser-dots-static-color, var(--foreground))",
-  opacity: "var(--phaser-dots-static-opacity, 0.025)"
+var INERT_PROPS = {
+  inert: true
 };
-var DEFAULT_TRAIL_STYLE = {
-  color: "var(--phaser-dots-trail-color, var(--foreground))",
-  opacity: "var(--phaser-dots-trail-opacity, 0.25)"
-};
-var INERT_PROPS = { inert: true };
 function PhaserDots({
   className,
   fadeDirection = "none",
@@ -190,7 +284,7 @@ function PhaserDots({
   dotClassName,
   trailClassName,
   style,
-  ...props2
+  ...props4
 }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -203,7 +297,9 @@ function PhaserDots({
     const canvas = canvasRef.current;
     if (!container || !canvas)
       return;
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d", {
+      alpha: true
+    });
     if (!ctx)
       return;
     const DOT_STEP = 6;
@@ -216,13 +312,22 @@ function PhaserDots({
     const MAX_INTERPOLATION_STEPS = 2;
     const MAX_RENDERED_PRIMARY_TRAIL_POINTS = 24;
     const MAX_RENDERED_SECONDARY_TRAIL_POINTS = 16;
-    const CLICK_TRAIL_STAMP = [
-      { dx: 0, dy: 0 },
-      { dx: DOT_STEP, dy: 0 },
-      { dx: -DOT_STEP, dy: 0 },
-      { dx: 0, dy: DOT_STEP },
-      { dx: 0, dy: -DOT_STEP }
-    ];
+    const CLICK_TRAIL_STAMP = [{
+      dx: 0,
+      dy: 0
+    }, {
+      dx: DOT_STEP,
+      dy: 0
+    }, {
+      dx: -DOT_STEP,
+      dy: 0
+    }, {
+      dx: 0,
+      dy: DOT_STEP
+    }, {
+      dx: 0,
+      dy: -DOT_STEP
+    }];
     const HOVER_BRUSH_RADIUS = 54;
     const HOVER_BRUSH_ALPHA = 0.6;
     const HOVER_BRUSH_DECAY_MS = 900;
@@ -319,16 +424,27 @@ function PhaserDots({
     const pushHoverBrushPoint = (x, y) => {
       if (lastHoverPoint?.x === x && lastHoverPoint.y === y)
         return;
-      hoverBrush.push({ x, y, t: performance.now() });
+      hoverBrush.push({
+        x,
+        y,
+        t: performance.now()
+      });
       if (hoverBrush.length > MAX_HOVER_POINTS) {
         hoverBrush.splice(0, hoverBrush.length - MAX_HOVER_POINTS);
       }
-      lastHoverPoint = { x, y };
+      lastHoverPoint = {
+        x,
+        y
+      };
     };
     const pushTrailPoint = (x, y) => {
       const now = performance.now();
       if (!lastPoint) {
-        trail.push({ x, y, t: now });
+        trail.push({
+          x,
+          y,
+          t: now
+        });
       } else {
         const dx = x - lastPoint.x;
         const dy = y - lastPoint.y;
@@ -343,13 +459,20 @@ function PhaserDots({
           if (trail[trail.length - 1]?.x === px && trail[trail.length - 1]?.y === py) {
             continue;
           }
-          trail.push({ x: px, y: py, t: now });
+          trail.push({
+            x: px,
+            y: py,
+            t: now
+          });
         }
       }
       if (trail.length > MAX_TRAIL_POINTS) {
         trail.splice(0, trail.length - MAX_TRAIL_POINTS);
       }
-      lastPoint = { x, y };
+      lastPoint = {
+        x,
+        y
+      };
     };
     const stampClickTrail = (x, y, t) => {
       for (const offset of CLICK_TRAIL_STAMP) {
@@ -485,21 +608,29 @@ function PhaserDots({
       raf = requestAnimationFrame(tick);
     };
     const handleMove = (e) => {
-      pendingMove = { x: e.clientX, y: e.clientY };
+      pendingMove = {
+        x: e.clientX,
+        y: e.clientY
+      };
       if (!raf)
         raf = requestAnimationFrame(tick);
     };
     const handleDown = (e) => {
       if (e.pointerType === "mouse" && e.button !== 0)
         return;
-      pendingDown = { x: e.clientX, y: e.clientY };
+      pendingDown = {
+        x: e.clientX,
+        y: e.clientY
+      };
       if (!raf)
         raf = requestAnimationFrame(tick);
     };
     const handleUp = () => {
       lastPoint = null;
     };
-    const passive = { passive: true };
+    const passive = {
+      passive: true
+    };
     document.addEventListener("pointermove", handleMove, passive);
     document.addEventListener("pointerdown", handleDown, passive);
     document.addEventListener("pointerup", handleUp, passive);
@@ -517,27 +648,28 @@ function PhaserDots({
   }, [mouseGlow]);
   const maskGradient = fadeDirection === "top" ? "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)" : fadeDirection === "bottom" ? "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)" : fadeDirection === "left" ? "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)" : fadeDirection === "right" ? "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)" : undefined;
   const mergedStyle = maskGradient ? {
-    ...style,
     WebkitMaskImage: maskGradient,
-    maskImage: maskGradient
+    maskImage: maskGradient,
+    ...style
   } : style;
+  const rootPresentation = stylex3.props(effectsStyles.phaserSlot, effectsStyles.phaserRoot);
+  const staticPresentation = stylex3.props(effectsStyles.phaserSlot, effectsStyles.phaserStatic, !dotClassName && effectsStyles.phaserStaticDefault);
+  const trailPresentation = stylex3.props(effectsStyles.phaserSlot, effectsStyles.phaserTrail, !trailClassName && effectsStyles.phaserTrailDefault);
   return /* @__PURE__ */ jsxs2("div", {
-    ...props2,
+    ...props4,
     ...INERT_PROPS,
     ref: containerRef,
     role: "presentation",
     "aria-hidden": "true",
-    className: cn3("hraness-design-phaser-dots", className),
+    className: cn3("hraness-design-phaser-dots", rootPresentation.className, className),
     style: mergedStyle,
     children: [
       /* @__PURE__ */ jsx3("div", {
-        className: cn3(DOT_PATTERN, dotClassName),
-        style: dotClassName ? undefined : DEFAULT_DOT_STYLE
+        className: cn3(DOT_PATTERN, staticPresentation.className, dotClassName)
       }),
       mouseGlow && /* @__PURE__ */ jsx3("canvas", {
         ref: canvasRef,
-        className: cn3("hraness-design-phaser-dots__trail", trailClassName),
-        style: trailClassName ? undefined : DEFAULT_TRAIL_STYLE
+        className: cn3("hraness-design-phaser-dots__trail", trailPresentation.className, trailClassName)
       })
     ]
   });
@@ -546,15 +678,17 @@ function PhaserDots({
 // src/react/aurora-dots-background.tsx
 import { jsx as jsx4, jsxs as jsxs3, Fragment } from "react/jsx-runtime";
 function AuroraDotsBackground() {
+  const backgroundPresentation = stylex4.props(effectsStyles.auroraBackground);
+  const dotsPresentation = stylex4.props(effectsStyles.auroraDots);
   return /* @__PURE__ */ jsxs3(Fragment, {
     children: [
       /* @__PURE__ */ jsx4("div", {
         "aria-hidden": "true",
-        className: "hraness-design-aurora-background"
+        className: cn4("hraness-design-aurora-background", backgroundPresentation.className)
       }),
       /* @__PURE__ */ jsx4("div", {
         "aria-hidden": "true",
-        className: "hraness-design-aurora-dots",
+        className: cn4("hraness-design-aurora-dots", dotsPresentation.className),
         children: /* @__PURE__ */ jsx4(PhaserDots, {
           mouseGlow: true
         })
@@ -562,393 +696,9 @@ function AuroraDotsBackground() {
     ]
   });
 }
-// src/react/charts.tsx
-import {
-  PolarAngleAxis,
-  PolarGrid,
-  PolarRadiusAxis,
-  Radar,
-  RadarChart,
-  ResponsiveContainer,
-  Tooltip as RechartsTooltip
-} from "recharts";
-import {
-  useId
-} from "react";
-import { cn as cn4 } from "@hraness/ui";
-import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
-function finiteOr(value, fallback) {
-  return Number.isFinite(value) ? value : fallback;
-}
-function normalizedPercent(value, minimum, maximum) {
-  const span = maximum - minimum;
-  if (!Number.isFinite(span) || span <= 0)
-    return 0;
-  const bounded = Math.max(0, Math.min(100, (finiteOr(value, minimum) - minimum) / span * 100));
-  return Math.round(bounded * 1e4) / 1e4;
-}
-function accessibleChartCaption({ ariaLabel }) {
-  if (ariaLabel.trim() === "")
-    throw new TypeError("Charts require a nonblank accessible label.");
-  return /* @__PURE__ */ jsx5("figcaption", {
-    className: "hraness-design-visually-hidden",
-    children: ariaLabel
-  });
-}
-function ChartRow({
-  children,
-  id,
-  isSelected,
-  onSelectionChange
-}) {
-  if (onSelectionChange === undefined) {
-    return /* @__PURE__ */ jsx5("div", {
-      className: "hraness-design-chart-row",
-      "data-selected": isSelected || undefined,
-      children
-    });
-  }
-  return /* @__PURE__ */ jsx5("button", {
-    "aria-pressed": isSelected,
-    className: "hraness-design-chart-row hraness-design-chart-row--selectable",
-    "data-selected": isSelected || undefined,
-    onClick: () => onSelectionChange(id),
-    type: "button",
-    children
-  });
-}
-function BarListChart({
-  "aria-label": ariaLabel,
-  className,
-  data,
-  domain = [0, Math.max(1, ...data.map(({ value }) => finiteOr(value, 0)))],
-  formatValue = (value) => String(value),
-  onSelectionChange,
-  selectedId = null
-}) {
-  const [minimum, maximum] = domain;
-  if (!Number.isFinite(minimum) || !Number.isFinite(maximum) || minimum >= maximum) {
-    throw new RangeError("Bar chart domain must be finite and ascending.");
-  }
-  return /* @__PURE__ */ jsxs4("figure", {
-    className: cn4("hraness-design-bar-list-chart", className),
-    children: [
-      accessibleChartCaption({ ariaLabel }),
-      /* @__PURE__ */ jsx5("div", {
-        className: "hraness-design-bar-list-chart__rows",
-        children: data.map((datum) => {
-          const value = finiteOr(datum.value, minimum);
-          const width = normalizedPercent(value, minimum, maximum);
-          const style = {
-            "--hraness-design-chart-color": datum.color ?? "var(--info)",
-            "--hraness-design-chart-value": `${String(width)}%`
-          };
-          return /* @__PURE__ */ jsxs4(ChartRow, {
-            id: datum.id,
-            isSelected: selectedId === datum.id,
-            onSelectionChange,
-            children: [
-              /* @__PURE__ */ jsxs4("span", {
-                className: "hraness-design-chart-row__heading",
-                children: [
-                  /* @__PURE__ */ jsx5("span", {
-                    className: "hraness-design-chart-row__label",
-                    children: datum.label
-                  }),
-                  /* @__PURE__ */ jsx5("span", {
-                    className: "hraness-design-chart-row__value",
-                    children: formatValue(value)
-                  })
-                ]
-              }),
-              /* @__PURE__ */ jsx5("span", {
-                "aria-hidden": "true",
-                className: "hraness-design-bar-list-chart__track",
-                style,
-                children: /* @__PURE__ */ jsx5("span", {
-                  className: "hraness-design-bar-list-chart__bar"
-                })
-              }),
-              datum.detail === undefined ? null : /* @__PURE__ */ jsx5("span", {
-                className: "hraness-design-chart-row__detail",
-                children: datum.detail
-              })
-            ]
-          }, datum.id);
-        })
-      })
-    ]
-  });
-}
-function RadarProfileTooltip({
-  active,
-  label,
-  payload,
-  series
-}) {
-  if (active !== true || payload === undefined || payload.length === 0)
-    return null;
-  const labels = new Map(series.map((item) => [item.id, item.label]));
-  return /* @__PURE__ */ jsxs4("div", {
-    className: "hraness-design-chart-tooltip",
-    children: [
-      /* @__PURE__ */ jsx5("strong", {
-        children: typeof label === "string" ? label : "Benchmark"
-      }),
-      /* @__PURE__ */ jsx5("dl", {
-        children: payload.map((item, index) => {
-          const key = String(item.dataKey ?? item.name ?? index);
-          const value = typeof item.value === "number" && Number.isFinite(item.value) ? item.value.toFixed(1) : "–";
-          return /* @__PURE__ */ jsxs4("div", {
-            children: [
-              /* @__PURE__ */ jsxs4("dt", {
-                children: [
-                  /* @__PURE__ */ jsx5("i", {
-                    "aria-hidden": "true",
-                    style: { background: item.color }
-                  }),
-                  labels.get(key) ?? key
-                ]
-              }),
-              /* @__PURE__ */ jsx5("dd", {
-                children: value
-              })
-            ]
-          }, key);
-        })
-      })
-    ]
-  });
-}
-function RadarProfileChart({
-  "aria-label": ariaLabel,
-  axes,
-  className,
-  onSelectionChange,
-  selectedId = null,
-  series
-}) {
-  const gradientPrefix = useId().replaceAll(":", "");
-  const effectiveSelectedId = series.some(({ id }) => id === selectedId) ? selectedId : null;
-  const data = axes.map((axis) => {
-    const row = { axis: axis.label };
-    for (const item of series)
-      row[item.id] = finiteOr(item.values[axis.id] ?? 0, 0);
-    return row;
-  });
-  return /* @__PURE__ */ jsxs4("figure", {
-    className: cn4("hraness-design-radar-profile-chart", className),
-    children: [
-      accessibleChartCaption({ ariaLabel }),
-      /* @__PURE__ */ jsx5("div", {
-        "aria-hidden": "true",
-        className: "hraness-design-radar-profile-chart__plot",
-        children: /* @__PURE__ */ jsx5(ResponsiveContainer, {
-          height: "100%",
-          initialDimension: { height: 280, width: 360 },
-          width: "100%",
-          children: /* @__PURE__ */ jsxs4(RadarChart, {
-            data,
-            margin: { bottom: 22, left: 28, right: 28, top: 22 },
-            children: [
-              /* @__PURE__ */ jsx5(PolarGrid, {
-                gridType: "polygon",
-                stroke: "var(--grid)",
-                strokeDasharray: "2 5"
-              }),
-              /* @__PURE__ */ jsx5(PolarAngleAxis, {
-                dataKey: "axis",
-                tick: { fill: "var(--muted)", fontFamily: "var(--font-text)", fontSize: 11 },
-                tickLine: false
-              }),
-              /* @__PURE__ */ jsx5(PolarRadiusAxis, {
-                axisLine: false,
-                domain: [0, 100],
-                tick: false
-              }),
-              /* @__PURE__ */ jsx5(RechartsTooltip, {
-                content: /* @__PURE__ */ jsx5(RadarProfileTooltip, {
-                  series
-                }),
-                cursor: false,
-                isAnimationActive: false
-              }),
-              /* @__PURE__ */ jsx5("defs", {
-                children: series.map((item, index) => {
-                  const gradientId = `${gradientPrefix}-${String(index)}`;
-                  return /* @__PURE__ */ jsxs4("radialGradient", {
-                    id: gradientId,
-                    children: [
-                      /* @__PURE__ */ jsx5("stop", {
-                        offset: "0%",
-                        stopColor: item.color,
-                        stopOpacity: "0.06"
-                      }),
-                      /* @__PURE__ */ jsx5("stop", {
-                        offset: "100%",
-                        stopColor: item.color,
-                        stopOpacity: "0.72"
-                      })
-                    ]
-                  }, item.id);
-                })
-              }),
-              series.map((item, index) => {
-                const gradientId = `${gradientPrefix}-${String(index)}`;
-                const dimmed = effectiveSelectedId !== null && effectiveSelectedId !== item.id;
-                return /* @__PURE__ */ jsx5(Radar, {
-                  dataKey: item.id,
-                  fill: `url(#${gradientId})`,
-                  fillOpacity: dimmed ? 0.05 : 0.17,
-                  isAnimationActive: false,
-                  name: item.label,
-                  stroke: item.color,
-                  strokeOpacity: dimmed ? 0.2 : 0.88,
-                  strokeWidth: dimmed ? 1 : 1.75
-                }, item.id);
-              })
-            ]
-          })
-        })
-      }),
-      /* @__PURE__ */ jsx5("div", {
-        "aria-label": "Profiles",
-        className: "hraness-design-radar-profile-chart__legend",
-        role: "group",
-        children: series.map((item) => /* @__PURE__ */ jsxs4(ChartRow, {
-          id: item.id,
-          isSelected: selectedId === item.id,
-          onSelectionChange,
-          children: [
-            /* @__PURE__ */ jsx5("i", {
-              "aria-hidden": "true",
-              style: { background: item.color }
-            }),
-            /* @__PURE__ */ jsx5("span", {
-              children: item.label
-            })
-          ]
-        }, item.id))
-      }),
-      /* @__PURE__ */ jsxs4("table", {
-        className: "hraness-design-visually-hidden",
-        children: [
-          /* @__PURE__ */ jsx5("caption", {
-            children: ariaLabel
-          }),
-          /* @__PURE__ */ jsx5("thead", {
-            children: /* @__PURE__ */ jsxs4("tr", {
-              children: [
-                /* @__PURE__ */ jsx5("th", {
-                  scope: "col",
-                  children: "Benchmark"
-                }),
-                series.map((item) => /* @__PURE__ */ jsx5("th", {
-                  scope: "col",
-                  children: item.label
-                }, item.id))
-              ]
-            })
-          }),
-          /* @__PURE__ */ jsx5("tbody", {
-            children: axes.map((axis) => /* @__PURE__ */ jsxs4("tr", {
-              children: [
-                /* @__PURE__ */ jsx5("th", {
-                  scope: "row",
-                  children: axis.label
-                }),
-                series.map((item) => /* @__PURE__ */ jsx5("td", {
-                  children: finiteOr(item.values[axis.id] ?? 0, 0).toFixed(1)
-                }, item.id))
-              ]
-            }, axis.id))
-          })
-        ]
-      })
-    ]
-  });
-}
-function RangePlotChart({
-  "aria-label": ariaLabel,
-  className,
-  data,
-  domain = [0, 100],
-  formatValue = (value) => String(value),
-  onSelectionChange,
-  selectedId = null
-}) {
-  const [domainMinimum, domainMaximum] = domain;
-  if (!Number.isFinite(domainMinimum) || !Number.isFinite(domainMaximum) || domainMinimum >= domainMaximum) {
-    throw new RangeError("Range plot domain must be finite and ascending.");
-  }
-  return /* @__PURE__ */ jsxs4("figure", {
-    className: cn4("hraness-design-range-plot-chart", className),
-    children: [
-      accessibleChartCaption({ ariaLabel }),
-      /* @__PURE__ */ jsx5("div", {
-        className: "hraness-design-range-plot-chart__rows",
-        children: data.map((datum) => {
-          const minimum = finiteOr(datum.minimum, domainMinimum);
-          const maximum = finiteOr(datum.maximum, domainMaximum);
-          const median = finiteOr(datum.median, minimum);
-          const left = normalizedPercent(Math.min(minimum, maximum), domainMinimum, domainMaximum);
-          const right = normalizedPercent(Math.max(minimum, maximum), domainMinimum, domainMaximum);
-          const middle = normalizedPercent(median, domainMinimum, domainMaximum);
-          const style = {
-            "--hraness-design-chart-color": datum.color ?? "var(--info)",
-            "--hraness-design-chart-range-left": `${String(left)}%`,
-            "--hraness-design-chart-range-width": `${String(Math.max(0, right - left))}%`,
-            "--hraness-design-chart-median": `${String(middle)}%`
-          };
-          return /* @__PURE__ */ jsxs4(ChartRow, {
-            id: datum.id,
-            isSelected: selectedId === datum.id,
-            onSelectionChange,
-            children: [
-              /* @__PURE__ */ jsxs4("span", {
-                className: "hraness-design-chart-row__heading",
-                children: [
-                  /* @__PURE__ */ jsx5("span", {
-                    className: "hraness-design-chart-row__label",
-                    children: datum.label
-                  }),
-                  /* @__PURE__ */ jsxs4("span", {
-                    className: "hraness-design-chart-row__value",
-                    children: [
-                      formatValue(minimum),
-                      "–",
-                      formatValue(maximum)
-                    ]
-                  })
-                ]
-              }),
-              /* @__PURE__ */ jsxs4("span", {
-                "aria-hidden": "true",
-                className: "hraness-design-range-plot-chart__track",
-                style,
-                children: [
-                  /* @__PURE__ */ jsx5("span", {
-                    className: "hraness-design-range-plot-chart__range"
-                  }),
-                  /* @__PURE__ */ jsx5("span", {
-                    className: "hraness-design-range-plot-chart__median"
-                  })
-                ]
-              }),
-              datum.detail === undefined ? null : /* @__PURE__ */ jsx5("span", {
-                className: "hraness-design-chart-row__detail",
-                children: datum.detail
-              })
-            ]
-          }, datum.id);
-        })
-      })
-    ]
-  });
-}
 // src/react/chat.tsx
 import { Button, TextAreaField, cn as cn5 } from "@hraness/ui";
-import * as stylex2 from "@stylexjs/stylex";
+import * as stylex5 from "@stylexjs/stylex";
 
 // src/react/chat.stylex.ts
 var chatStyles = {
@@ -985,7 +735,7 @@ var chatStyles = {
 };
 
 // src/react/chat.tsx
-import { jsx as jsx6, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
 function ChatMessage({
   actions,
   avatar,
@@ -995,41 +745,41 @@ function ChatMessage({
   name,
   role
 }) {
-  const messagePresentation = stylex2.props(chatStyles.message);
-  const minInlinePresentation = stylex2.props(chatStyles.messageMinInline);
-  const rowPresentation = stylex2.props(chatStyles.messageRow);
-  const headerPresentation = stylex2.props(chatStyles.messageRow, chatStyles.messageHeader);
-  return /* @__PURE__ */ jsxs5("article", {
+  const messagePresentation = stylex5.props(chatStyles.message);
+  const minInlinePresentation = stylex5.props(chatStyles.messageMinInline);
+  const rowPresentation = stylex5.props(chatStyles.messageRow);
+  const headerPresentation = stylex5.props(chatStyles.messageRow, chatStyles.messageHeader);
+  return /* @__PURE__ */ jsxs4("article", {
     ...messagePresentation,
     className: cn5("hraness-design-chat-message", messagePresentation.className, className),
     "data-role": role,
     children: [
-      avatar === undefined ? null : /* @__PURE__ */ jsx6("div", {
+      avatar === undefined ? null : /* @__PURE__ */ jsx5("div", {
         className: "hraness-design-chat-message__avatar",
         children: avatar
       }),
-      /* @__PURE__ */ jsxs5("div", {
+      /* @__PURE__ */ jsxs4("div", {
         ...minInlinePresentation,
         className: cn5("hraness-design-chat-message__content", minInlinePresentation.className),
         children: [
-          name === undefined && meta === undefined ? null : /* @__PURE__ */ jsxs5("header", {
+          name === undefined && meta === undefined ? null : /* @__PURE__ */ jsxs4("header", {
             ...headerPresentation,
             className: cn5("hraness-design-chat-message__header", headerPresentation.className),
             children: [
-              name === undefined ? null : /* @__PURE__ */ jsx6("strong", {
+              name === undefined ? null : /* @__PURE__ */ jsx5("strong", {
                 children: name
               }),
-              meta === undefined ? null : /* @__PURE__ */ jsx6("span", {
+              meta === undefined ? null : /* @__PURE__ */ jsx5("span", {
                 children: meta
               })
             ]
           }),
-          /* @__PURE__ */ jsx6("div", {
+          /* @__PURE__ */ jsx5("div", {
             ...minInlinePresentation,
             className: cn5("hraness-design-chat-message__body", minInlinePresentation.className),
             children
           }),
-          actions === undefined ? null : /* @__PURE__ */ jsx6("footer", {
+          actions === undefined ? null : /* @__PURE__ */ jsx5("footer", {
             ...rowPresentation,
             className: cn5("hraness-design-chat-message__actions", rowPresentation.className),
             children: actions
@@ -1049,22 +799,22 @@ function ChatComposer({
   placeholder,
   sendLabel = "Send",
   value,
-  ...props3
+  ...props6
 }) {
-  const presentation = stylex2.props(chatStyles.composer);
+  const presentation = stylex5.props(chatStyles.composer);
   const handleSubmit = (event) => {
     event.preventDefault();
     if (isDisabled || isPending || value.trim().length === 0)
       return;
     onSubmit();
   };
-  return /* @__PURE__ */ jsxs5("form", {
+  return /* @__PURE__ */ jsxs4("form", {
     ...presentation,
-    ...props3,
+    ...props6,
     className: cn5("hraness-design-chat-composer", presentation.className, className),
     onSubmit: handleSubmit,
     children: [
-      /* @__PURE__ */ jsx6(TextAreaField, {
+      /* @__PURE__ */ jsx5(TextAreaField, {
         ...placeholder === undefined ? {} : {
           placeholder
         },
@@ -1079,7 +829,7 @@ function ChatComposer({
         },
         value
       }),
-      /* @__PURE__ */ jsx6(Button, {
+      /* @__PURE__ */ jsx5(Button, {
         className: "hraness-design-chat-composer__send",
         isDisabled: isDisabled || value.trim().length === 0,
         isPending,
@@ -1092,7 +842,7 @@ function ChatComposer({
 }
 // src/react/design-theme-context.tsx
 import { createContext, useContext, useMemo } from "react";
-import { jsx as jsx7 } from "react/jsx-runtime";
+import { jsx as jsx6 } from "react/jsx-runtime";
 var DesignThemeContext = createContext({});
 function DesignPortalThemeProvider({
   children,
@@ -1100,10 +850,14 @@ function DesignPortalThemeProvider({
   theme
 }) {
   const value = useMemo(() => ({
-    ...portalClassName === undefined ? {} : { portalClassName },
-    ...theme === undefined ? {} : { theme }
+    ...portalClassName === undefined ? {} : {
+      portalClassName
+    },
+    ...theme === undefined ? {} : {
+      theme
+    }
   }), [portalClassName, theme]);
-  return /* @__PURE__ */ jsx7(DesignThemeContext.Provider, {
+  return /* @__PURE__ */ jsx6(DesignThemeContext.Provider, {
     value,
     children
   });
@@ -1115,28 +869,13 @@ function useDesignPortalClassName() {
   return useContext(DesignThemeContext).portalClassName;
 }
 // src/react/design-gallery.tsx
-import {
-  Badge,
-  Button as Button2,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Icon as Icon3,
-  LinkButton,
-  SegmentedControl,
-  Slider,
-  Tag,
-  ViewportFrame,
-  WrappingRow
-} from "@hraness/ui";
+import { Badge, Button as Button2, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
 import { useState as useState2 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
-import * as stylex3 from "@stylexjs/stylex";
+import * as stylex6 from "@stylexjs/stylex";
 import { cn as cn6 } from "@hraness/ui";
 
 // src/react/fader.stylex.ts
@@ -1223,7 +962,7 @@ var faderStyles = {
 };
 
 // src/react/fader.tsx
-import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
+import { jsx as jsx7, jsxs as jsxs5 } from "react/jsx-runtime";
 function Fader({
   className,
   density = "default",
@@ -1234,62 +973,62 @@ function Fader({
   orientation = "vertical",
   showLabel = false,
   showOutput = false,
-  ...props4
+  ...props7
 }) {
-  const rootPresentation = stylex3.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
-  const labelRowPresentation = stylex3.props(faderStyles.labelRow);
-  const captionPresentation = stylex3.props(faderStyles.caption);
-  const trackPresentation = stylex3.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
-  const trackRailPresentation = stylex3.props(faderStyles.rail, faderStyles.trackRail);
-  const fillRailPresentation = stylex3.props(faderStyles.rail, faderStyles.fillRail);
-  return /* @__PURE__ */ jsxs6(AriaSlider, {
-    ...props4,
+  const rootPresentation = stylex6.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
+  const labelRowPresentation = stylex6.props(faderStyles.labelRow);
+  const captionPresentation = stylex6.props(faderStyles.caption);
+  const trackPresentation = stylex6.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
+  const trackRailPresentation = stylex6.props(faderStyles.rail, faderStyles.trackRail);
+  const fillRailPresentation = stylex6.props(faderStyles.rail, faderStyles.fillRail);
+  return /* @__PURE__ */ jsxs5(AriaSlider, {
+    ...props7,
     className: cn6("hraness-design-fader", rootPresentation.className, className),
     "data-density": density,
     orientation,
     ref: faderRef,
     children: [
-      showLabel && labelAccessory !== undefined ? /* @__PURE__ */ jsxs6("div", {
+      showLabel && labelAccessory !== undefined ? /* @__PURE__ */ jsxs5("div", {
         className: cn6("hraness-design-fader__label-row", labelRowPresentation.className),
         children: [
-          /* @__PURE__ */ jsx8(Label, {
+          /* @__PURE__ */ jsx7(Label, {
             className: cn6("hraness-design-fader__label", captionPresentation.className),
             children: label
           }),
-          /* @__PURE__ */ jsx8("span", {
+          /* @__PURE__ */ jsx7("span", {
             className: "hraness-design-fader__label-accessory",
             children: labelAccessory
           })
         ]
-      }) : showLabel ? /* @__PURE__ */ jsx8(Label, {
+      }) : showLabel ? /* @__PURE__ */ jsx7(Label, {
         className: cn6("hraness-design-fader__label", captionPresentation.className),
         children: label
-      }) : /* @__PURE__ */ jsx8(Label, {
+      }) : /* @__PURE__ */ jsx7(Label, {
         className: "hraness-design-visually-hidden",
         children: label
       }),
-      showOutput ? /* @__PURE__ */ jsx8(SliderOutput, {
+      showOutput ? /* @__PURE__ */ jsx7(SliderOutput, {
         className: cn6("hraness-design-fader__output", captionPresentation.className)
       }) : null,
-      /* @__PURE__ */ jsxs6(SliderTrack, {
+      /* @__PURE__ */ jsxs5(SliderTrack, {
         className: cn6("hraness-design-fader__track", trackPresentation.className),
         children: [
-          /* @__PURE__ */ jsx8("span", {
+          /* @__PURE__ */ jsx7("span", {
             "aria-hidden": "true",
             className: cn6("hraness-design-fader__track-rail", trackRailPresentation.className)
           }),
-          /* @__PURE__ */ jsx8(SliderFill, {
+          /* @__PURE__ */ jsx7(SliderFill, {
             className: "hraness-design-fader__fill",
-            children: /* @__PURE__ */ jsx8("span", {
+            children: /* @__PURE__ */ jsx7("span", {
               "aria-hidden": "true",
               className: cn6("hraness-design-fader__fill-rail", fillRailPresentation.className)
             })
           }),
-          /* @__PURE__ */ jsx8(SliderThumb, {
+          /* @__PURE__ */ jsx7(SliderThumb, {
             className: ({
               isFocusVisible
             }) => {
-              const thumbPresentation = stylex3.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
+              const thumbPresentation = stylex6.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
               return cn6("hraness-design-fader__thumb", thumbPresentation.className);
             },
             ...inputRef === undefined ? {} : {
@@ -1303,7 +1042,7 @@ function Fader({
 }
 
 // src/react/foil-card-surface.tsx
-import * as stylex4 from "@stylexjs/stylex";
+import * as stylex7 from "@stylexjs/stylex";
 import { cn as cn7 } from "@hraness/ui";
 import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
 
@@ -1644,7 +1383,7 @@ var foilCardSurfaceStyles = {
 };
 
 // src/react/foil-card-surface.tsx
-import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
 var foilCardPresets = ["prism", "aurora", "etched", "gold", "fast", "max"];
 var foilCardIntensities = ["subtle", "standard", "vivid"];
 var foilCardRenderModes = ["interactive", "static"];
@@ -1836,7 +1575,7 @@ function addMediaListener(media, listener) {
 function FoilCardDeck({
   children,
   className,
-  ...props5
+  ...props8
 }) {
   const rootRef = useRef2(null);
   const registrations = useRef2(new Map);
@@ -2072,10 +1811,10 @@ function FoilCardDeck({
       resizeObserver.current = null;
     };
   }, [deactivate]);
-  return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
+  return /* @__PURE__ */ jsx8(FoilDeckContext.Provider, {
     value: contextValue,
-    children: /* @__PURE__ */ jsx9("div", {
-      ...props5,
+    children: /* @__PURE__ */ jsx8("div", {
+      ...props8,
       className: cn7("hraness-design-foil-card-deck", className),
       "data-foil-card-deck": "",
       ref: rootRef,
@@ -2107,14 +1846,14 @@ function FoilCardSurface({
   const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
-  const rootPresentation = stylex4.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
-  const basePresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
-  const spectrumPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
-  const sheenPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
-  const texturePresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
-  const ornamentPresentation = stylex4.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
-  const contentPresentation = stylex4.props(foilCardSurfaceStyles.content);
-  const activePresentation = stylex4.props(foilCardSurfaceStyles.active);
+  const rootPresentation = stylex7.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
+  const basePresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
+  const spectrumPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
+  const sheenPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
+  const texturePresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
+  const contentPresentation = stylex7.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex7.props(foilCardSurfaceStyles.active);
   useEffect3(() => {
     if (renderMode !== "interactive")
       return;
@@ -2229,7 +1968,7 @@ function FoilCardSurface({
       setActive(root, activePresentation.className, false);
     };
   }, [activePresentation.className, deck, renderMode, seedPose]);
-  return /* @__PURE__ */ jsxs7("div", {
+  return /* @__PURE__ */ jsxs6("div", {
     ...rootPresentation,
     className: cn7("hraness-design-foil-card-surface", rootPresentation.className, className),
     "data-foil-intensity": intensity,
@@ -2240,27 +1979,27 @@ function FoilCardSurface({
     ref: rootRef,
     style: seededStyle,
     children: [
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx8("span", {
         ...basePresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx9("div", {
+      /* @__PURE__ */ jsx8("div", {
         ...contentPresentation,
         children
       }),
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx8("span", {
         ...spectrumPresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx8("span", {
         ...sheenPresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx8("span", {
         ...texturePresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx8("span", {
         ...ornamentPresentation,
         "aria-hidden": "true"
       })
@@ -2269,13 +2008,8 @@ function FoilCardSurface({
 }
 
 // src/react/jelly-surface.tsx
-import {
-  createElement,
-  forwardRef,
-  useCallback as useCallback2,
-  useEffect as useEffect4,
-  useRef as useRef3
-} from "react";
+import { createElement, forwardRef, useCallback as useCallback2, useEffect as useEffect4, useRef as useRef3 } from "react";
+import * as stylex8 from "@stylexjs/stylex";
 import { cn as cn8 } from "@hraness/ui";
 
 // src/react/jelly-runtime.ts
@@ -2343,6 +2077,94 @@ async function setJellyThemeMode(mode) {
   return synchronizeJellyThemeMode(document, mode, loadBrowserJellyRuntime, () => request === themeRequest);
 }
 
+// src/react/jelly-surface.stylex.ts
+var jellySurfaceStyles = {
+  root: {
+    kawU7v: "x1cfjbvc",
+    k5BUTg: "x1a4igh8",
+    kqOd84: "xsdpl10",
+    kzPi7L: "x1sz4vi2",
+    kEz803: "x4aylkk",
+    "--jelly-card-padding-block": "x1bbk1wc",
+    "--jelly-card-padding-inline": "xhowent",
+    "--jelly-card-font-size": "xwi17fr",
+    "--jelly-radius": "x317v68",
+    "--jelly-fill": "x138r0kg",
+    "--jelly-label": "xf4onzy",
+    "--jelly-color-border-default": "x1kr16q7",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
+    k1xSpc: "x1lliihq",
+    kB7OPa: "x9f619",
+    kaIpWk: "x16gy7dz",
+    kMwMTN: "x1eebzld xs5hli",
+    kMv6JI: "xjb2p0i",
+    kV0H8L: "x10rt0pk",
+    krGR0G: "xvmqkbn",
+    kqBzK6: "x1rcybi7",
+    kHiXq7: "x61gc8y",
+    kC21eY: "xd4aj15",
+    ka26j: "xkyhvkk",
+    kGuDYH: "x1qlqyl8",
+    kKX8nH: "x1t35e8",
+    k63SB2: "x1pd3egz",
+    kjAs5C: "x1aazh3f",
+    kQqvRs: "x1xh6y1q",
+    kLWn49: "x15bjb6t",
+    kWkggS: "x9yvj25",
+    kVAM5u: "x1w1tqly",
+    ksu8eU: "xx61lck",
+    kMzoRj: "x13rsnn2",
+    kGVxlE: "xwaqzdf",
+    k1ekBW: "x4wkmsb",
+    $$css: true
+  },
+  primary: {
+    "--jelly-fill": "x1va3v6u",
+    "--jelly-label": "x3o2ea9",
+    $$css: true
+  },
+  quiet: {
+    "--jelly-fill": "x152g019",
+    "--jelly-label": "x183l2pk",
+    $$css: true
+  },
+  danger: {
+    "--jelly-fill": "x13ywtpv",
+    "--jelly-label": "xbz0pe5",
+    $$css: true
+  },
+  field: {
+    "--jelly-fill": "x16wb4my",
+    "--jelly-radius": "xve0zjm",
+    $$css: true
+  },
+  overlay: {
+    "--jelly-fill": "x19km55x",
+    "--jelly-label": "xek99g9",
+    "--jelly-radius": "xrfn3cn",
+    $$css: true
+  },
+  neutralHovered: {
+    "--jelly-fill": "x138r0kg x8rjkku",
+    $$css: true
+  },
+  primaryHovered: {
+    "--jelly-fill": "x1va3v6u xm3mlto",
+    $$css: true
+  },
+  disabled: {
+    "--jelly-fill": "x1vynlns x1tre9y0",
+    "--jelly-label": "x1ng5emh",
+    kkrTdU: "x1h6gzvc",
+    $$css: true
+  },
+  selectableText: {
+    kfSwDN: "x1hx0egp",
+    $$css: true
+  }
+};
+
 // src/react/jelly-surface.tsx
 var JellyCard = "jelly-card";
 function composeJellyCapture(consumer, internal) {
@@ -2409,7 +2231,7 @@ var JellySurface = forwardRef(function JellySurface2({
   onPointerMoveCapture,
   surfaceRef,
   tone = "neutral",
-  ...props5
+  ...props9
 }, forwardedRef) {
   const hostRef = useRef3(null);
   const activePointer = useRef3(null);
@@ -2446,8 +2268,8 @@ var JellySurface = forwardRef(function JellySurface2({
     }
   };
   return createElement(JellyCard, {
-    ...props5,
-    className: cn8("hraness-design-jelly-surface", className),
+    ...props9,
+    className: cn8("hraness-design-jelly-surface", stylex8.props(jellySurfaceStyles.root, tone === "danger" && jellySurfaceStyles.danger, tone === "field" && jellySurfaceStyles.field, tone === "overlay" && jellySurfaceStyles.overlay, tone === "primary" && jellySurfaceStyles.primary, tone === "quiet" && jellySurfaceStyles.quiet, tone === "neutral" && jellySurfaceStyles.neutralHovered, tone === "primary" && jellySurfaceStyles.primaryHovered, (isDisabled || isPending) && jellySurfaceStyles.disabled, interaction !== "press" && jellySurfaceStyles.selectableText).className, className),
     "data-disabled": isDisabled ? "true" : undefined,
     "data-pending": isPending ? "true" : undefined,
     "data-interaction": interaction,
@@ -2503,35 +2325,158 @@ var JellySurface = forwardRef(function JellySurface2({
 });
 
 // src/react/navigation-rail.tsx
-import {
-  Link,
-  cn as cn9
-} from "@hraness/ui";
-import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+import { Link, cn as cn9 } from "@hraness/ui";
+import * as stylex9 from "@stylexjs/stylex";
+
+// src/react/navigation-rail.stylex.ts
+var navigationRailStyles = {
+  item: {
+    kGNEyG: "x6s0dn4",
+    kaIpWk: "x1c6t507",
+    kMwMTN: "x17j02y5",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xmgkybt",
+    kumcoG: "xx9t13c",
+    kVQ08L: "x3adhqr",
+    kmVPX3: "x15skzh0",
+    kybGjl: "x1hl2dhg",
+    $$css: true
+  },
+  itemActive: {
+    ku1ltF: "x1fdtg7e x852r0y",
+    kHypHr: "x1u7o2vf x1yjm9pw",
+    kKwaWg: "x18o3ruo x1aysnjn",
+    kl9DO0: "x12koezg x1w7rtzm",
+    k1YJky: "x1y4qj14 x123h4s9",
+    kz484i: "x182nak8 x1xqmp8",
+    kgSjnq: "x103pssi xontfw7",
+    kWkggS: "x1ut2sa4 xx8mfso",
+    kMwMTN: "x154ywzv x89zja",
+    $$css: true
+  },
+  itemCopy: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x1enigpx",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  itemDescription: {
+    kMwMTN: "x17j02y5",
+    kGuDYH: "xaasd0c",
+    kHjlTd: "xj0a0fe",
+    $$css: true
+  },
+  itemIcon: {
+    k1xSpc: "xwz0xwf",
+    kgQiWS: "x1ku5rj1",
+    $$css: true
+  },
+  itemLabel: {
+    k63SB2: "x1e4wzip",
+    kHjlTd: "xj0a0fe",
+    $$css: true
+  },
+  itemNativeInteractionFallbacks: {
+    ku1ltF: "x852r0y",
+    kHypHr: "x1yjm9pw",
+    kKwaWg: "x1aysnjn",
+    kl9DO0: "x1w7rtzm",
+    k1YJky: "x123h4s9",
+    kz484i: "x1xqmp8",
+    kgSjnq: "xontfw7",
+    kWkggS: "x18e72hl",
+    kMwMTN: "x11ffpz8",
+    kjBf7l: "x2bii8l",
+    kInvED: "xecyca2",
+    k3XXqK: "xq2elj",
+    kMeerF: "x1g4ssbw",
+    $$css: true
+  },
+  navigation: {
+    kfiyM8: "x10ukxgv",
+    k1xSpc: "xrvj5dj",
+    kUk6DE: "x12lumcd",
+    kOIVth: "xzci21y",
+    kVQ08L: "x159srwy",
+    kVQacm: "xysyzu8",
+    kmVPX3: "xg94cu2",
+    $$css: true
+  },
+  rail: {
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x103pssi",
+    kWkggS: "xuvt9l",
+    kLWsYc: "xuxy95z",
+    k1xSpc: "x78zum5",
+    kXwgrk: "xdt5ytf",
+    kVQ08L: "x159srwy",
+    $$css: true
+  },
+  railEdge: {
+    kUk6DE: "x3psx0u",
+    kmVPX3: "xyz91iy",
+    $$css: true
+  },
+  section: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xmgkybt",
+    $$css: true
+  },
+  sectionItems: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xm15xud",
+    $$css: true
+  },
+  sectionTitle: {
+    kMwMTN: "x17j02y5",
+    kGuDYH: "xaasd0c",
+    k63SB2: "x1e4wzip",
+    kb6lSQ: "x1vyo3qp",
+    kogj98: "x1ghz6dp",
+    kJVvJu: "xv2ckdy",
+    kP9fke: "xtvhhri",
+    $$css: true
+  }
+};
+
+// src/react/navigation-rail.tsx
+import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
 function NavigationRail({
   "aria-label": ariaLabel = "Primary navigation",
   children,
   className,
   footer,
   header,
-  ...props5
+  ...props10
 }) {
-  return /* @__PURE__ */ jsxs8("aside", {
-    ...props5,
+  const rootPresentation = stylex9.props(navigationRailStyles.rail);
+  const edgePresentation = stylex9.props(navigationRailStyles.railEdge);
+  const navigationPresentation = stylex9.props(navigationRailStyles.navigation);
+  return /* @__PURE__ */ jsxs7("aside", {
+    ...rootPresentation,
+    ...props10,
     "aria-label": ariaLabel,
-    className: cn9("hraness-design-navigation-rail", className),
+    className: cn9("hraness-design-navigation-rail", rootPresentation.className, className),
     children: [
-      header === undefined ? null : /* @__PURE__ */ jsx10("header", {
-        className: "hraness-design-navigation-rail__header",
+      header === undefined ? null : /* @__PURE__ */ jsx9("header", {
+        ...edgePresentation,
+        className: cn9("hraness-design-navigation-rail__header", edgePresentation.className),
         children: header
       }),
-      /* @__PURE__ */ jsx10("nav", {
+      /* @__PURE__ */ jsx9("nav", {
+        ...navigationPresentation,
         "aria-label": ariaLabel,
-        className: "hraness-design-navigation-rail__navigation",
+        className: cn9("hraness-design-navigation-rail__navigation", navigationPresentation.className),
         children
       }),
-      footer === undefined ? null : /* @__PURE__ */ jsx10("footer", {
-        className: "hraness-design-navigation-rail__footer",
+      footer === undefined ? null : /* @__PURE__ */ jsx9("footer", {
+        ...edgePresentation,
+        className: cn9("hraness-design-navigation-rail__footer", edgePresentation.className),
         children: footer
       })
     ]
@@ -2542,19 +2487,25 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props5
+  ...props10
 }) {
   const Heading = titleAs;
-  return /* @__PURE__ */ jsxs8("section", {
-    ...props5,
-    className: cn9("hraness-design-rail-section", className),
+  const rootPresentation = stylex9.props(navigationRailStyles.section);
+  const titlePresentation = stylex9.props(navigationRailStyles.sectionTitle);
+  const itemsPresentation = stylex9.props(navigationRailStyles.sectionItems);
+  return /* @__PURE__ */ jsxs7("section", {
+    ...rootPresentation,
+    ...props10,
+    className: cn9("hraness-design-rail-section", rootPresentation.className, className),
     children: [
-      title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
-        className: "hraness-design-rail-section__title",
+      title === undefined ? null : /* @__PURE__ */ jsx9(Heading, {
+        ...titlePresentation,
+        className: cn9("hraness-design-rail-section__title", titlePresentation.className),
         children: title
       }),
-      /* @__PURE__ */ jsx10("div", {
-        className: "hraness-design-rail-section__items",
+      /* @__PURE__ */ jsx9("div", {
+        ...itemsPresentation,
+        className: cn9("hraness-design-rail-section__items", itemsPresentation.className),
         children
       })
     ]
@@ -2568,33 +2519,43 @@ function RailItem({
   icon,
   isActive = false,
   label,
-  ...props5
+  xstyle,
+  ...props10
 }) {
-  return /* @__PURE__ */ jsxs8(Link, {
-    ...props5,
+  const iconPresentation = stylex9.props(navigationRailStyles.itemIcon);
+  const copyPresentation = stylex9.props(navigationRailStyles.itemCopy);
+  const labelPresentation = stylex9.props(navigationRailStyles.itemLabel);
+  const descriptionPresentation = stylex9.props(navigationRailStyles.itemDescription);
+  return /* @__PURE__ */ jsxs7(Link, {
+    ...props10,
     "aria-current": isActive ? "page" : undefined,
     className: cn9("hraness-design-rail-item", className),
     href,
+    xstyle: [navigationRailStyles.item, navigationRailStyles.itemNativeInteractionFallbacks, isActive && navigationRailStyles.itemActive, xstyle],
     children: [
-      icon === undefined ? null : /* @__PURE__ */ jsx10("span", {
+      icon === undefined ? null : /* @__PURE__ */ jsx9("span", {
+        ...iconPresentation,
         "aria-hidden": "true",
-        className: "hraness-design-rail-item__icon",
+        className: cn9("hraness-design-rail-item__icon", iconPresentation.className),
         children: icon
       }),
-      /* @__PURE__ */ jsxs8("span", {
-        className: "hraness-design-rail-item__copy",
+      /* @__PURE__ */ jsxs7("span", {
+        ...copyPresentation,
+        className: cn9("hraness-design-rail-item__copy", copyPresentation.className),
         children: [
-          /* @__PURE__ */ jsx10("span", {
-            className: "hraness-design-rail-item__label",
+          /* @__PURE__ */ jsx9("span", {
+            ...labelPresentation,
+            className: cn9("hraness-design-rail-item__label", labelPresentation.className),
             children: label
           }),
-          description === undefined ? null : /* @__PURE__ */ jsx10("span", {
-            className: "hraness-design-rail-item__description",
+          description === undefined ? null : /* @__PURE__ */ jsx9("span", {
+            ...descriptionPresentation,
+            className: cn9("hraness-design-rail-item__description", descriptionPresentation.className),
             children: description
           })
         ]
       }),
-      badge === undefined ? null : /* @__PURE__ */ jsx10("span", {
+      badge === undefined ? null : /* @__PURE__ */ jsx9("span", {
         className: "hraness-design-rail-item__badge",
         children: badge
       })
@@ -2605,7 +2566,7 @@ function RailItem({
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex5 from "@stylexjs/stylex";
+import * as stylex10 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -2624,7 +2585,7 @@ var playbackTransportStyles = {
 };
 
 // src/react/playback-transport.tsx
-import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
 function PlaybackTransport({
   buttonAriaKeyShortcuts,
   buttonId,
@@ -2643,14 +2604,14 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex5.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex5.props(playbackTransportStyles.glyph);
-  return /* @__PURE__ */ jsxs9(Toolbar, {
+  const rootPresentation = stylex10.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex10.props(playbackTransportStyles.glyph);
+  return /* @__PURE__ */ jsxs8(Toolbar, {
     ...accessibleName,
     className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
     "data-playback-status": status,
     children: [
-      /* @__PURE__ */ jsx11(IconButton2, {
+      /* @__PURE__ */ jsx10(IconButton2, {
         "aria-busy": isPending || undefined,
         "aria-label": commandLabel,
         ...buttonAriaKeyShortcuts === undefined ? {} : {
@@ -2675,9 +2636,9 @@ function PlaybackTransport({
         },
         size: "large",
         variant: "primary",
-        children: isPending ? /* @__PURE__ */ jsx11(Spinner, {
+        children: isPending ? /* @__PURE__ */ jsx10(Spinner, {
           ...glyphPresentation
-        }) : /* @__PURE__ */ jsx11(Icon2, {
+        }) : /* @__PURE__ */ jsx10(Icon2, {
           ...glyphPresentation.className === undefined ? {} : {
             className: glyphPresentation.className
           },
@@ -2691,7 +2652,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex6 from "@stylexjs/stylex";
+import * as stylex11 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2704,9 +2665,16 @@ var productionDataPreviewNoticeStyles = {
   root: {
     kGNEyG: "x6s0dn4",
     kWkggS: "x1gq7pca",
-    kL6WhQ: "x9ap2lz",
-    kfdmCh: "x1q0q8m5",
-    kt9PQ7: "xlxy82",
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x1cwfr1t",
+    k4V0xq: "x1djed8t",
+    krFJ6x: "xn5uptl",
+    kP1A0P: "xhjnd2s",
     kGVxlE: "xlmpfgd",
     kMwMTN: "xam1lc8",
     k1xSpc: "x78zum5",
@@ -2714,7 +2682,7 @@ var productionDataPreviewNoticeStyles = {
     kMv6JI: "xumcc2o",
     kGuDYH: "xj8twjj",
     kOIVth: "x5kxhqv",
-    k87sOh: "x13vifvy",
+    kUvb1J: "xlb5a52",
     kjj79g: "xl56j7k",
     kLWn49: "x1xfvgam",
     kAzted: "xe8gcm",
@@ -2729,25 +2697,25 @@ var productionDataPreviewNoticeStyles = {
 };
 
 // src/react/production-data-preview-notice.tsx
-import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 function ProductionDataPreviewNotice({
   surfaceOrigin
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex6.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex6.props(productionDataPreviewNoticeStyles.emphasis);
-  return /* @__PURE__ */ jsxs10("aside", {
+  const noticePresentation = stylex11.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex11.props(productionDataPreviewNoticeStyles.emphasis);
+  return /* @__PURE__ */ jsxs9("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
     className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
     role: "alert",
     children: [
-      /* @__PURE__ */ jsx12("strong", {
+      /* @__PURE__ */ jsx11("strong", {
         ...emphasisPresentation,
         children: "Production data preview"
       }),
-      /* @__PURE__ */ jsx12("span", {
+      /* @__PURE__ */ jsx11("span", {
         children: "This preview uses production data. Actions are real and affect production."
       })
     ]
@@ -2755,59 +2723,81 @@ function ProductionDataPreviewNotice({
 }
 
 // src/react/design-gallery.tsx
-import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
-var designGallerySections = [
-  { id: "foundation", label: "Foundation" },
-  { id: "marketing", label: "Marketing" },
-  { id: "shells", label: "Shells" },
-  { id: "data", label: "Data" },
-  { id: "effects", label: "Effects" },
-  { id: "syntax", label: "Syntax" }
-];
-var designGalleryTouchKinds = [
-  "button",
-  "link",
-  "radio",
-  "range"
-];
-var designGalleryRecipeCoverage = [
-  "@hraness/ui primitives",
-  "animated rail stage",
-  "application shells",
-  "charts",
-  "chat message and composer",
-  "dither surface",
-  "fader",
-  "foil card surface",
-  "layout surfaces",
-  "Jelly presentation",
-  "playback transport",
-  "plain site and publication grammar",
-  "product-marketing grammar",
-  "Nebula Sans typography",
-  "procedural effects",
-  "production preview notice",
-  "syntax highlighting"
-];
+import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
+var designGallerySections = [{
+  id: "foundation",
+  label: "Foundation"
+}, {
+  id: "marketing",
+  label: "Marketing"
+}, {
+  id: "shells",
+  label: "Shells"
+}, {
+  id: "data",
+  label: "Data"
+}, {
+  id: "effects",
+  label: "Effects"
+}, {
+  id: "syntax",
+  label: "Syntax"
+}];
+var designGalleryTouchKinds = ["button", "link", "radio", "range"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Jelly presentation", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
 function resolveGalleryTheme(theme, prefersDark) {
   return theme === "system" ? prefersDark ? "dark" : "light" : theme;
 }
-var barData = [
-  { id: "alpha", label: "Alpha", value: 72, detail: "72 requests" },
-  { id: "beta", label: "Beta", value: 48, detail: "48 requests" },
-  { id: "gamma", label: "Gamma", value: 31, detail: "31 requests" }
-];
-var rangeData = [
-  { id: "north", label: "North", minimum: 24, median: 51, maximum: 78 },
-  { id: "south", label: "South", minimum: 38, median: 64, maximum: 82 }
-];
-var foilDeckExamples = [
-  { label: "Corner frame", ornament: "corners", preset: "prism" },
-  { label: "Rail frame", ornament: "rails", preset: "etched" },
-  { label: "Circuit frame", ornament: "circuit", preset: "fast" },
-  { label: "Radial frame", ornament: "radial", preset: "aurora" },
-  { label: "Facet frame", ornament: "facets", preset: "max" }
-];
+var barData = [{
+  id: "alpha",
+  label: "Alpha",
+  value: 72,
+  detail: "72 requests"
+}, {
+  id: "beta",
+  label: "Beta",
+  value: 48,
+  detail: "48 requests"
+}, {
+  id: "gamma",
+  label: "Gamma",
+  value: 31,
+  detail: "31 requests"
+}];
+var rangeData = [{
+  id: "north",
+  label: "North",
+  minimum: 24,
+  median: 51,
+  maximum: 78
+}, {
+  id: "south",
+  label: "South",
+  minimum: 38,
+  median: 64,
+  maximum: 82
+}];
+var foilDeckExamples = [{
+  label: "Corner frame",
+  ornament: "corners",
+  preset: "prism"
+}, {
+  label: "Rail frame",
+  ornament: "rails",
+  preset: "etched"
+}, {
+  label: "Circuit frame",
+  ornament: "circuit",
+  preset: "fast"
+}, {
+  label: "Radial frame",
+  ornament: "radial",
+  preset: "aurora"
+}, {
+  label: "Facet frame",
+  ornament: "facets",
+  preset: "max"
+}];
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
@@ -2817,34 +2807,37 @@ function DesignSystemGallery({
   const [faderValue, setFaderValue] = useState2(64);
   const [playbackStatus, setPlaybackStatus] = useState2("idle");
   const Root = isNestedInMain ? "div" : "main";
-  return /* @__PURE__ */ jsxs11(Root, {
+  return /* @__PURE__ */ jsxs10(Root, {
     className: "design-gallery",
     "data-design-gallery": "public",
     "data-design-gallery-nested": isNestedInMain ? "true" : "false",
     children: [
-      /* @__PURE__ */ jsxs11("header", {
+      /* @__PURE__ */ jsxs10("header", {
         className: "design-gallery__intro",
         children: [
-          /* @__PURE__ */ jsx13(Badge, {
+          /* @__PURE__ */ jsx12(Badge, {
             tone: "info",
             children: "@hraness/design-kit"
           }),
-          /* @__PURE__ */ jsx13("h1", {
+          /* @__PURE__ */ jsx12("h1", {
             children: "Presentation and composition reference"
           }),
-          /* @__PURE__ */ jsx13("p", {
+          /* @__PURE__ */ jsx12("p", {
             children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
           }),
-          /* @__PURE__ */ jsx13("p", {
+          /* @__PURE__ */ jsx12("p", {
             children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
           }),
-          /* @__PURE__ */ jsx13(WrappingRow, {
-            children: /* @__PURE__ */ jsx13(SegmentedControl, {
+          /* @__PURE__ */ jsx12(WrappingRow, {
+            children: /* @__PURE__ */ jsx12(SegmentedControl, {
               "aria-label": "Gallery density",
-              items: [
-                { id: "compact", label: "Compact" },
-                { id: "default", label: "Default" }
-              ],
+              items: [{
+                id: "compact",
+                label: "Compact"
+              }, {
+                id: "default",
+                label: "Default"
+              }],
               onChange: setDensity,
               size: "compact",
               value: density
@@ -2852,43 +2845,43 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "foundation",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Foundation boundary"
           }),
-          /* @__PURE__ */ jsx13(ProductionDataPreviewNotice, {
+          /* @__PURE__ */ jsx12(ProductionDataPreviewNotice, {
             surfaceOrigin: "https://preview.example.test"
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsxs11(Card, {
+              /* @__PURE__ */ jsxs10(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs11(CardHeader, {
+                  /* @__PURE__ */ jsxs10(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx13(CardTitle, {
+                      /* @__PURE__ */ jsx12(CardTitle, {
                         children: "Portable control"
                       }),
-                      /* @__PURE__ */ jsx13(CardDescription, {
+                      /* @__PURE__ */ jsx12(CardDescription, {
                         children: "Rendered directly by @hraness/ui."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx13(CardContent, {
-                    children: /* @__PURE__ */ jsxs11(WrappingRow, {
+                  /* @__PURE__ */ jsx12(CardContent, {
+                    children: /* @__PURE__ */ jsxs10(WrappingRow, {
                       children: [
-                        /* @__PURE__ */ jsx13(Button2, {
+                        /* @__PURE__ */ jsx12(Button2, {
                           variant: "primary",
                           children: "Primary action"
                         }),
-                        /* @__PURE__ */ jsx13(LinkButton, {
+                        /* @__PURE__ */ jsx12(LinkButton, {
                           href: "#shells",
                           children: "Open shells"
                         }),
-                        /* @__PURE__ */ jsx13(Tag, {
+                        /* @__PURE__ */ jsx12(Tag, {
                           variant: "outline",
                           children: "public core"
                         })
@@ -2897,27 +2890,27 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsxs11(Card, {
+              /* @__PURE__ */ jsxs10(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs11(CardHeader, {
+                  /* @__PURE__ */ jsxs10(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx13(CardTitle, {
+                      /* @__PURE__ */ jsx12(CardTitle, {
                         children: "Typography roles"
                       }),
-                      /* @__PURE__ */ jsx13(CardDescription, {
+                      /* @__PURE__ */ jsx12(CardDescription, {
                         children: "Nebula Sans for proportional text; mono stays explicit."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx13(CardContent, {
-                    children: /* @__PURE__ */ jsxs11("div", {
+                  /* @__PURE__ */ jsx12(CardContent, {
+                    children: /* @__PURE__ */ jsxs10("div", {
                       className: "design-gallery__type-specimen",
                       children: [
-                        /* @__PURE__ */ jsx13("p", {
+                        /* @__PURE__ */ jsx12("p", {
                           "data-gallery-font": "proportional",
                           children: "More shape, less noise."
                         }),
-                        /* @__PURE__ */ jsx13("code", {
+                        /* @__PURE__ */ jsx12("code", {
                           "data-gallery-font": "mono",
                           children: 'const role = "mono";'
                         })
@@ -2926,41 +2919,41 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx13(JellySurface, {
+              /* @__PURE__ */ jsx12(JellySurface, {
                 className: "design-gallery__jelly",
                 interaction: "press",
                 tone: "neutral",
-                children: /* @__PURE__ */ jsx13(Button2, {
+                children: /* @__PURE__ */ jsx12(Button2, {
                   variant: "quiet",
                   children: "Semantic button with optional Jelly paint"
                 })
               })
             ]
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             "aria-label": "Plain site link presentation",
             className: "design-gallery__plain-theme plain-site plain-publication",
             children: [
-              /* @__PURE__ */ jsx13("header", {
+              /* @__PURE__ */ jsx12("header", {
                 className: "plain-header",
-                children: /* @__PURE__ */ jsxs11("div", {
+                children: /* @__PURE__ */ jsxs10("div", {
                   className: "plain-header__inner",
                   "data-layout": "responsive-wrap",
                   children: [
-                    /* @__PURE__ */ jsx13("a", {
+                    /* @__PURE__ */ jsx12("a", {
                       className: "plain-wordmark",
                       href: "#foundation",
                       children: "project-name.example"
                     }),
-                    /* @__PURE__ */ jsxs11("nav", {
+                    /* @__PURE__ */ jsxs10("nav", {
                       "aria-label": "Plain site example",
                       className: "plain-nav",
                       children: [
-                        /* @__PURE__ */ jsx13("a", {
+                        /* @__PURE__ */ jsx12("a", {
                           href: "#foundation",
                           children: "Articles"
                         }),
-                        /* @__PURE__ */ jsx13("a", {
+                        /* @__PURE__ */ jsx12("a", {
                           href: "#shells",
                           children: "About"
                         })
@@ -2969,13 +2962,13 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              /* @__PURE__ */ jsx13("div", {
+              /* @__PURE__ */ jsx12("div", {
                 className: "plain-page",
-                children: /* @__PURE__ */ jsxs11("p", {
+                children: /* @__PURE__ */ jsxs10("p", {
                   className: "design-gallery__plain-link-example",
                   children: [
                     "Ordinary ",
-                    /* @__PURE__ */ jsx13("a", {
+                    /* @__PURE__ */ jsx12("a", {
                       href: "#foundation",
                       children: "blue links"
                     }),
@@ -2987,46 +2980,67 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "marketing",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Product-marketing grammar"
           }),
-          /* @__PURE__ */ jsxs11("div", {
-            className: "design-gallery__marketing hraness-marketing-page",
+          /* @__PURE__ */ jsxs10(MarketingPage, {
+            className: "design-gallery__marketing",
             children: [
-              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
-                action: { href: "#gallery-install", label: "Install Relay" },
+              /* @__PURE__ */ jsx12(MarketingSiteHeader, {
+                action: {
+                  href: "#gallery-install",
+                  label: "Install Relay"
+                },
                 brand: "Relay",
-                links: [
-                  { current: true, href: "#marketing", label: "How it works" },
-                  { href: "#gallery-install", label: "Install" },
-                  { href: "#shells", label: "Docs" }
-                ]
+                sticky: false,
+                links: [{
+                  current: true,
+                  href: "#marketing",
+                  label: "How it works"
+                }, {
+                  href: "#gallery-install",
+                  label: "Install"
+                }, {
+                  href: "#shells",
+                  label: "Docs"
+                }]
               }),
-              /* @__PURE__ */ jsx13(ProductHero, {
-                actions: [
-                  { href: "#gallery-install", label: "Install Relay" },
-                  { href: "#shells", label: "See the workspace" }
-                ],
+              /* @__PURE__ */ jsx12(ProductHero, {
+                actions: [{
+                  href: "#gallery-install",
+                  label: "Install Relay"
+                }, {
+                  href: "#shells",
+                  label: "See the workspace"
+                }],
                 boundary: "Free for local use on macOS and Linux · version 1.2.3",
                 className: "design-gallery__marketing-hero",
                 example: "Ask your agent to run the nightly job and show you the receipt.",
                 eyebrow: "A reference developer tool",
-                facts: [
-                  { detail: "One exact source.", label: "Input", value: "Repository" },
-                  { detail: "One inspectable result.", label: "Output", value: "Receipt" },
-                  { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" }
-                ],
-                frame: /* @__PURE__ */ jsx13(MarketingProofFrame, {
+                facts: [{
+                  detail: "One exact source.",
+                  label: "Input",
+                  value: "Repository"
+                }, {
+                  detail: "One inspectable result.",
+                  label: "Output",
+                  value: "Receipt"
+                }, {
+                  detail: "Terminal and typed code.",
+                  label: "Interfaces",
+                  value: "CLI + SDK"
+                }],
+                frame: /* @__PURE__ */ jsx12(MarketingProofFrame, {
                   caption: "Receipt produced by the checked example.",
                   credit: "Captured 5 September 2026",
                   title: "relay run job-01",
-                  children: /* @__PURE__ */ jsx13("pre", {
+                  children: /* @__PURE__ */ jsx12("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx13("code", {
+                    children: /* @__PURE__ */ jsx12("code", {
                       children: '{"status":"complete","job":"job-01","durationMs":412}'
                     })
                   })
@@ -3037,119 +3051,210 @@ function DesignSystemGallery({
                 name: "Relay",
                 summary: "Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
               }),
-              /* @__PURE__ */ jsx13(MarketingPillars, {
+              /* @__PURE__ */ jsx12(MarketingPillars, {
                 ariaLabel: "Relay in three points",
-                pillars: [
-                  { label: "Fast", summary: "Runs locally with no service in the loop." },
-                  { label: "Legible", summary: "Every run leaves a receipt you can open." },
-                  { label: "Yours", summary: "Source files and credentials stay on your machine." }
-                ]
+                pillars: [{
+                  label: "Fast",
+                  summary: "Runs locally with no service in the loop."
+                }, {
+                  label: "Legible",
+                  summary: "Every run leaves a receipt you can open."
+                }, {
+                  label: "Yours",
+                  summary: "Source files and credentials stay on your machine."
+                }]
               }),
-              /* @__PURE__ */ jsxs11(MarketingInstallPanel, {
+              /* @__PURE__ */ jsxs10(MarketingInstallPanel, {
                 eyebrow: "Local release",
                 heading: "Install the verified tool.",
                 headingId: "design-gallery-install-title",
                 headingLevel: 3,
                 id: "gallery-install",
                 children: [
-                  /* @__PURE__ */ jsx13("pre", {
+                  /* @__PURE__ */ jsx12("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx13("code", {
+                    children: /* @__PURE__ */ jsx12("code", {
                       children: "bun add --global relay@1.2.3"
                     })
                   }),
-                  /* @__PURE__ */ jsx13(MarketingFlow, {
+                  /* @__PURE__ */ jsx12(MarketingFlow, {
                     ariaLabel: "First Relay job",
-                    steps: [
-                      { code: "relay init", detail: "Create one workspace.", label: "Initialize" },
-                      { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
-                      { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" }
-                    ]
+                    steps: [{
+                      code: "relay init",
+                      detail: "Create one workspace.",
+                      label: "Initialize"
+                    }, {
+                      code: "relay run job-01",
+                      detail: "Run the named job.",
+                      label: "Execute"
+                    }, {
+                      code: "relay inspect job-01",
+                      detail: "Read the resulting receipt.",
+                      label: "Inspect"
+                    }]
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx13(MarketingPrimitives, {
+              /* @__PURE__ */ jsx12(MarketingPrimitives, {
                 heading: "Small building blocks for serious workflows.",
                 headingId: "design-gallery-primitives-title",
                 headingLevel: 3,
-                items: [
-                  { label: "Jobs", summary: "A named unit of work with declared inputs and outputs." },
-                  { label: "Receipts", summary: "The durable record of one run, readable by people and agents." },
-                  { label: "Schedules", summary: "Run a job on a cadence without another daemon." }
-                ],
+                items: [{
+                  label: "Jobs",
+                  summary: "A named unit of work with declared inputs and outputs."
+                }, {
+                  label: "Receipts",
+                  summary: "The durable record of one run, readable by people and agents."
+                }, {
+                  label: "Schedules",
+                  summary: "Run a job on a cadence without another daemon."
+                }],
                 label: "Primitives",
                 summary: "Relay gives agents a few durable objects to compose around the work in front of them."
               }),
-              /* @__PURE__ */ jsx13(MarketingStatStrip, {
+              /* @__PURE__ */ jsx12(MarketingSection, {
+                heading: "One durable object.",
+                headingId: "gallery-marketing-section",
+                headingLevel: 3,
+                label: "Workflow",
+                layout: "split-reverse",
+                summary: "Interfaces share the same identity.",
+                children: /* @__PURE__ */ jsxs10("p", {
+                  children: [
+                    "Consumer-owned content can include ",
+                    /* @__PURE__ */ jsx12("a", {
+                      href: "#gallery-install",
+                      children: "links"
+                    }),
+                    " and ",
+                    /* @__PURE__ */ jsx12("code", {
+                      children: "inline code"
+                    }),
+                    "."
+                  ]
+                })
+              }),
+              /* @__PURE__ */ jsx12(MarketingInterfaceGrid, {
+                heading: "Choose your interface.",
+                headingId: "gallery-marketing-interfaces",
+                headingLevel: 3,
+                label: "Interfaces",
+                interfaces: [{
+                  label: "CLI",
+                  summary: "Run a named job.",
+                  example: /* @__PURE__ */ jsx12("pre", {
+                    children: /* @__PURE__ */ jsx12("code", {
+                      children: "relay run job-01"
+                    })
+                  })
+                }, {
+                  label: "SDK",
+                  summary: "Use typed application code."
+                }]
+              }),
+              /* @__PURE__ */ jsx12(MarketingTrustBoundary, {
+                heading: "Keep authority visible.",
+                headingId: "gallery-marketing-trust",
+                headingLevel: 3,
+                label: "Boundary",
+                items: [{
+                  label: "Local",
+                  detail: "Source files and credentials."
+                }, {
+                  label: "Shared",
+                  detail: "Only the chosen receipt."
+                }]
+              }),
+              /* @__PURE__ */ jsx12(MarketingStatStrip, {
                 ariaLabel: "Relay usage",
                 source: "Counted from the public example repository on 5 September 2026.",
-                stats: [
-                  { label: "Example jobs", value: "12" },
-                  { label: "Interfaces", detail: "CLI, SDK, Agent Skill", value: "3" },
-                  { label: "Accounts required", value: "0" }
-                ]
+                stats: [{
+                  label: "Example jobs",
+                  value: "12"
+                }, {
+                  label: "Interfaces",
+                  detail: "CLI, SDK, Agent Skill",
+                  value: "3"
+                }, {
+                  label: "Accounts required",
+                  value: "0"
+                }]
               }),
-              /* @__PURE__ */ jsx13(MarketingQuoteGrid, {
+              /* @__PURE__ */ jsx12(MarketingQuoteGrid, {
                 heading: "From the people building with it.",
                 headingId: "design-gallery-quotes-title",
                 headingLevel: 3,
                 label: "Quotes",
-                quotes: [
-                  { name: "A. Example", quote: "A placeholder quote for the gallery only. Product sites render real, attributed quotes or none.", role: "@example" }
-                ]
+                quotes: [{
+                  name: "A. Example",
+                  quote: "A placeholder quote for the gallery only. Product sites render real, attributed quotes or none.",
+                  role: "@example"
+                }]
               }),
-              /* @__PURE__ */ jsx13(MarketingPricing, {
+              /* @__PURE__ */ jsx12(MarketingPricing, {
                 heading: "Free for local use.",
                 headingId: "design-gallery-pricing-title",
                 headingLevel: 3,
                 label: "Pricing",
-                plans: [
-                  {
-                    action: { href: "#gallery-install", label: "Install Relay" },
-                    emphasis: "primary",
-                    features: ["Every feature", "Unlimited local jobs", "All future updates"],
-                    name: "Local",
-                    period: "forever",
-                    price: "$0",
-                    summary: "Full-featured, with no trial or expiration."
+                plans: [{
+                  action: {
+                    href: "#gallery-install",
+                    label: "Install Relay"
                   },
-                  {
-                    action: { href: "#shells", label: "Read about sync" },
-                    features: ["Everything in Local", "Encrypted sync", "Priority email support"],
-                    name: "Sync",
-                    note: "Cancel any time.",
-                    period: "per year",
-                    price: "$49",
-                    summary: "Keep receipts in step across your machines."
-                  }
-                ]
+                  emphasis: "primary",
+                  features: ["Every feature", "Unlimited local jobs", "All future updates"],
+                  name: "Local",
+                  period: "forever",
+                  price: "$0",
+                  summary: "Full-featured, with no trial or expiration."
+                }, {
+                  action: {
+                    href: "#shells",
+                    label: "Read about sync"
+                  },
+                  features: ["Everything in Local", "Encrypted sync", "Priority email support"],
+                  name: "Sync",
+                  note: "Cancel any time.",
+                  period: "per year",
+                  price: "$49",
+                  summary: "Keep receipts in step across your machines."
+                }]
               }),
-              /* @__PURE__ */ jsx13(MarketingQuestionList, {
+              /* @__PURE__ */ jsx12(MarketingQuestionList, {
                 heading: "Questions before installing.",
                 headingId: "design-gallery-questions-title",
                 headingLevel: 3,
                 label: "Questions",
-                questions: [
-                  { answer: /* @__PURE__ */ jsx13("p", {
+                questions: [{
+                  answer: /* @__PURE__ */ jsx12("p", {
                     children: "No. The local workflow works without one."
-                  }), question: "Does it require an account?" },
-                  { answer: /* @__PURE__ */ jsx13("p", {
+                  }),
+                  question: "Does it require an account?"
+                }, {
+                  answer: /* @__PURE__ */ jsx12("p", {
                     children: "Nothing leaves your machine unless you turn on sync."
-                  }), question: "Does it phone home?" }
-                ]
+                  }),
+                  question: "Does it phone home?"
+                }]
               }),
-              /* @__PURE__ */ jsx13(MarketingMaker, {
+              /* @__PURE__ */ jsx12(MarketingMaker, {
                 heading: "Built by a reference maker.",
                 headingId: "design-gallery-maker-title",
                 headingLevel: 3,
                 label: "Built by",
-                links: [{ href: "#marketing", label: "Personal site" }],
-                children: /* @__PURE__ */ jsx13("p", {
+                links: [{
+                  href: "#marketing",
+                  label: "Personal site"
+                }],
+                children: /* @__PURE__ */ jsx12("p", {
                   children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
                 })
               }),
-              /* @__PURE__ */ jsx13(MarketingCallToAction, {
-                actions: [{ href: "#gallery-install", label: "Install Relay" }],
+              /* @__PURE__ */ jsx12(MarketingCallToAction, {
+                actions: [{
+                  href: "#gallery-install",
+                  label: "Install Relay"
+                }],
                 footnote: "Free for local use on macOS and Linux.",
                 heading: "Give every job the same room to run in.",
                 headingId: "design-gallery-cta-title",
@@ -3159,49 +3264,49 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "shells",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Application shells"
           }),
-          /* @__PURE__ */ jsx13(ViewportFrame, {
+          /* @__PURE__ */ jsx12(ViewportFrame, {
             className: "design-gallery__shell-preview",
-            children: /* @__PURE__ */ jsx13(AppShell, {
-              bottomBar: /* @__PURE__ */ jsx13(BottomBar, {
-                actions: /* @__PURE__ */ jsx13("span", {
+            children: /* @__PURE__ */ jsx12(AppShell, {
+              bottomBar: /* @__PURE__ */ jsx12(BottomBar, {
+                actions: /* @__PURE__ */ jsx12("span", {
                   children: "Synced"
                 }),
                 "data-gallery-layout-bottom-bar": "",
-                leading: /* @__PURE__ */ jsx13("span", {
+                leading: /* @__PURE__ */ jsx12("span", {
                   children: "Ready"
                 }),
                 children: "Reference footer"
               }),
               navigationKey: "gallery",
-              rail: /* @__PURE__ */ jsx13(NavigationRail, {
-                children: /* @__PURE__ */ jsxs11(RailSection, {
+              rail: /* @__PURE__ */ jsx12(NavigationRail, {
+                children: /* @__PURE__ */ jsxs10(RailSection, {
                   title: "Workspace",
                   children: [
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx12(RailItem, {
                       href: "#foundation",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
                         icon: DashboardSquare01Icon
                       }),
                       isActive: true,
                       label: "Overview"
                     }),
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx12(RailItem, {
                       href: "#data",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
                         icon: Chart01Icon
                       }),
                       label: "Data"
                     }),
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx12(RailItem, {
                       href: "#syntax",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx12(Icon3, {
                         icon: CodeIcon
                       }),
                       label: "Syntax"
@@ -3209,29 +3314,29 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              topBar: /* @__PURE__ */ jsx13(TopBar, {
+              topBar: /* @__PURE__ */ jsx12(TopBar, {
                 "data-gallery-layout-top-bar": "",
                 title: "Reference workspace"
               }),
-              children: /* @__PURE__ */ jsx13(PageCanvas, {
+              children: /* @__PURE__ */ jsx12(PageCanvas, {
                 as: "div",
                 "data-gallery-layout-page-canvas": "",
-                children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
+                children: /* @__PURE__ */ jsx12(AnimatedRailStage, {
                   className: "design-gallery__animated-rail-stage",
                   stageKey: density,
-                  children: /* @__PURE__ */ jsxs11(DitherSurface, {
+                  children: /* @__PURE__ */ jsxs10(DitherSurface, {
                     as: "section",
                     "data-gallery-dither": "",
                     density: density === "compact" ? "fine" : "medium",
                     tone: "card",
                     children: [
-                      /* @__PURE__ */ jsxs11("h3", {
+                      /* @__PURE__ */ jsxs10("h3", {
                         children: [
                           density === "compact" ? "Compact" : "Default",
                           " composition"
                         ]
                       }),
-                      /* @__PURE__ */ jsx13("p", {
+                      /* @__PURE__ */ jsx12("p", {
                         children: "The route body changes while persistent navigation remains in place."
                       })
                     ]
@@ -3240,14 +3345,14 @@ function DesignSystemGallery({
               })
             })
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             className: "design-gallery__docked-footer-preview",
             "data-gallery-layout-docked-frame": "",
             children: [
-              /* @__PURE__ */ jsx13("p", {
+              /* @__PURE__ */ jsx12("p", {
                 children: "Docked commands remain inside their positioning owner."
               }),
-              /* @__PURE__ */ jsx13(DockedFooter, {
+              /* @__PURE__ */ jsx12(DockedFooter, {
                 "data-gallery-layout-docked-footer": "",
                 density: "compact",
                 position: "absolute",
@@ -3257,34 +3362,34 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "data",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Data and instrument compositions"
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsx13(BarListChart, {
+              /* @__PURE__ */ jsx12(BarListChart, {
                 "aria-label": "Example request volume",
                 data: barData
               }),
-              /* @__PURE__ */ jsx13(RangePlotChart, {
+              /* @__PURE__ */ jsx12(RangePlotChart, {
                 "aria-label": "Example regional ranges",
                 data: rangeData
               }),
-              /* @__PURE__ */ jsxs11("div", {
+              /* @__PURE__ */ jsxs10("div", {
                 className: "design-gallery__instrument",
                 children: [
-                  /* @__PURE__ */ jsx13(Fader, {
+                  /* @__PURE__ */ jsx12(Fader, {
                     "aria-label": "Example level",
                     className: "design-gallery__vertical-fader",
                     "data-gallery-fader": "vertical",
                     density: "default",
                     label: "Level",
-                    labelAccessory: /* @__PURE__ */ jsx13("span", {
+                    labelAccessory: /* @__PURE__ */ jsx12("span", {
                       "data-gallery-fader-accessory": "",
                       children: "dB"
                     }),
@@ -3295,7 +3400,7 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx13(Fader, {
+                  /* @__PURE__ */ jsx12(Fader, {
                     "aria-label": "Example horizontal level",
                     className: "design-gallery__horizontal-fader",
                     "data-gallery-fader": "horizontal",
@@ -3309,13 +3414,13 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx13(Slider, {
+                  /* @__PURE__ */ jsx12(Slider, {
                     label: "Balance",
                     maxValue: 100,
                     minValue: 0,
                     value: 50
                   }),
-                  /* @__PURE__ */ jsx13(PlaybackTransport, {
+                  /* @__PURE__ */ jsx12(PlaybackTransport, {
                     "aria-label": "Preview transport",
                     buttonAriaKeyShortcuts: "Space",
                     buttonId: "design-gallery-playback-command",
@@ -3328,17 +3433,17 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             className: "design-gallery__chat",
             "data-gallery-chat": "",
             "data-gallery-chat-submission": chatSubmission,
             children: [
-              /* @__PURE__ */ jsx13(ChatMessage, {
-                actions: /* @__PURE__ */ jsx13(Button2, {
+              /* @__PURE__ */ jsx12(ChatMessage, {
+                actions: /* @__PURE__ */ jsx12(Button2, {
                   variant: "quiet",
                   children: "Copy response"
                 }),
-                avatar: /* @__PURE__ */ jsx13("span", {
+                avatar: /* @__PURE__ */ jsx12("span", {
                   "aria-hidden": "true",
                   className: "design-gallery__chat-avatar",
                   children: "AI"
@@ -3347,17 +3452,17 @@ function DesignSystemGallery({
                 meta: "Now",
                 name: "Assistant",
                 role: "assistant",
-                children: /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx12("p", {
                   children: "A complete message keeps its ordinary article and slot semantics."
                 })
               }),
-              /* @__PURE__ */ jsx13(ChatMessage, {
+              /* @__PURE__ */ jsx12(ChatMessage, {
                 role: "user",
-                children: /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx12("p", {
                   children: "Responsive composition belongs to the extracted package recipe."
                 })
               }),
-              /* @__PURE__ */ jsx13(ChatComposer, {
+              /* @__PURE__ */ jsx12(ChatComposer, {
                 action: "/gallery-chat-submit",
                 "aria-label": "Gallery message composer",
                 className: "design-gallery__chat-composer",
@@ -3374,36 +3479,36 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "effects",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Decorative effects"
           }),
-          /* @__PURE__ */ jsx13(FoilCardDeck, {
+          /* @__PURE__ */ jsx12(FoilCardDeck, {
             "aria-label": "Delegated foil ornament examples",
             className: "design-gallery__foil-deck",
-            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx13(FoilCardSurface, {
+            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx12(FoilCardSurface, {
               className: "design-gallery__foil-example",
               intensity: "standard",
               ornament: example.ornament,
               preset: example.preset,
               renderMode: "interactive",
               seed: `public-gallery-foil-${example.ornament}`,
-              children: /* @__PURE__ */ jsxs11("article", {
+              children: /* @__PURE__ */ jsxs10("article", {
                 className: "design-gallery__foil-card",
                 children: [
-                  /* @__PURE__ */ jsx13(Tag, {
+                  /* @__PURE__ */ jsx12(Tag, {
                     variant: "outline",
                     children: example.label
                   }),
-                  /* @__PURE__ */ jsxs11("div", {
+                  /* @__PURE__ */ jsxs10("div", {
                     children: [
-                      /* @__PURE__ */ jsx13("h3", {
+                      /* @__PURE__ */ jsx12("h3", {
                         children: "Semantic card content"
                       }),
-                      /* @__PURE__ */ jsx13("p", {
+                      /* @__PURE__ */ jsx12("p", {
                         children: "One deck controller decorates ordinary articles."
                       })
                     ]
@@ -3412,21 +3517,21 @@ function DesignSystemGallery({
               })
             }, example.ornament))
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs10("div", {
             className: "design-gallery__effect",
             children: [
-              /* @__PURE__ */ jsx13(AuroraDotsBackground, {}),
-              /* @__PURE__ */ jsx13(ProceduralBackdrop, {
+              /* @__PURE__ */ jsx12(AuroraDotsBackground, {}),
+              /* @__PURE__ */ jsx12(ProceduralBackdrop, {
                 seed: "public-gallery",
                 variant: "composite"
               }),
-              /* @__PURE__ */ jsxs11("div", {
+              /* @__PURE__ */ jsxs10("div", {
                 className: "design-gallery__effect-copy",
                 children: [
-                  /* @__PURE__ */ jsx13("h3", {
+                  /* @__PURE__ */ jsx12("h3", {
                     children: "Semantic content stays ordinary DOM"
                   }),
-                  /* @__PURE__ */ jsx13("p", {
+                  /* @__PURE__ */ jsx12("p", {
                     children: "Decorative paint is pointer-transparent and removable in forced colors."
                   })
                 ]
@@ -3435,16 +3540,16 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs10("section", {
         className: "design-gallery__section",
         id: "syntax",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx12("h2", {
             children: "Server syntax"
           }),
-          /* @__PURE__ */ jsx13("pre", {
+          /* @__PURE__ */ jsx12("pre", {
             className: "design-gallery__syntax",
-            children: /* @__PURE__ */ jsx13(SyntaxCode, {
+            children: /* @__PURE__ */ jsx12(SyntaxCode, {
               code: `import { AppShell } from "@hraness/design-kit/react";
 
 export const shell = <AppShell rail={null}>Content</AppShell>;`,
@@ -3486,7 +3591,9 @@ function dispatchHapticFeedbackEvent(environment, detail) {
   if (!hasCustomEventConstructor(environment.window) || !hasEventDispatcher(environment.document))
     return;
   try {
-    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, { detail }));
+    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, {
+      detail
+    }));
   } catch {}
 }
 function cancelAndDestroy(candidate) {
@@ -3509,10 +3616,15 @@ function createHapticFeedbackController(environment, loadModule) {
     if (enginePromise !== null)
       return enginePromise;
     const generation = engineGeneration;
-    const pendingEngine = loadModule().then(({ WebHaptics }) => {
+    const pendingEngine = loadModule().then(({
+      WebHaptics
+    }) => {
       if (!isHapticBrowserEnvironment(environment))
         return null;
-      const candidate = new WebHaptics({ debug: false, showSwitch: false });
+      const candidate = new WebHaptics({
+        debug: false,
+        showSwitch: false
+      });
       if (generation !== engineGeneration) {
         cancelAndDestroy(candidate);
         return null;
@@ -3556,7 +3668,10 @@ function createHapticFeedbackController(environment, loadModule) {
           return false;
         const input = hapticInputForFeedback(feedback);
         await activeEngine.trigger(input);
-        dispatchHapticFeedbackEvent(environment, { feedback, input });
+        dispatchHapticFeedbackEvent(environment, {
+          feedback,
+          input
+        });
         return true;
       } catch {
         return false;
@@ -3565,8 +3680,12 @@ function createHapticFeedbackController(environment, loadModule) {
   };
 }
 var browserHaptics = createHapticFeedbackController(globalThis, async () => {
-  const { WebHaptics } = await import("web-haptics");
-  return { WebHaptics };
+  const {
+    WebHaptics
+  } = await import("web-haptics");
+  return {
+    WebHaptics
+  };
 });
 async function prepareHapticFeedback() {
   return await browserHaptics.prepare();
@@ -3589,38 +3708,8 @@ function useHapticFeedback(enabled = true) {
 }
 // src/react/keyboard-shortcuts.ts
 import { useEffect as useEffect6, useRef as useRef4 } from "react";
-var interactiveTargetSelector = [
-  "a[href]",
-  "area[href]",
-  "button",
-  "input",
-  "select",
-  "summary",
-  "textarea",
-  "[contenteditable]:not([contenteditable='false'])",
-  "[role='button']",
-  "[role='checkbox']",
-  "[role='combobox']",
-  "[role='gridcell']",
-  "[role='link']",
-  "[role='menuitem']",
-  "[role='option']",
-  "[role='radio']",
-  "[role='slider']",
-  "[role='spinbutton']",
-  "[role='switch']",
-  "[role='tab']",
-  "[role='textbox']",
-  "[tabindex]:not([tabindex='-1'])"
-].join(",");
-var textEntryTargetSelector = [
-  "input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])",
-  "select",
-  "textarea",
-  "[contenteditable]:not([contenteditable='false'])",
-  "[role='combobox']",
-  "[role='textbox']"
-].join(",");
+var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
+var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
 function hasClosest(target) {
   return target !== null && "closest" in target && typeof target.closest === "function";
 }
@@ -3654,11 +3743,20 @@ function matchesKeyboardShortcut(event, shortcut) {
 }
 function decideKeyboardShortcut(shortcuts, event, context = {}) {
   if (context.isDisabled === true)
-    return { kind: "ignore", reason: "disabled" };
+    return {
+      kind: "ignore",
+      reason: "disabled"
+    };
   if (event.defaultPrevented)
-    return { kind: "ignore", reason: "default-prevented" };
+    return {
+      kind: "ignore",
+      reason: "default-prevented"
+    };
   if (event.isComposing)
-    return { kind: "ignore", reason: "composing" };
+    return {
+      kind: "ignore",
+      reason: "composing"
+    };
   let suppressedReason = null;
   for (const [bindingIndex, shortcut] of shortcuts.entries()) {
     if (shortcut.isDisabled === true || !matchesKeyboardShortcut(event, shortcut))
@@ -3675,16 +3773,29 @@ function decideKeyboardShortcut(shortcuts, event, context = {}) {
       suppressedReason ??= "interactive-target";
       continue;
     }
-    return { bindingId: shortcut.id, bindingIndex, kind: "handle" };
+    return {
+      bindingId: shortcut.id,
+      bindingIndex,
+      kind: "handle"
+    };
   }
-  return { kind: "ignore", reason: suppressedReason ?? "no-match" };
+  return {
+    kind: "ignore",
+    reason: suppressedReason ?? "no-match"
+  };
 }
 function isNode(target) {
   return target !== null && typeof Node !== "undefined" && target instanceof Node;
 }
 function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef4({ bindings, isDisabled: options.isDisabled ?? false });
-  latestRef.current = { bindings, isDisabled: options.isDisabled ?? false };
+  const latestRef = useRef4({
+    bindings,
+    isDisabled: options.isDisabled ?? false
+  });
+  latestRef.current = {
+    bindings,
+    isDisabled: options.isDisabled ?? false
+  };
   const scopeRef = options.scopeRef;
   useEffect6(() => {
     const onKeyDown = (event) => {
@@ -3710,31 +3821,215 @@ function useKeyboardShortcuts(bindings, options = {}) {
   }, [scopeRef]);
 }
 // src/react/route-state.tsx
-import {
-  Button as Button3,
-  EmptyState,
-  LinkButton as LinkButton2,
-  Skeleton,
-  Spinner as Spinner2
-} from "@hraness/ui";
-import { useEffect as useEffect8, useId as useId2 } from "react";
+import { Button as Button3, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
+import * as stylex13 from "@stylexjs/stylex";
+import { useEffect as useEffect8, useId } from "react";
+
+// src/react/route-state.stylex.ts
+var routeStateStyles = {
+  content: {
+    k1xSpc: "xrvj5dj",
+    kbNqZ1: "x7sv70a",
+    kVQ08L: "x159srwy",
+    kgQiWS: "x1ku5rj1",
+    $$css: true
+  },
+  header: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kjj79g: "x13a6bvl",
+    kdYMnH: "xesnm00",
+    kmVPX3: "xjhuplf",
+    $$css: true
+  },
+  loading: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xzci21y",
+    kULEZF: "x64rcuh",
+    $$css: true
+  },
+  root: {
+    k1xSpc: "xrvj5dj",
+    k9llMU: "x16p6thf",
+    kVQ08L: "x1ljpu7r",
+    $$css: true
+  },
+  row: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kOIVth: "xmgkybt",
+    $$css: true
+  },
+  skeletons: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xmgkybt",
+    $$css: true
+  }
+};
 
 // src/react/theme.tsx
-import {
-  AppearanceIcon,
-  IconButton as IconButton3,
-  Menu,
-  MenuItem,
-  MenuTrigger,
-  SegmentedControl as SegmentedControl2,
-  cn as cn11
-} from "@hraness/ui";
+import { AppearanceIcon, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
+import * as stylex12 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
-import {
-  useEffect as useEffect7,
-  useRef as useRef5,
-  useSyncExternalStore
-} from "react";
+import { useEffect as useEffect7, useRef as useRef5, useSyncExternalStore } from "react";
+
+// src/react/theme.stylex.ts
+var themeStyles = {
+  item: {
+    kGNEyG: "x6s0dn4",
+    ku1ltF: "x1whfoju",
+    kHypHr: "xa5e7qe",
+    kKwaWg: "xhhc4os",
+    kl9DO0: "x1tr436z",
+    k1YJky: "x1hv131x",
+    kz484i: "x1par0v0",
+    kgSjnq: "xroyn9c",
+    kWkggS: "xffqgfc",
+    kaIpWk: "xyz7jqb",
+    kMwMTN: "xlrt3vh xu0bq9",
+    kkrTdU: "xt0e3qv",
+    k1xSpc: "xrvj5dj",
+    kGuDYH: "xj8twjj",
+    kOIVth: "x8233eu",
+    kumcoG: "x1rkzygb",
+    kLWn49: "x132q4wb",
+    kVQ08L: "x3uqqqp x9me654",
+    k3XXqK: "x1t137rt",
+    k8WAf4: "x18g2hj5",
+    kg3NbH: "x1ryrjj2",
+    kfSwDN: "x87ps6o",
+    $$css: true
+  },
+  itemSelected: {
+    ku1ltF: "x1whfoju xcrev8p",
+    kHypHr: "xa5e7qe x1tzqu68",
+    kKwaWg: "xhhc4os xhobzj1",
+    kl9DO0: "x1tr436z xzln6ae",
+    k1YJky: "x1hv131x x2c5uud",
+    kz484i: "x1par0v0 x1pjo12s",
+    kgSjnq: "xroyn9c x1ug5rqp",
+    kWkggS: "xffqgfc x1jzqe4",
+    kMwMTN: "xlrt3vh xu0bq9 x1k5gbb1",
+    k63SB2: "x6ynj9m",
+    $$css: true
+  },
+  menu: {
+    k1xSpc: "xrvj5dj",
+    kLO5vc: "xn0k27n",
+    k3XXqK: "x1t137rt",
+    kVQacm: "xysyzu8",
+    k8WAf4: "x1o5vn8x",
+    kg3NbH: "xllzysa",
+    $$css: true
+  },
+  menuRoot: {
+    "--hraness-appearance-accent": "xwhnx5i",
+    "--hraness-appearance-accent-foreground": "x1gxadoi",
+    "--hraness-appearance-control-background": "xuwnfk3",
+    "--hraness-appearance-control-border": "xg6mmvg",
+    "--hraness-appearance-control-foreground": "x1q0riu",
+    "--hraness-appearance-focus": "x14tw958",
+    "--hraness-appearance-popover-background": "x15khpru",
+    "--hraness-appearance-popover-foreground": "xtuecvg",
+    kMwMTN: "x13y0b37",
+    kVAEAm: "x1n2onr6",
+    $$css: true
+  },
+  notReady: {
+    kSiTet: "xmu36h7",
+    $$css: true
+  },
+  popover: {
+    kawU7v: "x18sabzy",
+    k5BUTg: "x1jleocg",
+    kqOd84: "x1pjjote",
+    kzPi7L: "x1e53mt7",
+    kEz803: "xgkqhyc",
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x103pssi",
+    kWkggS: "x141cw3e",
+    kVAM5u: "x1r32107 x1w1tqly",
+    kaIpWk: "xvy3trx",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xmkeg23",
+    kGVxlE: "xl8zne6",
+    kMwMTN: "xlrt3vh",
+    k1xSpc: "xvgho8r",
+    kAXs8y: "xr5dkdi",
+    k2kXS: "x1ljtl1n",
+    k3XXqK: "x1t137rt",
+    kVQacm: "xb3r6kr",
+    kULEZF: "x2grt4k",
+    kVCA4M: "x1guzgd5",
+    $$css: true
+  },
+  root: {
+    k1xSpc: "x3nfvp2",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  trigger: {
+    kawU7v: "x18sabzy",
+    k5BUTg: "x1jleocg",
+    kqOd84: "x1pjjote",
+    kzPi7L: "x1e53mt7",
+    kEz803: "xgkqhyc",
+    ku1ltF: "x1fdtg7e x852r0y",
+    kHypHr: "x1u7o2vf x1yjm9pw",
+    kKwaWg: "x18o3ruo x1aysnjn",
+    kl9DO0: "x12koezg x1w7rtzm",
+    k1YJky: "x1y4qj14 x123h4s9",
+    kz484i: "x182nak8 x1xqmp8",
+    kgSjnq: "x103pssi xontfw7",
+    kWkggS: "x12dugtb x6j457c",
+    kVAM5u: "x1r32107 x1w1tqly",
+    kaIpWk: "xyz7jqb",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xmkeg23",
+    kGVxlE: "x1tc5apr xwaqzdf",
+    kMwMTN: "x2pn0fd x15kafvc",
+    kkrTdU: "x1ypdohk x1s07b3s",
+    k1xSpc: "xwz0xwf",
+    kMv6JI: "xjb2p0i",
+    kV0H8L: "x10rt0pk",
+    krGR0G: "xvmqkbn",
+    kqBzK6: "x1rcybi7",
+    kHiXq7: "x61gc8y",
+    kC21eY: "xd4aj15",
+    ka26j: "xkyhvkk",
+    kGuDYH: "x1qlqyl8",
+    kQqvRs: "x1xh6y1q",
+    kKX8nH: "x1t35e8",
+    kjAs5C: "x1aazh3f",
+    k63SB2: "x1pd3egz",
+    kAXs8y: "xr5dkdi",
+    kULEZF: "x130h922 xqnxffv",
+    kLWn49: "x15bjb6t",
+    kVQ08L: "xd0akbl x9me654",
+    kdYMnH: "x1o8ym9z x11je3w3",
+    kSiTet: "xijokvz",
+    kjBf7l: "xybcfi5 x1x84bn5",
+    kInvED: "xecyca2",
+    k3XXqK: "x1t137rt xq2elj",
+    kMeerF: "x19beueo",
+    k8WAf4: "xt970qd",
+    kg3NbH: "xnjsko4",
+    kgQiWS: "x1ku5rj1",
+    kFalU9: "xggy1nq",
+    k3aq6I: "x1rpfuv1",
+    kIr0Dl: "x1545fc0",
+    kIyJzY: "x19wcyzb xsagj69",
+    k1ekBW: "xv65o4f",
+    kAMwcw: "x8rfmps",
+    $$css: true
+  }
+};
 
 // src/browser/theme-color-sync.ts
 var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
@@ -3786,7 +4081,9 @@ function disableCompetingMeta(manager, meta) {
   if (ownedBy !== null || meta.getAttribute("media")?.trim().toLowerCase() === "not all") {
     return;
   }
-  manager.disabledMetas.set(meta, { media: meta.getAttribute("media") });
+  manager.disabledMetas.set(meta, {
+    media: meta.getAttribute("media")
+  });
   meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
   meta.setAttribute("media", "not all");
 }
@@ -3822,13 +4119,7 @@ function observeThemeColorMetas(manager) {
     return;
   manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
   manager.observer.observe(manager.document.head, {
-    attributeFilter: [
-      "content",
-      "media",
-      "name",
-      themeColorSyncActiveAttribute,
-      themeColorSyncDisabledAttribute
-    ],
+    attributeFilter: ["content", "media", "name", themeColorSyncActiveAttribute, themeColorSyncDisabledAttribute],
     attributes: true,
     childList: true,
     subtree: true
@@ -3897,7 +4188,7 @@ function acquireThemeColorMeta(document2, metaName, registrationId, color) {
 }
 
 // src/react/theme.tsx
-import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx13, jsxs as jsxs11, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
@@ -3910,7 +4201,10 @@ function themeStorageGuardScript(storageKey) {
   return `(()=>{try{const key=${serializedKey};const value=localStorage.getItem(key);if(value!==null&&value!=="light"&&value!=="dark"&&value!=="system")localStorage.setItem(key,"${defaultDesignTheme}")}catch{}})();`;
 }
 function PersistedThemeNormalizer() {
-  const { setTheme, theme } = useTheme();
+  const {
+    setTheme,
+    theme
+  } = useTheme();
   useEffect7(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
@@ -3918,7 +4212,9 @@ function PersistedThemeNormalizer() {
   return null;
 }
 function JellyThemeSync() {
-  const { resolvedTheme } = useTheme();
+  const {
+    resolvedTheme
+  } = useTheme();
   useEffect7(() => {
     if (resolvedTheme === "light" || resolvedTheme === "dark") {
       setJellyThemeMode(resolvedTheme);
@@ -3930,9 +4226,11 @@ function PortalThemeBridge({
   children,
   forcedTheme
 }) {
-  const { resolvedTheme } = useTheme();
+  const {
+    resolvedTheme
+  } = useTheme();
   const portalTheme = resolvedTheme === "light" || resolvedTheme === "dark" ? resolvedTheme : forcedTheme;
-  return /* @__PURE__ */ jsx14(DesignPortalThemeProvider, {
+  return /* @__PURE__ */ jsx13(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
   });
@@ -3943,16 +4241,22 @@ function DesignThemeProvider({
   nonce,
   storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs12(Fragment2, {
+  return /* @__PURE__ */ jsxs11(Fragment2, {
     children: [
-      forcedTheme === undefined ? /* @__PURE__ */ jsx14("script", {
-        ...nonce === undefined ? {} : { nonce },
+      forcedTheme === undefined ? /* @__PURE__ */ jsx13("script", {
+        ...nonce === undefined ? {} : {
+          nonce
+        },
         "data-hraness-design-theme-guard": "",
-        dangerouslySetInnerHTML: { __html: themeStorageGuardScript(storageKey) },
+        dangerouslySetInnerHTML: {
+          __html: themeStorageGuardScript(storageKey)
+        },
         suppressHydrationWarning: true
       }) : null,
-      /* @__PURE__ */ jsxs12(NextThemeProvider, {
-        ...nonce === undefined ? {} : { nonce },
+      /* @__PURE__ */ jsxs11(NextThemeProvider, {
+        ...nonce === undefined ? {} : {
+          nonce
+        },
         attribute: "data-theme",
         defaultTheme: forcedTheme ?? defaultDesignTheme,
         disableTransitionOnChange: true,
@@ -3961,9 +4265,9 @@ function DesignThemeProvider({
         storageKey,
         themes: [...concreteThemes],
         children: [
-          forcedTheme === undefined ? /* @__PURE__ */ jsx14(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx14(JellyThemeSync, {}),
-          /* @__PURE__ */ jsx14(PortalThemeBridge, {
+          forcedTheme === undefined ? /* @__PURE__ */ jsx13(PersistedThemeNormalizer, {}) : null,
+          /* @__PURE__ */ jsx13(JellyThemeSync, {}),
+          /* @__PURE__ */ jsx13(PortalThemeBridge, {
             forcedTheme,
             children
           })
@@ -3976,35 +4280,36 @@ function themeToggleLabel(id, labels) {
   return designThemeLabel(id, labels);
 }
 function themeToggleItems(labels) {
-  return [
-    { id: "light", label: themeToggleLabel("light", labels) },
-    { id: "dark", label: themeToggleLabel("dark", labels) },
-    { id: "system", label: themeToggleLabel("system", labels) }
-  ];
+  return [{
+    id: "light",
+    label: themeToggleLabel("light", labels)
+  }, {
+    id: "dark",
+    label: themeToggleLabel("dark", labels)
+  }, {
+    id: "system",
+    label: themeToggleLabel("system", labels)
+  }];
 }
 function themeToggleIcon(id) {
-  return /* @__PURE__ */ jsx14(AppearanceIcon, {
+  return /* @__PURE__ */ jsx13(AppearanceIcon, {
     name: id
   });
 }
 function themeToggleIconItems(labels) {
-  return [
-    {
-      ariaLabel: themeToggleLabel("light", labels),
-      id: "light",
-      label: themeToggleIcon("light")
-    },
-    {
-      ariaLabel: themeToggleLabel("dark", labels),
-      id: "dark",
-      label: themeToggleIcon("dark")
-    },
-    {
-      ariaLabel: themeToggleLabel("system", labels),
-      id: "system",
-      label: themeToggleIcon("system")
-    }
-  ];
+  return [{
+    ariaLabel: themeToggleLabel("light", labels),
+    id: "light",
+    label: themeToggleIcon("light")
+  }, {
+    ariaLabel: themeToggleLabel("dark", labels),
+    id: "dark",
+    label: themeToggleIcon("dark")
+  }, {
+    ariaLabel: themeToggleLabel("system", labels),
+    id: "system",
+    label: themeToggleIcon("system")
+  }];
 }
 function ThemeToggle({
   "aria-label": ariaLabel = "Appearance",
@@ -4016,14 +4321,19 @@ function ThemeToggle({
   size = "compact",
   value: controlledValue
 }) {
+  const portalClassName = useDesignPortalClassName();
   const hydrated = useHydrated();
-  const { setTheme, theme } = useTheme();
+  const {
+    setTheme,
+    theme
+  } = useTheme();
   const controlled = controlledValue !== undefined;
   const ready = controlled || hydrated;
   const value = controlledValue ?? (hydrated ? normalizeDesignTheme(theme) : defaultDesignTheme);
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
+  const presentationStyles = stylex12.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -4031,25 +4341,28 @@ function ThemeToggle({
       setTheme(nextTheme);
   };
   const currentLabel = themeToggleLabel(value, labels);
-  return /* @__PURE__ */ jsx14("div", {
+  return /* @__PURE__ */ jsx13("div", {
+    ...presentationStyles,
     "aria-busy": !ready || undefined,
-    className: cn11("hraness-design-theme-toggle", className),
+    className: cn11("hraness-design-theme-toggle", presentationStyles.className, className),
     "data-display": resolvedPresentation === "menu" ? "icons" : resolvedDisplay,
     "data-hraness-appearance-menu": resolvedPresentation === "menu" ? "" : undefined,
+    "data-hraness-theme-toggle-stylex": "",
     "data-presentation": resolvedPresentation,
     "data-ready": ready ? "true" : "false",
     "data-theme-value": value,
-    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs12(MenuTrigger, {
+    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs11(MenuTrigger, {
       children: [
-        /* @__PURE__ */ jsx14(IconButton3, {
+        /* @__PURE__ */ jsx13(IconButton3, {
           "aria-label": `${ariaLabel}: ${currentLabel}`,
           controlClassName: "hraness-design-theme-toggle__trigger",
+          controlXstyle: themeStyles.trigger,
           isDisabled: !ready,
           size,
           tooltip: `${ariaLabel}: ${currentLabel}`,
           children: themeToggleIcon(value)
         }),
-        /* @__PURE__ */ jsx14(Menu, {
+        /* @__PURE__ */ jsx13(Menu, {
           "aria-label": ariaLabel,
           className: "hraness-design-theme-toggle__menu",
           disallowEmptySelection: true,
@@ -4057,20 +4370,23 @@ function ThemeToggle({
             if (isDesignTheme(key))
               changeTheme(key);
           },
-          popoverClassName: "hraness-design-theme-toggle__popover",
+          popoverClassName: cn11("hraness-design-theme-toggle__popover", portalClassName),
+          popoverXstyle: themeStyles.popover,
           selectedKeys: [value],
           selectionMode: "single",
-          children: designThemes.map((id) => /* @__PURE__ */ jsx14(MenuItem, {
+          xstyle: themeStyles.menu,
+          children: designThemes.map((id) => /* @__PURE__ */ jsx13(MenuItem, {
             className: "hraness-design-theme-toggle__item",
             "data-theme-value": id,
             id,
             leading: themeToggleIcon(id),
             textValue: themeToggleLabel(id, labels),
+            xstyle: [themeStyles.item, id === value && themeStyles.itemSelected],
             children: themeToggleLabel(id, labels)
           }, id))
         })
       ]
-    }) : /* @__PURE__ */ jsx14(SegmentedControl2, {
+    }) : /* @__PURE__ */ jsx13(SegmentedControl2, {
       "aria-label": ariaLabel,
       isDisabled: !ready,
       items,
@@ -4080,9 +4396,9 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props7) {
-  return /* @__PURE__ */ jsx14(ThemeToggle, {
-    ...props7,
+function ThemeMenuButton(props13) {
+  return /* @__PURE__ */ jsx13(ThemeToggle, {
+    ...props13,
     presentation: "menu"
   });
 }
@@ -4094,10 +4410,15 @@ function ThemeColorSync({
   lightColor = colors.light.background,
   metaName = "theme-color"
 }) {
-  const { resolvedTheme } = useTheme();
+  const {
+    resolvedTheme
+  } = useTheme();
   const registrationId = useRef5(Symbol("hraness-design-theme-color"));
   const registration = useRef5(null);
-  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor }) : undefined;
+  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, {
+    dark: darkColor,
+    light: lightColor
+  }) : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
   const latestColor = useRef5(resolvedColor);
   latestColor.current = resolvedColor;
@@ -4120,10 +4441,14 @@ function ThemeColorSync({
 }
 
 // src/react/route-state.tsx
-import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment3 } from "react/jsx-runtime";
-function RouteActions({ children }) {
-  return /* @__PURE__ */ jsx15("div", {
-    className: "hraness-design-route-state__actions",
+import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
+function RouteActions({
+  children
+}) {
+  const presentation = stylex13.props(routeStateStyles.row);
+  return /* @__PURE__ */ jsx14("div", {
+    ...presentation,
+    className: cn12("hraness-design-route-state__actions", presentation.className),
     children
   });
 }
@@ -4132,24 +4457,29 @@ function RouteNotFoundPage({
   showThemeToggle = false,
   titleAs = "h1"
 } = {}) {
-  return /* @__PURE__ */ jsxs13(PageCanvas, {
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const headerPresentation = stylex13.props(routeStateStyles.header);
+  const contentPresentation = stylex13.props(routeStateStyles.content);
+  return /* @__PURE__ */ jsxs12(PageCanvas, {
     as: canvasAs,
-    className: "hraness-design-route-state",
+    className: cn12("hraness-design-route-state", rootPresentation.className),
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
-        className: "hraness-design-route-state__header",
-        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
+      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+        ...headerPresentation,
+        className: cn12("hraness-design-route-state__header", headerPresentation.className),
+        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx15("div", {
-        className: "hraness-design-route-state__content",
-        children: /* @__PURE__ */ jsx15(EmptyState, {
-          action: /* @__PURE__ */ jsx15(LinkButton2, {
+      /* @__PURE__ */ jsx14("div", {
+        ...contentPresentation,
+        className: cn12("hraness-design-route-state__content", contentPresentation.className),
+        children: /* @__PURE__ */ jsx14(EmptyState, {
+          action: /* @__PURE__ */ jsx14(LinkButton2, {
             href: "/",
             variant: "primary",
             children: "Return home"
           }),
           description: "The address may be out of date, or this page may have moved.",
-          icon: /* @__PURE__ */ jsx15("span", {
+          icon: /* @__PURE__ */ jsx14("span", {
             "aria-hidden": "true",
             children: "404"
           }),
@@ -4169,41 +4499,46 @@ function RouteErrorPage({
   showThemeToggle = false,
   titleAs = "h1"
 }) {
-  const focusId = `${useId2()}-route-error`;
+  const focusId = `${useId()}-route-error`;
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const headerPresentation = stylex13.props(routeStateStyles.header);
+  const contentPresentation = stylex13.props(routeStateStyles.content);
   useEffect8(() => {
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
-  return /* @__PURE__ */ jsxs13(PageCanvas, {
+  return /* @__PURE__ */ jsxs12(PageCanvas, {
     "aria-label": "This view could not load",
     "aria-live": announce ? "assertive" : undefined,
     as: canvasAs,
-    className: "hraness-design-route-state",
+    className: cn12("hraness-design-route-state", rootPresentation.className),
     id: focusId,
     tabIndex: -1,
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
-        className: "hraness-design-route-state__header",
-        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
+      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+        ...headerPresentation,
+        className: cn12("hraness-design-route-state__header", headerPresentation.className),
+        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx15("div", {
-        className: "hraness-design-route-state__content",
-        children: /* @__PURE__ */ jsx15(EmptyState, {
-          action: /* @__PURE__ */ jsxs13(RouteActions, {
+      /* @__PURE__ */ jsx14("div", {
+        ...contentPresentation,
+        className: cn12("hraness-design-route-state__content", contentPresentation.className),
+        children: /* @__PURE__ */ jsx14(EmptyState, {
+          action: /* @__PURE__ */ jsxs12(RouteActions, {
             children: [
-              /* @__PURE__ */ jsx15(Button3, {
+              /* @__PURE__ */ jsx14(Button3, {
                 onPress: reset,
                 variant: "primary",
                 children: "Try again"
               }),
-              /* @__PURE__ */ jsx15(LinkButton2, {
+              /* @__PURE__ */ jsx14(LinkButton2, {
                 href: "/",
                 children: "Return home"
               })
             ]
           }),
           description: "Retry this view, or return home and continue from there.",
-          icon: /* @__PURE__ */ jsx15("span", {
+          icon: /* @__PURE__ */ jsx14("span", {
             "aria-hidden": "true",
             children: "!"
           }),
@@ -4218,38 +4553,45 @@ function RouteLoadingPage({
   announce = true,
   canvasAs = "main"
 } = {}) {
-  return /* @__PURE__ */ jsx15(PageCanvas, {
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const loadingPresentation = stylex13.props(routeStateStyles.loading);
+  const titlePresentation = stylex13.props(routeStateStyles.row);
+  const skeletonPresentation = stylex13.props(routeStateStyles.skeletons);
+  return /* @__PURE__ */ jsx14(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
-    className: "hraness-design-route-state",
-    children: /* @__PURE__ */ jsxs13("section", {
-      className: "hraness-design-route-state__loading",
+    className: cn12("hraness-design-route-state", rootPresentation.className),
+    children: /* @__PURE__ */ jsxs12("section", {
+      ...loadingPresentation,
+      className: cn12("hraness-design-route-state__loading", loadingPresentation.className),
       role: announce ? "status" : undefined,
       children: [
-        /* @__PURE__ */ jsxs13("div", {
-          className: "hraness-design-route-state__loading-title",
+        /* @__PURE__ */ jsxs12("div", {
+          ...titlePresentation,
+          className: cn12("hraness-design-route-state__loading-title", titlePresentation.className),
           children: [
-            /* @__PURE__ */ jsx15(Spinner2, {}),
-            /* @__PURE__ */ jsx15("strong", {
+            /* @__PURE__ */ jsx14(Spinner2, {}),
+            /* @__PURE__ */ jsx14("strong", {
               children: "Loading page"
             })
           ]
         }),
-        /* @__PURE__ */ jsxs13("div", {
+        /* @__PURE__ */ jsxs12("div", {
+          ...skeletonPresentation,
           "aria-hidden": "true",
-          className: "hraness-design-route-state__skeletons",
+          className: cn12("hraness-design-route-state__skeletons", skeletonPresentation.className),
           children: [
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "1rem",
               isText: true,
               width: "88%"
             }),
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "1rem",
               isText: true,
               width: "64%"
             }),
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "8rem",
               width: "100%"
             })
@@ -4265,52 +4607,52 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props7
+  ...props14
 }) {
-  const content = /* @__PURE__ */ jsxs13(Fragment3, {
+  const content = /* @__PURE__ */ jsxs12(Fragment3, {
     children: [
       diagnostics,
-      /* @__PURE__ */ jsx15(RouteErrorPage, {
-        ...props7,
+      /* @__PURE__ */ jsx14(RouteErrorPage, {
+        ...props14,
         showThemeToggle: false
       })
     ]
   });
-  return /* @__PURE__ */ jsxs13("html", {
+  return /* @__PURE__ */ jsxs12("html", {
     "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
     children: [
-      /* @__PURE__ */ jsxs13("head", {
+      /* @__PURE__ */ jsxs12("head", {
         children: [
-          /* @__PURE__ */ jsx15("meta", {
+          /* @__PURE__ */ jsx14("meta", {
             content: theme === "system" ? "light dark" : theme,
             name: "color-scheme"
           }),
-          theme === "system" ? /* @__PURE__ */ jsxs13(Fragment3, {
+          theme === "system" ? /* @__PURE__ */ jsxs12(Fragment3, {
             children: [
-              /* @__PURE__ */ jsx15("meta", {
+              /* @__PURE__ */ jsx14("meta", {
                 content: lightColor,
                 media: "(prefers-color-scheme: light)",
                 name: "theme-color"
               }),
-              /* @__PURE__ */ jsx15("meta", {
+              /* @__PURE__ */ jsx14("meta", {
                 content: darkColor,
                 media: "(prefers-color-scheme: dark)",
                 name: "theme-color"
               })
             ]
-          }) : /* @__PURE__ */ jsx15("meta", {
+          }) : /* @__PURE__ */ jsx14("meta", {
             content: theme === "dark" ? darkColor : lightColor,
             name: "theme-color"
           })
         ]
       }),
-      /* @__PURE__ */ jsx15("body", {
+      /* @__PURE__ */ jsx14("body", {
         className: bodyClassName,
-        children: theme === "system" ? /* @__PURE__ */ jsxs13(DesignThemeProvider, {
+        children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
           children: [
-            /* @__PURE__ */ jsx15(ThemeColorSync, {
+            /* @__PURE__ */ jsx14(ThemeColorSync, {
               darkColor,
               lightColor
             }),

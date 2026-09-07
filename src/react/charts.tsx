@@ -14,8 +14,11 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import * as stylex from "@stylexjs/stylex";
 
 import { cn } from "@hraness/ui";
+
+import { chartStyles } from "./charts.stylex.js";
 
 export type BarListChartDatum = Readonly<{
   color?: string;
@@ -85,23 +88,43 @@ function ChartRow({
   id,
   isSelected,
   onSelectionChange,
+  variant = "default",
 }: Readonly<{
   children: ReactNode;
   id: string;
   isSelected: boolean;
   onSelectionChange: ((id: string) => void) | undefined;
+  variant?: "default" | "legend";
 }>) {
+  const presentation = stylex.props(
+    chartStyles.row,
+    onSelectionChange !== undefined && chartStyles.selectableRow,
+    isSelected && chartStyles.selectedRow,
+    variant === "legend" && chartStyles.legendRow,
+  );
   if (onSelectionChange === undefined) {
     return (
-      <div className="hraness-design-chart-row" data-selected={isSelected || undefined}>
+      <div
+        {...presentation}
+        className={cn(
+          "hraness-design-chart-row",
+          presentation.className,
+        )}
+        data-selected={isSelected || undefined}
+      >
         {children}
       </div>
     );
   }
   return (
     <button
+      {...presentation}
       aria-pressed={isSelected}
-      className="hraness-design-chart-row hraness-design-chart-row--selectable"
+      className={cn(
+        "hraness-design-chart-row",
+        "hraness-design-chart-row--selectable",
+        presentation.className,
+      )}
       data-selected={isSelected || undefined}
       onClick={() => onSelectionChange(id)}
       type="button"
@@ -130,11 +153,32 @@ export function BarListChart({
   if (!Number.isFinite(minimum) || !Number.isFinite(maximum) || minimum >= maximum) {
     throw new RangeError("Bar chart domain must be finite and ascending.");
   }
+  const rootPresentation = stylex.props(chartStyles.root);
+  const rowsPresentation = stylex.props(chartStyles.rows);
+  const headingPresentation = stylex.props(chartStyles.heading);
+  const labelPresentation = stylex.props(chartStyles.label);
+  const valuePresentation = stylex.props(chartStyles.value);
+  const detailPresentation = stylex.props(chartStyles.detail);
+  const trackPresentation = stylex.props(chartStyles.track);
+  const barPresentation = stylex.props(chartStyles.bar);
 
   return (
-    <figure className={cn("hraness-design-bar-list-chart", className)}>
+    <figure
+      {...rootPresentation}
+      className={cn(
+        "hraness-design-bar-list-chart",
+        rootPresentation.className,
+        className,
+      )}
+    >
       {accessibleChartCaption({ ariaLabel })}
-      <div className="hraness-design-bar-list-chart__rows">
+      <div
+        {...rowsPresentation}
+        className={cn(
+          "hraness-design-bar-list-chart__rows",
+          rowsPresentation.className,
+        )}
+      >
         {data.map((datum) => {
           const value = finiteOr(datum.value, minimum);
           const width = normalizedPercent(value, minimum, maximum);
@@ -149,15 +193,59 @@ export function BarListChart({
               key={datum.id}
               onSelectionChange={onSelectionChange}
             >
-              <span className="hraness-design-chart-row__heading">
-                <span className="hraness-design-chart-row__label">{datum.label}</span>
-                <span className="hraness-design-chart-row__value">{formatValue(value)}</span>
+              <span
+                {...headingPresentation}
+                className={cn(
+                  "hraness-design-chart-row__heading",
+                  headingPresentation.className,
+                )}
+              >
+                <span
+                  {...labelPresentation}
+                  className={cn(
+                    "hraness-design-chart-row__label",
+                    labelPresentation.className,
+                  )}
+                >
+                  {datum.label}
+                </span>
+                <span
+                  {...valuePresentation}
+                  className={cn(
+                    "hraness-design-chart-row__value",
+                    valuePresentation.className,
+                  )}
+                >
+                  {formatValue(value)}
+                </span>
               </span>
-              <span aria-hidden="true" className="hraness-design-bar-list-chart__track" style={style}>
-                <span className="hraness-design-bar-list-chart__bar" />
+              <span
+                {...trackPresentation}
+                aria-hidden="true"
+                className={cn(
+                  "hraness-design-bar-list-chart__track",
+                  trackPresentation.className,
+                )}
+                style={style}
+              >
+                <span
+                  {...barPresentation}
+                  className={cn(
+                    "hraness-design-bar-list-chart__bar",
+                    barPresentation.className,
+                  )}
+                />
               </span>
               {datum.detail === undefined ? null : (
-                <span className="hraness-design-chart-row__detail">{datum.detail}</span>
+                <span
+                  {...detailPresentation}
+                  className={cn(
+                    "hraness-design-chart-row__detail",
+                    detailPresentation.className,
+                  )}
+                >
+                  {datum.detail}
+                </span>
               )}
             </ChartRow>
           );
@@ -187,22 +275,51 @@ function RadarProfileTooltip({
 }>) {
   if (active !== true || payload === undefined || payload.length === 0) return null;
   const labels = new Map(series.map((item) => [item.id, item.label]));
+  const tooltipPresentation = stylex.props(chartStyles.tooltip);
+  const titlePresentation = stylex.props(chartStyles.tooltipTitle);
+  const listPresentation = stylex.props(chartStyles.tooltipList);
+  const itemPresentation = stylex.props(chartStyles.tooltipItem);
+  const termPresentation = stylex.props(chartStyles.tooltipTerm);
+  const indicatorPresentation = stylex.props(chartStyles.indicator);
+  const valuePresentation = stylex.props(chartStyles.tooltipValue);
   return (
-    <div className="hraness-design-chart-tooltip">
-      <strong>{typeof label === "string" ? label : "Benchmark"}</strong>
-      <dl>
+    <div
+      {...tooltipPresentation}
+      className={cn(
+        "hraness-design-chart-tooltip",
+        tooltipPresentation.className,
+      )}
+    >
+      <strong
+        {...titlePresentation}
+        className={titlePresentation.className}
+      >
+        {typeof label === "string" ? label : "Benchmark"}
+      </strong>
+      <dl {...listPresentation} className={listPresentation.className}>
         {payload.map((item, index) => {
           const key = String(item.dataKey ?? item.name ?? index);
           const value = typeof item.value === "number" && Number.isFinite(item.value)
             ? item.value.toFixed(1)
             : "–";
           return (
-            <div key={key}>
-              <dt>
-                <i aria-hidden="true" style={{ background: item.color }} />
+            <div
+              {...itemPresentation}
+              className={itemPresentation.className}
+              key={key}
+            >
+              <dt {...termPresentation} className={termPresentation.className}>
+                <i
+                  {...indicatorPresentation}
+                  aria-hidden="true"
+                  className={indicatorPresentation.className}
+                  style={{ backgroundColor: item.color }}
+                />
                 {labels.get(key) ?? key}
               </dt>
-              <dd>{value}</dd>
+              <dd {...valuePresentation} className={valuePresentation.className}>
+                {value}
+              </dd>
             </div>
           );
         })}
@@ -231,11 +348,29 @@ export function RadarProfileChart({
     for (const item of series) row[item.id] = finiteOr(item.values[axis.id] ?? 0, 0);
     return row;
   });
+  const rootPresentation = stylex.props(chartStyles.root);
+  const plotPresentation = stylex.props(chartStyles.plot);
+  const legendPresentation = stylex.props(chartStyles.legend);
+  const indicatorPresentation = stylex.props(chartStyles.indicator);
 
   return (
-    <figure className={cn("hraness-design-radar-profile-chart", className)}>
+    <figure
+      {...rootPresentation}
+      className={cn(
+        "hraness-design-radar-profile-chart",
+        rootPresentation.className,
+        className,
+      )}
+    >
       {accessibleChartCaption({ ariaLabel })}
-      <div aria-hidden="true" className="hraness-design-radar-profile-chart__plot">
+      <div
+        {...plotPresentation}
+        aria-hidden="true"
+        className={cn(
+          "hraness-design-radar-profile-chart__plot",
+          plotPresentation.className,
+        )}
+      >
         <ResponsiveContainer
           height="100%"
           initialDimension={{ height: 280, width: 360 }}
@@ -289,15 +424,29 @@ export function RadarProfileChart({
           </RadarChart>
         </ResponsiveContainer>
       </div>
-      <div aria-label="Profiles" className="hraness-design-radar-profile-chart__legend" role="group">
+      <div
+        {...legendPresentation}
+        aria-label="Profiles"
+        className={cn(
+          "hraness-design-radar-profile-chart__legend",
+          legendPresentation.className,
+        )}
+        role="group"
+      >
         {series.map((item) => (
           <ChartRow
             id={item.id}
             isSelected={selectedId === item.id}
             key={item.id}
             onSelectionChange={onSelectionChange}
+            variant="legend"
           >
-            <i aria-hidden="true" style={{ background: item.color }} />
+            <i
+              {...indicatorPresentation}
+              aria-hidden="true"
+              className={indicatorPresentation.className}
+              style={{ backgroundColor: item.color }}
+            />
             <span>{item.label}</span>
           </ChartRow>
         ))}
@@ -344,11 +493,33 @@ export function RangePlotChart({
   if (!Number.isFinite(domainMinimum) || !Number.isFinite(domainMaximum) || domainMinimum >= domainMaximum) {
     throw new RangeError("Range plot domain must be finite and ascending.");
   }
+  const rootPresentation = stylex.props(chartStyles.root);
+  const rowsPresentation = stylex.props(chartStyles.rows);
+  const headingPresentation = stylex.props(chartStyles.heading);
+  const labelPresentation = stylex.props(chartStyles.label);
+  const valuePresentation = stylex.props(chartStyles.value);
+  const detailPresentation = stylex.props(chartStyles.detail);
+  const trackPresentation = stylex.props(chartStyles.track, chartStyles.rangeTrack);
+  const rangePresentation = stylex.props(chartStyles.range);
+  const medianPresentation = stylex.props(chartStyles.median);
 
   return (
-    <figure className={cn("hraness-design-range-plot-chart", className)}>
+    <figure
+      {...rootPresentation}
+      className={cn(
+        "hraness-design-range-plot-chart",
+        rootPresentation.className,
+        className,
+      )}
+    >
       {accessibleChartCaption({ ariaLabel })}
-      <div className="hraness-design-range-plot-chart__rows">
+      <div
+        {...rowsPresentation}
+        className={cn(
+          "hraness-design-range-plot-chart__rows",
+          rowsPresentation.className,
+        )}
+      >
         {data.map((datum) => {
           const minimum = finiteOr(datum.minimum, domainMinimum);
           const maximum = finiteOr(datum.maximum, domainMaximum);
@@ -369,18 +540,66 @@ export function RangePlotChart({
               key={datum.id}
               onSelectionChange={onSelectionChange}
             >
-              <span className="hraness-design-chart-row__heading">
-                <span className="hraness-design-chart-row__label">{datum.label}</span>
-                <span className="hraness-design-chart-row__value">
+              <span
+                {...headingPresentation}
+                className={cn(
+                  "hraness-design-chart-row__heading",
+                  headingPresentation.className,
+                )}
+              >
+                <span
+                  {...labelPresentation}
+                  className={cn(
+                    "hraness-design-chart-row__label",
+                    labelPresentation.className,
+                  )}
+                >
+                  {datum.label}
+                </span>
+                <span
+                  {...valuePresentation}
+                  className={cn(
+                    "hraness-design-chart-row__value",
+                    valuePresentation.className,
+                  )}
+                >
                   {formatValue(minimum)}–{formatValue(maximum)}
                 </span>
               </span>
-              <span aria-hidden="true" className="hraness-design-range-plot-chart__track" style={style}>
-                <span className="hraness-design-range-plot-chart__range" />
-                <span className="hraness-design-range-plot-chart__median" />
+              <span
+                {...trackPresentation}
+                aria-hidden="true"
+                className={cn(
+                  "hraness-design-range-plot-chart__track",
+                  trackPresentation.className,
+                )}
+                style={style}
+              >
+                <span
+                  {...rangePresentation}
+                  className={cn(
+                    "hraness-design-range-plot-chart__range",
+                    rangePresentation.className,
+                  )}
+                />
+                <span
+                  {...medianPresentation}
+                  className={cn(
+                    "hraness-design-range-plot-chart__median",
+                    medianPresentation.className,
+                  )}
+                />
               </span>
               {datum.detail === undefined ? null : (
-                <span className="hraness-design-chart-row__detail">{datum.detail}</span>
+                <span
+                  {...detailPresentation}
+                  className={cn(
+                    "hraness-design-chart-row__detail",
+                    detailPresentation.className,
+                  )}
+                >
+                  {datum.detail}
+                </span>
               )}
             </ChartRow>
           );

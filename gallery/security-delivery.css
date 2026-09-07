@@ -48,7 +48,7 @@
 @layer components.hraness-design-kit.priority2 {
   html body [data-design-kit-stylex-layer-conflict="true"].hraness-button {
     --design-kit-stylex-layer-conflict: design-kit-priority2;
-    display: grid;
+    grid-auto-flow: column;
   }
 
   html body [data-design-kit-stylex-dither-conflict="true"].hraness-design-dither-surface {
@@ -69,7 +69,7 @@
   }
 
   html body [data-design-kit-stylex-old-parent="true"].hraness-button {
-    display: inline-flex;
+    grid-auto-flow: row;
   }
 
   html body [data-design-kit-stylex-dither-old-parent="true"].hraness-design-dither-surface {
@@ -103,6 +103,27 @@
   position: relative;
   min-height: 8rem;
   overflow: clip;
+}
+
+/* Attribute-driven probes keep the strict-CSP test free of inline styles. */
+.hraness-design-production-data-preview-notice[data-security-writing-mode="vertical-rl"] {
+  writing-mode: vertical-rl;
+}
+
+.hraness-design-production-data-preview-notice[data-security-writing-mode="vertical-lr"] {
+  writing-mode: vertical-lr;
+}
+
+@layer components.hraness-design-kit.legacy {
+  .hraness-design-production-data-preview-notice[data-security-writing-mode] {
+    background-image: linear-gradient(red, blue);
+    background-attachment: fixed;
+    background-clip: content-box;
+    background-origin: border-box;
+    background-position: 13px 17px;
+    background-repeat: no-repeat;
+    background-size: 19px 23px;
+  }
 }
 
 .security-canary-palette.security-canary-theme-light {

@@ -6,6 +6,9 @@ import { basename, join } from "node:path";
 import { chromium, type Browser, type Page } from "playwright-core";
 import { createElement } from "react";
 import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
+import { equalBackgroundValues } from "./browser-css-parity.js";
+import { browserStylesheetLayerOrder, bundleBrowserStylesheet } from "./browser-stylesheet.js";
+import { readStylexPackageManifest, serializeStylexPackageRules } from "@hraness/ui/stylex-build";
 
 import {
   createHeldSecurityDeliveryResource,
@@ -145,6 +148,41 @@ function compiledChatBranchClasses(
   return [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
 }
 
+function compiledStyleBranchClasses(
+  javaScript: string,
+  styleMapName: string,
+  branch: string,
+  label: string,
+): string[] {
+  const escapedMapName = escapeRegularExpression(styleMapName);
+  const styleMap = javaScript.match(
+    new RegExp(`var ${escapedMapName} = \\{([\\s\\S]*?)\\n\\};`, "u"),
+  )?.[1];
+  invariant(styleMap !== undefined, `${label} is missing the compiled ${styleMapName} map.`);
+  const escapedBranch = escapeRegularExpression(branch);
+  const branchMap = styleMap.match(
+    new RegExp(`^  ${escapedBranch}: \\{([\\s\\S]*?)^  \\},?$`, "mu"),
+  )?.[1];
+  invariant(branchMap !== undefined, `${label} is missing ${styleMapName}.${branch}.`);
+  const classes = [...new Set(branchMap.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+  invariant(classes.length > 0, `${label} compiled ${styleMapName}.${branch} to no classes.`);
+  return classes;
+}
+
+function compiledStyleMapClasses(javaScript: string, name: string): readonly string[] {
+  const map = javaScript.match(new RegExp(`var ${escapeRegularExpression(name)} = \\{([\\s\\S]*?)\\n\\};`, "u"))?.[1];
+  invariant(map !== undefined, `Missing compiled ${name} map.`);
+  const classes = [...new Set(map.match(/\bx[a-z0-9]+\b/gu) ?? [])];
+  invariant(classes.length > 0, `No classes in compiled ${name}.`);
+  return classes;
+}
+
+function cssForClasses(css: string, classes: readonly string[]): string {
+  return classes.flatMap((className) => [...css.matchAll(new RegExp(
+    `\\.${escapeRegularExpression(className)}(?=[\\s.{:,])[^{}]*\\{[^{}]*\\}`, "gu",
+  ))].map((match) => match[0])).join("\n");
+}
+
 function chatBranchRules(
   css: string,
   javaScript: string,
@@ -199,9 +237,25 @@ function requireChatStaticPresentation(
   );
 }
 
-function layerBlockCount(css: string, layerName: string): number {
+function layerBlockBodies(css: string, layerName: string, label: string): readonly string[] {
   const escaped = escapeRegularExpression(layerName);
-  return css.match(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))?.length ?? 0;
+  return [...css.matchAll(new RegExp(`@layer\\s+${escaped}\\s*\\{`, "gu"))].map((match) => {
+    invariant(match.index !== undefined, `${label} contains an unlocatable ${layerName} block.`);
+    const openBrace = match.index + match[0].lastIndexOf("{");
+    const closeBrace = matchingCssBrace(css, openBrace, label);
+    return css.slice(openBrace + 1, closeBrace);
+  });
+}
+
+function singleLayerBlockBody(css: string, layerName: string, label: string): string {
+  const bodies = layerBlockBodies(css, layerName, label);
+  invariant(
+    bodies.length === 1,
+    `${label} contains ${String(bodies.length)} ${layerName} blocks instead of one.`,
+  );
+  const body = bodies[0];
+  invariant(body !== undefined, `${label} has no ${layerName} body.`);
+  return body;
 }
 
 const animatedRailStageDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
@@ -239,9 +293,9 @@ const chatDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
 const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/align-items:\s*center/u, "align-items"],
   [/background-color:\s*(?:#ffcc33|#fc3)/u, "background-color"],
-  [/border-bottom-color:\s*#5c1906/u, "border-block-end color"],
-  [/border-bottom-style:\s*solid/u, "border-block-end style"],
-  [/border-bottom-width:\s*2px/u, "border-block-end width"],
+  [/border-block-end-color:\s*#5c1906/u, "border-block-end color"],
+  [/border-block-end-style:\s*solid/u, "border-block-end style"],
+  [/border-block-end-width:\s*2px/u, "border-block-end width"],
   [/box-shadow:\s*0\s+3px\s+12px\s+#24140059/u, "box-shadow"],
   [/color:\s*#241400/u, "color"],
   [/display:\s*flex/u, "display"],
@@ -249,7 +303,7 @@ const noticeDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/font-family:\s*var\(--font-text,\s*system-ui,\s*sans-serif\)/u, "font-family"],
   [/font-size:\s*var\(--text-label,\s*0?\.875rem\)/u, "font-size"],
   [/gap:\s*var\(--space-1,\s*0?\.25rem\)\s*var\(--space-3,\s*0?\.75rem\)/u, "gap"],
-  [/top:\s*0/u, "logical block-start inset"],
+  [/inset-block-start:\s*0/u, "logical block-start inset"],
   [/justify-content:\s*center/u, "justify-content"],
   [/line-height:\s*1\.35/u, "line-height"],
   [/min-height:\s*3rem/u, "min-height"],
@@ -310,30 +364,36 @@ const faderDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/outline-width:\s*3px/u, "focus outline width"],
 ];
 
-const playbackTransportDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
+const playbackTransportDeclarationPatterns: readonly (readonly [string, RegExp, string])[] = [
   [
-    /@layer components\.hraness-design-kit\.priority2\s*\{[\s\S]*?gap:\s*var\(--space-2\)/u,
-    "priority2 gap",
+    "components.hraness-design-kit.priority3",
+    /gap:\s*var\(--space-2\)/u,
+    "priority3 gap",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?align-items:\s*center/u,
-    "priority3 alignment",
+    "components.hraness-design-kit.priority4",
+    /align-items:\s*center/u,
+    "priority4 alignment",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?display:\s*flex/u,
-    "priority3 flex display",
+    "components.hraness-design-kit.priority4",
+    /display:\s*flex/u,
+    "priority4 flex display",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?flex-wrap:\s*wrap/u,
-    "priority3 wrapping",
+    "components.hraness-design-kit.priority4",
+    /flex-wrap:\s*wrap/u,
+    "priority4 wrapping",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?inline-size:\s*1\.5rem/u,
-    "priority3 logical inline glyph size",
+    "components.hraness-design-kit.priority4",
+    /inline-size:\s*1\.5rem/u,
+    "priority4 logical inline glyph size",
   ],
   [
-    /@layer components\.hraness-design-kit\.priority3\s*\{[\s\S]*?block-size:\s*1\.5rem/u,
-    "priority3 logical block glyph size",
+    "components.hraness-design-kit.priority4",
+    /block-size:\s*1\.5rem/u,
+    "priority4 logical block glyph size",
   ],
 ];
 
@@ -554,7 +614,6 @@ async function installPageObservers(page: Page): Promise<void> {
 
 const work = await mkdtemp(join(tmpdir(), "hraness-security-delivery-browser-"));
 const clientDirectory = join(work, "client");
-const cssDirectory = join(work, "css");
 let browser: Browser | undefined;
 let server: ReturnType<typeof Bun.serve> | undefined;
 
@@ -589,130 +648,179 @@ try {
   );
   const hydrationFileName = basename(hydrationOutput.path);
 
-  const cssBuild = await Bun.build({
-    entrypoints: [join(repository, "gallery/security-delivery.css")],
-    external: ["*.woff2"],
-    minify: true,
-    naming: "security-delivery.[ext]",
-    outdir: cssDirectory,
-    target: "browser",
-  });
-  if (!cssBuild.success) {
-    throw new Error(cssBuild.logs.map((log) => log.message).join("\n"));
-  }
-  const cssOutputs = cssBuild.outputs.filter((output) => output.path.endsWith(".css"));
-  invariant(cssOutputs.length === 1, `Expected one combined CSS artifact, received ${String(cssOutputs.length)}.`);
-  const cssOutput = cssOutputs[0];
-  invariant(cssOutput !== undefined, "The combined CSS artifact is unavailable.");
   const [
     combinedCss,
-    designCompiledJavaScript,
+    designEntryJavaScript,
     designLegacyCss,
     designStylexCss,
     uiStylexCss,
+    designManifest,
+    uiManifest,
   ] = await Promise.all([
-    Bun.file(cssOutput.path).text(),
+    bundleBrowserStylesheet(join(repository, "gallery/security-delivery.css"), repository),
     Bun.file(join(repository, "dist/react/index.js")).text(),
     Bun.file(join(repository, "src/components.css")).text(),
     Bun.file(join(repository, "dist/stylex.css")).text(),
     Bun.file(join(repository, "node_modules/@hraness/ui/dist/stylex.css")).text(),
+    readStylexPackageManifest(join(repository, "dist/stylex-manifest.json"), repository),
+    readStylexPackageManifest(join(repository, "node_modules/@hraness/ui/dist/stylex-manifest.json"),
+      join(repository, "node_modules/@hraness/ui")),
   ]);
-  const uiPriority3Marker = "@layer components.hraness-ui.priority3";
-  const uiPriority3Index = uiStylexCss.indexOf(uiPriority3Marker);
-  invariant(uiPriority3Index >= 0, "The pinned UI artifact has no emitted priority3 layer.");
-  const uiPriority3Css = uiStylexCss.slice(uiPriority3Index);
+  const designCompiledJavaScript = (await Promise.all(designManifest.runtime.map(({ path }) =>
+    path === "dist/react/index.js" ? designEntryJavaScript : Bun.file(join(repository, path)).text()))).join("\n");
+  const designLayers = Array.from({ length: 8 }, (_, index) => `components.hraness-design-kit.priority${index + 1}`);
+  const uiLayers = Array.from({ length: 7 }, (_, index) => `components.hraness-ui.priority${index + 1}`);
+  for (const [manifest, css, layers, expectedLevels] of [
+    [designManifest, designStylexCss, designLayers, [0, 1, 2, 3, 4, 6, 7, 8]],
+    [uiManifest, uiStylexCss, uiLayers, [0, 1, 2, 3, 4, 7, 8]],
+  ] as const) {
+    invariant(serializeStylexPackageRules(manifest.rules, manifest.standaloneSerializer) === css,
+      `${manifest.package.name} CSS differs from its verified canonical manifest.`);
+    const levels = [...new Set(manifest.rules.filter(([, rule]) => rule.constKey === undefined)
+      .map(([, , priority]) => Math.floor(priority / 1000)))].sort((left, right) => left - right);
+    invariant(
+      levels.length === layers.length
+        && levels.every((level, index) => level === expectedLevels[index]),
+      `${manifest.package.name} changed its reviewed raw-priority/rank inventory: ${JSON.stringify(levels)}.`,
+    );
+  }
+  const quietFooterPaddingRule = uiManifest.rules.filter(([, rule]) =>
+    /padding-top:var\(--space-5,\s*1\.25rem\)/u.test(rule.ltr));
+  invariant(quietFooterPaddingRule.length === 1 && quietFooterPaddingRule[0]?.[2] === 4000,
+    "The pinned UI manifest changed its exact QuietSite footer padding atom.");
+  const uiQuietFooterCss = singleLayerBlockBody(
+    uiStylexCss,
+    "components.hraness-ui.priority5",
+    "The pinned UI artifact",
+  );
   invariant(
-    /padding-top:\s*var\(--space-5,\s*1\.25rem\)/u.test(uiPriority3Css),
-    "The pinned UI priority3 layer lost the QuietSite footer padding canary.",
+    /padding-top:\s*var\(--space-5,\s*1\.25rem\)/u.test(uiQuietFooterCss),
+    "The pinned UI priority5 layer lost the QuietSite footer padding canary.",
   );
   invariant(combinedCss.trim().length > 0, "The combined CSS artifact is empty.");
+  const playbackTransportRootClasses = compiledStyleBranchClasses(
+    designCompiledJavaScript,
+    "playbackTransportStyles",
+    "root",
+    "The design-kit artifact",
+  );
   invariant(
     combinedCss.includes("@layer components.hraness-design-kit.priority"),
     "The combined CSS artifact lost the package-owned StyleX layer.",
   );
-  for (const layerName of [
-    "components.hraness-ui.priority1",
-    "components.hraness-ui.priority2",
-    "components.hraness-ui.priority3",
-    "components.hraness-design-kit.priority1",
-    "components.hraness-design-kit.priority3",
-    "components.hraness-design-kit.priority4",
-  ]) {
+  singleLayerBlockBody(
+    combinedCss,
+    "components.hraness-ui.legacy.base",
+    "The combined CSS artifact",
+  );
+  for (const [standaloneCss, layerName, label, hasGalleryCanary] of [
+    ...uiLayers.map((layer) => [uiStylexCss, layer, "The pinned UI artifact", false] as const),
+    ...designLayers.map((layer) => [
+      designStylexCss,
+      layer,
+      "The design-kit artifact",
+      layer.endsWith(".priority2"),
+    ] as const),
+  ] as const) {
+    const standaloneBlocks = layerBlockBodies(standaloneCss, layerName, label);
     invariant(
-      layerBlockCount(combinedCss, layerName) === 1,
-      `The combined CSS artifact contains ${String(layerBlockCount(combinedCss, layerName))} ${layerName} blocks instead of one.`,
+      standaloneBlocks.length <= 1,
+      `${label} contains ${String(standaloneBlocks.length)} ${layerName} blocks instead of zero or one.`,
+    );
+    const expectedCombinedBlocks = standaloneBlocks.length === 1 || hasGalleryCanary ? 1 : 0;
+    const combinedBlocks = layerBlockBodies(combinedCss, layerName, "The combined CSS artifact");
+    invariant(
+      combinedBlocks.length === expectedCombinedBlocks,
+      `The combined CSS artifact contains ${String(combinedBlocks.length)} ${layerName} blocks instead of ${String(expectedCombinedBlocks)}.`,
     );
   }
+  // Bundling coalesces named layers and removes a redundant comma prelude.
+  // The complete first-declaration order, including empty reserved ranks, is
+  // the cascade contract and must still match the package manifests exactly.
   invariant(
-    layerBlockCount(combinedCss, "components.hraness-design-kit.priority2") === 2,
-    `The combined CSS artifact must contain one compiled and one gallery-only design-kit priority2 block, received ${String(layerBlockCount(combinedCss, "components.hraness-design-kit.priority2"))}.`,
+    JSON.stringify(browserStylesheetLayerOrder(combinedCss)) === JSON.stringify([
+      "base", "components", "components.hraness-ui.legacy.base", "components.hraness-ui.legacy", ...uiLayers,
+      "components.hraness-design-kit.legacy", ...designLayers,
+    ]),
+    "The combined CSS artifact lost the frozen cross-package first-declaration order.",
+  );
+  const designPriority2Body = singleLayerBlockBody(
+    combinedCss,
+    "components.hraness-design-kit.priority2",
+    "The combined CSS artifact",
+  );
+  const uiLegacyBody = singleLayerBlockBody(
+    combinedCss,
+    "components.hraness-ui.legacy",
+    "The combined CSS artifact",
+  );
+  const oldComponentsBody = singleLayerBlockBody(
+    combinedCss,
+    "components",
+    "The combined CSS artifact",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*,\s*components\.hraness-ui\.priority1\s*,\s*components\.hraness-ui\.priority2\s*,\s*components\.hraness-ui\.priority3\s*,\s*components\.hraness-design-kit\.legacy\s*,\s*components\.hraness-design-kit\.priority1\s*,\s*components\.hraness-design-kit\.priority2\s*,\s*components\.hraness-design-kit\.priority3\s*,\s*components\.hraness-design-kit\.priority4/u.test(combinedCss),
-    "The combined CSS artifact lost the frozen cross-package layer prelude.",
-  );
-  invariant(
-    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[^}]*\[data-design-kit-stylex-layer-conflict=(?:"true"|true)\]\.hraness-button\s*\{(?=[^}]*--design-kit-stylex-layer-conflict:\s*design-kit-priority2)(?=[^}]*display:\s*grid)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-layer-conflict=(?:"true"|true)\]\.hraness-button\s*\{(?=[^}]*--design-kit-stylex-layer-conflict:\s*design-kit-priority2)(?=[^}]*grid-auto-flow:\s*column)[^}]*\}/u.test(designPriority2Body),
     "The combined CSS artifact lost the gallery-only design-kit priority2 Button conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[\s\S]*?\[data-design-kit-stylex-dither-conflict=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{(?=[^}]*--design-kit-stylex-dither-conflict:\s*design-kit-priority2)(?=[^}]*background-size:\s*99px\s+99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-dither-conflict=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{(?=[^}]*--design-kit-stylex-dither-conflict:\s*design-kit-priority2)(?=[^}]*background-size:\s*99px\s+99px)[^}]*\}/u.test(designPriority2Body),
     "The combined CSS artifact lost the gallery-only design-kit priority2 DitherSurface conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-design-kit\.priority2\s*\{[\s\S]*?\[data-design-kit-stylex-layout-conflict=(?:"true"|true)\]\.hraness-design-top-bar\s*\{(?=[^}]*--design-kit-stylex-layout-conflict:\s*design-kit-priority2)(?=[^}]*top:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-layout-conflict=(?:"true"|true)\]\.hraness-design-top-bar\s*\{(?=[^}]*--design-kit-stylex-layout-conflict:\s*design-kit-priority2)(?=[^}]*top:\s*99px)[^}]*\}/u.test(designPriority2Body),
     "The combined CSS artifact lost the gallery-only design-kit priority2 TopBar conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-playback-conflict=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{(?=[^}]*--design-kit-stylex-playback-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-playback-conflict=(?:"true"|true)\]\s+\.hraness-design-playback-transport\s*\{(?=[^}]*--design-kit-stylex-playback-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(uiLegacyBody),
     "The combined CSS artifact lost the matched gallery-only UI legacy PlaybackTransport conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-fader-conflict=(?:"true"|true)\]\.hraness-design-fader\s*\{(?=[^}]*--design-kit-stylex-fader-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-fader-conflict=(?:"true"|true)\]\.hraness-design-fader\s*\{(?=[^}]*--design-kit-stylex-fader-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(uiLegacyBody),
     "The combined CSS artifact lost the matched gallery-only UI legacy Fader conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-conflict=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{(?=[^}]*--design-kit-stylex-animated-rail-stage-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-animated-rail-stage-conflict=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage\s*\{(?=[^}]*--design-kit-stylex-animated-rail-stage-conflict:\s*ui-legacy)(?=[^}]*min-inline-size:\s*99px)[^}]*\}/u.test(uiLegacyBody),
     "The combined CSS artifact lost the matched gallery-only UI legacy AnimatedRailStage conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-conflict=(?:"true"|true)\]\s+\.hraness-design-chat-message\s*\{(?=[^}]*--design-kit-stylex-chat-message-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-chat-message-conflict=(?:"true"|true)\]\s+\.hraness-design-chat-message\s*\{(?=[^}]*--design-kit-stylex-chat-message-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(uiLegacyBody),
     "The combined CSS artifact lost the matched gallery-only UI legacy ChatMessage conflict.",
   );
   invariant(
-    /@layer\s+components\.hraness-ui\.legacy\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-conflict=(?:"true"|true)\]\.hraness-design-chat-composer\s*\{(?=[^}]*--design-kit-stylex-chat-composer-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(combinedCss),
+    /\[data-design-kit-stylex-chat-composer-conflict=(?:"true"|true)\]\.hraness-design-chat-composer\s*\{(?=[^}]*--design-kit-stylex-chat-composer-conflict:\s*ui-legacy)(?=[^}]*gap:\s*99px)[^}]*\}/u.test(uiLegacyBody),
     "The combined CSS artifact lost the matched gallery-only UI legacy ChatComposer conflict.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*display:\s*inline-flex/u.test(combinedCss),
+    /\[data-design-kit-stylex-old-parent=(?:"true"|true)\]\.hraness-button\s*\{[^}]*grid-auto-flow:\s*row/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-dither-old-parent=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{[^}]*background-size:\s*88px\s+88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-dither-old-parent=(?:"true"|true)\]\.hraness-design-dither-surface\s*\{[^}]*background-size:\s*88px\s+88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only DitherSurface old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-layout-old-parent=(?:"true"|true)\]\.hraness-design-top-bar\s*\{[^}]*top:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-layout-old-parent=(?:"true"|true)\]\.hraness-design-top-bar\s*\{[^}]*top:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only TopBar old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-playback-old-parent=(?:"true"|true)\]\s+\.hraness-design-playback-transport(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only PlaybackTransport old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-fader-old-parent=(?:"true"|true)\]\.hraness-design-fader(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only Fader old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-animated-rail-stage-old-parent=(?:"true"|true)\]\s+\.hraness-design-animated-rail-stage(?=\s*(?:,|\{))[^{}]*\{[^}]*min-inline-size:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only AnimatedRailStage old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-message-old-parent=(?:"true"|true)\]\s+\.hraness-design-chat-message(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-chat-message-old-parent=(?:"true"|true)\]\s+\.hraness-design-chat-message(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only ChatMessage old direct-parent negative control.",
   );
   invariant(
-    /@layer\s+components\s*\{[\s\S]*?\[data-design-kit-stylex-chat-composer-old-parent=(?:"true"|true)\]\.hraness-design-chat-composer(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(combinedCss),
+    /\[data-design-kit-stylex-chat-composer-old-parent=(?:"true"|true)\]\.hraness-design-chat-composer(?=\s*(?:,|\{))[^{}]*\{[^}]*gap:\s*88px/u.test(oldComponentsBody),
     "The combined CSS artifact lost the gallery-only ChatComposer old direct-parent negative control.",
   );
   for (const [pattern, declaration] of noticeDeclarationPatterns) {
@@ -763,12 +871,14 @@ try {
   }
   invariant(
     !designLegacyCss.includes(".hraness-design-fader")
-      && !/\.hraness-design-fader[^{]*::?before/u.test(combinedCss)
-      && !/@layer\s+components\.hraness-design-kit\.priority(?:5|6)/u.test(
-        designStylexCss,
-      ),
-    "Fader retained legacy or pseudo presentation or leaked priority5/priority6 output.",
+      && !/\.hraness-design-fader[^{]*::?before/u.test(combinedCss),
+    "Fader retained legacy or pseudo presentation.",
   );
+  for (const mapName of ["faderStyles", "playbackTransportStyles"]) {
+    const classes = new Set(compiledStyleMapClasses(designCompiledJavaScript, mapName));
+    invariant(designManifest.rules.filter(([key]) => classes.has(key)).every(([, , priority]) => priority < 5000),
+      `${mapName} moved outside its reviewed finite priority levels.`);
+  }
   invariant(
     !/\.hraness-design-dither-surface\s*(?:\{|\[|:)/u.test(designLegacyCss),
     "Legacy design-kit CSS can still satisfy the migrated DitherSurface selector.",
@@ -785,15 +895,18 @@ try {
       `The packed StyleX artifact lost the migrated layout-surface ${declaration} declaration.`,
     );
   }
+  const layoutClasses = compiledStyleMapClasses(designCompiledJavaScript, "layoutSurfaceStyles");
+  const packedLayoutCss = cssForClasses(designStylexCss, layoutClasses);
+  const combinedLayoutCss = cssForClasses(combinedCss, layoutClasses);
   for (const [pattern, substitution] of layoutSurfaceTokenPhysicalSubstitutions) {
     invariant(
-      !pattern.test(designStylexCss) && !pattern.test(combinedCss),
+      !pattern.test(packedLayoutCss) && !pattern.test(combinedLayoutCss),
       `The packed or combined CSS artifact contains a migrated layout-surface ${substitution}.`,
     );
   }
   for (const [pattern, substitution] of layoutSurfaceIsolatedPhysicalSubstitutions) {
     invariant(
-      !pattern.test(designStylexCss),
+      !pattern.test(packedLayoutCss),
       `The packed design-kit StyleX artifact contains a migrated layout-surface ${substitution}.`,
     );
   }
@@ -801,9 +914,19 @@ try {
     !/\.hraness-design-(?:top-bar|bottom-bar|page-canvas|docked-footer)(?:__[\w-]+)?\s*(?:\{|\[|,|:)/u.test(designLegacyCss),
     "Legacy design-kit CSS can still satisfy a migrated layout-surface selector.",
   );
-  for (const [pattern, declaration] of playbackTransportDeclarationPatterns) {
+  for (const [layerName, pattern, declaration] of playbackTransportDeclarationPatterns) {
+    const packedLayer = singleLayerBlockBody(
+      designStylexCss,
+      layerName,
+      "The packed design-kit StyleX artifact",
+    );
+    const combinedLayer = singleLayerBlockBody(
+      combinedCss,
+      layerName,
+      "The combined CSS artifact",
+    );
     invariant(
-      pattern.test(designStylexCss) && pattern.test(combinedCss),
+      pattern.test(packedLayer) && pattern.test(combinedLayer),
       `The packed or combined CSS artifact lost the migrated PlaybackTransport ${declaration} declaration.`,
     );
   }
@@ -811,9 +934,8 @@ try {
     !designLegacyCss.includes(".hraness-design-playback-transport {")
       && !designLegacyCss.includes(
         '.hraness-design-playback-transport__button :is(svg, [data-slot="spinner"])',
-      )
-      && !/@layer\s+components\.hraness-design-kit\.priority5/u.test(designStylexCss),
-    "PlaybackTransport retained a legacy visual selector or leaked priority5 output.",
+      ),
+    "PlaybackTransport retained a legacy visual selector.",
   );
   const reactAriaPressableRules = combinedCss.match(
     /\[data-react-aria-pressable\]\s*\{\s*touch-action:\s*pan-x pan-y pinch-zoom;?\s*\}/gu,
@@ -885,7 +1007,7 @@ try {
       requestPaths.push(pathname);
       if (pathname === "/favicon.ico") return new Response(null, { status: 204 });
       if (pathname === "/security-delivery.css") {
-        return new Response(Bun.file(cssOutput.path), {
+        return new Response(combinedCss, {
           headers: { "content-type": "text/css" },
         });
       }
@@ -910,7 +1032,7 @@ try {
         if (fontDirectory === undefined) {
           return new Response("Not found", { status: 404 });
         }
-        const candidate = join(repository, "src/fonts", fontDirectory, basename(pathname));
+        const candidate = join(repository, "src/fonts", fontDirectory, decodeURIComponent(basename(pathname)));
         if (!(await Bun.file(candidate).exists())) {
           return new Response("Not found", { status: 404 });
         }
@@ -1198,6 +1320,50 @@ try {
     );
   }
 
+  const noticeWritingModes = await page.evaluate(() => {
+    const notice = document.querySelector(".hraness-design-production-data-preview-notice");
+    if (!(notice instanceof HTMLElement)) throw new Error("Missing notice writing-mode fixture");
+    try {
+      return ["vertical-rl", "vertical-lr"].map((writingMode) => {
+        notice.setAttribute("data-security-writing-mode", writingMode);
+        const computed = getComputedStyle(notice);
+        return {
+          writingMode: computed.writingMode,
+          expectedWritingMode: writingMode,
+          blockEndBorder: [computed.borderBlockEndWidth, computed.borderBlockEndStyle, computed.borderBlockEndColor],
+          physicalEndWidth: writingMode === "vertical-rl" ? computed.borderLeftWidth : computed.borderRightWidth,
+          physicalBorderWidths: [computed.borderTopWidth, computed.borderRightWidth,
+            computed.borderBottomWidth, computed.borderLeftWidth],
+          blockStartInset: computed.insetBlockStart,
+          physicalStartInset: writingMode === "vertical-rl" ? computed.right : computed.left,
+          physicalInsets: [computed.top, computed.right, computed.bottom, computed.left],
+          background: [computed.backgroundImage, computed.backgroundAttachment, computed.backgroundClip,
+            computed.backgroundOrigin, computed.backgroundPosition, computed.backgroundRepeat, computed.backgroundSize],
+          hasInlineStyle: notice.hasAttribute("style"),
+        };
+      });
+    } finally { notice.removeAttribute("data-security-writing-mode"); }
+  });
+  for (const row of noticeWritingModes) {
+    const expectedPhysicalBorderWidths = row.expectedWritingMode === "vertical-rl"
+      ? ["0px", "0px", "0px", "2px"]
+      : ["0px", "2px", "0px", "0px"];
+    const expectedPhysicalInsets = row.expectedWritingMode === "vertical-rl"
+      ? ["auto", "0px", "auto", "auto"]
+      : ["auto", "auto", "auto", "0px"];
+    invariant(row.writingMode === row.expectedWritingMode
+      && JSON.stringify(row.blockEndBorder) === JSON.stringify(["2px", "solid", "rgb(92, 25, 6)"])
+      && row.physicalEndWidth === "2px" && row.blockStartInset === "0px"
+      && row.physicalStartInset === "0px"
+      && JSON.stringify(row.physicalBorderWidths) === JSON.stringify(expectedPhysicalBorderWidths)
+      && JSON.stringify(row.physicalInsets) === JSON.stringify(expectedPhysicalInsets)
+      && !row.hasInlineStyle,
+    `The notice logical edges changed in ${row.expectedWritingMode}: ${JSON.stringify(row)}`);
+    invariant(equalBackgroundValues(row.background,
+      ["none", "scroll", "border-box", "padding-box", "0% 0%", "repeat", "auto"], 4),
+    `The notice background reset lost to legacy in ${row.expectedWritingMode}: ${JSON.stringify(row.background)}`);
+  }
+
   const beforeReleaseElements = await page.evaluate(
     () => window.__hranessSecurityDeliveryElements ?? [],
   );
@@ -1333,9 +1499,9 @@ try {
     }
     button.setAttribute("data-design-kit-stylex-layer-conflict", "true");
     const buttonStyle = getComputedStyle(button);
-    const normalizedDisplay = buttonStyle.display;
+    const normalizedGridAutoFlow = buttonStyle.gridAutoFlow;
     button.setAttribute("data-design-kit-stylex-old-parent", "true");
-    const oldDirectParentDisplay = getComputedStyle(button).display;
+    const oldDirectParentGridAutoFlow = getComputedStyle(button).gridAutoFlow;
     button.removeAttribute("data-design-kit-stylex-old-parent");
     const iconStyle = getComputedStyle(icon);
     const quietSiteFooterStyle = getComputedStyle(quietSiteFooter);
@@ -1380,9 +1546,9 @@ try {
       oldDirectParentAnimatedRailStageMinInlineSize,
       restoredAnimatedRailStageMinInlineSize:
         restoredAnimatedRailStageStyle.minInlineSize,
-      normalizedDisplay,
-      oldDirectParentDisplay,
-      restoredDisplay: getComputedStyle(button).display,
+      normalizedGridAutoFlow,
+      oldDirectParentGridAutoFlow,
+      restoredGridAutoFlow: getComputedStyle(button).gridAutoFlow,
       buttonSentinel: buttonStyle
         .getPropertyValue("--design-kit-stylex-layer-conflict")
         .trim(),
@@ -1390,11 +1556,11 @@ try {
       iconDisplay: iconStyle.display,
       iconFlex: iconStyle.flex,
       iconHasInlineStyle: icon.hasAttribute("style"),
-      uiPriority3Classes: [...quietSiteFooter.classList].filter(
+      uiQuietFooterClasses: [...quietSiteFooter.classList].filter(
         (className) => className !== "hraness-quiet-site-footer",
       ),
-      uiPriority3HasInlineStyle: quietSiteFooter.hasAttribute("style"),
-      uiPriority3PaddingTop: quietSiteFooterStyle.paddingTop,
+      uiQuietFooterHasInlineStyle: quietSiteFooter.hasAttribute("style"),
+      uiQuietFooterPaddingTop: quietSiteFooterStyle.paddingTop,
       callerDitherBackgroundImage: callerDitherStyle.backgroundImage,
       callerDitherHasInlineStyle: callerDither.hasAttribute("style"),
       callerDitherSize: callerDitherStyle.backgroundSize,
@@ -1476,9 +1642,9 @@ try {
   );
   await page.emulateMedia({ reducedMotion: "no-preference" });
   invariant(
-    crossPackageEvidence.normalizedDisplay === "grid"
-      && crossPackageEvidence.oldDirectParentDisplay === "inline-flex"
-      && crossPackageEvidence.restoredDisplay === "grid"
+    crossPackageEvidence.normalizedGridAutoFlow === "column"
+      && crossPackageEvidence.oldDirectParentGridAutoFlow === "row"
+      && crossPackageEvidence.restoredGridAutoFlow === "column"
       && crossPackageEvidence.buttonSentinel === "design-kit-priority2",
     `The real Button did not distinguish normalized UI legacy from the old direct-parent negative control: ${JSON.stringify(crossPackageEvidence)}.`,
   );
@@ -1499,19 +1665,19 @@ try {
       `The served aggregate CSS does not contain the rendered UI Icon class ${className}.`,
     );
   }
-  const renderedUiPriority3Classes = crossPackageEvidence.uiPriority3Classes.filter(
-    (className) => classSelectorCount(uiPriority3Css, className) === 1,
+  const renderedUiQuietFooterClasses = crossPackageEvidence.uiQuietFooterClasses.filter(
+    (className) => classSelectorCount(uiQuietFooterCss, className) === 1,
   );
   invariant(
-    renderedUiPriority3Classes.length > 0
-      && crossPackageEvidence.uiPriority3PaddingTop === "20px"
-      && !crossPackageEvidence.uiPriority3HasInlineStyle,
-    `The real UI QuietSiteFooter lost its extracted priority3 presentation: ${JSON.stringify(crossPackageEvidence)}.`,
+    renderedUiQuietFooterClasses.includes(quietFooterPaddingRule[0]?.[0] ?? "")
+      && crossPackageEvidence.uiQuietFooterPaddingTop === "20px"
+      && !crossPackageEvidence.uiQuietFooterHasInlineStyle,
+    `The real UI QuietSiteFooter lost its extracted priority5 presentation: ${JSON.stringify(crossPackageEvidence)}.`,
   );
-  for (const className of renderedUiPriority3Classes) {
+  for (const className of renderedUiQuietFooterClasses) {
     invariant(
       classSelectorCount(uiStylexCss, className) === 1,
-      `The pinned UI StyleX artifact contains ${String(classSelectorCount(uiStylexCss, className))} selectors for rendered priority3 class ${className}.`,
+      `The pinned UI StyleX artifact contains ${String(classSelectorCount(uiStylexCss, className))} selectors for rendered QuietSite footer class ${className}.`,
     );
     invariant(
       classSelectorCount(combinedCss, className) >= 1,
@@ -1524,7 +1690,7 @@ try {
       && crossPackageEvidence.oldDirectParentDitherSize === "88px 88px"
       && crossPackageEvidence.restoredDitherSize === "4px 4px"
       && crossPackageEvidence.ditherConflictSentinel === "design-kit-priority2",
-    `The real DitherSurface did not distinguish normalized priority3 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(crossPackageEvidence)}.`,
+    `The real DitherSurface did not distinguish normalized priority4 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(crossPackageEvidence)}.`,
   );
   invariant(
     crossPackageEvidence.ditherImage.includes("radial-gradient")
@@ -2181,11 +2347,21 @@ try {
       && playbackTransportEvidence.trailingAfterCommand,
     `The real PlaybackTransport lost a semantic, pending, ref, stable-hook, or trailing-order contract: ${JSON.stringify(playbackTransportEvidence)}.`,
   );
-  invariant(
-    playbackTransportEvidence.rootClasses.length === 4,
-    `The real PlaybackTransport exposes the wrong root atomic class count: ${JSON.stringify(playbackTransportEvidence)}.`,
+  const renderedPlaybackRootClasses = playbackTransportEvidence.rootClasses.filter(
+    (className) => playbackTransportRootClasses.includes(className),
   );
-  for (const className of playbackTransportEvidence.rootClasses) {
+  invariant(
+    playbackTransportRootClasses.length === 4
+      && renderedPlaybackRootClasses.length === playbackTransportRootClasses.length
+      && playbackTransportRootClasses.every((className) =>
+        renderedPlaybackRootClasses.includes(className)),
+    `The real PlaybackTransport lost a compiled root atomic class: ${JSON.stringify({
+      ...playbackTransportEvidence,
+      playbackTransportRootClasses,
+      renderedPlaybackRootClasses,
+    })}.`,
+  );
+  for (const className of playbackTransportRootClasses) {
     invariant(
       classSelectorCount(designStylexCss, className) === 1
         && classSelectorCount(combinedCss, className) >= 1,
@@ -2317,7 +2493,7 @@ try {
       && layoutSurfaceEvidence.oldDirectParentTop === "88px"
       && layoutSurfaceEvidence.restoredTop === "0px"
       && layoutSurfaceEvidence.topConflictSentinel === "design-kit-priority2",
-    `The real TopBar did not distinguish priority4 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(layoutSurfaceEvidence)}.`,
+    `The real TopBar did not distinguish priority5 output from the priority2 match and old direct-parent negative control: ${JSON.stringify(layoutSurfaceEvidence)}.`,
   );
   invariant(
     layoutSurfaceEvidence.topTag === "HEADER"

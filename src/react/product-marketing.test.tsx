@@ -21,6 +21,16 @@ import {
   ProductHero,
 } from "./product-marketing";
 
+// Presentation atoms may change, while stable hooks, order, and native markup may not.
+function marketingMarkupPattern(snippet: string): RegExp {
+  const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  return new RegExp(snippet.split(/(class="[^"]*")/gu).map((part) => {
+    if (!part.startsWith('class="')) return escape(part);
+    const tokens = part.slice(7, -1).split(" ").map(escape);
+    return 'class="' + tokens.join('(?: [^" ]+)* ') + '(?: [^" ]+)*"';
+  }).join(""), "u");
+}
+
 const steps = [
   { code: "tool init", detail: "Create one exact workspace.", label: "Initialize" },
   { code: "tool run job-01", detail: "Run the named job.", label: "Execute" },
@@ -54,13 +64,13 @@ test("the product hero renders a complete semantic narrative without client beha
 
   expect(html.match(/<h1\b/gu)).toHaveLength(1);
   expect(html).toContain('<header aria-labelledby="relay-title"');
-  expect(html).toContain('class="hraness-marketing-hero product-hero"');
-  expect(html).toContain('<aside class="hraness-marketing-proof" aria-labelledby="relay-title-proof">');
-  expect(html).toContain('<h2 class="hraness-marketing-proof__heading" id="relay-title-proof">');
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-hero product-hero"'));
+  expect(html).toMatch(marketingMarkupPattern('<aside class="hraness-marketing-proof" aria-labelledby="relay-title-proof">'));
+  expect(html).toMatch(marketingMarkupPattern('<h2 class="hraness-marketing-proof__heading" id="relay-title-proof">'));
   expect(html).toContain('<ol aria-label="First Relay job"');
   expect(html).toContain('data-emphasis="primary"');
   expect(html).toContain('data-emphasis="secondary"');
-  expect(html).toContain('<dl class="hraness-marketing-facts"');
+  expect(html).toMatch(marketingMarkupPattern('<dl class="hraness-marketing-facts"'));
   expect(html).toContain("01");
   expect(html).toContain("tool run job-01");
   expect(html).not.toMatch(/onClick|<script\b/iu);
@@ -128,11 +138,11 @@ test("the marketing compositions preserve headings, native disclosure, and produ
   expect(html).toContain('data-hraness-marketing="questions"');
   expect(html).toContain('data-hraness-marketing="cta"');
   expect(html).toContain("bun add --global relay@1.2.3");
-  expect(html).toContain('<details class="hraness-marketing-question">');
+  expect(html).toMatch(marketingMarkupPattern('<details class="hraness-marketing-question">'));
   expect(html).toContain("Does it require an account?</summary>");
   expect(html).toContain("For typed application code.");
   expect(html).toContain("Source files and credentials.");
-  expect(html).toContain('<h3 class="hraness-marketing-interface__heading">CLI</h3>');
+  expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-interface__heading">CLI</h3>'));
 });
 
 test("an embedded hero advances its proof heading without adding another h1", () => {
@@ -152,8 +162,8 @@ test("an embedded hero advances its proof heading without adding another h1", ()
   );
 
   expect(html).not.toContain("<h1");
-  expect(html).toContain('<h2 class="hraness-marketing-hero__heading" id="embedded-title">');
-  expect(html).toContain('<h3 class="hraness-marketing-proof__heading" id="embedded-title-proof">');
+  expect(html).toMatch(marketingMarkupPattern('<h2 class="hraness-marketing-hero__heading" id="embedded-title">'));
+  expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-proof__heading" id="embedded-title-proof">'));
 });
 
 test("every public heading level renders its matching native element", () => {
@@ -169,8 +179,8 @@ test("every public heading level renders its matching native element", () => {
       </MarketingSection>,
     );
 
-    expect(html).toContain(
-      `<h${String(headingLevel)} class="hraness-marketing-section__heading" id="level-${String(headingLevel)}">`,
+    expect(html).toMatch(
+      marketingMarkupPattern(`<h${String(headingLevel)} class="hraness-marketing-section__heading" id="level-${String(headingLevel)}">`),
     );
   }
 });
@@ -268,31 +278,31 @@ test("the premium roles render semantic, server-only HTML with the shared data h
     </MarketingPage>,
   );
 
-  expect(html).toContain('class="hraness-marketing-page"');
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-page"'));
   expect(html).toContain('data-hraness-marketing="header"');
-  expect(html).toContain('<nav aria-label="Site" class="hraness-marketing-header__nav">');
+  expect(html).toMatch(marketingMarkupPattern('<nav aria-label="Site" class="hraness-marketing-header__nav">'));
   expect(html).toContain('aria-current="page"');
   expect(html).toContain('data-hraness-marketing="hero" data-tone="accent"');
-  expect(html).toContain('<p class="hraness-marketing-hero__example">Ask your agent to run the nightly job.</p>');
-  expect(html).toContain('<div class="hraness-marketing-hero__frame">');
-  expect(html).toContain('<span class="hraness-marketing-proof-frame__title">relay run job-01</span>');
+  expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-hero__example">Ask your agent to run the nightly job.</p>'));
+  expect(html).toMatch(marketingMarkupPattern('<div class="hraness-marketing-hero__frame">'));
+  expect(html).toMatch(marketingMarkupPattern('<span class="hraness-marketing-proof-frame__title">relay run job-01</span>'));
   expect(html).toContain('data-hraness-marketing="pillars"');
   expect(html).toContain("--hraness-marketing-pillar-columns:3");
   expect(html).toContain('data-layout="split"');
-  expect(html).toContain('<p class="hraness-marketing-section__summary">A lead.</p>');
+  expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-section__summary">A lead.</p>'));
   expect(html).toContain('data-hraness-marketing="primitives"');
-  expect(html).toContain('<h3 class="hraness-marketing-primitive__heading">Jobs</h3>');
+  expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-primitive__heading">Jobs</h3>'));
   expect(html).toContain('data-hraness-marketing="stats"');
-  expect(html).toContain('<p class="hraness-marketing-stats__source">Counted on 5 September 2026.</p>');
+  expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-stats__source">Counted on 5 September 2026.</p>'));
   expect(html).toContain('data-hraness-marketing="quotes"');
-  expect(html).toContain('<a href="https://example.com/a">@example</a>');
+  expect(html).toMatch(marketingMarkupPattern('<a class="hraness-marketing-quote__link" href="https://example.com/a">@example</a>'));
   expect(html).toContain('data-hraness-marketing="pricing"');
-  expect(html).toContain('<li class="hraness-marketing-plan" data-emphasis="primary">');
-  expect(html).toContain("<strong>$0</strong><span>forever</span>");
+  expect(html).toMatch(marketingMarkupPattern('<li class="hraness-marketing-plan" data-emphasis="primary">'));
+  expect(html).toMatch(marketingMarkupPattern('<strong class="hraness-marketing-plan__value">$0</strong><span class="hraness-marketing-plan__period">forever</span>'));
   expect(html).toContain('data-hraness-marketing="maker"');
-  expect(html).toContain('<ul class="hraness-marketing-maker__links">');
+  expect(html).toMatch(marketingMarkupPattern('<ul class="hraness-marketing-maker__links">'));
   expect(html).toContain('data-hraness-marketing="cta" data-tone="accent"');
-  expect(html).toContain('<p class="hraness-marketing-cta__footnote">Free for local use.</p>');
+  expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-cta__footnote">Free for local use.</p>'));
   expect(html.match(/<h1\b/gu)).toHaveLength(1);
   expect(html).not.toMatch(/onClick|<script\b/iu);
 });

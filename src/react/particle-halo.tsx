@@ -5,6 +5,9 @@ import type {
 } from "react";
 
 import { cn } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
+
+import { effectsStyles } from "./effects.stylex.js";
 import {
   createParticleHaloRecipe,
   type ProceduralColorRole,
@@ -44,24 +47,35 @@ export function ParticleHalo({
     ...(variation === undefined ? {} : { variation }),
   });
   const rootStyle: ProceduralStyle = {
-    ...style,
     "--hraness-design-procedural-highlight": recipe.palette.highlight,
     "--hraness-design-procedural-key": recipe.palette.key,
     "--hraness-design-procedural-shadow": recipe.palette.shadow,
     "--hraness-design-procedural-support": recipe.palette.support,
+    ...style,
   };
+  const rootPresentation = stylex.props(effectsStyles.particleRoot);
+  const fieldPresentation = stylex.props(effectsStyles.particleField);
+  const particlePresentation = stylex.props(effectsStyles.particle);
+  const contentPresentation = stylex.props(effectsStyles.particleContent);
 
   return (
     <div
       {...props}
-      className={cn("hraness-design-particle-halo", className)}
+      className={cn(
+        "hraness-design-particle-halo",
+        rootPresentation.className,
+        className,
+      )}
       data-recipe-version={recipe.version}
       data-variation={recipe.variation}
       style={rootStyle}
     >
       <span
         aria-hidden="true"
-        className="hraness-design-particle-halo__particles"
+        className={cn(
+          "hraness-design-particle-halo__particles",
+          fieldPresentation.className,
+        )}
         role="presentation"
       >
         {recipe.particles.map((particle, index) => {
@@ -78,14 +92,24 @@ export function ParticleHalo({
           };
           return (
             <i
-              className="hraness-design-particle-halo__particle"
+              className={cn(
+                "hraness-design-particle-halo__particle",
+                particlePresentation.className,
+              )}
               key={index}
               style={particleStyle}
             />
           );
         })}
       </span>
-      <div className="hraness-design-particle-halo__content">{children}</div>
+      <div
+        className={cn(
+          "hraness-design-particle-halo__content",
+          contentPresentation.className,
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }

@@ -27,12 +27,12 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-vy764dh1.js";
+} from "./chunk-qdnj4qfx.js";
 import {
   highlightCode,
   resolveSyntaxLanguage,
   syntaxLanguages
-} from "./chunk-djxa5bgc.js";
+} from "./chunk-t86wtsk5.js";
 import"./chunk-5gtx3pza.js";
 export {
   typography,

@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as stylex from "@stylexjs/stylex";
 
 import {
   auroraColors,
@@ -23,6 +24,26 @@ import {
   typography,
   typeScale,
 } from "./index";
+import { effectsStyles } from "./react/effects.stylex";
+
+function atomicRules(
+  css: string,
+  classNames: readonly string[],
+  label: string,
+): string {
+  return [...new Set(classNames)].flatMap((className) => {
+    const escaped = className.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+    const matches = [...css.matchAll(
+      new RegExp(
+        `\\.${escaped}(?:\\.${escaped})?(?=\\s|\\{|,|:|\\[)[^{}]*\\{[^{}]*\\}`,
+        "gu",
+      ),
+    )];
+    expect(matches.length, `Missing emitted rule for ${label} class ${className}`)
+      .toBeGreaterThan(0);
+    return matches.map((match) => match[0] ?? "");
+  }).join("\n");
+}
 
 function relativeLuminance(hex: string): number {
   const linearChannel = (start: number): number => {
@@ -106,13 +127,20 @@ test("browser effects expose portable aurora and chrome palettes", async () => {
   expect(new Set(Object.values(chromeColors.light)).size).toBe(5);
   expect(new Set(Object.values(chromeColors.dark)).size).toBe(5);
 
-  const tokens = await Bun.file(new URL("./tokens.css", import.meta.url)).text();
+  const tokensEntry = await Bun.file(new URL("./tokens.css", import.meta.url)).text();
+  const tokens = await Bun.file(new URL("./compiler-tokens.css", import.meta.url)).text();
   const effects = await Bun.file(new URL("./effects.css", import.meta.url)).text();
+  const compiledEffects = await Bun.file(
+    new URL("../dist/stylex.css", import.meta.url),
+  ).text();
   const fonts = await Bun.file(new URL("./fonts.css", import.meta.url)).text();
   const headingFont = Bun.file(
     new URL("./fonts/geist-mono/GeistMono[wght].woff2", import.meta.url),
   );
   const typographyStyles = await Bun.file(new URL("./typography.css", import.meta.url)).text();
+
+  expect(tokensEntry).toContain('@import "@hraness/ui/tokens.css";');
+  expect(tokensEntry).toContain('@import "./compiler-tokens.css";');
 
   for (const mode of Object.values(auroraColors)) {
     for (const value of Object.values(mode)) expect(tokens).toContain(value);
@@ -127,8 +155,25 @@ test("browser effects expose portable aurora and chrome palettes", async () => {
   expect(typographyStyles).toContain(".hraness-design-text-chrome");
   expect(typographyStyles).not.toContain("background-blend-mode");
   expect(typographyStyles).toContain("@media (forced-colors: active)");
-  expect(effects).toContain(".hraness-design-aurora-background::before");
-  expect(effects).toContain("background-size: 6px 6px");
+  expect(effects).toContain("@layer components.hraness-design-kit.legacy {");
+  expect(effects).toContain('[data-theme="dark"] .hraness-design-aurora-background,');
+  expect(effects).toContain(".dark .hraness-design-aurora-background {");
+  expect(effects).toContain("--hraness-design-aurora-cyan-mix: 15%;");
+  expect(effects).not.toContain("--hraness-design-aurora-cyan-mix: 26%;");
+  expect(effects).not.toContain("--phaser-dots-static-opacity:");
+
+  const auroraRules = atomicRules(
+    compiledEffects,
+    stylex.props(effectsStyles.auroraBackground).className?.split(" ").filter(Boolean) ?? [],
+    "aurora background",
+  );
+  const dotsRules = atomicRules(
+    compiledEffects,
+    stylex.props(effectsStyles.auroraDots).className?.split(" ").filter(Boolean) ?? [],
+    "aurora dots",
+  );
+  expect(auroraRules).toContain("var(--hraness-design-aurora-cyan-mix, 26%)");
+  expect(dotsRules).toMatch(/--phaser-dots-static-opacity:\s*(?:0?\.3);/u);
   expect(fonts).toContain('font-family: "Geist Mono";');
   expect(fonts).toContain("font-weight: 100 900;");
   expect(fonts).not.toContain("size-adjust:");
