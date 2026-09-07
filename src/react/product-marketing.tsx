@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { marketingClassName as classNames, marketingFactCellVariant } from "./product-marketing.stylex.js";
 
 export type MarketingHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -37,10 +38,6 @@ export interface MarketingLink {
   readonly label: string;
 }
 
-function classNames(...values: readonly (string | undefined)[]): string {
-  return values.filter((value): value is string => value !== undefined && value.length > 0).join(" ");
-}
-
 function Heading({
   children,
   className,
@@ -64,13 +61,17 @@ function childHeadingLevel(level: MarketingHeadingLevel): MarketingHeadingLevel 
 function MarketingActions({
   actions,
   className,
-}: Readonly<{ actions: readonly MarketingAction[]; className: string }>) {
+  tone,
+  context,
+}: Readonly<{ actions: readonly MarketingAction[]; className: string; tone: MarketingTone; context: "hero" | "cta" }>) {
   if (actions.length === 0) return null;
   return (
     <div className={className}>
       {actions.map((action, index) => (
         <a
-          className="hraness-marketing-action"
+          className={classNames("hraness-marketing-action", undefined, tone === "accent"
+            ? `${context}-${action.emphasis ?? (index === 0 ? "primary" : "secondary")}`
+            : (action.emphasis ?? (index === 0 ? "primary" : "secondary")) === "primary" ? "primary" : "default")}
           data-emphasis={action.emphasis ?? (index === 0 ? "primary" : "secondary")}
           href={action.href}
           key={`${action.href}-${action.label}`}
@@ -112,6 +113,7 @@ export function MarketingSiteHeader({
   className,
   links,
   trailing,
+  sticky = true,
 }: Readonly<{
   action?: MarketingAction;
   ariaLabel?: string;
@@ -121,18 +123,21 @@ export function MarketingSiteHeader({
   className?: string;
   links: readonly MarketingLink[];
   trailing?: ReactNode;
+  /** Keep embedded previews in document flow; product headers stick by default. */
+  sticky?: boolean;
 }>) {
   const brandProperties = brandLabel === undefined ? {} : { "aria-label": brandLabel };
   return (
-    <header className={classNames("hraness-marketing-header", className)} data-hraness-marketing="header">
-      <div className="hraness-marketing-header__inner">
-        <a className="hraness-marketing-header__brand" href={brandHref} {...brandProperties}>
+    <header className={classNames("hraness-marketing-header", className, sticky ? "default" : "static")} data-hraness-marketing="header">
+      <div className={classNames("hraness-marketing-header__inner")}>
+        <a className={classNames("hraness-marketing-header__brand")} href={brandHref} {...brandProperties}>
           {brand}
         </a>
-        <nav aria-label={ariaLabel} className="hraness-marketing-header__nav">
+        <nav aria-label={ariaLabel} className={classNames("hraness-marketing-header__nav")}>
           {links.map((link) => (
             <a
               aria-current={link.current === true ? "page" : undefined}
+              className={classNames("hraness-marketing-header__link", undefined, link.current === true ? "current" : "default")}
               href={link.href}
               key={`${link.href}-${link.label}`}
             >
@@ -143,12 +148,12 @@ export function MarketingSiteHeader({
         {action === undefined && trailing === undefined
           ? null
           : (
-            <div className="hraness-marketing-header__actions">
+            <div className={classNames("hraness-marketing-header__actions")}>
               {action === undefined
                 ? null
                 : (
                   <a
-                    className="hraness-marketing-action"
+                    className={classNames("hraness-marketing-action", undefined, `header-${action.emphasis ?? "primary"}`)}
                     data-emphasis={action.emphasis ?? "primary"}
                     href={action.href}
                   >
@@ -179,18 +184,18 @@ export function MarketingFlow({
       data-hraness-marketing="flow"
     >
       {steps.map((step, index) => (
-        <li className="hraness-marketing-flow__step" key={`${String(index)}-${step.label}`}>
-          <span aria-hidden="true" className="hraness-marketing-flow__number">
+        <li className={classNames("hraness-marketing-flow__step", undefined, index === 0 ? "first" : "default")} key={`${String(index)}-${step.label}`}>
+          <span aria-hidden="true" className={classNames("hraness-marketing-flow__number")}>
             {String(index + 1).padStart(2, "0")}
           </span>
-          <div className="hraness-marketing-flow__body">
-            <strong className="hraness-marketing-flow__label">{step.label}</strong>
+          <div className={classNames("hraness-marketing-flow__body")}>
+            <strong className={classNames("hraness-marketing-flow__label")}>{step.label}</strong>
             {step.code === undefined
               ? null
-              : <code className="hraness-marketing-flow__code">{step.code}</code>}
+              : <code className={classNames("hraness-marketing-flow__code")}>{step.code}</code>}
             {step.detail === undefined
               ? null
-              : <p className="hraness-marketing-flow__detail">{step.detail}</p>}
+              : <p className={classNames("hraness-marketing-flow__detail")}>{step.detail}</p>}
           </div>
         </li>
       ))}
@@ -212,12 +217,12 @@ export function MarketingFacts({
       data-hraness-marketing="facts"
       style={{ "--hraness-marketing-fact-columns": String(facts.length) } as Record<string, string>}
     >
-      {facts.map((fact) => (
-        <div key={`${fact.label}-${fact.value}`}>
-          <dt>{fact.label}</dt>
-          <dd>
-            <strong>{fact.value}</strong>
-            {fact.detail === undefined ? null : <span>{fact.detail}</span>}
+      {facts.map((fact, index) => (
+        <div className={classNames("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index))} key={`${fact.label}-${fact.value}`}>
+          <dt className={classNames("hraness-marketing-facts__label")}>{fact.label}</dt>
+          <dd className={classNames("hraness-marketing-facts__body")}>
+            <strong className={classNames("hraness-marketing-facts__value")}>{fact.value}</strong>
+            {fact.detail === undefined ? null : <span className={classNames("hraness-marketing-facts__detail")}>{fact.detail}</span>}
           </dd>
         </div>
       ))}
@@ -269,38 +274,38 @@ export function ProductHero({
   return (
     <header
       aria-labelledby={headingId}
-      className={classNames("hraness-marketing-hero", className)}
+      className={classNames("hraness-marketing-hero", className, tone === "accent" ? "accent" : "default")}
       data-align={align}
       data-hraness-marketing="hero"
       data-tone={tone}
     >
-      <div className="hraness-marketing-hero__copy">
-        <p className="hraness-marketing-hero__eyebrow">{eyebrow}</p>
-        <p className="hraness-marketing-hero__name">{name}</p>
-        <Heading className="hraness-marketing-hero__heading" id={headingId} level={headingLevel}>
+      <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
+        <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>
+        <p className={classNames("hraness-marketing-hero__name")}>{name}</p>
+        <Heading className={classNames("hraness-marketing-hero__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
-        <p className="hraness-marketing-hero__summary">{summary}</p>
+        <p className={classNames("hraness-marketing-hero__summary")}>{summary}</p>
         {example === undefined
           ? null
-          : <p className="hraness-marketing-hero__example">{example}</p>}
-        <MarketingActions actions={actions} className="hraness-marketing-hero__actions" />
+          : <p className={classNames("hraness-marketing-hero__example")}>{example}</p>}
+        <MarketingActions actions={actions} className={classNames("hraness-marketing-hero__actions", undefined, align === "start" ? "start" : "default")} context="hero" tone={tone} />
         {boundary === undefined
           ? null
-          : <p className="hraness-marketing-hero__boundary">{boundary}</p>}
+          : <p className={classNames("hraness-marketing-hero__boundary")}>{boundary}</p>}
       </div>
       {frame === undefined
         ? null
-        : <div className="hraness-marketing-hero__frame">{frame}</div>}
+        : <div className={classNames("hraness-marketing-hero__frame")}>{frame}</div>}
       {proof === undefined
         ? null
         : (
-          <aside className="hraness-marketing-proof" aria-labelledby={`${headingId}-proof`}>
+          <aside className={classNames("hraness-marketing-proof")} aria-labelledby={`${headingId}-proof`}>
             {proof.kicker === undefined
               ? null
-              : <p className="hraness-marketing-proof__kicker">{proof.kicker}</p>}
+              : <p className={classNames("hraness-marketing-proof__kicker")}>{proof.kicker}</p>}
             <Heading
-              className="hraness-marketing-proof__heading"
+              className={classNames("hraness-marketing-proof__heading")}
               id={`${headingId}-proof`}
               level={childHeadingLevel(headingLevel)}
             >
@@ -336,10 +341,10 @@ export function MarketingPillars({
       data-hraness-marketing="pillars"
       style={{ "--hraness-marketing-pillar-columns": String(pillars.length) } as Record<string, string>}
     >
-      {pillars.map((pillar) => (
-        <div key={pillar.label}>
-          <dt>{pillar.label}</dt>
-          <dd>{pillar.summary}</dd>
+      {pillars.map((pillar, index) => (
+        <div className={classNames("hraness-marketing-pillars__item", undefined, index === 0 ? "default" : "later")} key={pillar.label}>
+          <dt className={classNames("hraness-marketing-pillars__label")}>{pillar.label}</dt>
+          <dd className={classNames("hraness-marketing-pillars__summary")}>{pillar.summary}</dd>
         </div>
       ))}
     </dl>
@@ -370,13 +375,13 @@ export function MarketingInstallPanel({
       data-hraness-marketing="install"
       id={id}
     >
-      <div className="hraness-marketing-install__heading-group">
-        <p className="hraness-marketing-install__eyebrow">{eyebrow}</p>
-        <Heading className="hraness-marketing-install__heading" id={headingId} level={headingLevel}>
+      <div className={classNames("hraness-marketing-install__heading-group")}>
+        <p className={classNames("hraness-marketing-install__eyebrow")}>{eyebrow}</p>
+        <Heading className={classNames("hraness-marketing-install__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
       </div>
-      <div className="hraness-marketing-install__commands">{children}</div>
+      <div className={classNames("hraness-marketing-install__commands")}>{children}</div>
     </section>
   );
 }
@@ -403,22 +408,22 @@ export function MarketingProofFrame({
       {title === undefined
         ? null
         : (
-          <div aria-hidden="true" className="hraness-marketing-proof-frame__chrome">
-            <span className="hraness-marketing-proof-frame__lights">
-              <span />
-              <span />
-              <span />
+          <div aria-hidden="true" className={classNames("hraness-marketing-proof-frame__chrome")}>
+            <span className={classNames("hraness-marketing-proof-frame__lights")}>
+              <span className={classNames("hraness-marketing-proof-frame__light")} />
+              <span className={classNames("hraness-marketing-proof-frame__light")} />
+              <span className={classNames("hraness-marketing-proof-frame__light")} />
             </span>
-            <span className="hraness-marketing-proof-frame__title">{title}</span>
+            <span className={classNames("hraness-marketing-proof-frame__title")}>{title}</span>
           </div>
         )}
-      <div className="hraness-marketing-proof-frame__content">{children}</div>
+      <div className={classNames("hraness-marketing-proof-frame__content")}>{children}</div>
       {caption === undefined && credit === undefined
         ? null
         : (
-          <figcaption className="hraness-marketing-proof-frame__caption">
+          <figcaption className={classNames("hraness-marketing-proof-frame__caption")}>
             {caption === undefined ? null : <span>{caption}</span>}
-            {credit === undefined ? null : <small>{credit}</small>}
+            {credit === undefined ? null : <small className={classNames("hraness-marketing-proof-frame__credit")}>{credit}</small>}
           </figcaption>
         )}
     </figure>
@@ -449,26 +454,26 @@ export function MarketingSection({
   return (
     <section
       aria-labelledby={headingId}
-      className={classNames("hraness-marketing-section", className)}
+      className={classNames("hraness-marketing-section", className, layout === "stack" ? "default" : "split")}
       data-hraness-marketing="section"
       data-layout={layout}
       id={id}
     >
-      <div className="hraness-marketing-section__heading-group">
-        <p className="hraness-marketing-section__label">{label}</p>
-        <Heading className="hraness-marketing-section__heading" id={headingId} level={headingLevel}>
+      <div className={classNames("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse")}>
+        <p className={classNames("hraness-marketing-section__label")}>{label}</p>
+        <Heading className={classNames("hraness-marketing-section__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
         {summary === undefined
           ? null
-          : <p className="hraness-marketing-section__summary">{summary}</p>}
+          : <p className={classNames("hraness-marketing-section__summary")}>{summary}</p>}
       </div>
-      <div className="hraness-marketing-section__body">{children}</div>
+      <div className={classNames("hraness-marketing-section__body")}>{children}</div>
     </section>
   );
 }
 
-type MarketingCollectionPrefix = "interfaces" | "maker" | "pricing" | "primitives" | "questions" | "quotes" | "trust";
+type MarketingCollectionPrefix = "interfaces" | "pricing" | "primitives" | "questions" | "quotes" | "trust";
 
 interface MarketingCollectionHeaderProps {
   readonly heading: string;
@@ -488,12 +493,12 @@ function MarketingCollectionHeader({
   summary,
 }: Readonly<MarketingCollectionHeaderProps>) {
   return (
-    <header className={`hraness-marketing-${prefix}__header`}>
-      <p className={`hraness-marketing-${prefix}__label`}>{label}</p>
-      <Heading className={`hraness-marketing-${prefix}__heading`} id={headingId} level={headingLevel}>
+    <header className={classNames(`hraness-marketing-${prefix}__header`)}>
+      <p className={classNames(`hraness-marketing-${prefix}__label`)}>{label}</p>
+      <Heading className={classNames(`hraness-marketing-${prefix}__heading`)} id={headingId} level={headingLevel}>
         {heading}
       </Heading>
-      {summary === undefined ? null : <p>{summary}</p>}
+      {summary === undefined ? null : <p className={classNames(`hraness-marketing-${prefix}__summary`)}>{summary}</p>}
     </header>
   );
 }
@@ -531,16 +536,16 @@ export function MarketingPrimitives({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="primitives" />
-      <ol className="hraness-marketing-primitives__list">
+      <ol className={classNames("hraness-marketing-primitives__list")}>
         {items.map((item, index) => (
-          <li className="hraness-marketing-primitive" key={item.label}>
-            <span aria-hidden="true" className="hraness-marketing-primitive__number">
+          <li className={classNames("hraness-marketing-primitive")} key={item.label}>
+            <span aria-hidden="true" className={classNames("hraness-marketing-primitive__number")}>
               {String(index + 1).padStart(2, "0")}
             </span>
-            <Heading className="hraness-marketing-primitive__heading" level={childHeadingLevel(headingLevel)}>
+            <Heading className={classNames("hraness-marketing-primitive__heading")} level={childHeadingLevel(headingLevel)}>
               {item.label}
             </Heading>
-            <p>{item.summary}</p>
+            <p className={classNames("hraness-marketing-primitive__summary")}>{item.summary}</p>
             {item.example}
           </li>
         ))}
@@ -575,20 +580,20 @@ export function MarketingStatStrip({
       data-hraness-marketing="stats"
     >
       <dl
-        className="hraness-marketing-stats__list"
+        className={classNames("hraness-marketing-stats__list")}
         style={{ "--hraness-marketing-fact-columns": String(stats.length) } as Record<string, string>}
       >
-        {stats.map((stat) => (
-          <div key={`${stat.label}-${stat.value}`}>
-            <dt>{stat.label}</dt>
-            <dd>
-              <strong>{stat.value}</strong>
-              {stat.detail === undefined ? null : <span>{stat.detail}</span>}
+        {stats.map((stat, index) => (
+          <div className={classNames("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index))} key={`${stat.label}-${stat.value}`}>
+            <dt className={classNames("hraness-marketing-facts__label")}>{stat.label}</dt>
+            <dd className={classNames("hraness-marketing-facts__body")}>
+              <strong className={classNames("hraness-marketing-stats__value")}>{stat.value}</strong>
+              {stat.detail === undefined ? null : <span className={classNames("hraness-marketing-facts__detail")}>{stat.detail}</span>}
             </dd>
           </div>
         ))}
       </dl>
-      {source === undefined ? null : <p className="hraness-marketing-stats__source">{source}</p>}
+      {source === undefined ? null : <p className={classNames("hraness-marketing-stats__source")}>{source}</p>}
     </section>
   );
 }
@@ -626,16 +631,16 @@ export function MarketingInterfaceGrid({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="interfaces" />
-      <div className="hraness-marketing-interface-grid">
+      <div className={classNames("hraness-marketing-interface-grid")}>
         {interfaces.map((entry) => (
-          <article className="hraness-marketing-interface" key={entry.label}>
+          <article className={classNames("hraness-marketing-interface")} key={entry.label}>
             <Heading
-              className="hraness-marketing-interface__heading"
+              className={classNames("hraness-marketing-interface__heading")}
               level={childHeadingLevel(headingLevel)}
             >
               {entry.label}
             </Heading>
-            <p>{entry.summary}</p>
+            <p className={classNames("hraness-marketing-interface__summary")}>{entry.summary}</p>
             {entry.example}
           </article>
         ))}
@@ -676,11 +681,11 @@ export function MarketingTrustBoundary({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="trust" />
-      <dl className="hraness-marketing-trust-grid">
+      <dl className={classNames("hraness-marketing-trust-grid")}>
         {items.map((item) => (
-          <div className="hraness-marketing-trust-item" key={item.label}>
-            <dt>{item.label}</dt>
-            <dd>{item.detail}</dd>
+          <div className={classNames("hraness-marketing-trust-item")} key={item.label}>
+            <dt className={classNames("hraness-marketing-trust-item__label")}>{item.label}</dt>
+            <dd className={classNames("hraness-marketing-trust-item__detail")}>{item.detail}</dd>
           </div>
         ))}
       </dl>
@@ -729,20 +734,20 @@ export function MarketingQuoteGrid({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="quotes" />
-      <ul className="hraness-marketing-quote-grid">
+      <ul className={classNames("hraness-marketing-quote-grid")}>
         {quotes.map((entry) => (
           <li key={`${entry.name}-${entry.quote.slice(0, 24)}`}>
-            <figure className="hraness-marketing-quote">
-              <blockquote>
-                <p>{entry.quote}</p>
+            <figure className={classNames("hraness-marketing-quote")}>
+              <blockquote className={classNames("hraness-marketing-quote__body")}>
+                <p className={classNames("hraness-marketing-quote__text")}>{entry.quote}</p>
               </blockquote>
-              <figcaption>
-                <strong>{entry.name}</strong>
+              <figcaption className={classNames("hraness-marketing-quote__attribution")}>
+                <strong className={classNames("hraness-marketing-quote__name")}>{entry.name}</strong>
                 {entry.role === undefined
                   ? null
                   : entry.href === undefined
                     ? <span>{entry.role}</span>
-                    : <a href={entry.href}>{entry.role}</a>}
+                    : <a className={classNames("hraness-marketing-quote__link")} href={entry.href}>{entry.role}</a>}
               </figcaption>
             </figure>
           </li>
@@ -791,36 +796,36 @@ export function MarketingPricing({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="pricing" />
-      <ul className="hraness-marketing-plan-grid">
+      <ul className={classNames("hraness-marketing-plan-grid")}>
         {plans.map((plan) => (
-          <li className="hraness-marketing-plan" data-emphasis={plan.emphasis ?? "secondary"} key={plan.name}>
-            <Heading className="hraness-marketing-plan__name" level={childHeadingLevel(headingLevel)}>
+          <li className={classNames("hraness-marketing-plan", undefined, plan.emphasis === "primary" ? "primary" : "default")} data-emphasis={plan.emphasis ?? "secondary"} key={plan.name}>
+            <Heading className={classNames("hraness-marketing-plan__name")} level={childHeadingLevel(headingLevel)}>
               {plan.name}
             </Heading>
-            <p className="hraness-marketing-plan__price">
-              <strong>{plan.price}</strong>
-              {plan.period === undefined ? null : <span>{plan.period}</span>}
+            <p className={classNames("hraness-marketing-plan__price")}>
+              <strong className={classNames("hraness-marketing-plan__value")}>{plan.price}</strong>
+              {plan.period === undefined ? null : <span className={classNames("hraness-marketing-plan__period")}>{plan.period}</span>}
             </p>
-            {plan.summary === undefined ? null : <p className="hraness-marketing-plan__summary">{plan.summary}</p>}
+            {plan.summary === undefined ? null : <p className={classNames("hraness-marketing-plan__summary")}>{plan.summary}</p>}
             {plan.features.length === 0
               ? null
               : (
-                <ul className="hraness-marketing-plan__features">
-                  {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+                <ul className={classNames("hraness-marketing-plan__features")}>
+                  {plan.features.map((feature) => <li className={classNames("hraness-marketing-plan__feature")} key={feature}>{feature}</li>)}
                 </ul>
               )}
             {plan.action === undefined
               ? null
               : (
                 <a
-                  className="hraness-marketing-action"
+                  className={classNames("hraness-marketing-action", undefined, `plan-${plan.action.emphasis ?? plan.emphasis ?? "secondary"}`)}
                   data-emphasis={plan.action.emphasis ?? plan.emphasis ?? "secondary"}
                   href={plan.action.href}
                 >
                   {plan.action.label}
                 </a>
               )}
-            {plan.note === undefined ? null : <p className="hraness-marketing-plan__note">{plan.note}</p>}
+            {plan.note === undefined ? null : <p className={classNames("hraness-marketing-plan__note")}>{plan.note}</p>}
           </li>
         ))}
       </ul>
@@ -860,11 +865,11 @@ export function MarketingQuestionList({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="questions" />
-      <div className="hraness-marketing-question-list">
-        {questions.map((question) => (
-          <details className="hraness-marketing-question" key={question.question}>
-            <summary>{question.question}</summary>
-            <div className="hraness-marketing-question__answer">{question.answer}</div>
+      <div className={classNames("hraness-marketing-question-list")}>
+        {questions.map((question, index) => (
+          <details className={classNames("hraness-marketing-question", undefined, index === questions.length - 1 ? "last" : "default")} key={question.question}>
+            <summary className={classNames("hraness-marketing-question__summary")}>{question.question}</summary>
+            <div className={classNames("hraness-marketing-question__answer")}>{question.answer}</div>
           </details>
         ))}
       </div>
@@ -904,19 +909,19 @@ export function MarketingMaker({
       data-hraness-marketing="maker"
       id={id}
     >
-      <header className="hraness-marketing-maker__header">
-        {portrait === undefined ? null : <div className="hraness-marketing-maker__portrait">{portrait}</div>}
-        <p className="hraness-marketing-maker__label">{label}</p>
-        <Heading className="hraness-marketing-maker__heading" id={headingId} level={headingLevel}>
+      <header className={classNames("hraness-marketing-maker__header")}>
+        {portrait === undefined ? null : <div className={classNames("hraness-marketing-maker__portrait")}>{portrait}</div>}
+        <p className={classNames("hraness-marketing-maker__label")}>{label}</p>
+        <Heading className={classNames("hraness-marketing-maker__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
       </header>
-      <div className="hraness-marketing-maker__body">
+      <div className={classNames("hraness-marketing-maker__body")}>
         {children}
         {links.length === 0
           ? null
           : (
-            <ul className="hraness-marketing-maker__links">
+            <ul className={classNames("hraness-marketing-maker__links")}>
               {links.map((link) => (
                 <li key={`${link.href}-${link.label}`}>
                   <a href={link.href}>{link.label}</a>
@@ -955,18 +960,18 @@ export function MarketingCallToAction({
   return (
     <section
       aria-labelledby={headingId}
-      className={classNames("hraness-marketing-cta", className)}
+      className={classNames("hraness-marketing-cta", className, tone === "accent" ? "accent" : "default")}
       data-hraness-marketing="cta"
       data-tone={tone}
       id={id}
     >
-      {eyebrow === undefined ? null : <p className="hraness-marketing-cta__eyebrow">{eyebrow}</p>}
-      <Heading className="hraness-marketing-cta__heading" id={headingId} level={headingLevel}>
+      {eyebrow === undefined ? null : <p className={classNames("hraness-marketing-cta__eyebrow")}>{eyebrow}</p>}
+      <Heading className={classNames("hraness-marketing-cta__heading")} id={headingId} level={headingLevel}>
         {heading}
       </Heading>
-      {summary === undefined ? null : <p className="hraness-marketing-cta__summary">{summary}</p>}
-      <MarketingActions actions={actions} className="hraness-marketing-cta__actions" />
-      {footnote === undefined ? null : <p className="hraness-marketing-cta__footnote">{footnote}</p>}
+      {summary === undefined ? null : <p className={classNames("hraness-marketing-cta__summary")}>{summary}</p>}
+      <MarketingActions actions={actions} className={classNames("hraness-marketing-cta__actions")} context="cta" tone={tone} />
+      {footnote === undefined ? null : <p className={classNames("hraness-marketing-cta__footnote")}>{footnote}</p>}
     </section>
   );
 }

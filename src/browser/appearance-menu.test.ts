@@ -210,7 +210,7 @@ test("appearance menu CSS is a portable, accessible leaf asset", () => {
   expect(appearanceCss).toContain(".hraness-design-theme-toggle__item[data-selected]");
   expect(appearanceCss).toContain("@media (pointer: coarse)");
   expect(appearanceCss).toMatch(
-    /@media \(pointer: coarse\) \{\s+\.hraness-design-theme-toggle\[data-presentation="menu"\]\s+\.hraness-design-theme-toggle__trigger\s*\{\s+inline-size:\s*3rem;\s+min-inline-size:\s*3rem;\s+min-block-size:\s*3rem;/u,
+    /@media \(pointer: coarse\) \{\s+\.hraness-design-theme-toggle\[data-hraness-appearance-menu\]\[data-presentation="menu"\]:not\(\[data-hraness-theme-toggle-stylex\]\)\s+\.hraness-design-theme-toggle__trigger\s*\{\s+inline-size:\s*3rem;\s+min-inline-size:\s*3rem;\s+min-block-size:\s*3rem;/u,
   );
   expect(appearanceCss).toContain("@media (prefers-reduced-motion: reduce)");
   expect(appearanceCss).toContain("@media (forced-colors: active)");

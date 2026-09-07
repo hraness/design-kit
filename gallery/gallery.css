@@ -1,0 +1,10 @@
+.design-gallery-appearance-portal-canary {
+  --ui-accent: rgb(89, 45, 168);
+  --ui-accent-foreground: rgb(255, 255, 255);
+  --ui-popover: rgb(17, 31, 47);
+  --ui-popover-foreground: rgb(246, 248, 250);
+  --hraness-appearance-accent: var(--ui-accent);
+  --hraness-appearance-accent-foreground: var(--ui-accent-foreground);
+  --hraness-appearance-popover-background: var(--ui-popover);
+  --hraness-appearance-popover-foreground: var(--ui-popover-foreground);
+}

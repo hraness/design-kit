@@ -11,15 +11,15 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.4.1",
-    "@hraness/ui": "github:hraness/ui#v0.4.7"
+    "@hraness/design-kit": "github:hraness/design-kit#v0.5.0",
+    "@hraness/ui": "github:hraness/ui#v0.5.4"
   }
 }
 ```
 
 `@hraness/ui` is an explicit peer dependency with the supported range
-`>=0.4.7 <0.5.0`; consumers should pin an immutable compatible release such as
-`v0.4.7` when using the stylesheet or React entries. The peer is optional at
+`>=0.5.4 <0.6.0`; consumers should pin an immutable compatible release such as
+`v0.5.4` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
@@ -32,7 +32,11 @@ Import the complete stylesheet once after Tailwind, if the application uses it:
 @import "@hraness/design-kit/styles.css";
 ```
 
-The complete stylesheet composes the token, reset, legacy component, and extracted StyleX layers from `@hraness/ui` before applying design-kit presentation. It keeps `base` below `components`, then freezes UI legacy, priority1, priority2, and priority3 before design-kit legacy, priority1, priority2, priority3, and priority4. Migrated declarations therefore win according to package ownership and StyleX priority without relying on import timing. Nebula Sans is the default proportional text and heading face, while explicit code and mono roles keep the system monospace stack. Package-owned atomic component presentation is authored in colocated `*.stylex.ts` files and compiled into deterministic `dist/stylex.css` with runtime injection disabled. `styles.css` reaches that local artifact once through `components.css`, so the public narrow component entry and the complete entry carry the same component recipes. Generated atomic class names are declaration hashes that may repeat across package layers; they are internal and do not identify package ownership. Use documented stable classes only when a composition exposes one. StyleX 0.19 physicalizes the notice's block-axis inset and border into `top` and `border-bottom` rules. The notice preserves horizontal LTR and RTL behavior; this compiler canary does not claim vertical-writing-mode parity.
+The complete stylesheet composes the token, reset, legacy component, and extracted StyleX layers from `@hraness/ui` before applying design-kit presentation. It keeps `base` below `components`, then freezes UI `legacy.base`, legacy, and priority1 through priority7 before the design-kit legacy and priority1-through-priority8 inventory. The design-kit manifest currently maps eight raw-priority buckets to those eight serialized ranks. Rank 1 begins with generated raw-priority-0 keyframes, so its keyframes and custom-property atoms are unlayered and `priority1` is reserved in the prelude; the remaining atomic output occupies the exact `priority2` through `priority8` blocks. Migrated declarations therefore win according to package ownership and StyleX priority without relying on import timing. Nebula Sans is the default proportional text and heading face, while explicit code and mono roles keep the system monospace stack. Package-owned atomic component presentation is authored in colocated `*.stylex.ts` files and compiled into deterministic `dist/stylex.css` with runtime injection disabled. `styles.css` reaches that local artifact once through `components.css`, so the public narrow component entry and the complete entry carry the same component recipes. Generated atomic class names are declaration hashes that may repeat across package layers; they are internal and do not identify package ownership. Use documented stable classes only when a composition exposes one. The notice retains logical block-axis inset and border declarations through canonical dashed StyleX properties. Its minimum height remains physical; the horizontal LTR and RTL compiler canary does not establish complete vertical-writing-mode parity.
+
+Applications that compile local StyleX declarations register both `@hraness/ui/stylex-manifest.json` and `@hraness/design-kit/stylex-manifest.json` with the build tools from `@hraness/ui/stylex-build`. Import `@hraness/design-kit/compiler-foundation.css` in the stylesheet graph; it includes the UI compiler foundation transitively without either package's precompiled StyleX recipes. The finalizer unions the raw UI, design-kit, and application rules and serializes them once into `components.hraness-stylex`, after every package's legacy layers. Generation plans and completion records use schema 2 and bind the exact union policy; package manifests remain schema 1. Start a fresh generation when upgrading the union policy. Every HTML or SSR entry links that finalized stylesheet after its foundation stylesheet. Do not combine this route with either package's `styles.css` or `stylex.css`.
+
+Package authors use `createStylexTransformCollector` and `serializeStylexPackageRules` from `@hraness/ui/stylex-build` to publish externalized JavaScript, independently usable package CSS under a distinct `components.*` namespace, and a manifest that binds the raw rules, runtime files, standalone CSS, and compiler foundation. Final applications consume those manifests rather than concatenating independently serialized package stylesheets.
 
 Import narrower layers when the application does not need the full presentation system:
 
@@ -357,7 +361,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.1`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.3.0`.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.0`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.4.1`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

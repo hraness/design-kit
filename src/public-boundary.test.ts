@@ -63,11 +63,19 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.4.7 <0.5.0");
+  expect(packageJson.version).toBe("0.5.0");
+  expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.4 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
-  expect(packageJson.devDependencies["@hraness/ui"]).toMatch(
-    /^github:hraness\/ui#(?:v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)|[0-9a-f]{40})$/u,
-  );
+  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.4");
+  expect(packageJson.devDependencies).toMatchObject({
+    "@babel/core": "7.29.7",
+    "@stylexjs/babel-plugin": "0.19.0",
+    "@types/babel__core": "7.20.5",
+    "@types/bun": "1.3.14",
+    lightningcss: "1.33.0",
+  });
+  expect(packageJson.devDependencies["@stylexjs/unplugin"]).toBeUndefined();
+  expect(packageJson.devDependencies.unplugin).toBeUndefined();
   expect(packageJson.scripts.prepublishOnly).toBe("bun run check:publication-ready");
   expect(packageJson.scripts["check:publication-ready"]).toBe(
     "bun run ./scripts/package-smoke.ts --publication",
@@ -80,6 +88,25 @@ test("the package exposes compositions without a second primitive barrel", async
   expect(packageJson.exports["./product-marketing.css"]).toBe(
     "./src/product-marketing.css",
   );
+  expect(packageJson.exports["./compiler-foundation.css"]).toBe(
+    "./src/compiler-foundation.css",
+  );
+  expect(packageJson.exports["./stylex-manifest.json"]).toBe(
+    "./dist/stylex-manifest.json",
+  );
+  for (const path of [
+    "src/compiler-components.css",
+    "src/compiler-foundation.css",
+    "src/compiler-tokens.css",
+    "src/product-marketing-foundation.css",
+    "src/react/app-shell.stylex.ts",
+    "src/react/navigation-rail.stylex.ts",
+    "src/react/product-marketing.stylex.ts",
+    "src/react/route-state.stylex.ts",
+    "src/react/theme.stylex.ts",
+  ]) {
+    expect(packageJson.files).toContain(path);
+  }
   expect(reactBarrel).toContain('./product-marketing.js');
   expect(
     await Bun.file(new URL("./react/server.ts", import.meta.url)).text(),

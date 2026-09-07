@@ -1,6 +1,9 @@
 import type { CSSProperties, HTMLAttributes } from "react";
 
 import { cn } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
+
+import { effectsStyles } from "./effects.stylex.js";
 import {
   createProceduralBackdropRecipe,
   type ProceduralBackdropInput,
@@ -51,11 +54,11 @@ export function ProceduralBackdrop({
     ...(variant === undefined ? {} : { variant }),
   });
   const rootStyle: ProceduralStyle = {
-    ...style,
     "--hraness-design-procedural-highlight": recipe.palette.highlight,
     "--hraness-design-procedural-key": recipe.palette.key,
     "--hraness-design-procedural-shadow": recipe.palette.shadow,
     "--hraness-design-procedural-support": recipe.palette.support,
+    ...style,
   };
   const showAtmosphere = recipe.variant === "atmosphere"
     || recipe.variant === "composite";
@@ -78,13 +81,32 @@ export function ProceduralBackdrop({
     "--hraness-design-procedural-ripple-x": `${recipe.ripple.x}%`,
     "--hraness-design-procedural-ripple-y": `${recipe.ripple.y}%`,
   };
+  const rootPresentation = stylex.props(effectsStyles.proceduralRoot);
+  const atmospherePresentation = stylex.props(
+    effectsStyles.proceduralSlot,
+    effectsStyles.proceduralAtmosphere,
+  );
+  const cloudPresentation = stylex.props(effectsStyles.proceduralCloud);
+  const gridPresentation = stylex.props(
+    effectsStyles.proceduralSlot,
+    effectsStyles.proceduralGrid,
+  );
+  const ripplesPresentation = stylex.props(
+    effectsStyles.proceduralSlot,
+    effectsStyles.proceduralRipples,
+  );
+  const ripplePresentation = stylex.props(effectsStyles.proceduralRipple);
 
   return (
     <div
       {...props}
       {...INERT_PROPS}
       aria-hidden="true"
-      className={cn("hraness-design-procedural-backdrop", className)}
+      className={cn(
+        "hraness-design-procedural-backdrop",
+        rootPresentation.className,
+        className,
+      )}
       data-recipe-version={recipe.version}
       data-variation={recipe.variation}
       data-variant={recipe.variant}
@@ -92,7 +114,12 @@ export function ProceduralBackdrop({
       style={rootStyle}
     >
       {showAtmosphere ? (
-        <span className="hraness-design-procedural-backdrop__atmosphere">
+        <span
+          className={cn(
+            "hraness-design-procedural-backdrop__atmosphere",
+            atmospherePresentation.className,
+          )}
+        >
           {recipe.atmosphere.map((layer, index) => {
             const layerStyle: ProceduralStyle = {
               "--hraness-design-procedural-layer-blur": `${layer.blur}px`,
@@ -111,7 +138,10 @@ export function ProceduralBackdrop({
             };
             return (
               <i
-                className="hraness-design-procedural-backdrop__cloud"
+                className={cn(
+                  "hraness-design-procedural-backdrop__cloud",
+                  cloudPresentation.className,
+                )}
                 key={index}
                 style={layerStyle}
               />
@@ -121,13 +151,19 @@ export function ProceduralBackdrop({
       ) : null}
       {showGrid ? (
         <span
-          className="hraness-design-procedural-backdrop__grid"
+          className={cn(
+            "hraness-design-procedural-backdrop__grid",
+            gridPresentation.className,
+          )}
           style={gridStyle}
         />
       ) : null}
       {showRipple ? (
         <span
-          className="hraness-design-procedural-backdrop__ripples"
+          className={cn(
+            "hraness-design-procedural-backdrop__ripples",
+            ripplesPresentation.className,
+          )}
           style={rippleStyle}
         >
           {recipe.ripple.contours.map((contour, index) => {
@@ -140,7 +176,10 @@ export function ProceduralBackdrop({
             };
             return (
               <i
-                className="hraness-design-procedural-backdrop__ripple"
+                className={cn(
+                  "hraness-design-procedural-backdrop__ripple",
+                  ripplePresentation.className,
+                )}
                 key={index}
                 style={contourStyle}
               />

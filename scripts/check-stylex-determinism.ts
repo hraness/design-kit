@@ -6,9 +6,8 @@ async function buildInFreshProcess(
   buildScript: string,
   destination: string,
 ): Promise<void> {
-  // @stylexjs/unplugin shares extracted rules through a process-global store.
-  // Isolate each absolute-root proof so one compiler cannot retain the other
-  // root's rules before their generated outputs are compared.
+  // Give each absolute-root proof a fresh collector so extracted rules cannot
+  // leak between roots before their generated outputs are compared.
   const subprocess = Bun.spawn({
     cmd: [process.execPath, buildScript],
     cwd: destination,
@@ -37,6 +36,7 @@ async function buildCopy(
   buildScript: string,
 ): Promise<void> {
   await Promise.all([
+    cp(resolve(repository, "package.json"), resolve(destination, "package.json")),
     cp(resolve(repository, "src"), resolve(destination, "src"), {
       recursive: true,
     }),
@@ -84,9 +84,11 @@ try {
   const requiredOutputs = [
     "dist/browser/index.js",
     "dist/index.js",
+    "dist/react/charts.js",
     "dist/react/index.js",
     "dist/react/server.js",
     "dist/stylex.css",
+    "dist/stylex-manifest.json",
     "dist/syntax-highlighting.js",
   ] as const;
   const missingOutputs = requiredOutputs.filter(

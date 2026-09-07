@@ -10,6 +10,7 @@ import {
   cn,
   type SegmentedItem,
 } from "@hraness/ui";
+import * as stylex from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import {
   type ReactNode,
@@ -30,8 +31,12 @@ import {
   normalizeDesignTheme,
 } from "../appearance.js";
 import { colors } from "../index.js";
-import { DesignPortalThemeProvider } from "./design-theme-context.js";
+import {
+  DesignPortalThemeProvider,
+  useDesignPortalClassName,
+} from "./design-theme-context.js";
 import { setJellyThemeMode } from "./jelly-runtime.js";
+import { themeStyles } from "./theme.stylex.js";
 import {
   acquireThemeColorMeta,
   type ThemeColorMetaRegistration,
@@ -243,6 +248,7 @@ export function ThemeToggle({
   size = "compact",
   value: controlledValue,
 }: ThemeToggleProps) {
+  const portalClassName = useDesignPortalClassName();
   const hydrated = useHydrated();
   const { setTheme, theme } = useTheme();
   const controlled = controlledValue !== undefined;
@@ -251,6 +257,11 @@ export function ThemeToggle({
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
+  const presentationStyles = stylex.props(
+    themeStyles.root,
+    resolvedPresentation === "menu" && themeStyles.menuRoot,
+    !ready && themeStyles.notReady,
+  );
   const changeTheme = (nextTheme: DesignTheme): void => {
     if (controlled) onChange?.(nextTheme);
     else setTheme(nextTheme);
@@ -259,10 +270,16 @@ export function ThemeToggle({
 
   return (
     <div
+      {...presentationStyles}
       aria-busy={!ready || undefined}
-      className={cn("hraness-design-theme-toggle", className)}
+      className={cn(
+        "hraness-design-theme-toggle",
+        presentationStyles.className,
+        className,
+      )}
       data-display={resolvedPresentation === "menu" ? "icons" : resolvedDisplay}
       data-hraness-appearance-menu={resolvedPresentation === "menu" ? "" : undefined}
+      data-hraness-theme-toggle-stylex=""
       data-presentation={resolvedPresentation}
       data-ready={ready ? "true" : "false"}
       data-theme-value={value}
@@ -272,6 +289,7 @@ export function ThemeToggle({
           <IconButton
             aria-label={`${ariaLabel}: ${currentLabel}`}
             controlClassName="hraness-design-theme-toggle__trigger"
+            controlXstyle={themeStyles.trigger}
             isDisabled={!ready}
             size={size}
             tooltip={`${ariaLabel}: ${currentLabel}`}
@@ -285,9 +303,14 @@ export function ThemeToggle({
             onAction={(key) => {
               if (isDesignTheme(key)) changeTheme(key);
             }}
-            popoverClassName="hraness-design-theme-toggle__popover"
+            popoverClassName={cn(
+              "hraness-design-theme-toggle__popover",
+              portalClassName,
+            )}
+            popoverXstyle={themeStyles.popover}
             selectedKeys={[value]}
             selectionMode="single"
+            xstyle={themeStyles.menu}
           >
             {designThemes.map((id) => (
               <MenuItem
@@ -297,6 +320,10 @@ export function ThemeToggle({
                 key={id}
                 leading={themeToggleIcon(id)}
                 textValue={themeToggleLabel(id, labels)}
+                xstyle={[
+                  themeStyles.item,
+                  id === value && themeStyles.itemSelected,
+                ]}
               >
                 {themeToggleLabel(id, labels)}
               </MenuItem>

@@ -3,6 +3,24 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice";
 
+test("the production warning preserves native logical edges and background resets", async () => {
+  const recipe = await Bun.file(new URL("./production-data-preview-notice.stylex.ts", import.meta.url)).text();
+  for (const declaration of [
+    '"border-block-end-color": "#5c1906"',
+    '"border-block-end-style": "solid"',
+    '"border-block-end-width": 2',
+    '"inset-block-start": 0',
+    'backgroundAttachment: "scroll"',
+    'backgroundClip: "border-box"',
+    'backgroundImage: "none"',
+    'backgroundOrigin: "padding-box"',
+    'backgroundPosition: "0% 0%"',
+    'backgroundRepeat: "repeat"',
+    'backgroundSize: "auto"',
+  ]) expect(recipe).toContain(declaration);
+  expect(recipe).not.toMatch(/\b(?:borderBlockEnd(?:Color|Style|Width)|insetBlockStart):/u);
+});
+
 function classNames(element: string, html: string): string[] {
   const match = new RegExp(`<${element}[^>]*class="([^"]+)"`, "u").exec(html);
   if (match?.[1] === undefined) throw new Error(`${element} has no rendered classes`);

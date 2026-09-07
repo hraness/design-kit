@@ -1,0 +1,9 @@
+/* Independent raw-HTML oracle: the original marketing sheet and its public
+   token/reset prerequisites. Neither compiled atoms nor the new foundation
+   may contribute to this route. */
+@layer base, components;
+@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-design-kit.legacy;
+@import "../src/tokens.css";
+@import "../src/reset.css";
+@import "../src/typography.css";
+@import "../src/product-marketing.css";
