@@ -10,6 +10,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type * as ProductMarketing from "../src/react/product-marketing.js";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
 import { ProductMarketingFixture, productMarketingConsumerCoverage, productMarketingCoverage } from "../gallery/product-marketing-fixture.js";
+import { ProductMarketingCspFixture, productMarketingCspGrids } from "../gallery/product-marketing-csp-fixture.js";
 import {
   browserStylesheetHasComponentPriorityRules,
   bundleBrowserStylesheet,
@@ -29,6 +30,7 @@ const repository = resolve(import.meta.dir, "..");
 let compilerProjectionPage: Page | undefined;
 const modes = ["static", "projected-static", "standalone", "compiler"] as const;
 const deliveryModes = ["standalone", "compiler"] as const;
+const strictMarketingCsp = "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'";
 type Mode = typeof modes[number];
 const interactionCases = [
   ["paper primary", '.hraness-marketing-hero[data-tone="paper"] .hraness-marketing-action[data-emphasis="primary"]', 0],
@@ -92,6 +94,112 @@ async function settle(page: Page): Promise<void> {
     await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)));
     await new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
   });
+}
+
+async function strictGridSnapshot(page: Page) {
+  return page.locator(productMarketingCspGrids.map(({ selector }) => selector).join(", ")).evaluateAll((elements) =>
+    elements.map((element) => {
+      const style = getComputedStyle(element);
+      return { display: style.display, columns: style.gridTemplateColumns, items: element.children.length,
+        columnValue: style.getPropertyValue(element.matches(".hraness-marketing-pillars")
+          ? "--hraness-marketing-pillar-columns" : "--hraness-marketing-fact-columns").trim() };
+    }));
+}
+
+async function verifyStrictMarketingCsp(browser: Browser, origin: string,
+  stylesheetHashes: Readonly<Record<typeof deliveryModes[number], string>>) {
+  const receipts: { label: string; grids: Awaited<ReturnType<typeof strictGridSnapshot>>; inlineStyles: number; violations: number; cssSha256: string }[] = [];
+  const configurations = [
+    { name: "desktop-light", width: 1280, dark: false, rtl: false, forced: false, coarse: false },
+    { name: "desktop-two-columns", width: 1280, dark: false, rtl: false, forced: false, coarse: false },
+    { name: "phone-dark", width: 390, dark: true, rtl: false, forced: false, coarse: true },
+    { name: "rtl", width: 1100, dark: false, rtl: true, forced: false, coarse: false },
+    { name: "forced", width: 1100, dark: false, rtl: false, forced: true, coarse: false },
+  ] as const;
+  for (const configuration of configurations) for (const mode of deliveryModes) {
+    const label = `${configuration.name}/${mode}/strict-csp`;
+    const page = await browser.newPage({ viewport: { width: configuration.width, height: 900 },
+      colorScheme: configuration.dark ? "dark" : "light", hasTouch: configuration.coarse,
+      forcedColors: configuration.forced ? "active" : "none", reducedMotion: "reduce" });
+    const errors: string[] = [];
+    try {
+      page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+      page.on("pageerror", (error) => errors.push(error.message));
+      page.on("requestfailed", (request) => errors.push(`${request.url()}: ${request.failure()?.errorText}`));
+      page.on("response", (response) => { if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`); });
+      await page.route("**/*", async (route) => {
+        if (new URL(route.request().url()).origin !== origin || !["GET", "HEAD"].includes(route.request().method())) {
+          errors.push(`Unexpected strict-CSP request: ${route.request().url()}`);
+          await route.abort();
+        } else await route.continue();
+      });
+      await page.addInitScript(() => {
+        const state = window as unknown as { marketingCspViolations: string[] };
+        state.marketingCspViolations = [];
+        document.addEventListener("securitypolicyviolation", (event) => {
+          if (state.marketingCspViolations.length < 32) state.marketingCspViolations.push(event.violatedDirective);
+        });
+      });
+      const query = new URLSearchParams({ mode, theme: configuration.dark ? "dark" : "light", direction: configuration.rtl ? "rtl" : "ltr" });
+      const columnOverride = configuration.name === "desktop-two-columns" ? 2 : undefined;
+      if (columnOverride !== undefined) query.set("columns", String(columnOverride));
+      const response = await page.goto(`${origin}/strict-csp?${query}`, { waitUntil: "networkidle" });
+      assert.ok(response !== null, `${label}: missing document response`);
+      assert.equal(response.status(), 200, label);
+      assert.equal(response.headers()["content-security-policy"], strictMarketingCsp, `${label}: exact strict policy`);
+      await settle(page);
+      assert.deepEqual(await page.evaluate(() => ({
+        narrow: matchMedia("(max-width: 48rem)").matches, coarse: matchMedia("(pointer: coarse)").matches,
+        dark: matchMedia("(prefers-color-scheme: dark)").matches, forced: matchMedia("(forced-colors: active)").matches,
+        reduced: matchMedia("(prefers-reduced-motion: reduce)").matches, direction: document.documentElement.dir,
+      })), { narrow: configuration.width <= 768, coarse: configuration.coarse, dark: configuration.dark,
+        forced: configuration.forced, reduced: true, direction: configuration.rtl ? "rtl" : "ltr" }, label);
+      assert.equal(await page.locator("[style], style, script").count(), 0, `${label}: no inline style or production script`);
+      const grids = await strictGridSnapshot(page);
+      assert.equal(grids.length, productMarketingCspGrids.length, label);
+      for (const [index, expected] of productMarketingCspGrids.entries()) {
+        const actual = required(grids[index], `${label}: grid ${index}`);
+        assert.equal(await page.locator(expected.selector).count(), 1, label);
+        assert.equal(actual.display, "grid", label);
+        assert.equal(actual.items, expected.items, label);
+        assert.equal(actual.columnValue, String(columnOverride ?? expected.desktopColumns), `${label}: explicit compiled column atom`);
+        assert.match(actual.columns, /^\d+(?:\.\d+)?px(?: \d+(?:\.\d+)?px)*$/u, `${label}: resolved finite tracks`);
+        const tracks = actual.columns.split(" ");
+        assert.equal(tracks.length, configuration.width <= 768 ? expected.narrowColumns : columnOverride ?? expected.desktopColumns, label);
+        assert.ok(tracks.every((track) => Number.parseFloat(track) > 0), `${label}: nonempty tracks`);
+      }
+      const sheet = page.locator('link[rel="stylesheet"]');
+      assert.equal(await sheet.count(), 1, `${label}: one delivery stylesheet`);
+      const href = await sheet.getAttribute("href");
+      assert.ok(href !== null, `${label}: missing stylesheet URL`);
+      assert.equal(href, `/styles.css?mode=${mode}`);
+      const css = await page.request.get(new URL(href, origin).href);
+      assert.equal(css.status(), 200, label);
+      const cssSha256 = createHash("sha256").update(await css.body()).digest("hex");
+      assert.equal(cssSha256, stylesheetHashes[mode], `${label}: graph-bound stylesheet bytes`);
+      await sheet.evaluate((element) => { (element as HTMLLinkElement).disabled = true; });
+      try {
+        await settle(page);
+        assert.notDeepEqual(await strictGridSnapshot(page), grids, `${label}: stylesheet removal must break compiled geometry`);
+      } finally { await sheet.evaluate((element) => { (element as HTMLLinkElement).disabled = false; }); }
+      await settle(page);
+      assert.deepEqual(await strictGridSnapshot(page), grids, `${label}: restored exact geometry`);
+      const summary = page.locator("details > summary");
+      assert.equal(await summary.count(), 1, label);
+      await page.keyboard.press("Shift");
+      await summary.focus();
+      assert.equal(await summary.evaluate((element) => element.matches(":focus-visible")), true, label);
+      await page.keyboard.press("Enter");
+      assert.equal(await page.locator("details").getAttribute("open"), "", label);
+      await page.keyboard.press("Space");
+      assert.equal(await page.locator("details").getAttribute("open"), null, label);
+      assert.equal(await page.locator("[style], style, script").count(), 0, label);
+      assert.deepEqual(await page.evaluate(() => (window as unknown as { marketingCspViolations: string[] }).marketingCspViolations), [], label);
+      assert.deepEqual(errors, [], label);
+      receipts.push({ label, grids, inlineStyles: 0, violations: 0, cssSha256 });
+    } finally { await page.close(); }
+  }
+  return receipts;
 }
 
 async function snapshot(page: Page, selector = '[class*="hraness-marketing-"], [data-marketing-oracle]', index?: number, original = false): Promise<readonly Observation[]> {
@@ -390,6 +498,12 @@ try {
   // The fixture renders the shipped server entry, not copied component markup or a mock recipe.
   const api: typeof ProductMarketing = await import(join(repository, "dist/react/server.js"));
   const html = renderToStaticMarkup(createElement(ProductMarketingFixture, { api }));
+  const strictHtml = renderToStaticMarkup(createElement(ProductMarketingCspFixture, { api }));
+  const strictTwoColumnHtml = renderToStaticMarkup(createElement(ProductMarketingCspFixture, { api, columns: 2 }));
+  assert.doesNotMatch(strictHtml, /\sstyle\s*=|<style\b|<script\b/iu, "The strict public composition contains inline styling or script");
+  assert.doesNotMatch(strictTwoColumnHtml, /\sstyle\s*=|<style\b|<script\b/iu, "The nondefault strict composition contains inline styling or script");
+  await writeFile(join(output, "strict-csp.html"), strictHtml, { flag: "wx" });
+  await writeFile(join(output, "strict-csp-two-columns.html"), strictTwoColumnHtml, { flag: "wx" });
   const staticHtml = html.replace(/class="([^"]*)"/gu, (_match, value: string) => {
     const hooks = value.split(/\s+/u).filter((token) => token.startsWith("hraness-marketing-")
       || token.startsWith("fixture-") || token === "marketing-fixture");
@@ -491,6 +605,17 @@ try {
       if (within.startsWith("..") || isAbsolute(within) || !within.endsWith(".woff2")) return new Response(null, { status: 404 });
       return new Response(await readFile(path), { headers: { "content-type": "font/woff2" } });
     }
+    if (url.pathname === "/strict-csp") {
+      const mode = url.searchParams.get("mode");
+      if (mode !== "standalone" && mode !== "compiler") return new Response(null, { status: 404 });
+      const theme = url.searchParams.get("theme") === "dark" ? "dark" : "light";
+      const direction = url.searchParams.get("direction") === "rtl" ? "rtl" : "ltr";
+      const columns = url.searchParams.get("columns");
+      if (columns !== null && columns !== "2") return new Response(null, { status: 404 });
+      return new Response(`<!doctype html><html lang="en" dir="${direction}" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Strict marketing columns</title><link rel="stylesheet" href="/styles.css?mode=${mode}"></head><body>${columns === "2" ? strictTwoColumnHtml : strictHtml}</body></html>`, {
+        headers: { "content-type": "text/html", "content-security-policy": strictMarketingCsp },
+      });
+    }
     const mode = url.pathname.slice(1) as Mode;
     if (!modes.includes(mode)) return new Response(null, { status: 404 });
     const axis = url.searchParams.get("axis") === "vertical" ? "vertical" : "horizontal";
@@ -508,6 +633,10 @@ try {
   const origin = `http://127.0.0.1:${server.port}`;
   const browserPath = await executable();
   browser = await chromium.launch({ executablePath: browserPath, headless: true, args: ["--no-sandbox"] });
+  const strictCsp = await verifyStrictMarketingCsp(browser, origin, {
+    standalone: createHash("sha256").update(standalone).digest("hex"),
+    compiler: createHash("sha256").update(compiler).digest("hex"),
+  });
   compilerProjectionPage = await browser.newPage();
   colorProbeReceipt = await colorProbe(compilerProjectionPage);
   const configurations = [
@@ -653,7 +782,7 @@ try {
     native: [...nativeOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     projectedNative: [...projectedOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     standalone: createHash("sha256").update(standalone).digest("hex"), compiler: createHash("sha256").update(compiler).digest("hex") };
-  const evidence = { browserPath, browserVersion: browser.version(), legacySha256, stylesheetHashes, modes, coverage: productMarketingCoverage, consumerCoverage: productMarketingConsumerCoverage, interactionCases, environments, colorProbe: colorProbeReceipt,
+  const evidence = { browserPath, browserVersion: browser.version(), legacySha256, stylesheetHashes, modes, coverage: productMarketingCoverage, consumerCoverage: productMarketingConsumerCoverage, interactionCases, environments, colorProbe: colorProbeReceipt, strictCsp,
     colorParityContract: "all non-color computed structure equals the byte-exact raw oracle; delivery colors equal the browser-computed original-source oracle after only exact numeric OKLab/OKLCH spans are projected by the pinned compiler; raw/projected color differences are reported and never asserted as native equivalence",
     originalSourceColorProjections: projectedOracle.projections,
     rawProjectedColorDifferences: [...rawColorDifferences].map(([sha256, difference]) => ({ sha256, ...difference })),

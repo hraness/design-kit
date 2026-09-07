@@ -1,5 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 
+export type MarketingColumnCount = 1 | 2 | 3 | 4;
+
 // The public static stylesheet remains unchanged. These owned slot recipes
 // preserve its declarations and finite states for compiler-adopter React graphs.
 // Compound border tokens stay in native side shorthands; only a full border
@@ -11,6 +13,14 @@ import * as stylex from "@stylexjs/stylex";
 export const questionMarker = stylex.defineMarker();
 
 export const marketingStyles = stylex.create({
+  factColumns1: { "--hraness-marketing-fact-columns": "1" },
+  factColumns2: { "--hraness-marketing-fact-columns": "2" },
+  factColumns3: { "--hraness-marketing-fact-columns": "3" },
+  factColumns4: { "--hraness-marketing-fact-columns": "4" },
+  pillarColumns1: { "--hraness-marketing-pillar-columns": "1" },
+  pillarColumns2: { "--hraness-marketing-pillar-columns": "2" },
+  pillarColumns3: { "--hraness-marketing-pillar-columns": "3" },
+  pillarColumns4: { "--hraness-marketing-pillar-columns": "4" },
   actionFocus: {
     outline: { default: null, ":focus-visible": "2px solid var(--hraness-marketing-accent)" },
     "outline-offset": { default: null, ":focus-visible": "2px" },
@@ -3637,6 +3647,35 @@ const recipes = {
 } as const;
 
 export type MarketingSlot = keyof typeof recipes;
+
+const factColumns = {
+  1: marketingStyles.factColumns1,
+  2: marketingStyles.factColumns2,
+  3: marketingStyles.factColumns3,
+  4: marketingStyles.factColumns4,
+} as const;
+
+const pillarColumns = {
+  1: marketingStyles.pillarColumns1,
+  2: marketingStyles.pillarColumns2,
+  3: marketingStyles.pillarColumns3,
+  4: marketingStyles.pillarColumns4,
+} as const;
+
+/** Explicit finite columns compose static atoms, including the existing media rules. */
+export function marketingColumnClassName(
+  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list",
+  caller: string | undefined,
+  columns: MarketingColumnCount | undefined,
+): string {
+  if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
+    throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
+  }
+  const columnRecipe = columns === undefined ? undefined
+    : (hook === "hraness-marketing-pillars" ? pillarColumns : factColumns)[columns];
+  return [hook, stylex.props(recipes[hook].default, columnRecipe).className, caller]
+    .filter((value) => value !== undefined && value.length > 0).join(" ");
+}
 
 /** A finite slot/state lookup keeps caller classes last and never injects CSS. */
 export function marketingClassName(

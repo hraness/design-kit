@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { parseHTML } from "linkedom";
 
 import {
   DesignSystemGallery,
@@ -117,6 +118,11 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-hraness-marketing="pricing"');
   expect(html).toContain('data-hraness-marketing="maker"');
   expect(html).toContain("bun add --global relay@1.2.3");
+  const marketing = parseHTML(html).document.querySelector(".design-gallery__marketing");
+  expect(marketing).not.toBeNull();
+  expect(marketing?.querySelector("[style]")).toBeNull();
+  expect(marketing?.querySelectorAll(".hraness-marketing-facts__item")).toHaveLength(6);
+  expect(marketing?.querySelectorAll(".hraness-marketing-pillars__item")).toHaveLength(3);
 });
 
 test("a nested gallery identifies itself and defers appearance to the product header", () => {

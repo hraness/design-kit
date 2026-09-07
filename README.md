@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.5.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.5.1",
     "@hraness/ui": "github:hraness/ui#v0.5.4"
   }
 }
@@ -110,6 +110,7 @@ import {
   />
   <MarketingPillars
     ariaLabel="Relay in three points"
+    columns={3}
     pillars={[
       { label: "Fast", summary: "Runs locally with no service in the loop." },
       { label: "Legible", summary: "Every run leaves a receipt you can open." },
@@ -130,6 +131,15 @@ edge in the product accent. `layout="split"` or `"split-reverse"` on a
 section places its heading group beside its body. `MarketingQuoteGrid` and
 `MarketingPillars` render nothing for an empty list, so a site adds quotes
 only when it has real, attributed ones.
+
+For a policy with `style-src-attr 'none'`, set `columns` to `1`, `2`, `3`, or
+`4` on `MarketingFacts`, `MarketingPillars`, and `MarketingStatStrip`. Set
+`factsColumns` on `ProductHero` for its nested facts. These finite choices use
+compiled recipes and emit no inline column style. Below 48rem, facts and stats
+still use two columns and pillars use one. Omitting the prop preserves the
+existing item-count custom property, including its inline style and arbitrary
+collection length. Use the compiled standalone stylesheet or the finalized
+compiler-adopter stylesheet with the finite choices.
 
 Homepage copy on this grammar follows a few rules on top of `STYLE.md`. The
 headline is the reader's outcome in eight words or fewer, sentence case, no
@@ -361,7 +371,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.0`. The previous rollback pair remains `@hraness/ui` `v0.4.7` with `@hraness/design-kit` `v0.4.1`.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.1`. The previous rollback pair remains `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.0`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

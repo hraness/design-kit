@@ -569,6 +569,38 @@ var questionMarker = {
   $$css: true
 };
 var marketingStyles = {
+  factColumns1: {
+    "--hraness-marketing-fact-columns": "x1fyigdq",
+    $$css: true
+  },
+  factColumns2: {
+    "--hraness-marketing-fact-columns": "xhlljzi",
+    $$css: true
+  },
+  factColumns3: {
+    "--hraness-marketing-fact-columns": "xhjkyrr",
+    $$css: true
+  },
+  factColumns4: {
+    "--hraness-marketing-fact-columns": "x1mdspvo",
+    $$css: true
+  },
+  pillarColumns1: {
+    "--hraness-marketing-pillar-columns": "xphms39",
+    $$css: true
+  },
+  pillarColumns2: {
+    "--hraness-marketing-pillar-columns": "xavnjml",
+    $$css: true
+  },
+  pillarColumns3: {
+    "--hraness-marketing-pillar-columns": "xz1jsh7",
+    $$css: true
+  },
+  pillarColumns4: {
+    "--hraness-marketing-pillar-columns": "xj4arhr",
+    $$css: true
+  },
   actionFocus: {
     kI3sdo: "x13mrud1",
     kVtf5F: "x7s97pk",
@@ -3096,6 +3128,25 @@ var recipes = {
     "cta-secondary": marketingStyles.ctaActionSecondary
   }
 };
+var factColumns = {
+  1: marketingStyles.factColumns1,
+  2: marketingStyles.factColumns2,
+  3: marketingStyles.factColumns3,
+  4: marketingStyles.factColumns4
+};
+var pillarColumns = {
+  1: marketingStyles.pillarColumns1,
+  2: marketingStyles.pillarColumns2,
+  3: marketingStyles.pillarColumns3,
+  4: marketingStyles.pillarColumns4
+};
+function marketingColumnClassName(hook, caller, columns) {
+  if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
+    throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
+  }
+  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : factColumns)[columns];
+  return [hook, stylex2.props(recipes[hook].default, columnRecipe).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
+}
 function marketingClassName(hook, caller, variant = "default") {
   const variants = recipes[hook];
   if (!Object.hasOwn(variants, variant))
@@ -3258,16 +3309,18 @@ function MarketingFlow({
 }
 function MarketingFacts({
   className,
+  columns,
   facts
 }) {
+  const rootClassName = marketingColumnClassName("hraness-marketing-facts", className, columns);
   if (facts.length === 0)
     return null;
   return /* @__PURE__ */ jsx2("dl", {
-    className: marketingClassName("hraness-marketing-facts", className),
+    className: rootClassName,
     "data-hraness-marketing": "facts",
-    style: {
+    style: columns === undefined ? {
       "--hraness-marketing-fact-columns": String(facts.length)
-    },
+    } : undefined,
     children: facts.map((fact, index) => /* @__PURE__ */ jsxs2("div", {
       className: marketingClassName("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index)),
       children: [
@@ -3300,6 +3353,7 @@ function ProductHero({
   example,
   eyebrow,
   facts = [],
+  factsColumns,
   frame,
   heading,
   headingId,
@@ -3375,7 +3429,10 @@ function ProductHero({
         ]
       }),
       /* @__PURE__ */ jsx2(MarketingFacts, {
-        facts
+        facts,
+        ...factsColumns === undefined ? {} : {
+          columns: factsColumns
+        }
       })
     ]
   });
@@ -3383,17 +3440,19 @@ function ProductHero({
 function MarketingPillars({
   ariaLabel,
   className,
+  columns,
   pillars
 }) {
+  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns);
   if (pillars.length === 0)
     return null;
   return /* @__PURE__ */ jsx2("dl", {
     "aria-label": ariaLabel,
-    className: marketingClassName("hraness-marketing-pillars", className),
+    className: rootClassName,
     "data-hraness-marketing": "pillars",
-    style: {
+    style: columns === undefined ? {
       "--hraness-marketing-pillar-columns": String(pillars.length)
-    },
+    } : undefined,
     children: pillars.map((pillar, index) => /* @__PURE__ */ jsxs2("div", {
       className: marketingClassName("hraness-marketing-pillars__item", undefined, index === 0 ? "default" : "later"),
       children: [
@@ -3627,9 +3686,11 @@ function MarketingPrimitives({
 function MarketingStatStrip({
   ariaLabel,
   className,
+  columns,
   source,
   stats
 }) {
+  const listClassName = marketingColumnClassName("hraness-marketing-stats__list", undefined, columns);
   if (stats.length === 0)
     return null;
   return /* @__PURE__ */ jsxs2("section", {
@@ -3638,10 +3699,10 @@ function MarketingStatStrip({
     "data-hraness-marketing": "stats",
     children: [
       /* @__PURE__ */ jsx2("dl", {
-        className: marketingClassName("hraness-marketing-stats__list"),
-        style: {
+        className: listClassName,
+        style: columns === undefined ? {
           "--hraness-marketing-fact-columns": String(stats.length)
-        },
+        } : undefined,
         children: stats.map((stat, index) => /* @__PURE__ */ jsxs2("div", {
           className: marketingClassName("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index)),
           children: [

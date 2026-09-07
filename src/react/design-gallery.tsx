@@ -247,6 +247,7 @@ export function DesignSystemGallery({
               { detail: "One inspectable result.", label: "Output", value: "Receipt" },
               { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" },
             ]}
+            factsColumns={3}
             frame={(
               <MarketingProofFrame
                 caption="Receipt produced by the checked example."
@@ -264,6 +265,7 @@ export function DesignSystemGallery({
           />
           <MarketingPillars
             ariaLabel="Relay in three points"
+            columns={3}
             pillars={[
               { label: "Fast", summary: "Runs locally with no service in the loop." },
               { label: "Legible", summary: "Every run leaves a receipt you can open." },
@@ -312,6 +314,7 @@ export function DesignSystemGallery({
           ]} />
           <MarketingStatStrip
             ariaLabel="Relay usage"
+            columns={3}
             source="Counted from the public example repository on 5 September 2026."
             stats={[
               { label: "Example jobs", value: "12" },
