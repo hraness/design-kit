@@ -148,20 +148,126 @@ function highlightMarkdownInline(value: string): string {
   return html + escapeHtml(value.slice(cursor));
 }
 
+interface MarkdownLineParts {
+  readonly content: string;
+  readonly indentation: string;
+  readonly marker: string;
+  readonly separator: string;
+}
+
+/** Exact ECMAScript `\s` code-unit set used by the former matchers. */
+function isMarkdownWhitespace(codeUnit: number): boolean {
+  return codeUnit === 0x0009
+    || codeUnit === 0x000a
+    || codeUnit === 0x000b
+    || codeUnit === 0x000c
+    || codeUnit === 0x000d
+    || codeUnit === 0x0020
+    || codeUnit === 0x00a0
+    || codeUnit === 0x1680
+    || (codeUnit >= 0x2000 && codeUnit <= 0x200a)
+    || codeUnit === 0x2028
+    || codeUnit === 0x2029
+    || codeUnit === 0x202f
+    || codeUnit === 0x205f
+    || codeUnit === 0x3000
+    || codeUnit === 0xfeff;
+}
+
+function isMarkdownLineTerminator(codeUnit: number): boolean {
+  return codeUnit === 0x000a
+    || codeUnit === 0x000d
+    || codeUnit === 0x2028
+    || codeUnit === 0x2029;
+}
+
+function isAsciiDigit(codeUnit: number): boolean {
+  return codeUnit >= 0x0030 && codeUnit <= 0x0039;
+}
+
+function markdownLineParts(
+  line: string,
+  kind: "fence" | "heading" | "list",
+): MarkdownLineParts | null {
+  let markerStart = 0;
+  while (
+    markerStart < line.length
+    && isMarkdownWhitespace(line.charCodeAt(markerStart))
+  ) {
+    markerStart += 1;
+  }
+
+  let markerEnd = markerStart;
+  if (kind === "fence") {
+    const fence = line.charCodeAt(markerStart);
+    if (fence !== 0x0060 && fence !== 0x007e) return null;
+    while (markerEnd < line.length && line.charCodeAt(markerEnd) === fence) {
+      markerEnd += 1;
+    }
+    if (markerEnd - markerStart < 3) return null;
+  } else if (kind === "heading") {
+    while (
+      markerEnd < line.length
+      && markerEnd - markerStart < 6
+      && line.charCodeAt(markerEnd) === 0x0023
+    ) {
+      markerEnd += 1;
+    }
+    if (markerEnd === markerStart) return null;
+  } else {
+    const first = line.charCodeAt(markerStart);
+    if (first === 0x002a || first === 0x002b || first === 0x002d) {
+      markerEnd += 1;
+    } else if (isAsciiDigit(first)) {
+      while (markerEnd < line.length && isAsciiDigit(line.charCodeAt(markerEnd))) {
+        markerEnd += 1;
+      }
+      if (line.charCodeAt(markerEnd) !== 0x002e) return null;
+      markerEnd += 1;
+    } else {
+      return null;
+    }
+  }
+
+  const separatorStart = markerEnd;
+  if (kind !== "fence") {
+    while (
+      markerEnd < line.length
+      && isMarkdownWhitespace(line.charCodeAt(markerEnd))
+    ) {
+      markerEnd += 1;
+    }
+    if (markerEnd === separatorStart) return null;
+  }
+
+  // One final pass preserves `.` without dotAll: content containing any line
+  // terminator was never a legacy match, even when the terminator was last.
+  for (let cursor = markerEnd; cursor < line.length; cursor += 1) {
+    if (isMarkdownLineTerminator(line.charCodeAt(cursor))) return null;
+  }
+
+  return {
+    content: line.slice(markerEnd),
+    indentation: line.slice(0, markerStart),
+    marker: line.slice(markerStart, separatorStart),
+    separator: line.slice(separatorStart, markerEnd),
+  };
+}
+
 function highlightMarkdownLine(line: string): string {
-  const fence = /^(\s*)(`{3,}|~{3,})(.*)$/u.exec(line);
+  const fence = markdownLineParts(line, "fence");
   if (fence !== null) {
-    return `${escapeHtml(fence[1] ?? "")}${token("marker", fence[2] ?? "")}${token("keyword", fence[3] ?? "")}`;
+    return `${escapeHtml(fence.indentation)}${token("marker", fence.marker)}${token("keyword", fence.content)}`;
   }
 
-  const heading = /^(\s*)(#{1,6})(\s+)(.*)$/u.exec(line);
+  const heading = markdownLineParts(line, "heading");
   if (heading !== null) {
-    return `${escapeHtml(heading[1] ?? "")}${token("marker", heading[2] ?? "")}${escapeHtml(heading[3] ?? "")}${tokenHtml("heading", highlightMarkdownInline(heading[4] ?? ""))}`;
+    return `${escapeHtml(heading.indentation)}${token("marker", heading.marker)}${escapeHtml(heading.separator)}${tokenHtml("heading", highlightMarkdownInline(heading.content))}`;
   }
 
-  const listItem = /^(\s*)([-*+]|\d+\.)(\s+)(.*)$/u.exec(line);
+  const listItem = markdownLineParts(line, "list");
   if (listItem !== null) {
-    return `${escapeHtml(listItem[1] ?? "")}${token("marker", listItem[2] ?? "")}${escapeHtml(listItem[3] ?? "")}${highlightMarkdownInline(listItem[4] ?? "")}`;
+    return `${escapeHtml(listItem.indentation)}${token("marker", listItem.marker)}${escapeHtml(listItem.separator)}${highlightMarkdownInline(listItem.content)}`;
   }
 
   const quote = /^(\s*)(>)(\s?)(.*)$/u.exec(line);
