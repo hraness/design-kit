@@ -17,6 +17,7 @@ async function repositoryTextFiles(directory: string): Promise<string[]> {
   return nested.flat().sort();
 }
 
+// Exhaustive checkout scanning needs a bounded budget beyond the unit-test default.
 test("the repository contains only redistributable public identities", async () => {
   const root = repository.pathname;
   const files = await repositoryTextFiles(root);
@@ -42,7 +43,7 @@ test("the repository contains only redistributable public identities", async () 
       }
     }
   }
-});
+}, 60_000);
 
 test("the package exposes compositions without a second primitive barrel", async () => {
   const packageJson = await Bun.file(new URL("../package.json", import.meta.url)).json();
