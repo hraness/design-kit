@@ -1,3 +1,6 @@
+export * from "./palettes.js";
+export * from "./palette-appearance.js";
+export * from "./palette-themes.js";
 export * from "./syntax-highlighting.js";
 export * from "./appearance.js";
 

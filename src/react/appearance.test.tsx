@@ -411,8 +411,9 @@ test("theme color synchronization waits for a concrete resolved appearance", asy
   const source = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
 
   expect(source).toContain(
-    'const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark"',
+    'resolvedTheme === "light" || resolvedTheme === "dark"',
   );
+  expect(source).toContain('metaName !== "theme-color" && palette.ready ? palette.background : undefined');
   expect(source).toContain("if (!hasResolvedColor || latestColor.current === undefined) return;");
   expect(source).toContain("acquireThemeColorMeta(");
 });

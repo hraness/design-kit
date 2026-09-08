@@ -14,6 +14,7 @@ interface ThemeColorMetaManager {
   readonly document: Document;
   readonly metaName: string;
   observer: MutationObserver | null;
+  observedHead: HTMLHeadElement | null;
   readonly owner: string;
   readonly registrations: Map<symbol, string>;
 }
@@ -113,13 +114,18 @@ function reconcileThemeColorMetas(manager: ThemeColorMetaManager): void {
   for (const meta of metas) {
     if (meta !== active) disableCompetingMeta(manager, meta);
   }
+  observeThemeColorMetas(manager);
 }
 
 function observeThemeColorMetas(manager: ThemeColorMetaManager): void {
+  const head = manager.document.head;
+  if (manager.observer !== null && manager.observedHead === head) return;
+  manager.observer?.disconnect();
+  manager.observedHead = null;
   const Observer = manager.document.defaultView?.MutationObserver;
   if (Observer === undefined) return;
-  manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
-  manager.observer.observe(manager.document.head, {
+  manager.observer ??= new Observer(() => reconcileThemeColorMetas(manager));
+  manager.observer.observe(head, {
     attributeFilter: [
       "content",
       "media",
@@ -131,11 +137,13 @@ function observeThemeColorMetas(manager: ThemeColorMetaManager): void {
     childList: true,
     subtree: true,
   });
+  manager.observedHead = head;
 }
 
 function destroyThemeColorManager(manager: ThemeColorMetaManager): void {
   manager.observer?.disconnect();
   manager.observer = null;
+  manager.observedHead = null;
 
   for (const meta of manager.activeMetas) meta.remove();
   for (const [meta, original] of manager.disabledMetas) {
@@ -177,6 +185,7 @@ export function acquireThemeColorMeta(
       document,
       metaName,
       observer: null,
+      observedHead: null,
       owner: String(ownerSequence),
       registrations: new Map(),
     };
@@ -185,7 +194,6 @@ export function acquireThemeColorMeta(
 
   manager.registrations.set(registrationId, color);
   reconcileThemeColorMetas(manager);
-  if (manager.observer === null) observeThemeColorMetas(manager);
 
   let released = false;
   return {

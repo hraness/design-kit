@@ -31,6 +31,7 @@ import {
   normalizeDesignTheme,
 } from "../appearance.js";
 import { colors } from "../index.js";
+import { DesignPaletteMenuButton, useDesignPalette } from "./design-palette.js";
 import {
   DesignPortalThemeProvider,
   useDesignPortalClassName,
@@ -351,6 +352,8 @@ export type ThemeMenuButtonProps = ThemeToggleBaseProps & ThemeToggleControlProp
  * in a product header so every surface exposes the same icon-menu pattern.
  */
 export function ThemeMenuButton(props: ThemeMenuButtonProps) {
+  const palette = useDesignPalette();
+  if (palette !== null) return <DesignPaletteMenuButton {...props} />;
   return <ThemeToggle {...props} presentation="menu" />;
 }
 
@@ -373,12 +376,17 @@ export function ThemeColorSync({
   lightColor = colors.light.background,
   metaName = "theme-color",
 }: ThemeColorSyncProps) {
+  const palette = useDesignPalette();
   const { resolvedTheme } = useTheme();
   const registrationId = useRef(Symbol("hraness-design-theme-color"));
   const registration = useRef<ThemeColorMetaRegistration | null>(null);
-  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark"
-    ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor })
-    : undefined;
+  const resolvedColor = palette !== null
+    // The adopted palette controller already owns theme-color, including when
+    // its bootstrap was loaded as a separate bundle before React.
+    ? (metaName !== "theme-color" && palette.ready ? palette.background : undefined)
+    : resolvedTheme === "light" || resolvedTheme === "dark"
+      ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor })
+      : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
   const latestColor = useRef(resolvedColor);
   latestColor.current = resolvedColor;

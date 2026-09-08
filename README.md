@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.5.2",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.6.0",
     "@hraness/ui": "github:hraness/ui#v0.5.4"
   }
 }
@@ -290,6 +290,10 @@ diffraction; keyboard focus gets a motionless material cue. Touch, reduced
 motion, and forced-colors modes keep ordinary semantic content intact, and no
 inactive card receives `will-change`.
 
+## Semantic palettes
+
+Opt into Catppuccin, Gruvbox, Rosé Pine, or Tokyo Night in light or dark mode. `DesignPaletteProvider` and the existing `ThemeMenuButton` provide one appearance menu, with Catppuccin dark as the default. The shared controller supports external bootstrap scripts and strict content security policies. See [palette installation, semantic roles, and sources](./PALETTES.md).
+
 ## Appearance and fonts
 
 Wrap browser applications with `DesignThemeProvider` and render
@@ -384,7 +388,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.2`. The previous rollback pair remains `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.1`.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.6.0`. The previous rollback pair remains `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.5.2`.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

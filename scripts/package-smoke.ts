@@ -731,6 +731,8 @@ const compilerStylesheetPaths = [
   "src/effects.css",
   "src/fonts.css",
   "src/jelly.css",
+  "src/palette-bridge.css",
+  "src/palettes.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -755,7 +757,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.5.2" },
+    { name: "@hraness/design-kit", version: "0.6.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -819,7 +821,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.4") {
   throw new Error(
-    "Design-kit v0.5.2 must build and publish against the immutable @hraness/ui v0.5.4 release.",
+    "Design-kit v0.6.0 must build and publish against the immutable @hraness/ui v0.5.4 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -837,7 +839,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.4 <0.6.0") {
-  throw new Error("Design-kit v0.5.2 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.6.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -849,7 +851,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.5.2.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.0.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1377,6 +1379,16 @@ try {
     "src/browser/artifact-share.ts",
     "src/react/animated-rail-stage.stylex.ts",
     "src/react/app-shell.stylex.ts",
+    "src/palettes.ts",
+    "src/palette-tokens.stylex.ts",
+    "src/palette-themes.ts",
+    "src/palette-color.ts",
+    "src/palette-appearance.ts",
+    "src/palette-bridge.css",
+    "src/palettes.css",
+    "src/browser/design-palette.ts",
+    "src/react/design-palette.tsx",
+    "src/react/design-palette.stylex.ts",
     "src/react/charts.stylex.ts",
     "src/react/chat.stylex.ts",
     "src/react/effects.stylex.ts",
