@@ -99,10 +99,20 @@ async function settle(page: Page): Promise<void> {
 async function strictGridSnapshot(page: Page) {
   return page.locator(productMarketingCspGrids.map(({ selector }) => selector).join(", ")).evaluateAll((elements) =>
     elements.map((element) => {
+      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats");
+      if (container === null) throw new Error("The strict grid lost its public layout container.");
+      // Read layout before dependent computed grid tracks, including after the
+      // delivery sheet's application flag changes. Do not sample stale tracks.
+      const containerRect = container.getBoundingClientRect();
+      const gridRect = element.getBoundingClientRect();
+      const containerStyle = getComputedStyle(container);
       const style = getComputedStyle(element);
       return { display: style.display, columns: style.gridTemplateColumns, items: element.children.length,
         columnValue: style.getPropertyValue(element.matches(".hraness-marketing-pillars")
-          ? "--hraness-marketing-pillar-columns" : "--hraness-marketing-fact-columns").trim() };
+          ? "--hraness-marketing-pillar-columns" : "--hraness-marketing-fact-columns").trim(),
+        geometry: { containerWidth: containerRect.width, gridWidth: gridRect.width,
+          boxSizing: containerStyle.boxSizing, inlineSize: containerStyle.inlineSize,
+          paddingStart: containerStyle.paddingInlineStart, paddingEnd: containerStyle.paddingInlineEnd } };
     }));
 }
 
@@ -168,6 +178,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
         const actual = required(grids[index], `${label}: grid ${index}`);
         assert.equal(await page.locator(expected.selector).count(), 1, label);
         assert.equal(actual.display, "grid", label);
+        assert.equal(actual.geometry.boxSizing, "border-box", `${label}: public container reset`);
         assert.equal(actual.items, expected.items, label);
         assert.equal(actual.columnValue, String(columnOverride ?? expected.desktopColumns), `${label}: explicit compiled column atom`);
         assert.match(actual.columns, /^\d+(?:\.\d+)?px(?: \d+(?:\.\d+)?px)*$/u, `${label}: resolved finite tracks`);
@@ -184,13 +195,45 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
       assert.equal(css.status(), 200, label);
       const cssSha256 = createHash("sha256").update(await css.body()).digest("hex");
       assert.equal(cssSha256, stylesheetHashes[mode], `${label}: graph-bound stylesheet bytes`);
-      await sheet.evaluate((element) => { (element as HTMLLinkElement).disabled = true; });
+      // Disable the already-loaded CSSOM sheet, not the link resource. Toggling
+      // HTMLLinkElement.disabled may reprocess the resource on re-enablement;
+      // that is not the delivery-removal boundary this control verifies.
+      const loadedSheet = await sheet.evaluateHandle((element) => {
+        if (!(element instanceof HTMLLinkElement) || !element.isConnected) throw new Error("Missing ordinary stylesheet link.");
+        const stylesheet = element.sheet;
+        if (stylesheet === null || stylesheet.ownerNode !== element || stylesheet.disabled
+          || stylesheet.href !== element.href || new URL(element.href).origin !== location.origin
+          || document.styleSheets.length !== 1 || document.styleSheets[0] !== stylesheet
+          || stylesheet.cssRules.length === 0) throw new Error("Missing unique loaded same-origin delivery sheet.");
+        const markup = element.outerHTML;
+        const href = stylesheet.href;
+        const ruleCount = stylesheet.cssRules.length;
+        return { setDisabled(disabled: boolean) {
+          if (!element.isConnected || element.sheet !== stylesheet || stylesheet.ownerNode !== element
+            || element.outerHTML !== markup || stylesheet.href !== href
+            || document.styleSheets.length !== 1 || document.styleSheets[0] !== stylesheet
+            || stylesheet.cssRules.length !== ruleCount) throw new Error("Delivery stylesheet identity changed.");
+          stylesheet.disabled = disabled;
+          if (stylesheet.disabled !== disabled) throw new Error("Delivery stylesheet application flag did not change.");
+        } };
+      });
       try {
+        await loadedSheet.evaluate((state) => state.setDisabled(true));
+        try {
+          await settle(page);
+          const removed = await strictGridSnapshot(page);
+          assert.equal(removed.length, grids.length, `${label}: removal preserves all public grids`);
+          for (const [index, grid] of removed.entries()) {
+            assert.equal(grid.display, "block", `${label}: removed grid ${index} uses native block layout`);
+            assert.equal(grid.columns, "none", `${label}: removed grid ${index} has no compiled tracks`);
+            assert.equal(grid.columnValue, "", `${label}: removed grid ${index} has no compiled column atom`);
+            assert.equal(grid.items, required(grids[index], `${label}: baseline grid ${index}`).items, `${label}: removal preserves grid ${index} content`);
+          }
+          assert.notDeepEqual(removed, grids, `${label}: stylesheet removal must break compiled geometry`);
+        } finally { await loadedSheet.evaluate((state) => state.setDisabled(false)); }
         await settle(page);
-        assert.notDeepEqual(await strictGridSnapshot(page), grids, `${label}: stylesheet removal must break compiled geometry`);
-      } finally { await sheet.evaluate((element) => { (element as HTMLLinkElement).disabled = false; }); }
-      await settle(page);
-      assert.deepEqual(await strictGridSnapshot(page), grids, `${label}: restored exact geometry`);
+        assert.deepEqual(await strictGridSnapshot(page), grids, `${label}: restored exact geometry`);
+      } finally { await loadedSheet.dispose(); }
       const summary = page.locator("details > summary");
       assert.equal(await summary.count(), 1, label);
       await page.keyboard.press("Shift");
