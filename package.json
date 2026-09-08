@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -73,7 +73,8 @@
     "./vendor/evilcharts/LICENSE": "./vendor/evilcharts/LICENSE",
     "./vendor/evilcharts/UPSTREAM.md": "./vendor/evilcharts/UPSTREAM.md",
     "./vendor/jelly-ui/LICENSE": "./vendor/jelly-ui/LICENSE",
-    "./vendor/jelly-ui/UPSTREAM.md": "./vendor/jelly-ui/UPSTREAM.md"
+    "./vendor/jelly-ui/UPSTREAM.md": "./vendor/jelly-ui/UPSTREAM.md",
+    "./palettes.css": "./src/palettes.css"
   },
   "main": "./dist/index.js",
   "types": "./src/index.ts",
@@ -161,7 +162,18 @@
     "vendor/jelly-ui/jelly.js.map",
     "portfolio-inventory.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "PALETTES.md",
+    "src/browser/design-palette.ts",
+    "src/palette-appearance.ts",
+    "src/palette-bridge.css",
+    "src/palette-color.ts",
+    "src/palette-themes.ts",
+    "src/palette-tokens.stylex.ts",
+    "src/palettes.css",
+    "src/palettes.ts",
+    "src/react/design-palette.tsx",
+    "src/react/design-palette.stylex.ts"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -172,7 +184,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
-    "test:browser": "bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts",
+    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
     "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
     "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",
@@ -180,7 +192,10 @@
     "kb:catalog": "bunx --bun github:hraness/kb#v0.15.1 catalog --root kb",
     "check": "bun run lint && bun run typecheck && bun run build && bun run check:stylex-artifacts && bun run check:stylex-determinism && bun run test:package && bun run test && bun run test:browser",
     "prepack": "bun run check",
-    "prepublishOnly": "bun run check:publication-ready"
+    "prepublishOnly": "bun run check:publication-ready",
+    "generate:palettes": "bun run ./scripts/generate-palettes.ts --write",
+    "check:palettes": "bun run ./scripts/generate-palettes.ts",
+    "test:palettes": "bun run build && bun run ./scripts/palette-browser.ts"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.2.2",

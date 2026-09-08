@@ -8,9 +8,11 @@ import {
   readStylexPackageManifest,
   type StylexRuleV1,
 } from "@hraness/ui/stylex-build";
-import { colors } from "../src/index.js";
+import { builtDesignKit } from "./built-root.js";
 import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
 import { equalBackgroundValues, normalizeBackgroundPosition } from "./browser-css-parity.js";
+
+const { colors } = builtDesignKit;
 
 interface LayoutEvidence {
   readonly animatedRailStageAtomic: boolean;
@@ -2026,7 +2028,7 @@ try {
   );
   invariant(
     JSON.stringify(designPriorityContract.rawPrioritiesByRank) === JSON.stringify([
-      [0, 1, 41],
+      [0, 0.1, 0.5, 1, 41],
       [1000, 1200],
       [2000, 2040, 2130, 2200],
       [3000, 3040, 3092, 3130, 3200, 3330],

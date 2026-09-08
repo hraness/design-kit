@@ -4,6 +4,7 @@ export * from "./aurora-dots-background.js";
 export * from "./charts.js";
 export * from "./chat.js";
 export * from "./design-theme-context.js";
+export * from "./design-palette.js";
 export * from "./design-gallery.js";
 export * from "./fader.js";
 export * from "./foil-card-math.js";

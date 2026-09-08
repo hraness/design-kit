@@ -1,0 +1,3 @@
+/* Opt-in palette delivery without fonts, resets, or product grammar. */
+@import "../dist/stylex.css";
+@import "./palette-bridge.css";

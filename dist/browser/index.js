@@ -16,11 +16,7 @@ function resolveDesignTheme(theme, systemPrefersDark) {
 }
 
 // src/browser/appearance-menu.ts
-import {
-  ComputerIcon,
-  Moon02Icon,
-  Sun03Icon
-} from "@hugeicons/core-free-icons";
+import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
 
 // src/browser/theme-color-sync.ts
 var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
@@ -72,7 +68,9 @@ function disableCompetingMeta(manager, meta) {
   if (ownedBy !== null || meta.getAttribute("media")?.trim().toLowerCase() === "not all") {
     return;
   }
-  manager.disabledMetas.set(meta, { media: meta.getAttribute("media") });
+  manager.disabledMetas.set(meta, {
+    media: meta.getAttribute("media")
+  });
   meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
   meta.setAttribute("media", "not all");
 }
@@ -108,13 +106,7 @@ function observeThemeColorMetas(manager) {
     return;
   manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
   manager.observer.observe(manager.document.head, {
-    attributeFilter: [
-      "content",
-      "media",
-      "name",
-      themeColorSyncActiveAttribute,
-      themeColorSyncDisabledAttribute
-    ],
+    attributeFilter: ["content", "media", "name", themeColorSyncActiveAttribute, themeColorSyncDisabledAttribute],
     attributes: true,
     childList: true,
     subtree: true
@@ -563,7 +555,9 @@ function installAppearanceMenus(options) {
       preference: () => preference
     }
   };
-  const { publicInstallation } = state;
+  const {
+    publicInstallation
+  } = state;
   installationByDocument.set(document, state);
   try {
     metaRegistration = acquireThemeColorMeta(document, metaName, Symbol("hraness-static-appearance"), currentThemeColor());
@@ -616,7 +610,9 @@ function installAppearanceMenus(options) {
           throw error;
         }
       };
-      document.addEventListener("DOMContentLoaded", mountAfterParse, { once: true });
+      document.addEventListener("DOMContentLoaded", mountAfterParse, {
+        once: true
+      });
       cleanups.push(() => document.removeEventListener("DOMContentLoaded", mountAfterParse));
     } else {
       mount();
@@ -655,7 +651,10 @@ function normalizedIntent(input) {
   };
 }
 function buildXShareIntentUrl(input) {
-  const { text, url } = normalizedIntent(input);
+  const {
+    text,
+    url
+  } = normalizedIntent(input);
   const intent = new URL("https://x.com/intent/post");
   intent.searchParams.set("text", text);
   intent.searchParams.set("url", url);
@@ -667,7 +666,10 @@ function buildLinkedInShareIntentUrl(url) {
   return intent.href;
 }
 function buildBlueskyShareIntentUrl(input) {
-  const { text, url } = normalizedIntent(input);
+  const {
+    text,
+    url
+  } = normalizedIntent(input);
   const intent = new URL("https://bsky.app/intent/compose");
   intent.searchParams.set("text", `${text}
 ${url}`);
@@ -704,7 +706,9 @@ function isAbortError(error) {
   return typeof error === "object" && error !== null && "name" in error && error.name === "AbortError";
 }
 function filesOnlyShareData(file) {
-  return { files: [file] };
+  return {
+    files: [file]
+  };
 }
 function nativeFileShareNavigator() {
   const shareNavigator = globalThis.navigator;
@@ -727,16 +731,568 @@ function canShareFileNatively(file) {
 async function shareFileNatively(file) {
   const shareNavigator = nativeFileShareNavigator();
   if (shareNavigator === undefined || !canShareFileWithNavigator(shareNavigator, file)) {
-    return { kind: "unavailable" };
+    return {
+      kind: "unavailable"
+    };
   }
   try {
     await shareNavigator.share(filesOnlyShareData(file));
-    return { kind: "shared" };
+    return {
+      kind: "shared"
+    };
   } catch (error) {
     if (isAbortError(error))
-      return { kind: "cancelled" };
-    return { error, kind: "failed" };
+      return {
+        kind: "cancelled"
+      };
+    return {
+      error,
+      kind: "failed"
+    };
   }
+}
+// src/palette-color.ts
+function channels(hex) {
+  if (!/^#[0-9a-f]{6}$/iu.test(hex))
+    throw new Error("Palette colors must be six-digit hex values.");
+  return [Number.parseInt(hex.slice(1, 3), 16), Number.parseInt(hex.slice(3, 5), 16), Number.parseInt(hex.slice(5, 7), 16)];
+}
+function mixPaletteColor(color, toward, amount) {
+  const target = channels(toward);
+  return `#${channels(color).map((value, index) => Math.round(value * (1 - amount) + (target[index] ?? 0) * amount).toString(16).padStart(2, "0")).join("")}`;
+}
+function luminance(hex) {
+  const linearize = (channel) => {
+    const value = channel / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  };
+  const [red, green, blue] = channels(hex);
+  return linearize(red) * 0.2126 + linearize(green) * 0.7152 + linearize(blue) * 0.0722;
+}
+function paletteContrast(a, b) {
+  const first = luminance(a);
+  const second = luminance(b);
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+}
+function readablePaletteColor(color, toward, backgrounds, minimum) {
+  for (let step = 0;step <= 100; step += 1) {
+    const candidate = mixPaletteColor(color, toward, step / 100);
+    if (backgrounds.every((background) => paletteContrast(candidate, background) >= minimum))
+      return candidate;
+  }
+  throw new Error("The authored palette cannot meet its contrast contract.");
+}
+
+// src/palettes.ts
+var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night"];
+function isDesignPalette(value) {
+  return typeof value === "string" && designPalettes.some((palette) => palette === value);
+}
+var designPaletteSources = {
+  catppuccin: {
+    dark: {
+      background: "#1e1e2e",
+      surface: "#181825",
+      raised: "#313244",
+      hover: "#45475a",
+      text: "#cdd6f4",
+      muted: "#a6adc8",
+      border: "#7f849c",
+      primary: "#89b4fa",
+      danger: "#f38ba8",
+      warning: "#f9e2af",
+      success: "#a6e3a1",
+      info: "#89dceb",
+      violet: "#cba6f7",
+      rose: "#f5c2e7"
+    },
+    light: {
+      background: "#eff1f5",
+      surface: "#e6e9ef",
+      raised: "#dce0e8",
+      hover: "#ccd0da",
+      text: "#4c4f69",
+      muted: "#6c6f85",
+      border: "#7c7f93",
+      primary: "#1e66f5",
+      danger: "#d20f39",
+      warning: "#df8e1d",
+      success: "#40a02b",
+      info: "#179299",
+      violet: "#8839ef",
+      rose: "#ea76cb"
+    }
+  },
+  gruvbox: {
+    dark: {
+      background: "#282828",
+      surface: "#1d2021",
+      raised: "#3c3836",
+      hover: "#504945",
+      text: "#ebdbb2",
+      muted: "#bdae93",
+      border: "#928374",
+      primary: "#83a598",
+      danger: "#fb4934",
+      warning: "#fabd2f",
+      success: "#b8bb26",
+      info: "#8ec07c",
+      violet: "#d3869b",
+      rose: "#fe8019"
+    },
+    light: {
+      background: "#fbf1c7",
+      surface: "#f9f5d7",
+      raised: "#ebdbb2",
+      hover: "#d5c4a1",
+      text: "#3c3836",
+      muted: "#665c54",
+      border: "#7c6f64",
+      primary: "#076678",
+      danger: "#9d0006",
+      warning: "#b57614",
+      success: "#79740e",
+      info: "#427b58",
+      violet: "#8f3f71",
+      rose: "#af3a03"
+    }
+  },
+  "rose-pine": {
+    dark: {
+      background: "#191724",
+      surface: "#1f1d2e",
+      raised: "#26233a",
+      hover: "#403d52",
+      text: "#e0def4",
+      muted: "#908caa",
+      border: "#908caa",
+      primary: "#c4a7e7",
+      danger: "#eb6f92",
+      warning: "#f6c177",
+      success: "#9ccfd8",
+      info: "#ebbcba",
+      violet: "#c4a7e7",
+      rose: "#ebbcba"
+    },
+    light: {
+      background: "#faf4ed",
+      surface: "#fffaf3",
+      raised: "#f2e9e1",
+      hover: "#dfdad9",
+      text: "#575279",
+      muted: "#797593",
+      border: "#797593",
+      primary: "#907aa9",
+      danger: "#b4637a",
+      warning: "#ea9d34",
+      success: "#286983",
+      info: "#56949f",
+      violet: "#907aa9",
+      rose: "#d7827e"
+    }
+  },
+  "tokyo-night": {
+    dark: {
+      background: "#1a1b26",
+      surface: "#16161e",
+      raised: "#24283b",
+      hover: "#292e42",
+      text: "#c0caf5",
+      muted: "#a9b1d6",
+      border: "#737aa2",
+      primary: "#7aa2f7",
+      danger: "#f7768e",
+      warning: "#e0af68",
+      success: "#9ece6a",
+      info: "#7dcfff",
+      violet: "#bb9af7",
+      rose: "#ff9e64"
+    },
+    light: {
+      background: "#e1e2e7",
+      surface: "#d0d5e3",
+      raised: "#c4c8da",
+      hover: "#b7c1e3",
+      text: "#3760bf",
+      muted: "#6172b0",
+      border: "#6172b0",
+      primary: "#2e7de9",
+      danger: "#f52a65",
+      warning: "#8c6c3e",
+      success: "#587539",
+      info: "#007197",
+      violet: "#9854f1",
+      rose: "#b15c00"
+    }
+  }
+};
+function createPalette(source, mode) {
+  const surfaces = [source.background, source.surface, source.raised, source.hover];
+  const endpoint = mode === "dark" ? "#ffffff" : "#000000";
+  const foreground = readablePaletteColor(source.text, endpoint, surfaces, 7);
+  const muted = readablePaletteColor(source.muted, endpoint, surfaces, 4.6);
+  const status = (seed) => {
+    const soft = mixPaletteColor(source.background, seed, 0.12);
+    const color = readablePaletteColor(seed, endpoint, [...surfaces, soft], 4.6);
+    const onColor = paletteContrast(color, source.background) >= 4.5 ? source.background : endpoint === "#ffffff" ? "#000000" : "#ffffff";
+    return {
+      color,
+      foreground: onColor,
+      soft
+    };
+  };
+  const primary = status(source.primary);
+  const danger = status(source.danger);
+  const warning = status(source.warning);
+  const success = status(source.success);
+  const info = status(source.info);
+  return Object.freeze({
+    background: source.background,
+    foreground,
+    muted,
+    faint: muted,
+    grid: source.raised,
+    line: source.hover,
+    controlBorder: readablePaletteColor(source.border, endpoint, surfaces, 3.1),
+    surface: source.surface,
+    surfaceRaised: source.raised,
+    surfaceHover: source.hover,
+    card: source.surface,
+    cardForeground: foreground,
+    popover: source.raised,
+    popoverForeground: foreground,
+    primary: primary.color,
+    primaryForeground: primary.foreground,
+    primarySoft: primary.soft,
+    secondary: source.raised,
+    secondaryForeground: foreground,
+    accent: primary.soft,
+    accentForeground: foreground,
+    focus: primary.color,
+    scrim: mode === "dark" ? "#000000b8" : "#00000070",
+    disabled: source.raised,
+    disabledForeground: muted,
+    inverse: foreground,
+    inverseForeground: source.background,
+    danger: danger.color,
+    dangerForeground: danger.foreground,
+    dangerSoft: danger.soft,
+    warning: warning.color,
+    warningForeground: warning.foreground,
+    warningSoft: warning.soft,
+    success: success.color,
+    successForeground: success.foreground,
+    successSoft: success.soft,
+    info: info.color,
+    infoForeground: info.foreground,
+    infoSoft: info.soft,
+    chart1: readablePaletteColor(source.rose, endpoint, surfaces, 4.6),
+    chart2: success.color,
+    chart3: info.color,
+    chart4: warning.color,
+    chart5: readablePaletteColor(source.violet, endpoint, surfaces, 4.6)
+  });
+}
+var paletteColors = Object.freeze({
+  catppuccin: Object.freeze({
+    light: createPalette(designPaletteSources.catppuccin.light, "light"),
+    dark: createPalette(designPaletteSources.catppuccin.dark, "dark")
+  }),
+  gruvbox: Object.freeze({
+    light: createPalette(designPaletteSources.gruvbox.light, "light"),
+    dark: createPalette(designPaletteSources.gruvbox.dark, "dark")
+  }),
+  "rose-pine": Object.freeze({
+    light: createPalette(designPaletteSources["rose-pine"].light, "light"),
+    dark: createPalette(designPaletteSources["rose-pine"].dark, "dark")
+  }),
+  "tokyo-night": Object.freeze({
+    light: createPalette(designPaletteSources["tokyo-night"].light, "light"),
+    dark: createPalette(designPaletteSources["tokyo-night"].dark, "dark")
+  })
+});
+
+// src/palette-appearance.ts
+var defaultDesignPalettePreference = Object.freeze({
+  palette: "catppuccin",
+  mode: "dark"
+});
+var designPaletteStorageKey = "hraness-design-palette-v1";
+function parseDesignPalettePreference(value) {
+  if (typeof value === "string") {
+    if (value.length > 256)
+      return null;
+    try {
+      value = JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value))
+    return null;
+  const record = value;
+  if (!isDesignPalette(record.palette) || !isDesignTheme(record.mode))
+    return null;
+  return Object.freeze({
+    palette: record.palette,
+    mode: record.mode
+  });
+}
+function normalizeDesignPalettePreference(value, fallback = defaultDesignPalettePreference) {
+  return parseDesignPalettePreference(value) ?? parseDesignPalettePreference(fallback) ?? defaultDesignPalettePreference;
+}
+function resolveDesignPalettePreference(preference, systemPrefersDark) {
+  return {
+    palette: preference.palette,
+    mode: resolveDesignTheme(preference.mode, systemPrefersDark)
+  };
+}
+
+// src/palette-themes.ts
+import * as stylex from "@stylexjs/stylex";
+
+// src/palette-tokens.stylex.ts
+var catppuccinLight = {
+  x18acsur: "xadus2s x18acsur",
+  $$css: true
+};
+var catppuccinDark = {
+  x18acsur: "x18wthyl x18acsur",
+  $$css: true
+};
+var gruvboxLight = {
+  x18acsur: "xdktuxt x18acsur",
+  $$css: true
+};
+var gruvboxDark = {
+  x18acsur: "x1fsd05x x18acsur",
+  $$css: true
+};
+var rosePineLight = {
+  x18acsur: "x131glkb x18acsur",
+  $$css: true
+};
+var rosePineDark = {
+  x18acsur: "xivpxii x18acsur",
+  $$css: true
+};
+var tokyoNightLight = {
+  x18acsur: "x11phk89 x18acsur",
+  $$css: true
+};
+var tokyoNightDark = {
+  x18acsur: "xgp1gpt x18acsur",
+  $$css: true
+};
+
+// src/palette-themes.ts
+var classes = {
+  catppuccin: {
+    light: stylex.props(catppuccinLight).className,
+    dark: stylex.props(catppuccinDark).className
+  },
+  gruvbox: {
+    light: stylex.props(gruvboxLight).className,
+    dark: stylex.props(gruvboxDark).className
+  },
+  "rose-pine": {
+    light: stylex.props(rosePineLight).className,
+    dark: stylex.props(rosePineDark).className
+  },
+  "tokyo-night": {
+    light: stylex.props(tokyoNightLight).className,
+    dark: stylex.props(tokyoNightDark).className
+  }
+};
+function getDesignPaletteTheme(palette, mode) {
+  return {
+    className: `hraness-palette ${classes[palette][mode]}`,
+    background: paletteColors[palette][mode].background
+  };
+}
+
+// src/browser/design-palette.ts
+var installationKey = Symbol.for("hraness.design-palette.controller.v1");
+var darkQuery = "(prefers-color-scheme: dark)";
+function designPaletteSnapshot(preference, systemPrefersDark, isForced = false) {
+  const resolved = resolveDesignPalettePreference(preference, systemPrefersDark);
+  const theme = getDesignPaletteTheme(resolved.palette, resolved.mode);
+  return Object.freeze({
+    preference: Object.freeze({
+      ...preference
+    }),
+    resolvedMode: resolved.mode,
+    className: theme.className,
+    background: theme.background,
+    isForced
+  });
+}
+function readStorage(storage, key) {
+  try {
+    return storage?.getItem(key);
+  } catch {
+    return;
+  }
+}
+function writeStorage(storage, key, preference) {
+  try {
+    storage?.setItem(key, JSON.stringify(preference));
+  } catch {}
+}
+function initDesignPalette(options = {}) {
+  const document = options.document ?? globalThis.document;
+  if (document === undefined || document.documentElement === null || document.head === null) {
+    throw new Error("initDesignPalette requires an HTML document with a head.");
+  }
+  const view = document.defaultView;
+  const root = document.documentElement;
+  const storageKey = options.storageKey ?? designPaletteStorageKey;
+  const legacyStorageKey = options.legacyStorageKey === undefined ? designThemeStorageKey : options.legacyStorageKey;
+  if (storageKey.trim() === "" || legacyStorageKey?.trim() === "")
+    throw new Error("Appearance storage keys must not be blank.");
+  const fallback = normalizeDesignPalettePreference(options.defaultPreference);
+  const forced = options.forcedPreference === undefined ? null : parseDesignPalettePreference(options.forcedPreference);
+  if (options.forcedPreference !== undefined && (forced === null || forced.mode === "system")) {
+    throw new Error("A forced palette requires a valid palette and a light or dark mode.");
+  }
+  const configuration = JSON.stringify({
+    storageKey,
+    legacyStorageKey,
+    fallback,
+    forced
+  });
+  const ownerDocument = document;
+  const previous = ownerDocument[installationKey];
+  if (previous !== undefined) {
+    if (previous.version !== 1 || previous.configuration !== configuration) {
+      throw new Error("This document already has a different palette configuration.");
+    }
+    return previous.acquire();
+  }
+  let storage = options.storage ?? null;
+  const usesDefaultStorage = options.storage === undefined;
+  if (usesDefaultStorage && forced === null) {
+    try {
+      storage = view?.localStorage ?? null;
+    } catch {}
+  }
+  let media = null;
+  try {
+    media = view?.matchMedia?.(darkQuery) ?? null;
+  } catch {}
+  const readPreference = () => {
+    if (forced !== null)
+      return forced;
+    const raw = readStorage(storage, storageKey);
+    const saved = parseDesignPalettePreference(raw);
+    if (saved !== null)
+      return saved;
+    if ((raw === null || raw === undefined) && legacyStorageKey !== null) {
+      const legacy = readStorage(storage, legacyStorageKey);
+      if (isDesignTheme(legacy))
+        return Object.freeze({
+          palette: fallback.palette,
+          mode: legacy
+        });
+    }
+    return fallback;
+  };
+  let snapshot = designPaletteSnapshot(readPreference(), media?.matches ?? false, forced !== null);
+  const listeners = new Set;
+  const ownedClasses = new Set(designPalettes.flatMap((palette) => ["light", "dark"].flatMap((mode) => getDesignPaletteTheme(palette, mode).className.split(/\s+/u))));
+  const themeColor = acquireThemeColorMeta(document, "theme-color", Symbol("palette-theme-color"), snapshot.background);
+  const apply = () => {
+    const nextClasses = new Set(snapshot.className.split(/\s+/u).filter(Boolean));
+    for (const token of ownedClasses)
+      if (token !== "" && !nextClasses.has(token))
+        root.classList.remove(token);
+    for (const token of nextClasses)
+      root.classList.add(token);
+    root.setAttribute("data-palette", snapshot.preference.palette);
+    root.setAttribute("data-theme", snapshot.resolvedMode);
+    themeColor.update(snapshot.background);
+  };
+  const update = (preference) => {
+    const next = designPaletteSnapshot(preference, media?.matches ?? false, forced !== null);
+    if (next.preference.palette === snapshot.preference.palette && next.preference.mode === snapshot.preference.mode && next.resolvedMode === snapshot.resolvedMode)
+      return false;
+    snapshot = next;
+    apply();
+    for (const listener of listeners)
+      listener();
+    return true;
+  };
+  const onMedia = () => {
+    update(snapshot.preference);
+  };
+  const onStorage = (event) => {
+    if (forced !== null || event.key !== storageKey && event.key !== null)
+      return;
+    if (usesDefaultStorage && event.storageArea !== null && event.storageArea !== undefined && event.storageArea !== storage)
+      return;
+    update(readPreference());
+  };
+  apply();
+  if (forced === null) {
+    writeStorage(storage, storageKey, snapshot.preference);
+    view?.addEventListener("storage", onStorage);
+    media?.addEventListener("change", onMedia);
+  }
+  let owners = 0;
+  const installation = {
+    version: 1,
+    configuration,
+    acquire: () => {
+      owners += 1;
+      let disposed = false;
+      const subscriptions = new Set;
+      return {
+        getSnapshot: () => snapshot,
+        subscribe: (listener) => {
+          if (disposed)
+            return () => {
+              return;
+            };
+          const subscription = () => {
+            listener();
+          };
+          subscriptions.add(subscription);
+          listeners.add(subscription);
+          return () => {
+            subscriptions.delete(subscription);
+            listeners.delete(subscription);
+          };
+        },
+        setPreference: (value) => {
+          if (disposed || forced !== null)
+            return false;
+          const preference = parseDesignPalettePreference(value);
+          if (preference === null)
+            throw new Error("Choose a supported palette and appearance mode.");
+          writeStorage(storage, storageKey, preference);
+          return update(preference);
+        },
+        dispose: () => {
+          if (disposed)
+            return;
+          disposed = true;
+          for (const listener of subscriptions)
+            listeners.delete(listener);
+          subscriptions.clear();
+          owners -= 1;
+          if (owners !== 0)
+            return;
+          view?.removeEventListener("storage", onStorage);
+          media?.removeEventListener("change", onMedia);
+          themeColor.release();
+          if (ownerDocument[installationKey] === installation)
+            Reflect.deleteProperty(ownerDocument, installationKey);
+        }
+      };
+    }
+  };
+  ownerDocument[installationKey] = installation;
+  return installation.acquire();
 }
 
 // src/browser/index.ts
@@ -751,14 +1307,21 @@ var resolveDesignTheme2 = resolveDesignTheme;
 export {
   shareFileNatively,
   resolveDesignTheme2 as resolveDesignTheme,
+  resolveDesignPalettePreference,
+  parseDesignPalettePreference,
   normalizeDesignTheme2 as normalizeDesignTheme,
+  normalizeDesignPalettePreference,
   isDesignTheme2 as isDesignTheme,
   installAppearanceMenus2 as installAppearanceMenus,
+  initDesignPalette,
   downloadBlob,
   designThemes2 as designThemes,
   designThemeStorageKey2 as designThemeStorageKey,
   designThemeLabel2 as designThemeLabel,
+  designPaletteStorageKey,
+  designPaletteSnapshot,
   defaultDesignTheme2 as defaultDesignTheme,
+  defaultDesignPalettePreference,
   copyTextToClipboard,
   canShareFileNatively,
   buildXShareIntentUrl,

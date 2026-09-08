@@ -9,6 +9,7 @@ const {
   AppShell,
   BarListChart,
   DesignPortalThemeProvider,
+  DesignPaletteProvider,
   DesignSystemGallery,
   DesignThemeProvider,
   JellySurface,
@@ -81,7 +82,12 @@ if (!(root instanceof HTMLElement)) {
   throw new Error("Gallery root is missing.");
 }
 
-createRoot(root).render(
+createRoot(root).render(new URL(location.href).searchParams.has("palettes") ? (
+  <DesignPaletteProvider>
+    <TopBar actions={<ThemeMenuButton />} position="sticky" title="Design kit" />
+    <DesignSystemGallery />
+  </DesignPaletteProvider>
+) : (
   <DesignThemeProvider>
     <ThemeColorSync />
     {new URL(location.href).searchParams.has("migration-parity") ? (
@@ -103,5 +109,5 @@ createRoot(root).render(
         <DesignSystemGallery />
       </>
     )}
-  </DesignThemeProvider>,
-);
+  </DesignThemeProvider>
+));

@@ -30,6 +30,8 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/effects.css",
   "src/fonts.css",
   "src/jelly.css",
+  "src/palette-bridge.css",
+  "src/palettes.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -435,6 +437,7 @@ function requireAggregateContract(source: string): void {
     '@import "./product-marketing.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
+    '@import "./palette-bridge.css";',
   ];
   const statements = topLevelStatements(source, "src/styles.css");
   if (statements.length !== expectedStatements.length
@@ -462,6 +465,7 @@ function requireCompilerFoundationContract(source: string): void {
     '@import "./plain-publication.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
+    '@import "./palette-bridge.css";',
   ];
   const statements = topLevelStatements(source, "src/compiler-foundation.css");
   if (statements.length !== expectedStatements.length
@@ -1585,8 +1589,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.5.2" },
-  "StyleX manifest must describe design-kit v0.5.2",
+  { name: "@hraness/design-kit", version: "0.6.0" },
+  "StyleX manifest must describe design-kit v0.6.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.rulesSha256, stylexRulesSha256(manifest.rules));
@@ -1665,7 +1669,7 @@ const designPriorityContract = requireSerializedPriorityContract(
 assert.deepEqual(
   designPriorityContract.rawPrioritiesByRank,
   [
-    [0, 1, 41],
+    [0, 0.1, 0.5, 1, 41],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
     [3000, 3040, 3092, 3130, 3200, 3330],

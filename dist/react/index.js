@@ -1,14 +1,22 @@
 "use client";
 import {
   colors,
+  defaultDesignPalettePreference,
   defaultDesignTheme,
+  designPaletteLabels,
+  designPaletteStorageKey,
+  designPalettes,
   designThemeLabel,
   designThemeStorageKey,
   designThemes,
+  getDesignPaletteTheme,
   isDesignTheme,
   motion,
-  normalizeDesignTheme
-} from "../chunk-qdnj4qfx.js";
+  normalizeDesignPalettePreference,
+  normalizeDesignTheme,
+  parseDesignPalettePreference,
+  resolveDesignPalettePreference
+} from "../chunk-x957htqa.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -869,15 +877,664 @@ function useDesignPortalTheme() {
 function useDesignPortalClassName() {
   return useContext(DesignThemeContext).portalClassName;
 }
+// src/react/design-palette.tsx
+import { AppearanceIcon, cn as cn6 } from "@hraness/ui";
+import * as stylex6 from "@stylexjs/stylex";
+import { createContext as createContext2, useContext as useContext2, useEffect as useEffect3, useId, useMemo as useMemo2, useRef as useRef2, useState as useState2, useSyncExternalStore } from "react";
+
+// src/browser/theme-color-sync.ts
+var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
+var themeColorSyncDisabledAttribute = "data-hraness-design-theme-color-sync-disabled";
+var managersByDocument = new WeakMap;
+var ownerSequence = 0;
+function exactThemeColorMetas(manager) {
+  return Array.from(manager.document.head.querySelectorAll("meta[name]")).filter((meta) => meta.name === manager.metaName);
+}
+function currentRegisteredColor(manager) {
+  let color;
+  for (const registeredColor of manager.registrations.values())
+    color = registeredColor;
+  if (color === undefined)
+    throw new Error("Theme color synchronization has no active owner.");
+  return color;
+}
+function restoreDisabledMeta(meta, original) {
+  if (original.media === null)
+    meta.removeAttribute("media");
+  else
+    meta.setAttribute("media", original.media);
+  meta.removeAttribute(themeColorSyncDisabledAttribute);
+}
+function createActiveMeta(manager) {
+  const meta = manager.document.createElement("meta");
+  meta.name = manager.metaName;
+  meta.content = currentRegisteredColor(manager);
+  meta.setAttribute(themeColorSyncActiveAttribute, manager.owner);
+  manager.activeMetas.add(meta);
+  const first = exactThemeColorMetas(manager).find((candidate) => candidate.parentElement === manager.document.head);
+  manager.document.head.insertBefore(meta, first ?? null);
+  return meta;
+}
+function activeMetaIsOwned(manager) {
+  const active = manager.activeMeta;
+  return active !== null && active.parentElement === manager.document.head && active.name === manager.metaName && !active.hasAttribute("media") && active.getAttribute(themeColorSyncActiveAttribute) === manager.owner;
+}
+function disableCompetingMeta(manager, meta) {
+  if (manager.disabledMetas.has(meta)) {
+    if (meta.getAttribute(themeColorSyncDisabledAttribute) !== manager.owner) {
+      meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
+    }
+    if (meta.getAttribute("media") !== "not all")
+      meta.setAttribute("media", "not all");
+    return;
+  }
+  const ownedBy = meta.getAttribute(themeColorSyncDisabledAttribute);
+  if (ownedBy !== null || meta.getAttribute("media")?.trim().toLowerCase() === "not all") {
+    return;
+  }
+  manager.disabledMetas.set(meta, {
+    media: meta.getAttribute("media")
+  });
+  meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
+  meta.setAttribute("media", "not all");
+}
+function reconcileThemeColorMetas(manager) {
+  if (manager.registrations.size === 0)
+    return;
+  for (const [meta, original] of manager.disabledMetas) {
+    if (!manager.document.head.contains(meta) || meta.name !== manager.metaName) {
+      restoreDisabledMeta(meta, original);
+      manager.disabledMetas.delete(meta);
+    }
+  }
+  if (!activeMetaIsOwned(manager))
+    manager.activeMeta = createActiveMeta(manager);
+  const active = manager.activeMeta;
+  if (active === null)
+    return;
+  const metas = exactThemeColorMetas(manager);
+  const first = metas.find((meta) => meta.parentElement === manager.document.head);
+  if (first !== undefined && first !== active)
+    manager.document.head.insertBefore(active, first);
+  const color = currentRegisteredColor(manager);
+  if (active.content !== color)
+    active.content = color;
+  for (const meta of metas) {
+    if (meta !== active)
+      disableCompetingMeta(manager, meta);
+  }
+}
+function observeThemeColorMetas(manager) {
+  const Observer = manager.document.defaultView?.MutationObserver;
+  if (Observer === undefined)
+    return;
+  manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
+  manager.observer.observe(manager.document.head, {
+    attributeFilter: ["content", "media", "name", themeColorSyncActiveAttribute, themeColorSyncDisabledAttribute],
+    attributes: true,
+    childList: true,
+    subtree: true
+  });
+}
+function destroyThemeColorManager(manager) {
+  manager.observer?.disconnect();
+  manager.observer = null;
+  for (const meta of manager.activeMetas)
+    meta.remove();
+  for (const [meta, original] of manager.disabledMetas) {
+    restoreDisabledMeta(meta, original);
+  }
+  manager.activeMetas.clear();
+  manager.disabledMetas.clear();
+  manager.activeMeta = null;
+  const documentManagers = managersByDocument.get(manager.document);
+  if (documentManagers?.get(manager.metaName) === manager) {
+    documentManagers.delete(manager.metaName);
+  }
+}
+function acquireThemeColorMeta(document2, metaName, registrationId, color) {
+  let documentManagers = managersByDocument.get(document2);
+  if (documentManagers === undefined) {
+    documentManagers = new Map;
+    managersByDocument.set(document2, documentManagers);
+  }
+  let manager = documentManagers.get(metaName);
+  if (manager === undefined) {
+    ownerSequence += 1;
+    manager = {
+      activeMeta: null,
+      activeMetas: new Set,
+      disabledMetas: new Map,
+      document: document2,
+      metaName,
+      observer: null,
+      owner: String(ownerSequence),
+      registrations: new Map
+    };
+    documentManagers.set(metaName, manager);
+  }
+  manager.registrations.set(registrationId, color);
+  reconcileThemeColorMetas(manager);
+  if (manager.observer === null)
+    observeThemeColorMetas(manager);
+  let released = false;
+  return {
+    release: () => {
+      if (released)
+        return;
+      released = true;
+      manager.registrations.delete(registrationId);
+      if (manager.registrations.size === 0)
+        destroyThemeColorManager(manager);
+      else
+        reconcileThemeColorMetas(manager);
+    },
+    update: (nextColor) => {
+      if (released || !manager.registrations.has(registrationId))
+        return;
+      manager.registrations.set(registrationId, nextColor);
+      reconcileThemeColorMetas(manager);
+    }
+  };
+}
+
+// src/browser/design-palette.ts
+var installationKey = Symbol.for("hraness.design-palette.controller.v1");
+var darkQuery = "(prefers-color-scheme: dark)";
+function designPaletteSnapshot(preference, systemPrefersDark, isForced = false) {
+  const resolved = resolveDesignPalettePreference(preference, systemPrefersDark);
+  const theme = getDesignPaletteTheme(resolved.palette, resolved.mode);
+  return Object.freeze({
+    preference: Object.freeze({
+      ...preference
+    }),
+    resolvedMode: resolved.mode,
+    className: theme.className,
+    background: theme.background,
+    isForced
+  });
+}
+function readStorage(storage, key) {
+  try {
+    return storage?.getItem(key);
+  } catch {
+    return;
+  }
+}
+function writeStorage(storage, key, preference) {
+  try {
+    storage?.setItem(key, JSON.stringify(preference));
+  } catch {}
+}
+function initDesignPalette(options = {}) {
+  const document2 = options.document ?? globalThis.document;
+  if (document2 === undefined || document2.documentElement === null || document2.head === null) {
+    throw new Error("initDesignPalette requires an HTML document with a head.");
+  }
+  const view = document2.defaultView;
+  const root = document2.documentElement;
+  const storageKey = options.storageKey ?? designPaletteStorageKey;
+  const legacyStorageKey = options.legacyStorageKey === undefined ? designThemeStorageKey : options.legacyStorageKey;
+  if (storageKey.trim() === "" || legacyStorageKey?.trim() === "")
+    throw new Error("Appearance storage keys must not be blank.");
+  const fallback = normalizeDesignPalettePreference(options.defaultPreference);
+  const forced = options.forcedPreference === undefined ? null : parseDesignPalettePreference(options.forcedPreference);
+  if (options.forcedPreference !== undefined && (forced === null || forced.mode === "system")) {
+    throw new Error("A forced palette requires a valid palette and a light or dark mode.");
+  }
+  const configuration = JSON.stringify({
+    storageKey,
+    legacyStorageKey,
+    fallback,
+    forced
+  });
+  const ownerDocument = document2;
+  const previous = ownerDocument[installationKey];
+  if (previous !== undefined) {
+    if (previous.version !== 1 || previous.configuration !== configuration) {
+      throw new Error("This document already has a different palette configuration.");
+    }
+    return previous.acquire();
+  }
+  let storage = options.storage ?? null;
+  const usesDefaultStorage = options.storage === undefined;
+  if (usesDefaultStorage && forced === null) {
+    try {
+      storage = view?.localStorage ?? null;
+    } catch {}
+  }
+  let media = null;
+  try {
+    media = view?.matchMedia?.(darkQuery) ?? null;
+  } catch {}
+  const readPreference = () => {
+    if (forced !== null)
+      return forced;
+    const raw = readStorage(storage, storageKey);
+    const saved = parseDesignPalettePreference(raw);
+    if (saved !== null)
+      return saved;
+    if ((raw === null || raw === undefined) && legacyStorageKey !== null) {
+      const legacy = readStorage(storage, legacyStorageKey);
+      if (isDesignTheme(legacy))
+        return Object.freeze({
+          palette: fallback.palette,
+          mode: legacy
+        });
+    }
+    return fallback;
+  };
+  let snapshot = designPaletteSnapshot(readPreference(), media?.matches ?? false, forced !== null);
+  const listeners = new Set;
+  const ownedClasses = new Set(designPalettes.flatMap((palette) => ["light", "dark"].flatMap((mode) => getDesignPaletteTheme(palette, mode).className.split(/\s+/u))));
+  const themeColor = acquireThemeColorMeta(document2, "theme-color", Symbol("palette-theme-color"), snapshot.background);
+  const apply = () => {
+    const nextClasses = new Set(snapshot.className.split(/\s+/u).filter(Boolean));
+    for (const token of ownedClasses)
+      if (token !== "" && !nextClasses.has(token))
+        root.classList.remove(token);
+    for (const token of nextClasses)
+      root.classList.add(token);
+    root.setAttribute("data-palette", snapshot.preference.palette);
+    root.setAttribute("data-theme", snapshot.resolvedMode);
+    themeColor.update(snapshot.background);
+  };
+  const update = (preference) => {
+    const next = designPaletteSnapshot(preference, media?.matches ?? false, forced !== null);
+    if (next.preference.palette === snapshot.preference.palette && next.preference.mode === snapshot.preference.mode && next.resolvedMode === snapshot.resolvedMode)
+      return false;
+    snapshot = next;
+    apply();
+    for (const listener of listeners)
+      listener();
+    return true;
+  };
+  const onMedia = () => {
+    update(snapshot.preference);
+  };
+  const onStorage = (event) => {
+    if (forced !== null || event.key !== storageKey && event.key !== null)
+      return;
+    if (usesDefaultStorage && event.storageArea !== null && event.storageArea !== undefined && event.storageArea !== storage)
+      return;
+    update(readPreference());
+  };
+  apply();
+  if (forced === null) {
+    writeStorage(storage, storageKey, snapshot.preference);
+    view?.addEventListener("storage", onStorage);
+    media?.addEventListener("change", onMedia);
+  }
+  let owners = 0;
+  const installation = {
+    version: 1,
+    configuration,
+    acquire: () => {
+      owners += 1;
+      let disposed = false;
+      const subscriptions = new Set;
+      return {
+        getSnapshot: () => snapshot,
+        subscribe: (listener) => {
+          if (disposed)
+            return () => {
+              return;
+            };
+          const subscription = () => {
+            listener();
+          };
+          subscriptions.add(subscription);
+          listeners.add(subscription);
+          return () => {
+            subscriptions.delete(subscription);
+            listeners.delete(subscription);
+          };
+        },
+        setPreference: (value) => {
+          if (disposed || forced !== null)
+            return false;
+          const preference = parseDesignPalettePreference(value);
+          if (preference === null)
+            throw new Error("Choose a supported palette and appearance mode.");
+          writeStorage(storage, storageKey, preference);
+          return update(preference);
+        },
+        dispose: () => {
+          if (disposed)
+            return;
+          disposed = true;
+          for (const listener of subscriptions)
+            listeners.delete(listener);
+          subscriptions.clear();
+          owners -= 1;
+          if (owners !== 0)
+            return;
+          view?.removeEventListener("storage", onStorage);
+          media?.removeEventListener("change", onMedia);
+          themeColor.release();
+          if (ownerDocument[installationKey] === installation)
+            Reflect.deleteProperty(ownerDocument, installationKey);
+        }
+      };
+    }
+  };
+  ownerDocument[installationKey] = installation;
+  return installation.acquire();
+}
+
+// src/react/design-palette.stylex.ts
+var paletteMenuStyles = {
+  icon: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x3nfvp2",
+    kjj79g: "xl56j7k",
+    kLWn49: "x14ju556",
+    $$css: true
+  },
+  root: {
+    k1xSpc: "x3nfvp2",
+    kVAEAm: "x1n2onr6",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  trigger: {
+    kGNEyG: "x6s0dn4",
+    kWkggS: "x17tv4j5",
+    kVAM5u: "x1w4nuvj",
+    kaIpWk: "xyz7jqb",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xmkeg23",
+    kMwMTN: "xm06a53",
+    kkrTdU: "x1ypdohk",
+    k1xSpc: "x3nfvp2",
+    kjj79g: "xl56j7k",
+    kH6xsr: "x3ct3a4",
+    kVQ08L: "x1qwoi4t",
+    kdYMnH: "x9hh0qe",
+    kjBf7l: "x1mixbcr",
+    kInvED: "x1ewu8gn",
+    k8WAf4: "x18g2hj5",
+    kg3NbH: "xvpgqt4",
+    kfSwDN: "x87ps6o",
+    $$css: true
+  },
+  triggerDefault: {
+    kVQ08L: "x1j3ipif",
+    kdYMnH: "xz1t8dp",
+    $$css: true
+  },
+  panel: {
+    kWkggS: "x1awrtuo",
+    kVAM5u: "x1w4nuvj",
+    kaIpWk: "xvy3trx",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xmkeg23",
+    kGVxlE: "xl8zne6",
+    kMwMTN: "xxfsttr",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x8233eu",
+    kUvb1J: "x1g9am0e",
+    k7w2rI: "xtijo5x",
+    kULEZF: "x1052wsp",
+    kLO5vc: "xwnj3u5",
+    kVQacm: "xysyzu8",
+    k8WAf4: "xo0yzjp",
+    kg3NbH: "x1ryrjj2",
+    kVAEAm: "x10l6tqk",
+    kVCA4M: "x1guzgd5",
+    $$css: true
+  },
+  group: {
+    kMzoRj: "xc342km",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x1enigpx",
+    kqGvvJ: "x10im51j",
+    kUOVxO: "xrxpjvj",
+    kdYMnH: "xesnm00",
+    k8WAf4: "xt970qd",
+    kg3NbH: "xnjsko4",
+    $$css: true
+  },
+  legend: {
+    kMwMTN: "x12x9krh",
+    kGuDYH: "xkpwil5",
+    k63SB2: "xh88oxj",
+    kLWn49: "x1evy7pa",
+    k1K539: "x18jvhmb",
+    kg3NbH: "x97vtpp",
+    $$css: true
+  },
+  choice: {
+    kGNEyG: "x6s0dn4",
+    kaIpWk: "xyz7jqb",
+    kkrTdU: "x1ypdohk",
+    k1xSpc: "x78zum5",
+    kGuDYH: "x1jchvi3",
+    kOIVth: "xb6y1gh",
+    kLWn49: "x37zpob",
+    kVQ08L: "x4q3qzj",
+    k8WAf4: "x1bilvtl",
+    kg3NbH: "x97vtpp",
+    $$css: true
+  },
+  radio: {
+    keaTxX: "x1vgqp62",
+    kmuXW: "x2lah0s",
+    kLWsYc: "x38bysi",
+    kULEZF: "x1milg1j",
+    kqGvvJ: "x10im51j",
+    kUOVxO: "xrxpjvj",
+    $$css: true
+  }
+};
+
+// src/react/design-palette.tsx
+import { jsx as jsx7, jsxs as jsxs5 } from "react/jsx-runtime";
+import { createElement } from "react";
+var DesignPaletteContext = createContext2(null);
+var noSubscribe = () => () => {
+  return;
+};
+function isNode(target) {
+  return target !== null && "nodeType" in target;
+}
+function DesignPaletteProvider({
+  children,
+  defaultPreference = defaultDesignPalettePreference,
+  forcedPreference,
+  storageKey,
+  legacyStorageKey
+}) {
+  const fallback = useMemo2(() => normalizeDesignPalettePreference(defaultPreference), [defaultPreference.palette, defaultPreference.mode]);
+  const forced = useMemo2(() => forcedPreference === undefined ? undefined : {
+    ...forcedPreference
+  }, [forcedPreference?.palette, forcedPreference?.mode]);
+  const serverSnapshot = useMemo2(() => designPaletteSnapshot(forced ?? fallback, false, forced !== undefined), [fallback, forced]);
+  const [controller, setController] = useState2(null);
+  useEffect3(() => {
+    const current = initDesignPalette({
+      defaultPreference: fallback,
+      ...forced === undefined ? {} : {
+        forcedPreference: forced
+      },
+      ...storageKey === undefined ? {} : {
+        storageKey
+      },
+      ...legacyStorageKey === undefined ? {} : {
+        legacyStorageKey
+      }
+    });
+    setController(current);
+    return () => {
+      current.dispose();
+    };
+  }, [fallback, forced, storageKey, legacyStorageKey]);
+  const snapshot = useSyncExternalStore(controller?.subscribe ?? noSubscribe, controller?.getSnapshot ?? (() => serverSnapshot), () => serverSnapshot);
+  const value = useMemo2(() => ({
+    ...snapshot,
+    ready: controller !== null,
+    setPreference: (preference) => {
+      controller?.setPreference(preference);
+    },
+    setPalette: (palette) => {
+      controller?.setPreference({
+        ...controller.getSnapshot().preference,
+        palette
+      });
+    },
+    setMode: (mode) => {
+      controller?.setPreference({
+        ...controller.getSnapshot().preference,
+        mode
+      });
+    }
+  }), [snapshot, controller]);
+  return /* @__PURE__ */ jsx7(DesignPaletteContext.Provider, {
+    value,
+    children: /* @__PURE__ */ jsx7(DesignPortalThemeProvider, {
+      portalClassName: snapshot.className,
+      theme: snapshot.resolvedMode,
+      children
+    })
+  });
+}
+function useDesignPalette() {
+  return useContext2(DesignPaletteContext);
+}
+function DesignPaletteMenuButton({
+  "aria-label": ariaLabel = "Appearance",
+  className,
+  labels,
+  size = "compact",
+  onChange,
+  value: controlledMode
+}) {
+  const palette = useDesignPalette();
+  const detailsRef = useRef2(null);
+  const groupId = useId();
+  useEffect3(() => {
+    const details = detailsRef.current;
+    if (details === null)
+      return;
+    const document2 = details.ownerDocument;
+    const outside = (event) => {
+      if (details.open && isNode(event.target) && !details.contains(event.target))
+        details.open = false;
+    };
+    const escape = (event) => {
+      if (event.key !== "Escape" || !details.open)
+        return;
+      event.preventDefault();
+      details.open = false;
+      details.querySelector("summary")?.focus();
+    };
+    document2.addEventListener("pointerdown", outside);
+    details.addEventListener("keydown", escape);
+    return () => {
+      document2.removeEventListener("pointerdown", outside);
+      details.removeEventListener("keydown", escape);
+    };
+  }, []);
+  if (palette === null)
+    throw new Error("DesignPaletteMenuButton requires DesignPaletteProvider.");
+  const mode = controlledMode ?? palette.preference.mode;
+  const ready = palette.ready && !palette.isForced;
+  const title = `${ariaLabel}: ${designPaletteLabels[palette.preference.palette]}, ${designThemeLabel(mode, labels)}`;
+  return /* @__PURE__ */ jsxs5("details", {
+    ...stylex6.props(paletteMenuStyles.root),
+    className: cn6("hraness-design-theme-toggle", "hraness-design-palette-menu", stylex6.props(paletteMenuStyles.root).className, className),
+    "data-hraness-appearance-menu": "",
+    "data-presentation": "menu",
+    "data-ready": ready ? "true" : "false",
+    ref: detailsRef,
+    onBlur: (event) => {
+      if (isNode(event.relatedTarget) && !event.currentTarget.contains(event.relatedTarget))
+        event.currentTarget.open = false;
+    },
+    children: [
+      /* @__PURE__ */ jsx7("summary", {
+        ...stylex6.props(paletteMenuStyles.trigger, size === "default" && paletteMenuStyles.triggerDefault),
+        "aria-disabled": !ready || undefined,
+        "aria-label": title,
+        onClick: (event) => {
+          if (!ready)
+            event.preventDefault();
+        },
+        tabIndex: ready ? 0 : -1,
+        title,
+        children: /* @__PURE__ */ jsx7(AppearanceIcon, {
+          name: mode,
+          xstyle: paletteMenuStyles.icon
+        })
+      }),
+      /* @__PURE__ */ jsxs5("div", {
+        ...stylex6.props(paletteMenuStyles.panel),
+        children: [
+          /* @__PURE__ */ jsxs5("fieldset", {
+            ...stylex6.props(paletteMenuStyles.group),
+            disabled: !ready,
+            children: [
+              /* @__PURE__ */ jsx7("legend", {
+                ...stylex6.props(paletteMenuStyles.legend),
+                children: "Theme"
+              }),
+              designPalettes.map((id) => /* @__PURE__ */ createElement("label", {
+                ...stylex6.props(paletteMenuStyles.choice),
+                key: id
+              }, /* @__PURE__ */ jsx7("input", {
+                ...stylex6.props(paletteMenuStyles.radio),
+                checked: palette.preference.palette === id,
+                name: `${groupId}-palette`,
+                onChange: () => palette.setPalette(id),
+                type: "radio",
+                value: id
+              }), /* @__PURE__ */ jsx7("span", {
+                children: designPaletteLabels[id]
+              })))
+            ]
+          }),
+          /* @__PURE__ */ jsxs5("fieldset", {
+            ...stylex6.props(paletteMenuStyles.group),
+            disabled: !ready,
+            children: [
+              /* @__PURE__ */ jsx7("legend", {
+                ...stylex6.props(paletteMenuStyles.legend),
+                children: "Appearance"
+              }),
+              designThemes.map((id) => /* @__PURE__ */ createElement("label", {
+                ...stylex6.props(paletteMenuStyles.choice),
+                key: id
+              }, /* @__PURE__ */ jsx7("input", {
+                ...stylex6.props(paletteMenuStyles.radio),
+                checked: mode === id,
+                name: `${groupId}-mode`,
+                onChange: () => {
+                  if (onChange === undefined)
+                    palette.setMode(id);
+                  else
+                    onChange(id);
+                },
+                type: "radio",
+                value: id
+              }), /* @__PURE__ */ jsx7("span", {
+                children: designThemeLabel(id, labels)
+              })))
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
 // src/react/design-gallery.tsx
 import { Badge, Button as Button2, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
-import { useState as useState2 } from "react";
+import { useState as useState3 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
-import * as stylex6 from "@stylexjs/stylex";
-import { cn as cn6 } from "@hraness/ui";
+import * as stylex7 from "@stylexjs/stylex";
+import { cn as cn7 } from "@hraness/ui";
 
 // src/react/fader.stylex.ts
 var faderStyles = {
@@ -963,7 +1620,7 @@ var faderStyles = {
 };
 
 // src/react/fader.tsx
-import { jsx as jsx7, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
 function Fader({
   className,
   density = "default",
@@ -974,63 +1631,63 @@ function Fader({
   orientation = "vertical",
   showLabel = false,
   showOutput = false,
-  ...props7
+  ...props8
 }) {
-  const rootPresentation = stylex6.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
-  const labelRowPresentation = stylex6.props(faderStyles.labelRow);
-  const captionPresentation = stylex6.props(faderStyles.caption);
-  const trackPresentation = stylex6.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
-  const trackRailPresentation = stylex6.props(faderStyles.rail, faderStyles.trackRail);
-  const fillRailPresentation = stylex6.props(faderStyles.rail, faderStyles.fillRail);
-  return /* @__PURE__ */ jsxs5(AriaSlider, {
-    ...props7,
-    className: cn6("hraness-design-fader", rootPresentation.className, className),
+  const rootPresentation = stylex7.props(faderStyles.root, density === "compact" && faderStyles.compact, orientation === "horizontal" && faderStyles.horizontalRoot);
+  const labelRowPresentation = stylex7.props(faderStyles.labelRow);
+  const captionPresentation = stylex7.props(faderStyles.caption);
+  const trackPresentation = stylex7.props(faderStyles.track, orientation === "horizontal" && faderStyles.horizontalTrack);
+  const trackRailPresentation = stylex7.props(faderStyles.rail, faderStyles.trackRail);
+  const fillRailPresentation = stylex7.props(faderStyles.rail, faderStyles.fillRail);
+  return /* @__PURE__ */ jsxs6(AriaSlider, {
+    ...props8,
+    className: cn7("hraness-design-fader", rootPresentation.className, className),
     "data-density": density,
     orientation,
     ref: faderRef,
     children: [
-      showLabel && labelAccessory !== undefined ? /* @__PURE__ */ jsxs5("div", {
-        className: cn6("hraness-design-fader__label-row", labelRowPresentation.className),
+      showLabel && labelAccessory !== undefined ? /* @__PURE__ */ jsxs6("div", {
+        className: cn7("hraness-design-fader__label-row", labelRowPresentation.className),
         children: [
-          /* @__PURE__ */ jsx7(Label, {
-            className: cn6("hraness-design-fader__label", captionPresentation.className),
+          /* @__PURE__ */ jsx8(Label, {
+            className: cn7("hraness-design-fader__label", captionPresentation.className),
             children: label
           }),
-          /* @__PURE__ */ jsx7("span", {
+          /* @__PURE__ */ jsx8("span", {
             className: "hraness-design-fader__label-accessory",
             children: labelAccessory
           })
         ]
-      }) : showLabel ? /* @__PURE__ */ jsx7(Label, {
-        className: cn6("hraness-design-fader__label", captionPresentation.className),
+      }) : showLabel ? /* @__PURE__ */ jsx8(Label, {
+        className: cn7("hraness-design-fader__label", captionPresentation.className),
         children: label
-      }) : /* @__PURE__ */ jsx7(Label, {
+      }) : /* @__PURE__ */ jsx8(Label, {
         className: "hraness-design-visually-hidden",
         children: label
       }),
-      showOutput ? /* @__PURE__ */ jsx7(SliderOutput, {
-        className: cn6("hraness-design-fader__output", captionPresentation.className)
+      showOutput ? /* @__PURE__ */ jsx8(SliderOutput, {
+        className: cn7("hraness-design-fader__output", captionPresentation.className)
       }) : null,
-      /* @__PURE__ */ jsxs5(SliderTrack, {
-        className: cn6("hraness-design-fader__track", trackPresentation.className),
+      /* @__PURE__ */ jsxs6(SliderTrack, {
+        className: cn7("hraness-design-fader__track", trackPresentation.className),
         children: [
-          /* @__PURE__ */ jsx7("span", {
+          /* @__PURE__ */ jsx8("span", {
             "aria-hidden": "true",
-            className: cn6("hraness-design-fader__track-rail", trackRailPresentation.className)
+            className: cn7("hraness-design-fader__track-rail", trackRailPresentation.className)
           }),
-          /* @__PURE__ */ jsx7(SliderFill, {
+          /* @__PURE__ */ jsx8(SliderFill, {
             className: "hraness-design-fader__fill",
-            children: /* @__PURE__ */ jsx7("span", {
+            children: /* @__PURE__ */ jsx8("span", {
               "aria-hidden": "true",
-              className: cn6("hraness-design-fader__fill-rail", fillRailPresentation.className)
+              className: cn7("hraness-design-fader__fill-rail", fillRailPresentation.className)
             })
           }),
-          /* @__PURE__ */ jsx7(SliderThumb, {
+          /* @__PURE__ */ jsx8(SliderThumb, {
             className: ({
               isFocusVisible
             }) => {
-              const thumbPresentation = stylex6.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
-              return cn6("hraness-design-fader__thumb", thumbPresentation.className);
+              const thumbPresentation = stylex7.props(faderStyles.thumb, isFocusVisible && faderStyles.focusVisible);
+              return cn7("hraness-design-fader__thumb", thumbPresentation.className);
             },
             ...inputRef === undefined ? {} : {
               inputRef
@@ -1043,9 +1700,9 @@ function Fader({
 }
 
 // src/react/foil-card-surface.tsx
-import * as stylex7 from "@stylexjs/stylex";
-import { cn as cn7 } from "@hraness/ui";
-import { createContext as createContext2, useCallback, useContext as useContext2, useEffect as useEffect3, useMemo as useMemo2, useRef as useRef2 } from "react";
+import * as stylex8 from "@stylexjs/stylex";
+import { cn as cn8 } from "@hraness/ui";
+import { createContext as createContext3, useCallback, useContext as useContext3, useEffect as useEffect4, useMemo as useMemo3, useRef as useRef3 } from "react";
 
 // src/react/foil-card-math.ts
 function normalizedSeed(seed) {
@@ -1384,12 +2041,12 @@ var foilCardSurfaceStyles = {
 };
 
 // src/react/foil-card-surface.tsx
-import { jsx as jsx8, jsxs as jsxs6 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
 var foilCardPresets = ["prism", "aurora", "etched", "gold", "fast", "max"];
 var foilCardIntensities = ["subtle", "standard", "vivid"];
 var foilCardRenderModes = ["interactive", "static"];
 var foilCardOrnaments = ["none", "corners", "rails", "circuit", "radial", "facets"];
-var FoilDeckContext = createContext2(null);
+var FoilDeckContext = createContext3(null);
 var delegatedSurfaceSelector = ".hraness-design-foil-card-surface[data-foil-controller='deck']";
 var presetStyles = {
   aurora: {
@@ -1576,17 +2233,17 @@ function addMediaListener(media, listener) {
 function FoilCardDeck({
   children,
   className,
-  ...props8
+  ...props9
 }) {
-  const rootRef = useRef2(null);
-  const registrations = useRef2(new Map);
-  const activeElement = useRef2(null);
-  const focusedElement = useRef2(null);
-  const pointerElement = useRef2(null);
-  const activeBounds = useRef2(null);
-  const pendingInteraction = useRef2(null);
-  const frame = useRef2(null);
-  const resizeObserver = useRef2(null);
+  const rootRef = useRef3(null);
+  const registrations = useRef3(new Map);
+  const activeElement = useRef3(null);
+  const focusedElement = useRef3(null);
+  const pointerElement = useRef3(null);
+  const activeBounds = useRef3(null);
+  const pendingInteraction = useRef3(null);
+  const frame = useRef3(null);
+  const resizeObserver = useRef3(null);
   const deactivate = useCallback((element) => {
     const registration = registrations.current.get(element);
     if (registration !== undefined) {
@@ -1613,10 +2270,10 @@ function FoilCardDeck({
       registrations.current.delete(element);
     };
   }, [deactivate]);
-  const contextValue = useMemo2(() => ({
+  const contextValue = useMemo3(() => ({
     register
   }), [register]);
-  useEffect3(() => {
+  useEffect4(() => {
     const root = rootRef.current;
     if (root === null || typeof window.matchMedia !== "function" || typeof window.requestAnimationFrame !== "function" || typeof window.cancelAnimationFrame !== "function") {
       return;
@@ -1812,11 +2469,11 @@ function FoilCardDeck({
       resizeObserver.current = null;
     };
   }, [deactivate]);
-  return /* @__PURE__ */ jsx8(FoilDeckContext.Provider, {
+  return /* @__PURE__ */ jsx9(FoilDeckContext.Provider, {
     value: contextValue,
-    children: /* @__PURE__ */ jsx8("div", {
-      ...props8,
-      className: cn7("hraness-design-foil-card-deck", className),
+    children: /* @__PURE__ */ jsx9("div", {
+      ...props9,
+      className: cn8("hraness-design-foil-card-deck", className),
       "data-foil-card-deck": "",
       ref: rootRef,
       children
@@ -1841,21 +2498,21 @@ function FoilCardSurface({
   requirePublicValue(preset, foilCardPresets, "preset");
   requirePublicValue(renderMode, foilCardRenderModes, "render mode");
   requirePublicValue(ornament, foilCardOrnaments, "ornament");
-  const deck = useContext2(FoilDeckContext);
-  const rootRef = useRef2(null);
-  const seedPose = useMemo2(() => createFoilCardSeedPose(seed), [seed]);
+  const deck = useContext3(FoilDeckContext);
+  const rootRef = useRef3(null);
+  const seedPose = useMemo3(() => createFoilCardSeedPose(seed), [seed]);
   const seededStyle = poseStyle(seedPose, intensity);
   const selectedPreset = presetStyles[preset];
   const selectedIntensity = intensityStyles[intensity];
-  const rootPresentation = stylex7.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
-  const basePresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
-  const spectrumPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
-  const sheenPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
-  const texturePresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
-  const ornamentPresentation = stylex7.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
-  const contentPresentation = stylex7.props(foilCardSurfaceStyles.content);
-  const activePresentation = stylex7.props(foilCardSurfaceStyles.active);
-  useEffect3(() => {
+  const rootPresentation = stylex8.props(foilCardSurfaceStyles.base, renderMode === "interactive" ? foilCardSurfaceStyles.interactive : foilCardSurfaceStyles.static);
+  const basePresentation = stylex8.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.baseLayer, selectedPreset.base, selectedIntensity.base);
+  const spectrumPresentation = stylex8.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.spectrumLayer, selectedPreset.spectrum, selectedIntensity.spectrum);
+  const sheenPresentation = stylex8.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.sheenLayer, selectedIntensity.sheen);
+  const texturePresentation = stylex8.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.textureLayer, selectedPreset.texture, selectedIntensity.texture);
+  const ornamentPresentation = stylex8.props(foilCardSurfaceStyles.layer, foilCardSurfaceStyles.ornamentLayer, ornamentStyles[ornament], selectedIntensity.ornament);
+  const contentPresentation = stylex8.props(foilCardSurfaceStyles.content);
+  const activePresentation = stylex8.props(foilCardSurfaceStyles.active);
+  useEffect4(() => {
     if (renderMode !== "interactive")
       return;
     const root = rootRef.current;
@@ -1969,9 +2626,9 @@ function FoilCardSurface({
       setActive(root, activePresentation.className, false);
     };
   }, [activePresentation.className, deck, renderMode, seedPose]);
-  return /* @__PURE__ */ jsxs6("div", {
+  return /* @__PURE__ */ jsxs7("div", {
     ...rootPresentation,
-    className: cn7("hraness-design-foil-card-surface", rootPresentation.className, className),
+    className: cn8("hraness-design-foil-card-surface", rootPresentation.className, className),
     "data-foil-intensity": intensity,
     "data-foil-controller": deck === null ? "standalone" : "deck",
     "data-foil-ornament": ornament,
@@ -1980,27 +2637,27 @@ function FoilCardSurface({
     ref: rootRef,
     style: seededStyle,
     children: [
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         ...basePresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx8("div", {
+      /* @__PURE__ */ jsx9("div", {
         ...contentPresentation,
         children
       }),
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         ...spectrumPresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         ...sheenPresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         ...texturePresentation,
         "aria-hidden": "true"
       }),
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         ...ornamentPresentation,
         "aria-hidden": "true"
       })
@@ -2009,9 +2666,9 @@ function FoilCardSurface({
 }
 
 // src/react/jelly-surface.tsx
-import { createElement, forwardRef, useCallback as useCallback2, useEffect as useEffect4, useRef as useRef3 } from "react";
-import * as stylex8 from "@stylexjs/stylex";
-import { cn as cn8 } from "@hraness/ui";
+import { createElement as createElement2, forwardRef, useCallback as useCallback2, useEffect as useEffect5, useRef as useRef4 } from "react";
+import * as stylex9 from "@stylexjs/stylex";
+import { cn as cn9 } from "@hraness/ui";
 
 // src/react/jelly-runtime.ts
 function createRetryableJellyRuntimeLoader(loader) {
@@ -2232,11 +2889,11 @@ var JellySurface = forwardRef(function JellySurface2({
   onPointerMoveCapture,
   surfaceRef,
   tone = "neutral",
-  ...props9
+  ...props10
 }, forwardedRef) {
-  const hostRef = useRef3(null);
-  const activePointer = useRef3(null);
-  const activeReleaseListeners = useRef3(null);
+  const hostRef = useRef4(null);
+  const activePointer = useRef4(null);
+  const activeReleaseListeners = useRef4(null);
   const setHost = useCallback2((host) => {
     hostRef.current = host;
     assignRef(surfaceRef, host);
@@ -2250,7 +2907,7 @@ var JellySurface = forwardRef(function JellySurface2({
     host?.removeAttribute("data-pressed");
     host?.releaseBody?.();
   }, []);
-  useEffect4(() => {
+  useEffect5(() => {
     ensureJellyRuntime();
     return release;
   }, [release]);
@@ -2268,9 +2925,9 @@ var JellySurface = forwardRef(function JellySurface2({
       hostRef.current?.moveAt?.(event.clientX, event.clientY);
     }
   };
-  return createElement(JellyCard, {
-    ...props9,
-    className: cn8("hraness-design-jelly-surface", stylex8.props(jellySurfaceStyles.root, tone === "danger" && jellySurfaceStyles.danger, tone === "field" && jellySurfaceStyles.field, tone === "overlay" && jellySurfaceStyles.overlay, tone === "primary" && jellySurfaceStyles.primary, tone === "quiet" && jellySurfaceStyles.quiet, tone === "neutral" && jellySurfaceStyles.neutralHovered, tone === "primary" && jellySurfaceStyles.primaryHovered, (isDisabled || isPending) && jellySurfaceStyles.disabled, interaction !== "press" && jellySurfaceStyles.selectableText).className, className),
+  return createElement2(JellyCard, {
+    ...props10,
+    className: cn9("hraness-design-jelly-surface", stylex9.props(jellySurfaceStyles.root, tone === "danger" && jellySurfaceStyles.danger, tone === "field" && jellySurfaceStyles.field, tone === "overlay" && jellySurfaceStyles.overlay, tone === "primary" && jellySurfaceStyles.primary, tone === "quiet" && jellySurfaceStyles.quiet, tone === "neutral" && jellySurfaceStyles.neutralHovered, tone === "primary" && jellySurfaceStyles.primaryHovered, (isDisabled || isPending) && jellySurfaceStyles.disabled, interaction !== "press" && jellySurfaceStyles.selectableText).className, className),
     "data-disabled": isDisabled ? "true" : undefined,
     "data-pending": isPending ? "true" : undefined,
     "data-interaction": interaction,
@@ -2326,8 +2983,8 @@ var JellySurface = forwardRef(function JellySurface2({
 });
 
 // src/react/navigation-rail.tsx
-import { Link, cn as cn9 } from "@hraness/ui";
-import * as stylex9 from "@stylexjs/stylex";
+import { Link, cn as cn10 } from "@hraness/ui";
+import * as stylex10 from "@stylexjs/stylex";
 
 // src/react/navigation-rail.stylex.ts
 var navigationRailStyles = {
@@ -2446,38 +3103,38 @@ var navigationRailStyles = {
 };
 
 // src/react/navigation-rail.tsx
-import { jsx as jsx9, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
 function NavigationRail({
   "aria-label": ariaLabel = "Primary navigation",
   children,
   className,
   footer,
   header,
-  ...props10
+  ...props11
 }) {
-  const rootPresentation = stylex9.props(navigationRailStyles.rail);
-  const edgePresentation = stylex9.props(navigationRailStyles.railEdge);
-  const navigationPresentation = stylex9.props(navigationRailStyles.navigation);
-  return /* @__PURE__ */ jsxs7("aside", {
+  const rootPresentation = stylex10.props(navigationRailStyles.rail);
+  const edgePresentation = stylex10.props(navigationRailStyles.railEdge);
+  const navigationPresentation = stylex10.props(navigationRailStyles.navigation);
+  return /* @__PURE__ */ jsxs8("aside", {
     ...rootPresentation,
-    ...props10,
+    ...props11,
     "aria-label": ariaLabel,
-    className: cn9("hraness-design-navigation-rail", rootPresentation.className, className),
+    className: cn10("hraness-design-navigation-rail", rootPresentation.className, className),
     children: [
-      header === undefined ? null : /* @__PURE__ */ jsx9("header", {
+      header === undefined ? null : /* @__PURE__ */ jsx10("header", {
         ...edgePresentation,
-        className: cn9("hraness-design-navigation-rail__header", edgePresentation.className),
+        className: cn10("hraness-design-navigation-rail__header", edgePresentation.className),
         children: header
       }),
-      /* @__PURE__ */ jsx9("nav", {
+      /* @__PURE__ */ jsx10("nav", {
         ...navigationPresentation,
         "aria-label": ariaLabel,
-        className: cn9("hraness-design-navigation-rail__navigation", navigationPresentation.className),
+        className: cn10("hraness-design-navigation-rail__navigation", navigationPresentation.className),
         children
       }),
-      footer === undefined ? null : /* @__PURE__ */ jsx9("footer", {
+      footer === undefined ? null : /* @__PURE__ */ jsx10("footer", {
         ...edgePresentation,
-        className: cn9("hraness-design-navigation-rail__footer", edgePresentation.className),
+        className: cn10("hraness-design-navigation-rail__footer", edgePresentation.className),
         children: footer
       })
     ]
@@ -2488,25 +3145,25 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props10
+  ...props11
 }) {
   const Heading = titleAs;
-  const rootPresentation = stylex9.props(navigationRailStyles.section);
-  const titlePresentation = stylex9.props(navigationRailStyles.sectionTitle);
-  const itemsPresentation = stylex9.props(navigationRailStyles.sectionItems);
-  return /* @__PURE__ */ jsxs7("section", {
+  const rootPresentation = stylex10.props(navigationRailStyles.section);
+  const titlePresentation = stylex10.props(navigationRailStyles.sectionTitle);
+  const itemsPresentation = stylex10.props(navigationRailStyles.sectionItems);
+  return /* @__PURE__ */ jsxs8("section", {
     ...rootPresentation,
-    ...props10,
-    className: cn9("hraness-design-rail-section", rootPresentation.className, className),
+    ...props11,
+    className: cn10("hraness-design-rail-section", rootPresentation.className, className),
     children: [
-      title === undefined ? null : /* @__PURE__ */ jsx9(Heading, {
+      title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
         ...titlePresentation,
-        className: cn9("hraness-design-rail-section__title", titlePresentation.className),
+        className: cn10("hraness-design-rail-section__title", titlePresentation.className),
         children: title
       }),
-      /* @__PURE__ */ jsx9("div", {
+      /* @__PURE__ */ jsx10("div", {
         ...itemsPresentation,
-        className: cn9("hraness-design-rail-section__items", itemsPresentation.className),
+        className: cn10("hraness-design-rail-section__items", itemsPresentation.className),
         children
       })
     ]
@@ -2521,42 +3178,42 @@ function RailItem({
   isActive = false,
   label,
   xstyle,
-  ...props10
+  ...props11
 }) {
-  const iconPresentation = stylex9.props(navigationRailStyles.itemIcon);
-  const copyPresentation = stylex9.props(navigationRailStyles.itemCopy);
-  const labelPresentation = stylex9.props(navigationRailStyles.itemLabel);
-  const descriptionPresentation = stylex9.props(navigationRailStyles.itemDescription);
-  return /* @__PURE__ */ jsxs7(Link, {
-    ...props10,
+  const iconPresentation = stylex10.props(navigationRailStyles.itemIcon);
+  const copyPresentation = stylex10.props(navigationRailStyles.itemCopy);
+  const labelPresentation = stylex10.props(navigationRailStyles.itemLabel);
+  const descriptionPresentation = stylex10.props(navigationRailStyles.itemDescription);
+  return /* @__PURE__ */ jsxs8(Link, {
+    ...props11,
     "aria-current": isActive ? "page" : undefined,
-    className: cn9("hraness-design-rail-item", className),
+    className: cn10("hraness-design-rail-item", className),
     href,
     xstyle: [navigationRailStyles.item, navigationRailStyles.itemNativeInteractionFallbacks, isActive && navigationRailStyles.itemActive, xstyle],
     children: [
-      icon === undefined ? null : /* @__PURE__ */ jsx9("span", {
+      icon === undefined ? null : /* @__PURE__ */ jsx10("span", {
         ...iconPresentation,
         "aria-hidden": "true",
-        className: cn9("hraness-design-rail-item__icon", iconPresentation.className),
+        className: cn10("hraness-design-rail-item__icon", iconPresentation.className),
         children: icon
       }),
-      /* @__PURE__ */ jsxs7("span", {
+      /* @__PURE__ */ jsxs8("span", {
         ...copyPresentation,
-        className: cn9("hraness-design-rail-item__copy", copyPresentation.className),
+        className: cn10("hraness-design-rail-item__copy", copyPresentation.className),
         children: [
-          /* @__PURE__ */ jsx9("span", {
+          /* @__PURE__ */ jsx10("span", {
             ...labelPresentation,
-            className: cn9("hraness-design-rail-item__label", labelPresentation.className),
+            className: cn10("hraness-design-rail-item__label", labelPresentation.className),
             children: label
           }),
-          description === undefined ? null : /* @__PURE__ */ jsx9("span", {
+          description === undefined ? null : /* @__PURE__ */ jsx10("span", {
             ...descriptionPresentation,
-            className: cn9("hraness-design-rail-item__description", descriptionPresentation.className),
+            className: cn10("hraness-design-rail-item__description", descriptionPresentation.className),
             children: description
           })
         ]
       }),
-      badge === undefined ? null : /* @__PURE__ */ jsx9("span", {
+      badge === undefined ? null : /* @__PURE__ */ jsx10("span", {
         className: "hraness-design-rail-item__badge",
         children: badge
       })
@@ -2566,8 +3223,8 @@ function RailItem({
 
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
-import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex10 from "@stylexjs/stylex";
+import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn11 } from "@hraness/ui";
+import * as stylex11 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -2586,7 +3243,7 @@ var playbackTransportStyles = {
 };
 
 // src/react/playback-transport.tsx
-import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 function PlaybackTransport({
   buttonAriaKeyShortcuts,
   buttonId,
@@ -2605,14 +3262,14 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex10.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex10.props(playbackTransportStyles.glyph);
-  return /* @__PURE__ */ jsxs8(Toolbar, {
+  const rootPresentation = stylex11.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex11.props(playbackTransportStyles.glyph);
+  return /* @__PURE__ */ jsxs9(Toolbar, {
     ...accessibleName,
-    className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
+    className: cn11("hraness-design-playback-transport", rootPresentation.className, className),
     "data-playback-status": status,
     children: [
-      /* @__PURE__ */ jsx10(IconButton2, {
+      /* @__PURE__ */ jsx11(IconButton2, {
         "aria-busy": isPending || undefined,
         "aria-label": commandLabel,
         ...buttonAriaKeyShortcuts === undefined ? {} : {
@@ -2637,9 +3294,9 @@ function PlaybackTransport({
         },
         size: "large",
         variant: "primary",
-        children: isPending ? /* @__PURE__ */ jsx10(Spinner, {
+        children: isPending ? /* @__PURE__ */ jsx11(Spinner, {
           ...glyphPresentation
-        }) : /* @__PURE__ */ jsx10(Icon2, {
+        }) : /* @__PURE__ */ jsx11(Icon2, {
           ...glyphPresentation.className === undefined ? {} : {
             className: glyphPresentation.className
           },
@@ -2653,7 +3310,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex11 from "@stylexjs/stylex";
+import * as stylex12 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -2698,25 +3355,25 @@ var productionDataPreviewNoticeStyles = {
 };
 
 // src/react/production-data-preview-notice.tsx
-import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
 function ProductionDataPreviewNotice({
   surfaceOrigin
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex11.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex11.props(productionDataPreviewNoticeStyles.emphasis);
-  return /* @__PURE__ */ jsxs9("aside", {
+  const noticePresentation = stylex12.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex12.props(productionDataPreviewNoticeStyles.emphasis);
+  return /* @__PURE__ */ jsxs10("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
     className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
     role: "alert",
     children: [
-      /* @__PURE__ */ jsx11("strong", {
+      /* @__PURE__ */ jsx12("strong", {
         ...emphasisPresentation,
         children: "Production data preview"
       }),
-      /* @__PURE__ */ jsx11("span", {
+      /* @__PURE__ */ jsx12("span", {
         children: "This preview uses production data. Actions are real and affect production."
       })
     ]
@@ -2724,7 +3381,7 @@ function ProductionDataPreviewNotice({
 }
 
 // src/react/design-gallery.tsx
-import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
 var designGallerySections = [{
   id: "foundation",
   label: "Foundation"
@@ -2802,35 +3459,35 @@ var foilDeckExamples = [{
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
-  const [density, setDensity] = useState2("default");
-  const [chatDraft, setChatDraft] = useState2("Review the presentation contract");
-  const [chatSubmission, setChatSubmission] = useState2("");
-  const [faderValue, setFaderValue] = useState2(64);
-  const [playbackStatus, setPlaybackStatus] = useState2("idle");
+  const [density, setDensity] = useState3("default");
+  const [chatDraft, setChatDraft] = useState3("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState3("");
+  const [faderValue, setFaderValue] = useState3(64);
+  const [playbackStatus, setPlaybackStatus] = useState3("idle");
   const Root = isNestedInMain ? "div" : "main";
-  return /* @__PURE__ */ jsxs10(Root, {
+  return /* @__PURE__ */ jsxs11(Root, {
     className: "design-gallery",
     "data-design-gallery": "public",
     "data-design-gallery-nested": isNestedInMain ? "true" : "false",
     children: [
-      /* @__PURE__ */ jsxs10("header", {
+      /* @__PURE__ */ jsxs11("header", {
         className: "design-gallery__intro",
         children: [
-          /* @__PURE__ */ jsx12(Badge, {
+          /* @__PURE__ */ jsx13(Badge, {
             tone: "info",
             children: "@hraness/design-kit"
           }),
-          /* @__PURE__ */ jsx12("h1", {
+          /* @__PURE__ */ jsx13("h1", {
             children: "Presentation and composition reference"
           }),
-          /* @__PURE__ */ jsx12("p", {
+          /* @__PURE__ */ jsx13("p", {
             children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
           }),
-          /* @__PURE__ */ jsx12("p", {
+          /* @__PURE__ */ jsx13("p", {
             children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
           }),
-          /* @__PURE__ */ jsx12(WrappingRow, {
-            children: /* @__PURE__ */ jsx12(SegmentedControl, {
+          /* @__PURE__ */ jsx13(WrappingRow, {
+            children: /* @__PURE__ */ jsx13(SegmentedControl, {
               "aria-label": "Gallery density",
               items: [{
                 id: "compact",
@@ -2846,43 +3503,43 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "foundation",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Foundation boundary"
           }),
-          /* @__PURE__ */ jsx12(ProductionDataPreviewNotice, {
+          /* @__PURE__ */ jsx13(ProductionDataPreviewNotice, {
             surfaceOrigin: "https://preview.example.test"
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsxs10(Card, {
+              /* @__PURE__ */ jsxs11(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs10(CardHeader, {
+                  /* @__PURE__ */ jsxs11(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx12(CardTitle, {
+                      /* @__PURE__ */ jsx13(CardTitle, {
                         children: "Portable control"
                       }),
-                      /* @__PURE__ */ jsx12(CardDescription, {
+                      /* @__PURE__ */ jsx13(CardDescription, {
                         children: "Rendered directly by @hraness/ui."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx12(CardContent, {
-                    children: /* @__PURE__ */ jsxs10(WrappingRow, {
+                  /* @__PURE__ */ jsx13(CardContent, {
+                    children: /* @__PURE__ */ jsxs11(WrappingRow, {
                       children: [
-                        /* @__PURE__ */ jsx12(Button2, {
+                        /* @__PURE__ */ jsx13(Button2, {
                           variant: "primary",
                           children: "Primary action"
                         }),
-                        /* @__PURE__ */ jsx12(LinkButton, {
+                        /* @__PURE__ */ jsx13(LinkButton, {
                           href: "#shells",
                           children: "Open shells"
                         }),
-                        /* @__PURE__ */ jsx12(Tag, {
+                        /* @__PURE__ */ jsx13(Tag, {
                           variant: "outline",
                           children: "public core"
                         })
@@ -2891,27 +3548,27 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsxs10(Card, {
+              /* @__PURE__ */ jsxs11(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs10(CardHeader, {
+                  /* @__PURE__ */ jsxs11(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx12(CardTitle, {
+                      /* @__PURE__ */ jsx13(CardTitle, {
                         children: "Typography roles"
                       }),
-                      /* @__PURE__ */ jsx12(CardDescription, {
+                      /* @__PURE__ */ jsx13(CardDescription, {
                         children: "Nebula Sans for proportional text; mono stays explicit."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx12(CardContent, {
-                    children: /* @__PURE__ */ jsxs10("div", {
+                  /* @__PURE__ */ jsx13(CardContent, {
+                    children: /* @__PURE__ */ jsxs11("div", {
                       className: "design-gallery__type-specimen",
                       children: [
-                        /* @__PURE__ */ jsx12("p", {
+                        /* @__PURE__ */ jsx13("p", {
                           "data-gallery-font": "proportional",
                           children: "More shape, less noise."
                         }),
-                        /* @__PURE__ */ jsx12("code", {
+                        /* @__PURE__ */ jsx13("code", {
                           "data-gallery-font": "mono",
                           children: 'const role = "mono";'
                         })
@@ -2920,41 +3577,41 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx12(JellySurface, {
+              /* @__PURE__ */ jsx13(JellySurface, {
                 className: "design-gallery__jelly",
                 interaction: "press",
                 tone: "neutral",
-                children: /* @__PURE__ */ jsx12(Button2, {
+                children: /* @__PURE__ */ jsx13(Button2, {
                   variant: "quiet",
                   children: "Semantic button with optional Jelly paint"
                 })
               })
             ]
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             "aria-label": "Plain site link presentation",
             className: "design-gallery__plain-theme plain-site plain-publication",
             children: [
-              /* @__PURE__ */ jsx12("header", {
+              /* @__PURE__ */ jsx13("header", {
                 className: "plain-header",
-                children: /* @__PURE__ */ jsxs10("div", {
+                children: /* @__PURE__ */ jsxs11("div", {
                   className: "plain-header__inner",
                   "data-layout": "responsive-wrap",
                   children: [
-                    /* @__PURE__ */ jsx12("a", {
+                    /* @__PURE__ */ jsx13("a", {
                       className: "plain-wordmark",
                       href: "#foundation",
                       children: "project-name.example"
                     }),
-                    /* @__PURE__ */ jsxs10("nav", {
+                    /* @__PURE__ */ jsxs11("nav", {
                       "aria-label": "Plain site example",
                       className: "plain-nav",
                       children: [
-                        /* @__PURE__ */ jsx12("a", {
+                        /* @__PURE__ */ jsx13("a", {
                           href: "#foundation",
                           children: "Articles"
                         }),
-                        /* @__PURE__ */ jsx12("a", {
+                        /* @__PURE__ */ jsx13("a", {
                           href: "#shells",
                           children: "About"
                         })
@@ -2963,13 +3620,13 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              /* @__PURE__ */ jsx12("div", {
+              /* @__PURE__ */ jsx13("div", {
                 className: "plain-page",
-                children: /* @__PURE__ */ jsxs10("p", {
+                children: /* @__PURE__ */ jsxs11("p", {
                   className: "design-gallery__plain-link-example",
                   children: [
                     "Ordinary ",
-                    /* @__PURE__ */ jsx12("a", {
+                    /* @__PURE__ */ jsx13("a", {
                       href: "#foundation",
                       children: "blue links"
                     }),
@@ -2981,17 +3638,17 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "marketing",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Product-marketing grammar"
           }),
-          /* @__PURE__ */ jsxs10(MarketingPage, {
+          /* @__PURE__ */ jsxs11(MarketingPage, {
             className: "design-gallery__marketing",
             children: [
-              /* @__PURE__ */ jsx12(MarketingSiteHeader, {
+              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
                 action: {
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -3010,7 +3667,7 @@ function DesignSystemGallery({
                   label: "Docs"
                 }]
               }),
-              /* @__PURE__ */ jsx12(ProductHero, {
+              /* @__PURE__ */ jsx13(ProductHero, {
                 actions: [{
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -3036,13 +3693,13 @@ function DesignSystemGallery({
                   value: "CLI + SDK"
                 }],
                 factsColumns: 3,
-                frame: /* @__PURE__ */ jsx12(MarketingProofFrame, {
+                frame: /* @__PURE__ */ jsx13(MarketingProofFrame, {
                   caption: "Receipt produced by the checked example.",
                   credit: "Captured 5 September 2026",
                   title: "relay run job-01",
-                  children: /* @__PURE__ */ jsx12("pre", {
+                  children: /* @__PURE__ */ jsx13("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx12("code", {
+                    children: /* @__PURE__ */ jsx13("code", {
                       children: '{"status":"complete","job":"job-01","durationMs":412}'
                     })
                   })
@@ -3051,13 +3708,13 @@ function DesignSystemGallery({
                 headingId: "design-gallery-marketing-title",
                 headingLevel: 3,
                 name: "Relay",
-                notice: /* @__PURE__ */ jsx12("p", {
+                notice: /* @__PURE__ */ jsx13("p", {
                   "data-gallery-marketing-slot": "notice",
                   children: "This example release runs locally."
                 }),
                 summary: "Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
               }),
-              /* @__PURE__ */ jsx12(MarketingPillars, {
+              /* @__PURE__ */ jsx13(MarketingPillars, {
                 ariaLabel: "Relay in three points",
                 columns: 3,
                 pillars: [{
@@ -3071,24 +3728,24 @@ function DesignSystemGallery({
                   summary: "Source files and credentials stay on your machine."
                 }]
               }),
-              /* @__PURE__ */ jsxs10(MarketingInstallPanel, {
+              /* @__PURE__ */ jsxs11(MarketingInstallPanel, {
                 eyebrow: "Local release",
                 heading: "Install the verified tool.",
                 headingId: "design-gallery-install-title",
                 headingLevel: 3,
                 id: "gallery-install",
-                note: /* @__PURE__ */ jsx12("p", {
+                note: /* @__PURE__ */ jsx13("p", {
                   "data-gallery-marketing-slot": "note",
                   children: "Requires Bun 1.3.14."
                 }),
                 children: [
-                  /* @__PURE__ */ jsx12("pre", {
+                  /* @__PURE__ */ jsx13("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx12("code", {
+                    children: /* @__PURE__ */ jsx13("code", {
                       children: "bun add --global relay@1.2.3"
                     })
                   }),
-                  /* @__PURE__ */ jsx12(MarketingFlow, {
+                  /* @__PURE__ */ jsx13(MarketingFlow, {
                     ariaLabel: "First Relay job",
                     steps: [{
                       code: "relay init",
@@ -3106,7 +3763,7 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx12(MarketingPrimitives, {
+              /* @__PURE__ */ jsx13(MarketingPrimitives, {
                 heading: "Small building blocks for serious workflows.",
                 headingId: "design-gallery-primitives-title",
                 headingLevel: 3,
@@ -3123,7 +3780,7 @@ function DesignSystemGallery({
                 label: "Primitives",
                 summary: "Relay gives agents a few durable objects to compose around the work in front of them."
               }),
-              /* @__PURE__ */ jsxs10(MarketingSection, {
+              /* @__PURE__ */ jsxs11(MarketingSection, {
                 heading: "One durable object.",
                 headingId: "gallery-marketing-section",
                 headingLevel: 3,
@@ -3131,19 +3788,19 @@ function DesignSystemGallery({
                 layout: "split-reverse",
                 summary: "Interfaces share the same identity.",
                 children: [
-                  /* @__PURE__ */ jsx12(MarketingSectionLabel, {
+                  /* @__PURE__ */ jsx13(MarketingSectionLabel, {
                     size: "body",
                     children: "Reference"
                   }),
-                  /* @__PURE__ */ jsxs10("p", {
+                  /* @__PURE__ */ jsxs11("p", {
                     children: [
                       "Consumer-owned content can include ",
-                      /* @__PURE__ */ jsx12("a", {
+                      /* @__PURE__ */ jsx13("a", {
                         href: "#gallery-install",
                         children: "links"
                       }),
                       " and ",
-                      /* @__PURE__ */ jsx12("code", {
+                      /* @__PURE__ */ jsx13("code", {
                         children: "inline code"
                       }),
                       "."
@@ -3151,7 +3808,7 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx12(MarketingInterfaceGrid, {
+              /* @__PURE__ */ jsx13(MarketingInterfaceGrid, {
                 heading: "Choose your interface.",
                 headingId: "gallery-marketing-interfaces",
                 headingLevel: 3,
@@ -3159,8 +3816,8 @@ function DesignSystemGallery({
                 interfaces: [{
                   label: "CLI",
                   summary: "Run a named job.",
-                  example: /* @__PURE__ */ jsx12("pre", {
-                    children: /* @__PURE__ */ jsx12("code", {
+                  example: /* @__PURE__ */ jsx13("pre", {
+                    children: /* @__PURE__ */ jsx13("code", {
                       children: "relay run job-01"
                     })
                   })
@@ -3169,7 +3826,7 @@ function DesignSystemGallery({
                   summary: "Use typed application code."
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingTrustBoundary, {
+              /* @__PURE__ */ jsx13(MarketingTrustBoundary, {
                 heading: "Keep authority visible.",
                 headingId: "gallery-marketing-trust",
                 headingLevel: 3,
@@ -3182,7 +3839,7 @@ function DesignSystemGallery({
                   detail: "Only the chosen receipt."
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingStatStrip, {
+              /* @__PURE__ */ jsx13(MarketingStatStrip, {
                 ariaLabel: "Relay usage",
                 columns: 3,
                 source: "Counted from the public example repository on 5 September 2026.",
@@ -3198,7 +3855,7 @@ function DesignSystemGallery({
                   value: "0"
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingQuoteGrid, {
+              /* @__PURE__ */ jsx13(MarketingQuoteGrid, {
                 heading: "From the people building with it.",
                 headingId: "design-gallery-quotes-title",
                 headingLevel: 3,
@@ -3209,7 +3866,7 @@ function DesignSystemGallery({
                   role: "@example"
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingPricing, {
+              /* @__PURE__ */ jsx13(MarketingPricing, {
                 heading: "Free for local use.",
                 headingId: "design-gallery-pricing-title",
                 headingLevel: 3,
@@ -3238,24 +3895,24 @@ function DesignSystemGallery({
                   summary: "Keep receipts in step across your machines."
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingQuestionList, {
+              /* @__PURE__ */ jsx13(MarketingQuestionList, {
                 heading: "Questions before installing.",
                 headingId: "design-gallery-questions-title",
                 headingLevel: 3,
                 label: "Questions",
                 questions: [{
-                  answer: /* @__PURE__ */ jsx12("p", {
+                  answer: /* @__PURE__ */ jsx13("p", {
                     children: "No. The local workflow works without one."
                   }),
                   question: "Does it require an account?"
                 }, {
-                  answer: /* @__PURE__ */ jsx12("p", {
+                  answer: /* @__PURE__ */ jsx13("p", {
                     children: "Nothing leaves your machine unless you turn on sync."
                   }),
                   question: "Does it phone home?"
                 }]
               }),
-              /* @__PURE__ */ jsx12(MarketingMaker, {
+              /* @__PURE__ */ jsx13(MarketingMaker, {
                 heading: "Built by a reference maker.",
                 headingId: "design-gallery-maker-title",
                 headingLevel: 3,
@@ -3265,11 +3922,11 @@ function DesignSystemGallery({
                   href: "#marketing",
                   label: "Personal site"
                 }],
-                children: /* @__PURE__ */ jsx12("p", {
+                children: /* @__PURE__ */ jsx13("p", {
                   children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
                 })
               }),
-              /* @__PURE__ */ jsx12(MarketingCallToAction, {
+              /* @__PURE__ */ jsx13(MarketingCallToAction, {
                 actions: [{
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -3283,49 +3940,49 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "shells",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Application shells"
           }),
-          /* @__PURE__ */ jsx12(ViewportFrame, {
+          /* @__PURE__ */ jsx13(ViewportFrame, {
             className: "design-gallery__shell-preview",
-            children: /* @__PURE__ */ jsx12(AppShell, {
-              bottomBar: /* @__PURE__ */ jsx12(BottomBar, {
-                actions: /* @__PURE__ */ jsx12("span", {
+            children: /* @__PURE__ */ jsx13(AppShell, {
+              bottomBar: /* @__PURE__ */ jsx13(BottomBar, {
+                actions: /* @__PURE__ */ jsx13("span", {
                   children: "Synced"
                 }),
                 "data-gallery-layout-bottom-bar": "",
-                leading: /* @__PURE__ */ jsx12("span", {
+                leading: /* @__PURE__ */ jsx13("span", {
                   children: "Ready"
                 }),
                 children: "Reference footer"
               }),
               navigationKey: "gallery",
-              rail: /* @__PURE__ */ jsx12(NavigationRail, {
-                children: /* @__PURE__ */ jsxs10(RailSection, {
+              rail: /* @__PURE__ */ jsx13(NavigationRail, {
+                children: /* @__PURE__ */ jsxs11(RailSection, {
                   title: "Workspace",
                   children: [
-                    /* @__PURE__ */ jsx12(RailItem, {
+                    /* @__PURE__ */ jsx13(RailItem, {
                       href: "#foundation",
-                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                      icon: /* @__PURE__ */ jsx13(Icon3, {
                         icon: DashboardSquare01Icon
                       }),
                       isActive: true,
                       label: "Overview"
                     }),
-                    /* @__PURE__ */ jsx12(RailItem, {
+                    /* @__PURE__ */ jsx13(RailItem, {
                       href: "#data",
-                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                      icon: /* @__PURE__ */ jsx13(Icon3, {
                         icon: Chart01Icon
                       }),
                       label: "Data"
                     }),
-                    /* @__PURE__ */ jsx12(RailItem, {
+                    /* @__PURE__ */ jsx13(RailItem, {
                       href: "#syntax",
-                      icon: /* @__PURE__ */ jsx12(Icon3, {
+                      icon: /* @__PURE__ */ jsx13(Icon3, {
                         icon: CodeIcon
                       }),
                       label: "Syntax"
@@ -3333,29 +3990,29 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              topBar: /* @__PURE__ */ jsx12(TopBar, {
+              topBar: /* @__PURE__ */ jsx13(TopBar, {
                 "data-gallery-layout-top-bar": "",
                 title: "Reference workspace"
               }),
-              children: /* @__PURE__ */ jsx12(PageCanvas, {
+              children: /* @__PURE__ */ jsx13(PageCanvas, {
                 as: "div",
                 "data-gallery-layout-page-canvas": "",
-                children: /* @__PURE__ */ jsx12(AnimatedRailStage, {
+                children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
                   className: "design-gallery__animated-rail-stage",
                   stageKey: density,
-                  children: /* @__PURE__ */ jsxs10(DitherSurface, {
+                  children: /* @__PURE__ */ jsxs11(DitherSurface, {
                     as: "section",
                     "data-gallery-dither": "",
                     density: density === "compact" ? "fine" : "medium",
                     tone: "card",
                     children: [
-                      /* @__PURE__ */ jsxs10("h3", {
+                      /* @__PURE__ */ jsxs11("h3", {
                         children: [
                           density === "compact" ? "Compact" : "Default",
                           " composition"
                         ]
                       }),
-                      /* @__PURE__ */ jsx12("p", {
+                      /* @__PURE__ */ jsx13("p", {
                         children: "The route body changes while persistent navigation remains in place."
                       })
                     ]
@@ -3364,14 +4021,14 @@ function DesignSystemGallery({
               })
             })
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__docked-footer-preview",
             "data-gallery-layout-docked-frame": "",
             children: [
-              /* @__PURE__ */ jsx12("p", {
+              /* @__PURE__ */ jsx13("p", {
                 children: "Docked commands remain inside their positioning owner."
               }),
-              /* @__PURE__ */ jsx12(DockedFooter, {
+              /* @__PURE__ */ jsx13(DockedFooter, {
                 "data-gallery-layout-docked-footer": "",
                 density: "compact",
                 position: "absolute",
@@ -3381,34 +4038,34 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "data",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Data and instrument compositions"
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsx12(BarListChart, {
+              /* @__PURE__ */ jsx13(BarListChart, {
                 "aria-label": "Example request volume",
                 data: barData
               }),
-              /* @__PURE__ */ jsx12(RangePlotChart, {
+              /* @__PURE__ */ jsx13(RangePlotChart, {
                 "aria-label": "Example regional ranges",
                 data: rangeData
               }),
-              /* @__PURE__ */ jsxs10("div", {
+              /* @__PURE__ */ jsxs11("div", {
                 className: "design-gallery__instrument",
                 children: [
-                  /* @__PURE__ */ jsx12(Fader, {
+                  /* @__PURE__ */ jsx13(Fader, {
                     "aria-label": "Example level",
                     className: "design-gallery__vertical-fader",
                     "data-gallery-fader": "vertical",
                     density: "default",
                     label: "Level",
-                    labelAccessory: /* @__PURE__ */ jsx12("span", {
+                    labelAccessory: /* @__PURE__ */ jsx13("span", {
                       "data-gallery-fader-accessory": "",
                       children: "dB"
                     }),
@@ -3419,7 +4076,7 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx12(Fader, {
+                  /* @__PURE__ */ jsx13(Fader, {
                     "aria-label": "Example horizontal level",
                     className: "design-gallery__horizontal-fader",
                     "data-gallery-fader": "horizontal",
@@ -3433,13 +4090,13 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx12(Slider, {
+                  /* @__PURE__ */ jsx13(Slider, {
                     label: "Balance",
                     maxValue: 100,
                     minValue: 0,
                     value: 50
                   }),
-                  /* @__PURE__ */ jsx12(PlaybackTransport, {
+                  /* @__PURE__ */ jsx13(PlaybackTransport, {
                     "aria-label": "Preview transport",
                     buttonAriaKeyShortcuts: "Space",
                     buttonId: "design-gallery-playback-command",
@@ -3452,17 +4109,17 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__chat",
             "data-gallery-chat": "",
             "data-gallery-chat-submission": chatSubmission,
             children: [
-              /* @__PURE__ */ jsx12(ChatMessage, {
-                actions: /* @__PURE__ */ jsx12(Button2, {
+              /* @__PURE__ */ jsx13(ChatMessage, {
+                actions: /* @__PURE__ */ jsx13(Button2, {
                   variant: "quiet",
                   children: "Copy response"
                 }),
-                avatar: /* @__PURE__ */ jsx12("span", {
+                avatar: /* @__PURE__ */ jsx13("span", {
                   "aria-hidden": "true",
                   className: "design-gallery__chat-avatar",
                   children: "AI"
@@ -3471,17 +4128,17 @@ function DesignSystemGallery({
                 meta: "Now",
                 name: "Assistant",
                 role: "assistant",
-                children: /* @__PURE__ */ jsx12("p", {
+                children: /* @__PURE__ */ jsx13("p", {
                   children: "A complete message keeps its ordinary article and slot semantics."
                 })
               }),
-              /* @__PURE__ */ jsx12(ChatMessage, {
+              /* @__PURE__ */ jsx13(ChatMessage, {
                 role: "user",
-                children: /* @__PURE__ */ jsx12("p", {
+                children: /* @__PURE__ */ jsx13("p", {
                   children: "Responsive composition belongs to the extracted package recipe."
                 })
               }),
-              /* @__PURE__ */ jsx12(ChatComposer, {
+              /* @__PURE__ */ jsx13(ChatComposer, {
                 action: "/gallery-chat-submit",
                 "aria-label": "Gallery message composer",
                 className: "design-gallery__chat-composer",
@@ -3498,36 +4155,36 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "effects",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Decorative effects"
           }),
-          /* @__PURE__ */ jsx12(FoilCardDeck, {
+          /* @__PURE__ */ jsx13(FoilCardDeck, {
             "aria-label": "Delegated foil ornament examples",
             className: "design-gallery__foil-deck",
-            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx12(FoilCardSurface, {
+            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx13(FoilCardSurface, {
               className: "design-gallery__foil-example",
               intensity: "standard",
               ornament: example.ornament,
               preset: example.preset,
               renderMode: "interactive",
               seed: `public-gallery-foil-${example.ornament}`,
-              children: /* @__PURE__ */ jsxs10("article", {
+              children: /* @__PURE__ */ jsxs11("article", {
                 className: "design-gallery__foil-card",
                 children: [
-                  /* @__PURE__ */ jsx12(Tag, {
+                  /* @__PURE__ */ jsx13(Tag, {
                     variant: "outline",
                     children: example.label
                   }),
-                  /* @__PURE__ */ jsxs10("div", {
+                  /* @__PURE__ */ jsxs11("div", {
                     children: [
-                      /* @__PURE__ */ jsx12("h3", {
+                      /* @__PURE__ */ jsx13("h3", {
                         children: "Semantic card content"
                       }),
-                      /* @__PURE__ */ jsx12("p", {
+                      /* @__PURE__ */ jsx13("p", {
                         children: "One deck controller decorates ordinary articles."
                       })
                     ]
@@ -3536,21 +4193,21 @@ function DesignSystemGallery({
               })
             }, example.ornament))
           }),
-          /* @__PURE__ */ jsxs10("div", {
+          /* @__PURE__ */ jsxs11("div", {
             className: "design-gallery__effect",
             children: [
-              /* @__PURE__ */ jsx12(AuroraDotsBackground, {}),
-              /* @__PURE__ */ jsx12(ProceduralBackdrop, {
+              /* @__PURE__ */ jsx13(AuroraDotsBackground, {}),
+              /* @__PURE__ */ jsx13(ProceduralBackdrop, {
                 seed: "public-gallery",
                 variant: "composite"
               }),
-              /* @__PURE__ */ jsxs10("div", {
+              /* @__PURE__ */ jsxs11("div", {
                 className: "design-gallery__effect-copy",
                 children: [
-                  /* @__PURE__ */ jsx12("h3", {
+                  /* @__PURE__ */ jsx13("h3", {
                     children: "Semantic content stays ordinary DOM"
                   }),
-                  /* @__PURE__ */ jsx12("p", {
+                  /* @__PURE__ */ jsx13("p", {
                     children: "Decorative paint is pointer-transparent and removable in forced colors."
                   })
                 ]
@@ -3559,16 +4216,16 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs10("section", {
+      /* @__PURE__ */ jsxs11("section", {
         className: "design-gallery__section",
         id: "syntax",
         children: [
-          /* @__PURE__ */ jsx12("h2", {
+          /* @__PURE__ */ jsx13("h2", {
             children: "Server syntax"
           }),
-          /* @__PURE__ */ jsx12("pre", {
+          /* @__PURE__ */ jsx13("pre", {
             className: "design-gallery__syntax",
-            children: /* @__PURE__ */ jsx12(SyntaxCode, {
+            children: /* @__PURE__ */ jsx13(SyntaxCode, {
               code: `import { AppShell } from "@hraness/design-kit/react";
 
 export const shell = <AppShell rail={null}>Content</AppShell>;`,
@@ -3581,7 +4238,7 @@ export const shell = <AppShell rail={null}>Content</AppShell>;`,
   });
 }
 // src/react/haptics.ts
-import { useCallback as useCallback3, useEffect as useEffect5 } from "react";
+import { useCallback as useCallback3, useEffect as useEffect6 } from "react";
 var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
 function isHapticBrowserEnvironment(environment = globalThis) {
   return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
@@ -3719,14 +4376,14 @@ function disposeHapticFeedback() {
   browserHaptics.dispose();
 }
 function useHapticFeedback(enabled = true) {
-  useEffect5(() => {
+  useEffect6(() => {
     if (enabled)
       prepareHapticFeedback();
   }, [enabled]);
   return useCallback3(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
 }
 // src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect6, useRef as useRef4 } from "react";
+import { useEffect as useEffect7, useRef as useRef5 } from "react";
 var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
 var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
 function hasClosest(target) {
@@ -3803,11 +4460,11 @@ function decideKeyboardShortcut(shortcuts, event, context = {}) {
     reason: suppressedReason ?? "no-match"
   };
 }
-function isNode(target) {
+function isNode2(target) {
   return target !== null && typeof Node !== "undefined" && target instanceof Node;
 }
 function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef4({
+  const latestRef = useRef5({
     bindings,
     isDisabled: options.isDisabled ?? false
   });
@@ -3816,11 +4473,11 @@ function useKeyboardShortcuts(bindings, options = {}) {
     isDisabled: options.isDisabled ?? false
   };
   const scopeRef = options.scopeRef;
-  useEffect6(() => {
+  useEffect7(() => {
     const onKeyDown = (event) => {
       if (scopeRef !== undefined) {
         const scope = scopeRef.current;
-        if (scope === null || !isNode(event.target) || !scope.contains(event.target))
+        if (scope === null || !isNode2(event.target) || !scope.contains(event.target))
           return;
       }
       const current = latestRef.current;
@@ -3840,9 +4497,9 @@ function useKeyboardShortcuts(bindings, options = {}) {
   }, [scopeRef]);
 }
 // src/react/route-state.tsx
-import { Button as Button3, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
-import * as stylex13 from "@stylexjs/stylex";
-import { useEffect as useEffect8, useId } from "react";
+import { Button as Button3, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn13 } from "@hraness/ui";
+import * as stylex14 from "@stylexjs/stylex";
+import { useEffect as useEffect9, useId as useId2 } from "react";
 
 // src/react/route-state.stylex.ts
 var routeStateStyles = {
@@ -3888,10 +4545,10 @@ var routeStateStyles = {
 };
 
 // src/react/theme.tsx
-import { AppearanceIcon, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
-import * as stylex12 from "@stylexjs/stylex";
+import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn12 } from "@hraness/ui";
+import * as stylex13 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
-import { useEffect as useEffect7, useRef as useRef5, useSyncExternalStore } from "react";
+import { useEffect as useEffect8, useRef as useRef6, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
 // src/react/theme.stylex.ts
 var themeStyles = {
@@ -4050,170 +4707,14 @@ var themeStyles = {
   }
 };
 
-// src/browser/theme-color-sync.ts
-var themeColorSyncActiveAttribute = "data-hraness-design-theme-color-sync-active";
-var themeColorSyncDisabledAttribute = "data-hraness-design-theme-color-sync-disabled";
-var managersByDocument = new WeakMap;
-var ownerSequence = 0;
-function exactThemeColorMetas(manager) {
-  return Array.from(manager.document.head.querySelectorAll("meta[name]")).filter((meta) => meta.name === manager.metaName);
-}
-function currentRegisteredColor(manager) {
-  let color;
-  for (const registeredColor of manager.registrations.values())
-    color = registeredColor;
-  if (color === undefined)
-    throw new Error("Theme color synchronization has no active owner.");
-  return color;
-}
-function restoreDisabledMeta(meta, original) {
-  if (original.media === null)
-    meta.removeAttribute("media");
-  else
-    meta.setAttribute("media", original.media);
-  meta.removeAttribute(themeColorSyncDisabledAttribute);
-}
-function createActiveMeta(manager) {
-  const meta = manager.document.createElement("meta");
-  meta.name = manager.metaName;
-  meta.content = currentRegisteredColor(manager);
-  meta.setAttribute(themeColorSyncActiveAttribute, manager.owner);
-  manager.activeMetas.add(meta);
-  const first = exactThemeColorMetas(manager).find((candidate) => candidate.parentElement === manager.document.head);
-  manager.document.head.insertBefore(meta, first ?? null);
-  return meta;
-}
-function activeMetaIsOwned(manager) {
-  const active = manager.activeMeta;
-  return active !== null && active.parentElement === manager.document.head && active.name === manager.metaName && !active.hasAttribute("media") && active.getAttribute(themeColorSyncActiveAttribute) === manager.owner;
-}
-function disableCompetingMeta(manager, meta) {
-  if (manager.disabledMetas.has(meta)) {
-    if (meta.getAttribute(themeColorSyncDisabledAttribute) !== manager.owner) {
-      meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
-    }
-    if (meta.getAttribute("media") !== "not all")
-      meta.setAttribute("media", "not all");
-    return;
-  }
-  const ownedBy = meta.getAttribute(themeColorSyncDisabledAttribute);
-  if (ownedBy !== null || meta.getAttribute("media")?.trim().toLowerCase() === "not all") {
-    return;
-  }
-  manager.disabledMetas.set(meta, {
-    media: meta.getAttribute("media")
-  });
-  meta.setAttribute(themeColorSyncDisabledAttribute, manager.owner);
-  meta.setAttribute("media", "not all");
-}
-function reconcileThemeColorMetas(manager) {
-  if (manager.registrations.size === 0)
-    return;
-  for (const [meta, original] of manager.disabledMetas) {
-    if (!manager.document.head.contains(meta) || meta.name !== manager.metaName) {
-      restoreDisabledMeta(meta, original);
-      manager.disabledMetas.delete(meta);
-    }
-  }
-  if (!activeMetaIsOwned(manager))
-    manager.activeMeta = createActiveMeta(manager);
-  const active = manager.activeMeta;
-  if (active === null)
-    return;
-  const metas = exactThemeColorMetas(manager);
-  const first = metas.find((meta) => meta.parentElement === manager.document.head);
-  if (first !== undefined && first !== active)
-    manager.document.head.insertBefore(active, first);
-  const color = currentRegisteredColor(manager);
-  if (active.content !== color)
-    active.content = color;
-  for (const meta of metas) {
-    if (meta !== active)
-      disableCompetingMeta(manager, meta);
-  }
-}
-function observeThemeColorMetas(manager) {
-  const Observer = manager.document.defaultView?.MutationObserver;
-  if (Observer === undefined)
-    return;
-  manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
-  manager.observer.observe(manager.document.head, {
-    attributeFilter: ["content", "media", "name", themeColorSyncActiveAttribute, themeColorSyncDisabledAttribute],
-    attributes: true,
-    childList: true,
-    subtree: true
-  });
-}
-function destroyThemeColorManager(manager) {
-  manager.observer?.disconnect();
-  manager.observer = null;
-  for (const meta of manager.activeMetas)
-    meta.remove();
-  for (const [meta, original] of manager.disabledMetas) {
-    restoreDisabledMeta(meta, original);
-  }
-  manager.activeMetas.clear();
-  manager.disabledMetas.clear();
-  manager.activeMeta = null;
-  const documentManagers = managersByDocument.get(manager.document);
-  if (documentManagers?.get(manager.metaName) === manager) {
-    documentManagers.delete(manager.metaName);
-  }
-}
-function acquireThemeColorMeta(document2, metaName, registrationId, color) {
-  let documentManagers = managersByDocument.get(document2);
-  if (documentManagers === undefined) {
-    documentManagers = new Map;
-    managersByDocument.set(document2, documentManagers);
-  }
-  let manager = documentManagers.get(metaName);
-  if (manager === undefined) {
-    ownerSequence += 1;
-    manager = {
-      activeMeta: null,
-      activeMetas: new Set,
-      disabledMetas: new Map,
-      document: document2,
-      metaName,
-      observer: null,
-      owner: String(ownerSequence),
-      registrations: new Map
-    };
-    documentManagers.set(metaName, manager);
-  }
-  manager.registrations.set(registrationId, color);
-  reconcileThemeColorMetas(manager);
-  if (manager.observer === null)
-    observeThemeColorMetas(manager);
-  let released = false;
-  return {
-    release: () => {
-      if (released)
-        return;
-      released = true;
-      manager.registrations.delete(registrationId);
-      if (manager.registrations.size === 0)
-        destroyThemeColorManager(manager);
-      else
-        reconcileThemeColorMetas(manager);
-    },
-    update: (nextColor) => {
-      if (released || !manager.registrations.has(registrationId))
-        return;
-      manager.registrations.set(registrationId, nextColor);
-      reconcileThemeColorMetas(manager);
-    }
-  };
-}
-
 // src/react/theme.tsx
-import { jsx as jsx13, jsxs as jsxs11, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
 };
 function useHydrated() {
-  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+  return useSyncExternalStore2(emptySubscribe, () => true, () => false);
 }
 function themeStorageGuardScript(storageKey) {
   const serializedKey = JSON.stringify(storageKey).replaceAll("<", "\\u003c").replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
@@ -4224,7 +4725,7 @@ function PersistedThemeNormalizer() {
     setTheme,
     theme
   } = useTheme();
-  useEffect7(() => {
+  useEffect8(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
@@ -4234,7 +4735,7 @@ function JellyThemeSync() {
   const {
     resolvedTheme
   } = useTheme();
-  useEffect7(() => {
+  useEffect8(() => {
     if (resolvedTheme === "light" || resolvedTheme === "dark") {
       setJellyThemeMode(resolvedTheme);
     }
@@ -4249,7 +4750,7 @@ function PortalThemeBridge({
     resolvedTheme
   } = useTheme();
   const portalTheme = resolvedTheme === "light" || resolvedTheme === "dark" ? resolvedTheme : forcedTheme;
-  return /* @__PURE__ */ jsx13(DesignPortalThemeProvider, {
+  return /* @__PURE__ */ jsx14(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
   });
@@ -4260,9 +4761,9 @@ function DesignThemeProvider({
   nonce,
   storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs11(Fragment2, {
+  return /* @__PURE__ */ jsxs12(Fragment2, {
     children: [
-      forcedTheme === undefined ? /* @__PURE__ */ jsx13("script", {
+      forcedTheme === undefined ? /* @__PURE__ */ jsx14("script", {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -4272,7 +4773,7 @@ function DesignThemeProvider({
         },
         suppressHydrationWarning: true
       }) : null,
-      /* @__PURE__ */ jsxs11(NextThemeProvider, {
+      /* @__PURE__ */ jsxs12(NextThemeProvider, {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -4284,9 +4785,9 @@ function DesignThemeProvider({
         storageKey,
         themes: [...concreteThemes],
         children: [
-          forcedTheme === undefined ? /* @__PURE__ */ jsx13(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx13(JellyThemeSync, {}),
-          /* @__PURE__ */ jsx13(PortalThemeBridge, {
+          forcedTheme === undefined ? /* @__PURE__ */ jsx14(PersistedThemeNormalizer, {}) : null,
+          /* @__PURE__ */ jsx14(JellyThemeSync, {}),
+          /* @__PURE__ */ jsx14(PortalThemeBridge, {
             forcedTheme,
             children
           })
@@ -4311,7 +4812,7 @@ function themeToggleItems(labels) {
   }];
 }
 function themeToggleIcon(id) {
-  return /* @__PURE__ */ jsx13(AppearanceIcon, {
+  return /* @__PURE__ */ jsx14(AppearanceIcon2, {
     name: id
   });
 }
@@ -4352,7 +4853,7 @@ function ThemeToggle({
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
-  const presentationStyles = stylex12.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
+  const presentationStyles = stylex13.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -4360,19 +4861,19 @@ function ThemeToggle({
       setTheme(nextTheme);
   };
   const currentLabel = themeToggleLabel(value, labels);
-  return /* @__PURE__ */ jsx13("div", {
+  return /* @__PURE__ */ jsx14("div", {
     ...presentationStyles,
     "aria-busy": !ready || undefined,
-    className: cn11("hraness-design-theme-toggle", presentationStyles.className, className),
+    className: cn12("hraness-design-theme-toggle", presentationStyles.className, className),
     "data-display": resolvedPresentation === "menu" ? "icons" : resolvedDisplay,
     "data-hraness-appearance-menu": resolvedPresentation === "menu" ? "" : undefined,
     "data-hraness-theme-toggle-stylex": "",
     "data-presentation": resolvedPresentation,
     "data-ready": ready ? "true" : "false",
     "data-theme-value": value,
-    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs11(MenuTrigger, {
+    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs12(MenuTrigger, {
       children: [
-        /* @__PURE__ */ jsx13(IconButton3, {
+        /* @__PURE__ */ jsx14(IconButton3, {
           "aria-label": `${ariaLabel}: ${currentLabel}`,
           controlClassName: "hraness-design-theme-toggle__trigger",
           controlXstyle: themeStyles.trigger,
@@ -4381,7 +4882,7 @@ function ThemeToggle({
           tooltip: `${ariaLabel}: ${currentLabel}`,
           children: themeToggleIcon(value)
         }),
-        /* @__PURE__ */ jsx13(Menu, {
+        /* @__PURE__ */ jsx14(Menu, {
           "aria-label": ariaLabel,
           className: "hraness-design-theme-toggle__menu",
           disallowEmptySelection: true,
@@ -4389,12 +4890,12 @@ function ThemeToggle({
             if (isDesignTheme(key))
               changeTheme(key);
           },
-          popoverClassName: cn11("hraness-design-theme-toggle__popover", portalClassName),
+          popoverClassName: cn12("hraness-design-theme-toggle__popover", portalClassName),
           popoverXstyle: themeStyles.popover,
           selectedKeys: [value],
           selectionMode: "single",
           xstyle: themeStyles.menu,
-          children: designThemes.map((id) => /* @__PURE__ */ jsx13(MenuItem, {
+          children: designThemes.map((id) => /* @__PURE__ */ jsx14(MenuItem, {
             className: "hraness-design-theme-toggle__item",
             "data-theme-value": id,
             id,
@@ -4405,7 +4906,7 @@ function ThemeToggle({
           }, id))
         })
       ]
-    }) : /* @__PURE__ */ jsx13(SegmentedControl2, {
+    }) : /* @__PURE__ */ jsx14(SegmentedControl2, {
       "aria-label": ariaLabel,
       isDisabled: !ready,
       items,
@@ -4415,9 +4916,14 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props13) {
-  return /* @__PURE__ */ jsx13(ThemeToggle, {
-    ...props13,
+function ThemeMenuButton(props14) {
+  const palette = useDesignPalette();
+  if (palette !== null)
+    return /* @__PURE__ */ jsx14(DesignPaletteMenuButton, {
+      ...props14
+    });
+  return /* @__PURE__ */ jsx14(ThemeToggle, {
+    ...props14,
     presentation: "menu"
   });
 }
@@ -4429,19 +4935,20 @@ function ThemeColorSync({
   lightColor = colors.light.background,
   metaName = "theme-color"
 }) {
+  const palette = useDesignPalette();
   const {
     resolvedTheme
   } = useTheme();
-  const registrationId = useRef5(Symbol("hraness-design-theme-color"));
-  const registration = useRef5(null);
-  const resolvedColor = resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, {
+  const registrationId = useRef6(Symbol("hraness-design-theme-color"));
+  const registration = useRef6(null);
+  const resolvedColor = palette !== null ? metaName !== "theme-color" && palette.ready ? palette.background : undefined : resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, {
     dark: darkColor,
     light: lightColor
   }) : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
-  const latestColor = useRef5(resolvedColor);
+  const latestColor = useRef6(resolvedColor);
   latestColor.current = resolvedColor;
-  useEffect7(() => {
+  useEffect8(() => {
     if (!hasResolvedColor || latestColor.current === undefined)
       return;
     const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
@@ -4452,7 +4959,7 @@ function ThemeColorSync({
       current.release();
     };
   }, [hasResolvedColor, metaName]);
-  useEffect7(() => {
+  useEffect8(() => {
     if (resolvedColor !== undefined)
       registration.current?.update(resolvedColor);
   }, [resolvedColor]);
@@ -4460,14 +4967,14 @@ function ThemeColorSync({
 }
 
 // src/react/route-state.tsx
-import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
+import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment3 } from "react/jsx-runtime";
 function RouteActions({
   children
 }) {
-  const presentation = stylex13.props(routeStateStyles.row);
-  return /* @__PURE__ */ jsx14("div", {
+  const presentation = stylex14.props(routeStateStyles.row);
+  return /* @__PURE__ */ jsx15("div", {
     ...presentation,
-    className: cn12("hraness-design-route-state__actions", presentation.className),
+    className: cn13("hraness-design-route-state__actions", presentation.className),
     children
   });
 }
@@ -4476,29 +4983,29 @@ function RouteNotFoundPage({
   showThemeToggle = false,
   titleAs = "h1"
 } = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
-  return /* @__PURE__ */ jsxs12(PageCanvas, {
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const headerPresentation = stylex14.props(routeStateStyles.header);
+  const contentPresentation = stylex14.props(routeStateStyles.content);
+  return /* @__PURE__ */ jsxs13(PageCanvas, {
     as: canvasAs,
-    className: cn12("hraness-design-route-state", rootPresentation.className),
+    className: cn13("hraness-design-route-state", rootPresentation.className),
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
         ...headerPresentation,
-        className: cn12("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
+        className: cn13("hraness-design-route-state__header", headerPresentation.className),
+        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx14("div", {
+      /* @__PURE__ */ jsx15("div", {
         ...contentPresentation,
-        className: cn12("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx14(EmptyState, {
-          action: /* @__PURE__ */ jsx14(LinkButton2, {
+        className: cn13("hraness-design-route-state__content", contentPresentation.className),
+        children: /* @__PURE__ */ jsx15(EmptyState, {
+          action: /* @__PURE__ */ jsx15(LinkButton2, {
             href: "/",
             variant: "primary",
             children: "Return home"
           }),
           description: "The address may be out of date, or this page may have moved.",
-          icon: /* @__PURE__ */ jsx14("span", {
+          icon: /* @__PURE__ */ jsx15("span", {
             "aria-hidden": "true",
             children: "404"
           }),
@@ -4518,46 +5025,46 @@ function RouteErrorPage({
   showThemeToggle = false,
   titleAs = "h1"
 }) {
-  const focusId = `${useId()}-route-error`;
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
-  useEffect8(() => {
+  const focusId = `${useId2()}-route-error`;
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const headerPresentation = stylex14.props(routeStateStyles.header);
+  const contentPresentation = stylex14.props(routeStateStyles.content);
+  useEffect9(() => {
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
-  return /* @__PURE__ */ jsxs12(PageCanvas, {
+  return /* @__PURE__ */ jsxs13(PageCanvas, {
     "aria-label": "This view could not load",
     "aria-live": announce ? "assertive" : undefined,
     as: canvasAs,
-    className: cn12("hraness-design-route-state", rootPresentation.className),
+    className: cn13("hraness-design-route-state", rootPresentation.className),
     id: focusId,
     tabIndex: -1,
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
+      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
         ...headerPresentation,
-        className: cn12("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
+        className: cn13("hraness-design-route-state__header", headerPresentation.className),
+        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx14("div", {
+      /* @__PURE__ */ jsx15("div", {
         ...contentPresentation,
-        className: cn12("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx14(EmptyState, {
-          action: /* @__PURE__ */ jsxs12(RouteActions, {
+        className: cn13("hraness-design-route-state__content", contentPresentation.className),
+        children: /* @__PURE__ */ jsx15(EmptyState, {
+          action: /* @__PURE__ */ jsxs13(RouteActions, {
             children: [
-              /* @__PURE__ */ jsx14(Button3, {
+              /* @__PURE__ */ jsx15(Button3, {
                 onPress: reset,
                 variant: "primary",
                 children: "Try again"
               }),
-              /* @__PURE__ */ jsx14(LinkButton2, {
+              /* @__PURE__ */ jsx15(LinkButton2, {
                 href: "/",
                 children: "Return home"
               })
             ]
           }),
           description: "Retry this view, or return home and continue from there.",
-          icon: /* @__PURE__ */ jsx14("span", {
+          icon: /* @__PURE__ */ jsx15("span", {
             "aria-hidden": "true",
             children: "!"
           }),
@@ -4572,45 +5079,45 @@ function RouteLoadingPage({
   announce = true,
   canvasAs = "main"
 } = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const loadingPresentation = stylex13.props(routeStateStyles.loading);
-  const titlePresentation = stylex13.props(routeStateStyles.row);
-  const skeletonPresentation = stylex13.props(routeStateStyles.skeletons);
-  return /* @__PURE__ */ jsx14(PageCanvas, {
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const loadingPresentation = stylex14.props(routeStateStyles.loading);
+  const titlePresentation = stylex14.props(routeStateStyles.row);
+  const skeletonPresentation = stylex14.props(routeStateStyles.skeletons);
+  return /* @__PURE__ */ jsx15(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
-    className: cn12("hraness-design-route-state", rootPresentation.className),
-    children: /* @__PURE__ */ jsxs12("section", {
+    className: cn13("hraness-design-route-state", rootPresentation.className),
+    children: /* @__PURE__ */ jsxs13("section", {
       ...loadingPresentation,
-      className: cn12("hraness-design-route-state__loading", loadingPresentation.className),
+      className: cn13("hraness-design-route-state__loading", loadingPresentation.className),
       role: announce ? "status" : undefined,
       children: [
-        /* @__PURE__ */ jsxs12("div", {
+        /* @__PURE__ */ jsxs13("div", {
           ...titlePresentation,
-          className: cn12("hraness-design-route-state__loading-title", titlePresentation.className),
+          className: cn13("hraness-design-route-state__loading-title", titlePresentation.className),
           children: [
-            /* @__PURE__ */ jsx14(Spinner2, {}),
-            /* @__PURE__ */ jsx14("strong", {
+            /* @__PURE__ */ jsx15(Spinner2, {}),
+            /* @__PURE__ */ jsx15("strong", {
               children: "Loading page"
             })
           ]
         }),
-        /* @__PURE__ */ jsxs12("div", {
+        /* @__PURE__ */ jsxs13("div", {
           ...skeletonPresentation,
           "aria-hidden": "true",
-          className: cn12("hraness-design-route-state__skeletons", skeletonPresentation.className),
+          className: cn13("hraness-design-route-state__skeletons", skeletonPresentation.className),
           children: [
-            /* @__PURE__ */ jsx14(Skeleton, {
+            /* @__PURE__ */ jsx15(Skeleton, {
               height: "1rem",
               isText: true,
               width: "88%"
             }),
-            /* @__PURE__ */ jsx14(Skeleton, {
+            /* @__PURE__ */ jsx15(Skeleton, {
               height: "1rem",
               isText: true,
               width: "64%"
             }),
-            /* @__PURE__ */ jsx14(Skeleton, {
+            /* @__PURE__ */ jsx15(Skeleton, {
               height: "8rem",
               width: "100%"
             })
@@ -4626,52 +5133,52 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props14
+  ...props15
 }) {
-  const content = /* @__PURE__ */ jsxs12(Fragment3, {
+  const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
-      /* @__PURE__ */ jsx14(RouteErrorPage, {
-        ...props14,
+      /* @__PURE__ */ jsx15(RouteErrorPage, {
+        ...props15,
         showThemeToggle: false
       })
     ]
   });
-  return /* @__PURE__ */ jsxs12("html", {
+  return /* @__PURE__ */ jsxs13("html", {
     "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
     children: [
-      /* @__PURE__ */ jsxs12("head", {
+      /* @__PURE__ */ jsxs13("head", {
         children: [
-          /* @__PURE__ */ jsx14("meta", {
+          /* @__PURE__ */ jsx15("meta", {
             content: theme === "system" ? "light dark" : theme,
             name: "color-scheme"
           }),
-          theme === "system" ? /* @__PURE__ */ jsxs12(Fragment3, {
+          theme === "system" ? /* @__PURE__ */ jsxs13(Fragment3, {
             children: [
-              /* @__PURE__ */ jsx14("meta", {
+              /* @__PURE__ */ jsx15("meta", {
                 content: lightColor,
                 media: "(prefers-color-scheme: light)",
                 name: "theme-color"
               }),
-              /* @__PURE__ */ jsx14("meta", {
+              /* @__PURE__ */ jsx15("meta", {
                 content: darkColor,
                 media: "(prefers-color-scheme: dark)",
                 name: "theme-color"
               })
             ]
-          }) : /* @__PURE__ */ jsx14("meta", {
+          }) : /* @__PURE__ */ jsx15("meta", {
             content: theme === "dark" ? darkColor : lightColor,
             name: "theme-color"
           })
         ]
       }),
-      /* @__PURE__ */ jsx14("body", {
+      /* @__PURE__ */ jsx15("body", {
         className: bodyClassName,
-        children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
+        children: theme === "system" ? /* @__PURE__ */ jsxs13(DesignThemeProvider, {
           children: [
-            /* @__PURE__ */ jsx14(ThemeColorSync, {
+            /* @__PURE__ */ jsx15(ThemeColorSync, {
               darkColor,
               lightColor
             }),
@@ -4687,6 +5194,7 @@ export {
   useHapticFeedback,
   useDesignPortalTheme,
   useDesignPortalClassName,
+  useDesignPalette,
   triggerHapticFeedback,
   themeToggleItems,
   themeColorFor,
@@ -4773,6 +5281,8 @@ export {
   DesignThemeProvider,
   DesignSystemGallery,
   DesignPortalThemeProvider,
+  DesignPaletteProvider,
+  DesignPaletteMenuButton,
   ChatMessage,
   ChatComposer,
   BottomBar,

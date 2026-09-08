@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import "./generate-palettes.js";
 import { readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 
@@ -30,6 +31,8 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/effects.css",
   "src/fonts.css",
   "src/jelly.css",
+  "src/palette-bridge.css",
+  "src/palettes.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -176,8 +179,6 @@ export async function buildPackage(
       throw: false,
     });
     requireBuildSuccess(result, "Package build");
-    const rules = collector.seal();
-    assert.ok(rules.length > 0, "Package build collected no StyleX rules");
 
     // Keep the standards-only browser entry self-contained. Bun currently loses
     // live re-export bindings when this entry shares the root appearance module in
@@ -194,12 +195,15 @@ export async function buildPackage(
       naming: "[dir]/[name].[ext]",
       outdir,
       packages: "external",
+      plugins: [plugin],
       root: sourceRoot,
       splitting: false,
       target: "browser",
       throw: false,
     });
     requireBuildSuccess(browserResult, "Browser package build");
+    const rules = collector.seal();
+    assert.ok(rules.length > 0, "Package build collected no StyleX rules");
 
     const reactEntry = join(outdir, "react/index.js");
     const directive = '"use client";\n';

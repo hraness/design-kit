@@ -1,0 +1,8 @@
+/* Product layout for the palette-only, strict-CSP consumer fixture. */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--foreground); font: 17px/1.6 system-ui, sans-serif; }
+header { display: flex; align-items: center; justify-content: space-between; padding: 1rem; }
+main { max-width: 48rem; margin: 2rem auto; padding: 1rem; }
+[data-palette-surface], [data-palette-portal] { background: var(--surface); color: var(--foreground); border: 1px solid var(--line); padding: 1rem; margin-block: 1rem; }
+[data-palette-portal] { margin-inline: 1rem; }
+#outside { background: var(--primary); border: 1px solid var(--control-border); color: var(--primary-foreground); font: inherit; padding: 0.5rem 1rem; }
