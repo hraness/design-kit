@@ -2103,6 +2103,10 @@
     max-inline-size: var(--hraness-marketing-copy-measure);
   }
 
+  .x1ic370k {
+    max-inline-size: var(--hraness-marketing-example-measure, var(--hraness-marketing-copy-measure));
+  }
+
   .xjq529q {
     max-inline-size: var(--hraness-marketing-prose-measure);
   }

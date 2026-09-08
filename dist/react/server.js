@@ -16,6 +16,7 @@ import {
   MarketingQuestionList,
   MarketingQuoteGrid,
   MarketingSection,
+  MarketingSectionLabel,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -29,7 +30,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-vf91mqxn.js";
+} from "../chunk-516rk56h.js";
 import"../chunk-jey98bgc.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -46,6 +47,7 @@ export {
   MarketingTrustBoundary,
   MarketingStatStrip,
   MarketingSiteHeader,
+  MarketingSectionLabel,
   MarketingSection,
   MarketingQuoteGrid,
   MarketingQuestionList,

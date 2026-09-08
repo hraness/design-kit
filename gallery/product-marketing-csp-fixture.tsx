@@ -17,7 +17,7 @@ export function ProductMarketingCspFixture({ api, columns }: Readonly<{ api: typ
       <MarketingPillars ariaLabel="Three pillars" columns={columns ?? 3}
         pillars={facts.slice(0, 3).map(({ label, detail }) => ({ label, summary: detail }))} />
       <MarketingStatStrip ariaLabel="Four observations" columns={columns ?? 4} stats={facts} />
-      <MarketingInstallPanel heading="Install locally." headingId="strict-install"
+      <MarketingInstallPanel eyebrow="One command" heading="Install locally." headingId="strict-install"
         note={<p data-strict-slot="note">Choose the release for your platform.</p>}>
         <pre><code>bun add relay</code></pre>
       </MarketingInstallPanel>

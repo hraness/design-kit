@@ -55,7 +55,7 @@ test("hero notices preserve native elements immediately after the boundary insid
   const { document } = parseHTML(html);
   const copy = required(document.querySelector(".hraness-marketing-hero__copy"));
   const notice = required(document.querySelector("#notice"));
-  expect(notice.parentElement).toBe(copy);
+  expect(notice.parentElement === copy).toBe(true);
   expect(notice.previousElementSibling?.classList.contains("hraness-marketing-hero__boundary")).toBe(true);
   expect(notice.nextElementSibling?.id).toBe("follow-up");
   expect(copy.lastElementChild?.id).toBe("follow-up");
@@ -75,7 +75,8 @@ test("install notes stay after the heading and before the separate command group
   expect(note.previousElementSibling?.id).toBe("install");
   expect(note.nextElementSibling).toBeNull();
   expect(note.parentElement?.nextElementSibling?.classList.contains("hraness-marketing-install__commands")).toBe(true);
-  expect(document.querySelector("#command")?.parentElement).toBe(note.parentElement?.nextElementSibling);
+  const command = required(document.querySelector("#command"));
+  expect(command.parentElement === note.parentElement?.nextElementSibling).toBe(true);
   expect(document.querySelector("[style],style,script")).toBeNull();
 });
 

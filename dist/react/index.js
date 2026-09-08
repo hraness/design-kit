@@ -32,6 +32,7 @@ import {
   MarketingQuestionList,
   MarketingQuoteGrid,
   MarketingSection,
+  MarketingSectionLabel,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -46,7 +47,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-vf91mqxn.js";
+} from "../chunk-516rk56h.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -3050,6 +3051,10 @@ function DesignSystemGallery({
                 headingId: "design-gallery-marketing-title",
                 headingLevel: 3,
                 name: "Relay",
+                notice: /* @__PURE__ */ jsx12("p", {
+                  "data-gallery-marketing-slot": "notice",
+                  children: "This example release runs locally."
+                }),
                 summary: "Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
               }),
               /* @__PURE__ */ jsx12(MarketingPillars, {
@@ -3072,6 +3077,10 @@ function DesignSystemGallery({
                 headingId: "design-gallery-install-title",
                 headingLevel: 3,
                 id: "gallery-install",
+                note: /* @__PURE__ */ jsx12("p", {
+                  "data-gallery-marketing-slot": "note",
+                  children: "Requires Bun 1.3.14."
+                }),
                 children: [
                   /* @__PURE__ */ jsx12("pre", {
                     className: "design-gallery__marketing-command",
@@ -3114,27 +3123,33 @@ function DesignSystemGallery({
                 label: "Primitives",
                 summary: "Relay gives agents a few durable objects to compose around the work in front of them."
               }),
-              /* @__PURE__ */ jsx12(MarketingSection, {
+              /* @__PURE__ */ jsxs10(MarketingSection, {
                 heading: "One durable object.",
                 headingId: "gallery-marketing-section",
                 headingLevel: 3,
                 label: "Workflow",
                 layout: "split-reverse",
                 summary: "Interfaces share the same identity.",
-                children: /* @__PURE__ */ jsxs10("p", {
-                  children: [
-                    "Consumer-owned content can include ",
-                    /* @__PURE__ */ jsx12("a", {
-                      href: "#gallery-install",
-                      children: "links"
-                    }),
-                    " and ",
-                    /* @__PURE__ */ jsx12("code", {
-                      children: "inline code"
-                    }),
-                    "."
-                  ]
-                })
+                children: [
+                  /* @__PURE__ */ jsx12(MarketingSectionLabel, {
+                    size: "body",
+                    children: "Reference"
+                  }),
+                  /* @__PURE__ */ jsxs10("p", {
+                    children: [
+                      "Consumer-owned content can include ",
+                      /* @__PURE__ */ jsx12("a", {
+                        href: "#gallery-install",
+                        children: "links"
+                      }),
+                      " and ",
+                      /* @__PURE__ */ jsx12("code", {
+                        children: "inline code"
+                      }),
+                      "."
+                    ]
+                  })
+                ]
               }),
               /* @__PURE__ */ jsx12(MarketingInterfaceGrid, {
                 heading: "Choose your interface.",
@@ -3245,6 +3260,7 @@ function DesignSystemGallery({
                 headingId: "design-gallery-maker-title",
                 headingLevel: 3,
                 label: "Built by",
+                linkClassName: "design-gallery__maker-link",
                 links: [{
                   href: "#marketing",
                   label: "Personal site"
@@ -4731,6 +4747,7 @@ export {
   MarketingTrustBoundary,
   MarketingStatStrip,
   MarketingSiteHeader,
+  MarketingSectionLabel,
   MarketingSection,
   MarketingQuoteGrid,
   MarketingQuestionList,
