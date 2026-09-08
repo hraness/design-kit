@@ -123,6 +123,10 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(marketing?.querySelector("[style]")).toBeNull();
   expect(marketing?.querySelectorAll(".hraness-marketing-facts__item")).toHaveLength(6);
   expect(marketing?.querySelectorAll(".hraness-marketing-pillars__item")).toHaveLength(3);
+  expect(marketing?.querySelector('.hraness-marketing-hero__copy > [data-gallery-marketing-slot="notice"]')?.tagName).toBe("P");
+  expect(marketing?.querySelector('.hraness-marketing-install__heading-group > [data-gallery-marketing-slot="note"]')?.textContent).toBe("Requires Bun 1.3.14.");
+  expect(marketing?.querySelector('.hraness-marketing-section__label[data-size="body"]')?.textContent).toBe("Reference");
+  expect(marketing?.querySelector('.hraness-marketing-maker__links > li > a')?.classList.contains("design-gallery__maker-link")).toBe(true);
 });
 
 test("a nested gallery identifies itself and defers appearance to the product header", () => {

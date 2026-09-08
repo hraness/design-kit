@@ -916,7 +916,7 @@ var marketingStyles = {
     knIRL8: "xrtw95r",
     kLh5Sq: "x1ksoetq",
     kN5DiO: "x1evy7pa",
-    k2kXS: "x1l2wkh2",
+    k2kXS: "x1ic370k",
     kAiAap: "xcf5i7g",
     $$css: true
   },
@@ -1431,6 +1431,10 @@ var marketingStyles = {
     kUEKN5: "x12oo3zp",
     kN5DiO: "x37zpob",
     ksq1ai: "x6mezaz",
+    $$css: true
+  },
+  sectionLabelBody: {
+    kLh5Sq: "x1jchvi3",
     $$css: true
   },
   section__heading: {
@@ -2870,7 +2874,8 @@ var recipes = {
     reverse: marketingStyles.section__heading_groupReverse
   },
   "hraness-marketing-section__label": {
-    default: marketingStyles.section__label
+    default: marketingStyles.section__label,
+    body: [marketingStyles.section__label, marketingStyles.sectionLabelBody]
   },
   "hraness-marketing-section__heading": {
     default: marketingStyles.section__heading
@@ -3359,6 +3364,7 @@ function ProductHero({
   headingId,
   headingLevel = 1,
   name,
+  notice,
   proof,
   summary,
   tone = "paper"
@@ -3404,7 +3410,8 @@ function ProductHero({
           boundary === undefined ? null : /* @__PURE__ */ jsx2("p", {
             className: marketingClassName("hraness-marketing-hero__boundary"),
             children: boundary
-          })
+          }),
+          notice
         ]
       }),
       frame === undefined ? null : /* @__PURE__ */ jsx2("div", {
@@ -3475,7 +3482,8 @@ function MarketingInstallPanel({
   heading,
   headingId,
   headingLevel = 2,
-  id
+  id,
+  note
 }) {
   return /* @__PURE__ */ jsxs2("section", {
     "aria-labelledby": headingId,
@@ -3495,7 +3503,8 @@ function MarketingInstallPanel({
             id: headingId,
             level: headingLevel,
             children: heading
-          })
+          }),
+          note
         ]
       }),
       /* @__PURE__ */ jsx2("div", {
@@ -3559,6 +3568,19 @@ function MarketingProofFrame({
     ]
   });
 }
+function MarketingSectionLabel({
+  children,
+  className,
+  size = "default"
+}) {
+  if (size !== "default" && size !== "body")
+    throw new RangeError("Marketing label size must be default or body.");
+  return /* @__PURE__ */ jsx2("p", {
+    className: marketingClassName("hraness-marketing-section__label", className, size),
+    "data-size": size === "body" ? "body" : undefined,
+    children
+  });
+}
 function MarketingSection({
   children,
   className,
@@ -3580,8 +3602,7 @@ function MarketingSection({
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse"),
         children: [
-          /* @__PURE__ */ jsx2("p", {
-            className: marketingClassName("hraness-marketing-section__label"),
+          /* @__PURE__ */ jsx2(MarketingSectionLabel, {
             children: label
           }),
           /* @__PURE__ */ jsx2(Heading, {
@@ -4019,6 +4040,7 @@ function MarketingMaker({
   headingLevel = 2,
   id,
   label,
+  linkClassName,
   links = [],
   portrait
 }) {
@@ -4055,6 +4077,7 @@ function MarketingMaker({
             className: marketingClassName("hraness-marketing-maker__links"),
             children: links.map((link) => /* @__PURE__ */ jsx2("li", {
               children: /* @__PURE__ */ jsx2("a", {
+                className: linkClassName,
                 href: link.href,
                 children: link.label
               })
@@ -4528,4 +4551,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingSiteHeader, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };
+export { effectsStyles, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingSiteHeader, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };

@@ -2,7 +2,7 @@ import * as stylex from "@stylexjs/stylex";
 
 export type MarketingColumnCount = 1 | 2 | 3 | 4;
 
-// The public static stylesheet remains unchanged. These owned slot recipes
+// The public static stylesheet is the legacy reference. These owned slot recipes
 // preserve its declarations and finite states for compiler-adopter React graphs.
 // Compound border tokens stay in native side shorthands; only a full border
 // resets border-image. Kebab-case logical properties retain the writing axis.
@@ -557,7 +557,7 @@ export const marketingStyles = stylex.create({
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "1.05rem",
     "line-height": "1.5",
-    "max-inline-size": "var(--hraness-marketing-copy-measure)",
+    "max-inline-size": "var(--hraness-marketing-example-measure, var(--hraness-marketing-copy-measure))",
     "margin-block-start": "-0.35rem"
   },
   "hero__actions": {
@@ -1228,6 +1228,7 @@ export const marketingStyles = stylex.create({
     "line-height": "1.4",
     "text-transform": "none"
   },
+  sectionLabelBody: { "font-size": "1rem" },
   "section__heading": {
     "margin": "0",
     "color": "var(--hraness-marketing-ink)",
@@ -3562,7 +3563,7 @@ const recipes = {
   "hraness-marketing-install__commands": { "default": marketingStyles.install__commands },
   "hraness-marketing-section": { "default": marketingStyles.section, "split": marketingStyles.sectionSplit },
   "hraness-marketing-section__heading-group": { "default": marketingStyles.section__heading_group, "split": marketingStyles.section__heading_groupSplit, "reverse": marketingStyles.section__heading_groupReverse },
-  "hraness-marketing-section__label": { "default": marketingStyles.section__label },
+  "hraness-marketing-section__label": { "default": marketingStyles.section__label, "body": [marketingStyles.section__label, marketingStyles.sectionLabelBody] },
   "hraness-marketing-section__heading": { "default": marketingStyles.section__heading },
   "hraness-marketing-section__summary": { "default": marketingStyles.section__summary },
   "hraness-marketing-section__body": { "default": marketingStyles.section__body },

@@ -118,7 +118,7 @@ async function strictGridSnapshot(page: Page) {
 
 async function verifyStrictMarketingCsp(browser: Browser, origin: string,
   stylesheetHashes: Readonly<Record<typeof deliveryModes[number], string>>) {
-  const receipts: { label: string; grids: Awaited<ReturnType<typeof strictGridSnapshot>>; inlineStyles: number; violations: number; cssSha256: string }[] = [];
+  const receipts: { label: string; grids: Awaited<ReturnType<typeof strictGridSnapshot>>; labelSizes: readonly string[]; inlineStyles: number; violations: number; cssSha256: string }[] = [];
   const configurations = [
     { name: "desktop-light", width: 1280, dark: false, rtl: false, forced: false, coarse: false },
     { name: "desktop-two-columns", width: 1280, dark: false, rtl: false, forced: false, coarse: false },
@@ -165,6 +165,13 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
       })), { narrow: configuration.width <= 768, coarse: configuration.coarse, dark: configuration.dark,
         forced: configuration.forced, reduced: true, direction: configuration.rtl ? "rtl" : "ltr" }, label);
       assert.equal(await page.locator("[style], style, script").count(), 0, `${label}: no inline style or production script`);
+      const labelSizes = await page.locator(".strict-default-label, .strict-body-label")
+        .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).fontSize));
+      assert.deepEqual(labelSizes, ["14px", "16px"], `${label}: default and body label recipes`);
+      assert.equal(await page.locator('.hraness-marketing-hero__copy > p[data-strict-slot="notice"]').count(), 1, `${label}: unwrapped native notice`);
+      assert.equal(await page.locator('.hraness-marketing-install__heading-group > p[data-strict-slot="note"]').count(), 1, `${label}: unwrapped native install note`);
+      assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "strict-maker-link", `${label}: listed-link class`);
+      assert.equal(await page.locator('.hraness-marketing-maker__body > p > a').getAttribute("class"), null, `${label}: biography link remains product-owned`);
       const grids = await strictGridSnapshot(page);
       assert.equal(grids.length, productMarketingCspGrids.length, label);
       for (const [index, expected] of productMarketingCspGrids.entries()) {
@@ -239,7 +246,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
       assert.equal(await page.locator("[style], style, script").count(), 0, label);
       assert.deepEqual(await page.evaluate(() => (window as unknown as { marketingCspViolations: string[] }).marketingCspViolations), [], label);
       assert.deepEqual(errors, [], label);
-      receipts.push({ label, grids, inlineStyles: 0, violations: 0, cssSha256 });
+      receipts.push({ label, grids, labelSizes, inlineStyles: 0, violations: 0, cssSha256 });
     } finally { await page.close(); }
   }
   return receipts;
@@ -482,7 +489,7 @@ async function colorProbe(page: Page) {
     receipts.push({ label, property, authored: [left, right], computed, nativeEquivalent: equivalent, projectedParity, projectionProof, actual: a, original: b });
   }
   const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "f2437b977ddb764d9648e5a22fff9d376022b3606a225fe54d38f30a536e57e4");
+  assert.equal(legacySha256, "13e248b43c4ee2d29651cc27d45740d76ff0f74589f1cf8c82b1da6693bf20ff");
   return { space: "xyz-d65", coordinateEpsilon: CSS_COLOR_XYZ_EPSILON, alphaEpsilon: CSS_COLOR_ALPHA_EPSILON,
     compiler: colorProjectionCompilerIdentity(), legacySha256, receipts };
 }
@@ -504,6 +511,7 @@ let server: ReturnType<typeof Bun.serve> | undefined;
 const failures: string[] = [];
 const receipts: { label: string; slots: number; assertions: number }[] = [];
 const environments: { label: string; narrow: boolean; coarse: boolean; forced: boolean; reduced: boolean; dark: boolean; writingMode: string; direction: string }[] = [];
+const compositionSeams: { label: string; labels: readonly string[]; examples: readonly { example: string; summary: string }[] }[] = [];
 const deliveryMismatchSamples: Readonly<{
   actual: string;
   actualColors: CssColorObservation | null;
@@ -537,7 +545,7 @@ function recordDeliveryMismatch(
 }
 try {
   const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "f2437b977ddb764d9648e5a22fff9d376022b3606a225fe54d38f30a536e57e4", "The independent static CSS oracle changed");
+  assert.equal(legacySha256, "13e248b43c4ee2d29651cc27d45740d76ff0f74589f1cf8c82b1da6693bf20ff", "The independent static CSS oracle changed");
   // The fixture renders the shipped server entry, not copied component markup or a mock recipe.
   const api: typeof ProductMarketing = await import(join(repository, "dist/react/server.js"));
   const html = renderToStaticMarkup(createElement(ProductMarketingFixture, { api }));
@@ -600,6 +608,7 @@ try {
     body[data-axis="vertical"] { writing-mode: vertical-rl; }
     .fixture-static-header { position: static; }
     .fixture-caller-last { padding-inline-start: 37px; }
+    body[data-tokens="true"] .fixture-body-label { font-size: 19px; }
     body[data-tokens="true"] .marketing-fixture { --hraness-site-accent: oklch(.62 .17 38); --hraness-site-accent-ink: #17202b; }
     body[data-tokens="true"] .fixture-role-tokens {
       --hraness-marketing-ink: #203040; --hraness-marketing-muted: #506070; --hraness-marketing-background: #e6f0f5;
@@ -607,7 +616,7 @@ try {
       --hraness-marketing-inverse: #242830; --hraness-marketing-inverse-ink: #faf4dc;
       --hraness-marketing-accent: #943b18; --hraness-marketing-accent-ink: #faf5c8; --hraness-marketing-accent-soft: #943b1826;
       --hraness-marketing-text-font: monospace; --hraness-marketing-heading-font: serif; --hraness-marketing-mono-font: monospace;
-      --hraness-marketing-measure: 61rem; --hraness-marketing-copy-measure: 31rem; --hraness-marketing-prose-measure: 51ch;
+      --hraness-marketing-measure: 61rem; --hraness-marketing-copy-measure: 31rem; --hraness-marketing-example-measure: 36rem; --hraness-marketing-prose-measure: 51ch;
       --hraness-marketing-gutter: 2.125rem; --hraness-marketing-radius: .8125rem; --hraness-marketing-frame-radius: 1.125rem;
       --hraness-marketing-rule: 3px dotted rgb(93, 46, 18); --hraness-marketing-shadow: 2px 4px 8px #0003;
       --hraness-marketing-section-space: 5.125rem; --hraness-marketing-heading-weight: 700;
@@ -738,6 +747,20 @@ try {
         }
         results.set(mode, observations);
         assert.equal(await page.locator(".fixture-caller-last").evaluate((node) => getComputedStyle(node).paddingInlineStart), "37px");
+        const labels = await page.locator(".fixture-caller-last .hraness-marketing-section__label")
+          .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).fontSize));
+        assert.deepEqual(labels, ["14px", settings.tokens ? "19px" : "16px"], `${settings.name}/${mode}: finite body recipe and caller override`);
+        const examples = await page.locator(".hraness-marketing-hero").evaluateAll((elements) => elements.map((element) => {
+          const example = element.querySelector(".hraness-marketing-hero__example");
+          const summary = element.querySelector(".hraness-marketing-hero__summary");
+          if (example === null || summary === null) throw new Error("Missing hero measure fixture");
+          return { example: getComputedStyle(example).maxInlineSize, summary: getComputedStyle(summary).maxInlineSize };
+        }));
+        assert.deepEqual(examples, Array.from({ length: 4 }, (_, index) => settings.tokens && index === 1
+          ? { example: "576px", summary: "496px" } : { example: "640px", summary: "640px" }),
+        `${settings.name}/${mode}: example-only measure and omitted fallback`);
+        assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "fixture-maker-link");
+        compositionSeams.push({ label: `${settings.name}/${mode}`, labels, examples });
         if (deliveryModes.includes(mode as typeof deliveryModes[number])) {
           assert.equal(await page.locator(".hraness-marketing-header").first().evaluate((node) => getComputedStyle(node).position), "sticky");
           // The isolated prop check removes only the fixture's legacy static override.
@@ -825,7 +848,7 @@ try {
     native: [...nativeOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     projectedNative: [...projectedOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     standalone: createHash("sha256").update(standalone).digest("hex"), compiler: createHash("sha256").update(compiler).digest("hex") };
-  const evidence = { browserPath, browserVersion: browser.version(), legacySha256, stylesheetHashes, modes, coverage: productMarketingCoverage, consumerCoverage: productMarketingConsumerCoverage, interactionCases, environments, colorProbe: colorProbeReceipt, strictCsp,
+  const evidence = { browserPath, browserVersion: browser.version(), legacySha256, stylesheetHashes, modes, coverage: productMarketingCoverage, consumerCoverage: productMarketingConsumerCoverage, interactionCases, environments, compositionSeams, colorProbe: colorProbeReceipt, strictCsp,
     colorParityContract: "all non-color computed structure equals the byte-exact raw oracle; delivery colors equal the browser-computed original-source oracle after only exact numeric OKLab/OKLCH spans are projected by the pinned compiler; raw/projected color differences are reported and never asserted as native equivalence",
     originalSourceColorProjections: projectedOracle.projections,
     rawProjectedColorDifferences: [...rawColorDifferences].map(([sha256, difference]) => ({ sha256, ...difference })),

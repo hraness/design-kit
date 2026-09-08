@@ -254,6 +254,8 @@ export interface ProductHeroProps {
   readonly headingId: string;
   readonly headingLevel?: MarketingHeadingLevel;
   readonly name: string;
+  /** Product-owned notice after the copy boundary, without an added wrapper. */
+  readonly notice?: ReactNode;
   readonly proof?: Readonly<{
     readonly content: ReactNode;
     readonly heading: string;
@@ -277,6 +279,7 @@ export function ProductHero({
   headingId,
   headingLevel = 1,
   name,
+  notice,
   proof,
   summary,
   tone = "paper",
@@ -303,6 +306,7 @@ export function ProductHero({
         {boundary === undefined
           ? null
           : <p className={classNames("hraness-marketing-hero__boundary")}>{boundary}</p>}
+        {notice}
       </div>
       {frame === undefined
         ? null
@@ -373,6 +377,7 @@ export function MarketingInstallPanel({
   headingId,
   headingLevel = 2,
   id,
+  note,
 }: Readonly<{
   children: ReactNode;
   className?: string;
@@ -381,6 +386,8 @@ export function MarketingInstallPanel({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
+  /** Product-owned supporting copy directly after the heading. */
+  note?: ReactNode;
 }>) {
   return (
     <section
@@ -394,6 +401,7 @@ export function MarketingInstallPanel({
         <Heading className={classNames("hraness-marketing-install__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
+        {note}
       </div>
       <div className={classNames("hraness-marketing-install__commands")}>{children}</div>
     </section>
@@ -444,6 +452,21 @@ export function MarketingProofFrame({
   );
 }
 
+/** The section's native paragraph label, reusable by product-owned prose. */
+export function MarketingSectionLabel({
+  children,
+  className,
+  size = "default",
+}: Readonly<{
+  children: string;
+  className?: string;
+  size?: "default" | "body";
+}>) {
+  if (size !== "default" && size !== "body") throw new RangeError("Marketing label size must be default or body.");
+  return <p className={classNames("hraness-marketing-section__label", className, size)}
+    data-size={size === "body" ? "body" : undefined}>{children}</p>;
+}
+
 export function MarketingSection({
   children,
   className,
@@ -474,7 +497,7 @@ export function MarketingSection({
       id={id}
     >
       <div className={classNames("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse")}>
-        <p className={classNames("hraness-marketing-section__label")}>{label}</p>
+        <MarketingSectionLabel>{label}</MarketingSectionLabel>
         <Heading className={classNames("hraness-marketing-section__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
@@ -907,6 +930,7 @@ export function MarketingMaker({
   headingLevel = 2,
   id,
   label,
+  linkClassName,
   links = [],
   portrait,
 }: Readonly<{
@@ -917,6 +941,8 @@ export function MarketingMaker({
   headingLevel?: MarketingHeadingLevel;
   id?: string;
   label: string;
+  /** Added only to listed links, never to caller-owned biography content. */
+  linkClassName?: string;
   links?: readonly MarketingLink[];
   portrait?: ReactNode;
 }>) {
@@ -942,7 +968,7 @@ export function MarketingMaker({
             <ul className={classNames("hraness-marketing-maker__links")}>
               {links.map((link) => (
                 <li key={`${link.href}-${link.label}`}>
-                  <a href={link.href}>{link.label}</a>
+                  <a className={linkClassName} href={link.href}>{link.label}</a>
                 </li>
               ))}
             </ul>
