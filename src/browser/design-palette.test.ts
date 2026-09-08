@@ -101,6 +101,66 @@ test("the React owner adopts an external bootstrap and only the last owner remov
   expect(f.listeners.size).toBe(0);
 });
 
+for (const replacement of ["attributes", "document root"] as const) {
+  test(`a new page owner restores the saved appearance after replacing ${replacement}`, async () => {
+    const f = fixture();
+    f.storage.setItem(designPaletteStorageKey, JSON.stringify({ palette: "gruvbox", mode: "light" }));
+    const bootstrap = initDesignPalette({ document: f.document, storage: f.storage });
+    const snapshot = bootstrap.getSnapshot();
+    let updates = 0;
+    bootstrap.subscribe(() => { updates += 1; });
+    const defaultTheme = getDesignPaletteTheme("catppuccin", "dark");
+    if (replacement === "document root") {
+      const nextRoot = f.document.createElement("html");
+      nextRoot.innerHTML = '<head><meta name="theme-color" content="#000"></head><body></body>';
+      f.document.replaceChild(nextRoot, f.document.documentElement);
+    }
+    f.document.documentElement.className = `fallback-font ${defaultTheme.className}`;
+    f.document.documentElement.setAttribute("data-palette", "catppuccin");
+    f.document.documentElement.setAttribute("data-theme", "dark");
+
+    const fallback = initDesignPalette({ document: f.document });
+    const lateMeta = f.document.createElement("meta");
+    lateMeta.name = "theme-color";
+    lateMeta.media = "(prefers-color-scheme: dark)";
+    lateMeta.content = "#000";
+    try {
+      expect(fallback.getSnapshot()).toBe(snapshot);
+      expect(f.document.documentElement.className.split(" ").sort()).toEqual([
+        ...snapshot.className.split(" "), "fallback-font",
+      ].sort());
+      expect(f.document.documentElement.getAttribute("data-palette")).toBe("gruvbox");
+      expect(f.document.documentElement.getAttribute("data-theme")).toBe("light");
+      const activeMetas = f.document.querySelectorAll('meta[name="theme-color"]:not([media])');
+      expect(activeMetas).toHaveLength(1);
+      expect(activeMetas[0]?.getAttribute("content")).toBe(snapshot.background);
+      expect(f.listeners.size).toBe(1);
+      expect(updates).toBe(0);
+      expect(JSON.parse(f.storage.values.get(designPaletteStorageKey) ?? "null")).toEqual(snapshot.preference);
+      expect(f.document.querySelectorAll("[style], style, script")).toHaveLength(0);
+      // Let adoption settle before simulating metadata streamed into the new head.
+      await Promise.resolve();
+      await Promise.resolve();
+      f.document.head.prepend(lateMeta);
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(lateMeta.media).toBe("not all");
+      expect(f.document.head.querySelectorAll('meta[name="theme-color"]:not([media])')).toHaveLength(1);
+      expect(f.document.head.querySelector('meta[name="theme-color"]')?.getAttribute("content")).toBe(snapshot.background);
+      fallback.setPreference({ palette: "tokyo-night", mode: "system" });
+      f.changeSystem(true);
+      expect(f.document.documentElement.getAttribute("data-palette")).toBe("tokyo-night");
+      expect(f.document.documentElement.getAttribute("data-theme")).toBe("dark");
+    } finally {
+      fallback.dispose();
+      bootstrap.dispose();
+    }
+    expect(f.listeners.size).toBe(0);
+    expect(lateMeta.media).toBe("(prefers-color-scheme: dark)");
+    expect(f.document.head.querySelectorAll('[data-hraness-design-theme-color-sync-active]')).toHaveLength(0);
+  });
+}
+
 test("existing valid mode choices migrate once without overwriting palette selections", () => {
   const f = fixture();
   f.storage.setItem("hraness-design-theme-v1", "light");

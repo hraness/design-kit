@@ -79,7 +79,6 @@ export function initDesignPalette(options: DesignPaletteOptions = {}): DesignPal
     throw new Error("initDesignPalette requires an HTML document with a head.");
   }
   const view = document.defaultView;
-  const root = document.documentElement;
   const storageKey = options.storageKey ?? designPaletteStorageKey;
   const legacyStorageKey = options.legacyStorageKey === undefined ? designThemeStorageKey : options.legacyStorageKey;
   if (storageKey.trim() === "" || legacyStorageKey?.trim() === "") throw new Error("Appearance storage keys must not be blank.");
@@ -122,6 +121,7 @@ export function initDesignPalette(options: DesignPaletteOptions = {}): DesignPal
     (["light", "dark"] as const).flatMap((mode) => getDesignPaletteTheme(palette, mode).className.split(/\s+/u))));
   const themeColor = acquireThemeColorMeta(document, "theme-color", Symbol("palette-theme-color"), snapshot.background);
   const apply = (): void => {
+    const root = document.documentElement;
     const nextClasses = new Set(snapshot.className.split(/\s+/u).filter(Boolean));
     for (const token of ownedClasses) if (token !== "" && !nextClasses.has(token)) root.classList.remove(token);
     for (const token of nextClasses) root.classList.add(token);
@@ -145,7 +145,6 @@ export function initDesignPalette(options: DesignPaletteOptions = {}): DesignPal
     if (usesDefaultStorage && event.storageArea !== null && event.storageArea !== undefined && event.storageArea !== storage) return;
     update(readPreference());
   };
-  apply();
   if (forced === null) {
     writeStorage(storage, storageKey, snapshot.preference);
     view?.addEventListener("storage", onStorage);
@@ -156,6 +155,9 @@ export function initDesignPalette(options: DesignPaletteOptions = {}): DesignPal
     version: 1,
     configuration,
     acquire: () => {
+      // An error document can replace the root or reset its server attributes.
+      // Restore the current choice without another controller or storage read.
+      apply();
       owners += 1;
       let disposed = false;
       const subscriptions = new Set<() => void>();

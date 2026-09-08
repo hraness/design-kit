@@ -99,22 +99,30 @@ function reconcileThemeColorMetas(manager) {
     if (meta !== active)
       disableCompetingMeta(manager, meta);
   }
+  observeThemeColorMetas(manager);
 }
 function observeThemeColorMetas(manager) {
+  const head = manager.document.head;
+  if (manager.observer !== null && manager.observedHead === head)
+    return;
+  manager.observer?.disconnect();
+  manager.observedHead = null;
   const Observer = manager.document.defaultView?.MutationObserver;
   if (Observer === undefined)
     return;
-  manager.observer = new Observer(() => reconcileThemeColorMetas(manager));
-  manager.observer.observe(manager.document.head, {
+  manager.observer ??= new Observer(() => reconcileThemeColorMetas(manager));
+  manager.observer.observe(head, {
     attributeFilter: ["content", "media", "name", themeColorSyncActiveAttribute, themeColorSyncDisabledAttribute],
     attributes: true,
     childList: true,
     subtree: true
   });
+  manager.observedHead = head;
 }
 function destroyThemeColorManager(manager) {
   manager.observer?.disconnect();
   manager.observer = null;
+  manager.observedHead = null;
   for (const meta of manager.activeMetas)
     meta.remove();
   for (const [meta, original] of manager.disabledMetas) {
@@ -144,6 +152,7 @@ function acquireThemeColorMeta(document, metaName, registrationId, color) {
       document,
       metaName,
       observer: null,
+      observedHead: null,
       owner: String(ownerSequence),
       registrations: new Map
     };
@@ -151,8 +160,6 @@ function acquireThemeColorMeta(document, metaName, registrationId, color) {
   }
   manager.registrations.set(registrationId, color);
   reconcileThemeColorMetas(manager);
-  if (manager.observer === null)
-    observeThemeColorMetas(manager);
   let released = false;
   return {
     release: () => {
@@ -1145,7 +1152,6 @@ function initDesignPalette(options = {}) {
     throw new Error("initDesignPalette requires an HTML document with a head.");
   }
   const view = document.defaultView;
-  const root = document.documentElement;
   const storageKey = options.storageKey ?? designPaletteStorageKey;
   const legacyStorageKey = options.legacyStorageKey === undefined ? designThemeStorageKey : options.legacyStorageKey;
   if (storageKey.trim() === "" || legacyStorageKey?.trim() === "")
@@ -1202,6 +1208,7 @@ function initDesignPalette(options = {}) {
   const ownedClasses = new Set(designPalettes.flatMap((palette) => ["light", "dark"].flatMap((mode) => getDesignPaletteTheme(palette, mode).className.split(/\s+/u))));
   const themeColor = acquireThemeColorMeta(document, "theme-color", Symbol("palette-theme-color"), snapshot.background);
   const apply = () => {
+    const root = document.documentElement;
     const nextClasses = new Set(snapshot.className.split(/\s+/u).filter(Boolean));
     for (const token of ownedClasses)
       if (token !== "" && !nextClasses.has(token))
@@ -1232,7 +1239,6 @@ function initDesignPalette(options = {}) {
       return;
     update(readPreference());
   };
-  apply();
   if (forced === null) {
     writeStorage(storage, storageKey, snapshot.preference);
     view?.addEventListener("storage", onStorage);
@@ -1243,6 +1249,7 @@ function initDesignPalette(options = {}) {
     version: 1,
     configuration,
     acquire: () => {
+      apply();
       owners += 1;
       let disposed = false;
       const subscriptions = new Set;
