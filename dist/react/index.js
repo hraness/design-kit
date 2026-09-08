@@ -46,7 +46,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-3yvfd58s.js";
+} from "../chunk-vf91mqxn.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -3034,6 +3034,7 @@ function DesignSystemGallery({
                   label: "Interfaces",
                   value: "CLI + SDK"
                 }],
+                factsColumns: 3,
                 frame: /* @__PURE__ */ jsx12(MarketingProofFrame, {
                   caption: "Receipt produced by the checked example.",
                   credit: "Captured 5 September 2026",
@@ -3053,6 +3054,7 @@ function DesignSystemGallery({
               }),
               /* @__PURE__ */ jsx12(MarketingPillars, {
                 ariaLabel: "Relay in three points",
+                columns: 3,
                 pillars: [{
                   label: "Fast",
                   summary: "Runs locally with no service in the loop."
@@ -3167,6 +3169,7 @@ function DesignSystemGallery({
               }),
               /* @__PURE__ */ jsx12(MarketingStatStrip, {
                 ariaLabel: "Relay usage",
+                columns: 3,
                 source: "Counted from the public example repository on 5 September 2026.",
                 stats: [{
                   label: "Example jobs",

@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import { marketingClassName as classNames, marketingFactCellVariant } from "./product-marketing.stylex.js";
+import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
+import type { MarketingColumnCount } from "./product-marketing.stylex.js";
+
+export type { MarketingColumnCount } from "./product-marketing.stylex.js";
 
 export type MarketingHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -205,17 +208,21 @@ export function MarketingFlow({
 
 export function MarketingFacts({
   className,
+  columns,
   facts,
 }: Readonly<{
   className?: string;
+  /** Static desktop columns without inline styles; omission uses the collection length. Mobile stays two columns. */
+  columns?: MarketingColumnCount;
   facts: readonly MarketingFact[];
 }>) {
+  const rootClassName = marketingColumnClassName("hraness-marketing-facts", className, columns);
   if (facts.length === 0) return null;
   return (
     <dl
-      className={classNames("hraness-marketing-facts", className)}
+      className={rootClassName}
       data-hraness-marketing="facts"
-      style={{ "--hraness-marketing-fact-columns": String(facts.length) } as Record<string, string>}
+      style={columns === undefined ? { "--hraness-marketing-fact-columns": String(facts.length) } as Record<string, string> : undefined}
     >
       {facts.map((fact, index) => (
         <div className={classNames("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index))} key={`${fact.label}-${fact.value}`}>
@@ -239,6 +246,8 @@ export interface ProductHeroProps {
   readonly example?: string;
   readonly eyebrow: string;
   readonly facts?: readonly MarketingFact[];
+  /** Static fact columns without inline styles; omission uses the facts length. Mobile stays two columns. */
+  readonly factsColumns?: MarketingColumnCount;
   /** A product frame or other proof rendered full width below the copy. */
   readonly frame?: ReactNode;
   readonly heading: string;
@@ -262,6 +271,7 @@ export function ProductHero({
   example,
   eyebrow,
   facts = [],
+  factsColumns,
   frame,
   heading,
   headingId,
@@ -314,7 +324,7 @@ export function ProductHero({
             {proof.content}
           </aside>
         )}
-      <MarketingFacts facts={facts} />
+      <MarketingFacts facts={facts} {...(factsColumns === undefined ? {} : { columns: factsColumns })} />
     </header>
   );
 }
@@ -327,19 +337,23 @@ export interface MarketingPillar {
 export function MarketingPillars({
   ariaLabel,
   className,
+  columns,
   pillars,
 }: Readonly<{
   ariaLabel: string;
   className?: string;
+  /** Static desktop columns without inline styles; omission uses the collection length. Mobile stays one column. */
+  columns?: MarketingColumnCount;
   pillars: readonly MarketingPillar[];
 }>) {
+  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns);
   if (pillars.length === 0) return null;
   return (
     <dl
       aria-label={ariaLabel}
-      className={classNames("hraness-marketing-pillars", className)}
+      className={rootClassName}
       data-hraness-marketing="pillars"
-      style={{ "--hraness-marketing-pillar-columns": String(pillars.length) } as Record<string, string>}
+      style={columns === undefined ? { "--hraness-marketing-pillar-columns": String(pillars.length) } as Record<string, string> : undefined}
     >
       {pillars.map((pillar, index) => (
         <div className={classNames("hraness-marketing-pillars__item", undefined, index === 0 ? "default" : "later")} key={pillar.label}>
@@ -563,15 +577,19 @@ export interface MarketingStat {
 export function MarketingStatStrip({
   ariaLabel,
   className,
+  columns,
   source,
   stats,
 }: Readonly<{
   ariaLabel: string;
   className?: string;
+  /** Static desktop columns without inline styles; omission uses the collection length. Mobile stays two columns. */
+  columns?: MarketingColumnCount;
   /** Where the numbers come from and when they were checked. */
   source?: ReactNode;
   stats: readonly MarketingStat[];
 }>) {
+  const listClassName = marketingColumnClassName("hraness-marketing-stats__list", undefined, columns);
   if (stats.length === 0) return null;
   return (
     <section
@@ -580,8 +598,8 @@ export function MarketingStatStrip({
       data-hraness-marketing="stats"
     >
       <dl
-        className={classNames("hraness-marketing-stats__list")}
-        style={{ "--hraness-marketing-fact-columns": String(stats.length) } as Record<string, string>}
+        className={listClassName}
+        style={columns === undefined ? { "--hraness-marketing-fact-columns": String(stats.length) } as Record<string, string> : undefined}
       >
         {stats.map((stat, index) => (
           <div className={classNames("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index))} key={`${stat.label}-${stat.value}`}>
