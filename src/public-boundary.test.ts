@@ -64,7 +64,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.6.0");
+  expect(packageJson.version).toBe("0.6.1");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.4 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.4");
@@ -92,12 +92,14 @@ test("the package exposes compositions without a second primitive barrel", async
   expect(packageJson.exports["./compiler-foundation.css"]).toBe(
     "./src/compiler-foundation.css",
   );
+  expect(packageJson.exports["./compiler-palettes.css"]).toBe("./src/compiler-palettes.css");
   expect(packageJson.exports["./stylex-manifest.json"]).toBe(
     "./dist/stylex-manifest.json",
   );
   for (const path of [
     "src/compiler-components.css",
     "src/compiler-foundation.css",
+    "src/compiler-palettes.css",
     "src/compiler-tokens.css",
     "src/product-marketing-foundation.css",
     "src/react/app-shell.stylex.ts",

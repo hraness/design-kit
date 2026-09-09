@@ -102,7 +102,7 @@ test("the design layer composes the public primitive core first", () => {
   expect(stylesCss).toContain('@import "./product-marketing.css";\n@import "./product-marketing-foundation.css";');
 
   expect(compilerFoundationCss).toContain(
-    '@import "@hraness/ui/compiler-foundation.css";',
+    '@import "./compiler-palettes.css";',
   );
   expect(compilerFoundationCss).toContain(
     '@import "./compiler-components.css";',

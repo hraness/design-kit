@@ -28,7 +28,9 @@ Portalled controls receive the resolved palette class through the shared portal 
 
 The global CSS boundary maps existing `--primary`, `--danger`, `--warning`, `--success`, surface, text, focus, and `--ui-*` roles to the compiled `--hraness-palette-*` properties. Product CSS and shared controls consume the same values. Use semantic roles for meaning; keep text or an icon with each status so color is not its only cue.
 
-Compiler adopters import `compiler-foundation.css` and the finalized cross-package stylesheet. They must not also load the standalone `palettes.css` or `styles.css` entries.
+Compiler adopters that own their typography import `@hraness/design-kit/compiler-palettes.css`. It includes the portable UI foundation and semantic palette bridge, without webfonts, marketing styles, or standalone atomic recipes. It supports the palette controller, `DesignPaletteMenuButton`, and portable UI primitives. Full design-kit compositions use `compiler-foundation.css`, which includes that minimal foundation plus the package's typography and presentation styles.
+
+Both routes register the UI and design-kit manifests and link one finalized cross-package stylesheet after the foundation. The manifest binds `compiler-palettes.css`; the full foundation imports it once. Do not also load the standalone `palettes.css`, `styles.css`, or `stylex.css` entries.
 
 This uses StyleX's documented [variable contract](https://stylexjs.com/docs/api/javascript/defineVars/) and [compiled theme classes](https://stylexjs.com/docs/learn/theming/creating-themes/). Applications consuming the precompiled package do not need another StyleX compiler configuration.
 

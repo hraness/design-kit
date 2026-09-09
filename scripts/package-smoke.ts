@@ -725,6 +725,7 @@ const compilerStylesheetPaths = [
   "src/charts.css",
   "src/compiler-components.css",
   "src/compiler-foundation.css",
+  "src/compiler-palettes.css",
   "src/compiler-tokens.css",
   "src/components.css",
   "src/design-gallery.css",
@@ -757,7 +758,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.0" },
+    { name: "@hraness/design-kit", version: "0.6.1" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -770,7 +771,7 @@ function requireDesignKitManifest(
     [...runtimePaths].sort(),
     `${label} runtime inventory is incomplete`,
   );
-  assert.equal(manifest.compilerFoundation, "src/compiler-foundation.css");
+  assert.equal(manifest.compilerFoundation, "src/compiler-palettes.css");
   assert.deepEqual(
     manifest.stylesheets.map(({ path }) => path),
     [...compilerStylesheetPaths].sort(),
@@ -821,7 +822,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.4") {
   throw new Error(
-    "Design-kit v0.6.0 must build and publish against the immutable @hraness/ui v0.5.4 release.",
+    "Design-kit v0.6.1 must build and publish against the immutable @hraness/ui v0.5.4 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -839,7 +840,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.4 <0.6.0") {
-  throw new Error("Design-kit v0.6.0 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.6.1 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -851,7 +852,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.0.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.1.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -888,6 +889,7 @@ try {
     join(packedRoot, "src/compiler-foundation.css"),
     "utf8",
   );
+  const packedCompilerPalettesCss = await readFile(join(packedRoot, "src/compiler-palettes.css"), "utf8");
   const packedCompilerComponentsCss = await readFile(
     join(packedRoot, "src/compiler-components.css"),
     "utf8",
@@ -925,6 +927,13 @@ try {
     "./src/compiler-foundation.css",
     "Packed package must export its compiler foundation.",
   );
+  assert.equal(packedPackageJson.exports?.["./compiler-palettes.css"], "./src/compiler-palettes.css");
+  assert.deepEqual(packedCompilerPalettesCss.replace(/\/\*[\s\S]*?\*\//gu, "").trim().split(/\n+/u), [
+    "@layer base, components;",
+    "@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-design-kit.legacy;",
+    '@import "@hraness/ui/compiler-foundation.css";',
+    '@import "./palette-bridge.css";',
+  ], "Packed minimal foundation must remain free of fonts, marketing, and atomic recipes");
   assert.equal(
     packedPackageJson.exports?.["./stylex-manifest.json"],
     "./dist/stylex-manifest.json",
@@ -943,7 +952,7 @@ try {
       `Packed package must keep ${internalExport} internal or UI-owned.`,
     );
   }
-  if (!packedCompilerFoundationCss.includes('@import "@hraness/ui/compiler-foundation.css";')
+  if (!packedCompilerFoundationCss.includes('@import "./compiler-palettes.css";')
     || !packedCompilerFoundationCss.includes('@import "./compiler-tokens.css";')
     || !packedCompilerFoundationCss.includes('@import "./compiler-components.css";')
     || !packedCompilerFoundationCss.includes('@import "./appearance-menu.css";')
@@ -1372,6 +1381,7 @@ try {
     "src/appearance-menu.css",
     "src/compiler-components.css",
     "src/compiler-foundation.css",
+    "src/compiler-palettes.css",
     "src/compiler-tokens.css",
     "src/components.css",
     "src/product-marketing-foundation.css",
@@ -2231,6 +2241,54 @@ try {
   assert.equal(complete.schemaVersion, STYLEX_COMPLETE_RECORD_SCHEMA_VERSION);
   assert.equal(complete.unionPolicySha256, stylexUnionPolicySha256);
   assert.equal(complete.planSha256, finalGeneration.planSha256);
+
+  // The public minimal route uses the same package manifests and exact
+  // foundation gate, while a product retains its system typography.
+  await writeFile(join(consumer, "palette-client.tsx"), [
+    'import "@hraness/design-kit/compiler-palettes.css";',
+    'import { createElement } from "react";',
+    'import { createRoot } from "react-dom/client";',
+    'import { Button } from "@hraness/ui";',
+    'import { DesignPaletteProvider, DesignPaletteMenuButton } from "@hraness/design-kit/react";',
+    'const root = document.getElementById("root"); if (root === null) throw new Error("Missing palette root");',
+    'createRoot(root).render(createElement(DesignPaletteProvider, null, createElement(DesignPaletteMenuButton), createElement(Button, null, "Continue")));',
+    "",
+  ].join("\n"));
+  const paletteGeneration = await createStylexGeneration({
+    expectedGraphs: [{ adapter: "bun", entrypoints: ["palette-client.tsx"], id: "client", kind: "client" }],
+    finalCssPath: "stylex.css", generationId: "palette-final-app", outputDirectory: compilerOutputDirectory,
+    packageManifests: compilerManifestPaths, rootDirectory: consumer,
+    templates: [{ cssHref: "/stylex.css", graphId: "client", outputPath: "index.html", sourcePath: "palette-template.html", stylesheetGraphId: "client" }],
+  });
+  const paletteReceipt = await collectBunStylexGraph({ generation: paletteGeneration, graphId: "client", rootDirectory: consumer });
+  assert.ok(paletteReceipt.outputs.every(({ path }) => /\.(?:js|css)$/u.test(path)), "Minimal palette graph emitted a font or other asset");
+  assert.ok(paletteReceipt.inputs.every(({ path }) => !/\.(?:woff2?|otf|ttf)$|\/fonts\.css$|\/compiler-tokens\.css$/u.test(path)),
+    "Minimal palette graph imported typography assets");
+  const paletteFoundations = paletteReceipt.outputs.filter(({ path }) => path.endsWith(".css"));
+  assert.equal(paletteFoundations.length, 1);
+  const paletteFoundation = paletteFoundations[0];
+  assert.ok(paletteFoundation !== undefined);
+  const paletteFoundationCss = await readFile(join(paletteGeneration.directory, paletteReceipt.outputRoot, paletteFoundation.path), "utf8");
+  assert.ok(!/@font-face|url\(|components\.hraness-(?:ui|design-kit|stylex)\.priority/u.test(paletteFoundationCss),
+    "Minimal palette foundation mixed font loading or atomic recipes into its global CSS");
+  for (const manifest of [installedUiManifest, installedManifest]) {
+    const foundation = manifest.stylesheets.find(({ path }) => path === manifest.compilerFoundation);
+    assert.ok(foundation !== undefined);
+    const captured = paletteReceipt.inputs.filter(({ path }) => path.endsWith(`${manifest.package.name}/${manifest.compilerFoundation}`));
+    assert.equal(captured.length, 1, "Minimal palette graph must capture each exact required foundation once");
+    assert.equal(captured[0]?.bytes, foundation.bytes);
+    assert.equal(captured[0]?.sha256, foundation.sha256);
+  }
+  const paletteTemplate = await prepareStylexProducedTemplate(paletteGeneration, "index.html");
+  await writeFile(paletteTemplate.sourcePath,
+    `<!doctype html><html><head><link rel="stylesheet" href="/graphs/client/${paletteFoundation.path}"><link rel="stylesheet" href="${STYLEX_TEMPLATE_CSS_PLACEHOLDER}"></head><body><div id="root"></div></body></html>\n`,
+    { flag: "wx" });
+  await sealStylexProducedTemplate(paletteGeneration, "index.html");
+  const paletteDirectory = await finalizeStylexGeneration({ generation: paletteGeneration, outputDirectory: compilerOutputDirectory, rootDirectory: consumer });
+  assert.equal(await readFile(join(paletteDirectory, "stylex.css"), "utf8"), serializeStylexRuleUnionV1(
+    [...installedUiManifest.rules, ...installedManifest.rules, ...paletteReceipt.rules],
+    [installedUiManifest.standaloneSerializer, installedManifest.standaloneSerializer],
+  ), "Minimal palette consumer must emit one canonical package-and-application rule union");
 
   await writeFile(
     join(consumer, "negative-template.html"),
