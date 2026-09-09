@@ -19,11 +19,12 @@ import {
   type StylexStandaloneSerializerV1,
 } from "@hraness/ui/stylex-build";
 
-const COMPILER_FOUNDATION = "src/compiler-foundation.css";
+const COMPILER_FOUNDATION = "src/compiler-palettes.css";
 const COMPILER_STYLESHEET_PATHS = [
   "src/appearance-menu.css",
   "src/charts.css",
   "src/compiler-components.css",
+  "src/compiler-foundation.css",
   COMPILER_FOUNDATION,
   "src/compiler-tokens.css",
   "src/components.css",
@@ -249,8 +250,10 @@ export async function buildPackage(
       "Package exports must be an object",
     );
     const packageExports = packageRecord.exports as Record<string, unknown>;
+    assert.equal(packageExports["./compiler-foundation.css"], "./src/compiler-foundation.css",
+      "Package must retain its full compiler presentation entry");
     assert.equal(
-      packageExports["./compiler-foundation.css"],
+      packageExports["./compiler-palettes.css"],
       `./${COMPILER_FOUNDATION}`,
       "Package must export its compiler foundation",
     );

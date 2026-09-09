@@ -1,0 +1,7 @@
+/* Palette/controller/menu and portable controls; applications own typography.
+ * Atomic recipes arrive once through the finalized cross-package stylesheet. */
+@layer base, components;
+@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-design-kit.legacy;
+
+@import "@hraness/ui/compiler-foundation.css";
+@import "./palette-bridge.css";

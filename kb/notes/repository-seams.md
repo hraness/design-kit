@@ -24,6 +24,8 @@ The dependency seam is directional: `@hraness/ui` primitives feed this optional 
 
 Consumers pin reviewed immutable releases or full commits and validate upgrades on their own schedule. Do not use sibling paths, Git submodules, or coordinated `main` workflows. Add a shared composition only after two concrete consumers need the same stable interface. Freeze public interfaces before parallel work and give inventories, manifests, locks, generated artifacts, and release convergence surfaces one owner.
 
+The compiler palette foundation keeps font policy with the application. `compiler-palettes.css` supplies the portable UI foundation and semantic palette bridge for controllers, the appearance menu, and portable controls. The manifest binds that exact file, and the full `compiler-foundation.css` imports it before adding design-kit typography and presentation. Both routes therefore satisfy the same required-foundation check and emit one finalized rule union. This avoids importing webfonts into a product that deliberately uses a system stack while retaining the full presentation route for other consumers.
+
 ## Related
 
 The normative rules remain in the root `AGENTS.md`. [[documentation-ownership|Documentation ownership]] explains how those rules relate to executable contracts and this pull-based context.

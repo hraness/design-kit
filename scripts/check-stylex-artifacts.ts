@@ -24,6 +24,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/charts.css",
   "src/compiler-components.css",
   "src/compiler-foundation.css",
+  "src/compiler-palettes.css",
   "src/compiler-tokens.css",
   "src/components.css",
   "src/design-gallery.css",
@@ -452,7 +453,7 @@ function requireCompilerFoundationContract(source: string): void {
   const expectedStatements = [
     TOP_LEVEL_LAYER_PRELUDE,
     "@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-design-kit.legacy;",
-    '@import "@hraness/ui/compiler-foundation.css";',
+    '@import "./compiler-palettes.css";',
     '@import "./compiler-tokens.css";',
     '@import "./typography.css";',
     '@import "./syntax-highlighting.css";',
@@ -465,7 +466,6 @@ function requireCompilerFoundationContract(source: string): void {
     '@import "./plain-publication.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
-    '@import "./palette-bridge.css";',
   ];
   const statements = topLevelStatements(source, "src/compiler-foundation.css");
   if (statements.length !== expectedStatements.length
@@ -479,6 +479,15 @@ function requireCompilerFoundationContract(source: string): void {
     /(?:styles|stylex)\.css|components\.(?:hraness-ui|hraness-design-kit)\.priority\d+/u,
     "a standalone recipe sheet or fixed generated priority in the compiler foundation",
   );
+}
+
+function requireCompilerPalettesContract(source: string): void {
+  assert.deepEqual(topLevelStatements(source, "src/compiler-palettes.css"), [
+    TOP_LEVEL_LAYER_PRELUDE,
+    "@layer components.hraness-ui.legacy.base, components.hraness-ui.legacy, components.hraness-design-kit.legacy;",
+    '@import "@hraness/ui/compiler-foundation.css";',
+    '@import "./palette-bridge.css";',
+  ], "Minimal compiler foundation must retain only the portable foundation and palette bridge");
 }
 
 function selectors(source: string): string[] {
@@ -1569,6 +1578,7 @@ const [
   localEntry,
   legacyComponents,
   compilerFoundation,
+  compilerPalettes,
   uiLegacyComponents,
   uiCompiledCss,
 ] = await Promise.all([
@@ -1577,6 +1587,7 @@ const [
   readFile(resolve(repository, "src/components.css"), "utf8"),
   readFile(resolve(repository, "src/compiler-components.css"), "utf8"),
   readFile(resolve(repository, "src/compiler-foundation.css"), "utf8"),
+  readFile(resolve(repository, "src/compiler-palettes.css"), "utf8"),
   readFile(resolve(repository, "node_modules/@hraness/ui/src/components.css"), "utf8"),
   readFile(resolve(repository, "node_modules/@hraness/ui/dist/stylex.css"), "utf8"),
 ]);
@@ -1589,8 +1600,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.0" },
-  "StyleX manifest must describe design-kit v0.6.0",
+  { name: "@hraness/design-kit", version: "0.6.1" },
+  "StyleX manifest must describe design-kit v0.6.1",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.rulesSha256, stylexRulesSha256(manifest.rules));
@@ -1618,7 +1629,7 @@ assert.deepEqual(
   },
   "Design-kit must own its standalone StyleX namespace and legacy boundary",
 );
-assert.equal(manifest.compilerFoundation, "src/compiler-foundation.css");
+assert.equal(manifest.compilerFoundation, "src/compiler-palettes.css");
 assert.deepEqual(
   manifest.stylesheets.map(({ path }) => path),
   [...COMPILER_STYLESHEET_PATHS].sort(),
@@ -2487,6 +2498,12 @@ requireMutationRejected("arbitrary component restored in compiler legacy layer",
   appendToNamedLayer(legacyComponents, "components.hraness-design-kit.legacy", ".hraness-design-unreviewed { display: grid; }", "legacy utility"),
 ));
 requireCompilerFoundationContract(compilerFoundation);
+requireCompilerPalettesContract(compilerPalettes);
+for (const mutation of [
+  compilerPalettes.replace('@import "./palette-bridge.css";', ""),
+  `${compilerPalettes}\n@import "./fonts.css";\n`,
+  `${compilerPalettes}\n@import "../dist/stylex.css";\n`,
+]) assert.throws(() => requireCompilerPalettesContract(mutation));
 requireAggregateContract(orderedStylesheet);
 const foundationMutations = [
   compilerFoundation.replace(
