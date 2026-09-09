@@ -23,6 +23,8 @@ function PalettePreview() {
       {controlled ? <p data-palette-controlled-request>{requestedMode}</p> : null}
       <div data-palette-surface>Surface and text use semantic colors.</div>
       <button id="outside" type="button">Outside menu</button>
+      <div data-forced-reference hidden>Native system colors</div>
+      <button data-forced-reference-button hidden type="button">Native system action</button>
     </main>
     {createPortal(<div className={portalClassName} data-palette-portal data-theme={mode}>Body portal</div>, document.body)}
   </>;

@@ -90,8 +90,10 @@
 .hraness-palette[data-theme="light"] { color-scheme: light; }
 
 @media (forced-colors: active) {
-  :root.hraness-palette[data-theme],
-  .hraness-palette[data-theme] {
+  /* The pinned StyleX serializer doubles createTheme classes. Outrank those
+   * unlayered rules even when a compiler consumer loads its final union last. */
+  :root.hraness-palette.hraness-palette[data-theme],
+  .hraness-palette.hraness-palette[data-theme] {
     --hraness-palette-background: Canvas;
     --hraness-palette-foreground: CanvasText;
     --hraness-palette-muted: CanvasText;
@@ -109,4 +111,3 @@
     --hraness-palette-focus: Highlight;
   }
 }
-

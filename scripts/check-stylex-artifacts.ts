@@ -1600,8 +1600,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.1" },
-  "StyleX manifest must describe design-kit v0.6.1",
+  { name: "@hraness/design-kit", version: "0.6.2" },
+  "StyleX manifest must describe design-kit v0.6.2",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.rulesSha256, stylexRulesSha256(manifest.rules));
