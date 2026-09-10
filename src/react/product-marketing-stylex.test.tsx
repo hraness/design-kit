@@ -221,6 +221,46 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
   expect(source).toContain("export const questionMarker = stylex.defineMarker();");
 });
 
+test("the public collector rejects unsupported shorthand recipes without retaining partial rules", async () => {
+  const logical = "src/react/marketing-validation-fixture.stylex.ts";
+  for (const declaration of [
+    'borderInlineStart: "1px solid red"',
+    'borderBlockEnd: { default: "1px solid red", ":hover": "2px solid blue" }',
+    '"@media (forced-colors: active)": { border: "1px solid CanvasText" }',
+  ]) {
+    for (const mapped of [false, true]) {
+      const collector = createStylexTransformCollector(process.cwd());
+      const source = `import * as stylex from "@stylexjs/stylex";
+        export const styles = stylex.create({ root: { color: "blue", ${declaration} } });`;
+      const filename = resolve(process.cwd(), logical);
+      const result = mapped
+        ? collector.transformWithMap(source, filename, { logicalSourceFileName: logical })
+        : collector.transform(source, filename);
+      await expect(result).rejects.toThrow(/not supported/u);
+      expect(collector.seal()).toEqual([]);
+    }
+  }
+});
+
+test("supported raw logical shorthands retain compound custom-property values", async () => {
+  const collector = createStylexTransformCollector(process.cwd());
+  const transformed = await collector.transform(`import * as stylex from "@stylexjs/stylex";
+    export const styles = stylex.create({ root: {
+      "border-inline-start": { default: "var(--marketing-edge, 1px solid currentColor)", ":hover": "2px solid currentColor" },
+      "border-block-end": "var(--marketing-edge, 1px solid currentColor)",
+      "border-image-source": "none",
+    } });`, resolve(process.cwd(), "src/react/marketing-raw-edge-fixture.stylex.ts"));
+  const css = serializeStylexRules(collector.seal()).replaceAll(/\s+/gu, "");
+  expect(css).toContain("border-inline-start:var(--marketing-edge,1pxsolidcurrentColor)");
+  expect(css).toContain("border-block-end:var(--marketing-edge,1pxsolidcurrentColor)");
+  expect(css).toContain(":hover");
+  // The pinned serializer omits the border color's initial currentColor value.
+  expect(css).toContain("border-inline-start:2pxsolid;");
+  expect(css).toContain("border-image-source:none");
+  expect(transformed.code).not.toContain("stylex.create(");
+  expect(transformed.code).not.toContain("inject(");
+});
+
 test("the public collector compiles native logical edges, backgrounds, media, and details deterministically", async () => {
   const filename = resolve(import.meta.dir, "product-marketing.stylex.ts");
   const source = await readFile(filename, "utf8");

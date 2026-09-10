@@ -758,12 +758,14 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.2" },
+    { name: "@hraness/design-kit", version: "0.6.3" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
   assert.deepEqual(manifest.compiler, compilerContract, `${label} compiler contract changed`);
   assert.equal(manifest.compilerSha256, compilerSha256, `${label} compiler hash changed`);
+  assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
+  assert.equal(manifest.compilerSha256, "9ac2c8448ec8f198047e824ce27a97657e05025918c01c204aa0399f94641049");
   assert.equal(manifest.rulesSha256, stylexRulesSha256(manifest.rules));
   assert.deepEqual(manifest.buildTools, [], `${label} must not publish build tools`);
   assert.deepEqual(
@@ -820,9 +822,9 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
     "The @hraness/ui development dependency must use an exact immutable release tag or full reviewed commit.",
   );
 }
-if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.4") {
+if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.6.2 must build and publish against the immutable @hraness/ui v0.5.4 release.",
+    "Design-kit v0.6.3 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -839,8 +841,8 @@ const uiPeerRange = stringField(
   "@hraness/ui",
   "package.json peerDependencies",
 );
-if (uiPeerRange !== ">=0.5.4 <0.6.0") {
-  throw new Error("Design-kit v0.6.2 must declare the exact @hraness/ui v0.5 peer range.");
+if (uiPeerRange !== ">=0.5.12 <0.6.0") {
+  throw new Error("Design-kit v0.6.3 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -852,7 +854,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.2.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.3.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1455,8 +1457,8 @@ try {
   );
   assert.deepEqual(
     installedUiManifest.package,
-    { name: "@hraness/ui", version: "0.5.4" },
-    "Compiler consumer must install the immutable UI v0.5.4 manifest.",
+    { name: "@hraness/ui", version: "0.5.12" },
+    "Compiler consumer must install the immutable UI v0.5.12 manifest.",
   );
   assert.notEqual(
     installedUiManifest.standaloneSerializer.prefix,
@@ -1472,7 +1474,7 @@ try {
       ],
       prefix: "components.hraness-ui",
     },
-    "UI v0.5.4 standalone serialization contract changed.",
+    "UI v0.5.12 standalone serialization contract changed.",
   );
   assert.equal(
     installedUiManifest.compilerSha256,
@@ -1482,18 +1484,18 @@ try {
   assert.equal(installedUiManifest.compilerSha256, compilerSha256);
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex-manifest.json")).sha256,
-    "cf7598b3f9e4f39842520c1a9c3d6327c6df53e787c98db17f705ee233a46a94",
-    "Installed UI manifest does not match the immutable v0.5.4 release.",
+    "46593d40347a0967a71027dce76e051db4e0c681f1f36597a1b586bf60fe6195",
+    "Installed UI manifest does not match the immutable v0.5.12 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "src/compiler-foundation.css")).sha256,
     "2b9b3f7d23856b10357599793c649a3af41f83ac7d58f7a1ffae91a03f322e4e",
-    "Installed UI compiler foundation does not match the immutable v0.5.4 release.",
+    "Installed UI compiler foundation does not match the immutable v0.5.12 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex.css")).sha256,
     "10fefdbe5809b66c863ed08cedac55222b1788f1c444e072e1b08c82a88fbc74",
-    "Installed UI standalone StyleX CSS does not match the immutable v0.5.4 release.",
+    "Installed UI standalone StyleX CSS does not match the immutable v0.5.12 release.",
   );
   assert.deepEqual(
     stylexUnionPolicy,

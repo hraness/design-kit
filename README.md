@@ -11,15 +11,15 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.6.1",
-    "@hraness/ui": "github:hraness/ui#v0.5.4"
+    "@hraness/design-kit": "github:hraness/design-kit#v0.6.3",
+    "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
 ```
 
 `@hraness/ui` is an explicit peer dependency with the supported range
-`>=0.5.4 <0.6.0`; consumers should pin an immutable compatible release such as
-`v0.5.4` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
+`>=0.5.12 <0.6.0`; consumers should pin an immutable compatible release such as
+`v0.5.12` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
@@ -388,7 +388,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.6.1`. The previous rollback pair is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.6.0`.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.3`. The previous rollback pair is `@hraness/ui` `v0.5.4` with `@hraness/design-kit` `v0.6.2`. This release rebuilds the package manifest against the compiler's fail-fast property-validation contract without changing its presentation recipes. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

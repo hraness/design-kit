@@ -64,10 +64,10 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.6.2");
-  expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.4 <0.6.0");
+  expect(packageJson.version).toBe("0.6.3");
+  expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.12 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
-  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.4");
+  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.12");
   expect(packageJson.devDependencies).toMatchObject({
     "@babel/core": "7.29.7",
     "@stylexjs/babel-plugin": "0.19.0",
@@ -117,6 +117,12 @@ test("the package exposes compositions without a second primitive barrel", async
   for (const module of excludedPrimitiveModules) {
     expect(reactBarrel).not.toContain(`./${module}`);
   }
+});
+
+test("the package manifest binds fail-fast property validation to the reviewed compiler", async () => {
+  const manifest = await Bun.file(new URL("../dist/stylex-manifest.json", import.meta.url)).json();
+  expect(manifest.compiler.transform.propertyValidationMode).toBe("throw");
+  expect(manifest.compilerSha256).toBe("9ac2c8448ec8f198047e824ce27a97657e05025918c01c204aa0399f94641049");
 });
 
 test("excluded source and font boundaries stay absent", async () => {
