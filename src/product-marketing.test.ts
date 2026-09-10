@@ -16,7 +16,7 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css).toContain(".hraness-marketing-trust-grid");
   expect(css).toContain(".hraness-marketing-question");
   expect(css).toContain(".hraness-marketing-cta");
-  expect(css).not.toMatch(/soloterm|atet|wrench|message like me|peopleblade|\bhra\b/iu);
+  expect(css).not.toMatch(/soloterm|atet|slopcamera|ghostget|wrench|message like me|peopleblade|\bhra\b/iu);
   expect(css).not.toMatch(/#[0-9a-f]{3,8}\b/iu);
 });
 
