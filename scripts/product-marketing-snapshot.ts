@@ -12,6 +12,8 @@ export const marketingSnapshotPaths = {
   "marketing-assets/grain.svg": "src/marketing-assets/grain.svg",
   "marketing-assets/cells.svg": "src/marketing-assets/cells.svg",
   "marketing-assets/UPSTREAM.md": "src/marketing-assets/UPSTREAM.md",
+  "check.mjs": "scripts/check-marketing-snapshot.mjs",
+  "check.d.mts": "scripts/check-marketing-snapshot.d.mts",
   LICENSE: "LICENSE",
 } as const;
 type Artifact = keyof typeof marketingSnapshotPaths;
@@ -24,7 +26,7 @@ export interface MarketingSnapshot {
   readonly schemaVersion: 1;
   readonly contractVersion: 1;
   readonly source: { readonly repository: typeof repository; readonly commit: string; readonly export: "@hraness/design-kit/product-marketing-preset.css" };
-  readonly files: Readonly<Record<Artifact, { readonly path: string; readonly sha256: string }>>;
+  readonly files: Readonly<Record<Exclude<Artifact, "check.mjs" | "check.d.mts">, { readonly path: string; readonly sha256: string }> & Partial<Record<"check.mjs" | "check.d.mts", { readonly path: string; readonly sha256: string }>>>;
 }
 
 export function createMarketingSnapshot(commit: string, files: Readonly<Record<Artifact, Uint8Array>>): MarketingSnapshot {
@@ -36,15 +38,16 @@ export function createMarketingSnapshot(commit: string, files: Readonly<Record<A
   };
 }
 
-export function parseMarketingSnapshot(value: unknown): MarketingSnapshot {
+export function parseMarketingSnapshot(value: unknown, allowPreviousInventory = false): MarketingSnapshot {
+  const expected = allowPreviousInventory && isRecord(value) && isRecord(value.files) && !("check.mjs" in value.files) ? artifacts.filter((name) => name !== "check.mjs" && name !== "check.d.mts") : artifacts;
   if (!isRecord(value) || value.schemaVersion !== 1 || value.contractVersion !== 1
     || !isRecord(value.source) || value.source.repository !== repository
     || value.source.export !== "@hraness/design-kit/product-marketing-preset.css"
     || typeof value.source.commit !== "string" || !/^[a-f0-9]{40}$/u.test(value.source.commit)
-    || !isRecord(value.files) || Object.keys(value.files).sort().join("\n") !== [...artifacts].sort().join("\n")) {
+    || !isRecord(value.files) || Object.keys(value.files).sort().join("\n") !== [...expected].sort().join("\n")) {
     throw new Error("Invalid marketing snapshot provenance.");
   }
-  for (const name of artifacts) {
+  for (const name of expected) {
     const file = value.files[name];
     if (!isRecord(file) || file.path !== marketingSnapshotPaths[name] || typeof file.sha256 !== "string" || !/^[a-f0-9]{64}$/u.test(file.sha256)) {
       throw new Error(`Invalid ${name} provenance.`);
@@ -70,13 +73,13 @@ async function inventory(directory: string, prefix = ""): Promise<string[]> {
   return files.sort();
 }
 
-export async function checkMarketingSnapshot(directory: string): Promise<MarketingSnapshot> {
-  const expected = [...artifacts, "provenance.json"].sort();
-  if ((await inventory(directory)).join("\n") !== expected.join("\n")) throw new Error("Snapshot has missing or unowned files.");
+export async function checkMarketingSnapshot(directory: string, allowPreviousInventory = false): Promise<MarketingSnapshot> {
+  const actual = await inventory(directory);
   const value: unknown = JSON.parse(await readFile(join(directory, "provenance.json"), "utf8"));
-  const manifest = parseMarketingSnapshot(value);
-  for (const name of artifacts) {
-    if (digest(await readFile(join(directory, name))) !== manifest.files[name].sha256) throw new Error(`${name} differs from its immutable snapshot.`);
+  const manifest = parseMarketingSnapshot(value, allowPreviousInventory);
+  if (actual.join("\n") !== [...Object.keys(manifest.files), "provenance.json"].sort().join("\n")) throw new Error("Snapshot has missing or unowned files.");
+  for (const [name, receipt] of Object.entries(manifest.files)) {
+    if (digest(await readFile(join(directory, name))) !== receipt.sha256) throw new Error(`${name} differs from its immutable snapshot.`);
   }
   return manifest;
 }
@@ -94,7 +97,7 @@ export async function writeMarketingSnapshot(directory: string, commit: string, 
   try {
     const present = await inventory(directory);
     existed = true;
-    if (present.length > 0) previous = await checkMarketingSnapshot(directory);
+    if (present.length > 0) previous = await checkMarketingSnapshot(directory, true);
   } catch (error) { if (!missing(error)) throw error; }
   await mkdir(dirname(directory), { recursive: true });
   const stage = `${directory}.stage-${randomUUID()}`;
@@ -111,11 +114,11 @@ export async function writeMarketingSnapshot(directory: string, commit: string, 
     if (existed) {
       if (previous === undefined) {
         if ((await inventory(directory)).length !== 0) throw new Error("Unowned files appeared in the snapshot destination.");
-      } else if (JSON.stringify(await checkMarketingSnapshot(directory)) !== JSON.stringify(previous)) throw new Error("Snapshot changed during installation.");
+      } else if (JSON.stringify(await checkMarketingSnapshot(directory, true)) !== JSON.stringify(previous)) throw new Error("Snapshot changed during installation.");
       await rename(directory, backup);
       backedUp = true;
       // Check again after moving the exact directory before replacing it.
-      if (previous === undefined ? (await inventory(backup)).length !== 0 : JSON.stringify(await checkMarketingSnapshot(backup)) !== JSON.stringify(previous)) throw new Error("Snapshot changed during installation.");
+      if (previous === undefined ? (await inventory(backup)).length !== 0 : JSON.stringify(await checkMarketingSnapshot(backup, true)) !== JSON.stringify(previous)) throw new Error("Snapshot changed during installation.");
     }
     await rename(stage, directory);
     await checkMarketingSnapshot(directory);

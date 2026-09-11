@@ -126,6 +126,10 @@
     }
   }
 
+  :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) .hraness-marketing-field > :where(.hraness-marketing-hero, .hraness-marketing-section) {
+    padding-inline: var(--hraness-marketing-gutter);
+  }
+
   /* This is a background on a flow container, never an overlay on content. */
   :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]).hraness-marketing-field,
   :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) .hraness-marketing-field {
@@ -151,7 +155,7 @@
 
   /* Legacy releases require string labels. Empty labels may omit the slot;
      nonempty product facts remain visible and are never hidden by a preset. */
-  :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) :where(.hraness-marketing-hero__name, .hraness-marketing-hero__eyebrow, .hraness-marketing-section__label, .hraness-marketing-install__eyebrow, .hraness-marketing-questions__label, .hraness-marketing-primitives__label, .hraness-marketing-interfaces__label, .hraness-marketing-trust__label, .hraness-marketing-quotes__label, .hraness-marketing-pricing__label):empty {
+  :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) :where(.hraness-marketing-hero__name, .hraness-marketing-hero__eyebrow, .hraness-marketing-section__label, .hraness-marketing-install__eyebrow, .hraness-marketing-questions__label, .hraness-marketing-primitives__label, .hraness-marketing-interfaces__label, .hraness-marketing-trust__label, .hraness-marketing-quotes__label, .hraness-marketing-pricing__label, .hraness-marketing-maker__label):empty {
     display: none;
   }
 

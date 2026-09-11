@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import type * as SnapshotChecker from "../scripts/check-marketing-snapshot.mjs";
 import { marketingTextures } from "../scripts/marketing-textures.js";
 import { checkMarketingSnapshot, createMarketingSnapshot, marketingSnapshotPaths, parseMarketingSnapshot, writeMarketingSnapshot } from "../scripts/product-marketing-snapshot.js";
 
@@ -68,11 +69,25 @@ test("immutable snapshot installation rejects binary edits, unowned files, and s
     await writeFile(join(source, "src/product-marketing-preset.css"), "dirty source");
     await writeMarketingSnapshot(output, commit, source);
     expect((await checkMarketingSnapshot(output)).source.commit).toBe(commit);
+    const standalone = () => execFileSync("node", [join(output, "check.mjs")], { encoding: "utf8", timeout: 10_000, stdio: ["ignore", "pipe", "pipe"] });
+    expect(standalone()).toContain(commit);
+    const exported = await import(join(output, "check.mjs")) as typeof SnapshotChecker;
+    expect((await exported.checkMarketingSnapshot(output)).source.commit).toBe(commit);
     expect(await readFile(join(output, "product-marketing-preset.css"), "utf8")).toBe(css);
     await writeMarketingSnapshot(output, commit, source);
+    // Upgrade the previously admitted contract-1 inventory without erasing
+    // unverified caller bytes. Only the checker artifact was absent there.
+    const old = await checkMarketingSnapshot(output);
+    const oldFiles = { ...old.files }; delete oldFiles["check.mjs"]; delete oldFiles["check.d.mts"];
+    await rm(join(output, "check.mjs")); await rm(join(output, "check.d.mts"));
+    await writeFile(join(output, "provenance.json"), JSON.stringify({ ...old, files: oldFiles }));
+    await expect(checkMarketingSnapshot(output)).rejects.toThrow("provenance");
+    await writeMarketingSnapshot(output, commit, source);
+    expect(standalone()).toContain(commit);
     const font = "fonts/instrument-serif/instrument-serif-latin-400.woff2";
     await writeFile(join(output, font), "damaged font");
     await expect(checkMarketingSnapshot(output)).rejects.toThrow("differs");
+    expect(standalone).toThrow();
     await expect(writeMarketingSnapshot(output, commit, source)).rejects.toThrow("differs");
     await writeFile(join(output, font), sources[font]);
     await writeFile(join(output, "unowned.txt"), "keep");
