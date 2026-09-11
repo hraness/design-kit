@@ -159,8 +159,8 @@
   color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-heading-font);
   font-weight: var(--hraness-marketing-heading-weight);
-  letter-spacing: -0.012em;
-  line-height: 1.15;
+  letter-spacing: var(--hraness-marketing-h2-tracking, -0.012em);
+  line-height: var(--hraness-marketing-h2-leading, 1.15);
   text-wrap: balance;
 }
 
@@ -330,7 +330,7 @@
 .hraness-marketing-header__inner {
   display: flex;
   inline-size: min(100%, var(--hraness-marketing-measure));
-  min-block-size: 3.5rem;
+  min-block-size: var(--hraness-marketing-header-height, 3.5rem);
   align-items: center;
   gap: 0.75rem 1.5rem;
   margin-inline: auto;
@@ -391,7 +391,7 @@
 .hraness-marketing-hero {
   display: grid;
   gap: clamp(2rem, 5vw, 3.5rem);
-  padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
+  padding-block: var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem));
 }
 
 .hraness-marketing-hero__copy {
@@ -435,13 +435,13 @@
   max-inline-size: 18ch;
   font-size: var(--hraness-paper-heading-size, clamp(2.5rem, 5vw, 4.25rem));
   letter-spacing: var(--hraness-marketing-heading-tracking);
-  line-height: 1.05;
+  line-height: var(--hraness-marketing-h1-leading, 1.05);
 }
 
 .hraness-marketing-hero__summary {
   max-inline-size: var(--hraness-marketing-copy-measure);
   font-size: var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem));
-  line-height: 1.45;
+  line-height: var(--hraness-marketing-summary-leading, 1.45);
 }
 
 .hraness-marketing-hero__example {
@@ -804,7 +804,7 @@
 
 .hraness-marketing-install__heading {
   max-inline-size: 14ch;
-  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-size: var(--hraness-marketing-h2-size, clamp(1.5rem, 2.6vw, 2rem));
 }
 
 .hraness-marketing-install__commands,

@@ -194,7 +194,7 @@ export const marketingStyles = stylex.create({
   "header__inner": {
     "display": "flex",
     "inline-size": "min(100%, var(--hraness-marketing-measure))",
-    "min-block-size": "3.5rem",
+    "min-block-size": "var(--hraness-marketing-header-height, 3.5rem)",
     "align-items": "center",
     "gap": "0.75rem 1.5rem",
     "margin-inline": "auto",
@@ -260,7 +260,7 @@ export const marketingStyles = stylex.create({
     "margin-inline": "auto",
     "display": "grid",
     "gap": "clamp(2rem, 5vw, 3.5rem)",
-    "padding-block": "clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem)"
+    "padding-block": "var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem))"
   },
   "heroAccent": {
     "color": {
@@ -273,7 +273,7 @@ export const marketingStyles = stylex.create({
     "margin-inline": "auto",
     "display": "grid",
     "gap": "clamp(2rem, 5vw, 3.5rem)",
-    "padding-block": "clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem)",
+    "padding-block": "var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem))",
     "background-color": {
       "default": "var(--hraness-marketing-accent)",
       "@media (forced-colors: active)": "Canvas"
@@ -535,7 +535,7 @@ export const marketingStyles = stylex.create({
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
     "letter-spacing": "var(--hraness-marketing-heading-tracking)",
-    "line-height": "1.05",
+    "line-height": "var(--hraness-marketing-h1-leading, 1.05)",
     "text-wrap": "balance",
     "max-inline-size": {
       "default": "18ch",
@@ -548,7 +548,7 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem))",
-    "line-height": "1.45",
+    "line-height": "var(--hraness-marketing-summary-leading, 1.45)",
     "max-inline-size": "var(--hraness-marketing-copy-measure)"
   },
   "hero__example": {
@@ -683,8 +683,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "max-inline-size": "24ch",
     "font-size": "clamp(1.25rem, 2vw, 1.5rem)"
@@ -1156,14 +1156,14 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "max-inline-size": {
       "default": "14ch",
       "@media (max-width: 48rem)": "none"
     },
-    "font-size": "clamp(1.5rem, 2.6vw, 2rem)"
+    "font-size": "var(--hraness-marketing-h2-size, clamp(1.5rem, 2.6vw, 2rem))"
   },
   "install__commands": {
     "min-inline-size": "0",
@@ -1234,8 +1234,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1283,8 +1283,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1327,8 +1327,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1371,8 +1371,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1415,8 +1415,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1459,8 +1459,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1503,8 +1503,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
@@ -1552,8 +1552,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.012em",
-    "line-height": "1.15",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
