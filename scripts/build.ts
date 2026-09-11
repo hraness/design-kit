@@ -40,6 +40,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
+  "src/product-marketing-preset.css",
   "src/reset.css",
   "src/styles.css",
   "src/syntax-highlighting.css",

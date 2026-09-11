@@ -38,6 +38,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
+  "src/product-marketing-preset.css",
   "src/reset.css",
   "src/styles.css",
   "src/syntax-highlighting.css",
@@ -1620,8 +1621,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.6" },
-  "StyleX manifest must describe design-kit v0.6.6",
+  { name: "@hraness/design-kit", version: "0.6.7" },
+  "StyleX manifest must describe design-kit v0.6.7",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");

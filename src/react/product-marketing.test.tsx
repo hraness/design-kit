@@ -337,3 +337,11 @@ test("editorial and minimal presets remain explicit, server-safe composition bou
   expect(renderToStaticMarkup(<MarketingPage>Default content</MarketingPage>)).not.toContain("data-hraness-marketing-preset");
   expect(() => renderToStaticMarkup(<MarketingPage preset={"unknown" as "editorial"}>Invalid</MarketingPage>)).toThrow();
 });
+
+test("optional generic labels omit their slots while factual labels remain visible", () => {
+  const html = renderToStaticMarkup(<><MarketingQuestionList heading="Questions" headingId="questions" questions={[{ question: "How?", answer: "A concrete answer." }]} /><MarketingInstallPanel heading="Install" headingId="install"><code>relay run</code></MarketingInstallPanel><MarketingMaker heading="Maker" headingId="maker"><p>Product-owned biography.</p></MarketingMaker></>);
+  expect(html).not.toContain("hraness-marketing-questions__label");
+  expect(html).not.toContain("hraness-marketing-install__eyebrow");
+  expect(html).not.toContain("hraness-marketing-maker__label");
+  expect(html).toContain("A concrete answer.");
+});

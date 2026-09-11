@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -76,7 +76,10 @@
     "./vendor/jelly-ui/LICENSE": "./vendor/jelly-ui/LICENSE",
     "./vendor/jelly-ui/UPSTREAM.md": "./vendor/jelly-ui/UPSTREAM.md",
     "./palettes.css": "./src/palettes.css",
-    "./paper-theme.css": "./src/paper-theme.css"
+    "./paper-theme.css": "./src/paper-theme.css",
+    "./product-marketing-preset.css": "./src/product-marketing-preset.css",
+    "./fonts/instrument-serif/*": "./src/fonts/instrument-serif/*",
+    "./marketing-assets/*": "./src/marketing-assets/*"
   },
   "main": "./dist/index.js",
   "types": "./src/index.ts",
@@ -179,7 +182,15 @@
     "src/react/design-palette.stylex.ts",
     "src/paper-theme.css",
     "PAPER_THEME.md",
-    "scripts/paper-theme-snapshot.ts"
+    "scripts/paper-theme-snapshot.ts",
+    "src/product-marketing-preset.css",
+    "src/fonts/instrument-serif",
+    "src/marketing-assets",
+    "MARKETING_PRESET.md",
+    "scripts/product-marketing-snapshot.ts",
+    "scripts/marketing-textures.ts",
+    "scripts/check-marketing-snapshot.mjs",
+    "scripts/check-marketing-snapshot.d.mts"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -190,7 +201,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
-    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts",
+    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
     "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
     "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",
@@ -204,7 +215,8 @@
     "test:palettes": "bun run build && bun run ./scripts/palette-browser.ts",
     "generate:paper-theme": "bun run ./scripts/generate-paper-theme.ts --write",
     "check:paper-theme": "bun run ./scripts/generate-paper-theme.ts",
-    "test:paper-theme": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src/paper-theme.test.ts ./src/palettes.test.ts ./src/browser/design-palette.test.ts ./src/react/design-palette.test.tsx && bun run ./scripts/paper-theme-browser.ts"
+    "test:paper-theme": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src/paper-theme.test.ts ./src/palettes.test.ts ./src/browser/design-palette.test.ts ./src/react/design-palette.test.tsx && bun run ./scripts/paper-theme-browser.ts",
+    "check:marketing-textures": "bun run ./scripts/marketing-textures.ts"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.2.2",

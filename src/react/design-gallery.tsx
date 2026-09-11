@@ -34,6 +34,7 @@ import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js
 import {
   MarketingCallToAction,
   MarketingFlow,
+  MarketingField,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
   MarketingMaker,
@@ -407,6 +408,18 @@ export function DesignSystemGallery({
             headingId="design-gallery-cta-title"
             headingLevel={3}
           />
+        </MarketingPage>
+        <MarketingPage preset="editorial" className="design-gallery__marketing-preset">
+          <MarketingField>
+            <ProductHero name="Relay" heading="One clear next step." headingId="gallery-editorial-title" headingLevel={3}
+              summary="Give people a short promise, then show the product at work."
+              actions={[{ href: "#gallery-minimal-title", label: "See the compact preset" }]} />
+          </MarketingField>
+        </MarketingPage>
+        <MarketingPage preset="minimal" className="design-gallery__marketing-preset">
+          <MarketingSiteHeader brand="Relay" brandHref="#marketing" links={[]} sticky={false} />
+          <ProductHero name="Relay" heading="A quieter public page." headingId="gallery-minimal-title" headingLevel={3}
+            summary="The same shared system, with compact sans headings and a plain surface." />
         </MarketingPage>
       </section>
 

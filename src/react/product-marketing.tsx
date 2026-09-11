@@ -391,7 +391,7 @@ export function MarketingInstallPanel({
 }: Readonly<{
   children: ReactNode;
   className?: string;
-  eyebrow: string;
+  eyebrow?: string;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -407,7 +407,7 @@ export function MarketingInstallPanel({
       id={id}
     >
       <div className={classNames("hraness-marketing-install__heading-group")}>
-        <p className={classNames("hraness-marketing-install__eyebrow")}>{eyebrow}</p>
+        {eyebrow === undefined ? null : <p className={classNames("hraness-marketing-install__eyebrow")}>{eyebrow}</p>}
         <Heading className={classNames("hraness-marketing-install__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
@@ -772,7 +772,7 @@ export function MarketingQuoteGrid({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   quotes: readonly MarketingQuote[];
   summary?: string;
 }>) {
@@ -835,7 +835,7 @@ export function MarketingPricing({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   plans: readonly MarketingPlan[];
   summary?: string;
 }>) {
@@ -904,7 +904,7 @@ export function MarketingQuestionList({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   questions: readonly MarketingQuestion[];
   summary?: string;
 }>) {
@@ -950,7 +950,7 @@ export function MarketingMaker({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   /** Added only to listed links, never to caller-owned biography content. */
   linkClassName?: string;
   links?: readonly MarketingLink[];
@@ -965,7 +965,7 @@ export function MarketingMaker({
     >
       <header className={classNames("hraness-marketing-maker__header")}>
         {portrait === undefined ? null : <div className={classNames("hraness-marketing-maker__portrait")}>{portrait}</div>}
-        <p className={classNames("hraness-marketing-maker__label")}>{label}</p>
+        {label === undefined ? null : <p className={classNames("hraness-marketing-maker__label")}>{label}</p>}
         <Heading className={classNames("hraness-marketing-maker__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
