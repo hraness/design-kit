@@ -345,3 +345,8 @@ test("optional generic labels omit their slots while factual labels remain visib
   expect(html).not.toContain("hraness-marketing-maker__label");
   expect(html).toContain("A concrete answer.");
 });
+
+test("empty legacy-compatible React eyebrows omit their atomic display slot", () => {
+  const html = renderToStaticMarkup(<ProductHero eyebrow="" name="Relay" heading="Clear" headingId="clear-empty" summary="Factual summary." />);
+  expect(html).not.toContain("hraness-marketing-hero__eyebrow");
+});

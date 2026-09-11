@@ -79,6 +79,7 @@ export async function checkMarketingSnapshot(directory: string, allowPreviousInv
   const manifest = parseMarketingSnapshot(value, allowPreviousInventory);
   if (actual.join("\n") !== [...Object.keys(manifest.files), "provenance.json"].sort().join("\n")) throw new Error("Snapshot has missing or unowned files.");
   for (const [name, receipt] of Object.entries(manifest.files)) {
+    if (receipt === undefined) throw new Error(`Missing ${name} provenance.`);
     if (digest(await readFile(join(directory, name))) !== receipt.sha256) throw new Error(`${name} differs from its immutable snapshot.`);
   }
   return manifest;
@@ -86,6 +87,10 @@ export async function checkMarketingSnapshot(directory: string, allowPreviousInv
 
 export async function writeMarketingSnapshot(directory: string, commit: string, sourceRoot = resolve(import.meta.dir, "..")): Promise<void> {
   if (!/^[a-f0-9]{40}$/u.test(commit)) throw new Error("Snapshot source must be a full lowercase Git commit.");
+  const objectType = execFileSync("git", ["cat-file", "-t", commit], {
+    cwd: sourceRoot, encoding: "utf8", maxBuffer: 1024, timeout: 30_000,
+  }).trim();
+  if (objectType !== "commit") throw new Error("Snapshot source must name a commit object, not a tree or tag object.");
   directory = resolve(directory);
   // Read immutable bytes before touching the destination. Never copy a dirty tree.
   const files = Object.fromEntries(artifacts.map((name) => [name, execFileSync("git", ["show", `${commit}:${marketingSnapshotPaths[name]}`], {

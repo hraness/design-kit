@@ -28,6 +28,7 @@ import {
   DockedFooter,
   MarketingCallToAction,
   MarketingFacts,
+  MarketingField,
   MarketingFlow,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
@@ -55,7 +56,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-5v55gs1x.js";
+} from "../chunk-ergwhzcj.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -4032,6 +4033,42 @@ function DesignSystemGallery({
                 headingLevel: 3
               })
             ]
+          }),
+          /* @__PURE__ */ jsx13(MarketingPage, {
+            preset: "editorial",
+            className: "design-gallery__marketing-preset",
+            children: /* @__PURE__ */ jsx13(MarketingField, {
+              children: /* @__PURE__ */ jsx13(ProductHero, {
+                name: "Relay",
+                heading: "One clear next step.",
+                headingId: "gallery-editorial-title",
+                headingLevel: 3,
+                summary: "Give people a short promise, then show the product at work.",
+                actions: [{
+                  href: "#gallery-minimal-title",
+                  label: "See the compact preset"
+                }]
+              })
+            })
+          }),
+          /* @__PURE__ */ jsxs11(MarketingPage, {
+            preset: "minimal",
+            className: "design-gallery__marketing-preset",
+            children: [
+              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+                brand: "Relay",
+                brandHref: "#marketing",
+                links: [],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx13(ProductHero, {
+                name: "Relay",
+                heading: "A quieter public page.",
+                headingId: "gallery-minimal-title",
+                headingLevel: 3,
+                summary: "The same shared system, with compact sans headings and a plain surface."
+              })
+            ]
           })
         ]
       }),
@@ -5363,6 +5400,7 @@ export {
   MarketingInterfaceGrid,
   MarketingInstallPanel,
   MarketingFlow,
+  MarketingField,
   MarketingFacts,
   MarketingCallToAction,
   JellySurface,

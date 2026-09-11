@@ -2404,8 +2404,8 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "var(--hraness-marketing-heading-tracking)",
-    "line-height": "1.08",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, var(--hraness-marketing-heading-tracking))",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.08)",
     "text-wrap": "balance",
     "max-inline-size": "20ch",
     "font-size": "var(--hraness-paper-section-heading-size, clamp(2rem, 4vw, 3.25rem))"
@@ -2652,7 +2652,7 @@ export const marketingStyles = stylex.create({
   },
   "headerAction": {
     "display": "inline-flex",
-    "min-block-size": "2.25rem",
+    "min-block-size": "var(--hraness-marketing-header-action-height, 2.25rem)",
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",
@@ -2751,7 +2751,7 @@ export const marketingStyles = stylex.create({
   },
   "headerActionPrimary": {
     "display": "inline-flex",
-    "min-block-size": "2.25rem",
+    "min-block-size": "var(--hraness-marketing-header-action-height, 2.25rem)",
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",

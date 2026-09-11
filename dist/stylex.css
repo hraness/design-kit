@@ -536,16 +536,16 @@
     padding-block: clamp(1.5rem, 4vw, 3rem);
   }
 
-  .x1lkh1nq {
-    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
-  }
-
   .xh0s0sg {
     padding-block: max(var(--layout-chrome-inset),env(safe-area-inset-top)) var(--layout-chrome-inset);
   }
 
   .x2d8rr9 {
     padding-block: max(var(--space-2, .5rem),env(safe-area-inset-top));
+  }
+
+  .xgu4rd8 {
+    padding-block: var(--hraness-marketing-hero-space, clamp(3.5rem,9vw,7rem) clamp(2.5rem,6vw,4.5rem));
   }
 
   .x1e7ni4k {
@@ -1762,16 +1762,16 @@
     font-size: clamp(1.25rem, 2vw, 1.5rem);
   }
 
-  .x8emjvr {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-  }
-
   .x1cic291 {
     font-size: clamp(1.75rem, 3vw, 2.25rem);
   }
 
   .x1qlqyl8 {
     font-size: inherit;
+  }
+
+  .xafhd6w {
+    font-size: var(--hraness-marketing-h2-size, clamp(1.5rem,2.6vw,2rem));
   }
 
   .xbs339 {
@@ -2038,10 +2038,6 @@
     justify-self: start;
   }
 
-  .x1hi0czg {
-    letter-spacing: -.012em;
-  }
-
   .xjat59b {
     letter-spacing: -.01em;
   }
@@ -2058,6 +2054,14 @@
     letter-spacing: 0;
   }
 
+  .x154du55 {
+    letter-spacing: var(--hraness-marketing-h2-tracking, -.012em);
+  }
+
+  .xbujoek {
+    letter-spacing: var(--hraness-marketing-h2-tracking, var(--hraness-marketing-heading-tracking));
+  }
+
   .x1y508rd {
     letter-spacing: var(--hraness-marketing-heading-tracking);
   }
@@ -2066,20 +2070,8 @@
     line-height: 0;
   }
 
-  .x1f41ap9 {
-    line-height: 1.05;
-  }
-
-  .x1vsts26 {
-    line-height: 1.08;
-  }
-
   .x1159mfc {
     line-height: 1.1;
-  }
-
-  .x1uo3zyz {
-    line-height: 1.15;
   }
 
   .x1u7k74 {
@@ -2120,6 +2112,22 @@
 
   .x15bjb6t {
     line-height: inherit;
+  }
+
+  .xkj4vsn {
+    line-height: var(--hraness-marketing-h1-leading, 1.05);
+  }
+
+  .x1kptsu5 {
+    line-height: var(--hraness-marketing-h2-leading, 1.08);
+  }
+
+  .xjnvrkt {
+    line-height: var(--hraness-marketing-h2-leading, 1.15);
+  }
+
+  .xf4jco4 {
+    line-height: var(--hraness-marketing-summary-leading, 1.45);
   }
 
   .x3ct3a4 {
@@ -2215,10 +2223,6 @@
     min-block-size: 100%;
   }
 
-  .x122pzkh {
-    min-block-size: 2.25rem;
-  }
-
   .x3uqqqp {
     min-block-size: 2.5rem;
   }
@@ -2235,16 +2239,20 @@
     min-block-size: 3.25rem;
   }
 
-  .x6abo41 {
-    min-block-size: 3.5rem;
-  }
-
   .x1b207tk {
     min-block-size: var(--bottom-bar-height);
   }
 
   .x1kopacs {
     min-block-size: var(--hraness-marketing-action-height);
+  }
+
+  .x13hmluy {
+    min-block-size: var(--hraness-marketing-header-action-height, 2.25rem);
+  }
+
+  .x4naf9l {
+    min-block-size: var(--hraness-marketing-header-height, 3.5rem);
   }
 
   .x1qwoi4t {

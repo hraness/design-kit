@@ -35,8 +35,9 @@ test("both native header blur paths survive the installed optimizer", () => {
   expect(optimized).toContain(";backdrop-filter:var(--hraness-marketing-header-backdrop)");
   expect(optimized).toContain("prefers-reduced-transparency:reduce");
   expect(optimized).toContain("forced-colors:active");
+  expect(css).toContain('.hraness-marketing-header-surface,\n');
   expect(css).toContain(']):where(.hraness-marketing-header, .hraness-marketing-header-surface)');
-  expect(css).toContain('.hraness-marketing-field:where(.hraness-marketing-hero, .hraness-marketing-section)');
+  expect(css).toMatch(/\.hraness-marketing-field:where\([^)]*\.hraness-marketing-hero[^)]*\.hraness-marketing-trust[^)]*\.hraness-marketing-maker[^)]*\):not\(\[data-tone="accent"\]\)/u);
 });
 
 test("the legacy preset applies actual heading declarations without changing application headings", () => {
@@ -66,6 +67,11 @@ test("immutable snapshot installation rejects binary edits, unowned files, and s
     const git = (...args: string[]) => execFileSync("git", args, { cwd: source, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
     git("init"); git("add", "."); git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "commit", "--no-gpg-sign", "-m", "Snapshot fixture");
     const commit = git("rev-parse", "HEAD").trim();
+    const tree = git("rev-parse", "HEAD^{tree}").trim();
+    git("-c", "user.name=Fixture", "-c", "user.email=fixture@example.test", "tag", "--no-sign", "-a", "snapshot-fixture", "-m", "Fixture annotation");
+    const tag = git("rev-parse", "refs/tags/snapshot-fixture").trim();
+    for (const object of [tree, tag]) await expect(writeMarketingSnapshot(output, object, source)).rejects.toThrow("must name a commit object");
+    expect(await Bun.file(join(output, "provenance.json")).exists()).toBe(false);
     await writeFile(join(source, "src/product-marketing-preset.css"), "dirty source");
     await writeMarketingSnapshot(output, commit, source);
     expect((await checkMarketingSnapshot(output)).source.commit).toBe(commit);

@@ -684,7 +684,7 @@ var marketingStyles = {
   header__inner: {
     k1xSpc: "x78zum5",
     kULEZF: "x19vpta5",
-    kVQ08L: "x6abo41",
+    kVQ08L: "x4naf9l",
     kkeX5w: "x6s0dn4",
     kOIVth: "xilar1o",
     kYk0Dm: "xvueqy4",
@@ -742,7 +742,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     k1xSpc: "xrvj5dj",
     kOIVth: "x1kfhdh0",
-    kF3gjK: "x1lkh1nq",
+    kF3gjK: "xgu4rd8",
     $$css: true
   },
   heroAccent: {
@@ -753,7 +753,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     k1xSpc: "xrvj5dj",
     kOIVth: "x1kfhdh0",
-    kF3gjK: "x1lkh1nq",
+    kF3gjK: "xgu4rd8",
     kL20gf: "xvor1dj x9yvj25",
     kb5WsR: "x14zxsdj xhobzj1",
     k2EZ2Y: "x1y4qj14 x2c5uud",
@@ -895,7 +895,7 @@ var marketingStyles = {
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
     kUEKN5: "x1y508rd",
-    kN5DiO: "x1f41ap9",
+    kN5DiO: "xkj4vsn",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x17152no x11ndyap",
     kLh5Sq: "xbs339",
@@ -906,7 +906,7 @@ var marketingStyles = {
     kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
     kLh5Sq: "x1h87l4j",
-    kN5DiO: "xfrs9s4",
+    kN5DiO: "xf4jco4",
     k2kXS: "x1l2wkh2",
     $$css: true
   },
@@ -993,8 +993,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x1nrp9oy",
     kLh5Sq: "x9s08v2",
@@ -1362,11 +1362,11 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x14vmqpl x1h8pmfy",
-    kLh5Sq: "x8emjvr",
+    kLh5Sq: "xafhd6w",
     $$css: true
   },
   install__commands: {
@@ -1442,8 +1442,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1497,8 +1497,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1546,8 +1546,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1595,8 +1595,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1644,8 +1644,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1693,8 +1693,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1742,8 +1742,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -1793,8 +1793,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1hi0czg",
-    kN5DiO: "x1uo3zyz",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     kLh5Sq: "xixn193",
     $$css: true
@@ -2297,8 +2297,8 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "x1y508rd",
-    kN5DiO: "x1vsts26",
+    kUEKN5: "xbujoek",
+    kN5DiO: "x1kptsu5",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x1mq39nd",
     kLh5Sq: "x1qczpk7",
@@ -2400,7 +2400,7 @@ var marketingStyles = {
   },
   headerAction: {
     k1xSpc: "x3nfvp2",
-    kVQ08L: "x122pzkh",
+    kVQ08L: "x13hmluy",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
     kOIVth: "x1rcpt3j",
@@ -2435,7 +2435,7 @@ var marketingStyles = {
   },
   headerActionPrimary: {
     k1xSpc: "x3nfvp2",
-    kVQ08L: "x122pzkh",
+    kVQ08L: "x13hmluy",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
     kOIVth: "x1rcpt3j",
@@ -3213,12 +3213,26 @@ function MarketingActions({
 function MarketingPage({
   children,
   className,
-  id
+  id,
+  preset
 }) {
+  if (preset !== undefined && preset !== "editorial" && preset !== "minimal")
+    throw new RangeError("Unknown marketing preset.");
   return /* @__PURE__ */ jsx2("div", {
     className: marketingClassName("hraness-marketing-page", className),
     "data-hraness-marketing": "page",
+    "data-hraness-marketing-preset": preset,
     id,
+    children
+  });
+}
+function MarketingField({
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsx2("div", {
+    className: ["hraness-marketing-field", className].filter(Boolean).join(" "),
+    "data-hraness-marketing": "field",
     children
   });
 }
@@ -3379,7 +3393,7 @@ function ProductHero({
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default"),
         children: [
-          eyebrow === undefined ? null : /* @__PURE__ */ jsx2("p", {
+          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx2("p", {
             className: marketingClassName("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default"),
             children: eyebrow
           }),
@@ -3494,7 +3508,7 @@ function MarketingInstallPanel({
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-install__heading-group"),
         children: [
-          /* @__PURE__ */ jsx2("p", {
+          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx2("p", {
             className: marketingClassName("hraness-marketing-install__eyebrow"),
             children: eyebrow
           }),
@@ -3602,7 +3616,7 @@ function MarketingSection({
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse"),
         children: [
-          /* @__PURE__ */ jsx2(MarketingSectionLabel, {
+          label === undefined || label === "" ? null : /* @__PURE__ */ jsx2(MarketingSectionLabel, {
             children: label
           }),
           /* @__PURE__ */ jsx2(Heading, {
@@ -3635,7 +3649,7 @@ function MarketingCollectionHeader({
   return /* @__PURE__ */ jsxs2("header", {
     className: marketingClassName(`hraness-marketing-${prefix}__header`),
     children: [
-      /* @__PURE__ */ jsx2("p", {
+      label === undefined || label === "" ? null : /* @__PURE__ */ jsx2("p", {
         className: marketingClassName(`hraness-marketing-${prefix}__label`),
         children: label
       }),
@@ -4057,7 +4071,7 @@ function MarketingMaker({
             className: marketingClassName("hraness-marketing-maker__portrait"),
             children: portrait
           }),
-          /* @__PURE__ */ jsx2("p", {
+          label === undefined || label === "" ? null : /* @__PURE__ */ jsx2("p", {
             className: marketingClassName("hraness-marketing-maker__label"),
             children: label
           }),
@@ -4107,7 +4121,7 @@ function MarketingCallToAction({
     "data-tone": tone,
     id,
     children: [
-      eyebrow === undefined ? null : /* @__PURE__ */ jsx2("p", {
+      eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx2("p", {
         className: marketingClassName("hraness-marketing-cta__eyebrow"),
         children: eyebrow
       }),
@@ -4552,4 +4566,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingSiteHeader, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };
+export { effectsStyles, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, SyntaxCode, ParticleHalo };

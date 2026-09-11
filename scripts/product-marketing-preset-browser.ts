@@ -32,7 +32,7 @@ assert(optimized.includes(";backdrop-filter:"), "Optimized preset lost native bl
 const compiled = foundation + "\n" + serializeStylexRuleUnionV1([...ui.rules, ...kit.rules], [ui.standaloneSerializer, kit.standaloneSerializer]);
 const styles = { raw: raw + "\n" + optimized, standalone: standalone + "\n" + optimized, compiler: compiled + "\n" + optimized };
 const failures: string[] = [];
-const fixtureCss = 'body{margin:0}.fixture-quiet-header{position:sticky;top:0;padding:12px 20px;z-index:50}.fixture-product-heading{font:600 19px/1.3 system-ui}.hraness-marketing-page{--hraness-site-accent:rgb(22,90,61)}';
+const fixtureCss = 'body{margin:0}.fixture-quiet-header,.fixture-standalone-header{position:sticky;top:0;padding:12px 20px;z-index:50}.fixture-product-heading{font:600 19px/1.3 system-ui}.hraness-marketing-page{--hraness-site-accent:rgb(22,90,61)}';
 const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
   const url = new URL(request.url);
   if (url.pathname === "/styles.css") {
@@ -74,31 +74,44 @@ try {
           const metrics = (selector: string) => { const node = required(selector), style = getComputedStyle(node); return { font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, leading: style.lineHeight, tracking: style.letterSpacing, padding: style.paddingInlineStart, width: node.getBoundingClientRect().width }; };
           const field = required('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');
           return {
+            cta: metrics("#editorial-cta-title"), minimalCta: metrics("#minimal-cta-title"),
             hero: metrics("#editorial-title"), section: metrics("#section-title"), install: metrics("#install-title"), minimal: metrics("#minimal-title"), product: metrics(".fixture-product-heading"),
+            fieldTrustMuted: getComputedStyle(required(".hraness-marketing-trust-item__detail")).color,
+            fieldHeroMuted: getComputedStyle(required(".hraness-marketing-hero__summary")).color,
             heroContainer: metrics('.hraness-marketing-field > .hraness-marketing-hero'),
             background: getComputedStyle(field).backgroundImage,
             minimalBackground: getComputedStyle(required('[data-hraness-marketing-preset="minimal"] > .hraness-marketing-field')).backgroundImage,
             blur: getComputedStyle(required(".fixture-quiet-header")).backdropFilter,
+            standaloneBlur: getComputedStyle(required(".fixture-standalone-header")).backdropFilter,
+            standaloneBackground: getComputedStyle(required(".fixture-standalone-header")).backgroundColor,
             headerPosition: getComputedStyle(required(".fixture-quiet-header")).position,
             actionHeight: required(".hraness-marketing-action").getBoundingClientRect().height,
             actionBackground: getComputedStyle(required(".hraness-marketing-action")).backgroundColor,
-            label: getComputedStyle(required(".hraness-marketing-hero__eyebrow")).display,
+            primaryActions: [...document.querySelectorAll<HTMLElement>('.hraness-marketing-action[data-emphasis="primary"]')].map((node) => {
+              const style = getComputedStyle(node);
+              return { color: style.color, fill: style.webkitTextFillColor, background: style.backgroundColor, opacity: style.opacity };
+            }),
+            label: document.querySelector(".hraness-marketing-hero__eyebrow") === null ? "omitted" : getComputedStyle(required(".hraness-marketing-hero__eyebrow")).display,
             fontLoaded: document.fonts.check('400 40px "Instrument Serif"'),
             overflow: document.documentElement.scrollWidth > window.innerWidth,
             overlay: getComputedStyle(field, "::before").content,
           };
         });
         assert(proof.fontLoaded && proof.hero.font.includes("Instrument Serif"));
+        assert.equal(proof.fieldTrustMuted, proof.fieldHeroMuted);
         assert.equal(proof.hero.weight, "400");
         assert(!proof.minimal.font.includes("Instrument Serif"));
         assert.equal(proof.product.size, "19px");
         assert.equal(proof.minimalBackground, "none");
         assert(proof.background.includes("grain.svg") && proof.background.includes("cells.svg") && proof.background.includes("gradient"));
         assert.equal(proof.blur, "blur(14px) saturate(1.4)");
+        assert.equal(proof.standaloneBlur, "blur(14px) saturate(1.4)");
+        assert.notEqual(proof.standaloneBackground, "rgba(0, 0, 0, 0)");
         assert.equal(proof.headerPosition, "sticky");
         assert.equal(proof.actionHeight, 42);
         assert.equal(proof.actionBackground, "rgb(22, 90, 61)");
-        assert.equal(proof.label, "none");
+        assert.deepEqual(proof.primaryActions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode} primary action paint at ${width}/${theme}`);
+        assert.equal(proof.label, "omitted");
         assert.equal(proof.overflow, false);
         assert.equal(proof.overlay, "none");
         const { background: _background, ...comparable } = proof; // Different origin ports are not geometry or typography.
@@ -110,9 +123,21 @@ try {
         await page.emulateMedia({ forcedColors: "active" });
         assert.equal(await page.locator('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field').evaluate((node) => getComputedStyle(node).backgroundImage), "none");
         assert.equal(await page.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
+        assert.equal(await page.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
       } finally { await page.close(); }
     }
   }
+  const coarse = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  try {
+    await coarse.goto(`http://${server.hostname}:${server.port}/?mode=compiler`, { waitUntil: "networkidle" });
+    assert.equal(await coarse.locator(".hraness-marketing-action").first().evaluate((node) => node.getBoundingClientRect().height), 48);
+    const session = await coarse.context().newCDPSession(coarse);
+    try {
+      await session.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
+      assert.equal(await coarse.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
+      assert.equal(await coarse.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
+    } finally { await session.detach(); }
+  } finally { await coarse.close(); }
   assert.deepEqual(failures, []);
   await writeFile(join(output, "receipt.json"), JSON.stringify({ sourceSha256: createHash("sha256").update(preset).digest("hex"), cases: receipts }, null, 2));
   console.log(`Marketing preset parity verified: ${receipts.length} cases; ${output}`);

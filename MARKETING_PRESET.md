@@ -1,6 +1,6 @@
 # Marketing preset contract 1
 
-The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the approved editorial marketing treatment to the existing product-marketing grammar. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet; CSS URL assets are part of the final consumer's captured asset closure.
+The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the approved editorial marketing treatment to the existing product-marketing grammar. It shares Paper's `light-dark()` browser baseline: Chrome 123+, Firefox 120+, and Safari 17.5+. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet; CSS URL assets are part of the final consumer's captured asset closure.
 
 ```tsx
 import "@hraness/design-kit/product-marketing-preset.css";
@@ -21,7 +21,7 @@ Raw HTML and older components use `data-hraness-marketing-preset="editorial"` on
 
 `minimal` uses the existing `--font-text` sans face, a compact heading scale and 45px header token, with no textured field. Both presets inherit the existing body face (normally Nebula Sans); the snapshot adds only Instrument Serif 400, not a second body-font system. Nested scopes reset their own display and field tokens. Prefer independent header and main scopes when their presets differ.
 
-For a custom header, put both `data-hraness-marketing-preset="minimal"` and `class="hraness-marketing-header-surface"` on the header itself. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Coarse pointers retain 48px action targets.
+For a custom or older component header, add `class="hraness-marketing-header-surface"` to the header itself. This class explicitly opts in to paint without requiring a preset ancestor. Add `data-hraness-marketing-preset="minimal"` on the same element only when you also need its compact role tokens. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Coarse pointers retain 48px action targets.
 
 ## Tokens for custom compositions
 
