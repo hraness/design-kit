@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { access, mkdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright-core";
+import { transform } from "lightningcss";
 import { paletteColors } from "../src/palettes.js";
 
 const root = resolve(import.meta.dir, "..");
@@ -16,13 +17,33 @@ for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google 
 assert(executablePath, "No Chromium executable is available.");
 const html = await readFile(resolve(root, "gallery/paper-theme.html"), "utf8");
 const paper = await readFile(resolve(root, "src/paper-theme.css"), "utf8");
+const optimizedPaper = transform({ filename: "paper-theme.css", code: Buffer.from(paper), minify: true }).code.toString();
+// The v0.4.0 consumer declaration order loses the standard alias when optimized.
+// Keep this negative baseline independent of the repaired source contract.
+const legacyHeader = transform({ filename: "legacy-header.css", code: Buffer.from(`
+@layer components.hraness-design-kit.legacy {
+  .hraness-marketing-header {
+    --hraness-marketing-background: var(--background);
+    background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    position: sticky; top: 0; z-index: 40; display: flex;
+    min-height: 56px; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: .75rem 1rem; border-bottom: 1px solid var(--line);
+  }
+}`), minify: true }).code.toString();
+const fallbackPaper = transform({ filename: "paper-no-backdrop.css", code: Buffer.from(paper), minify: true, visitor: {
+  Rule(rule) { if (rule.type === "supports" && JSON.stringify(rule).includes("backdrop-filter")) return []; return undefined; },
+} }).code.toString();
 const fixture = await readFile(resolve(root, "gallery/paper-theme.css"), "utf8");
 const fontCss = await readFile(resolve(root, "src/fonts.css"), "utf8");
 const server = Bun.serve({ port: 0, hostname: "127.0.0.1", fetch(request) {
   const path = new URL(request.url).pathname;
   const headers = { "content-security-policy": "default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'" };
   if (path === "/") return new Response(html, { headers: { ...headers, "content-type": "text/html" } });
-  if (path === "/paper-theme.css") return new Response(paper, { headers: { "content-type": "text/css" } });
+  if (path === "/paper-theme.css") return new Response(optimizedPaper, { headers: { "content-type": "text/css" } });
+  if (path === "/legacy-header.css") return new Response(legacyHeader, { headers: { "content-type": "text/css" } });
+  if (path === "/paper-no-backdrop.css") return new Response(fallbackPaper, { headers: { "content-type": "text/css" } });
   if (path === "/fixture.css") return new Response(fixture, { headers: { "content-type": "text/css" } });
   if (path === "/fonts.css") return new Response(fontCss, { headers: { "content-type": "text/css" } });
   if (/^\/fonts\/(?:nebula-sans|geist-mono)\/[\w[\]-]+\.woff2$/u.test(path)) return new Response(Bun.file(resolve(root, `src${path}`)));
@@ -54,6 +75,40 @@ try {
     assert.equal((await inspect("#chosen")).background, "rgb(40, 40, 40)");
     assert.equal((await inspect("#chosen-link")).foreground, "rgb(184, 187, 38)");
     assert.equal((await inspect("#marketing-rhythm")).measure, "80rem");
+    const headerPaint = () => page.locator("#light-header-scroll header, #dark-header-scroll header").evaluateAll((headers) => headers.map((header) => {
+      const css = getComputedStyle(header);
+      return { background: css.backgroundColor, backdrop: css.backdropFilter, position: css.position };
+    }));
+    // Demonstrate the user-visible optimizer failure before applying the snapshot.
+    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = true; });
+    assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
+    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = false; });
+    assert((await headerPaint()).every(({ backdrop, position }) => backdrop === "blur(14px) saturate(1.4)" && position === "sticky"));
+    await page.locator(".header-scroll").evaluateAll((regions) => { for (const region of regions) region.scrollTop = 110; });
+    assert(await page.locator("#light-header-scroll").evaluate((region) => {
+      const header = region.querySelector("header");
+      if (header === null) throw new Error("The scrolling fixture lost its header.");
+      return Math.abs(header.getBoundingClientRect().top - region.getBoundingClientRect().top - 1) < 1;
+    }));
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
+    assert(await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches));
+    assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
+      { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
+      { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
+    ]);
+    await cdp.send("Emulation.setEmulatedMedia", { features: [] });
+    await cdp.detach();
+    // Removing only the capability branches models an engine that rejects both
+    // aliases; the real browser must then paint the opaque base surface.
+    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-no-backdrop.css"; });
+    await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-no-backdrop.css")));
+    assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
+      { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
+      { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
+    ]);
+    await page.locator('link[href="/paper-no-backdrop.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-theme.css"; });
+    await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")));
     const chosen = await inspect("#chosen");
     await page.emulateMedia({ colorScheme: "dark" });
     assert.equal((await inspect("#light")).background, rgb(paletteColors.paper.light.background));
@@ -90,6 +145,7 @@ try {
       await page.screenshot({ path: resolve(screenshotDirectory, `paper-${width}.png`), fullPage: true });
     }
     await page.emulateMedia({ forcedColors: "active" });
+    assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
     const forced = await page.locator("#light").evaluate((element) => {
       const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim()];
     });
@@ -116,5 +172,5 @@ try {
     assert.deepEqual(errors, []);
     await page.close();
   }
-  console.log("Paper CSS verified: desktop/mobile, light/dark islands, named palette isolation, legacy root priority, system mode, semantic controls, and forced colors.");
+  console.log("Paper CSS verified: desktop/mobile, light/dark islands, named palette isolation, legacy root priority, system mode, semantic controls, optimized header blur, opaque capability fallback, reduced transparency, and forced colors.");
 } finally { await browser.close(); server.stop(true); }

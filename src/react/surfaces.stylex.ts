@@ -141,12 +141,12 @@ export const layoutSurfaceStyles = stylex.create({
     "margin-inline-start": "auto",
   },
   topBarGlass: {
-    backdropFilter: {
-      default: "blur(18px) saturate(1.08)",
-      [forcedColors]: "none",
-    },
+    // The global capability/media boundary binds both values locally; atoms
+    // paint them without repeating feature queries in optimized delivery.
+    "-webkit-backdrop-filter": "var(--hraness-design-top-bar-backdrop, none)",
+    "backdrop-filter": "var(--hraness-design-top-bar-backdrop, none)",
     backgroundColor: {
-      default: "color-mix(in oklch, var(--background) 90%, transparent)",
+      default: "var(--hraness-design-top-bar-background, var(--background))",
       [forcedColors]: "Canvas",
     },
   },

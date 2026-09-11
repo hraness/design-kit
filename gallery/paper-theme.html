@@ -6,6 +6,7 @@
   <title>Paper theme reference</title>
   <link rel="stylesheet" href="/fonts.css">
   <link rel="stylesheet" href="/fixture.css">
+  <link rel="stylesheet" href="/legacy-header.css">
   <link rel="stylesheet" href="/paper-theme.css">
 </head>
 <body>
@@ -14,6 +15,10 @@
     <p>One shared palette, with independent appearance choices.</p>
     <p><a id="root-link" href="#light">Open the light example</a><span id="system-link-reference" aria-hidden="true"></span></p>
     <section data-hraness-theme="paper" data-theme="light" data-paper-sample id="light">
+      <div class="header-scroll" tabindex="0" aria-label="Scrollable light header example" id="light-header-scroll">
+        <header class="hraness-marketing-header"><a href="#note">light paper</a><a href="#dark">Read notes</a></header>
+        <div class="header-copy"><p>Clear headings stay readable while notes move underneath.</p><p>Plan tomorrow’s work. Review what changed. Keep a useful record.</p><p>Scroll this example to see the shared header above the page.</p><p>Your saved appearance keeps the same colors.</p><p>Continue reading the notes below the header.</p></div>
+      </div>
       <h2>Plan tomorrow’s work</h2>
       <p>Keep your notes beside the next action. Warm surfaces and clear text make the work easy to follow.</p>
       <p><a id="light-link" href="#note">Read the note</a></p>
@@ -24,6 +29,10 @@
       <aside data-hraness-theme="paper" data-theme="dark" data-paper-sample id="nested-dark"><p>A dark view inside a light page. <a id="nested-dark-link" href="#dark">Open dark notes</a></p></aside>
     </section>
     <section data-hraness-theme="paper" data-theme="dark" data-paper-sample id="dark">
+      <div class="header-scroll" tabindex="0" aria-label="Scrollable dark header example" id="dark-header-scroll">
+        <header class="hraness-marketing-header"><a href="#note">dark paper</a><a href="#dark">Read notes</a></header>
+        <div class="header-copy"><p>Clear headings stay readable while notes move underneath.</p><p>Plan tomorrow’s work. Review what changed. Keep a useful record.</p><p>Scroll this example to see the shared header above the page.</p><p>Your saved appearance keeps the same colors.</p><p>Continue reading the notes below the header.</p></div>
+      </div>
       <h2>Continue after sunset</h2><p>The same controls retain their shape and meaning in dark appearance.</p>
       <p><a id="dark-link" href="#note">Read the note</a></p>
       <button type="button">Open notes</button><button type="button" disabled>Saved</button>

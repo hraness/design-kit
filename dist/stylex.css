@@ -732,8 +732,12 @@
 }
 
 @layer components.hraness-design-kit.priority4 {
-  .xayle1h {
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  .x1fqaf3z {
+    -webkit-backdrop-filter: var(--hraness-design-top-bar-backdrop, none);
+  }
+
+  .x117uaps {
+    -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop, none);
   }
 
   .xvmahel {
@@ -872,14 +876,14 @@
     aspect-ratio: 1 / var(--hraness-design-procedural-ripple-aspect);
   }
 
-  .x1exceir {
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
-    backdrop-filter: blur(14px) saturate(1.4);
+  .x4b736z {
+    -webkit-backdrop-filter: var(--hraness-design-top-bar-backdrop, none);
+    backdrop-filter: var(--hraness-design-top-bar-backdrop, none);
   }
 
-  .xz687w2 {
-    -webkit-backdrop-filter: blur(18px) saturate(1.08);
-    backdrop-filter: blur(18px) saturate(1.08);
+  .x1ts91e6 {
+    -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop, none);
+    backdrop-filter: var(--hraness-marketing-header-backdrop, none);
   }
 
   .x1fdtg7e {
@@ -892,10 +896,6 @@
 
   .x1gq7pca {
     background-color: #fc3;
-  }
-
-  .x1g71ool {
-    background-color: color-mix(in oklch,var(--background) 90%,transparent);
   }
 
   .xdx376k {
@@ -912,10 +912,6 @@
 
   .xbo1qdt {
     background-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 14%,transparent);
-  }
-
-  .x13bddl2 {
-    background-color: color-mix(in oklch,var(--hraness-marketing-background) 82%,transparent);
   }
 
   .xsuzxoi {
@@ -966,6 +962,10 @@
     background-color: var(--hraness-design-particle-color);
   }
 
+  .xdral45 {
+    background-color: var(--hraness-design-top-bar-background, var(--background));
+  }
+
   .x4mtw51 {
     background-color: var(--hraness-marketing-accent-ink);
   }
@@ -980,6 +980,10 @@
 
   .xnrqjil {
     background-color: var(--hraness-marketing-background);
+  }
+
+  .x1vch632 {
+    background-color: var(--hraness-marketing-header-background, var(--hraness-marketing-background));
   }
 
   .x1itpb23 {
@@ -2820,11 +2824,6 @@
   }
 
   @media (forced-colors: active) {
-    .x14hm74v.x14hm74v {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-
     .xcrev8p.xcrev8p {
       background-attachment: scroll;
     }

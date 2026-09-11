@@ -1,5 +1,5 @@
 /* Compiler-adopter marketing foundation: public token bindings, arbitrary
-   consumer-content grammar and direct-child layout relationships only.
+   consumer-content grammar, header capability/media tokens and direct-child layout relationships.
    Owned React slots are compiled from product-marketing.stylex.ts.
    The standalone product-marketing.css remains the raw HTML compatibility API. */
 @layer components.hraness-design-kit.legacy {
@@ -186,5 +186,34 @@
   color: var(--hraness-marketing-muted);
   font-size: 0.85rem;
   line-height: 1.45;
+}
+
+/* Shared header capability/media tokens; paint stays in the owned atoms. */
+/* Keep the browser aliases in separate feature queries: CSS optimizers can
+ * collapse adjacent aliases to the prefixed property and lose Chromium blur. */
+.hraness-marketing-header {
+  --hraness-marketing-header-background: var(--hraness-marketing-background);
+  --hraness-marketing-header-backdrop: none;
+}
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
+  }
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: var(--hraness-marketing-background);
+    --hraness-marketing-header-backdrop: none;
+  }
 }
 }

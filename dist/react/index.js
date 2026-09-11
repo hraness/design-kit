@@ -55,7 +55,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-96h25arz.js";
+} from "../chunk-5v55gs1x.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -3660,11 +3660,25 @@ function DesignSystemGallery({
             "data-hraness-theme": "paper",
             "data-theme": "light",
             children: [
+              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+                brand: "Light paper",
+                brandHref: "#paper-theme",
+                links: [{
+                  href: "#foundation",
+                  label: "Foundation"
+                }],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx13(TopBar, {
+                surface: "glass",
+                title: "Glass application header",
+                "data-gallery-glass-top-bar": ""
+              }),
               /* @__PURE__ */ jsx13("h3", {
                 children: "Light paper"
               }),
               /* @__PURE__ */ jsx13("p", {
-                children: "Shared semantic roles keep text, surfaces, and actions consistent."
+                children: "Headers blur scrolling content and become opaque when reduced transparency is preferred."
               }),
               /* @__PURE__ */ jsx13("p", {
                 children: /* @__PURE__ */ jsx13("a", {
@@ -3684,11 +3698,25 @@ function DesignSystemGallery({
             "data-hraness-theme": "paper",
             "data-theme": "dark",
             children: [
+              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+                brand: "Dark paper",
+                brandHref: "#paper-theme",
+                links: [{
+                  href: "#foundation",
+                  label: "Foundation"
+                }],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx13(TopBar, {
+                surface: "glass",
+                title: "Glass application header",
+                "data-gallery-glass-top-bar": ""
+              }),
               /* @__PURE__ */ jsx13("h3", {
                 children: "Dark paper"
               }),
               /* @__PURE__ */ jsx13("p", {
-                children: "The same palette contract follows an explicit dark preference."
+                children: "The same header treatment follows an explicit dark preference."
               }),
               /* @__PURE__ */ jsx13("p", {
                 children: /* @__PURE__ */ jsx13("a", {
