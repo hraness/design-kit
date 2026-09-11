@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.6.5",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.6.6",
     "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
@@ -232,7 +232,7 @@ Connect routing with `RouterProvider` from `@hraness/ui`. Design-kit rail links 
 
 `ChatMessage` keeps its article, finite `data-role`, optional avatar, header, and action slots, and caller-last root class while its grid, logical minimum, and metadata-row presentation are delivered through extracted StyleX classes. `ChatComposer` remains a controlled native form composition with a multiline field and submit button. It always prevents native navigation, calls its callback only for an enabled, non-pending, nonblank value, and keeps native form attributes and inline styles caller-controlled. Its two-column layout collapses to one column at the existing compact breakpoint. Neither component exposes a public `xstyle` or ref seam.
 
-`TopBar`, `BottomBar`, `PageCanvas`, and `DockedFooter` keep their native header, footer, main, or div semantics while their product-neutral layout recipes are delivered through extracted StyleX classes. Their stable classes and data attributes remain available for semantic inspection, and native `className` and `style` props remain caller-controlled. `DockedFooter` continues to forward its root footer ref. Its `surface` value remains a stable data hook; only `TopBar` gives `glass` a visual treatment.
+`TopBar`, `BottomBar`, `PageCanvas`, and `DockedFooter` keep their native header, footer, main, or div semantics while their product-neutral layout recipes are delivered through extracted StyleX classes. Their stable classes and data attributes remain available for semantic inspection, and native `className` and `style` props remain caller-controlled. `DockedFooter` continues to forward its root footer ref. Its `surface` value remains a stable data hook; only `TopBar` gives `glass` a visual treatment. Its 90% tint and 18px blur use feature detection; unsupported filtering, reduced transparency, and forced colors use an opaque surface.
 
 `DitherSurface` composes its product-neutral texture through the typed `ThemedSurface` seam from `@hraness/ui`. Its `density` is one of `coarse`, `fine`, or `medium`; the default medium texture uses `4px`, while coarse and fine set the literal public `--hraness-design-dither-size` property to `7px` and `3px`. A caller `xstyle` recipe is applied after the shared texture, and native `style` remains last for deliberate per-instance overrides. Forced-colors mode removes the decorative image without changing the surface's content, native element, tone, shape, or border.
 
@@ -398,7 +398,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.5`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.4`. This patch gives portable Paper text links the system `LinkText` color in forced-colors mode while action and focus roles retain `Highlight`. Ordinary Paper colors, portable contract 1, existing defaults, recipe sizes, and the compiler identity stay unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.6`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.5`. This patch preserves shared header blur through CSS optimization and uses opaque surfaces when backdrop filtering is unavailable, reduced transparency is preferred, or forced colors are active. The portable Paper snapshot carries the same paint correction for older component releases. Paper colors, header geometry, portable contract 1, and the compiler identity stay unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

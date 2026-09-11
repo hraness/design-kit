@@ -30,7 +30,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-96h25arz.js";
+} from "../chunk-5v55gs1x.js";
 import"../chunk-jey98bgc.js";
 import"../chunk-5gtx3pza.js";
 export {

@@ -283,10 +283,11 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
 const layoutSurfaceDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/background-color:\s*var\(--background\)/u, "solid surface background"],
   [
-    /background-color:\s*color-mix\(in oklch,\s*var\(--background\)\s*90%,\s*transparent\)/u,
-    "glass TopBar background",
+    /(?:^|;)\s*background-color:\s*var\(--hraness-design-top-bar-background,\s*var\(--background\)\)/mu,
+    "glass TopBar background token binding",
   ],
-  [/backdrop-filter:\s*blur\(18px\)\s*saturate\(1\.08\)/u, "glass TopBar filter"],
+  [/(?:^|;)\s*backdrop-filter:\s*var\(--hraness-design-top-bar-backdrop,\s*none\)/mu, "glass TopBar standard filter token binding"],
+  [/(?:^|;)\s*-webkit-backdrop-filter:\s*var\(--hraness-design-top-bar-backdrop,\s*none\)/mu, "glass TopBar WebKit filter token binding"],
   [/border-block-end-color:\s*var\(--line\)/u, "TopBar logical block-end border"],
   [/border-block-start-color:\s*var\(--line\)/u, "footer logical block-start border"],
   [/min-inline-size:\s*0/u, "logical inline minimum"],
@@ -582,6 +583,51 @@ function requireLayoutSurfacePresentation(
   }
 }
 
+function requireTopBarPaintFoundation(css: string, label: string): string {
+  const tokenRules = [...css.matchAll(
+    /\.hraness-design-top-bar\[data-surface=(?:"glass"|'glass'|glass)\]\s*\{([^{}]*)\}/gu,
+  )];
+  assert.equal(tokenRules.length, 3, `${label} must deliver the three scoped glass TopBar paint rules exactly once.`);
+  const conditions = [...css.matchAll(/@(supports|media)\s*[^{};]+\{/gu)].map((match) => {
+    const openBrace = match.index + match[0].lastIndexOf("{");
+    return {
+      bodyStart: openBrace + 1,
+      closeBrace: matchingCssBrace(css, openBrace, label),
+      condition: match[0].slice(0, -1).replace(/[\s()]/gu, ""),
+    };
+  });
+  const opaque = [
+    "--hraness-design-top-bar-background:var(--background)",
+    "--hraness-design-top-bar-backdrop:none",
+  ].sort();
+  const glass = [
+    "--hraness-design-top-bar-background:color-mix(inoklch,var(--background)90%,transparent)",
+    "--hraness-design-top-bar-backdrop:blur(18px)saturate(1.08)",
+  ].sort();
+  for (const [index, rule] of tokenRules.entries()) {
+    assert.deepEqual(
+      (rule[1] ?? "").replace(/\s+/gu, "").split(";").filter(Boolean).sort(),
+      index === 1 ? glass : opaque,
+      `${label} glass TopBar rules may contain only the exact locally resolved paint tokens.`,
+    );
+    assert.deepEqual(
+      conditions.filter(({ bodyStart, closeBrace }) => rule.index >= bodyStart && rule.index < closeBrace)
+        .map(({ condition }) => condition),
+      index === 0 ? [] : index === 1
+        ? ["@supports-webkit-backdrop-filter:blur1pxorbackdrop-filter:blur1px"]
+        : ["@mediaprefers-reduced-transparency:reduce,forced-colors:active"],
+      `${label} glass TopBar paint must retain its capability and preference conditions in cascade order.`,
+    );
+  }
+  // Exempt only the verified token rules from the migrated legacy recipe ban.
+  let withoutTokens = css;
+  for (const rule of tokenRules.toReversed()) {
+    withoutTokens = withoutTokens.slice(0, rule.index) + withoutTokens.slice(rule.index + rule[0].length);
+  }
+  assert.ok(!migratedLayoutLegacySelector.test(withoutTokens), `${label} retained a migrated legacy layout-surface recipe.`);
+  return withoutTokens;
+}
+
 function requirePlaybackTransportPresentation(css: string, label: string): void {
   for (const [pattern, declaration] of playbackTransportDeclarationPatterns) {
     if (!pattern.test(css)) {
@@ -759,7 +805,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.5" },
+    { name: "@hraness/design-kit", version: "0.6.6" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -825,7 +871,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.6.5 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.6.6 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -843,7 +889,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.6.5 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.6.6 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -855,7 +901,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.5.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.6.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -902,6 +948,8 @@ try {
     "utf8",
   );
   const packedComponentsCss = await Bun.file(join(packedRoot, "src/components.css")).text();
+  requireTopBarPaintFoundation(packedCompilerComponentsCss, "Packed compiler component foundation");
+  assert.ok(packedComponentsCss.includes('@import "./compiler-components.css";'), "Packed standalone components must import their shared paint foundation.");
   const packedStylesCss = await Bun.file(join(packedRoot, "src/styles.css")).text();
   const packedRuntimePaths = (await filesBelow(join(packedRoot, "dist")))
     .filter((path) => path.endsWith(".js"))
@@ -1754,9 +1802,7 @@ try {
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy DitherSurface recipe.");
   }
-  if (migratedLayoutLegacySelector.test(builtCss)) {
-    throw new Error("Packed aggregate Vite CSS retained a migrated legacy layout-surface recipe.");
-  }
+  requireTopBarPaintFoundation(builtCss, "Packed aggregate Vite CSS");
   if (migratedPlaybackLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy PlaybackTransport recipe.");
   }
@@ -1879,9 +1925,7 @@ try {
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained the migrated legacy DitherSurface recipe.");
   }
-  if (migratedLayoutLegacySelector.test(narrowBuiltCss)) {
-    throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy layout-surface recipe.");
-  }
+  requireTopBarPaintFoundation(narrowBuiltCss, "Packed narrow components.css Vite CSS");
   if (migratedPlaybackLegacySelector.test(narrowBuiltCss)) {
     throw new Error("Packed narrow components.css Vite CSS retained a migrated legacy PlaybackTransport recipe.");
   }

@@ -1,4 +1,9 @@
 import { expect, test } from "bun:test";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createStylexTransformCollector, serializeStylexRules } from "@hraness/ui/stylex-build";
+import { transform } from "lightningcss";
 import * as stylex from "@stylexjs/stylex";
 import type { CSSProperties } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -369,4 +374,37 @@ test("DockedFooter preserves root and caller hooks plus every finite recipe", ()
   expect(tagWithClass(glassMarkup, "hraness-design-docked-footer")).toContain(
     'data-surface="glass"',
   );
+});
+
+
+test("glass header atoms preserve separate browser capabilities and accessibility fallbacks after optimization", async () => {
+  const filename = new URL("./surfaces.stylex.ts", import.meta.url).pathname;
+  const collector = createStylexTransformCollector(process.cwd());
+  await collector.transform(await readFile(filename, "utf8"), filename);
+  const media = await readFile(new URL("../compiler-components.css", import.meta.url), "utf8");
+  const css = `${serializeStylexRules(collector.seal())}\n${media}`;
+  const optimized = transform({ filename: "surface-atoms.css", code: Buffer.from(css), minify: true }).code.toString();
+  expect(optimized).toMatch(/@supports[^{}]*-webkit-backdrop-filter:blur\(1px\)/u);
+  expect(optimized).toMatch(/@supports[^{}]*[^-]backdrop-filter:blur\(1px\)/u);
+  expect(optimized).toContain("-webkit-backdrop-filter:var(--hraness-design-top-bar-backdrop,none)");
+  expect(optimized).toMatch(/[;{]backdrop-filter:var\(--hraness-design-top-bar-backdrop,none\)/u);
+  expect(optimized).toContain("prefers-reduced-transparency:reduce");
+  expect(optimized).toContain("background-color:var(--background)");
+  expect(optimized).toContain("--hraness-design-top-bar-backdrop:none");
+  // Bun is a second optimizer in real consumers. Adjacent duplicate support
+  // blocks lose the later block; the shared media boundary groups both values.
+  const temporary = await mkdtemp(join(tmpdir(), "glass-header-css-"));
+  try {
+    const entry = join(temporary, "headers.css");
+    await writeFile(entry, `${css}\n@supports (display: grid) { .support-first-control { color: red; } } @supports (display: grid) { .support-lost-control { color: blue; } }`);
+    const result = await Bun.build({ entrypoints: [entry], minify: true, target: "browser" });
+    expect(result.success).toBe(true);
+    expect(result.outputs).toHaveLength(1);
+    const bundled = await result.outputs[0]?.text() ?? "";
+    expect(bundled).toContain("support-first-control");
+    expect(bundled).not.toContain("support-lost-control");
+    expect(bundled).toMatch(/@media[^{}]*prefers-reduced-transparency:reduce[^{}]*\{[\s\S]*?--hraness-design-top-bar-backdrop:none/u);
+    expect(bundled).toMatch(/@media[^{}]*prefers-reduced-transparency:reduce[^{}]*\{[\s\S]*?--hraness-design-top-bar-background:var\(--background\)/u);
+  } finally { await rm(temporary, { recursive: true, force: true }); }
+
 });

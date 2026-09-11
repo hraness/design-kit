@@ -2,7 +2,7 @@
 
 Paper shares warm neutral surfaces, Nebula Sans typography, a compact heading
 scale, and blue actions across marketing sites and application defaults.
-The CSS is generated from the same source as the `paper` semantic palette.
+The CSS is generated from the `paper` semantic palette and shared marketing header paint.
 Products retain their content, layout, functionality, and saved appearance.
 
 ## Portable CSS contract 1
@@ -14,7 +14,7 @@ Load `@hraness/design-kit/paper-theme.css` after existing theme styles, then set
 <html data-hraness-theme="paper" data-theme="light">
 ```
 
-The export has no imports, font requests, reset, JavaScript, component recipes,
+The export has no imports, font requests, reset, JavaScript, layout recipes,
 or dependency on React, UI, or a StyleX compiler. It uses standard CSS
 `light-dark()`, supported by Chrome 123+, Firefox 120+, and Safari 17.5+.
 Use the compiled palette route for applications whose existing CSS pipeline
@@ -30,7 +30,16 @@ The stylesheet declares semantic product roles (`--background`, `--foreground`,
 Control boundaries and secondary text are contrast adapted; subtle grid lines
 remain decorative. Forced colors use system surface, text, and action colors. The `--plain-link`
 alias uses `LinkText`; primary actions and focus retain `Highlight`.
-Product CSS still decides where to paint these roles.
+Product CSS decides where to paint these roles, with one shared header correction.
+The opted-in `.hraness-marketing-header` receives the same paint as current
+marketing headers in `components.hraness-design-kit.legacy`. It retains the
+82% surface tint and 14px blur, with separate standard and WebKit feature
+queries so CSS optimization preserves both browser paths. An opaque surface
+applies when neither path is supported, reduced transparency is preferred, or
+forced colors are active. This rule changes paint only; header layout,
+positioning, and interactions remain owned by the component. Loading a fresh
+snapshot after an older marketing stylesheet applies the correction without
+changing the installed component or compiler versions.
 
 `--font-text`, `--font-heading`, and `--font-sans` use Nebula Sans with system
 fallbacks. Code remains system monospace. Load the existing licensed font
@@ -102,7 +111,7 @@ detects edits to either artifact; it does not contact a service or update them.
 Consumer checks can implement that small hash contract in their own runtime.
 
 Contract 1 keeps existing semantic meanings and selectors stable. Additive
-tokens do not require a coordinated upgrade. A breaking token or selector
+tokens and compatible paint corrections do not require a coordinated upgrade. A breaking token or selector
 change requires a new contract and an explicit migration. Pin the package or
 source commit independently in every product; upgrade and validate each on its
 own schedule. Do not use sibling paths, mutable branches, or runtime CSS CDNs.
@@ -113,7 +122,7 @@ own schedule. Do not use sibling paths, mutable branches, or runtime CSS CDNs.
 pair. `src/browser/design-palette.test.ts` covers saved choices and legacy
 appearance migration. `scripts/paper-theme-browser.ts` renders the standalone
 gallery at desktop and phone sizes, checks light/dark islands, system mode,
-palette isolation, marketing token inheritance, real native controls, and
-forced colors. `src/paper-theme.test.ts` verifies generated CSS and snapshot
+palette isolation, marketing token inheritance, real native controls, optimized
+header blur, opaque capability fallback, reduced transparency, and forced colors. `src/paper-theme.test.ts` verifies generated CSS and snapshot
 integrity. The public `DesignSystemGallery` includes Paper specimens; load
 `paper-theme.css` alongside the gallery stylesheet to display them.

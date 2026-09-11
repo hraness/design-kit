@@ -1391,6 +1391,55 @@ async function requireAppearanceBackground(page: Page, selector: string, label: 
     `${label}: appearance background shorthand parity is ${JSON.stringify(result)}`);
 }
 
+async function requireGlassHeaderPaint(page: Page): Promise<void> {
+  const selector = "[data-gallery-glass-top-bar]";
+  const initial = await page.evaluate(() => ({
+    scrollX, scrollY,
+    features: [
+      { name: "prefers-color-scheme", value: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" },
+      { name: "prefers-reduced-motion", value: matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduce" : "no-preference" },
+      { name: "prefers-reduced-transparency", value: matchMedia("(prefers-reduced-transparency: reduce)").matches ? "reduce" : "no-preference" },
+      { name: "forced-colors", value: matchMedia("(forced-colors: active)").matches ? "active" : "none" },
+    ],
+  }));
+  const headers = page.locator(selector);
+  invariant(await headers.count() === 2, "The gallery must exercise light and dark glass headers.");
+  const requirePaint = async (opaque: boolean) => {
+    for (let index = 0; index < 2; index += 1) {
+      // Offscreen CSS transitions can retain their old computed paint in Chrome.
+      // Verify the rendered specimen, without disabling or cancelling its styles.
+      await headers.nth(index).scrollIntoViewIfNeeded({ timeout: 5_000 });
+      await page.waitForFunction(({ selector, index, opaque }) => {
+        const header = document.querySelectorAll(selector)[index];
+        if (header === undefined) return false;
+        const probe = document.createElement("span");
+        probe.style.backgroundColor = "var(--background)";
+        header.append(probe);
+        try {
+          const css = getComputedStyle(header);
+          return opaque
+            ? css.backdropFilter === "none" && css.backgroundColor === getComputedStyle(probe).backgroundColor
+            : css.backdropFilter === "blur(18px) saturate(1.08)";
+        } finally { probe.remove(); }
+      }, { selector, index, opaque }, { timeout: 5_000, polling: "raf" });
+    }
+  };
+  const cdp = await page.context().newCDPSession(page);
+  const features = (value: string) => initial.features.map((feature) =>
+    feature.name === "prefers-reduced-transparency" ? { ...feature, value } : feature);
+  try {
+    await cdp.send("Emulation.setEmulatedMedia", { features: features("no-preference") });
+    await requirePaint(false);
+    await cdp.send("Emulation.setEmulatedMedia", { features: features("reduce") });
+    invariant(await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches), "Reduced transparency emulation is unavailable.");
+    await requirePaint(true);
+  } finally {
+    await cdp.send("Emulation.setEmulatedMedia", { features: initial.features });
+    await page.evaluate(({ scrollX, scrollY }) => scrollTo({ left: scrollX, top: scrollY, behavior: "instant" }), initial);
+    await cdp.detach();
+  }
+}
+
 async function evidence(page: Page): Promise<LayoutEvidence> {
   return page.evaluate(() => {
     const gallery = document.querySelector(".design-gallery");
@@ -2642,6 +2691,8 @@ try {
         await page.locator('html[data-theme="dark"]').waitFor();
         await requireShellBackgrounds(page, `${layout.id}: dark theme`);
         await requireEffectBackgrounds(page, true, `${layout.id}: dark theme`);
+        // Isolate CDP media emulation from the preceding appearance assertions.
+        await requireGlassHeaderPaint(page);
         invariant(
           await page.getByRole("button", { name: "Appearance: Dark" }).count() === 1,
           `${layout.id}: keyboard appearance change did not select Dark`,
@@ -2692,6 +2743,7 @@ try {
         waitUntil: "networkidle",
       });
       await forcedPage.locator('.hraness-design-theme-toggle[data-ready="true"]').waitFor();
+      invariant(await forcedPage.locator("[data-gallery-glass-top-bar]").evaluateAll((headers) => headers.length === 2 && headers.every((header) => getComputedStyle(header).backdropFilter === "none")), "Forced colors must remove glass header blur.");
       await forcedPage.getByRole("button", { name: "Appearance: System" }).focus();
       await forcedPage.keyboard.press("Enter");
       await forcedPage.getByRole("menu", { name: "Appearance" }).waitFor();

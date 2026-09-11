@@ -1,4 +1,4 @@
-/* Fixture-owned layout. The distributed theme contains no component recipes. */
+/* Fixture-owned layout. The distributed theme owns header paint, while this fixture owns layout. */
 /* Incumbent theme selectors: the opt-in root must override these when loaded later. */
 :root[data-theme="light"] { --background: #fbf6f2; --foreground: #201b19; --focus: #3b5ccc; }
 :root[data-theme="dark"] { --background: #000000; --foreground: #f2f2ed; --focus: #92bafa; }
@@ -24,3 +24,7 @@ details { margin-top: 1rem; }
 #chosen { --background: #282828; --foreground: #ebdbb2; --muted: #bdae93; --plain-link: #b8bb26; }
 .hraness-marketing-section { --hraness-marketing-measure: 72rem; }
 @media (max-width: 40rem) { body { padding: 1rem; } [data-paper-sample] { padding: 1.25rem; } button { margin-top: .5rem; } }
+
+.header-scroll { block-size: 17rem; overflow: auto; border: 1px solid var(--line); margin-block-end: 2rem; }
+.header-copy { padding: 1rem; }
+.header-scroll:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }

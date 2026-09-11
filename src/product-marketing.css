@@ -292,10 +292,40 @@
   inset-block-start: 0;
   z-index: 40;
   border-block-end: var(--hraness-marketing-rule);
-  background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
 }
+
+/* marketing-header-paint:start */
+/* Keep the browser aliases in separate feature queries: CSS optimizers can
+ * collapse adjacent aliases to the prefixed property and lose Chromium blur. */
+.hraness-marketing-header {
+  --hraness-marketing-header-background: var(--hraness-marketing-background);
+  --hraness-marketing-header-backdrop: none;
+  background: var(--hraness-marketing-header-background);
+}
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop);
+  }
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
+    backdrop-filter: var(--hraness-marketing-header-backdrop);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .hraness-marketing-header {
+    --hraness-marketing-header-background: var(--hraness-marketing-background);
+    --hraness-marketing-header-backdrop: none;
+  }
+}
+/* marketing-header-paint:end */
 
 .hraness-marketing-header__inner {
   display: flex;

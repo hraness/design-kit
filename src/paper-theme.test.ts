@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { transform } from "lightningcss";
 import { execFileSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -9,7 +10,7 @@ import { checkPaperThemeSnapshot, createPaperThemeSnapshot, parsePaperThemeSnaps
 test("portable paper CSS stays generated, opt-in, and independent of runtime and assets", async () => {
   const css = await readFile(new URL("./paper-theme.css", import.meta.url), "utf8");
   expect(css).toBe(paperThemeCss);
-  expect(css).not.toMatch(/@import\b|url\(|@font-face|@layer|!important/u);
+  expect(css).not.toMatch(/@import\b|url\(|@font-face|!important/u);
   expect(css).toContain('[data-hraness-theme="paper"]');
   expect(css).toContain(':where(:not([data-palette]), [data-palette="paper"])');
   expect(css).toContain('light-dark(#f8f7f4, #12100f)');
@@ -18,6 +19,19 @@ test("portable paper CSS stays generated, opt-in, and independent of runtime and
   expect(css).toMatch(/@media \(forced-colors: active\)\s*\{[\s\S]*--plain-link: LinkText;/u);
   expect(css).toContain('--ui-input: var(--control-border)');
   expect(css).not.toMatch(/(?:^|\n)(?:html|body|:root|\*)\s*\{/u);
+});
+
+test("portable header paint keeps both browser paths after CSS optimization", () => {
+  const optimized = transform({ filename: "paper-theme.css", code: Buffer.from(paperThemeCss), minify: true }).code.toString();
+  expect(optimized).toContain("-webkit-backdrop-filter:var(--hraness-marketing-header-backdrop)");
+  expect(optimized).toContain(";backdrop-filter:var(--hraness-marketing-header-backdrop)");
+  expect(optimized).toContain("prefers-reduced-transparency:reduce");
+  expect(paperThemeCss).toContain("@layer components.hraness-design-kit.legacy");
+  expect(paperThemeCss).toContain("--hraness-marketing-header-backdrop: none");
+  // Reproduce the consumer's optimizer failure so removing the feature-query
+  // separation cannot leave this test green with an ineffective prefix reorder.
+  const old = transform({ filename: "old-header.css", code: Buffer.from(".header { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }"), minify: true }).code.toString();
+  expect(old).toBe(".header{-webkit-backdrop-filter:blur(14px)}");
 });
 
 test("snapshot verification is offline and detects changes to either redistributed artifact", async () => {

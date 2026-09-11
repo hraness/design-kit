@@ -199,7 +199,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("313895e36bee0902727adfebf5d811147b45b9d2242a78f54f6d88681f4618a4");
+    .toBe("903fb3f520eb3228a0bb97c3557b2afc90582a7f072dd72dd07f792f79d26511");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -212,6 +212,12 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
   expect(tokenRoots(foundation)).toEqual(expectedRoots);
   expect(compiler).toContain('@import "./product-marketing-foundation.css";');
   expect(compiler).not.toContain('@import "./product-marketing.css";');
+  const paint = (legacy.split("/* marketing-header-paint:start */")[1]?.split("/* marketing-header-paint:end */")[0] ?? "").trim();
+  expect(paint.length).toBeGreaterThan(0);
+  const mediaTokens = paint.replace(/^\s+(?:background|-webkit-backdrop-filter|backdrop-filter):[^\n]+\n/gmu, "");
+  expect(foundation).toContain(mediaTokens);
+  expect(source).toContain('"backdrop-filter": "var(--hraness-marketing-header-backdrop, none)"');
+  expect(source).toContain('"-webkit-backdrop-filter": "var(--hraness-marketing-header-backdrop, none)"');
   expect(foundation).not.toContain(".hraness-marketing-hero__heading");
   expect(foundation).toContain(".hraness-marketing-page > .hraness-marketing-install");
   expect(source).not.toMatch(/fontPalette|font-palette|fontLanguageOverride|font-language-override/u);

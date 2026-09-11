@@ -411,12 +411,31 @@ function requireCompilerComponentsContract(source: string): void {
   }
   const layer = statements[0] ?? "";
   const rules = topLevelStatements(layer.slice(layer.indexOf("{") + 1, -1), "compiler-components utility");
-  assert.equal(rules.length, 1, "Only the shared visually-hidden utility may remain in compiler-components.css");
+  assert.equal(rules.length, 4, "Only the shared visually-hidden utility and scoped glass-header media tokens may remain in compiler-components.css");
   const rule = rules[0] ?? "";
   assert.equal(rule.slice(0, rule.indexOf("{")).trim(), ".hraness-design-visually-hidden");
   assert.equal(rule.slice(rule.indexOf("{") + 1, -1).replace(/\s+/gu, ""),
     "position:absolute;inline-size:1px;block-size:1px;padding:0;overflow:hidden;clip:rect(0000);white-space:nowrap;border:0;",
     "The shared visually-hidden utility must retain its exact accessibility declarations");
+  const selector = '.hraness-design-top-bar[data-surface="glass"]';
+  const opaque = "--hraness-design-top-bar-background:var(--background);--hraness-design-top-bar-backdrop:none;";
+  const glass = "--hraness-design-top-bar-background:color-mix(inoklch,var(--background)90%,transparent);--hraness-design-top-bar-backdrop:blur(18px)saturate(1.08);";
+  const tokenRule = (text: string, values: string) => {
+    assert.equal(text.slice(0, text.indexOf("{")).trim(), selector, "Only glass TopBar owns these media tokens");
+    assert.equal(text.slice(text.indexOf("{") + 1, -1).replace(/\s+/gu, ""), values, "Header media rules may contain only the reviewed paint tokens");
+  };
+  tokenRule(rules[1] ?? "", opaque);
+  for (const [index, condition, values] of [
+    [2, "@supports(-webkit-backdrop-filter:blur(1px))or(backdrop-filter:blur(1px))", glass],
+    [3, "@media(prefers-reduced-transparency:reduce),(forced-colors:active)", opaque],
+  ] as const) {
+    const conditional = rules[index] ?? "";
+    assert.equal(conditional.slice(0, conditional.indexOf("{")).replace(/\s+/gu, ""), condition);
+    const children = topLevelStatements(conditional.slice(conditional.indexOf("{") + 1, -1), "header media tokens");
+    assert.equal(children.length, 1);
+    tokenRule(children[0] ?? "", values);
+  }
+
 }
 
 function requireAggregateContract(source: string): void {
@@ -1601,8 +1620,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.5" },
-  "StyleX manifest must describe design-kit v0.6.5",
+  { name: "@hraness/design-kit", version: "0.6.6" },
+  "StyleX manifest must describe design-kit v0.6.6",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1769,15 +1788,12 @@ const layoutSurfaceDeclarations: readonly (readonly [RegExp, string])[] = [
   [/background-attachment:\s*scroll;/u, "surface background attachment reset"],
   [/background-clip:\s*border-box;/u, "surface background clip reset"],
   [/background-color:\s*var\(--background\);/u, "solid surface background"],
-  [
-    /background-color:\s*color-mix\(in oklch,\s*var\(--background\) 90%,\s*transparent\);/u,
-    "glass TopBar background",
-  ],
+  [/background-color:\s*var\(--hraness-design-top-bar-background,\s*var\(--background\)\);/u, "glass TopBar background binding"],
   [/background-image:\s*none;/u, "surface background image reset"],
   [/background-origin:\s*padding-box;/u, "surface background origin reset"],
   [/background-repeat:\s*repeat;/u, "surface background repeat reset"],
   [/background-size:\s*auto;/u, "surface background size reset"],
-  [/backdrop-filter:\s*blur\(18px\)\s+saturate\(1\.08\);/u, "glass TopBar filter"],
+  [/backdrop-filter:\s*var\(--hraness-design-top-bar-backdrop,\s*none\);/u, "glass TopBar filter binding"],
   [/border-block-end-color:\s*var\(--line\);/u, "TopBar logical block-end border color"],
   [/border-block-end-style:\s*solid;/u, "TopBar logical block-end border style"],
   [/border-block-end-width:\s*1px;/u, "TopBar logical block-end border width"],
@@ -1812,8 +1828,8 @@ const layoutSurfaceDeclarations: readonly (readonly [RegExp, string])[] = [
   [/position:\s*absolute;/u, "absolute DockedFooter position"],
   [/position:\s*fixed;/u, "fixed DockedFooter position"],
   [
-    /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?backdrop-filter:\s*none;[\s\S]*?background-color:\s*canvas;/u,
-    "forced-colors glass and surface reset",
+    /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?background-color:\s*canvas;/u,
+    "forced-colors surface reset",
   ],
   [
     /@media \(forced-colors:\s*active\)\s*\{[\s\S]*?border-block-end-color:\s*canvastext;[\s\S]*?border-block-start-color:\s*canvastext;/u,
@@ -2446,7 +2462,6 @@ forbid(
   "the migrated DitherSurface legacy selector",
 );
 for (const stableClass of [
-  "top-bar",
   "bottom-bar",
   "page-canvas",
   "docked-footer",

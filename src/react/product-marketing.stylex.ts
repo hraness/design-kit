@@ -52,7 +52,7 @@ export const marketingStyles = stylex.create({
     "z-index": "40",
     "border-block-end": "var(--hraness-marketing-rule)",
     "background-color": {
-      "default": "color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent)",
+      "default": "var(--hraness-marketing-header-background, var(--hraness-marketing-background))",
       "@media (forced-colors: active)": "Canvas"
     },
     "background-image": {
@@ -83,8 +83,8 @@ export const marketingStyles = stylex.create({
       "default": "scroll",
       "@media (forced-colors: active)": "scroll"
     },
-    "backdrop-filter": "blur(14px) saturate(1.4)",
-    "-webkit-backdrop-filter": "blur(14px) saturate(1.4)",
+    "backdrop-filter": "var(--hraness-marketing-header-backdrop, none)",
+    "-webkit-backdrop-filter": "var(--hraness-marketing-header-backdrop, none)",
     "border-top": {
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
@@ -127,7 +127,7 @@ export const marketingStyles = stylex.create({
     "z-index": "40",
     "border-block-end": "var(--hraness-marketing-rule)",
     "background-color": {
-      "default": "color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent)",
+      "default": "var(--hraness-marketing-header-background, var(--hraness-marketing-background))",
       "@media (forced-colors: active)": "Canvas"
     },
     "background-image": {
@@ -158,8 +158,8 @@ export const marketingStyles = stylex.create({
       "default": "scroll",
       "@media (forced-colors: active)": "scroll"
     },
-    "backdrop-filter": "blur(14px) saturate(1.4)",
-    "-webkit-backdrop-filter": "blur(14px) saturate(1.4)",
+    "backdrop-filter": "var(--hraness-marketing-header-backdrop, none)",
+    "-webkit-backdrop-filter": "var(--hraness-marketing-header-backdrop, none)",
     "border-top": {
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
