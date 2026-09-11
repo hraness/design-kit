@@ -83,6 +83,29 @@ try {
     await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = true; });
     assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
     await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = false; });
+    // Re-enabling the link can return before its stylesheet affects computed paint.
+    try {
+      await page.waitForFunction(() => {
+        const headers = [...document.querySelectorAll("#light-header-scroll header, #dark-header-scroll header")];
+        return headers.length === 2 && headers.every((header) => {
+          const css = getComputedStyle(header);
+          return css.backdropFilter === "blur(14px) saturate(1.4)" && css.position === "sticky";
+        });
+      }, undefined, { timeout: 5_000, polling: "raf" });
+    } catch (cause) {
+      const diagnostics = await page.evaluate(() => {
+        const link = document.querySelector<HTMLLinkElement>('link[href="/paper-theme.css"]');
+        return {
+          disabled: link?.disabled,
+          stylesheetPresent: [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")),
+          headers: [...document.querySelectorAll("#light-header-scroll header, #dark-header-scroll header")].map((header) => {
+            const css = getComputedStyle(header);
+            return { region: header.parentElement?.id, background: css.backgroundColor, backdrop: css.backdropFilter, position: css.position };
+          }),
+        };
+      }).catch((error: unknown) => ({ diagnosticError: error instanceof Error ? error.message : String(error) }));
+      throw new Error(`Paper header paint did not return at viewport ${width}: ${JSON.stringify(diagnostics)}`, { cause });
+    }
     assert((await headerPaint()).every(({ backdrop, position }) => backdrop === "blur(14px) saturate(1.4)" && position === "sticky"));
     await page.locator(".header-scroll").evaluateAll((regions) => { for (const region of regions) region.scrollTop = 110; });
     assert(await page.locator("#light-header-scroll").evaluate((region) => {
