@@ -33,3 +33,11 @@ Forced-color overrides depend on the serialized theme selectors. The pinned Styl
 ## Related
 
 The normative rules remain in the root `AGENTS.md`. [[documentation-ownership|Documentation ownership]] explains how those rules relate to executable contracts and this pull-based context.
+
+## Portable Paper links
+
+Portable Paper links use `--plain-link`, which follows `--primary` in ordinary light and dark appearance. In forced-colors mode the link alias selects `LinkText`, while filled primary actions and focus retain `Highlight`. These system roles carry different meanings; a selection background color is not a reliable text-link color. The correction preserves portable contract 1, its opt-in boundary and the guard that leaves a selected non-Paper palette in charge of its own colors.
+
+The standalone gallery includes real `href` links at the document root and inside explicit light, dark and nested Paper islands. Its browser regression compares their resolved paint with a `LinkText` reference in forced light and dark modes, with native color adjustment still enabled. The same test checks ordinary link paint against the Paper primary colors and preserves the non-Paper link token. The new paint assertion first failed against the earlier generated stylesheet; checking custom-property names alone had missed the error. The public React gallery also exposes Paper text links.
+
+The patch keeps the existing compiler identity and immutable UI dependency. Consumers adopt the new package or regenerate an intentional snapshot from a reviewed commit on their own schedule, following `PAPER_THEME.md`; a release does not rewrite their pinned snapshots.

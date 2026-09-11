@@ -77,6 +77,10 @@
   font-size: var(--text-caption);
 }
 
+.design-gallery__paper-link {
+  color: var(--plain-link);
+}
+
 .design-gallery__jelly {
   display: grid;
   min-block-size: 8rem;

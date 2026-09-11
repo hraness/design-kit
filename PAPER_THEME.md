@@ -28,7 +28,8 @@ The stylesheet declares semantic product roles (`--background`, `--foreground`,
 `--primary`, status and inverse pairs), the corresponding `--ui-*` roles,
 `--plain-*` publication aliases, and `--hraness-site-accent` with its foreground.
 Control boundaries and secondary text are contrast adapted; subtle grid lines
-remain decorative. Forced colors use system surface, text, and action colors.
+remain decorative. Forced colors use system surface, text, and action colors. The `--plain-link`
+alias uses `LinkText`; primary actions and focus retain `Highlight`.
 Product CSS still decides where to paint these roles.
 
 `--font-text`, `--font-heading`, and `--font-sans` use Nebula Sans with system
