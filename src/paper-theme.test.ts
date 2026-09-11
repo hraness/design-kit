@@ -14,6 +14,8 @@ test("portable paper CSS stays generated, opt-in, and independent of runtime and
   expect(css).toContain(':where(:not([data-palette]), [data-palette="paper"])');
   expect(css).toContain('light-dark(#f8f7f4, #12100f)');
   expect(css).toContain('--plain-background: var(--background)');
+  expect(css).toContain('--plain-link: var(--primary)');
+  expect(css).toMatch(/@media \(forced-colors: active\)\s*\{[\s\S]*--plain-link: LinkText;/u);
   expect(css).toContain('--ui-input: var(--control-border)');
   expect(css).not.toMatch(/(?:^|\n)(?:html|body|:root|\*)\s*\{/u);
 });

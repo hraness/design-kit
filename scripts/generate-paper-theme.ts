@@ -119,6 +119,7 @@ ${Object.entries(aliases).map(([name, target]) => `  --${name}: var(--${target})
     --control-border: ButtonText;
     --primary: Highlight;
     --primary-foreground: HighlightText;
+    --plain-link: LinkText;
     --accent: Highlight;
     --accent-foreground: HighlightText;
     --focus: Highlight;

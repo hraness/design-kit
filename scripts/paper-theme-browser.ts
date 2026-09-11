@@ -48,9 +48,11 @@ try {
       assert.equal(style.foreground, rgb(paletteColors.paper[mode].foreground));
       assert.equal(style.overflow, false);
       assert(style.font.includes("Nebula Sans"));
+      assert.equal((await inspect(`${selector} > p a`)).foreground, rgb(paletteColors.paper[mode].primary));
     }
     assert.equal((await inspect("#unthemed")).background, "rgb(255, 255, 255)");
     assert.equal((await inspect("#chosen")).background, "rgb(40, 40, 40)");
+    assert.equal((await inspect("#chosen-link")).foreground, "rgb(184, 187, 38)");
     assert.equal((await inspect("#marketing-rhythm")).measure, "80rem");
     const chosen = await inspect("#chosen");
     await page.emulateMedia({ colorScheme: "dark" });
@@ -65,6 +67,7 @@ try {
       await page.evaluate((mode) => { document.documentElement.dataset.theme = mode; }, mode);
       assert.equal((await inspect("body")).background, rgb(paletteColors.paper[mode].background));
       assert.equal((await inspect("body")).foreground, rgb(paletteColors.paper[mode].foreground));
+      assert.equal((await inspect("#root-link")).foreground, rgb(paletteColors.paper[mode].primary));
     }
     await page.evaluate(() => { document.documentElement.removeAttribute("data-theme"); });
     // A real top-level first visit follows the system; an explicit legacy
@@ -91,10 +94,25 @@ try {
       const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim()];
     });
     assert.deepEqual(forced, ["Canvas", "CanvasText", "Highlight"]);
-    await page.evaluate(() => { document.documentElement.dataset.hranessTheme = "paper"; document.documentElement.dataset.theme = "dark"; });
-    assert.deepEqual(await page.locator("html").evaluate((element) => {
-      const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim()];
-    }), ["Canvas", "CanvasText", "Highlight"], "Legacy root rules must not override forced-color semantics.");
+    for (const mode of ["light", "dark"] as const) {
+      await page.emulateMedia({ colorScheme: mode });
+      await page.evaluate((mode) => { document.documentElement.dataset.hranessTheme = "paper"; document.documentElement.dataset.theme = mode; }, mode);
+      assert.deepEqual(await page.locator("html").evaluate((element) => {
+        const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim(), css.getPropertyValue("--primary").trim()];
+      }), ["Canvas", "CanvasText", "Highlight", "Highlight"], "Legacy root rules must not override forced-color semantics.");
+      const systemLink = (await inspect("#system-link-reference")).foreground;
+      for (const selector of ["#root-link", "#light-link", "#dark-link", "#nested-light-link", "#nested-dark-link"]) {
+        const link = await page.locator(selector).evaluate((element) => ({
+          color: getComputedStyle(element).color,
+          adjustment: getComputedStyle(element).forcedColorAdjust,
+          nativeLink: element instanceof HTMLAnchorElement && element.hasAttribute("href"),
+        }));
+        assert(link.nativeLink);
+        assert.equal(link.adjustment, "auto");
+        assert.equal(link.color, systemLink, `${selector} must paint LinkText in forced ${mode} colors.`);
+      }
+      assert.equal(await page.locator("#chosen").evaluate((element) => getComputedStyle(element).getPropertyValue("--plain-link").trim()), "#b8bb26", "A selected non-Paper palette retains its own link token.");
+    }
     assert.deepEqual(errors, []);
     await page.close();
   }

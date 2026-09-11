@@ -102,6 +102,7 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-foil-ornament="radial"');
   expect(html).toContain('data-foil-ornament="facets"');
   expect(html).toContain('class="design-gallery__plain-link-example"');
+  expect(html.match(/class="design-gallery__paper-link" href="#foundation"/gu)).toHaveLength(2);
   expect(html).toContain('class="plain-header__inner" data-layout="responsive-wrap"');
   expect(html).toContain('class="plain-wordmark"');
   expect(html).toContain("project-name.example");

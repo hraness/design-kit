@@ -3666,6 +3666,13 @@ function DesignSystemGallery({
               /* @__PURE__ */ jsx13("p", {
                 children: "Shared semantic roles keep text, surfaces, and actions consistent."
               }),
+              /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx13("a", {
+                  className: "design-gallery__paper-link",
+                  href: "#foundation",
+                  children: "Read about the foundation"
+                })
+              }),
               /* @__PURE__ */ jsx13(Button2, {
                 variant: "primary",
                 children: "Create note"
@@ -3682,6 +3689,13 @@ function DesignSystemGallery({
               }),
               /* @__PURE__ */ jsx13("p", {
                 children: "The same palette contract follows an explicit dark preference."
+              }),
+              /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx13("a", {
+                  className: "design-gallery__paper-link",
+                  href: "#foundation",
+                  children: "Read about the foundation"
+                })
               }),
               /* @__PURE__ */ jsx13(Button2, {
                 variant: "primary",

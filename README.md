@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.6.4",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.6.5",
     "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
@@ -398,7 +398,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.4`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.3`. This release adds the opt-in Paper palette and portable CSS contract, and optional compact sizing for existing marketing compositions. Existing defaults and recipe sizes stay unchanged unless a consumer opts in. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.5`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.4`. This patch gives portable Paper text links the system `LinkText` color in forced-colors mode while action and focus roles retain `Highlight`. Ordinary Paper colors, portable contract 1, existing defaults, recipe sizes, and the compiler identity stay unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
