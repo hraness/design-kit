@@ -541,13 +541,13 @@ export const marketingStyles = stylex.create({
       "default": "18ch",
       "@media (max-width: 48rem)": "14ch"
     },
-    "font-size": "clamp(2.5rem, 5vw, 4.25rem)"
+    "font-size": "var(--hraness-paper-heading-size, clamp(2.5rem, 5vw, 4.25rem))"
   },
   "hero__summary": {
     "margin": "0",
     "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "clamp(1.125rem, 1.6vw, 1.3rem)",
+    "font-size": "var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem))",
     "line-height": "1.45",
     "max-inline-size": "var(--hraness-marketing-copy-measure)"
   },
@@ -1237,7 +1237,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "section__summary": {
     "margin": "0",
@@ -1286,7 +1286,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "primitives__summary": {
     "margin": "0",
@@ -1330,7 +1330,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "interfaces__summary": {
     "margin": "0",
@@ -1374,7 +1374,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "trust__summary": {
     "margin": "0",
@@ -1418,7 +1418,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "quotes__summary": {
     "margin": "0",
@@ -1462,7 +1462,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "pricing__summary": {
     "margin": "0",
@@ -1506,7 +1506,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "questions__summary": {
     "margin": "0",
@@ -1555,7 +1555,7 @@ export const marketingStyles = stylex.create({
     "letter-spacing": "-0.012em",
     "line-height": "1.15",
     "text-wrap": "balance",
-    "font-size": "clamp(1.75rem, 3vw, 2.5rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "primitives__list": {
     "display": "grid",
@@ -2408,7 +2408,7 @@ export const marketingStyles = stylex.create({
     "line-height": "1.08",
     "text-wrap": "balance",
     "max-inline-size": "20ch",
-    "font-size": "clamp(2rem, 4vw, 3.25rem)"
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(2rem, 4vw, 3.25rem))"
   },
   "cta__summary": {
     "margin": "0",

@@ -1,7 +1,7 @@
 import type { ConcreteDesignTheme } from "./appearance.js";
 import { mixPaletteColor, paletteContrast, readablePaletteColor } from "./palette-color.js";
 
-export const designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night"] as const;
+export const designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night", "paper"] as const;
 export type DesignPalette = (typeof designPalettes)[number];
 
 export const designPaletteLabels: Readonly<Record<DesignPalette, string>> = {
@@ -9,6 +9,7 @@ export const designPaletteLabels: Readonly<Record<DesignPalette, string>> = {
   gruvbox: "Gruvbox",
   "rose-pine": "Rosé Pine",
   "tokyo-night": "Tokyo Night",
+  paper: "Paper",
 };
 
 export function isDesignPalette(value: unknown): value is DesignPalette {
@@ -34,6 +35,20 @@ interface PaletteSource {
 
 /** Official palette seeds; provenance and application adaptations are in PALETTES.md. */
 export const designPaletteSources: Readonly<Record<DesignPalette, Readonly<Record<ConcreteDesignTheme, PaletteSource>>>> = {
+  paper: {
+    light: {
+      background: "#f8f7f4", surface: "#fffefa", raised: "#fffefa", hover: "#ebe8e3",
+      text: "#1c1917", muted: "#6f6962", border: "#8b8278", primary: "#1f5eea",
+      danger: "#b23c34", warning: "#a65f00", success: "#26814d", info: "#1f5eea",
+      violet: "#7959a5", rose: "#a44b65",
+    },
+    dark: {
+      background: "#12100f", surface: "#1d1a18", raised: "#211d1a", hover: "#292522",
+      text: "#f5f2ed", muted: "#aaa29a", border: "#827a72", primary: "#8fb0ff",
+      danger: "#ef8c82", warning: "#efae55", success: "#5fc98b", info: "#8fb0ff",
+      violet: "#b7a0dc", rose: "#db91aa",
+    },
+  },
   catppuccin: {
     dark: {
       background: "#1e1e2e", surface: "#181825", raised: "#313244", hover: "#45475a",
@@ -135,6 +150,10 @@ export type SemanticPalette = ReturnType<typeof createPalette>;
 
 /** The same opaque values drive compiled StyleX themes, metadata, and contrast tests. */
 export const paletteColors: Readonly<Record<DesignPalette, Readonly<Record<ConcreteDesignTheme, SemanticPalette>>>> = Object.freeze({
+  paper: Object.freeze({
+    light: Object.freeze({ ...createPalette(designPaletteSources.paper.light, "light"), grid: "#dfdcd6", line: "#b9b3ab", secondary: "#ebe8e3" }),
+    dark: Object.freeze({ ...createPalette(designPaletteSources.paper.dark, "dark"), grid: "#302b27", line: "#514a44", secondary: "#292522" }),
+  }),
   catppuccin: Object.freeze({ light: createPalette(designPaletteSources.catppuccin.light, "light"), dark: createPalette(designPaletteSources.catppuccin.dark, "dark") }),
   gruvbox: Object.freeze({ light: createPalette(designPaletteSources.gruvbox.light, "light"), dark: createPalette(designPaletteSources.gruvbox.dark, "dark") }),
   "rose-pine": Object.freeze({ light: createPalette(designPaletteSources["rose-pine"].light, "light"), dark: createPalette(designPaletteSources["rose-pine"].dark, "dark") }),

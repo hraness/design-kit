@@ -33,6 +33,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/jelly.css",
   "src/palette-bridge.css",
   "src/palettes.css",
+  "src/paper-theme.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -1600,8 +1601,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.3" },
-  "StyleX manifest must describe design-kit v0.6.3",
+  { name: "@hraness/design-kit", version: "0.6.4" },
+  "StyleX manifest must describe design-kit v0.6.4",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");

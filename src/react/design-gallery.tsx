@@ -221,6 +221,19 @@ export function DesignSystemGallery({
         </div>
       </section>
 
+      <section className="design-gallery__section" id="paper-theme">
+        <h2>Paper theme</h2>
+        <p>Import paper-theme.css to share warm neutral colors and compact typography without replacing layouts or saved appearance choices.</p>
+        <div className="design-gallery__paper" data-hraness-theme="paper" data-theme="light">
+          <h3>Light paper</h3><p>Shared semantic roles keep text, surfaces, and actions consistent.</p>
+          <Button variant="primary">Create note</Button>
+        </div>
+        <div className="design-gallery__paper" data-hraness-theme="paper" data-theme="dark">
+          <h3>Dark paper</h3><p>The same palette contract follows an explicit dark preference.</p>
+          <Button variant="primary">Open notes</Button>
+        </div>
+      </section>
+
       <section className="design-gallery__section" id="marketing">
         <h2>Product-marketing grammar</h2>
         <MarketingPage className="design-gallery__marketing">

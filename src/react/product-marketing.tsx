@@ -244,7 +244,7 @@ export interface ProductHeroProps {
   readonly className?: string;
   /** A concrete request a reader could make, shown under the summary. */
   readonly example?: string;
-  readonly eyebrow: string;
+  readonly eyebrow?: string;
   readonly facts?: readonly MarketingFact[];
   /** Static fact columns without inline styles; omission uses the facts length. Mobile stays two columns. */
   readonly factsColumns?: MarketingColumnCount;
@@ -293,7 +293,7 @@ export function ProductHero({
       data-tone={tone}
     >
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
-        <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>
+        {eyebrow === undefined ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
         <p className={classNames("hraness-marketing-hero__name")}>{name}</p>
         <Heading className={classNames("hraness-marketing-hero__heading")} id={headingId} level={headingLevel}>
           {heading}

@@ -898,14 +898,14 @@ var marketingStyles = {
     kN5DiO: "x1f41ap9",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x17152no x11ndyap",
-    kLh5Sq: "xonxqqx",
+    kLh5Sq: "xbs339",
     $$css: true
   },
   hero__summary: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
-    kLh5Sq: "x1agoj5f",
+    kLh5Sq: "x1h87l4j",
     kN5DiO: "xfrs9s4",
     k2kXS: "x1l2wkh2",
     $$css: true
@@ -1445,7 +1445,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   section__summary: {
@@ -1500,7 +1500,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   primitives__summary: {
@@ -1549,7 +1549,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   interfaces__summary: {
@@ -1598,7 +1598,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   trust__summary: {
@@ -1647,7 +1647,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   quotes__summary: {
@@ -1696,7 +1696,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   pricing__summary: {
@@ -1745,7 +1745,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   questions__summary: {
@@ -1796,7 +1796,7 @@ var marketingStyles = {
     kUEKN5: "x1hi0czg",
     kN5DiO: "x1uo3zyz",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xrimsq4",
+    kLh5Sq: "xixn193",
     $$css: true
   },
   primitives__list: {
@@ -2301,7 +2301,7 @@ var marketingStyles = {
     kN5DiO: "x1vsts26",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x1mq39nd",
-    kLh5Sq: "xeg013o",
+    kLh5Sq: "x1qczpk7",
     $$css: true
   },
   cta__summary: {
@@ -3379,7 +3379,7 @@ function ProductHero({
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default"),
         children: [
-          /* @__PURE__ */ jsx2("p", {
+          eyebrow === undefined ? null : /* @__PURE__ */ jsx2("p", {
             className: marketingClassName("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default"),
             children: eyebrow
           }),

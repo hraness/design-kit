@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import "./generate-palettes.js";
+import { paperThemeCss } from "./generate-paper-theme.js";
 import { readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";
 
@@ -34,6 +35,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/jelly.css",
   "src/palette-bridge.css",
   "src/palettes.css",
+  "src/paper-theme.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -124,6 +126,7 @@ export async function buildPackage(
 ): Promise<void> {
   assert.equal(Bun.version, "1.3.14", "Package builds require Bun 1.3.14");
   repository = resolve(repository);
+  assert.equal(await readFile(join(repository, "src/paper-theme.css"), "utf8"), paperThemeCss, "Paper theme is stale; run bun run generate:paper-theme.");
   outdir = resolve(outdir);
   relativeBelow(repository, outdir, "build output directory");
   await rm(outdir, { recursive: true, force: true });

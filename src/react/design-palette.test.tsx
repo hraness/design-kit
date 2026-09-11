@@ -16,7 +16,7 @@ test("palette SSR renders one native appearance control and no inline CSP depend
   expect(document.querySelectorAll("details")).toHaveLength(1);
   expect(document.querySelectorAll("summary")).toHaveLength(1);
   expect(document.querySelector("summary")?.getAttribute("aria-label")).toBe("Appearance: Catppuccin, Dark");
-  expect(document.querySelectorAll('input[type="radio"]')).toHaveLength(7);
+  expect(document.querySelectorAll('input[type="radio"]')).toHaveLength(8);
   expect(document.querySelectorAll("fieldset")).toHaveLength(2);
   expect(Array.from(document.querySelectorAll("legend"), (legend) => legend.textContent)).toEqual(["Theme", "Appearance"]);
   expect(document.querySelectorAll('input[checked]')).toHaveLength(2);

@@ -38,7 +38,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-x957htqa.js";
+} from "./chunk-spvbmw4r.js";
 import {
   highlightCode,
   resolveSyntaxLanguage,

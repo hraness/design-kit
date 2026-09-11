@@ -24,7 +24,7 @@ const source = [
 const path = resolve(root, "src/palette-tokens.stylex.ts");
 if (process.argv.includes("--write")) {
   await writeFile(path, source);
-  console.log("Generated the eight complete StyleX palette recipes.");
+  console.log(`Generated ${designPalettes.length * 2} complete StyleX palette recipes.`);
 } else if (await readFile(path, "utf8") !== source) {
   throw new Error("StyleX palettes are stale. Run bun run scripts/generate-palettes.ts --write.");
 }

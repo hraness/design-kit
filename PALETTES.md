@@ -1,6 +1,6 @@
 # Semantic palettes
 
-Applications can opt into Catppuccin, Gruvbox, Rosé Pine, or Tokyo Night, with light, dark, and system appearance. Catppuccin dark is the default. Existing `DesignThemeProvider` consumers keep their existing appearance behavior until they opt in.
+Applications can opt into Paper, Catppuccin, Gruvbox, Rosé Pine, or Tokyo Night, with light, dark, and system appearance. Catppuccin dark is the default. Existing `DesignThemeProvider` consumers keep their existing appearance behavior until they opt in.
 
 ## Install and render
 
@@ -16,7 +16,7 @@ A product can use the browser controller without React. Its snapshot, subscripti
 
 ## Preferences and embedded views
 
-The controller stores only `{ "palette": "catppuccin", "mode": "dark" }` under `hraness-design-palette-v1` in the current origin's local storage. It supports all four palette identifiers and `light`, `dark`, or `system`. Invalid or inaccessible storage falls back to Catppuccin dark. Storage events synchronize other tabs, and system mode follows operating-system appearance changes.
+The controller stores only `{ "palette": "catppuccin", "mode": "dark" }` under `hraness-design-palette-v1` in the current origin's local storage. It supports all five palette identifiers and `light`, `dark`, or `system`. Invalid or inaccessible storage falls back to Catppuccin dark. Storage events synchronize other tabs, and system mode follows operating-system appearance changes.
 
 Use `forcedPreference` for an embedded example or fixed preview in its own document. A document has one palette controller; conflicting nested providers are rejected. Forced providers do not persist preferences or adopt the parent document's controller. Each document still needs its initial attributes and compiled palette class. The host owns any propagation between iframe documents.
 
@@ -24,7 +24,7 @@ Portalled controls receive the resolved palette class through the shared portal 
 
 ## StyleX and semantic roles
 
-`src/palettes.ts` owns the source colors and their application adaptations. `bun run generate:palettes` writes eight complete `stylex.createTheme` recipes against one `stylex.defineVars` contract in `src/palette-tokens.stylex.ts`. The build verifies that the generated source is current, then compiles the recipes with runtime CSS injection disabled.
+`src/palettes.ts` owns the source colors and their application adaptations. `bun run generate:palettes` writes ten complete `stylex.createTheme` recipes against one `stylex.defineVars` contract in `src/palette-tokens.stylex.ts`. The build verifies that the generated source is current, then compiles the recipes with runtime CSS injection disabled.
 
 The global CSS boundary maps existing `--primary`, `--danger`, `--warning`, `--success`, surface, text, focus, and `--ui-*` roles to the compiled `--hraness-palette-*` properties. Product CSS and shared controls consume the same values. Use semantic roles for meaning; keep text or an icon with each status so color is not its only cue.
 
@@ -46,3 +46,17 @@ This uses StyleX's documented [variable contract](https://stylexjs.com/docs/api/
 These are interface adaptations of the upstream palettes. Backgrounds retain their source values. Text and control colors move toward black or white when necessary for readability across the background, surface, raised surface, and hover surface. Body text reaches 7:1, secondary text and semantic text reach at least 4.5:1, and control boundaries reach at least 3:1. Filled semantic actions also have a tested foreground pair. Subtle separators are decorative and do not serve as the sole boundary of an interactive control.
 
 The recipe tests cover every supported color pair. Browser coverage checks actual inheritance, theme switching, storage, and overlays. Forced-colors mode uses system colors. Components remain responsible for appropriate labels, keyboard behavior, and focus visibility.
+
+## Paper as a product default
+
+Paper uses warm neutral backgrounds and one blue action color. Its source
+backgrounds and typography follow the shared studio visual reference;
+foreground, status, and control colors use the same readability adaptation
+as the other palettes. Use `defaultPreference={{ palette: "paper", mode: "system" }}`
+on both the bootstrap and `DesignPaletteProvider`. Existing saved palette
+preferences win; `legacyStorageKey` migrates an existing light, dark, or system
+choice. The package default remains Catppuccin dark.
+
+The [portable Paper stylesheet](PAPER_THEME.md) is generated from these same
+palette values. It supplies typography and marketing tokens to named-palette
+consumers while a non-Paper palette retains its selected colors.
