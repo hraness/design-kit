@@ -31,17 +31,52 @@ function readablePaletteColor(color, toward, backgrounds, minimum) {
 }
 
 // src/palettes.ts
-var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night"];
+var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night", "paper"];
 var designPaletteLabels = {
   catppuccin: "Catppuccin",
   gruvbox: "Gruvbox",
   "rose-pine": "Rosé Pine",
-  "tokyo-night": "Tokyo Night"
+  "tokyo-night": "Tokyo Night",
+  paper: "Paper"
 };
 function isDesignPalette(value) {
   return typeof value === "string" && designPalettes.some((palette) => palette === value);
 }
 var designPaletteSources = {
+  paper: {
+    light: {
+      background: "#f8f7f4",
+      surface: "#fffefa",
+      raised: "#fffefa",
+      hover: "#ebe8e3",
+      text: "#1c1917",
+      muted: "#6f6962",
+      border: "#8b8278",
+      primary: "#1f5eea",
+      danger: "#b23c34",
+      warning: "#a65f00",
+      success: "#26814d",
+      info: "#1f5eea",
+      violet: "#7959a5",
+      rose: "#a44b65"
+    },
+    dark: {
+      background: "#12100f",
+      surface: "#1d1a18",
+      raised: "#211d1a",
+      hover: "#292522",
+      text: "#f5f2ed",
+      muted: "#aaa29a",
+      border: "#827a72",
+      primary: "#8fb0ff",
+      danger: "#ef8c82",
+      warning: "#efae55",
+      success: "#5fc98b",
+      info: "#8fb0ff",
+      violet: "#b7a0dc",
+      rose: "#db91aa"
+    }
+  },
   catppuccin: {
     dark: {
       background: "#1e1e2e",
@@ -247,6 +282,20 @@ function createPalette(source, mode) {
   });
 }
 var paletteColors = Object.freeze({
+  paper: Object.freeze({
+    light: Object.freeze({
+      ...createPalette(designPaletteSources.paper.light, "light"),
+      grid: "#dfdcd6",
+      line: "#b9b3ab",
+      secondary: "#ebe8e3"
+    }),
+    dark: Object.freeze({
+      ...createPalette(designPaletteSources.paper.dark, "dark"),
+      grid: "#302b27",
+      line: "#514a44",
+      secondary: "#292522"
+    })
+  }),
   catppuccin: Object.freeze({
     light: createPalette(designPaletteSources.catppuccin.light, "light"),
     dark: createPalette(designPaletteSources.catppuccin.dark, "dark")
@@ -352,9 +401,21 @@ var tokyoNightDark = {
   x18acsur: "xgp1gpt x18acsur",
   $$css: true
 };
+var paperLight = {
+  x18acsur: "xjfxk3y x18acsur",
+  $$css: true
+};
+var paperDark = {
+  x18acsur: "x1lresar x18acsur",
+  $$css: true
+};
 
 // src/palette-themes.ts
 var classes = {
+  paper: {
+    light: stylex.props(paperLight).className,
+    dark: stylex.props(paperDark).className
+  },
   catppuccin: {
     light: stylex.props(catppuccinLight).className,
     dark: stylex.props(catppuccinDark).className

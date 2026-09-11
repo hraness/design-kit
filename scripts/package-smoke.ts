@@ -734,6 +734,7 @@ const compilerStylesheetPaths = [
   "src/jelly.css",
   "src/palette-bridge.css",
   "src/palettes.css",
+  "src/paper-theme.css",
   "src/plain-publication.css",
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
@@ -758,7 +759,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.3" },
+    { name: "@hraness/design-kit", version: "0.6.4" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -824,7 +825,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.6.3 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.6.4 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -842,7 +843,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.6.3 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.6.4 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -854,7 +855,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.3.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.4.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1398,6 +1399,7 @@ try {
     "src/palette-appearance.ts",
     "src/palette-bridge.css",
     "src/palettes.css",
+  "src/paper-theme.css",
     "src/browser/design-palette.ts",
     "src/react/design-palette.tsx",
     "src/react/design-palette.stylex.ts",

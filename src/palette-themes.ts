@@ -3,10 +3,11 @@ import type { ConcreteDesignTheme } from "./appearance.js";
 import { paletteColors, type DesignPalette } from "./palettes.js";
 import {
   catppuccinDark, catppuccinLight, gruvboxDark, gruvboxLight,
-  rosePineDark, rosePineLight, tokyoNightDark, tokyoNightLight,
+  rosePineDark, rosePineLight, tokyoNightDark, tokyoNightLight, paperDark, paperLight,
 } from "./palette-tokens.stylex.js";
 
 const classes = {
+  paper: { light: stylex.props(paperLight).className, dark: stylex.props(paperDark).className },
   catppuccin: { light: stylex.props(catppuccinLight).className, dark: stylex.props(catppuccinDark).className },
   gruvbox: { light: stylex.props(gruvboxLight).className, dark: stylex.props(gruvboxDark).className },
   "rose-pine": { light: stylex.props(rosePineLight).className, dark: stylex.props(rosePineDark).className },

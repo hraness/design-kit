@@ -16,7 +16,7 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   resolveDesignPalettePreference
-} from "../chunk-x957htqa.js";
+} from "../chunk-spvbmw4r.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -55,7 +55,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-516rk56h.js";
+} from "../chunk-96h25arz.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -3640,6 +3640,52 @@ function DesignSystemGallery({
                     " stay quiet until interaction."
                   ]
                 })
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs11("section", {
+        className: "design-gallery__section",
+        id: "paper-theme",
+        children: [
+          /* @__PURE__ */ jsx13("h2", {
+            children: "Paper theme"
+          }),
+          /* @__PURE__ */ jsx13("p", {
+            children: "Import paper-theme.css to share warm neutral colors and compact typography without replacing layouts or saved appearance choices."
+          }),
+          /* @__PURE__ */ jsxs11("div", {
+            className: "design-gallery__paper",
+            "data-hraness-theme": "paper",
+            "data-theme": "light",
+            children: [
+              /* @__PURE__ */ jsx13("h3", {
+                children: "Light paper"
+              }),
+              /* @__PURE__ */ jsx13("p", {
+                children: "Shared semantic roles keep text, surfaces, and actions consistent."
+              }),
+              /* @__PURE__ */ jsx13(Button2, {
+                variant: "primary",
+                children: "Create note"
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs11("div", {
+            className: "design-gallery__paper",
+            "data-hraness-theme": "paper",
+            "data-theme": "dark",
+            children: [
+              /* @__PURE__ */ jsx13("h3", {
+                children: "Dark paper"
+              }),
+              /* @__PURE__ */ jsx13("p", {
+                children: "The same palette contract follows an explicit dark preference."
+              }),
+              /* @__PURE__ */ jsx13(Button2, {
+                variant: "primary",
+                children: "Open notes"
               })
             ]
           })

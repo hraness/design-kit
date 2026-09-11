@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paper theme reference</title>
+  <link rel="stylesheet" href="/fonts.css">
+  <link rel="stylesheet" href="/fixture.css">
+  <link rel="stylesheet" href="/paper-theme.css">
+</head>
+<body>
+  <main>
+    <h1>Paper theme reference</h1>
+    <p>One shared palette, with independent appearance choices.</p>
+    <section data-hraness-theme="paper" data-theme="light" data-paper-sample id="light">
+      <h2>Plan tomorrow’s work</h2>
+      <p>Keep your notes beside the next action. Warm surfaces and clear text make the work easy to follow.</p>
+      <label for="note">Note</label><input id="note" placeholder="Add a note">
+      <button type="button">Create note</button>
+      <details><summary>Saved preferences</summary><p>Your choice of Light, Dark, or System stays with this browser.</p></details>
+      <div class="hraness-marketing-section" id="marketing-rhythm">Marketing rhythm inherits the shared measure.</div>
+      <aside data-hraness-theme="paper" data-theme="dark" data-paper-sample id="nested-dark"><p>A dark view inside a light page.</p></aside>
+    </section>
+    <section data-hraness-theme="paper" data-theme="dark" data-paper-sample id="dark">
+      <h2>Continue after sunset</h2><p>The same controls retain their shape and meaning in dark appearance.</p>
+      <button type="button">Open notes</button><button type="button" disabled>Saved</button>
+      <aside data-hraness-theme="paper" data-theme="light" data-paper-sample id="nested-light"><p>A light view inside a dark page.</p></aside>
+    </section>
+    <section id="unthemed" data-paper-sample><h2>An independent surface</h2><p>A site that does not opt in keeps its own styles.</p></section>
+    <section id="chosen" data-paper-sample data-hraness-theme="paper" data-palette="gruvbox" data-theme="dark"><h2>A saved palette</h2><p>Choosing another palette retains its colors.</p></section>
+  </main>
+</body>
+</html>

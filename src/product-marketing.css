@@ -174,7 +174,7 @@
   .hraness-marketing-questions__heading,
   .hraness-marketing-maker__heading
 ) {
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-size: var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem));
 }
 
 /* Lead and summary paragraphs under a heading. */
@@ -403,14 +403,14 @@
 
 .hraness-marketing-hero__heading {
   max-inline-size: 18ch;
-  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-size: var(--hraness-paper-heading-size, clamp(2.5rem, 5vw, 4.25rem));
   letter-spacing: var(--hraness-marketing-heading-tracking);
   line-height: 1.05;
 }
 
 .hraness-marketing-hero__summary {
   max-inline-size: var(--hraness-marketing-copy-measure);
-  font-size: clamp(1.125rem, 1.6vw, 1.3rem);
+  font-size: var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem));
   line-height: 1.45;
 }
 
@@ -1242,7 +1242,7 @@
 
 .hraness-marketing-cta__heading {
   max-inline-size: 20ch;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: var(--hraness-paper-section-heading-size, clamp(2rem, 4vw, 3.25rem));
   letter-spacing: var(--hraness-marketing-heading-tracking);
   line-height: 1.08;
 }

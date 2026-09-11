@@ -202,3 +202,27 @@ test("forced previews do not read or write preferences and ignore later system c
   expect(f.listeners.size).toBe(0);
   controller.dispose();
 });
+
+
+test("opting into Paper changes first visits and preserves named palettes and legacy appearance", () => {
+  for (const saved of [null, JSON.stringify({ palette: "gruvbox", mode: "light" })]) {
+    const f = fixture(true);
+    if (saved !== null) f.storage.setItem(designPaletteStorageKey, saved);
+    f.storage.setItem("product-appearance", "light");
+    const controller = initDesignPalette({ document: f.document, storage: f.storage,
+      defaultPreference: { palette: "paper", mode: "system" }, legacyStorageKey: "product-appearance" });
+    expect(controller.getSnapshot().preference).toEqual(saved === null
+      ? { palette: "paper", mode: "light" } : { palette: "gruvbox", mode: "light" });
+    expect(JSON.parse(f.storage.getItem(designPaletteStorageKey) ?? "null")).toEqual(controller.getSnapshot().preference);
+    controller.dispose();
+  }
+  const fresh = fixture(true);
+  const controller = initDesignPalette({ document: fresh.document, storage: fresh.storage,
+    defaultPreference: { palette: "paper", mode: "system" } });
+  expect(controller.getSnapshot().preference).toEqual({ palette: "paper", mode: "system" });
+  expect(controller.getSnapshot().resolvedMode).toBe("dark");
+  fresh.changeSystem(false);
+  expect(controller.getSnapshot().resolvedMode).toBe("light");
+  expect(JSON.parse(fresh.storage.getItem(designPaletteStorageKey) ?? "null")).toEqual({ palette: "paper", mode: "system" });
+  controller.dispose();
+});

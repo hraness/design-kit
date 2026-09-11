@@ -232,6 +232,7 @@ try {
       await page.locator("#outside").click();
       assert.equal(await page.locator("details").getAttribute("open"), null);
       await openMenu(page);
+      await page.locator('input[value="tokyo-night"]').check();
       await page.locator('input[value="system"]').check();
       await page.emulateMedia({ colorScheme: "light" });
       await assertPalette(page, "tokyo-night", "light");
@@ -289,7 +290,7 @@ try {
         "The original compiled cascade must fail the same forced-color assertion.");
       await forcedContext.close();
       assert.deepEqual(errors, [], "Browser errors occurred.");
-      console.log("Palette browser checks passed: eight variants, first paint, persistence, cross-tab/system changes, denied/malformed storage, native menu, portals, strict CSP, and forced colors across standalone and compiled foundations with the original-cascade negative control.");
+      console.log(`Palette browser checks passed: ${String(designPalettes.length * 2)} variants, first paint, persistence, cross-tab/system changes, denied/malformed storage, native menu, portals, strict CSP, and forced colors across standalone and compiled foundations with the original-cascade negative control.`);
     } finally { await browser.close(); }
   } finally { await server.stop(true); }
 } finally { await rm(work, { recursive: true, force: true }); }

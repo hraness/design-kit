@@ -489,7 +489,7 @@ async function colorProbe(page: Page) {
     receipts.push({ label, property, authored: [left, right], computed, nativeEquivalent: equivalent, projectedParity, projectionProof, actual: a, original: b });
   }
   const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "13e248b43c4ee2d29651cc27d45740d76ff0f74589f1cf8c82b1da6693bf20ff");
+  assert.equal(legacySha256, "313895e36bee0902727adfebf5d811147b45b9d2242a78f54f6d88681f4618a4");
   return { space: "xyz-d65", coordinateEpsilon: CSS_COLOR_XYZ_EPSILON, alphaEpsilon: CSS_COLOR_ALPHA_EPSILON,
     compiler: colorProjectionCompilerIdentity(), legacySha256, receipts };
 }
@@ -545,7 +545,7 @@ function recordDeliveryMismatch(
 }
 try {
   const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "13e248b43c4ee2d29651cc27d45740d76ff0f74589f1cf8c82b1da6693bf20ff", "The independent static CSS oracle changed");
+  assert.equal(legacySha256, "313895e36bee0902727adfebf5d811147b45b9d2242a78f54f6d88681f4618a4", "The independent static CSS oracle changed");
   // The fixture renders the shipped server entry, not copied component markup or a mock recipe.
   const api: typeof ProductMarketing = await import(join(repository, "dist/react/server.js"));
   const html = renderToStaticMarkup(createElement(ProductMarketingFixture, { api }));

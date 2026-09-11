@@ -32,7 +32,7 @@ describe("semantic palettes", () => {
       expect(Object.keys(paletteColors[palette][mode as "light" | "dark"]).sort()).toEqual(keys);
       return getDesignPaletteTheme(palette, mode as "light" | "dark").className;
     }));
-    expect(new Set(themes).size).toBe(8);
+    expect(new Set(themes).size).toBe(designPalettes.length * 2);
   });
   test("foreign palette values never expand the closed set", () => {
     fc.assert(fc.property(fc.anything(), (value) => {

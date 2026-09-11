@@ -1,3 +1,5 @@
+@import "../src/paper-theme.css";
+
 .design-gallery-appearance-portal-canary {
   --ui-accent: rgb(89, 45, 168);
   --ui-accent-foreground: rgb(255, 255, 255);

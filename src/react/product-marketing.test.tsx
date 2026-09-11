@@ -313,3 +313,13 @@ test("empty quote and pillar collections render nothing", () => {
   )).toBe("");
   expect(renderToStaticMarkup(<MarketingPillars ariaLabel="Pillars" pillars={[]} />)).toBe("");
 });
+
+
+test("a compact hero can omit its eyebrow without rendering an empty label", () => {
+  const html = renderToStaticMarkup(<ProductHero name="Relay" heading="Run the next job" headingId="compact-title" summary="Keep your work in one place." />);
+  expect(html).not.toContain("hraness-marketing-hero__eyebrow");
+  expect(html).toContain("Run the next job");
+  const labeled = renderToStaticMarkup(<ProductHero eyebrow="Developer tools" name="Relay" heading="Run the next job" headingId="labeled-title" summary="Keep your work in one place." />);
+  expect(labeled).toContain("hraness-marketing-hero__eyebrow");
+  expect(labeled).toContain("Developer tools");
+});

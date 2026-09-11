@@ -64,7 +64,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.6.3");
+  expect(packageJson.version).toBe("0.6.4");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.12 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.12");
@@ -86,6 +86,7 @@ test("the package exposes compositions without a second primitive barrel", async
     types: "./src/react/server.ts",
     import: "./dist/react/server.js",
   });
+  expect(packageJson.exports["./paper-theme.css"]).toBe("./src/paper-theme.css");
   expect(packageJson.exports["./product-marketing.css"]).toBe(
     "./src/product-marketing.css",
   );
