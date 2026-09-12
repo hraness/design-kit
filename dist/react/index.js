@@ -4682,6 +4682,15 @@ import * as stylex13 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import { useEffect as useEffect8, useRef as useRef6, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
+// src/react/theme-resolution.ts
+function resolveEffectiveTheme(forcedTheme, resolvedTheme) {
+  if (forcedTheme === "light" || forcedTheme === "dark")
+    return forcedTheme;
+  if (resolvedTheme === "light" || resolvedTheme === "dark")
+    return resolvedTheme;
+  return;
+}
+
 // src/react/theme.stylex.ts
 var themeStyles = {
   item: {
@@ -4865,13 +4874,15 @@ function PersistedThemeNormalizer() {
 }
 function JellyThemeSync() {
   const {
+    forcedTheme,
     resolvedTheme
   } = useTheme();
+  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
   useEffect8(() => {
-    if (resolvedTheme === "light" || resolvedTheme === "dark") {
-      setJellyThemeMode(resolvedTheme);
+    if (effectiveTheme !== undefined) {
+      setJellyThemeMode(effectiveTheme);
     }
-  }, [resolvedTheme]);
+  }, [effectiveTheme]);
   return null;
 }
 function PortalThemeBridge({
@@ -4881,7 +4892,7 @@ function PortalThemeBridge({
   const {
     resolvedTheme
   } = useTheme();
-  const portalTheme = resolvedTheme === "light" || resolvedTheme === "dark" ? resolvedTheme : forcedTheme;
+  const portalTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
   return /* @__PURE__ */ jsx14(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
@@ -5069,11 +5080,13 @@ function ThemeColorSync({
 }) {
   const palette = useDesignPalette();
   const {
+    forcedTheme,
     resolvedTheme
   } = useTheme();
+  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
   const registrationId = useRef6(Symbol("hraness-design-theme-color"));
   const registration = useRef6(null);
-  const resolvedColor = palette !== null ? metaName !== "theme-color" && palette.ready ? palette.background : undefined : resolvedTheme === "light" || resolvedTheme === "dark" ? themeColorFor(resolvedTheme, {
+  const resolvedColor = palette !== null ? metaName !== "theme-color" && palette.ready ? palette.background : undefined : effectiveTheme !== undefined ? themeColorFor(effectiveTheme, {
     dark: darkColor,
     light: lightColor
   }) : undefined;
