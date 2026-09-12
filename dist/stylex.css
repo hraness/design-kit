@@ -990,6 +990,10 @@
     background-color: var(--hraness-marketing-surface);
   }
 
+  .x1esxp0 {
+    background-color: var(--hraness-material-warm-plane);
+  }
+
   .x1awrtuo {
     background-color: var(--popover, Canvas);
   }
@@ -1052,6 +1056,18 @@
 
   .x14zxsdj {
     background-image: linear-gradient(color-mix(in oklch,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklch,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),none;
+  }
+
+  .x1ypvk0y {
+    background-image: linear-gradient(to bottom,var(--hraness-material-edge),transparent 2px);
+  }
+
+  .x149bd8 {
+    background-image: linear-gradient(to bottom,var(--hraness-material-shade),transparent 4px);
+  }
+
+  .x116gf9f {
+    background-image: linear-gradient(to top,var(--hraness-material-warm),var(--hraness-material-warm) 2px,transparent 2px);
   }
 
   .x18o3ruo {
@@ -1528,6 +1544,10 @@
 
   .xs87ocq {
     color: var(--hraness-marketing-muted);
+  }
+
+  .x1rowbon {
+    color: var(--hraness-material-ink);
   }
 
   .x1eebzld {
@@ -2693,7 +2713,7 @@
     background-color: var(--surface-hover);
   }
 
-  .x1aysnjn:is([data-hovered], :hover), .xhhc4os:is([data-focused], [data-hovered], :focus-visible, :hover) {
+  .x1aysnjn:is([data-hovered], :hover), .xhhc4os:is([data-focused], [data-hovered], :focus-visible, :hover), .xl5f23e:is(:disabled, [data-disabled], [aria-disabled="true"]) {
     background-image: none;
   }
 
@@ -2759,6 +2779,10 @@
 
   .x1rpfuv1:is([data-pressed], :active) {
     transform: translateY(1px);
+  }
+
+  .x13lu1oe:has(input:disabled, textarea:disabled) {
+    background-image: none;
   }
 
   .x1s07b3s:disabled {

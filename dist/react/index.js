@@ -56,7 +56,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ergwhzcj.js";
+} from "../chunk-m3e0ek89.js";
 import"../chunk-jey98bgc.js";
 import {
   __require
@@ -1535,9 +1535,9 @@ function DesignPaletteMenuButton({
   });
 }
 // src/react/design-gallery.tsx
-import { Badge, Button as Button2, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
+import { Badge, Button as Button3, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
-import { useState as useState3 } from "react";
+import { useState as useState4 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
@@ -2990,6 +2990,245 @@ var JellySurface = forwardRef(function JellySurface2({
   }, children);
 });
 
+// src/react/lantern-material-gallery.tsx
+import { Button as Button2, TextField } from "@hraness/ui";
+import { useId as useId2, useState as useState3 } from "react";
+
+// src/react/lantern-material.stylex.ts
+var lanternControlStyles = {
+  edge: {
+    kKwaWg: "x1ypvk0y xl5f23e xhobzj1",
+    $$css: true
+  },
+  inset: {
+    kKwaWg: "x149bd8 x13lu1oe xhobzj1",
+    $$css: true
+  },
+  selected: {
+    kWkggS: "x1esxp0 x1jzqe4",
+    kKwaWg: "x116gf9f xl5f23e xhobzj1",
+    kMwMTN: "x1rowbon x1k5gbb1",
+    $$css: true
+  }
+};
+
+// src/react/lantern-material-gallery.tsx
+import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+var exampleNotes = [{
+  title: "A place for unfinished thoughts",
+  detail: "Personal · edited today"
+}, {
+  title: "What we learned on the walk",
+  detail: "Shared · edited yesterday"
+}, {
+  title: "Ideas for a slower morning",
+  detail: "Personal · edited Monday"
+}];
+function MaterialWorkspace({
+  mode
+}) {
+  const id = useId2();
+  const [query, setQuery] = useState3("");
+  const [personalOnly, setPersonalOnly] = useState3(false);
+  const [saved, setSaved] = useState3(false);
+  const notes = exampleNotes.filter((note) => note.title.toLowerCase().includes(query.toLowerCase()) && (!personalOnly || note.detail.startsWith("Personal")));
+  return /* @__PURE__ */ jsxs8("div", {
+    className: `design-gallery__lantern-wall hraness-material-wall ${getDesignPaletteTheme("paper", mode).className}`,
+    "data-hraness-material": "lantern",
+    "data-hraness-theme": "paper",
+    "data-palette": "paper",
+    "data-theme": mode,
+    "data-gallery-lantern": mode,
+    children: [
+      /* @__PURE__ */ jsxs8("div", {
+        className: "design-gallery__lantern-caption",
+        children: [
+          /* @__PURE__ */ jsx10("h3", {
+            children: mode === "light" ? "Daylight" : "Lamplight"
+          }),
+          /* @__PURE__ */ jsx10("p", {
+            children: "Same room. A different light."
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs8("div", {
+        className: "design-gallery__lantern-workspace hraness-material-pane",
+        "data-depth": "raised",
+        children: [
+          /* @__PURE__ */ jsx10(TopBar, {
+            className: "hraness-material-chrome",
+            position: "sticky",
+            surface: "glass",
+            title: "Your notebook",
+            actions: /* @__PURE__ */ jsx10("span", {
+              className: "design-gallery__lantern-local",
+              children: "Local workspace"
+            })
+          }),
+          /* @__PURE__ */ jsxs8("div", {
+            className: "design-gallery__lantern-content",
+            children: [
+              /* @__PURE__ */ jsx10(TextField, {
+                controlXstyle: lanternControlStyles.inset,
+                inputProps: {
+                  id: `${id}-search`
+                },
+                label: "Find a note",
+                onChange: setQuery,
+                placeholder: "Search your notes",
+                value: query
+              }),
+              /* @__PURE__ */ jsxs8("div", {
+                className: "design-gallery__lantern-filter",
+                children: [
+                  /* @__PURE__ */ jsx10(Button2, {
+                    "aria-pressed": personalOnly,
+                    controlXstyle: [lanternControlStyles.edge, personalOnly && lanternControlStyles.selected],
+                    "data-gallery-lantern-filter": "",
+                    onPress: () => setPersonalOnly(!personalOnly),
+                    size: "compact",
+                    children: "Personal only"
+                  }),
+                  /* @__PURE__ */ jsxs8("span", {
+                    "aria-live": "polite",
+                    children: [
+                      notes.length,
+                      " ",
+                      notes.length === 1 ? "note" : "notes"
+                    ]
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsx10("ul", {
+                className: "hraness-material-rows design-gallery__lantern-notes",
+                children: notes.map((note) => /* @__PURE__ */ jsxs8("li", {
+                  children: [
+                    /* @__PURE__ */ jsxs8("details", {
+                      className: "hraness-material-disclosure",
+                      children: [
+                        /* @__PURE__ */ jsx10("summary", {
+                          children: note.title
+                        }),
+                        /* @__PURE__ */ jsx10("p", {
+                          children: "Illustrative note. Your words and decisions stay together here."
+                        })
+                      ]
+                    }),
+                    /* @__PURE__ */ jsx10("span", {
+                      children: note.detail
+                    })
+                  ]
+                }, note.title))
+              }),
+              notes.length === 0 ? /* @__PURE__ */ jsx10("p", {
+                role: "status",
+                children: "No notes match. Try a shorter search or turn off the personal filter."
+              }) : null,
+              /* @__PURE__ */ jsxs8("div", {
+                className: "design-gallery__lantern-save",
+                children: [
+                  /* @__PURE__ */ jsx10(Button2, {
+                    controlXstyle: lanternControlStyles.edge,
+                    onPress: () => setSaved(true),
+                    variant: "primary",
+                    children: "Save this view"
+                  }),
+                  /* @__PURE__ */ jsx10("span", {
+                    "aria-live": "polite",
+                    children: saved ? "View saved for this example." : "Example content. Nothing leaves this page."
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+function LanternMaterialGallery() {
+  const [plainSelected, setPlainSelected] = useState3(true);
+  const [removed, setRemoved] = useState3(false);
+  return /* @__PURE__ */ jsxs8("section", {
+    className: "design-gallery__section",
+    id: "lantern",
+    children: [
+      /* @__PURE__ */ jsx10("h2", {
+        children: "Lantern material"
+      }),
+      /* @__PURE__ */ jsx10("p", {
+        className: "design-gallery__lantern-intro",
+        children: "Quiet surfaces. Light at the edges. Warmth where you act."
+      }),
+      /* @__PURE__ */ jsxs8("div", {
+        className: "design-gallery__lantern-pair",
+        children: [
+          /* @__PURE__ */ jsx10(MaterialWorkspace, {
+            mode: "light"
+          }),
+          /* @__PURE__ */ jsx10(MaterialWorkspace, {
+            mode: "dark"
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs8("div", {
+        className: `design-gallery__lantern-states hraness-material-pane ${getDesignPaletteTheme("paper", "light").className}`,
+        "data-hraness-material": "lantern",
+        "data-hraness-theme": "paper",
+        "data-palette": "paper",
+        "data-theme": "light",
+        children: [
+          /* @__PURE__ */ jsx10("h3", {
+            children: "Controls keep their meaning"
+          }),
+          /* @__PURE__ */ jsx10("p", {
+            children: "Material follows the action. Keyboard focus, errors and unavailable actions remain explicit."
+          }),
+          /* @__PURE__ */ jsxs8("div", {
+            className: "design-gallery__lantern-state-actions",
+            children: [
+              /* @__PURE__ */ jsx10(Button2, {
+                controlXstyle: lanternControlStyles.edge,
+                isDisabled: true,
+                children: "Unavailable action"
+              }),
+              /* @__PURE__ */ jsx10(Button2, {
+                controlXstyle: lanternControlStyles.edge,
+                isPending: true,
+                children: "Saving changes"
+              }),
+              /* @__PURE__ */ jsx10(Button2, {
+                controlXstyle: lanternControlStyles.edge,
+                onPress: () => setRemoved(true),
+                variant: "danger",
+                children: "Remove example"
+              }),
+              /* @__PURE__ */ jsx10("button", {
+                className: "design-gallery__lantern-plain hraness-material-choice",
+                "aria-pressed": plainSelected,
+                onClick: () => setPlainSelected(!plainSelected),
+                type: "button",
+                children: "HTML selection"
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx10("p", {
+            "aria-live": "polite",
+            children: removed ? "Example removed for this visit." : "These controls demonstrate their real interaction states."
+          }),
+          /* @__PURE__ */ jsx10(TextField, {
+            controlXstyle: lanternControlStyles.inset,
+            defaultValue: "",
+            errorMessage: "Give the notebook a name before saving.",
+            isInvalid: true,
+            label: "Notebook name"
+          })
+        ]
+      })
+    ]
+  });
+}
+
 // src/react/navigation-rail.tsx
 import { Link, cn as cn10 } from "@hraness/ui";
 import * as stylex10 from "@stylexjs/stylex";
@@ -3111,7 +3350,7 @@ var navigationRailStyles = {
 };
 
 // src/react/navigation-rail.tsx
-import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
 function NavigationRail({
   "aria-label": ariaLabel = "Primary navigation",
   children,
@@ -3123,24 +3362,24 @@ function NavigationRail({
   const rootPresentation = stylex10.props(navigationRailStyles.rail);
   const edgePresentation = stylex10.props(navigationRailStyles.railEdge);
   const navigationPresentation = stylex10.props(navigationRailStyles.navigation);
-  return /* @__PURE__ */ jsxs8("aside", {
+  return /* @__PURE__ */ jsxs9("aside", {
     ...rootPresentation,
     ...props11,
     "aria-label": ariaLabel,
     className: cn10("hraness-design-navigation-rail", rootPresentation.className, className),
     children: [
-      header === undefined ? null : /* @__PURE__ */ jsx10("header", {
+      header === undefined ? null : /* @__PURE__ */ jsx11("header", {
         ...edgePresentation,
         className: cn10("hraness-design-navigation-rail__header", edgePresentation.className),
         children: header
       }),
-      /* @__PURE__ */ jsx10("nav", {
+      /* @__PURE__ */ jsx11("nav", {
         ...navigationPresentation,
         "aria-label": ariaLabel,
         className: cn10("hraness-design-navigation-rail__navigation", navigationPresentation.className),
         children
       }),
-      footer === undefined ? null : /* @__PURE__ */ jsx10("footer", {
+      footer === undefined ? null : /* @__PURE__ */ jsx11("footer", {
         ...edgePresentation,
         className: cn10("hraness-design-navigation-rail__footer", edgePresentation.className),
         children: footer
@@ -3159,17 +3398,17 @@ function RailSection({
   const rootPresentation = stylex10.props(navigationRailStyles.section);
   const titlePresentation = stylex10.props(navigationRailStyles.sectionTitle);
   const itemsPresentation = stylex10.props(navigationRailStyles.sectionItems);
-  return /* @__PURE__ */ jsxs8("section", {
+  return /* @__PURE__ */ jsxs9("section", {
     ...rootPresentation,
     ...props11,
     className: cn10("hraness-design-rail-section", rootPresentation.className, className),
     children: [
-      title === undefined ? null : /* @__PURE__ */ jsx10(Heading, {
+      title === undefined ? null : /* @__PURE__ */ jsx11(Heading, {
         ...titlePresentation,
         className: cn10("hraness-design-rail-section__title", titlePresentation.className),
         children: title
       }),
-      /* @__PURE__ */ jsx10("div", {
+      /* @__PURE__ */ jsx11("div", {
         ...itemsPresentation,
         className: cn10("hraness-design-rail-section__items", itemsPresentation.className),
         children
@@ -3192,36 +3431,36 @@ function RailItem({
   const copyPresentation = stylex10.props(navigationRailStyles.itemCopy);
   const labelPresentation = stylex10.props(navigationRailStyles.itemLabel);
   const descriptionPresentation = stylex10.props(navigationRailStyles.itemDescription);
-  return /* @__PURE__ */ jsxs8(Link, {
+  return /* @__PURE__ */ jsxs9(Link, {
     ...props11,
     "aria-current": isActive ? "page" : undefined,
     className: cn10("hraness-design-rail-item", className),
     href,
     xstyle: [navigationRailStyles.item, navigationRailStyles.itemNativeInteractionFallbacks, isActive && navigationRailStyles.itemActive, xstyle],
     children: [
-      icon === undefined ? null : /* @__PURE__ */ jsx10("span", {
+      icon === undefined ? null : /* @__PURE__ */ jsx11("span", {
         ...iconPresentation,
         "aria-hidden": "true",
         className: cn10("hraness-design-rail-item__icon", iconPresentation.className),
         children: icon
       }),
-      /* @__PURE__ */ jsxs8("span", {
+      /* @__PURE__ */ jsxs9("span", {
         ...copyPresentation,
         className: cn10("hraness-design-rail-item__copy", copyPresentation.className),
         children: [
-          /* @__PURE__ */ jsx10("span", {
+          /* @__PURE__ */ jsx11("span", {
             ...labelPresentation,
             className: cn10("hraness-design-rail-item__label", labelPresentation.className),
             children: label
           }),
-          description === undefined ? null : /* @__PURE__ */ jsx10("span", {
+          description === undefined ? null : /* @__PURE__ */ jsx11("span", {
             ...descriptionPresentation,
             className: cn10("hraness-design-rail-item__description", descriptionPresentation.className),
             children: description
           })
         ]
       }),
-      badge === undefined ? null : /* @__PURE__ */ jsx10("span", {
+      badge === undefined ? null : /* @__PURE__ */ jsx11("span", {
         className: "hraness-design-rail-item__badge",
         children: badge
       })
@@ -3251,7 +3490,7 @@ var playbackTransportStyles = {
 };
 
 // src/react/playback-transport.tsx
-import { jsx as jsx11, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
 function PlaybackTransport({
   buttonAriaKeyShortcuts,
   buttonId,
@@ -3272,12 +3511,12 @@ function PlaybackTransport({
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
   const rootPresentation = stylex11.props(playbackTransportStyles.root);
   const glyphPresentation = stylex11.props(playbackTransportStyles.glyph);
-  return /* @__PURE__ */ jsxs9(Toolbar, {
+  return /* @__PURE__ */ jsxs10(Toolbar, {
     ...accessibleName,
     className: cn11("hraness-design-playback-transport", rootPresentation.className, className),
     "data-playback-status": status,
     children: [
-      /* @__PURE__ */ jsx11(IconButton2, {
+      /* @__PURE__ */ jsx12(IconButton2, {
         "aria-busy": isPending || undefined,
         "aria-label": commandLabel,
         ...buttonAriaKeyShortcuts === undefined ? {} : {
@@ -3302,9 +3541,9 @@ function PlaybackTransport({
         },
         size: "large",
         variant: "primary",
-        children: isPending ? /* @__PURE__ */ jsx11(Spinner, {
+        children: isPending ? /* @__PURE__ */ jsx12(Spinner, {
           ...glyphPresentation
-        }) : /* @__PURE__ */ jsx11(Icon2, {
+        }) : /* @__PURE__ */ jsx12(Icon2, {
           ...glyphPresentation.className === undefined ? {} : {
             className: glyphPresentation.className
           },
@@ -3363,7 +3602,7 @@ var productionDataPreviewNoticeStyles = {
 };
 
 // src/react/production-data-preview-notice.tsx
-import { jsx as jsx12, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
 function ProductionDataPreviewNotice({
   surfaceOrigin
 }) {
@@ -3371,17 +3610,17 @@ function ProductionDataPreviewNotice({
     return null;
   const noticePresentation = stylex12.props(productionDataPreviewNoticeStyles.root);
   const emphasisPresentation = stylex12.props(productionDataPreviewNoticeStyles.emphasis);
-  return /* @__PURE__ */ jsxs10("aside", {
+  return /* @__PURE__ */ jsxs11("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
     className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
     role: "alert",
     children: [
-      /* @__PURE__ */ jsx12("strong", {
+      /* @__PURE__ */ jsx13("strong", {
         ...emphasisPresentation,
         children: "Production data preview"
       }),
-      /* @__PURE__ */ jsx12("span", {
+      /* @__PURE__ */ jsx13("span", {
         children: "This preview uses production data. Actions are real and affect production."
       })
     ]
@@ -3389,10 +3628,13 @@ function ProductionDataPreviewNotice({
 }
 
 // src/react/design-gallery.tsx
-import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
+import { jsx as jsx14, jsxs as jsxs12 } from "react/jsx-runtime";
 var designGallerySections = [{
   id: "foundation",
   label: "Foundation"
+}, {
+  id: "lantern",
+  label: "Lantern"
 }, {
   id: "marketing",
   label: "Marketing"
@@ -3410,7 +3652,7 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Jelly presentation", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "Jelly presentation", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
 function resolveGalleryTheme(theme, prefersDark) {
   return theme === "system" ? prefersDark ? "dark" : "light" : theme;
 }
@@ -3467,35 +3709,35 @@ var foilDeckExamples = [{
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
-  const [density, setDensity] = useState3("default");
-  const [chatDraft, setChatDraft] = useState3("Review the presentation contract");
-  const [chatSubmission, setChatSubmission] = useState3("");
-  const [faderValue, setFaderValue] = useState3(64);
-  const [playbackStatus, setPlaybackStatus] = useState3("idle");
+  const [density, setDensity] = useState4("default");
+  const [chatDraft, setChatDraft] = useState4("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState4("");
+  const [faderValue, setFaderValue] = useState4(64);
+  const [playbackStatus, setPlaybackStatus] = useState4("idle");
   const Root = isNestedInMain ? "div" : "main";
-  return /* @__PURE__ */ jsxs11(Root, {
+  return /* @__PURE__ */ jsxs12(Root, {
     className: "design-gallery",
     "data-design-gallery": "public",
     "data-design-gallery-nested": isNestedInMain ? "true" : "false",
     children: [
-      /* @__PURE__ */ jsxs11("header", {
+      /* @__PURE__ */ jsxs12("header", {
         className: "design-gallery__intro",
         children: [
-          /* @__PURE__ */ jsx13(Badge, {
+          /* @__PURE__ */ jsx14(Badge, {
             tone: "info",
             children: "@hraness/design-kit"
           }),
-          /* @__PURE__ */ jsx13("h1", {
+          /* @__PURE__ */ jsx14("h1", {
             children: "Presentation and composition reference"
           }),
-          /* @__PURE__ */ jsx13("p", {
+          /* @__PURE__ */ jsx14("p", {
             children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
           }),
-          /* @__PURE__ */ jsx13("p", {
+          /* @__PURE__ */ jsx14("p", {
             children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
           }),
-          /* @__PURE__ */ jsx13(WrappingRow, {
-            children: /* @__PURE__ */ jsx13(SegmentedControl, {
+          /* @__PURE__ */ jsx14(WrappingRow, {
+            children: /* @__PURE__ */ jsx14(SegmentedControl, {
               "aria-label": "Gallery density",
               items: [{
                 id: "compact",
@@ -3511,43 +3753,43 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "foundation",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Foundation boundary"
           }),
-          /* @__PURE__ */ jsx13(ProductionDataPreviewNotice, {
+          /* @__PURE__ */ jsx14(ProductionDataPreviewNotice, {
             surfaceOrigin: "https://preview.example.test"
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsxs11(Card, {
+              /* @__PURE__ */ jsxs12(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs11(CardHeader, {
+                  /* @__PURE__ */ jsxs12(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx13(CardTitle, {
+                      /* @__PURE__ */ jsx14(CardTitle, {
                         children: "Portable control"
                       }),
-                      /* @__PURE__ */ jsx13(CardDescription, {
+                      /* @__PURE__ */ jsx14(CardDescription, {
                         children: "Rendered directly by @hraness/ui."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx13(CardContent, {
-                    children: /* @__PURE__ */ jsxs11(WrappingRow, {
+                  /* @__PURE__ */ jsx14(CardContent, {
+                    children: /* @__PURE__ */ jsxs12(WrappingRow, {
                       children: [
-                        /* @__PURE__ */ jsx13(Button2, {
+                        /* @__PURE__ */ jsx14(Button3, {
                           variant: "primary",
                           children: "Primary action"
                         }),
-                        /* @__PURE__ */ jsx13(LinkButton, {
+                        /* @__PURE__ */ jsx14(LinkButton, {
                           href: "#shells",
                           children: "Open shells"
                         }),
-                        /* @__PURE__ */ jsx13(Tag, {
+                        /* @__PURE__ */ jsx14(Tag, {
                           variant: "outline",
                           children: "public core"
                         })
@@ -3556,27 +3798,27 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsxs11(Card, {
+              /* @__PURE__ */ jsxs12(Card, {
                 children: [
-                  /* @__PURE__ */ jsxs11(CardHeader, {
+                  /* @__PURE__ */ jsxs12(CardHeader, {
                     children: [
-                      /* @__PURE__ */ jsx13(CardTitle, {
+                      /* @__PURE__ */ jsx14(CardTitle, {
                         children: "Typography roles"
                       }),
-                      /* @__PURE__ */ jsx13(CardDescription, {
+                      /* @__PURE__ */ jsx14(CardDescription, {
                         children: "Nebula Sans for proportional text; mono stays explicit."
                       })
                     ]
                   }),
-                  /* @__PURE__ */ jsx13(CardContent, {
-                    children: /* @__PURE__ */ jsxs11("div", {
+                  /* @__PURE__ */ jsx14(CardContent, {
+                    children: /* @__PURE__ */ jsxs12("div", {
                       className: "design-gallery__type-specimen",
                       children: [
-                        /* @__PURE__ */ jsx13("p", {
+                        /* @__PURE__ */ jsx14("p", {
                           "data-gallery-font": "proportional",
                           children: "More shape, less noise."
                         }),
-                        /* @__PURE__ */ jsx13("code", {
+                        /* @__PURE__ */ jsx14("code", {
                           "data-gallery-font": "mono",
                           children: 'const role = "mono";'
                         })
@@ -3585,41 +3827,41 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx13(JellySurface, {
+              /* @__PURE__ */ jsx14(JellySurface, {
                 className: "design-gallery__jelly",
                 interaction: "press",
                 tone: "neutral",
-                children: /* @__PURE__ */ jsx13(Button2, {
+                children: /* @__PURE__ */ jsx14(Button3, {
                   variant: "quiet",
                   children: "Semantic button with optional Jelly paint"
                 })
               })
             ]
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             "aria-label": "Plain site link presentation",
             className: "design-gallery__plain-theme plain-site plain-publication",
             children: [
-              /* @__PURE__ */ jsx13("header", {
+              /* @__PURE__ */ jsx14("header", {
                 className: "plain-header",
-                children: /* @__PURE__ */ jsxs11("div", {
+                children: /* @__PURE__ */ jsxs12("div", {
                   className: "plain-header__inner",
                   "data-layout": "responsive-wrap",
                   children: [
-                    /* @__PURE__ */ jsx13("a", {
+                    /* @__PURE__ */ jsx14("a", {
                       className: "plain-wordmark",
                       href: "#foundation",
                       children: "project-name.example"
                     }),
-                    /* @__PURE__ */ jsxs11("nav", {
+                    /* @__PURE__ */ jsxs12("nav", {
                       "aria-label": "Plain site example",
                       className: "plain-nav",
                       children: [
-                        /* @__PURE__ */ jsx13("a", {
+                        /* @__PURE__ */ jsx14("a", {
                           href: "#foundation",
                           children: "Articles"
                         }),
-                        /* @__PURE__ */ jsx13("a", {
+                        /* @__PURE__ */ jsx14("a", {
                           href: "#shells",
                           children: "About"
                         })
@@ -3628,13 +3870,13 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              /* @__PURE__ */ jsx13("div", {
+              /* @__PURE__ */ jsx14("div", {
                 className: "plain-page",
-                children: /* @__PURE__ */ jsxs11("p", {
+                children: /* @__PURE__ */ jsxs12("p", {
                   className: "design-gallery__plain-link-example",
                   children: [
                     "Ordinary ",
-                    /* @__PURE__ */ jsx13("a", {
+                    /* @__PURE__ */ jsx14("a", {
                       href: "#foundation",
                       children: "blue links"
                     }),
@@ -3646,22 +3888,22 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "paper-theme",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Paper theme"
           }),
-          /* @__PURE__ */ jsx13("p", {
+          /* @__PURE__ */ jsx14("p", {
             children: "Import paper-theme.css to share warm neutral colors and compact typography without replacing layouts or saved appearance choices."
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__paper",
             "data-hraness-theme": "paper",
             "data-theme": "light",
             children: [
-              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
                 brand: "Light paper",
                 brandHref: "#paper-theme",
                 links: [{
@@ -3670,36 +3912,36 @@ function DesignSystemGallery({
                 }],
                 sticky: false
               }),
-              /* @__PURE__ */ jsx13(TopBar, {
+              /* @__PURE__ */ jsx14(TopBar, {
                 surface: "glass",
                 title: "Glass application header",
                 "data-gallery-glass-top-bar": ""
               }),
-              /* @__PURE__ */ jsx13("h3", {
+              /* @__PURE__ */ jsx14("h3", {
                 children: "Light paper"
               }),
-              /* @__PURE__ */ jsx13("p", {
+              /* @__PURE__ */ jsx14("p", {
                 children: "Headers blur scrolling content and become opaque when reduced transparency is preferred."
               }),
-              /* @__PURE__ */ jsx13("p", {
-                children: /* @__PURE__ */ jsx13("a", {
+              /* @__PURE__ */ jsx14("p", {
+                children: /* @__PURE__ */ jsx14("a", {
                   className: "design-gallery__paper-link",
                   href: "#foundation",
                   children: "Read about the foundation"
                 })
               }),
-              /* @__PURE__ */ jsx13(Button2, {
+              /* @__PURE__ */ jsx14(Button3, {
                 variant: "primary",
                 children: "Create note"
               })
             ]
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__paper",
             "data-hraness-theme": "paper",
             "data-theme": "dark",
             children: [
-              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
                 brand: "Dark paper",
                 brandHref: "#paper-theme",
                 links: [{
@@ -3708,25 +3950,25 @@ function DesignSystemGallery({
                 }],
                 sticky: false
               }),
-              /* @__PURE__ */ jsx13(TopBar, {
+              /* @__PURE__ */ jsx14(TopBar, {
                 surface: "glass",
                 title: "Glass application header",
                 "data-gallery-glass-top-bar": ""
               }),
-              /* @__PURE__ */ jsx13("h3", {
+              /* @__PURE__ */ jsx14("h3", {
                 children: "Dark paper"
               }),
-              /* @__PURE__ */ jsx13("p", {
+              /* @__PURE__ */ jsx14("p", {
                 children: "The same header treatment follows an explicit dark preference."
               }),
-              /* @__PURE__ */ jsx13("p", {
-                children: /* @__PURE__ */ jsx13("a", {
+              /* @__PURE__ */ jsx14("p", {
+                children: /* @__PURE__ */ jsx14("a", {
                   className: "design-gallery__paper-link",
                   href: "#foundation",
                   children: "Read about the foundation"
                 })
               }),
-              /* @__PURE__ */ jsx13(Button2, {
+              /* @__PURE__ */ jsx14(Button3, {
                 variant: "primary",
                 children: "Open notes"
               })
@@ -3734,17 +3976,18 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsx14(LanternMaterialGallery, {}),
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "marketing",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Product-marketing grammar"
           }),
-          /* @__PURE__ */ jsxs11(MarketingPage, {
+          /* @__PURE__ */ jsxs12(MarketingPage, {
             className: "design-gallery__marketing",
             children: [
-              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
                 action: {
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -3763,7 +4006,7 @@ function DesignSystemGallery({
                   label: "Docs"
                 }]
               }),
-              /* @__PURE__ */ jsx13(ProductHero, {
+              /* @__PURE__ */ jsx14(ProductHero, {
                 actions: [{
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -3789,13 +4032,13 @@ function DesignSystemGallery({
                   value: "CLI + SDK"
                 }],
                 factsColumns: 3,
-                frame: /* @__PURE__ */ jsx13(MarketingProofFrame, {
+                frame: /* @__PURE__ */ jsx14(MarketingProofFrame, {
                   caption: "Receipt produced by the checked example.",
                   credit: "Captured 5 September 2026",
                   title: "relay run job-01",
-                  children: /* @__PURE__ */ jsx13("pre", {
+                  children: /* @__PURE__ */ jsx14("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx13("code", {
+                    children: /* @__PURE__ */ jsx14("code", {
                       children: '{"status":"complete","job":"job-01","durationMs":412}'
                     })
                   })
@@ -3804,13 +4047,13 @@ function DesignSystemGallery({
                 headingId: "design-gallery-marketing-title",
                 headingLevel: 3,
                 name: "Relay",
-                notice: /* @__PURE__ */ jsx13("p", {
+                notice: /* @__PURE__ */ jsx14("p", {
                   "data-gallery-marketing-slot": "notice",
                   children: "This example release runs locally."
                 }),
                 summary: "Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
               }),
-              /* @__PURE__ */ jsx13(MarketingPillars, {
+              /* @__PURE__ */ jsx14(MarketingPillars, {
                 ariaLabel: "Relay in three points",
                 columns: 3,
                 pillars: [{
@@ -3824,24 +4067,24 @@ function DesignSystemGallery({
                   summary: "Source files and credentials stay on your machine."
                 }]
               }),
-              /* @__PURE__ */ jsxs11(MarketingInstallPanel, {
+              /* @__PURE__ */ jsxs12(MarketingInstallPanel, {
                 eyebrow: "Local release",
                 heading: "Install the verified tool.",
                 headingId: "design-gallery-install-title",
                 headingLevel: 3,
                 id: "gallery-install",
-                note: /* @__PURE__ */ jsx13("p", {
+                note: /* @__PURE__ */ jsx14("p", {
                   "data-gallery-marketing-slot": "note",
                   children: "Requires Bun 1.3.14."
                 }),
                 children: [
-                  /* @__PURE__ */ jsx13("pre", {
+                  /* @__PURE__ */ jsx14("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx13("code", {
+                    children: /* @__PURE__ */ jsx14("code", {
                       children: "bun add --global relay@1.2.3"
                     })
                   }),
-                  /* @__PURE__ */ jsx13(MarketingFlow, {
+                  /* @__PURE__ */ jsx14(MarketingFlow, {
                     ariaLabel: "First Relay job",
                     steps: [{
                       code: "relay init",
@@ -3859,7 +4102,7 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx13(MarketingPrimitives, {
+              /* @__PURE__ */ jsx14(MarketingPrimitives, {
                 heading: "Small building blocks for serious workflows.",
                 headingId: "design-gallery-primitives-title",
                 headingLevel: 3,
@@ -3876,7 +4119,7 @@ function DesignSystemGallery({
                 label: "Primitives",
                 summary: "Relay gives agents a few durable objects to compose around the work in front of them."
               }),
-              /* @__PURE__ */ jsxs11(MarketingSection, {
+              /* @__PURE__ */ jsxs12(MarketingSection, {
                 heading: "One durable object.",
                 headingId: "gallery-marketing-section",
                 headingLevel: 3,
@@ -3884,19 +4127,19 @@ function DesignSystemGallery({
                 layout: "split-reverse",
                 summary: "Interfaces share the same identity.",
                 children: [
-                  /* @__PURE__ */ jsx13(MarketingSectionLabel, {
+                  /* @__PURE__ */ jsx14(MarketingSectionLabel, {
                     size: "body",
                     children: "Reference"
                   }),
-                  /* @__PURE__ */ jsxs11("p", {
+                  /* @__PURE__ */ jsxs12("p", {
                     children: [
                       "Consumer-owned content can include ",
-                      /* @__PURE__ */ jsx13("a", {
+                      /* @__PURE__ */ jsx14("a", {
                         href: "#gallery-install",
                         children: "links"
                       }),
                       " and ",
-                      /* @__PURE__ */ jsx13("code", {
+                      /* @__PURE__ */ jsx14("code", {
                         children: "inline code"
                       }),
                       "."
@@ -3904,7 +4147,7 @@ function DesignSystemGallery({
                   })
                 ]
               }),
-              /* @__PURE__ */ jsx13(MarketingInterfaceGrid, {
+              /* @__PURE__ */ jsx14(MarketingInterfaceGrid, {
                 heading: "Choose your interface.",
                 headingId: "gallery-marketing-interfaces",
                 headingLevel: 3,
@@ -3912,8 +4155,8 @@ function DesignSystemGallery({
                 interfaces: [{
                   label: "CLI",
                   summary: "Run a named job.",
-                  example: /* @__PURE__ */ jsx13("pre", {
-                    children: /* @__PURE__ */ jsx13("code", {
+                  example: /* @__PURE__ */ jsx14("pre", {
+                    children: /* @__PURE__ */ jsx14("code", {
                       children: "relay run job-01"
                     })
                   })
@@ -3922,7 +4165,7 @@ function DesignSystemGallery({
                   summary: "Use typed application code."
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingTrustBoundary, {
+              /* @__PURE__ */ jsx14(MarketingTrustBoundary, {
                 heading: "Keep authority visible.",
                 headingId: "gallery-marketing-trust",
                 headingLevel: 3,
@@ -3935,7 +4178,7 @@ function DesignSystemGallery({
                   detail: "Only the chosen receipt."
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingStatStrip, {
+              /* @__PURE__ */ jsx14(MarketingStatStrip, {
                 ariaLabel: "Relay usage",
                 columns: 3,
                 source: "Counted from the public example repository on 5 September 2026.",
@@ -3951,7 +4194,7 @@ function DesignSystemGallery({
                   value: "0"
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingQuoteGrid, {
+              /* @__PURE__ */ jsx14(MarketingQuoteGrid, {
                 heading: "From the people building with it.",
                 headingId: "design-gallery-quotes-title",
                 headingLevel: 3,
@@ -3962,7 +4205,7 @@ function DesignSystemGallery({
                   role: "@example"
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingPricing, {
+              /* @__PURE__ */ jsx14(MarketingPricing, {
                 heading: "Free for local use.",
                 headingId: "design-gallery-pricing-title",
                 headingLevel: 3,
@@ -3991,24 +4234,24 @@ function DesignSystemGallery({
                   summary: "Keep receipts in step across your machines."
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingQuestionList, {
+              /* @__PURE__ */ jsx14(MarketingQuestionList, {
                 heading: "Questions before installing.",
                 headingId: "design-gallery-questions-title",
                 headingLevel: 3,
                 label: "Questions",
                 questions: [{
-                  answer: /* @__PURE__ */ jsx13("p", {
+                  answer: /* @__PURE__ */ jsx14("p", {
                     children: "No. The local workflow works without one."
                   }),
                   question: "Does it require an account?"
                 }, {
-                  answer: /* @__PURE__ */ jsx13("p", {
+                  answer: /* @__PURE__ */ jsx14("p", {
                     children: "Nothing leaves your machine unless you turn on sync."
                   }),
                   question: "Does it phone home?"
                 }]
               }),
-              /* @__PURE__ */ jsx13(MarketingMaker, {
+              /* @__PURE__ */ jsx14(MarketingMaker, {
                 heading: "Built by a reference maker.",
                 headingId: "design-gallery-maker-title",
                 headingLevel: 3,
@@ -4018,11 +4261,11 @@ function DesignSystemGallery({
                   href: "#marketing",
                   label: "Personal site"
                 }],
-                children: /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx14("p", {
                   children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
                 })
               }),
-              /* @__PURE__ */ jsx13(MarketingCallToAction, {
+              /* @__PURE__ */ jsx14(MarketingCallToAction, {
                 actions: [{
                   href: "#gallery-install",
                   label: "Install Relay"
@@ -4034,11 +4277,11 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsx13(MarketingPage, {
+          /* @__PURE__ */ jsx14(MarketingPage, {
             preset: "editorial",
             className: "design-gallery__marketing-preset",
-            children: /* @__PURE__ */ jsx13(MarketingField, {
-              children: /* @__PURE__ */ jsx13(ProductHero, {
+            children: /* @__PURE__ */ jsx14(MarketingField, {
+              children: /* @__PURE__ */ jsx14(ProductHero, {
                 name: "Relay",
                 heading: "One clear next step.",
                 headingId: "gallery-editorial-title",
@@ -4051,17 +4294,17 @@ function DesignSystemGallery({
               })
             })
           }),
-          /* @__PURE__ */ jsxs11(MarketingPage, {
+          /* @__PURE__ */ jsxs12(MarketingPage, {
             preset: "minimal",
             className: "design-gallery__marketing-preset",
             children: [
-              /* @__PURE__ */ jsx13(MarketingSiteHeader, {
+              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
                 brand: "Relay",
                 brandHref: "#marketing",
                 links: [],
                 sticky: false
               }),
-              /* @__PURE__ */ jsx13(ProductHero, {
+              /* @__PURE__ */ jsx14(ProductHero, {
                 name: "Relay",
                 heading: "A quieter public page.",
                 headingId: "gallery-minimal-title",
@@ -4072,49 +4315,49 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "shells",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Application shells"
           }),
-          /* @__PURE__ */ jsx13(ViewportFrame, {
+          /* @__PURE__ */ jsx14(ViewportFrame, {
             className: "design-gallery__shell-preview",
-            children: /* @__PURE__ */ jsx13(AppShell, {
-              bottomBar: /* @__PURE__ */ jsx13(BottomBar, {
-                actions: /* @__PURE__ */ jsx13("span", {
+            children: /* @__PURE__ */ jsx14(AppShell, {
+              bottomBar: /* @__PURE__ */ jsx14(BottomBar, {
+                actions: /* @__PURE__ */ jsx14("span", {
                   children: "Synced"
                 }),
                 "data-gallery-layout-bottom-bar": "",
-                leading: /* @__PURE__ */ jsx13("span", {
+                leading: /* @__PURE__ */ jsx14("span", {
                   children: "Ready"
                 }),
                 children: "Reference footer"
               }),
               navigationKey: "gallery",
-              rail: /* @__PURE__ */ jsx13(NavigationRail, {
-                children: /* @__PURE__ */ jsxs11(RailSection, {
+              rail: /* @__PURE__ */ jsx14(NavigationRail, {
+                children: /* @__PURE__ */ jsxs12(RailSection, {
                   title: "Workspace",
                   children: [
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx14(RailItem, {
                       href: "#foundation",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx14(Icon3, {
                         icon: DashboardSquare01Icon
                       }),
                       isActive: true,
                       label: "Overview"
                     }),
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx14(RailItem, {
                       href: "#data",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx14(Icon3, {
                         icon: Chart01Icon
                       }),
                       label: "Data"
                     }),
-                    /* @__PURE__ */ jsx13(RailItem, {
+                    /* @__PURE__ */ jsx14(RailItem, {
                       href: "#syntax",
-                      icon: /* @__PURE__ */ jsx13(Icon3, {
+                      icon: /* @__PURE__ */ jsx14(Icon3, {
                         icon: CodeIcon
                       }),
                       label: "Syntax"
@@ -4122,29 +4365,29 @@ function DesignSystemGallery({
                   ]
                 })
               }),
-              topBar: /* @__PURE__ */ jsx13(TopBar, {
+              topBar: /* @__PURE__ */ jsx14(TopBar, {
                 "data-gallery-layout-top-bar": "",
                 title: "Reference workspace"
               }),
-              children: /* @__PURE__ */ jsx13(PageCanvas, {
+              children: /* @__PURE__ */ jsx14(PageCanvas, {
                 as: "div",
                 "data-gallery-layout-page-canvas": "",
-                children: /* @__PURE__ */ jsx13(AnimatedRailStage, {
+                children: /* @__PURE__ */ jsx14(AnimatedRailStage, {
                   className: "design-gallery__animated-rail-stage",
                   stageKey: density,
-                  children: /* @__PURE__ */ jsxs11(DitherSurface, {
+                  children: /* @__PURE__ */ jsxs12(DitherSurface, {
                     as: "section",
                     "data-gallery-dither": "",
                     density: density === "compact" ? "fine" : "medium",
                     tone: "card",
                     children: [
-                      /* @__PURE__ */ jsxs11("h3", {
+                      /* @__PURE__ */ jsxs12("h3", {
                         children: [
                           density === "compact" ? "Compact" : "Default",
                           " composition"
                         ]
                       }),
-                      /* @__PURE__ */ jsx13("p", {
+                      /* @__PURE__ */ jsx14("p", {
                         children: "The route body changes while persistent navigation remains in place."
                       })
                     ]
@@ -4153,14 +4396,14 @@ function DesignSystemGallery({
               })
             })
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__docked-footer-preview",
             "data-gallery-layout-docked-frame": "",
             children: [
-              /* @__PURE__ */ jsx13("p", {
+              /* @__PURE__ */ jsx14("p", {
                 children: "Docked commands remain inside their positioning owner."
               }),
-              /* @__PURE__ */ jsx13(DockedFooter, {
+              /* @__PURE__ */ jsx14(DockedFooter, {
                 "data-gallery-layout-docked-footer": "",
                 density: "compact",
                 position: "absolute",
@@ -4170,34 +4413,34 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "data",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Data and instrument compositions"
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__grid",
             children: [
-              /* @__PURE__ */ jsx13(BarListChart, {
+              /* @__PURE__ */ jsx14(BarListChart, {
                 "aria-label": "Example request volume",
                 data: barData
               }),
-              /* @__PURE__ */ jsx13(RangePlotChart, {
+              /* @__PURE__ */ jsx14(RangePlotChart, {
                 "aria-label": "Example regional ranges",
                 data: rangeData
               }),
-              /* @__PURE__ */ jsxs11("div", {
+              /* @__PURE__ */ jsxs12("div", {
                 className: "design-gallery__instrument",
                 children: [
-                  /* @__PURE__ */ jsx13(Fader, {
+                  /* @__PURE__ */ jsx14(Fader, {
                     "aria-label": "Example level",
                     className: "design-gallery__vertical-fader",
                     "data-gallery-fader": "vertical",
                     density: "default",
                     label: "Level",
-                    labelAccessory: /* @__PURE__ */ jsx13("span", {
+                    labelAccessory: /* @__PURE__ */ jsx14("span", {
                       "data-gallery-fader-accessory": "",
                       children: "dB"
                     }),
@@ -4208,7 +4451,7 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx13(Fader, {
+                  /* @__PURE__ */ jsx14(Fader, {
                     "aria-label": "Example horizontal level",
                     className: "design-gallery__horizontal-fader",
                     "data-gallery-fader": "horizontal",
@@ -4222,13 +4465,13 @@ function DesignSystemGallery({
                     showOutput: true,
                     value: faderValue
                   }),
-                  /* @__PURE__ */ jsx13(Slider, {
+                  /* @__PURE__ */ jsx14(Slider, {
                     label: "Balance",
                     maxValue: 100,
                     minValue: 0,
                     value: 50
                   }),
-                  /* @__PURE__ */ jsx13(PlaybackTransport, {
+                  /* @__PURE__ */ jsx14(PlaybackTransport, {
                     "aria-label": "Preview transport",
                     buttonAriaKeyShortcuts: "Space",
                     buttonId: "design-gallery-playback-command",
@@ -4241,17 +4484,17 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__chat",
             "data-gallery-chat": "",
             "data-gallery-chat-submission": chatSubmission,
             children: [
-              /* @__PURE__ */ jsx13(ChatMessage, {
-                actions: /* @__PURE__ */ jsx13(Button2, {
+              /* @__PURE__ */ jsx14(ChatMessage, {
+                actions: /* @__PURE__ */ jsx14(Button3, {
                   variant: "quiet",
                   children: "Copy response"
                 }),
-                avatar: /* @__PURE__ */ jsx13("span", {
+                avatar: /* @__PURE__ */ jsx14("span", {
                   "aria-hidden": "true",
                   className: "design-gallery__chat-avatar",
                   children: "AI"
@@ -4260,17 +4503,17 @@ function DesignSystemGallery({
                 meta: "Now",
                 name: "Assistant",
                 role: "assistant",
-                children: /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx14("p", {
                   children: "A complete message keeps its ordinary article and slot semantics."
                 })
               }),
-              /* @__PURE__ */ jsx13(ChatMessage, {
+              /* @__PURE__ */ jsx14(ChatMessage, {
                 role: "user",
-                children: /* @__PURE__ */ jsx13("p", {
+                children: /* @__PURE__ */ jsx14("p", {
                   children: "Responsive composition belongs to the extracted package recipe."
                 })
               }),
-              /* @__PURE__ */ jsx13(ChatComposer, {
+              /* @__PURE__ */ jsx14(ChatComposer, {
                 action: "/gallery-chat-submit",
                 "aria-label": "Gallery message composer",
                 className: "design-gallery__chat-composer",
@@ -4287,36 +4530,36 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "effects",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Decorative effects"
           }),
-          /* @__PURE__ */ jsx13(FoilCardDeck, {
+          /* @__PURE__ */ jsx14(FoilCardDeck, {
             "aria-label": "Delegated foil ornament examples",
             className: "design-gallery__foil-deck",
-            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx13(FoilCardSurface, {
+            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx14(FoilCardSurface, {
               className: "design-gallery__foil-example",
               intensity: "standard",
               ornament: example.ornament,
               preset: example.preset,
               renderMode: "interactive",
               seed: `public-gallery-foil-${example.ornament}`,
-              children: /* @__PURE__ */ jsxs11("article", {
+              children: /* @__PURE__ */ jsxs12("article", {
                 className: "design-gallery__foil-card",
                 children: [
-                  /* @__PURE__ */ jsx13(Tag, {
+                  /* @__PURE__ */ jsx14(Tag, {
                     variant: "outline",
                     children: example.label
                   }),
-                  /* @__PURE__ */ jsxs11("div", {
+                  /* @__PURE__ */ jsxs12("div", {
                     children: [
-                      /* @__PURE__ */ jsx13("h3", {
+                      /* @__PURE__ */ jsx14("h3", {
                         children: "Semantic card content"
                       }),
-                      /* @__PURE__ */ jsx13("p", {
+                      /* @__PURE__ */ jsx14("p", {
                         children: "One deck controller decorates ordinary articles."
                       })
                     ]
@@ -4325,21 +4568,21 @@ function DesignSystemGallery({
               })
             }, example.ornament))
           }),
-          /* @__PURE__ */ jsxs11("div", {
+          /* @__PURE__ */ jsxs12("div", {
             className: "design-gallery__effect",
             children: [
-              /* @__PURE__ */ jsx13(AuroraDotsBackground, {}),
-              /* @__PURE__ */ jsx13(ProceduralBackdrop, {
+              /* @__PURE__ */ jsx14(AuroraDotsBackground, {}),
+              /* @__PURE__ */ jsx14(ProceduralBackdrop, {
                 seed: "public-gallery",
                 variant: "composite"
               }),
-              /* @__PURE__ */ jsxs11("div", {
+              /* @__PURE__ */ jsxs12("div", {
                 className: "design-gallery__effect-copy",
                 children: [
-                  /* @__PURE__ */ jsx13("h3", {
+                  /* @__PURE__ */ jsx14("h3", {
                     children: "Semantic content stays ordinary DOM"
                   }),
-                  /* @__PURE__ */ jsx13("p", {
+                  /* @__PURE__ */ jsx14("p", {
                     children: "Decorative paint is pointer-transparent and removable in forced colors."
                   })
                 ]
@@ -4348,16 +4591,16 @@ function DesignSystemGallery({
           })
         ]
       }),
-      /* @__PURE__ */ jsxs11("section", {
+      /* @__PURE__ */ jsxs12("section", {
         className: "design-gallery__section",
         id: "syntax",
         children: [
-          /* @__PURE__ */ jsx13("h2", {
+          /* @__PURE__ */ jsx14("h2", {
             children: "Server syntax"
           }),
-          /* @__PURE__ */ jsx13("pre", {
+          /* @__PURE__ */ jsx14("pre", {
             className: "design-gallery__syntax",
-            children: /* @__PURE__ */ jsx13(SyntaxCode, {
+            children: /* @__PURE__ */ jsx14(SyntaxCode, {
               code: `import { AppShell } from "@hraness/design-kit/react";
 
 export const shell = <AppShell rail={null}>Content</AppShell>;`,
@@ -4629,9 +4872,9 @@ function useKeyboardShortcuts(bindings, options = {}) {
   }, [scopeRef]);
 }
 // src/react/route-state.tsx
-import { Button as Button3, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn13 } from "@hraness/ui";
+import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn13 } from "@hraness/ui";
 import * as stylex14 from "@stylexjs/stylex";
-import { useEffect as useEffect9, useId as useId2 } from "react";
+import { useEffect as useEffect9, useId as useId3 } from "react";
 
 // src/react/route-state.stylex.ts
 var routeStateStyles = {
@@ -4849,7 +5092,7 @@ var themeStyles = {
 };
 
 // src/react/theme.tsx
-import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
@@ -4893,7 +5136,7 @@ function PortalThemeBridge({
     resolvedTheme
   } = useTheme();
   const portalTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-  return /* @__PURE__ */ jsx14(DesignPortalThemeProvider, {
+  return /* @__PURE__ */ jsx15(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
   });
@@ -4904,9 +5147,9 @@ function DesignThemeProvider({
   nonce,
   storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs12(Fragment2, {
+  return /* @__PURE__ */ jsxs13(Fragment2, {
     children: [
-      forcedTheme === undefined ? /* @__PURE__ */ jsx14("script", {
+      forcedTheme === undefined ? /* @__PURE__ */ jsx15("script", {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -4916,7 +5159,7 @@ function DesignThemeProvider({
         },
         suppressHydrationWarning: true
       }) : null,
-      /* @__PURE__ */ jsxs12(NextThemeProvider, {
+      /* @__PURE__ */ jsxs13(NextThemeProvider, {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -4928,9 +5171,9 @@ function DesignThemeProvider({
         storageKey,
         themes: [...concreteThemes],
         children: [
-          forcedTheme === undefined ? /* @__PURE__ */ jsx14(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx14(JellyThemeSync, {}),
-          /* @__PURE__ */ jsx14(PortalThemeBridge, {
+          forcedTheme === undefined ? /* @__PURE__ */ jsx15(PersistedThemeNormalizer, {}) : null,
+          /* @__PURE__ */ jsx15(JellyThemeSync, {}),
+          /* @__PURE__ */ jsx15(PortalThemeBridge, {
             forcedTheme,
             children
           })
@@ -4955,7 +5198,7 @@ function themeToggleItems(labels) {
   }];
 }
 function themeToggleIcon(id) {
-  return /* @__PURE__ */ jsx14(AppearanceIcon2, {
+  return /* @__PURE__ */ jsx15(AppearanceIcon2, {
     name: id
   });
 }
@@ -5004,7 +5247,7 @@ function ThemeToggle({
       setTheme(nextTheme);
   };
   const currentLabel = themeToggleLabel(value, labels);
-  return /* @__PURE__ */ jsx14("div", {
+  return /* @__PURE__ */ jsx15("div", {
     ...presentationStyles,
     "aria-busy": !ready || undefined,
     className: cn12("hraness-design-theme-toggle", presentationStyles.className, className),
@@ -5014,9 +5257,9 @@ function ThemeToggle({
     "data-presentation": resolvedPresentation,
     "data-ready": ready ? "true" : "false",
     "data-theme-value": value,
-    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs12(MenuTrigger, {
+    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs13(MenuTrigger, {
       children: [
-        /* @__PURE__ */ jsx14(IconButton3, {
+        /* @__PURE__ */ jsx15(IconButton3, {
           "aria-label": `${ariaLabel}: ${currentLabel}`,
           controlClassName: "hraness-design-theme-toggle__trigger",
           controlXstyle: themeStyles.trigger,
@@ -5025,7 +5268,7 @@ function ThemeToggle({
           tooltip: `${ariaLabel}: ${currentLabel}`,
           children: themeToggleIcon(value)
         }),
-        /* @__PURE__ */ jsx14(Menu, {
+        /* @__PURE__ */ jsx15(Menu, {
           "aria-label": ariaLabel,
           className: "hraness-design-theme-toggle__menu",
           disallowEmptySelection: true,
@@ -5038,7 +5281,7 @@ function ThemeToggle({
           selectedKeys: [value],
           selectionMode: "single",
           xstyle: themeStyles.menu,
-          children: designThemes.map((id) => /* @__PURE__ */ jsx14(MenuItem, {
+          children: designThemes.map((id) => /* @__PURE__ */ jsx15(MenuItem, {
             className: "hraness-design-theme-toggle__item",
             "data-theme-value": id,
             id,
@@ -5049,7 +5292,7 @@ function ThemeToggle({
           }, id))
         })
       ]
-    }) : /* @__PURE__ */ jsx14(SegmentedControl2, {
+    }) : /* @__PURE__ */ jsx15(SegmentedControl2, {
       "aria-label": ariaLabel,
       isDisabled: !ready,
       items,
@@ -5062,10 +5305,10 @@ function ThemeToggle({
 function ThemeMenuButton(props14) {
   const palette = useDesignPalette();
   if (palette !== null)
-    return /* @__PURE__ */ jsx14(DesignPaletteMenuButton, {
+    return /* @__PURE__ */ jsx15(DesignPaletteMenuButton, {
       ...props14
     });
-  return /* @__PURE__ */ jsx14(ThemeToggle, {
+  return /* @__PURE__ */ jsx15(ThemeToggle, {
     ...props14,
     presentation: "menu"
   });
@@ -5112,12 +5355,12 @@ function ThemeColorSync({
 }
 
 // src/react/route-state.tsx
-import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment3 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs14, Fragment as Fragment3 } from "react/jsx-runtime";
 function RouteActions({
   children
 }) {
   const presentation = stylex14.props(routeStateStyles.row);
-  return /* @__PURE__ */ jsx15("div", {
+  return /* @__PURE__ */ jsx16("div", {
     ...presentation,
     className: cn13("hraness-design-route-state__actions", presentation.className),
     children
@@ -5131,26 +5374,26 @@ function RouteNotFoundPage({
   const rootPresentation = stylex14.props(routeStateStyles.root);
   const headerPresentation = stylex14.props(routeStateStyles.header);
   const contentPresentation = stylex14.props(routeStateStyles.content);
-  return /* @__PURE__ */ jsxs13(PageCanvas, {
+  return /* @__PURE__ */ jsxs14(PageCanvas, {
     as: canvasAs,
     className: cn13("hraness-design-route-state", rootPresentation.className),
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
+      showThemeToggle ? /* @__PURE__ */ jsx16("header", {
         ...headerPresentation,
         className: cn13("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
+        children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx15("div", {
+      /* @__PURE__ */ jsx16("div", {
         ...contentPresentation,
         className: cn13("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx15(EmptyState, {
-          action: /* @__PURE__ */ jsx15(LinkButton2, {
+        children: /* @__PURE__ */ jsx16(EmptyState, {
+          action: /* @__PURE__ */ jsx16(LinkButton2, {
             href: "/",
             variant: "primary",
             children: "Return home"
           }),
           description: "The address may be out of date, or this page may have moved.",
-          icon: /* @__PURE__ */ jsx15("span", {
+          icon: /* @__PURE__ */ jsx16("span", {
             "aria-hidden": "true",
             children: "404"
           }),
@@ -5170,7 +5413,7 @@ function RouteErrorPage({
   showThemeToggle = false,
   titleAs = "h1"
 }) {
-  const focusId = `${useId2()}-route-error`;
+  const focusId = `${useId3()}-route-error`;
   const rootPresentation = stylex14.props(routeStateStyles.root);
   const headerPresentation = stylex14.props(routeStateStyles.header);
   const contentPresentation = stylex14.props(routeStateStyles.content);
@@ -5178,7 +5421,7 @@ function RouteErrorPage({
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
-  return /* @__PURE__ */ jsxs13(PageCanvas, {
+  return /* @__PURE__ */ jsxs14(PageCanvas, {
     "aria-label": "This view could not load",
     "aria-live": announce ? "assertive" : undefined,
     as: canvasAs,
@@ -5186,30 +5429,30 @@ function RouteErrorPage({
     id: focusId,
     tabIndex: -1,
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx15("header", {
+      showThemeToggle ? /* @__PURE__ */ jsx16("header", {
         ...headerPresentation,
         className: cn13("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx15(ThemeMenuButton, {})
+        children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx15("div", {
+      /* @__PURE__ */ jsx16("div", {
         ...contentPresentation,
         className: cn13("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx15(EmptyState, {
-          action: /* @__PURE__ */ jsxs13(RouteActions, {
+        children: /* @__PURE__ */ jsx16(EmptyState, {
+          action: /* @__PURE__ */ jsxs14(RouteActions, {
             children: [
-              /* @__PURE__ */ jsx15(Button3, {
+              /* @__PURE__ */ jsx16(Button4, {
                 onPress: reset,
                 variant: "primary",
                 children: "Try again"
               }),
-              /* @__PURE__ */ jsx15(LinkButton2, {
+              /* @__PURE__ */ jsx16(LinkButton2, {
                 href: "/",
                 children: "Return home"
               })
             ]
           }),
           description: "Retry this view, or return home and continue from there.",
-          icon: /* @__PURE__ */ jsx15("span", {
+          icon: /* @__PURE__ */ jsx16("span", {
             "aria-hidden": "true",
             children: "!"
           }),
@@ -5228,41 +5471,41 @@ function RouteLoadingPage({
   const loadingPresentation = stylex14.props(routeStateStyles.loading);
   const titlePresentation = stylex14.props(routeStateStyles.row);
   const skeletonPresentation = stylex14.props(routeStateStyles.skeletons);
-  return /* @__PURE__ */ jsx15(PageCanvas, {
+  return /* @__PURE__ */ jsx16(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
     className: cn13("hraness-design-route-state", rootPresentation.className),
-    children: /* @__PURE__ */ jsxs13("section", {
+    children: /* @__PURE__ */ jsxs14("section", {
       ...loadingPresentation,
       className: cn13("hraness-design-route-state__loading", loadingPresentation.className),
       role: announce ? "status" : undefined,
       children: [
-        /* @__PURE__ */ jsxs13("div", {
+        /* @__PURE__ */ jsxs14("div", {
           ...titlePresentation,
           className: cn13("hraness-design-route-state__loading-title", titlePresentation.className),
           children: [
-            /* @__PURE__ */ jsx15(Spinner2, {}),
-            /* @__PURE__ */ jsx15("strong", {
+            /* @__PURE__ */ jsx16(Spinner2, {}),
+            /* @__PURE__ */ jsx16("strong", {
               children: "Loading page"
             })
           ]
         }),
-        /* @__PURE__ */ jsxs13("div", {
+        /* @__PURE__ */ jsxs14("div", {
           ...skeletonPresentation,
           "aria-hidden": "true",
           className: cn13("hraness-design-route-state__skeletons", skeletonPresentation.className),
           children: [
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx16(Skeleton, {
               height: "1rem",
               isText: true,
               width: "88%"
             }),
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx16(Skeleton, {
               height: "1rem",
               isText: true,
               width: "64%"
             }),
-            /* @__PURE__ */ jsx15(Skeleton, {
+            /* @__PURE__ */ jsx16(Skeleton, {
               height: "8rem",
               width: "100%"
             })
@@ -5280,50 +5523,50 @@ function GlobalErrorDocument({
   theme = defaultDesignTheme,
   ...props15
 }) {
-  const content = /* @__PURE__ */ jsxs13(Fragment3, {
+  const content = /* @__PURE__ */ jsxs14(Fragment3, {
     children: [
       diagnostics,
-      /* @__PURE__ */ jsx15(RouteErrorPage, {
+      /* @__PURE__ */ jsx16(RouteErrorPage, {
         ...props15,
         showThemeToggle: false
       })
     ]
   });
-  return /* @__PURE__ */ jsxs13("html", {
+  return /* @__PURE__ */ jsxs14("html", {
     "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
     children: [
-      /* @__PURE__ */ jsxs13("head", {
+      /* @__PURE__ */ jsxs14("head", {
         children: [
-          /* @__PURE__ */ jsx15("meta", {
+          /* @__PURE__ */ jsx16("meta", {
             content: theme === "system" ? "light dark" : theme,
             name: "color-scheme"
           }),
-          theme === "system" ? /* @__PURE__ */ jsxs13(Fragment3, {
+          theme === "system" ? /* @__PURE__ */ jsxs14(Fragment3, {
             children: [
-              /* @__PURE__ */ jsx15("meta", {
+              /* @__PURE__ */ jsx16("meta", {
                 content: lightColor,
                 media: "(prefers-color-scheme: light)",
                 name: "theme-color"
               }),
-              /* @__PURE__ */ jsx15("meta", {
+              /* @__PURE__ */ jsx16("meta", {
                 content: darkColor,
                 media: "(prefers-color-scheme: dark)",
                 name: "theme-color"
               })
             ]
-          }) : /* @__PURE__ */ jsx15("meta", {
+          }) : /* @__PURE__ */ jsx16("meta", {
             content: theme === "dark" ? darkColor : lightColor,
             name: "theme-color"
           })
         ]
       }),
-      /* @__PURE__ */ jsx15("body", {
+      /* @__PURE__ */ jsx16("body", {
         className: bodyClassName,
-        children: theme === "system" ? /* @__PURE__ */ jsxs13(DesignThemeProvider, {
+        children: theme === "system" ? /* @__PURE__ */ jsxs14(DesignThemeProvider, {
           children: [
-            /* @__PURE__ */ jsx15(ThemeColorSync, {
+            /* @__PURE__ */ jsx16(ThemeColorSync, {
               darkColor,
               lightColor
             }),
@@ -5350,6 +5593,7 @@ export {
   prepareHapticFeedback,
   normalizeDesignTheme,
   matchesKeyboardShortcut,
+  lanternControlStyles,
   isKeyboardTextEntryTarget,
   isKeyboardInteractionTarget,
   isJellySurfaceDisabled,
@@ -5416,6 +5660,7 @@ export {
   MarketingField,
   MarketingFacts,
   MarketingCallToAction,
+  LanternMaterialGallery,
   JellySurface,
   HAPTIC_FEEDBACK_EVENT_NAME,
   GlobalErrorDocument,

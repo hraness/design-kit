@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.6.9",
+  "version": "0.7.0",
   "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -57,6 +57,7 @@
       "import": "./dist/fonts/nebula-sans/social-fonts.generated.js"
     },
     "./jelly.css": "./src/jelly.css",
+    "./lantern-material.css": "./src/lantern-material.css",
     "./plain-publication.css": "./src/plain-publication.css",
     "./plain-site.css": "./src/plain-site.css",
     "./product-marketing.css": "./src/product-marketing.css",
@@ -191,7 +192,14 @@
     "scripts/product-marketing-snapshot.ts",
     "scripts/marketing-textures.ts",
     "scripts/check-marketing-snapshot.mjs",
-    "scripts/check-marketing-snapshot.d.mts"
+    "scripts/check-marketing-snapshot.d.mts",
+    "src/lantern-material.css",
+    "src/react/lantern-material-gallery.tsx",
+    "src/react/lantern-material.stylex.ts",
+    "LANTERN_MATERIAL.md",
+    "scripts/lantern-material-snapshot.ts",
+    "scripts/check-lantern-material-snapshot.mjs",
+    "scripts/check-lantern-material-snapshot.d.mts"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -202,7 +210,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
-    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts",
+    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/jelly-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
     "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
     "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",

@@ -27,6 +27,7 @@ import { ChatComposer, ChatMessage } from "./chat.js";
 import { Fader } from "./fader.js";
 import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
 import { JellySurface } from "./jelly-surface.js";
+import { LanternMaterialGallery } from "./lantern-material-gallery.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
@@ -64,6 +65,7 @@ import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
 export const designGallerySections = [
   { id: "foundation", label: "Foundation" },
+  { id: "lantern", label: "Lantern" },
   { id: "marketing", label: "Marketing" },
   { id: "shells", label: "Shells" },
   { id: "data", label: "Data" },
@@ -89,6 +91,7 @@ export const designGalleryRecipeCoverage = [
   "fader",
   "foil card surface",
   "layout surfaces",
+  "Lantern material",
   "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
@@ -240,6 +243,8 @@ export function DesignSystemGallery({
           <Button variant="primary">Open notes</Button>
         </div>
       </section>
+
+      <LanternMaterialGallery />
 
       <section className="design-gallery__section" id="marketing">
         <h2>Product-marketing grammar</h2>
