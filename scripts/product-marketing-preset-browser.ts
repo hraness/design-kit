@@ -12,7 +12,7 @@ import type * as Marketing from "../src/react/product-marketing.js";
 import { ProductMarketingPresetFixture } from "../gallery/product-marketing-preset-fixture.js";
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
 import { requireHeaderPaint, withTransparencyPreference } from "./browser-transparency.js";
-import { colors } from "../src/index.js";
+import { builtDesignKit } from "./built-root.js";
 
 const root = resolve(import.meta.dir, "..");
 const rgb = (hex: string) => `rgb(${[1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16)).join(", ")})`;
@@ -128,10 +128,12 @@ try {
           if (mode === "compiler" && width === 1280) await page.screenshot({ path: join(output, `${theme}.png`), fullPage: true });
           await selectTransparency("reduce");
           await requireHeaderPaint(page, headerSelectors.map((selector) => ({
-            selector, background: rgb(colors[theme].background),
+            selector, background: rgb(builtDesignKit.colors[theme].background),
           })), "none");
           await selectTransparency("no-preference");
-          await page.emulateMedia({ forcedColors: "active" });
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
+          await selectTransparency("no-preference", { forcedColors: "active" });
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "none");
           assert.equal(await page.locator('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field').evaluate((node) => getComputedStyle(node).backgroundImage), "none");
           assert.equal(await page.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
           assert.equal(await page.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
@@ -147,7 +149,7 @@ try {
       await requireHeaderPaint(coarse, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
       await selectTransparency("reduce");
       await requireHeaderPaint(coarse, headerSelectors.map((selector) => ({
-        selector, background: rgb(colors.light.background),
+        selector, background: rgb(builtDesignKit.colors.light.background),
       })), "none");
       assert.equal(await coarse.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
       assert.equal(await coarse.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");

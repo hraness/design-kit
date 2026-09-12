@@ -1,11 +1,16 @@
 import assert from "node:assert/strict";
 import type { Page } from "playwright-core";
 
+type FixtureMediaOverrides = Readonly<{
+  colorScheme?: "light" | "dark";
+  forcedColors?: "none" | "active";
+}>;
+
 /** Override only this fixture's transparency preference, then restore its media and scroll state. */
 export async function withTransparencyPreference<T>(
   page: Page,
   value: "reduce" | "no-preference",
-  inspect: (select: (value: "reduce" | "no-preference") => Promise<void>) => Promise<T>,
+  inspect: (select: (value: "reduce" | "no-preference", overrides?: FixtureMediaOverrides) => Promise<void>) => Promise<T>,
 ): Promise<T> {
   const initial = await page.evaluate(() => ({
     scrollX, scrollY,
@@ -17,28 +22,39 @@ export async function withTransparencyPreference<T>(
     ],
   }));
   const session = await page.context().newCDPSession(page);
-  const select = async (value: "reduce" | "no-preference"): Promise<void> => {
-    await session.send("Emulation.setEmulatedMedia", {
-      features: initial.features.map((feature) => feature.name === "prefers-reduced-transparency"
-        ? { ...feature, value } : feature),
+  const select = async (value: "reduce" | "no-preference", overrides: FixtureMediaOverrides = {}): Promise<void> => {
+    const features = initial.features.map((feature) => {
+      if (feature.name === "prefers-reduced-transparency") return { ...feature, value };
+      if (feature.name === "forced-colors" && overrides.forcedColors !== undefined) return { ...feature, value: overrides.forcedColors };
+      if (feature.name === "prefers-color-scheme" && overrides.colorScheme !== undefined) return { ...feature, value: overrides.colorScheme };
+      return feature;
     });
-    assert(await page.evaluate((value) =>
-      matchMedia(`(prefers-reduced-transparency: ${value})`).matches, value),
-    `Transparency emulation did not select ${value}.`);
+    await session.send("Emulation.setEmulatedMedia", { features });
+    assert(await page.evaluate((features) => features.every(({ name, value }) =>
+      matchMedia(`(${name}: ${value})`).matches), features),
+    `Fixture media emulation did not apply ${JSON.stringify(features)}.`);
   };
+  const failures: unknown[] = [];
+  let result: { value: T } | undefined;
   try {
     await select(value);
-    return await inspect(select);
+    result = { value: await inspect(select) };
+  } catch (error) {
+    failures.push(error);
   } finally {
     try {
       await session.send("Emulation.setEmulatedMedia", { features: initial.features });
-    } finally {
-      try {
-        await page.evaluate(({ scrollX, scrollY }) =>
-          scrollTo({ left: scrollX, top: scrollY, behavior: "instant" }), initial);
-      } finally { await session.detach(); }
-    }
+    } catch (error) { failures.push(error); }
+    try {
+      await page.evaluate(({ scrollX, scrollY }) =>
+        scrollTo({ left: scrollX, top: scrollY, behavior: "instant" }), initial);
+    } catch (error) { failures.push(error); }
+    try { await session.detach(); } catch (error) { failures.push(error); }
   }
+  if (failures.length === 1) throw failures[0];
+  if (failures.length > 1) throw new AggregateError(failures, "Fixture media inspection and cleanup failed.");
+  assert(result !== undefined, "Fixture media inspection did not return a result.");
+  return result.value;
 }
 
 /** Inspect rendered paint without injecting styles into a strict-CSP fixture. */

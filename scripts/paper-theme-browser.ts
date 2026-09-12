@@ -169,31 +169,35 @@ try {
       await mkdir(screenshotDirectory, { recursive: true });
       await page.screenshot({ path: resolve(screenshotDirectory, `paper-${width}.png`), fullPage: true });
     }
-    await page.emulateMedia({ forcedColors: "active" });
-    assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
-    const forced = await page.locator("#light").evaluate((element) => {
-      const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim()];
-    });
-    assert.deepEqual(forced, ["Canvas", "CanvasText", "Highlight"]);
-    for (const mode of ["light", "dark"] as const) {
-      await page.emulateMedia({ colorScheme: mode });
-      await page.evaluate((mode) => { document.documentElement.dataset.hranessTheme = "paper"; document.documentElement.dataset.theme = mode; }, mode);
-      assert.deepEqual(await page.locator("html").evaluate((element) => {
-        const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim(), css.getPropertyValue("--primary").trim()];
-      }), ["Canvas", "CanvasText", "Highlight", "Highlight"], "Legacy root rules must not override forced-color semantics.");
-      const systemLink = (await inspect("#system-link-reference")).foreground;
-      for (const selector of ["#root-link", "#light-link", "#dark-link", "#nested-light-link", "#nested-dark-link"]) {
-        const link = await page.locator(selector).evaluate((element) => ({
-          color: getComputedStyle(element).color,
-          adjustment: getComputedStyle(element).forcedColorAdjust,
-          nativeLink: element instanceof HTMLAnchorElement && element.hasAttribute("href"),
-        }));
-        assert(link.nativeLink);
-        assert.equal(link.adjustment, "auto");
-        assert.equal(link.color, systemLink, `${selector} must paint LinkText in forced ${mode} colors.`);
+    await withTransparencyPreference(page, "no-preference", async (selectTransparency) => {
+      await requireHeaderPaint(page, headers, "blur(14px) saturate(1.4)");
+      await selectTransparency("no-preference", { forcedColors: "active" });
+      await requireHeaderPaint(page, headers, "none");
+      assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
+      const forced = await page.locator("#light").evaluate((element) => {
+        const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim()];
+      });
+      assert.deepEqual(forced, ["Canvas", "CanvasText", "Highlight"]);
+      for (const mode of ["light", "dark"] as const) {
+        await selectTransparency("no-preference", { forcedColors: "active", colorScheme: mode });
+        await page.evaluate((mode) => { document.documentElement.dataset.hranessTheme = "paper"; document.documentElement.dataset.theme = mode; }, mode);
+        assert.deepEqual(await page.locator("html").evaluate((element) => {
+          const css = getComputedStyle(element); return [css.getPropertyValue("--background").trim(), css.getPropertyValue("--foreground").trim(), css.getPropertyValue("--focus").trim(), css.getPropertyValue("--primary").trim()];
+        }), ["Canvas", "CanvasText", "Highlight", "Highlight"], "Legacy root rules must not override forced-color semantics.");
+        const systemLink = (await inspect("#system-link-reference")).foreground;
+        for (const selector of ["#root-link", "#light-link", "#dark-link", "#nested-light-link", "#nested-dark-link"]) {
+          const link = await page.locator(selector).evaluate((element) => ({
+            color: getComputedStyle(element).color,
+            adjustment: getComputedStyle(element).forcedColorAdjust,
+            nativeLink: element instanceof HTMLAnchorElement && element.hasAttribute("href"),
+          }));
+          assert(link.nativeLink);
+          assert.equal(link.adjustment, "auto");
+          assert.equal(link.color, systemLink, `${selector} must paint LinkText in forced ${mode} colors.`);
+        }
+        assert.equal(await page.locator("#chosen").evaluate((element) => getComputedStyle(element).getPropertyValue("--plain-link").trim()), "#b8bb26", "A selected non-Paper palette retains its own link token.");
       }
-      assert.equal(await page.locator("#chosen").evaluate((element) => getComputedStyle(element).getPropertyValue("--plain-link").trim()), "#b8bb26", "A selected non-Paper palette retains its own link token.");
-    }
+    });
     assert.deepEqual(errors, []);
     await page.close();
   }
