@@ -141,7 +141,9 @@ test("invalid explicit columns fail closed before rendering even empty collectio
 test("all 19 marketing compositions render real owned atoms with native server-only semantics", () => {
   const html = renderToStaticMarkup(<ProductMarketingFixture api={api} />);
   const { document } = parseHTML(html);
-  expect(Object.keys(api).filter((name) => name.startsWith("Marketing") || name === "ProductHero")).toHaveLength(19);
+  // MarketingField is a flow/background boundary, not a new owned atom recipe.
+  expect(typeof api.MarketingField).toBe("function");
+  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(19);
   const owned = [...document.querySelectorAll('[class*="hraness-marketing-"]')];
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {
@@ -199,7 +201,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("903fb3f520eb3228a0bb97c3557b2afc90582a7f072dd72dd07f792f79d26511");
+    .toBe("a4bddaaa2cfbc3cf13a2f174405cc1bb3ac8bf78e061ffcc73aef1dc42f83824");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));

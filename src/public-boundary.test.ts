@@ -64,7 +64,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.6.6");
+  expect(packageJson.version).toBe("0.6.7");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.12 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.12");
@@ -86,6 +86,9 @@ test("the package exposes compositions without a second primitive barrel", async
     types: "./src/react/server.ts",
     import: "./dist/react/server.js",
   });
+  expect(packageJson.exports["./product-marketing-preset.css"]).toBe("./src/product-marketing-preset.css");
+  expect(packageJson.exports["./fonts/instrument-serif/*"]).toBe("./src/fonts/instrument-serif/*");
+  expect(packageJson.exports["./marketing-assets/*"]).toBe("./src/marketing-assets/*");
   expect(packageJson.exports["./paper-theme.css"]).toBe("./src/paper-theme.css");
   expect(packageJson.exports["./product-marketing.css"]).toBe(
     "./src/product-marketing.css",
@@ -133,6 +136,6 @@ test("excluded source and font boundaries stay absent", async () => {
   const restrictedFontDirectory = "mono" + "lisa";
 
   expect(sourceFiles).not.toContain(restrictedEffect);
-  expect(fontDirectories).toEqual(["geist-mono", "nebula-sans"]);
+  expect(fontDirectories).toEqual(["geist-mono", "instrument-serif", "nebula-sans"]);
   expect(fontDirectories).not.toContain(restrictedFontDirectory);
 });

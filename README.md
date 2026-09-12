@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.6.6",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.6.7",
     "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
@@ -398,7 +398,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.6`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.5`. This patch preserves shared header blur through CSS optimization and uses opaque surfaces when backdrop filtering is unavailable, reduced transparency is preferred, or forced colors are active. The portable Paper snapshot carries the same paint correction for older component releases. Paper colors, header geometry, portable contract 1, and the compiler identity stay unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.7`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.6`. This patch adds an explicit editorial/minimal marketing preset, Instrument Serif, checked static field assets, and a source-commit snapshot installer for consumers on older UI packages. Existing defaults, Paper contract 1, header blur fallbacks, peer boundaries, and compiler identity remain unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
@@ -409,3 +409,9 @@ Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request. Report 
 ## License
 
 MIT. Vendored Nebula Sans, Geist Mono, and other upstream artifacts retain their own included license and provenance files.
+
+### Shared editorial marketing preset
+
+Import `@hraness/design-kit/product-marketing-preset.css` after your existing marketing styles, then opt in with `<MarketingPage preset="editorial">`. Wrap the opening in `<MarketingField>` for the checked grain, seams, and gradient. `preset="minimal"` retains a compact sans hierarchy and omits the field texture. Product accents and copy remain product-owned.
+
+[Marketing preset contract](MARKETING_PRESET.md) documents the native HTML hooks, shared tokens, paint-only header hook, and immutable CSS/font/asset snapshots for consumers that retain an older component release. The preset leaves application UI outside its explicit scope untouched.

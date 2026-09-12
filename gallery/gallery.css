@@ -1,4 +1,5 @@
 @import "../src/paper-theme.css";
+@import "../src/product-marketing-preset.css";
 
 .design-gallery-appearance-portal-canary {
   --ui-accent: rgb(89, 45, 168);

@@ -2018,7 +2018,11 @@ function startGalleryServer(directory: string) {
             ? "text/css"
             : name.endsWith(".js")
               ? "text/javascript"
-              : "text/html";
+              : name.endsWith(".svg")
+                ? "image/svg+xml"
+                : name.endsWith(".woff2")
+                  ? "font/woff2"
+                  : "text/html";
           return new Response(file, { headers: { "content-type": type } });
         },
       });

@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import {
   MarketingCallToAction,
   MarketingFlow,
+  MarketingField,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
   MarketingMaker,
@@ -322,4 +323,30 @@ test("a compact hero can omit its eyebrow without rendering an empty label", () 
   const labeled = renderToStaticMarkup(<ProductHero eyebrow="Developer tools" name="Relay" heading="Run the next job" headingId="labeled-title" summary="Keep your work in one place." />);
   expect(labeled).toContain("hraness-marketing-hero__eyebrow");
   expect(labeled).toContain("Developer tools");
+});
+
+
+test("editorial and minimal presets remain explicit, server-safe composition boundaries", () => {
+  for (const preset of ["editorial", "minimal"] as const) {
+    const html = renderToStaticMarkup(<MarketingPage preset={preset}><MarketingField className="product-opening"><MarketingSection heading="One clear heading" headingId="clear">Product-owned content</MarketingSection></MarketingField></MarketingPage>);
+    expect(html).toContain(`data-hraness-marketing-preset="${preset}"`);
+    expect(html).toContain('class="hraness-marketing-field product-opening"');
+    expect(html).not.toContain('hraness-marketing-section__label');
+    expect(html).not.toMatch(/<script|<img|style=/u);
+  }
+  expect(renderToStaticMarkup(<MarketingPage>Default content</MarketingPage>)).not.toContain("data-hraness-marketing-preset");
+  expect(() => renderToStaticMarkup(<MarketingPage preset={"unknown" as "editorial"}>Invalid</MarketingPage>)).toThrow();
+});
+
+test("optional generic labels omit their slots while factual labels remain visible", () => {
+  const html = renderToStaticMarkup(<><MarketingQuestionList heading="Questions" headingId="questions" questions={[{ question: "How?", answer: "A concrete answer." }]} /><MarketingInstallPanel heading="Install" headingId="install"><code>relay run</code></MarketingInstallPanel><MarketingMaker heading="Maker" headingId="maker"><p>Product-owned biography.</p></MarketingMaker></>);
+  expect(html).not.toContain("hraness-marketing-questions__label");
+  expect(html).not.toContain("hraness-marketing-install__eyebrow");
+  expect(html).not.toContain("hraness-marketing-maker__label");
+  expect(html).toContain("A concrete answer.");
+});
+
+test("empty legacy-compatible React eyebrows omit their atomic display slot", () => {
+  const html = renderToStaticMarkup(<ProductHero eyebrow="" name="Relay" heading="Clear" headingId="clear-empty" summary="Factual summary." />);
+  expect(html).not.toContain("hraness-marketing-hero__eyebrow");
 });

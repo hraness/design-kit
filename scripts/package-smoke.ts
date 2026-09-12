@@ -1,3 +1,4 @@
+import { marketingSnapshotPaths } from "./product-marketing-snapshot.js";
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -785,6 +786,7 @@ const compilerStylesheetPaths = [
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
+  "src/product-marketing-preset.css",
   "src/reset.css",
   "src/styles.css",
   "src/syntax-highlighting.css",
@@ -805,7 +807,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.6" },
+    { name: "@hraness/design-kit", version: "0.6.7" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -871,7 +873,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.6.6 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.6.7 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -889,7 +891,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.6.6 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.6.7 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -901,7 +903,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.6.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.7.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1466,6 +1468,18 @@ try {
     "src/react/route-state.stylex.ts",
     "src/react/surfaces.stylex.ts",
     "src/react/theme.stylex.ts",
+    "MARKETING_PRESET.md",
+    "scripts/product-marketing-snapshot.ts",
+    "scripts/marketing-textures.ts",
+    "scripts/check-marketing-snapshot.mjs",
+    "scripts/check-marketing-snapshot.d.mts",
+    "src/product-marketing-preset.css",
+    "src/fonts/instrument-serif/instrument-serif-latin-400.woff2",
+    "src/fonts/instrument-serif/OFL.txt",
+    "src/fonts/instrument-serif/UPSTREAM.md",
+    "src/marketing-assets/grain.svg",
+    "src/marketing-assets/cells.svg",
+    "src/marketing-assets/UPSTREAM.md",
     "src/fonts/geist-mono/GeistMono[wght].woff2",
     "src/fonts/nebula-sans/LICENSE.txt",
     "src/fonts/nebula-sans/NebulaSans-Black.woff2",
@@ -1490,6 +1504,9 @@ try {
     if (!(await Bun.file(join(installed, path)).exists())) {
       throw new Error(`Packed package is missing ${path}`);
     }
+  }
+  for (const path of Object.values(marketingSnapshotPaths)) {
+    assert.deepEqual(await readFile(join(installed, path)), await readFile(join(repository, path)), `Packed marketing artifact differs: ${path}`);
   }
   const installedManifestPath = join(installed, "dist/stylex-manifest.json");
   const installedManifest = await readStylexPackageManifest(installedManifestPath, installed);

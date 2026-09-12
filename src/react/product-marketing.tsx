@@ -16,6 +16,7 @@ const MARKETING_HEADING_TAGS = {
 } as const;
 
 export type MarketingTone = "paper" | "accent";
+export type MarketingPreset = "editorial" | "minimal";
 
 export interface MarketingAction {
   readonly emphasis?: "primary" | "secondary";
@@ -95,16 +96,25 @@ export function MarketingPage({
   children,
   className,
   id,
+  preset,
 }: Readonly<{
   children: ReactNode;
   className?: string;
   id?: string;
+  /** Opt in to the separately imported product-marketing-preset.css contract. */
+  preset?: MarketingPreset;
 }>) {
+  if (preset !== undefined && preset !== "editorial" && preset !== "minimal") throw new RangeError("Unknown marketing preset.");
   return (
-    <div className={classNames("hraness-marketing-page", className)} data-hraness-marketing="page" id={id}>
+    <div className={classNames("hraness-marketing-page", className)} data-hraness-marketing="page" data-hraness-marketing-preset={preset} id={id}>
       {children}
     </div>
   );
+}
+
+/** Static decorative field; it never creates an overlay or a fixed-position containing block. */
+export function MarketingField({ children, className }: Readonly<{ children: ReactNode; className?: string }>) {
+  return <div className={["hraness-marketing-field", className].filter(Boolean).join(" ")} data-hraness-marketing="field">{children}</div>;
 }
 
 export function MarketingSiteHeader({
@@ -293,7 +303,7 @@ export function ProductHero({
       data-tone={tone}
     >
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
-        {eyebrow === undefined ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
+        {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
         <p className={classNames("hraness-marketing-hero__name")}>{name}</p>
         <Heading className={classNames("hraness-marketing-hero__heading")} id={headingId} level={headingLevel}>
           {heading}
@@ -381,7 +391,7 @@ export function MarketingInstallPanel({
 }: Readonly<{
   children: ReactNode;
   className?: string;
-  eyebrow: string;
+  eyebrow?: string;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -397,7 +407,7 @@ export function MarketingInstallPanel({
       id={id}
     >
       <div className={classNames("hraness-marketing-install__heading-group")}>
-        <p className={classNames("hraness-marketing-install__eyebrow")}>{eyebrow}</p>
+        {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-install__eyebrow")}>{eyebrow}</p>}
         <Heading className={classNames("hraness-marketing-install__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
@@ -484,7 +494,7 @@ export function MarketingSection({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   layout?: "split" | "split-reverse" | "stack";
   summary?: string;
 }>) {
@@ -497,7 +507,7 @@ export function MarketingSection({
       id={id}
     >
       <div className={classNames("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse")}>
-        <MarketingSectionLabel>{label}</MarketingSectionLabel>
+        {label === undefined || label === "" ? null : <MarketingSectionLabel>{label}</MarketingSectionLabel>}
         <Heading className={classNames("hraness-marketing-section__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
@@ -516,7 +526,7 @@ interface MarketingCollectionHeaderProps {
   readonly heading: string;
   readonly headingId: string;
   readonly headingLevel: MarketingHeadingLevel;
-  readonly label: string;
+  readonly label: string | undefined;
   readonly prefix: MarketingCollectionPrefix;
   readonly summary: string | undefined;
 }
@@ -531,7 +541,7 @@ function MarketingCollectionHeader({
 }: Readonly<MarketingCollectionHeaderProps>) {
   return (
     <header className={classNames(`hraness-marketing-${prefix}__header`)}>
-      <p className={classNames(`hraness-marketing-${prefix}__label`)}>{label}</p>
+      {label === undefined || label === "" ? null : <p className={classNames(`hraness-marketing-${prefix}__label`)}>{label}</p>}
       <Heading className={classNames(`hraness-marketing-${prefix}__heading`)} id={headingId} level={headingLevel}>
         {heading}
       </Heading>
@@ -562,7 +572,7 @@ export function MarketingPrimitives({
   headingLevel?: MarketingHeadingLevel;
   id?: string;
   items: readonly MarketingPrimitive[];
-  label: string;
+  label?: string;
   summary?: string;
 }>) {
   return (
@@ -661,7 +671,7 @@ export function MarketingInterfaceGrid({
   headingLevel?: MarketingHeadingLevel;
   id?: string;
   interfaces: readonly MarketingInterface[];
-  label: string;
+  label?: string;
   summary?: string;
 }>) {
   return (
@@ -711,7 +721,7 @@ export function MarketingTrustBoundary({
   headingLevel?: MarketingHeadingLevel;
   id?: string;
   items: readonly MarketingTrustItem[];
-  label: string;
+  label?: string;
   summary?: string;
 }>) {
   return (
@@ -762,7 +772,7 @@ export function MarketingQuoteGrid({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   quotes: readonly MarketingQuote[];
   summary?: string;
 }>) {
@@ -825,7 +835,7 @@ export function MarketingPricing({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   plans: readonly MarketingPlan[];
   summary?: string;
 }>) {
@@ -894,7 +904,7 @@ export function MarketingQuestionList({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   questions: readonly MarketingQuestion[];
   summary?: string;
 }>) {
@@ -940,7 +950,7 @@ export function MarketingMaker({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  label: string;
+  label?: string;
   /** Added only to listed links, never to caller-owned biography content. */
   linkClassName?: string;
   links?: readonly MarketingLink[];
@@ -955,7 +965,7 @@ export function MarketingMaker({
     >
       <header className={classNames("hraness-marketing-maker__header")}>
         {portrait === undefined ? null : <div className={classNames("hraness-marketing-maker__portrait")}>{portrait}</div>}
-        <p className={classNames("hraness-marketing-maker__label")}>{label}</p>
+        {label === undefined || label === "" ? null : <p className={classNames("hraness-marketing-maker__label")}>{label}</p>}
         <Heading className={classNames("hraness-marketing-maker__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
@@ -1009,7 +1019,7 @@ export function MarketingCallToAction({
       data-tone={tone}
       id={id}
     >
-      {eyebrow === undefined ? null : <p className={classNames("hraness-marketing-cta__eyebrow")}>{eyebrow}</p>}
+      {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-cta__eyebrow")}>{eyebrow}</p>}
       <Heading className={classNames("hraness-marketing-cta__heading")} id={headingId} level={headingLevel}>
         {heading}
       </Heading>
