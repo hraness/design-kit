@@ -31,6 +31,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/effects.css",
   "src/fonts.css",
   "src/jelly.css",
+  "src/lantern-material.css",
   "src/palette-bridge.css",
   "src/palettes.css",
   "src/paper-theme.css",
@@ -460,6 +461,7 @@ function requireAggregateContract(source: string): void {
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
     '@import "./palette-bridge.css";',
+    '@import "./lantern-material.css";',
   ];
   const statements = topLevelStatements(source, "src/styles.css");
   if (statements.length !== expectedStatements.length
@@ -487,6 +489,7 @@ function requireCompilerFoundationContract(source: string): void {
     '@import "./plain-publication.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
+    '@import "./lantern-material.css";',
   ];
   const statements = topLevelStatements(source, "src/compiler-foundation.css");
   if (statements.length !== expectedStatements.length
@@ -1621,8 +1624,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.6.9" },
-  "StyleX manifest must describe design-kit v0.6.9",
+  { name: "@hraness/design-kit", version: "0.7.0" },
+  "StyleX manifest must describe design-kit v0.7.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1706,13 +1709,25 @@ assert.deepEqual(
     [0, 0.1, 0.5, 1, 41],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
-    [3000, 3040, 3092, 3130, 3200, 3330],
+    [3000, 3040, 3045, 3092, 3130, 3200, 3330],
     [4000, 4130],
     [6000],
     [7000],
     [8000, 8040],
   ],
   "Design-kit raw StyleX priorities no longer map to the reviewed eight-rank inventory",
+);
+// TextField paints a containing control div. Its disabled input remains the
+// authority for inset paint; this :has atom belongs to existing rank 4.
+assert.deepEqual(manifest.rules.filter(([, , priority]) => priority === 3045), [[
+  "x13lu1oe",
+  { ltr: ".x13lu1oe:has(input:disabled, textarea:disabled){background-image:none}", rtl: null },
+  3045,
+]], "Raw priority 3045 must contain only the disabled-field material adapter");
+assert.equal(
+  requireRuleSerializedRank(compiledCss, "x13lu1oe", designPriorityContract, "dist/stylex.css"),
+  "priority4",
+  "The disabled-field material adapter must stay in the existing fourth rank",
 );
 // The reviewed primary-action hover repair introduces one media-plus-pseudo
 // atom. It stays in rank 4; it does not create a ninth standalone layer.

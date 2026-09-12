@@ -5,6 +5,105 @@
   padding: clamp(var(--space-5), 4vw, var(--space-12));
 }
 
+@layer components.hraness-design-kit.legacy {
+  .design-gallery__lantern-intro {
+    margin: 0;
+    max-inline-size: 60ch;
+    color: var(--muted);
+  }
+  .design-gallery__lantern-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .design-gallery__lantern-wall {
+    --hraness-material-module: 4rem;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    border-radius: 2rem;
+    min-inline-size: 0;
+  }
+  .design-gallery__lantern-caption { margin-block-end: 2rem; }
+  .design-gallery__lantern-caption h3 {
+    margin: 0 0 0.375rem;
+    font-size: 1.75rem;
+    font-weight: 550;
+    letter-spacing: -0.025em;
+  }
+  .design-gallery__lantern-caption p { margin: 0; }
+  .design-gallery__lantern-workspace {
+    block-size: 32rem;
+    overflow: auto;
+    scrollbar-color: var(--hraness-material-seam) var(--hraness-material-plane);
+    scrollbar-width: thin;
+  }
+  .design-gallery__lantern-local {
+    font-size: 0.75rem;
+    color: var(--hraness-material-muted);
+  }
+  .design-gallery__lantern-content {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  .design-gallery__lantern-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .design-gallery__lantern-filter > span,
+  .design-gallery__lantern-notes > li > span,
+  .design-gallery__lantern-save > span {
+    color: var(--hraness-material-muted);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+  .design-gallery__lantern-notes > li { padding-block: 0.625rem 1rem; }
+  .design-gallery__lantern-notes summary {
+    font-size: 1rem;
+    font-weight: 550;
+    line-height: 1.4;
+  }
+  .design-gallery__lantern-notes details p {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    max-inline-size: 65ch;
+  }
+  .design-gallery__lantern-save { display: grid; justify-items: start; gap: 0.75rem; }
+  .design-gallery__lantern-states {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  .design-gallery__lantern-states > :is(h3, p) { margin: 0; }
+  .design-gallery__lantern-states > p { max-inline-size: 65ch; }
+  .design-gallery__lantern-state-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .design-gallery__lantern-plain {
+    min-block-size: 2.75rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--hraness-material-seam);
+    border-radius: var(--radius-md, 0.5rem);
+    background-color: var(--hraness-material-plane);
+    color: var(--hraness-material-ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  .design-gallery__lantern-plain:focus-visible {
+    outline: 2px solid var(--hraness-material-focus);
+    outline-offset: 3px;
+  }
+  @media (max-width: 60rem) {
+    .design-gallery__lantern-pair { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 30rem) {
+    .design-gallery__lantern-wall { padding: 1rem; border-radius: 1.5rem; }
+    .design-gallery__lantern-content { padding: 1rem; }
+    .design-gallery__lantern-local { display: none; }
+  }
+}
+
 .design-gallery__intro,
 .design-gallery__section {
   inline-size: min(100%, 72rem);

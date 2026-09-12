@@ -13,6 +13,7 @@ import {
 test("the public gallery covers the composition boundary", () => {
   expect(designGallerySections.map(({ id }) => id)).toEqual([
     "foundation",
+    "lantern",
     "marketing",
     "shells",
     "data",
@@ -27,6 +28,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("dither surface");
   expect(designGalleryRecipeCoverage).toContain("fader");
   expect(designGalleryRecipeCoverage).toContain("layout surfaces");
+  expect(designGalleryRecipeCoverage).toContain("Lantern material");
   expect(designGalleryRecipeCoverage).toContain("playback transport");
   expect(designGalleryRecipeCoverage).toContain("plain site and publication grammar");
   expect(designGalleryRecipeCoverage).toContain("product-marketing grammar");

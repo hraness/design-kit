@@ -1,4 +1,5 @@
 import { marketingSnapshotPaths } from "./product-marketing-snapshot.js";
+import { lanternSnapshotPaths } from "./lantern-material-snapshot.js";
 import assert from "node:assert/strict";
 import { mkdir, mkdtemp, readFile, readdir, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -584,7 +585,30 @@ function requireLayoutSurfacePresentation(
   }
 }
 
-function requireTopBarPaintFoundation(css: string, label: string): string {
+function requireTopBarPaintFoundation(css: string, label: string, lantern = false): string {
+  if (lantern) {
+    // CSS optimizers may unwrap a single :is() selector. Admit only this
+    // material adapter and its two public paint bindings before checking the
+    // unchanged base TopBar rules and the migrated legacy-recipe ban.
+    const host = String.raw`\[data-hraness-material=(?:"lantern"|'lantern'|lantern)\]`;
+    const surface = String.raw`\.hraness-material-chrome\.hraness-design-top-bar\[data-surface=(?:"glass"|'glass'|glass)\]`;
+    const adapterRules = [...css.matchAll(new RegExp(
+      String.raw`:where\(${host}\s*,\s*${host}\s+\*\)(?:${surface}|:is\(${surface}\))\s*\{([^{}]*)\}`,
+      "gu",
+    ))];
+    assert.equal(adapterRules.length, 1, `${label} must deliver the scoped Lantern TopBar adapter exactly once.`);
+    const adapter = adapterRules[0];
+    assert.ok(adapter !== undefined);
+    assert.deepEqual(
+      (adapter[1] ?? "").replace(/\s+/gu, "").split(";").filter(Boolean).sort(),
+      [
+        "--hraness-design-top-bar-background:var(--hraness-material-chrome-paint)",
+        "--hraness-design-top-bar-backdrop:var(--hraness-material-chrome-blur)",
+      ].sort(),
+      `${label} Lantern TopBar adapter may contain only the exact material paint bindings.`,
+    );
+    css = css.slice(0, adapter.index) + css.slice(adapter.index + adapter[0].length);
+  }
   const tokenRules = [...css.matchAll(
     /\.hraness-design-top-bar\[data-surface=(?:"glass"|'glass'|glass)\]\s*\{([^{}]*)\}/gu,
   )];
@@ -779,6 +803,7 @@ const compilerStylesheetPaths = [
   "src/effects.css",
   "src/fonts.css",
   "src/jelly.css",
+  "src/lantern-material.css",
   "src/palette-bridge.css",
   "src/palettes.css",
   "src/paper-theme.css",
@@ -807,7 +832,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.6.9" },
+    { name: "@hraness/design-kit", version: "0.7.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -873,7 +898,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.6.9 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.7.0 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -891,7 +916,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.6.9 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.7.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -903,7 +928,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.6.9.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.7.0.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1268,7 +1293,7 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')])",
+    "const [, react] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')]); if (typeof react.LanternMaterialGallery !== 'function' || ['edge', 'inset', 'selected'].some(name => !react.lanternControlStyles?.[name] || Object.keys(react.lanternControlStyles[name]).length === 0)) throw new Error('Packed Lantern exports are unavailable.');",
   ], consumer);
   await writeFile(
     join(consumer, "global-error.mjs"),
@@ -1469,6 +1494,13 @@ try {
     "src/react/surfaces.stylex.ts",
     "src/react/theme.stylex.ts",
     "MARKETING_PRESET.md",
+    "LANTERN_MATERIAL.md",
+    "src/lantern-material.css",
+    "src/react/lantern-material-gallery.tsx",
+    "src/react/lantern-material.stylex.ts",
+    "scripts/lantern-material-snapshot.ts",
+    "scripts/check-lantern-material-snapshot.mjs",
+    "scripts/check-lantern-material-snapshot.d.mts",
     "scripts/product-marketing-snapshot.ts",
     "scripts/marketing-textures.ts",
     "scripts/check-marketing-snapshot.mjs",
@@ -1507,6 +1539,9 @@ try {
   }
   for (const path of Object.values(marketingSnapshotPaths)) {
     assert.deepEqual(await readFile(join(installed, path)), await readFile(join(repository, path)), `Packed marketing artifact differs: ${path}`);
+  }
+  for (const path of Object.values(lanternSnapshotPaths)) {
+    assert.deepEqual(await readFile(join(installed, path)), await readFile(join(repository, path)), `Packed Lantern material artifact differs: ${path}`);
   }
   const installedManifestPath = join(installed, "dist/stylex-manifest.json");
   const installedManifest = await readStylexPackageManifest(installedManifestPath, installed);
@@ -1819,7 +1854,21 @@ try {
   if (/\.hraness-design-dither-surface\s*(?:\{|\[|,)/u.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained the migrated legacy DitherSurface recipe.");
   }
-  requireTopBarPaintFoundation(builtCss, "Packed aggregate Vite CSS");
+  requireTopBarPaintFoundation(builtCss, "Packed aggregate Vite CSS", true);
+  for (const [before, after] of [
+    ["--hraness-design-top-bar-background:var(--hraness-material-chrome-paint)", "background:red;--hraness-design-top-bar-background:var(--hraness-material-chrome-paint)"],
+    ["--hraness-design-top-bar-backdrop:var(--hraness-material-chrome-blur)", "--hraness-design-top-bar-backdrop:none"],
+  ] as const) {
+    const compact = builtCss.replace(/\s+/gu, "");
+    assert.ok(compact.includes(before), "Packed Lantern adapter mutation must exercise an existing binding.");
+    // Keep selector whitespace intact; compact only declarations for the mutation.
+    const mutated = builtCss.replace(/\{([^{}]*)\}/gu, (rule: string) =>
+      rule.replace(/\s+/gu, "").replace(before, after));
+    assert.throws(
+      () => requireTopBarPaintFoundation(mutated, "Mutated Lantern TopBar adapter", true),
+      /may contain only the exact material paint bindings/u,
+    );
+  }
   if (migratedPlaybackLegacySelector.test(builtCss)) {
     throw new Error("Packed aggregate Vite CSS retained a migrated legacy PlaybackTransport recipe.");
   }
@@ -2551,7 +2600,7 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')])",
+    "const [, react] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server'), import('@hraness/design-kit/syntax-highlighting')]); if (typeof react.LanternMaterialGallery !== 'function' || ['edge', 'inset', 'selected'].some(name => !react.lanternControlStyles?.[name] || Object.keys(react.lanternControlStyles[name]).length === 0)) throw new Error('Packed Lantern exports are unavailable.');",
   ], react18Consumer);
   await writeFile(
     join(react18Consumer, "notice-react18.mjs"),
