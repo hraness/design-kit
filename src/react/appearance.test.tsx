@@ -2,6 +2,8 @@ import { expect, test } from "bun:test";
 import * as stylex from "@stylexjs/stylex";
 import { parseHTML } from "linkedom";
 import { runInNewContext } from "node:vm";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
+import { Children, isValidElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { colors } from "../index";
@@ -261,7 +263,7 @@ test("route states defer to the product header and keep any opt-in menu inside a
   expect(optedIn).toContain('data-presentation="menu"');
 });
 
-test("a forced provider omits preference repair and system selection", () => {
+test("a forced provider omits preference repair and does not add selection controls", () => {
   const html = renderToStaticMarkup(
     <DesignThemeProvider forcedTheme="dark">
       <PortalThemeProbe />
@@ -271,6 +273,24 @@ test("a forced provider omits preference repair and system selection", () => {
   expect(html).toContain('data-portal-theme="dark"');
   expect(html).not.toContain('data-hraness-design-theme-guard=""');
   expect(html).not.toContain("hraness-design-theme-toggle");
+});
+
+test("system resolution remains enabled across forced and ordinary provider renders", () => {
+  for (const forcedTheme of ["dark", undefined, "light", undefined] as const) {
+    const tree = DesignThemeProvider({ children: <span>Retained application</span>,
+      ...(forcedTheme === undefined ? {} : { forcedTheme }) });
+    const boundary = Children.toArray(tree.props.children as ReactNode)
+      .find((child) => isValidElement(child) && child.type === NextThemeProvider);
+    expect(isValidElement(boundary)).toBe(true);
+    if (!isValidElement<{ enableSystem: boolean; forcedTheme?: string; storageKey: string }>(boundary)) {
+      throw new Error("Missing persistent next-themes boundary.");
+    }
+    expect(boundary.props.enableSystem).toBe(true);
+    expect(boundary.props.forcedTheme).toBe(forcedTheme);
+    expect(boundary.props.storageKey).toBe("hraness-design-theme-v1");
+    // React's positional child key stays identical; forcing must not remount children.
+    expect(boundary.key).toBe(".1");
+  }
 });
 
 test("the provider owns the Jelly repaint bridge for runtime appearance changes", async () => {

@@ -4923,7 +4923,7 @@ function DesignThemeProvider({
         attribute: "data-theme",
         defaultTheme: forcedTheme ?? defaultDesignTheme,
         disableTransitionOnChange: true,
-        enableSystem: forcedTheme === undefined,
+        enableSystem: true,
         forcedTheme,
         storageKey,
         themes: [...concreteThemes],
