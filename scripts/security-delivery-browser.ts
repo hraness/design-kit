@@ -8,6 +8,7 @@ import { createElement } from "react";
 import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
 import { equalBackgroundValues } from "./browser-css-parity.js";
 import { browserStylesheetLayerOrder, bundleBrowserStylesheet } from "./browser-stylesheet.js";
+import { withTransparencyPreference } from "./browser-transparency.js";
 import { readStylexPackageManifest, serializeStylexPackageRules } from "@hraness/ui/stylex-build";
 
 import {
@@ -71,25 +72,7 @@ function invariant(value: unknown, message: string): asserts value {
 /** Exercise both paint contracts without inheriting the host's transparency preference. */
 async function withGlassHeaderPaint<T>(page: Page, inspect: () => Promise<T>): Promise<T> {
   const selector = '[data-security-layout="top"]';
-  const initial = await page.evaluate(() => ({
-    scrollX, scrollY,
-    features: [
-      { name: "prefers-color-scheme", value: matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light" },
-      { name: "prefers-reduced-motion", value: matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduce" : "no-preference" },
-      { name: "prefers-reduced-transparency", value: matchMedia("(prefers-reduced-transparency: reduce)").matches ? "reduce" : "no-preference" },
-      { name: "forced-colors", value: matchMedia("(forced-colors: active)").matches ? "active" : "none" },
-    ],
-  }));
-  const cdp = await page.context().newCDPSession(page);
   const requirePaint = async (opaque: boolean): Promise<void> => {
-    const value = opaque ? "reduce" : "no-preference";
-    await cdp.send("Emulation.setEmulatedMedia", {
-      features: initial.features.map((feature) => feature.name === "prefers-reduced-transparency"
-        ? { ...feature, value } : feature),
-    });
-    invariant(await page.evaluate((value) =>
-      matchMedia(`(prefers-reduced-transparency: ${value})`).matches, value),
-    `The security canary could not emulate transparency ${value}.`);
     // Chrome can defer paint transitions for offscreen specimens. Inspect the
     // rendered header and wait for its real styles; never disable animations.
     await page.locator(selector).scrollIntoViewIfNeeded({ timeout: 5_000 });
@@ -108,22 +91,14 @@ async function withGlassHeaderPaint<T>(page: Page, inspect: () => Promise<T>): P
       } finally { probe.remove(); }
     }, { selector, opaque }, { timeout: 5_000, polling: "raf" });
   };
-  try {
+  return withTransparencyPreference(page, "no-preference", async (select) => {
     await requirePaint(false);
     const evidence = await inspect();
+    await select("reduce");
     await requirePaint(true);
     console.log("Security TopBar paint passed no-preference glass and reduced-transparency opaque token checks.");
     return evidence;
-  } finally {
-    try {
-      await cdp.send("Emulation.setEmulatedMedia", { features: initial.features });
-    } finally {
-      try {
-        await page.evaluate(({ scrollX, scrollY }) =>
-          scrollTo({ left: scrollX, top: scrollY, behavior: "instant" }), initial);
-      } finally { await cdp.detach(); }
-    }
-  }
+  });
 }
 
 function escapeRegularExpression(value: string): string {
