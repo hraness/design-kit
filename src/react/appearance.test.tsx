@@ -277,7 +277,7 @@ test("the provider owns the Jelly repaint bridge for runtime appearance changes"
   const source = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
 
   expect(source).toContain('import { setJellyThemeMode } from "./jelly-runtime.js";');
-  expect(source).toContain("void setJellyThemeMode(resolvedTheme);");
+  expect(source).toContain("void setJellyThemeMode(effectiveTheme);");
   expect(source).not.toContain('new CustomEvent("jelly-theme-change")');
   expect(source).toContain("<JellyThemeSync />");
 });
@@ -407,12 +407,13 @@ test("the global error document accepts product colors for adaptive head metadat
   expect(html).toContain('content="#101419" media="(prefers-color-scheme: dark)"');
 });
 
-test("theme color synchronization waits for a concrete resolved appearance", async () => {
+test("theme color synchronization uses a concrete forced or resolved appearance without replacing palette ownership", async () => {
   const source = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
 
   expect(source).toContain(
-    'resolvedTheme === "light" || resolvedTheme === "dark"',
+    "const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);",
   );
+  expect(source).toContain("effectiveTheme !== undefined");
   expect(source).toContain('metaName !== "theme-color" && palette.ready ? palette.background : undefined');
   expect(source).toContain("if (!hasResolvedColor || latestColor.current === undefined) return;");
   expect(source).toContain("acquireThemeColorMeta(");

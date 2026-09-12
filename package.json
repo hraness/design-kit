@@ -151,6 +151,7 @@
     "src/react/surfaces.tsx",
     "src/react/syntax-code.tsx",
     "src/react/theme-color-sync.ts",
+    "src/react/theme-resolution.ts",
     "src/react/theme.stylex.ts",
     "src/react/theme.tsx",
     "src/reset.css",

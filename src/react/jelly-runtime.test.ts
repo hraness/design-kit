@@ -89,12 +89,13 @@ test("theme changes use Jelly's public API and emit the canvas repaint event", a
   expect(vendor).toContain("setThemeMode");
 });
 
-test("the shared theme provider repaints Jelly after resolved appearance changes", async () => {
+test("the shared theme provider repaints Jelly after forced or resolved appearance changes", async () => {
   const theme = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
 
   expect(theme.match(/setJellyThemeMode\(/gu)).toHaveLength(1);
-  expect(theme).toContain("void setJellyThemeMode(resolvedTheme);");
-  expect(theme).toContain('resolvedTheme === "light" || resolvedTheme === "dark"');
+  expect(theme).toContain("void setJellyThemeMode(effectiveTheme);");
+  expect(theme).toContain("const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);");
+  expect(theme).toContain("}, [effectiveTheme]);");
 });
 
 test("a rejected Jelly runtime load can retry instead of poisoning the singleton", async () => {
