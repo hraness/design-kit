@@ -1,18 +1,29 @@
 import assert from "node:assert/strict";
-import type { Browser, Page } from "playwright-core";
+import type { Browser, ElementHandle, Page } from "playwright-core";
 
 import { builtDesignKit } from "./built-root.js";
 import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
 
 const storageKey = "hraness-design-theme-v1";
+type ConcreteTheme = "light" | "dark";
+type SavedTheme = ConcreteTheme | "system";
+const scenarios: readonly { saved: SavedTheme; forced: ConcreteTheme; os: ConcreteTheme }[] = [
+  { saved: "light", forced: "dark", os: "dark" },
+  { saved: "dark", forced: "light", os: "light" },
+  { saved: "system", forced: "dark", os: "light" },
+  { saved: "system", forced: "light", os: "dark" },
+  { saved: "system", forced: "dark", os: "dark" },
+  { saved: "system", forced: "light", os: "light" },
+];
 
 function rgb(hex: string): string {
   assert.match(hex, /^#[\da-f]{6}$/iu);
   return `rgb(${[1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16)).join(", ")})`;
 }
 
-async function requireAppearance(page: Page, saved: "light" | "dark", effective: "light" | "dark",
-  forced: "light" | "dark" | "none", nested: "light" | "dark"): Promise<void> {
+async function requireAppearance(page: Page, saved: SavedTheme, effective: ConcreteTheme,
+  forced: ConcreteTheme | "none", nested: ConcreteTheme, os: ConcreteTheme,
+  retainedProbe: ElementHandle<HTMLElement | SVGElement>): Promise<void> {
   const expected = builtDesignKit.colors[effective];
   await page.waitForFunction(({ effective, forced, expected, activeAttribute }) => {
     const html = document.documentElement;
@@ -42,11 +53,17 @@ async function requireAppearance(page: Page, saved: "light" | "dark", effective:
       jellyDefined: customElements.get(jelly.localName) !== undefined,
       jellyCanvas: jelly.shadowRoot?.querySelector("canvas") !== null && jelly.shadowRoot !== null,
       jellyEvents: Number(document.documentElement.dataset.jellyEventCount),
+      systemDark: matchMedia("(prefers-color-scheme: dark)").matches,
+      literalSystemObserved: Reflect.get(window, "__forcedThemeLiteralSystem") as boolean,
     };
   }, { key: storageKey, activeAttribute: themeColorSyncActiveAttribute });
   assert.equal(state.stored, saved, "forcing must not rewrite saved storage");
   assert.equal(state.saved, saved, "forcing must not rewrite the next-themes preference");
-  assert.equal(state.resolved, saved, "the regression must exercise a distinct saved/resolved preference");
+  assert.equal(state.resolved, saved === "system" ? os : saved, "saved System resolves to the actual emulated OS without replacing storage");
+  assert.equal(state.systemDark, os === "dark", "the fixture uses the specified native OS scheme");
+  assert.equal(state.literalSystemObserved, false, "even transient document themes remain concrete");
+  assert.equal(await retainedProbe.evaluate((element) => element.isConnected
+    && element === document.querySelector("[data-forced-preference]")), true, "forcing and unforcing retain the mounted provider subtree");
   assert.equal(state.portalAtBody, true, "the inherited surface must use a real body portal");
   assert.equal(state.nestedAtBody, true, "the explicit surface must use a real body portal");
   assert.equal(state.rootBackground, rgb(expected.background));
@@ -62,8 +79,8 @@ async function requireAppearance(page: Page, saved: "light" | "dark", effective:
 }
 
 export async function verifyForcedThemeContract(browser: Browser, origin: string): Promise<void> {
-  for (const [saved, forced] of [["light", "dark"], ["dark", "light"]] as const) {
-    const context = await browser.newContext({ colorScheme: forced, serviceWorkers: "block" });
+  for (const { saved, forced, os } of scenarios) {
+    const context = await browser.newContext({ colorScheme: os, serviceWorkers: "block" });
     try {
       const errors: string[] = [];
       await context.route("**/*", (route) => {
@@ -75,6 +92,13 @@ export async function verifyForcedThemeContract(browser: Browser, origin: string
       });
       await context.addInitScript(({ key, saved }) => {
         localStorage.setItem(key, saved);
+        Reflect.set(window, "__forcedThemeLiteralSystem", false);
+        new MutationObserver((records) => {
+          if (records.some((record) => record.target === document.documentElement
+            && (record.oldValue === "system" || document.documentElement.dataset.theme === "system"))) {
+            Reflect.set(window, "__forcedThemeLiteralSystem", true);
+          }
+        }).observe(document, { subtree: true, attributes: true, attributeFilter: ["data-theme"], attributeOldValue: true });
         window.addEventListener("jelly-theme-change", () => {
           const html = document.documentElement;
           html.dataset.jellyEventMode = html.dataset.jellyMode;
@@ -85,13 +109,25 @@ export async function verifyForcedThemeContract(browser: Browser, origin: string
       page.setDefaultTimeout(10_000);
       page.on("pageerror", (error) => errors.push(error.message));
       assert.equal((await page.goto(`${origin}/?forced-theme=${forced}`, { waitUntil: "load" }))?.status(), 200);
-      await requireAppearance(page, saved, forced, forced, saved);
+      const retainedProbe = await page.locator("[data-forced-preference]").elementHandle();
+      assert.ok(retainedProbe, "The compiled provider exposes its mounted preference probe");
+      const nested = forced === "dark" ? "light" : "dark";
+      const ordinary = saved === "system" ? os : saved;
+      await requireAppearance(page, saved, forced, forced, nested, os, retainedProbe);
       await page.getByRole("button", { name: "Use saved appearance", exact: true }).click();
-      await requireAppearance(page, saved, saved, "none", saved);
+      await requireAppearance(page, saved, ordinary, "none", nested, os, retainedProbe);
+      if (saved === "system") {
+        const changedOs = os === "dark" ? "light" : "dark";
+        await page.emulateMedia({ colorScheme: changedOs });
+        await requireAppearance(page, saved, changedOs, "none", nested, changedOs, retainedProbe);
+        await page.emulateMedia({ colorScheme: os });
+        await requireAppearance(page, saved, os, "none", nested, os, retainedProbe);
+      }
       await page.getByRole("button", { name: "Restore forced appearance", exact: true }).click();
-      await requireAppearance(page, saved, forced, forced, saved);
+      await requireAppearance(page, saved, forced, forced, nested, os, retainedProbe);
       assert.deepEqual(errors, [], "forced-theme verification must stay local and error-free");
-      console.log(`Forced-theme native checks passed: saved ${saved}, forced ${forced}, unforced, restored; portal, explicit island, browser chrome, storage and Jelly.`);
+      await retainedProbe.dispose();
+      console.log(`Forced-theme native checks passed: saved ${saved}, OS ${os}, forced ${forced}, unforced, restored; mounted identity, concrete document theme, portal, explicit island, browser chrome, storage and Jelly.`);
     } finally { await context.close(); }
   }
 }

@@ -144,7 +144,9 @@ export function DesignThemeProvider({
         attribute="data-theme"
         defaultTheme={forcedTheme ?? defaultDesignTheme}
         disableTransitionOnChange
-        enableSystem={forcedTheme === undefined}
+        // next-themes captures this flag when its applying callback is created.
+        // Keep System resolvable after unforcing; forcedTheme still wins while set.
+        enableSystem
         forcedTheme={forcedTheme}
         storageKey={storageKey}
         themes={[...concreteThemes]}
