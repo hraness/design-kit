@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.7.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.7.1",
     "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
@@ -406,7 +406,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.7.0`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.6.9`. This release adds the opt-in Lantern material, control-paint recipes, an executable gallery and an immutable CSS snapshot. Existing Paper and editorial defaults, semantic palettes, saved preferences, peer boundaries and compiler identity remain unchanged. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.7.1`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.7.0`. This patch adds the already-rendered Paper-theme section to the public gallery metadata and verifies exact section order in standalone and nested galleries. The Lantern material, control-paint recipes and immutable CSS snapshot from `v0.7.0` remain unchanged, as do Paper and editorial defaults, semantic palettes, saved preferences, peer boundaries and compiler identity. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
