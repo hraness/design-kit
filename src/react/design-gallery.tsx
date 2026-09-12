@@ -65,6 +65,7 @@ import { type ConcreteDesignTheme, type DesignTheme } from "./theme.js";
 
 export const designGallerySections = [
   { id: "foundation", label: "Foundation" },
+  { id: "paper-theme", label: "Paper theme" },
   { id: "lantern", label: "Lantern" },
   { id: "marketing", label: "Marketing" },
   { id: "shells", label: "Shells" },

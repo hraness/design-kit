@@ -3633,6 +3633,9 @@ var designGallerySections = [{
   id: "foundation",
   label: "Foundation"
 }, {
+  id: "paper-theme",
+  label: "Paper theme"
+}, {
   id: "lantern",
   label: "Lantern"
 }, {

@@ -13,6 +13,7 @@ import {
 test("the public gallery covers the composition boundary", () => {
   expect(designGallerySections.map(({ id }) => id)).toEqual([
     "foundation",
+    "paper-theme",
     "lantern",
     "marketing",
     "shells",
@@ -35,6 +36,22 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("Nebula Sans typography");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
+});
+
+test("gallery section metadata matches every rendered top-level section in order", () => {
+  const declaredIds = designGallerySections.map(({ id }) => id);
+  expect(new Set(declaredIds).size).toBe(declaredIds.length);
+  expect(designGallerySections.find(({ id }) => id === "paper-theme")?.label).toBe("Paper theme");
+
+  for (const isNestedInMain of [false, true]) {
+    const html = renderToStaticMarkup(<DesignSystemGallery isNestedInMain={isNestedInMain} />);
+    const gallery = parseHTML(html).document.querySelector('[data-design-gallery="public"]');
+    expect(gallery).not.toBeNull();
+    const sections = [...(gallery?.children ?? [])]
+      .filter(element => element.tagName === "SECTION");
+    expect(sections.map(section => section.id)).toEqual(declaredIds);
+    expect(sections.every(section => section.classList.contains("design-gallery__section"))).toBe(true);
+  }
 });
 
 test("the gallery is product-neutral and server renderable", () => {
