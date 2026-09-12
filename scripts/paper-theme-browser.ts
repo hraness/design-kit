@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { chromium } from "playwright-core";
 import { transform } from "lightningcss";
 import { paletteColors } from "../src/palettes.js";
+import { requireHeaderPaint, withTransparencyPreference } from "./browser-transparency.js";
 
 const root = resolve(import.meta.dir, "..");
 const screenshotArgument = process.argv.indexOf("--screenshots");
@@ -79,59 +80,60 @@ try {
       const css = getComputedStyle(header);
       return { background: css.backgroundColor, backdrop: css.backdropFilter, position: css.position };
     }));
-    // Demonstrate the user-visible optimizer failure before applying the snapshot.
-    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = true; });
-    assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
-    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = false; });
-    // Re-enabling the link can return before its stylesheet affects computed paint.
-    try {
-      await page.waitForFunction(() => {
-        const headers = [...document.querySelectorAll("#light-header-scroll header, #dark-header-scroll header")];
-        return headers.length === 2 && headers.every((header) => {
-          const css = getComputedStyle(header);
-          return css.backdropFilter === "blur(14px) saturate(1.4)" && css.position === "sticky";
-        });
-      }, undefined, { timeout: 5_000, polling: "raf" });
-    } catch (cause) {
-      const diagnostics = await page.evaluate(() => {
-        const link = document.querySelector<HTMLLinkElement>('link[href="/paper-theme.css"]');
-        return {
-          disabled: link?.disabled,
-          stylesheetPresent: [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")),
-          headers: [...document.querySelectorAll("#light-header-scroll header, #dark-header-scroll header")].map((header) => {
-            const css = getComputedStyle(header);
-            return { region: header.parentElement?.id, background: css.backgroundColor, backdrop: css.backdropFilter, position: css.position };
-          }),
-        };
-      }).catch((error: unknown) => ({ diagnosticError: error instanceof Error ? error.message : String(error) }));
-      throw new Error(`Paper header paint did not return at viewport ${width}: ${JSON.stringify(diagnostics)}`, { cause });
-    }
-    assert((await headerPaint()).every(({ backdrop, position }) => backdrop === "blur(14px) saturate(1.4)" && position === "sticky"));
-    await page.locator(".header-scroll").evaluateAll((regions) => { for (const region of regions) region.scrollTop = 110; });
-    assert(await page.locator("#light-header-scroll").evaluate((region) => {
-      const header = region.querySelector("header");
-      if (header === null) throw new Error("The scrolling fixture lost its header.");
-      return Math.abs(header.getBoundingClientRect().top - region.getBoundingClientRect().top - 1) < 1;
+    const headers = ["light", "dark"].map((mode) => ({ selector: `#${mode}-header-scroll header` }));
+    const opaqueHeaders = (["light", "dark"] as const).map((mode) => ({
+      selector: `#${mode}-header-scroll header`, background: rgb(paletteColors.paper[mode].background),
     }));
-    const cdp = await page.context().newCDPSession(page);
-    await cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
-    assert(await page.evaluate(() => matchMedia("(prefers-reduced-transparency: reduce)").matches));
-    assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
-      { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
-      { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
-    ]);
-    await cdp.send("Emulation.setEmulatedMedia", { features: [] });
-    await cdp.detach();
-    // Removing only the capability branches models an engine that rejects both
-    // aliases; the real browser must then paint the opaque base surface.
-    await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-no-backdrop.css"; });
-    await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-no-backdrop.css")));
-    assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
-      { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
-      { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
-    ]);
-    await page.locator('link[href="/paper-no-backdrop.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-theme.css"; });
-    await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")));
+    await withTransparencyPreference(page, "no-preference", async (selectTransparency) => {
+      // Demonstrate the optimizer failure without letting the host's opaque
+      // accessibility preference satisfy the negative control accidentally.
+      await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = true; });
+      assert((await headerPaint()).every(({ backdrop }) => backdrop === "none"));
+      await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).disabled = false; });
+      // Re-enabling the link can return before its stylesheet affects paint.
+      try {
+        await requireHeaderPaint(page, headers, "blur(14px) saturate(1.4)");
+      } catch (cause) {
+        const diagnostics = await page.evaluate(() => {
+          const link = document.querySelector<HTMLLinkElement>('link[href="/paper-theme.css"]');
+          return {
+            disabled: link?.disabled,
+            stylesheetPresent: [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")),
+            headers: [...document.querySelectorAll("#light-header-scroll header, #dark-header-scroll header")].map((header) => {
+              const css = getComputedStyle(header);
+              return { region: header.parentElement?.id, background: css.backgroundColor, backdrop: css.backdropFilter, position: css.position };
+            }),
+          };
+        }).catch((error: unknown) => ({ diagnosticError: error instanceof Error ? error.message : String(error) }));
+        throw new Error(`Paper header paint did not return at viewport ${width}: ${JSON.stringify(diagnostics)}`, { cause });
+      }
+      assert((await headerPaint()).every(({ backdrop, position }) => backdrop === "blur(14px) saturate(1.4)" && position === "sticky"));
+      await page.locator(".header-scroll").evaluateAll((regions) => { for (const region of regions) region.scrollTop = 110; });
+      assert(await page.locator("#light-header-scroll").evaluate((region) => {
+        const header = region.querySelector("header");
+        if (header === null) throw new Error("The scrolling fixture lost its header.");
+        return Math.abs(header.getBoundingClientRect().top - region.getBoundingClientRect().top - 1) < 1;
+      }));
+      await selectTransparency("reduce");
+      await requireHeaderPaint(page, opaqueHeaders, "none");
+      assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
+        { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
+        { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
+      ]);
+      await selectTransparency("no-preference");
+      // Removing only capability branches models an engine rejecting both
+      // aliases. Keep no-preference active so accessibility cannot mask a bug.
+      await page.locator('link[href="/paper-theme.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-no-backdrop.css"; });
+      await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-no-backdrop.css")));
+      await requireHeaderPaint(page, opaqueHeaders, "none");
+      assert.deepEqual((await headerPaint()).map(({ background, backdrop }) => ({ background, backdrop })), [
+        { background: rgb(paletteColors.paper.light.background), backdrop: "none" },
+        { background: rgb(paletteColors.paper.dark.background), backdrop: "none" },
+      ]);
+      await page.locator('link[href="/paper-no-backdrop.css"]').evaluate((link) => { (link as HTMLLinkElement).href = "/paper-theme.css"; });
+      await page.waitForFunction(() => [...document.styleSheets].some((sheet) => sheet.href?.endsWith("/paper-theme.css")));
+      await requireHeaderPaint(page, headers, "blur(14px) saturate(1.4)");
+    });
     const chosen = await inspect("#chosen");
     await page.emulateMedia({ colorScheme: "dark" });
     assert.equal((await inspect("#light")).background, rgb(paletteColors.paper.light.background));
