@@ -11,6 +11,7 @@ import {
 import { builtDesignKit } from "./built-root.js";
 import { themeColorSyncActiveAttribute } from "../src/react/theme-color-sync.js";
 import { equalBackgroundValues, normalizeBackgroundPosition } from "./browser-css-parity.js";
+import { verifyForcedThemeContract } from "./forced-theme-browser.js";
 
 const { colors } = builtDesignKit;
 
@@ -2847,6 +2848,7 @@ try {
         );
         await page.close();
       }
+      await verifyForcedThemeContract(browser, `http://${server.hostname}:${String(server.port)}`);
     } finally {
       await browser.close();
     }

@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import "../src/styles.css";
 import "./gallery.css";
 import { builtDesignKitReact } from "./built-react.js";
+import { ForcedThemeFixture } from "./forced-theme-fixture.js";
 
 const {
   AppShell,
@@ -82,7 +83,9 @@ if (!(root instanceof HTMLElement)) {
   throw new Error("Gallery root is missing.");
 }
 
-createRoot(root).render(new URL(location.href).searchParams.has("palettes") ? (
+createRoot(root).render(new URL(location.href).searchParams.has("forced-theme") ? (
+  <ForcedThemeFixture />
+) : new URL(location.href).searchParams.has("palettes") ? (
   <DesignPaletteProvider>
     <TopBar actions={<ThemeMenuButton />} position="sticky" title="Design kit" />
     <DesignSystemGallery />

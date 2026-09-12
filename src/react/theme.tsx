@@ -37,6 +37,7 @@ import {
   useDesignPortalClassName,
 } from "./design-theme-context.js";
 import { setJellyThemeMode } from "./jelly-runtime.js";
+import { resolveEffectiveTheme } from "./theme-resolution.js";
 import { themeStyles } from "./theme.stylex.js";
 import {
   acquireThemeColorMeta,
@@ -79,13 +80,14 @@ function PersistedThemeNormalizer() {
 }
 
 function JellyThemeSync() {
-  const { resolvedTheme } = useTheme();
+  const { forcedTheme, resolvedTheme } = useTheme();
+  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
 
   useEffect(() => {
-    if (resolvedTheme === "light" || resolvedTheme === "dark") {
-      void setJellyThemeMode(resolvedTheme);
+    if (effectiveTheme !== undefined) {
+      void setJellyThemeMode(effectiveTheme);
     }
-  }, [resolvedTheme]);
+  }, [effectiveTheme]);
 
   return null;
 }
@@ -98,9 +100,7 @@ function PortalThemeBridge({
   forcedTheme: ConcreteDesignTheme | undefined;
 }>) {
   const { resolvedTheme } = useTheme();
-  const portalTheme = resolvedTheme === "light" || resolvedTheme === "dark"
-    ? resolvedTheme
-    : forcedTheme;
+  const portalTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
 
   return (
     <DesignPortalThemeProvider theme={portalTheme}>
@@ -370,22 +370,23 @@ export function themeColorFor(
   return resolvedTheme === "dark" ? values.dark : values.light;
 }
 
-/** Keeps browser and installed-app chrome aligned with the resolved theme. */
+/** Keeps browser and installed-app chrome aligned with forced or resolved appearance. */
 export function ThemeColorSync({
   darkColor = colors.dark.background,
   lightColor = colors.light.background,
   metaName = "theme-color",
 }: ThemeColorSyncProps) {
   const palette = useDesignPalette();
-  const { resolvedTheme } = useTheme();
+  const { forcedTheme, resolvedTheme } = useTheme();
+  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
   const registrationId = useRef(Symbol("hraness-design-theme-color"));
   const registration = useRef<ThemeColorMetaRegistration | null>(null);
   const resolvedColor = palette !== null
     // The adopted palette controller already owns theme-color, including when
     // its bootstrap was loaded as a separate bundle before React.
     ? (metaName !== "theme-color" && palette.ready ? palette.background : undefined)
-    : resolvedTheme === "light" || resolvedTheme === "dark"
-      ? themeColorFor(resolvedTheme, { dark: darkColor, light: lightColor })
+    : effectiveTheme !== undefined
+      ? themeColorFor(effectiveTheme, { dark: darkColor, light: lightColor })
       : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
   const latestColor = useRef(resolvedColor);

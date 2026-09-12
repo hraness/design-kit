@@ -8,6 +8,7 @@ import { createElement } from "react";
 import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server";
 import { equalBackgroundValues } from "./browser-css-parity.js";
 import { browserStylesheetLayerOrder, bundleBrowserStylesheet } from "./browser-stylesheet.js";
+import { withTransparencyPreference } from "./browser-transparency.js";
 import { readStylexPackageManifest, serializeStylexPackageRules } from "@hraness/ui/stylex-build";
 
 import {
@@ -66,6 +67,38 @@ const contentSecurityPolicy = [
 
 function invariant(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
+}
+
+/** Exercise both paint contracts without inheriting the host's transparency preference. */
+async function withGlassHeaderPaint<T>(page: Page, inspect: () => Promise<T>): Promise<T> {
+  const selector = '[data-security-layout="top"]';
+  const requirePaint = async (opaque: boolean): Promise<void> => {
+    // Chrome can defer paint transitions for offscreen specimens. Inspect the
+    // rendered header and wait for its real styles; never disable animations.
+    await page.locator(selector).scrollIntoViewIfNeeded({ timeout: 5_000 });
+    await page.waitForFunction(({ selector, opaque }) => {
+      const header = document.querySelector(selector);
+      if (!(header instanceof HTMLElement)) return false;
+      const probe = document.createElement("span");
+      probe.style.backgroundColor = "var(--background)";
+      header.append(probe);
+      try {
+        const style = getComputedStyle(header);
+        return opaque
+          ? style.backdropFilter === "none"
+            && style.backgroundColor === getComputedStyle(probe).backgroundColor
+          : style.backdropFilter === "blur(18px) saturate(1.08)";
+      } finally { probe.remove(); }
+    }, { selector, opaque }, { timeout: 5_000, polling: "raf" });
+  };
+  return withTransparencyPreference(page, "no-preference", async (select) => {
+    await requirePaint(false);
+    const evidence = await inspect();
+    await select("reduce");
+    await requirePaint(true);
+    console.log("Security TopBar paint passed no-preference glass and reduced-transparency opaque token checks.");
+    return evidence;
+  });
 }
 
 function escapeRegularExpression(value: string): string {
@@ -2389,7 +2422,7 @@ try {
       `The served PlaybackTransport glyph class ${className} is missing or duplicated.`,
     );
   }
-  const layoutSurfaceEvidence = await page.evaluate(() => {
+  const layoutSurfaceEvidence = await withGlassHeaderPaint(page, () => page.evaluate(() => {
     const top = document.querySelector('[data-security-layout="top"]');
     const bottom = document.querySelector('[data-security-layout="bottom"]');
     const pageCanvas = document.querySelector('[data-security-layout="page"]');
@@ -2488,7 +2521,7 @@ try {
       topTag: top.tagName,
       topZIndex: restoredTopStyle.zIndex,
     };
-  });
+  }));
   invariant(
     layoutSurfaceEvidence.normalizedTop === "0px"
       && layoutSurfaceEvidence.oldDirectParentTop === "88px"

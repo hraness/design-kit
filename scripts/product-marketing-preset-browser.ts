@@ -11,8 +11,12 @@ import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/
 import type * as Marketing from "../src/react/product-marketing.js";
 import { ProductMarketingPresetFixture } from "../gallery/product-marketing-preset-fixture.js";
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
+import { requireHeaderPaint, withTransparencyPreference } from "./browser-transparency.js";
+import { builtDesignKit } from "./built-root.js";
 
 const root = resolve(import.meta.dir, "..");
+const rgb = (hex: string) => `rgb(${[1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16)).join(", ")})`;
+const headerSelectors = [".fixture-quiet-header", ".fixture-standalone-header"];
 const output = await mkdtemp(join(tmpdir(), "marketing-preset-browser-"));
 const api: typeof Marketing = await import(join(root, "dist/react/server.js"));
 const html = renderToStaticMarkup(createElement(ProductMarketingPresetFixture, { api }));
@@ -59,7 +63,7 @@ assert(executablePath, "A local Chromium executable is required");
 const browser = await chromium.launch({ executablePath, headless: true, args: process.platform === "linux" ? ["--no-sandbox"] : [] });
 const receipts: unknown[] = [];
 try {
-  for (const width of [320, 800, 1280]) for (const theme of ["light", "dark"]) {
+  for (const width of [320, 800, 1280]) for (const theme of ["light", "dark"] as const) {
     let reference: unknown;
     for (const mode of ["raw", "standalone", "compiler"] as const) {
       const page = await browser.newPage({ viewport: { width, height: 1000 }, colorScheme: theme as "light" | "dark" });
@@ -68,62 +72,72 @@ try {
       page.on("response", (response) => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });
       try {
         await page.goto(`http://${server.hostname}:${server.port}/?mode=${mode}&theme=${theme}`, { waitUntil: "networkidle" });
-        await page.evaluate(async () => { await document.fonts.ready; });
-        const proof = await page.evaluate(() => {
-          const required = (selector: string) => { const node = document.querySelector(selector); if (!(node instanceof HTMLElement)) throw new Error(`Missing ${selector}`); return node; };
-          const metrics = (selector: string) => { const node = required(selector), style = getComputedStyle(node); return { font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, leading: style.lineHeight, tracking: style.letterSpacing, padding: style.paddingInlineStart, width: node.getBoundingClientRect().width }; };
-          const field = required('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');
-          return {
-            cta: metrics("#editorial-cta-title"), minimalCta: metrics("#minimal-cta-title"),
-            hero: metrics("#editorial-title"), section: metrics("#section-title"), install: metrics("#install-title"), minimal: metrics("#minimal-title"), product: metrics(".fixture-product-heading"),
-            fieldTrustMuted: getComputedStyle(required(".hraness-marketing-trust-item__detail")).color,
-            fieldHeroMuted: getComputedStyle(required(".hraness-marketing-hero__summary")).color,
-            heroContainer: metrics('.hraness-marketing-field > .hraness-marketing-hero'),
-            background: getComputedStyle(field).backgroundImage,
-            minimalBackground: getComputedStyle(required('[data-hraness-marketing-preset="minimal"] > .hraness-marketing-field')).backgroundImage,
-            blur: getComputedStyle(required(".fixture-quiet-header")).backdropFilter,
-            standaloneBlur: getComputedStyle(required(".fixture-standalone-header")).backdropFilter,
-            standaloneBackground: getComputedStyle(required(".fixture-standalone-header")).backgroundColor,
-            headerPosition: getComputedStyle(required(".fixture-quiet-header")).position,
-            actionHeight: required(".hraness-marketing-action").getBoundingClientRect().height,
-            actionBackground: getComputedStyle(required(".hraness-marketing-action")).backgroundColor,
-            primaryActions: [...document.querySelectorAll<HTMLElement>('.hraness-marketing-action[data-emphasis="primary"]')].map((node) => {
-              const style = getComputedStyle(node);
-              return { color: style.color, fill: style.webkitTextFillColor, background: style.backgroundColor, opacity: style.opacity };
-            }),
-            label: document.querySelector(".hraness-marketing-hero__eyebrow") === null ? "omitted" : getComputedStyle(required(".hraness-marketing-hero__eyebrow")).display,
-            fontLoaded: document.fonts.check('400 40px "Instrument Serif"'),
-            overflow: document.documentElement.scrollWidth > window.innerWidth,
-            overlay: getComputedStyle(field, "::before").content,
-          };
+        await withTransparencyPreference(page, "no-preference", async (selectTransparency) => {
+          await page.evaluate(async () => { await document.fonts.ready; });
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
+          const proof = await page.evaluate(() => {
+            const required = (selector: string) => { const node = document.querySelector(selector); if (!(node instanceof HTMLElement)) throw new Error(`Missing ${selector}`); return node; };
+            const metrics = (selector: string) => { const node = required(selector), style = getComputedStyle(node); return { font: style.fontFamily, size: style.fontSize, weight: style.fontWeight, leading: style.lineHeight, tracking: style.letterSpacing, padding: style.paddingInlineStart, width: node.getBoundingClientRect().width }; };
+            const field = required('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');
+            return {
+              cta: metrics("#editorial-cta-title"), minimalCta: metrics("#minimal-cta-title"),
+              hero: metrics("#editorial-title"), section: metrics("#section-title"), install: metrics("#install-title"), minimal: metrics("#minimal-title"), product: metrics(".fixture-product-heading"),
+              fieldTrustMuted: getComputedStyle(required(".hraness-marketing-trust-item__detail")).color,
+              fieldHeroMuted: getComputedStyle(required(".hraness-marketing-hero__summary")).color,
+              heroContainer: metrics('.hraness-marketing-field > .hraness-marketing-hero'),
+              background: getComputedStyle(field).backgroundImage,
+              minimalBackground: getComputedStyle(required('[data-hraness-marketing-preset="minimal"] > .hraness-marketing-field')).backgroundImage,
+              blur: getComputedStyle(required(".fixture-quiet-header")).backdropFilter,
+              standaloneBlur: getComputedStyle(required(".fixture-standalone-header")).backdropFilter,
+              standaloneBackground: getComputedStyle(required(".fixture-standalone-header")).backgroundColor,
+              headerPosition: getComputedStyle(required(".fixture-quiet-header")).position,
+              actionHeight: required(".hraness-marketing-action").getBoundingClientRect().height,
+              actionBackground: getComputedStyle(required(".hraness-marketing-action")).backgroundColor,
+              primaryActions: [...document.querySelectorAll<HTMLElement>('.hraness-marketing-action[data-emphasis="primary"]')].map((node) => {
+                const style = getComputedStyle(node);
+                return { color: style.color, fill: style.webkitTextFillColor, background: style.backgroundColor, opacity: style.opacity };
+              }),
+              label: document.querySelector(".hraness-marketing-hero__eyebrow") === null ? "omitted" : getComputedStyle(required(".hraness-marketing-hero__eyebrow")).display,
+              fontLoaded: document.fonts.check('400 40px "Instrument Serif"'),
+              overflow: document.documentElement.scrollWidth > window.innerWidth,
+              overlay: getComputedStyle(field, "::before").content,
+            };
+          });
+          assert(proof.fontLoaded && proof.hero.font.includes("Instrument Serif"));
+          assert.equal(proof.fieldTrustMuted, proof.fieldHeroMuted);
+          assert.equal(proof.hero.weight, "400");
+          assert(!proof.minimal.font.includes("Instrument Serif"));
+          assert.equal(proof.product.size, "19px");
+          assert.equal(proof.minimalBackground, "none");
+          assert(proof.background.includes("grain.svg") && proof.background.includes("cells.svg") && proof.background.includes("gradient"));
+          assert.equal(proof.blur, "blur(14px) saturate(1.4)");
+          assert.equal(proof.standaloneBlur, "blur(14px) saturate(1.4)");
+          assert.notEqual(proof.standaloneBackground, "rgba(0, 0, 0, 0)");
+          assert.equal(proof.headerPosition, "sticky");
+          assert.equal(proof.actionHeight, 42);
+          assert.equal(proof.actionBackground, "rgb(22, 90, 61)");
+          assert.deepEqual(proof.primaryActions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode} primary action paint at ${width}/${theme}`);
+          assert.equal(proof.label, "omitted");
+          assert.equal(proof.overflow, false);
+          assert.equal(proof.overlay, "none");
+          const { background: _background, ...comparable } = proof; // Different origin ports are not geometry or typography.
+          void _background;
+          if (reference === undefined) reference = comparable;
+          else assert.deepEqual(comparable, reference, `${mode} differs from raw preset at ${width}/${theme}`);
+          receipts.push({ mode, width, theme, ...proof });
+          if (mode === "compiler" && width === 1280) await page.screenshot({ path: join(output, `${theme}.png`), fullPage: true });
+          await selectTransparency("reduce");
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({
+            selector, background: rgb(builtDesignKit.colors[theme].background),
+          })), "none");
+          await selectTransparency("no-preference");
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
+          await selectTransparency("no-preference", { forcedColors: "active" });
+          await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "none");
+          assert.equal(await page.locator('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field').evaluate((node) => getComputedStyle(node).backgroundImage), "none");
+          assert.equal(await page.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
+          assert.equal(await page.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
         });
-        assert(proof.fontLoaded && proof.hero.font.includes("Instrument Serif"));
-        assert.equal(proof.fieldTrustMuted, proof.fieldHeroMuted);
-        assert.equal(proof.hero.weight, "400");
-        assert(!proof.minimal.font.includes("Instrument Serif"));
-        assert.equal(proof.product.size, "19px");
-        assert.equal(proof.minimalBackground, "none");
-        assert(proof.background.includes("grain.svg") && proof.background.includes("cells.svg") && proof.background.includes("gradient"));
-        assert.equal(proof.blur, "blur(14px) saturate(1.4)");
-        assert.equal(proof.standaloneBlur, "blur(14px) saturate(1.4)");
-        assert.notEqual(proof.standaloneBackground, "rgba(0, 0, 0, 0)");
-        assert.equal(proof.headerPosition, "sticky");
-        assert.equal(proof.actionHeight, 42);
-        assert.equal(proof.actionBackground, "rgb(22, 90, 61)");
-        assert.deepEqual(proof.primaryActions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode} primary action paint at ${width}/${theme}`);
-        assert.equal(proof.label, "omitted");
-        assert.equal(proof.overflow, false);
-        assert.equal(proof.overlay, "none");
-        const { background: _background, ...comparable } = proof; // Different origin ports are not geometry or typography.
-        void _background;
-        if (reference === undefined) reference = comparable;
-        else assert.deepEqual(comparable, reference, `${mode} differs from raw preset at ${width}/${theme}`);
-        receipts.push({ mode, width, theme, ...proof });
-        if (mode === "compiler" && width === 1280) await page.screenshot({ path: join(output, `${theme}.png`), fullPage: true });
-        await page.emulateMedia({ forcedColors: "active" });
-        assert.equal(await page.locator('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field').evaluate((node) => getComputedStyle(node).backgroundImage), "none");
-        assert.equal(await page.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
-        assert.equal(await page.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
       } finally { await page.close(); }
     }
   }
@@ -131,12 +145,15 @@ try {
   try {
     await coarse.goto(`http://${server.hostname}:${server.port}/?mode=compiler`, { waitUntil: "networkidle" });
     assert.equal(await coarse.locator(".hraness-marketing-action").first().evaluate((node) => node.getBoundingClientRect().height), 48);
-    const session = await coarse.context().newCDPSession(coarse);
-    try {
-      await session.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-transparency", value: "reduce" }] });
+    await withTransparencyPreference(coarse, "no-preference", async (selectTransparency) => {
+      await requireHeaderPaint(coarse, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
+      await selectTransparency("reduce");
+      await requireHeaderPaint(coarse, headerSelectors.map((selector) => ({
+        selector, background: rgb(builtDesignKit.colors.light.background),
+      })), "none");
       assert.equal(await coarse.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
       assert.equal(await coarse.locator(".fixture-standalone-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");
-    } finally { await session.detach(); }
+    });
   } finally { await coarse.close(); }
   assert.deepEqual(failures, []);
   await writeFile(join(output, "receipt.json"), JSON.stringify({ sourceSha256: createHash("sha256").update(preset).digest("hex"), cases: receipts }, null, 2));
