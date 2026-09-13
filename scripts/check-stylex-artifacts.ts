@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
-import { basename, join, relative, resolve, sep } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 
 import {
   canonicalJson,
@@ -30,7 +30,6 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/design-gallery.css",
   "src/effects.css",
   "src/fonts.css",
-  "src/jelly.css",
   "src/lantern-material.css",
   "src/palette-bridge.css",
   "src/palettes.css",
@@ -454,7 +453,6 @@ function requireAggregateContract(source: string): void {
     DESIGN_COMPONENTS_IMPORT,
     '@import "./appearance-menu.css";',
     '@import "./charts.css";',
-    '@import "./jelly.css";',
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
     '@import "./product-marketing.css";',
@@ -484,7 +482,6 @@ function requireCompilerFoundationContract(source: string): void {
     DESIGN_COMPILER_COMPONENTS_IMPORT,
     '@import "./appearance-menu.css";',
     '@import "./charts.css";',
-    '@import "./jelly.css";',
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
     '@import "./product-marketing-foundation.css";',
@@ -618,30 +615,12 @@ function requirePresentationBoundary(source: string, file: string): void {
       }
       assert.ok(!selector.startsWith("@"), `${file}: unexpected at-rule ${selector}`);
       const list = selectors(selector);
-      const tokenRule = file === "src/jelly.css"
-        && list.every((item) => /^(?::root(?:\[data-theme="(?:light|dark)"\])?|\[data-theme="(?:light|dark)"\]|\.dark)$/u.test(item));
-      if (tokenRule) {
-        assert.ok(!layered, `${file}: theme tokens must remain outside component layers`);
-        const declarations = body.split(";").map((item) => item.trim()).filter(Boolean);
-        assert.ok(declarations.length > 0, `${file}: empty token rule`);
-        assert.ok(declarations.every((item) => /^--[\w-]+\s*:[^{}]+$/u.test(item)), `${file}: theme boundaries may only set custom properties`);
-        continue;
-      }
       assert.ok(layered, `${file}: component fallback escaped its legacy layer`);
       if (file === "src/appearance-menu.css") {
         assert.ok(list.every((item) => item.includes(":not([data-hraness-theme-toggle-stylex])")), `${file}: browser-only fallback also matches React StyleX markup`);
       } else if (file === "src/charts.css") {
         assert.deepEqual(list, [".hraness-design-radar-profile-chart__plot .recharts-surface"], `${file}: only the vendor SVG descendant may remain`);
         assert.equal(body.replace(/\s+/gu, ""), "overflow:visible;", `${file}: unexpected vendor override`);
-      } else if (file === "src/jelly.css") {
-        const lifecycle = new Map([
-          [".hraness-design-jelly-surface:not(:defined)", "border:1pxsolidvar(--line);background:var(--jelly-fill);box-shadow:var(--jelly-shadow-raised);"],
-          [".hraness-design-jelly-surface:defined", "border-color:transparent;background:transparent;box-shadow:none;"],
-        ]);
-        assert.equal(list.length, 1, `${file}: unexpected lifecycle selector group`);
-        const expected = lifecycle.get(list[0] ?? "");
-        assert.ok(expected !== undefined, `${file}: only native vendor upgrade selectors may remain`);
-        assert.equal(body.replace(/\s+/gu, ""), expected, `${file}: unexpected lifecycle declarations`);
       } else {
         assert.fail(`${file}: owned effect recipes must be compiled StyleX`);
       }
@@ -650,7 +629,6 @@ function requirePresentationBoundary(source: string, file: string): void {
   }
   visit(source);
   if (file === "src/charts.css") assert.equal(fallbackRules, 1);
-  if (file === "src/jelly.css") assert.equal(fallbackRules, 2);
   if (file === "src/appearance-menu.css") assert.ok(fallbackRules > 0);
 }
 
@@ -1624,8 +1602,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.7.1" },
-  "StyleX manifest must describe design-kit v0.7.1",
+  { name: "@hraness/design-kit", version: "0.8.0" },
+  "StyleX manifest must describe design-kit v0.8.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1706,7 +1684,7 @@ const designPriorityContract = requireSerializedPriorityContract(
 assert.deepEqual(
   designPriorityContract.rawPrioritiesByRank,
   [
-    [0, 0.1, 0.5, 1, 41],
+    [0, 0.1, 0.5, 1],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
     [3000, 3040, 3045, 3092, 3130, 3200, 3330],
@@ -2401,34 +2379,8 @@ requireMatch(
   /from\s*["']@stylexjs\/stylex["']/u,
   "the static StyleX props runtime",
 );
-requireMatch(
-  compiledJavaScript,
-  /querySelector\(["']\.hraness-design-jelly-surface["']\)/u,
-  "the no-surface Jelly runtime guard",
-);
-
-const jellyTokenArtifacts = [...javaScriptSources]
-  .filter(([, source]) => source.includes("data-jelly-tokens"));
-if (jellyTokenArtifacts.length !== 1) {
-  throw new Error(
-    `expected one isolated Jelly vendor artifact, found ${jellyTokenArtifacts.length}`,
-  );
-}
-const jellyTokenArtifact = jellyTokenArtifacts[0];
-if (jellyTokenArtifact === undefined) {
-  throw new Error("the isolated Jelly vendor artifact is missing");
-}
-const [jellyTokenPath] = jellyTokenArtifact;
-const jellyTokenFile = basename(jellyTokenPath);
-const escapedJellyTokenFile = jellyTokenFile.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-const staticJellyImport = new RegExp(
-  `(?:from\\s*|import\\s*)["'][^"']*${escapedJellyTokenFile}["']`,
-  "u",
-);
 for (const [path, source] of javaScriptSources) {
-  if (path !== jellyTokenPath && staticJellyImport.test(source)) {
-    throw new Error(`Jelly's vendor stylesheet became statically reachable from ${path}`);
-  }
+  forbid(source, /data-jelly-tokens|jelly-card|jelly-ui|ensureJellyRuntime|setJellyThemeMode/u, `removed Jelly runtime in ${path}`);
 }
 const reactEntry = javaScriptSources.get(resolve(dist, "react/index.js"));
 if (reactEntry === undefined) throw new Error("dist/react/index.js is missing");
@@ -2450,11 +2402,6 @@ const [rechartsArtifact] = rechartsArtifacts;
 if (rechartsArtifact === undefined || rechartsArtifact[0] === resolve(dist, "react/index.js")) {
   throw new Error("the isolated Recharts artifact is missing");
 }
-requireMatch(
-  reactEntry,
-  new RegExp(`import\\(["'][^"']*${escapedJellyTokenFile}["']\\)`, "u"),
-  "a dynamic-only Jelly vendor import",
-);
 
 forbid(compiledJavaScript, /react\/jsx-dev-runtime/u, "the development React JSX runtime");
 forbid(
@@ -2561,7 +2508,7 @@ let rejectedMutationCount = 3 + foundationMutations.length + requireMutationNega
   legacyComponents,
   orderedStylesheet,
 );
-for (const file of ["src/appearance-menu.css", "src/charts.css", "src/effects.css", "src/jelly.css"]) {
+for (const file of ["src/appearance-menu.css", "src/charts.css", "src/effects.css"]) {
   const css = await readFile(resolve(file), "utf8");
   requirePresentationBoundary(css, file);
   for (const mutation of [
@@ -2636,12 +2583,7 @@ for (const file of ["src/appearance-menu.css", "src/charts.css", "src/effects.cs
       rejectedMutationCount += 1;
     }
   }
-  if (file === "src/jelly.css") {
-    requireMutationRejected(`${file} layered theme tokens`, () => requirePresentationBoundary(
-      `${css}\n@layer components.hraness-design-kit.legacy { .dark { --theme-mutation: red; } }`, file,
-    ));
-    rejectedMutationCount += 1;
-  }
+
 }
 forbid(
   `${compiledJavaScript}\n${compiledCss}\n${localEntry}\n${legacyComponents}\n${compilerFoundation}\n${orderedStylesheet}`,

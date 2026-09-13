@@ -13,7 +13,6 @@ const {
   DesignPaletteProvider,
   DesignSystemGallery,
   DesignThemeProvider,
-  JellySurface,
   ProceduralBackdrop,
   RadarProfileChart,
   RangePlotChart,
@@ -68,7 +67,6 @@ function MigrationParityFixture() {
         <div data-parity-rail-control="">Rail border negative control</div>
         <div data-parity-system-color="">System text color reference</div>
         <ThemeMenuButton aria-label="Parity appearance" onChange={setTheme} value={theme} />
-        <JellySurface>Native border canary</JellySurface>
         <div style={{ height: 120, position: "relative", width: 240 }}>
           <ProceduralBackdrop seed="migration-border-parity" variant="ripple" />
         </div>

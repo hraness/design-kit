@@ -1,6 +1,13 @@
 // src/syntax-highlighting.ts
 import { highlight } from "sugar-high";
 var syntaxLanguages = ["css", "html", "json", "markdown", "shell", "text", "typescript"];
+function classOnlySyntax(html) {
+  const result = html.replace(/<span class="sh__token--(class|comment|entity|identifier|jsxliterals|keyword|property|sign|space|string)" style="color:var\(--sh-\1\)">/gu, '<span class="sh__token--$1">');
+  if (/<[A-Za-z][^<>]*\sstyle\s*=/iu.test(result)) {
+    throw new Error("Unrecognized inline style in class-only syntax output.");
+  }
+  return result;
+}
 var shellKeywords = new Set(["case", "do", "done", "elif", "else", "esac", "fi", "for", "function", "if", "in", "select", "then", "time", "until", "while"]);
 var shellKeywordsFollowedByCommand = new Set(["do", "elif", "if", "then", "until", "while"]);
 function languageToken(input) {
@@ -259,11 +266,15 @@ function highlightShell(value) {
 `).map(highlightShellLine).join(`
 `);
 }
-function highlightCode(code, language) {
+function highlightCode(code, language, options = {}) {
+  const styles = options.styles ?? "inline";
+  if (styles !== "inline" && styles !== "classes") {
+    throw new Error("Syntax styles must be inline or classes.");
+  }
   const html = language === "text" ? escapeHtml(code) : language === "markdown" ? highlightMarkdown(code) : language === "shell" ? highlightShell(code) : highlight(code);
   return Object.freeze({
     className: `syntax-code language-${language}`,
-    html,
+    html: styles === "classes" ? classOnlySyntax(html) : html,
     language
   });
 }

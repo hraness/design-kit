@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 
 import { builtDesignKitReact } from "./built-react.js";
 
-const { DesignPortalThemeProvider, DesignThemeProvider, JellySurface, ThemeColorSync,
+const { DesignPortalThemeProvider, DesignThemeProvider, ThemeColorSync,
   useDesignPortalClassName, useDesignPortalTheme } = builtDesignKitReact;
 
 function PortalProbe({ nested = false }: Readonly<{ nested?: boolean }>) {
@@ -41,7 +41,6 @@ export function ForcedThemeFixture() {
       <DesignPortalThemeProvider portalClassName="forced-theme-explicit-portal" theme={nestedTheme}>
         <PortalProbe nested />
       </DesignPortalThemeProvider>
-      <JellySurface>Native Jelly appearance</JellySurface>
     </DesignThemeProvider>
   </main>;
 }

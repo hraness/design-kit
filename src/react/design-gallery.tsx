@@ -26,7 +26,6 @@ import { BarListChart, RangePlotChart } from "./charts.js";
 import { ChatComposer, ChatMessage } from "./chat.js";
 import { Fader } from "./fader.js";
 import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
-import { JellySurface } from "./jelly-surface.js";
 import { LanternMaterialGallery } from "./lantern-material-gallery.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
@@ -93,7 +92,6 @@ export const designGalleryRecipeCoverage = [
   "foil card surface",
   "layout surfaces",
   "Lantern material",
-  "Jelly presentation",
   "playback transport",
   "plain site and publication grammar",
   "product-marketing grammar",
@@ -152,7 +150,7 @@ export function DesignSystemGallery({
         <h1>Presentation and composition reference</h1>
         <p>
           Portable controls come from @hraness/ui. This package adds application
-          shells, charts, effects, syntax, haptics, and optional Jelly paint.
+          shells, charts, effects, syntax, and haptics.
         </p>
         <p>
           System follows your device on the first visit. Choosing Light, Dark,
@@ -201,9 +199,6 @@ export function DesignSystemGallery({
               </div>
             </CardContent>
           </Card>
-          <JellySurface className="design-gallery__jelly" interaction="press" tone="neutral">
-            <Button variant="quiet">Semantic button with optional Jelly paint</Button>
-          </JellySurface>
         </div>
         <div
           aria-label="Plain site link presentation"

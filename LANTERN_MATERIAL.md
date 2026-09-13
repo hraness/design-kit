@@ -2,16 +2,18 @@
 
 Lantern adds luminous edges, warm selection states and restrained depth to the shared component system. It is independent of the selected palette, the Paper theme and editorial typography. The default application treatment is quiet. Glazing belongs at key transitions and on chrome with real content behind it.
 
-The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, image, remote URL or inline-style dependency. Existing controls continue to own their semantics, dimensions, state and accessible names.
+The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, remote URL or inline-style dependency. Its CSS-only shaded faces work independently; the marketing preset supplies original grain and individually shaded SVG cells through optional background tokens. Existing controls continue to own their semantics, dimensions, state and accessible names.
 
 | Hook | Purpose |
 | --- | --- |
 | `.hraness-material-pane` | Opaque, readable content plane. Optional `data-depth="raised"` or `"inset"` describes actual depth. |
 | `.hraness-material-chrome` | Diffused header or floating enclosure. It becomes opaque without backdrop support or when reduced transparency is requested. |
-| `.hraness-material-wall` | Decorative square glazing and transmitted light behind an expressive area. It never filters or overlays descendants. |
+| `.hraness-material-wall` | Decorative shaded square faces and transmitted light behind an expressive area. It never filters or overlays descendants. |
 | `.hraness-material-control` | Plain HTML action adapter. A narrow edge leaves the established foreground/background pair and focus shadow intact. |
 | `.hraness-material-input` | Plain HTML field adapter: inset edge paint and a semantic caret. |
 | `.hraness-material-choice` | Plain HTML selection with a matched fill/text pair, driven by `aria-pressed`, `aria-selected` or React Aria's `data-selected`. |
+| `.hraness-material-terminal` | A quiet window enclosure; its `__bar` is decorative title chrome. |
+| `.hraness-material-code` | A theme-aware `pre` with intact source lines and horizontal overflow. Use `SyntaxCode` or framework-neutral `highlightCode` for syntax; give an overflowing example a keyboard focus target. |
 | `.hraness-material-rows` | Separators for a readable collection. The product owns grouping and responsive structure. |
 | `.hraness-material-disclosure` | Native disclosure with a touch-sized summary and visible keyboard focus. |
 

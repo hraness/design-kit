@@ -16,7 +16,7 @@ test("the preset retains the approved static assets and source-relative URLs", (
   for (const [name, contents] of Object.entries(marketingTextures())) expect(sources[`marketing-assets/${name}` as keyof typeof sources].toString()).toBe(contents);
   const hashes = {
     "marketing-assets/grain.svg": "b40c33a0e382c8e9d0518b4720321b5c262a929c28d40a190a902d07acd06553",
-    "marketing-assets/cells.svg": "dc687b71a46c4767f052a0546485f6621b5f4c8f4003127807521e02a3c92d4c",
+    "marketing-assets/cells.svg": "be9b12eefeae91772f024ed24ccda5be6173fb626921374b7e5270c298611b01",
     "fonts/instrument-serif/instrument-serif-latin-400.woff2": "60c06664b5a95c7de6cc3e00d1f9034d78bd1e40b564016b241674449a067d4d",
   } as const;
   for (const [name, digest] of Object.entries(hashes)) {

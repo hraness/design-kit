@@ -999,7 +999,9 @@ export const marketingStyles = stylex.create({
     "display": "flex",
     "align-items": "center",
     "gap": "0.75rem",
-    "padding": "0.6rem 0.9rem",
+    "padding": "0.8rem 1rem",
+    "background-image": { default: "var(--hraness-marketing-frame-chrome, none)", "@media (forced-colors: active)": "none" },
+    "box-shadow": { default: "inset 0 1px 0 #ffffff1f", "@media (forced-colors: active)": "none" },
     "border-block-end": "var(--hraness-marketing-rule)",
     "color": "var(--hraness-marketing-muted)",
     "font-size": "0.78rem"

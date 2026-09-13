@@ -10,13 +10,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { appShellStyles } from "./app-shell.stylex.js";
 import { chartStyles } from "./charts.stylex.js";
 import { effectsStyles } from "./effects.stylex.js";
-import { jellySurfaceStyles } from "./jelly-surface.stylex.js";
 import { ThemeToggle } from "./theme.js";
 import { themeStyles } from "./theme.stylex.js";
 
 async function compileRecipes() {
   const collector = createStylexTransformCollector(process.cwd());
-  for (const name of ["app-shell", "charts", "effects", "jelly-surface", "theme"]) {
+  for (const name of ["app-shell", "charts", "effects", "theme"]) {
     const filename = resolve(import.meta.dir, `${name}.stylex.ts`);
     const transformed = await collector.transform(await readFile(filename, "utf8"), filename);
     expect(transformed.code).not.toContain("inject(");
@@ -32,7 +31,7 @@ async function compileRecipes() {
   };
 }
 
-test("all ten former full-border owners retain the five border-image resets at their original media scope", async () => {
+test("all nine remaining full-border owners retain the five border-image resets at their original media scope", async () => {
   const recipeRules = await compileRecipes();
   // A full border shorthand resets border-image; a logical side shorthand does not.
   const owners = [
@@ -45,9 +44,8 @@ test("all ten former full-border owners retain the five border-image resets at t
     ["chart bar", chartStyles.bar, true],
     ["chart range", chartStyles.range, true],
     ["chart track", chartStyles.track, true],
-    ["jelly root", jellySurfaceStyles.root, true],
   ] as const;
-  expect(owners).toHaveLength(10);
+  expect(owners).toHaveLength(9);
   const resets = [
     ["source", "none"], ["slice", "100%"], ["width", "1"],
     ["outset", "0"], ["repeat", "stretch"],

@@ -27,8 +27,7 @@ async function requireAppearance(page: Page, saved: SavedTheme, effective: Concr
   const expected = builtDesignKit.colors[effective];
   await page.waitForFunction(({ effective, forced, expected, activeAttribute }) => {
     const html = document.documentElement;
-    return html.dataset.theme === effective && html.dataset.jellyMode === effective
-      && html.dataset.jellyEventMode === effective
+    return html.dataset.theme === effective
       && document.querySelector("[data-forced-preference]")?.getAttribute("data-forced-preference") === forced
       && document.querySelector('[data-forced-theme-portal="root"]')?.getAttribute("data-theme") === effective
       && document.querySelector(`meta[${activeAttribute}]`)?.getAttribute("content") === expected;
@@ -37,8 +36,7 @@ async function requireAppearance(page: Page, saved: SavedTheme, effective: Concr
     const portal = document.querySelector('[data-forced-theme-portal="root"]');
     const nested = document.querySelector('[data-forced-theme-portal="nested"]');
     const probe = document.querySelector("[data-forced-preference]");
-    const jelly = document.querySelector(".hraness-design-jelly-surface");
-    if (!portal || !nested || !probe || !jelly) throw new Error("Missing forced-theme fixture surface.");
+    if (!portal || !nested || !probe) throw new Error("Missing forced-theme fixture surface.");
     return {
       stored: localStorage.getItem(key), saved: probe.getAttribute("data-saved-preference"),
       resolved: probe.getAttribute("data-resolved-preference"),
@@ -50,9 +48,8 @@ async function requireAppearance(page: Page, saved: SavedTheme, effective: Concr
       nestedTheme: nested.getAttribute("data-theme"), nestedClass: nested.className,
       activeMetaCount: document.querySelectorAll(`meta[${activeAttribute}]`).length,
       liveMetaCount: document.querySelectorAll('meta[name="theme-color"]:not([media])').length,
-      jellyDefined: customElements.get(jelly.localName) !== undefined,
-      jellyCanvas: jelly.shadowRoot?.querySelector("canvas") !== null && jelly.shadowRoot !== null,
-      jellyEvents: Number(document.documentElement.dataset.jellyEventCount),
+      legacyHosts: document.querySelectorAll("jelly-card, .hraness-design-jelly-surface").length,
+      legacyRuntime: customElements.get("jelly-card") !== undefined,
       systemDark: matchMedia("(prefers-color-scheme: dark)").matches,
       literalSystemObserved: Reflect.get(window, "__forcedThemeLiteralSystem") as boolean,
     };
@@ -73,9 +70,8 @@ async function requireAppearance(page: Page, saved: SavedTheme, effective: Concr
   assert.equal(state.nestedBackground, rgb(builtDesignKit.colors[nested].background));
   assert.equal(state.activeMetaCount, 1);
   assert.equal(state.liveMetaCount, 1);
-  assert.equal(state.jellyDefined, true);
-  assert.equal(state.jellyCanvas, true, "the real Jelly runtime must upgrade its canvas");
-  assert.ok(state.jellyEvents > 0, "the real Jelly theme-change event must reach native surfaces");
+  assert.equal(state.legacyHosts, 0, "Theme changes must use native shared surfaces");
+  assert.equal(state.legacyRuntime, false, "ThemeProvider must not register removed Jelly elements");
 }
 
 export async function verifyForcedThemeContract(browser: Browser, origin: string): Promise<void> {
@@ -99,11 +95,7 @@ export async function verifyForcedThemeContract(browser: Browser, origin: string
             Reflect.set(window, "__forcedThemeLiteralSystem", true);
           }
         }).observe(document, { subtree: true, attributes: true, attributeFilter: ["data-theme"], attributeOldValue: true });
-        window.addEventListener("jelly-theme-change", () => {
-          const html = document.documentElement;
-          html.dataset.jellyEventMode = html.dataset.jellyMode;
-          html.dataset.jellyEventCount = String(Number(html.dataset.jellyEventCount ?? "0") + 1);
-        });
+
       }, { key: storageKey, saved });
       const page = await context.newPage();
       page.setDefaultTimeout(10_000);
@@ -127,7 +119,7 @@ export async function verifyForcedThemeContract(browser: Browser, origin: string
       await requireAppearance(page, saved, forced, forced, nested, os, retainedProbe);
       assert.deepEqual(errors, [], "forced-theme verification must stay local and error-free");
       await retainedProbe.dispose();
-      console.log(`Forced-theme native checks passed: saved ${saved}, OS ${os}, forced ${forced}, unforced, restored; mounted identity, concrete document theme, portal, explicit island, browser chrome, storage and Jelly.`);
+      console.log(`Forced-theme native checks passed: saved ${saved}, OS ${os}, forced ${forced}, unforced, restored; mounted identity, concrete document theme, portal, explicit island, browser chrome, storage and absence of legacy runtime.`);
     } finally { await context.close(); }
   }
 }

@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 
 import { getDesignPaletteTheme } from "../palette-themes.js";
 import { lanternControlStyles } from "./lantern-material.stylex.js";
+import { SyntaxCode } from "./syntax-code.js";
 import { TopBar } from "./surfaces.js";
 
 const exampleNotes = [
@@ -36,10 +37,14 @@ function MaterialWorkspace({ mode }: Readonly<{ mode: "light" | "dark" }>) {
         <h3>{mode === "light" ? "Daylight" : "Lamplight"}</h3>
         <p>Same room. A different light.</p>
       </div>
+      <div className="hraness-material-terminal">
+        <div className="hraness-material-terminal__bar">notebook · terminal</div>
+        <pre className="hraness-material-code" aria-label="Illustrative notebook command" tabIndex={0}><SyntaxCode code={'notebook search "a slower morning" --format markdown\n# One matching note, on your computer.'} language="shell" /></pre>
+      </div>
       <div className="design-gallery__lantern-workspace hraness-material-pane" data-depth="raised">
         <TopBar
           className="hraness-material-chrome"
-          position="sticky"
+          position="static"
           surface="glass"
           title="Your notebook"
           actions={<span className="design-gallery__lantern-local">Local workspace</span>}

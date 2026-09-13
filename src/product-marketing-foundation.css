@@ -56,11 +56,14 @@
   padding: 1rem 1.15rem;
   overflow: auto;
   border-radius: var(--hraness-marketing-radius);
-  background: var(--hraness-marketing-inverse);
-  color: var(--hraness-marketing-inverse-ink);
+  background: var(--hraness-marketing-surface);
+  color: var(--hraness-marketing-ink);
   font-size: 0.85rem;
   line-height: 1.6;
   tab-size: 2;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .hraness-marketing-page :where(:not(pre) > code) {
