@@ -32,7 +32,6 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/design-gallery.css",
   "src/effects.css",
   "src/fonts.css",
-  "src/jelly.css",
   "src/lantern-material.css",
   "src/palette-bridge.css",
   "src/palettes.css",

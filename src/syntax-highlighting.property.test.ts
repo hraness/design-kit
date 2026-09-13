@@ -90,6 +90,27 @@ test("property: highlighted markup preserves the exact source text", () => {
   ));
 });
 
+test("property: class-only syntax preserves text and the default DOM except its finite styles", () => {
+  fc.assert(fc.property(
+    fc.string({ maxLength: 1_000 }),
+    fc.constantFrom(...syntaxLanguages),
+    (source, language) => {
+      const inline = highlightCode(source, language);
+      const classes = highlightCode(source, language, { styles: "classes" });
+      const before = parseHTML(`<code>${inline.html}</code>`).document;
+      const after = parseHTML(`<code>${classes.html}</code>`).document;
+      expect(after.querySelector("code")?.textContent).toBe(source);
+      expect(after.querySelector("script")).toBeNull();
+      expect(after.querySelectorAll("[style]")).toHaveLength(0);
+      for (const node of before.querySelectorAll("[style]")) {
+        expect(node.getAttribute("style")).toMatch(/^color:var\(--sh-(?:class|comment|entity|identifier|jsxliterals|keyword|property|sign|space|string)\)$/u);
+        node.removeAttribute("style");
+      }
+      expect(after.querySelector("code")?.outerHTML).toBe(before.querySelector("code")?.outerHTML);
+    },
+  ), { seed: 20260913, numRuns: 128 });
+});
+
 test("property: every foreign language label resolves to a supported language", () => {
   fc.assert(fc.property(fc.anything(), (input) => {
     expect(syntaxLanguages).toContain(resolveSyntaxLanguage(input));

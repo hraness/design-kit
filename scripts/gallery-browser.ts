@@ -129,7 +129,7 @@ const layouts = [
 ] as const;
 
 const expectedHeading = "Presentation and composition reference";
-const expectedCopy = "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint.";
+const expectedCopy = "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, and haptics.";
 const appearancePortalCanary = {
   accent: "rgb(89, 45, 168)",
   accentForeground: "rgb(255, 255, 255)",
@@ -402,7 +402,7 @@ async function requireMigrationParity(browser: Browser, origin: string): Promise
     "[data-parity-live] .hraness-design-bar-list-chart__track",
     "[data-parity-live] .hraness-design-range-plot-chart__track",
     "[data-parity-live] .hraness-design-range-plot-chart__range",
-    ".hraness-design-jelly-surface", "[data-parity-border-control]",
+    "[data-parity-border-control]",
   ];
   for (const environment of environments) {
     const page = await browser.newPage({
@@ -577,18 +577,17 @@ async function requireMigrationParity(browser: Browser, origin: string): Promise
         "[data-parity-live] .hraness-design-range-plot-chart__median", ".hraness-design-procedural-backdrop__ripple",
         ".hraness-design-theme-toggle__trigger",
       ], true);
-      await page.locator(".hraness-design-jelly-surface:defined").waitFor();
+      invariant(await page.locator("jelly-card, .hraness-design-jelly-surface").count() === 0, "Gallery must use native shared surfaces");
       await readBorders([
         "[data-parity-live] .hraness-design-bar-list-chart__bar", "[data-parity-live] .hraness-design-bar-list-chart__track",
         "[data-parity-live] .hraness-design-range-plot-chart__track", "[data-parity-live] .hraness-design-range-plot-chart__range",
-        ".hraness-design-jelly-surface",
       ], environment.forced);
       await page.getByRole("button", { name: "Parity appearance: Dark", exact: true }).click();
       await page.locator(".hraness-design-theme-toggle__popover").waitFor();
       await readBorders([".hraness-design-theme-toggle__popover"], true);
       await page.keyboard.press("Escape");
       invariant(failures.length === 0, `${environment.name}: ${failures.join("; ")}`);
-      console.log(`Migration parity: ${environment.name}; 13 physical sizes, native SVG coordinates, segmented selection, 10 border owners (five reset longhands).`);
+      console.log(`Migration parity: ${environment.name}; 13 physical sizes, native SVG coordinates, segmented selection, nine border owners (five reset longhands).`);
     } finally {
       await page.close();
     }
@@ -2082,7 +2081,7 @@ try {
   );
   invariant(
     JSON.stringify(designPriorityContract.rawPrioritiesByRank) === JSON.stringify([
-      [0, 0.1, 0.5, 1, 41],
+      [0, 0.1, 0.5, 1],
       [1000, 1200],
       [2000, 2040, 2130, 2200],
       [3000, 3040, 3045, 3092, 3130, 3200, 3330],

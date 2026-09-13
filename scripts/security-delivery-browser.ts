@@ -3034,7 +3034,7 @@ try {
   );
 
   console.log(
-    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, AnimatedRailStage semantic/caller/cascade/reduced-motion evidence, Chat message/composer semantic/caller/cascade/responsive/form evidence, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture excludes Jelly surfaces; Jelly's vendor-owned permanent style still needs a separate nonce solution or broader style policy.",
+    "Security delivery canary passed classic React SSR streaming, nonce-strict scripts and style elements with style attributes permitted, packed cross-package StyleX layers, AnimatedRailStage semantic/caller/cascade/reduced-motion evidence, Chat message/composer semantic/caller/cascade/responsive/form evidence, DitherSurface evidence, Fader semantic/ref/caller/cascade/keyboard/focus/forced-color evidence, layout-surface native/ref/caller/cascade/forced-color/vertical-writing evidence, PlaybackTransport semantic/ref/cascade/logical-size/forced-color evidence, hydration, and real portal checks. It intentionally externalizes React Aria's permanent pressable rule through a bounded style-id bridge. The fixture verifies that removed Jelly surfaces remain absent before and after hydration.",
   );
 } finally {
   try {

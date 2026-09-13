@@ -802,7 +802,6 @@ const compilerStylesheetPaths = [
   "src/design-gallery.css",
   "src/effects.css",
   "src/fonts.css",
-  "src/jelly.css",
   "src/lantern-material.css",
   "src/palette-bridge.css",
   "src/palettes.css",
@@ -832,7 +831,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.7.1" },
+    { name: "@hraness/design-kit", version: "0.8.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -898,7 +897,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
   throw new Error(
-    "Design-kit v0.7.1 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.8.0 must build and publish against the immutable @hraness/ui v0.5.12 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -916,7 +915,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.7.1 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.8.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -928,7 +927,7 @@ for (const [dependency, version] of Object.entries(publicCollectorToolchain)) {
 }
 if (rootDevDependencies["@stylexjs/unplugin"] !== undefined
   || rootDevDependencies.unplugin !== undefined) {
-  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.7.1.");
+  throw new Error("The private unplugin compiler adapter must not remain in design-kit v0.8.0.");
 }
 const uiInstallSource = process.env.HRANESS_UI_PACKAGE
   ?? uiDevelopmentSpecifier;
@@ -1200,7 +1199,7 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')])",
+    "const [, , , syntax] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')]); const output = syntax.highlightCode('const answer = 42;', 'typescript', { styles: 'classes' }); if (output.html.includes('style=') || !output.html.includes('sh__token--keyword')) throw new Error('Packed class-only syntax is unavailable');",
   ], neutralConsumer);
   await writeFile(
     join(neutralConsumer, "index.ts"),
@@ -1208,6 +1207,8 @@ try {
       'import * as core from "@hraness/design-kit";',
       'import { nebulaSansSocialFonts } from "@hraness/design-kit/fonts/nebula-sans/social";',
       'import * as syntax from "@hraness/design-kit/syntax-highlighting";',
+      'const styles: syntax.HighlightCodeOptions = { styles: "classes" };',
+      'syntax.highlightCode("const answer = 42;", "typescript", styles);',
       "void [core, nebulaSansSocialFonts, syntax];",
       "",
     ].join("\n"),
@@ -1485,7 +1486,6 @@ try {
     "src/react/foil-card-surface.tsx",
     "src/react/foil-card-surface.stylex.ts",
     "src/react/fader.stylex.ts",
-    "src/react/jelly-surface.stylex.ts",
     "src/react/playback-transport.stylex.ts",
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/product-marketing.stylex.ts",
@@ -1531,7 +1531,6 @@ try {
     "src/fonts/nebula-sans/PROVENANCE.md",
     "src/fonts/nebula-sans/social-fonts.generated.ts",
     "vendor/evilcharts/LICENSE",
-    "vendor/jelly-ui/LICENSE",
   ]) {
     if (!(await Bun.file(join(installed, path)).exists())) {
       throw new Error(`Packed package is missing ${path}`);
@@ -1755,10 +1754,10 @@ try {
       'import { Search01Icon } from "@hugeicons/core-free-icons";',
       'import { Icon } from "@hraness/ui";',
       'import "@hraness/design-kit/styles.css";',
-      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, JellySurface, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
+      'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'const target = document.getElementById("root");',
       'if (target === null) throw new Error("Missing root");',
-      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-aggregate" }, "Stage"), createElement(ChatMessage, { actions: "Copy", avatar: "A", className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, "Message"), createElement(ChatComposer, { "aria-label": "Aggregate composer", className: "consumer-chat-composer", onSubmit() {}, onValueChange() {}, value: "Draft" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 }), createElement(Icon, { icon: Search01Icon }), createElement(JellySurface, { interaction: "press" }, createElement("button", { type: "button" }, "Run"))));',
+      'createRoot(target).render(createElement(Fragment, null, createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }), createElement(AnimatedRailStage, { stageKey: "vite-aggregate" }, "Stage"), createElement(ChatMessage, { actions: "Copy", avatar: "A", className: "consumer-chat-message", meta: "Now", name: "Assistant", role: "assistant" }, "Message"), createElement(ChatComposer, { "aria-label": "Aggregate composer", className: "consumer-chat-composer", onSubmit() {}, onValueChange() {}, value: "Draft" }), createElement(DitherSurface, { density: "coarse" }, "Dither"), createElement(TopBar, { position: "sticky", surface: "glass", title: "Top" }, "Content"), createElement(BottomBar, null, "Bottom"), createElement(PageCanvas, { as: "div", inset: "none", size: "wide" }, "Page"), createElement(DockedFooter, { position: "absolute", density: "compact" }, "Docked"), createElement(PlaybackTransport, { "aria-label": "Preview transport", onPlay() {}, onStop() {}, status: "pending" }), createElement(Fader, { className: "consumer-fader-default", label: "Gain", maxValue: 100, minValue: 0, orientation: "vertical", showLabel: true, showOutput: true, value: 32 }), createElement(Fader, { className: "consumer-fader-compact", density: "compact", label: "Pan", labelAccessory: createElement("span", null, "Reset"), maxValue: 100, minValue: 0, orientation: "horizontal", showLabel: true, showOutput: true, value: 64 }), createElement(Icon, { icon: Search01Icon })));',
       "",
     ].join("\n"),
   );
@@ -1767,8 +1766,9 @@ try {
   if (!builtFiles.some((path) => path.endsWith(".css"))) {
     throw new Error("Packed Vite consumer emitted no design stylesheet.");
   }
-  if (builtFiles.filter((path) => path.endsWith(".js")).length < 2) {
-    throw new Error("Packed Vite consumer did not preserve the dynamic Jelly chunk.");
+  const builtJavaScript = (await Promise.all(builtFiles.filter((path) => path.endsWith(".js")).map((path) => Bun.file(path).text()))).join("\n");
+  if (/data-jelly-tokens|jelly-card|jelly-ui/u.test(builtJavaScript)) {
+    throw new Error("Packed Vite consumer retains removed Jelly runtime.");
   }
   const builtCss = (await Promise.all(
     builtFiles

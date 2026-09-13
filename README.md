@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.7.1",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.8.0",
     "@hraness/ui": "github:hraness/ui#v0.5.12"
   }
 }
@@ -268,7 +268,7 @@ import { BarListChart, SyntaxCode } from "@hraness/design-kit/react";
 </pre>
 ```
 
-The framework-neutral highlighter is also available from `@hraness/design-kit/syntax-highlighting`.
+The framework-neutral highlighter is also available from `@hraness/design-kit/syntax-highlighting`. For sites that disallow inline styles, call `highlightCode(code, "typescript", { styles: "classes" })` or pass `styles="classes"` to `SyntaxCode`, and load `syntax-highlighting.css`. The default output remains unchanged; both modes share the same theme colors and preserve source line breaks.
 Server components can import `SyntaxCode`, deterministic procedural effects, and
 static surfaces from `@hraness/design-kit/react/server` without crossing the
 client boundary used by the interactive React barrel.
@@ -387,11 +387,18 @@ Generated artwork can import `nebulaSansSocialFonts` from
 Bold OTF payloads without a remote request or runtime filesystem lookup, ready
 for an `ImageResponse` `fonts` option.
 
-## Optional Jelly paint
+## Migrating Jelly surfaces
 
-`JellySurface` adds a painted host around semantic content. The child remains the only interactive control. The runtime is pinned, loaded only in a browser, and has a CSS fallback when JavaScript or the dynamic chunk is unavailable.
+The Jelly surface API, stylesheet export, and browser runtime have been removed.
+Replace `JellySurface` wrappers with the appropriate native or `@hraness/ui`
+primitive. Apply the [shared material roles](./LANTERN_MATERIAL.md) to that
+semantic element when it needs a surface treatment. Keep labels, refs, disabled
+and pending behavior, keyboard interaction, and portal ownership on the
+primitive. Remove imports of `@hraness/design-kit/jelly.css` and any direct
+Jelly runtime integration. `DesignThemeProvider` continues to manage appearance
+and portal themes without loading a decorative control runtime.
 
-The audited Jelly UI artifacts and MIT license are under `vendor/jelly-ui`. The EvilCharts license and adaptation provenance are under `vendor/evilcharts`.
+The EvilCharts license and adaptation provenance remain under `vendor/evilcharts`.
 
 ## Gallery
 
@@ -406,7 +413,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.7.1`. The previous rollback pair is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.7.0`. This patch adds the already-rendered Paper-theme section to the public gallery metadata and verifies exact section order in standalone and nested galleries. The Lantern material, control-paint recipes and immutable CSS snapshot from `v0.7.0` remain unchanged, as do Paper and editorial defaults, semantic palettes, saved preferences, peer boundaries and compiler identity. Unsupported camel-case properties fail compilation; supported raw dashed CSS properties retain their native declarations. Compiler adopters must use compatible manifests throughout their registered package set and start a fresh generation when changing compiler identity.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.8.0`. The previous rollback pair uses design-kit `v0.7.1` with the same UI release. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, peer boundaries and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

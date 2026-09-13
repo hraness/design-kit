@@ -50,9 +50,7 @@ test("plain-site exposes one compact, product-neutral site shell", () => {
   expect(plainSiteCss).toMatch(
     /\.plain-footer :where\(a\)\s*\{[^}]*color:\s*inherit;[^}]*display:\s*inline-flex;[^}]*min-block-size:\s*var\(--plain-link-target-min\);[^}]*min-inline-size:\s*var\(--plain-link-target-min\);/u,
   );
-  expect(plainSiteCss).toMatch(
-    /\.plain-footer:has\(\.hraness-design-jelly-surface\)\s*\{[^}]*padding-top:\s*var\(--space-6\);[^}]*padding-right:\s*max\(var\(--plain-shell-gutter\), var\(--space-6\), env\(safe-area-inset-right\)\);[^}]*padding-bottom:\s*max\(var\(--space-6\), env\(safe-area-inset-bottom\)\);/su,
-  );
+  expect(plainSiteCss).not.toContain("jelly");
   expect(plainSiteCss).toMatch(
     /\.plain-site main:has\(> \.design-gallery\[data-design-gallery-nested="true"\]\)\s*\{[^}]*padding-inline:\s*max\(var\(--plain-shell-gutter\), var\(--space-6\)\);/su,
   );

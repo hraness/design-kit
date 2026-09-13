@@ -56,8 +56,8 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-m3e0ek89.js";
-import"../chunk-jey98bgc.js";
+} from "../chunk-ahkmp4s5.js";
+import"../chunk-be8hm55p.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -2673,323 +2673,6 @@ function FoilCardSurface({
   });
 }
 
-// src/react/jelly-surface.tsx
-import { createElement as createElement2, forwardRef, useCallback as useCallback2, useEffect as useEffect5, useRef as useRef4 } from "react";
-import * as stylex9 from "@stylexjs/stylex";
-import { cn as cn9 } from "@hraness/ui";
-
-// src/react/jelly-runtime.ts
-function createRetryableJellyRuntimeLoader(loader) {
-  let runtime;
-  return () => {
-    runtime ??= loader().catch((error) => {
-      runtime = undefined;
-      throw error;
-    });
-    return runtime;
-  };
-}
-var loadBrowserJellyRuntime = createRetryableJellyRuntimeLoader(() => import("../chunk-v6dxv8rs.js"));
-var themeRequest = 0;
-function shouldLoadJellyRuntime(documentRoot) {
-  return documentRoot.querySelector(".hraness-design-jelly-surface") !== null;
-}
-function applyJellyRootMode(root, mode) {
-  if (mode === "auto")
-    root.removeAttribute("data-jelly-mode");
-  else
-    root.setAttribute("data-jelly-mode", mode);
-}
-function readJellyRootMode(root) {
-  const mode = root.getAttribute("data-jelly-mode");
-  return mode === "light" || mode === "dark" ? mode : "auto";
-}
-async function loadJellyRuntimeForRoot(loader, root) {
-  try {
-    const runtime = await loader();
-    applyJellyThemeMode(runtime, readJellyRootMode(root));
-    return true;
-  } catch {
-    return false;
-  }
-}
-async function synchronizeJellyThemeMode(documentRoot, mode, loader, isCurrent = () => true) {
-  applyJellyRootMode(documentRoot.documentElement, mode);
-  if (!shouldLoadJellyRuntime(documentRoot))
-    return true;
-  let runtime;
-  try {
-    runtime = await loader();
-  } catch {
-    return false;
-  }
-  if (!isCurrent())
-    return false;
-  applyJellyThemeMode(runtime, mode);
-  return true;
-}
-async function ensureJellyRuntime() {
-  if (typeof window === "undefined" || typeof document === "undefined")
-    return;
-  await loadJellyRuntimeForRoot(loadBrowserJellyRuntime, document.documentElement);
-}
-function applyJellyThemeMode(runtime, mode) {
-  runtime.setThemeMode(mode);
-}
-async function setJellyThemeMode(mode) {
-  if (typeof window === "undefined" || typeof document === "undefined")
-    return false;
-  const request = ++themeRequest;
-  return synchronizeJellyThemeMode(document, mode, loadBrowserJellyRuntime, () => request === themeRequest);
-}
-
-// src/react/jelly-surface.stylex.ts
-var jellySurfaceStyles = {
-  root: {
-    kawU7v: "x1cfjbvc",
-    k5BUTg: "x1a4igh8",
-    kqOd84: "xsdpl10",
-    kzPi7L: "x1sz4vi2",
-    kEz803: "x4aylkk",
-    "--jelly-card-padding-block": "x1bbk1wc",
-    "--jelly-card-padding-inline": "xhowent",
-    "--jelly-card-font-size": "xwi17fr",
-    "--jelly-radius": "x317v68",
-    "--jelly-fill": "x138r0kg",
-    "--jelly-label": "xf4onzy",
-    "--jelly-color-border-default": "x1kr16q7",
-    kVAEAm: "x1n2onr6",
-    kHBbk8: "xc8icb0",
-    k1xSpc: "x1lliihq",
-    kB7OPa: "x9f619",
-    kaIpWk: "x16gy7dz",
-    kMwMTN: "x1eebzld xs5hli",
-    kMv6JI: "xjb2p0i",
-    kV0H8L: "x10rt0pk",
-    krGR0G: "xvmqkbn",
-    kqBzK6: "x1rcybi7",
-    kHiXq7: "x61gc8y",
-    kC21eY: "xd4aj15",
-    ka26j: "xkyhvkk",
-    kGuDYH: "x1qlqyl8",
-    kKX8nH: "x1t35e8",
-    k63SB2: "x1pd3egz",
-    kjAs5C: "x1aazh3f",
-    kQqvRs: "x1xh6y1q",
-    kLWn49: "x15bjb6t",
-    kWkggS: "x9yvj25",
-    kVAM5u: "x1w1tqly",
-    ksu8eU: "xx61lck",
-    kMzoRj: "x13rsnn2",
-    kGVxlE: "xwaqzdf",
-    k1ekBW: "x4wkmsb",
-    $$css: true
-  },
-  primary: {
-    "--jelly-fill": "x1va3v6u",
-    "--jelly-label": "x3o2ea9",
-    $$css: true
-  },
-  quiet: {
-    "--jelly-fill": "x152g019",
-    "--jelly-label": "x183l2pk",
-    $$css: true
-  },
-  danger: {
-    "--jelly-fill": "x13ywtpv",
-    "--jelly-label": "xbz0pe5",
-    $$css: true
-  },
-  field: {
-    "--jelly-fill": "x16wb4my",
-    "--jelly-radius": "xve0zjm",
-    $$css: true
-  },
-  overlay: {
-    "--jelly-fill": "x19km55x",
-    "--jelly-label": "xek99g9",
-    "--jelly-radius": "xrfn3cn",
-    $$css: true
-  },
-  neutralHovered: {
-    "--jelly-fill": "x138r0kg x8rjkku",
-    $$css: true
-  },
-  primaryHovered: {
-    "--jelly-fill": "x1va3v6u xm3mlto",
-    $$css: true
-  },
-  disabled: {
-    "--jelly-fill": "x1vynlns x1tre9y0",
-    "--jelly-label": "x1ng5emh",
-    kkrTdU: "x1h6gzvc",
-    $$css: true
-  },
-  selectableText: {
-    kfSwDN: "x1hx0egp",
-    $$css: true
-  }
-};
-
-// src/react/jelly-surface.tsx
-var JellyCard = "jelly-card";
-function composeJellyCapture(consumer, internal) {
-  return (event) => {
-    consumer?.(event);
-    if (!event.defaultPrevented)
-      internal(event);
-  };
-}
-function isJellySurfaceDisabled(target) {
-  return target.matches("[data-disabled], [data-pending]");
-}
-function ownsJellyInteraction(host, target) {
-  return target instanceof Element && target.closest(".hraness-design-jelly-surface") === host;
-}
-function bindJellyPointerRelease(target, pointerId, onRelease) {
-  let active = true;
-  const dispose = () => {
-    if (!active)
-      return;
-    active = false;
-    target.removeEventListener("blur", handleBlur);
-    target.removeEventListener("pointercancel", handlePointerFinish);
-    target.removeEventListener("pointerup", handlePointerFinish);
-  };
-  const finish = () => {
-    if (!active)
-      return;
-    dispose();
-    onRelease();
-  };
-  const handleBlur = () => finish();
-  const handlePointerFinish = (event) => {
-    const candidate = event;
-    if (candidate.pointerId === pointerId)
-      finish();
-  };
-  target.addEventListener("blur", handleBlur);
-  target.addEventListener("pointercancel", handlePointerFinish);
-  target.addEventListener("pointerup", handlePointerFinish);
-  return dispose;
-}
-function assignRef(ref, value) {
-  if (typeof ref === "function") {
-    ref(value);
-  } else if (ref !== null && ref !== undefined) {
-    ref.current = value;
-  }
-}
-var JellySurface = forwardRef(function JellySurface2({
-  children,
-  className,
-  interaction = "passive",
-  isDisabled = false,
-  isPending = false,
-  onBlurCapture,
-  onFocusCapture,
-  onInputCapture,
-  onKeyDownCapture,
-  onKeyUpCapture,
-  onPointerDownCapture,
-  onPointerEnter,
-  onPointerLeave,
-  onPointerMoveCapture,
-  surfaceRef,
-  tone = "neutral",
-  ...props10
-}, forwardedRef) {
-  const hostRef = useRef4(null);
-  const activePointer = useRef4(null);
-  const activeReleaseListeners = useRef4(null);
-  const setHost = useCallback2((host) => {
-    hostRef.current = host;
-    assignRef(surfaceRef, host);
-    assignRef(forwardedRef, host);
-  }, [forwardedRef, surfaceRef]);
-  const release = useCallback2(() => {
-    activeReleaseListeners.current?.();
-    activeReleaseListeners.current = null;
-    activePointer.current = null;
-    const host = hostRef.current;
-    host?.removeAttribute("data-pressed");
-    host?.releaseBody?.();
-  }, []);
-  useEffect5(() => {
-    ensureJellyRuntime();
-    return release;
-  }, [release]);
-  const handlePointerDown = (event) => {
-    if (interaction === "passive" || activePointer.current !== null || !ownsJellyInteraction(event.currentTarget, event.target) || isJellySurfaceDisabled(event.currentTarget))
-      return;
-    activePointer.current = event.pointerId;
-    const host = hostRef.current;
-    host?.setAttribute("data-pressed", "true");
-    host?.pressAt?.(event.clientX, event.clientY);
-    activeReleaseListeners.current = bindJellyPointerRelease(globalThis, event.pointerId, release);
-  };
-  const handlePointerMove = (event) => {
-    if (event.pointerId === activePointer.current) {
-      hostRef.current?.moveAt?.(event.clientX, event.clientY);
-    }
-  };
-  return createElement2(JellyCard, {
-    ...props10,
-    className: cn9("hraness-design-jelly-surface", stylex9.props(jellySurfaceStyles.root, tone === "danger" && jellySurfaceStyles.danger, tone === "field" && jellySurfaceStyles.field, tone === "overlay" && jellySurfaceStyles.overlay, tone === "primary" && jellySurfaceStyles.primary, tone === "quiet" && jellySurfaceStyles.quiet, tone === "neutral" && jellySurfaceStyles.neutralHovered, tone === "primary" && jellySurfaceStyles.primaryHovered, (isDisabled || isPending) && jellySurfaceStyles.disabled, interaction !== "press" && jellySurfaceStyles.selectableText).className, className),
-    "data-disabled": isDisabled ? "true" : undefined,
-    "data-pending": isPending ? "true" : undefined,
-    "data-interaction": interaction,
-    "data-tone": tone,
-    onBlurCapture: (event) => {
-      onBlurCapture?.(event);
-      if (!event.currentTarget.contains(event.relatedTarget)) {
-        event.currentTarget.removeAttribute("data-focus-within");
-        release();
-      }
-    },
-    onFocusCapture: (event) => {
-      onFocusCapture?.(event);
-      event.currentTarget.setAttribute("data-focus-within", "true");
-      if (ownsJellyInteraction(event.currentTarget, event.target) && !isJellySurfaceDisabled(event.currentTarget)) {
-        hostRef.current?.centerPop?.(interaction === "field" ? 0.55 : 0.35);
-      }
-    },
-    onInputCapture: (event) => {
-      onInputCapture?.(event);
-      if (interaction === "field" && ownsJellyInteraction(event.currentTarget, event.target) && !isJellySurfaceDisabled(event.currentTarget)) {
-        hostRef.current?.centerPop?.(0.16);
-      }
-    },
-    onKeyDownCapture: (event) => {
-      onKeyDownCapture?.(event);
-      if (interaction === "press" && !event.defaultPrevented && !event.repeat && ownsJellyInteraction(event.currentTarget, event.target) && !isJellySurfaceDisabled(event.currentTarget) && (event.key === "Enter" || event.key === " ")) {
-        event.currentTarget.setAttribute("data-pressed", "true");
-        hostRef.current?.centerPulse?.(1.12);
-      }
-    },
-    onKeyUpCapture: (event) => {
-      onKeyUpCapture?.(event);
-      if (interaction === "press" && (event.key === "Enter" || event.key === " "))
-        release();
-    },
-    onPointerDownCapture: composeJellyCapture(onPointerDownCapture, handlePointerDown),
-    onPointerEnter: (event) => {
-      onPointerEnter?.(event);
-      if (!ownsJellyInteraction(event.currentTarget, event.target) || isJellySurfaceDisabled(event.currentTarget))
-        return;
-      event.currentTarget.setAttribute("data-hovered", "true");
-      if (interaction !== "passive")
-        hostRef.current?.centerPop?.(0.18);
-    },
-    onPointerLeave: (event) => {
-      onPointerLeave?.(event);
-      event.currentTarget.removeAttribute("data-hovered");
-    },
-    onPointerMoveCapture: composeJellyCapture(onPointerMoveCapture, handlePointerMove),
-    ref: setHost
-  }, children);
-});
-
 // src/react/lantern-material-gallery.tsx
 import { Button as Button2, TextField } from "@hraness/ui";
 import { useId as useId2, useState as useState3 } from "react";
@@ -3052,12 +2735,31 @@ function MaterialWorkspace({
         ]
       }),
       /* @__PURE__ */ jsxs8("div", {
+        className: "hraness-material-terminal",
+        children: [
+          /* @__PURE__ */ jsx10("div", {
+            className: "hraness-material-terminal__bar",
+            children: "notebook · terminal"
+          }),
+          /* @__PURE__ */ jsx10("pre", {
+            className: "hraness-material-code",
+            "aria-label": "Illustrative notebook command",
+            tabIndex: 0,
+            children: /* @__PURE__ */ jsx10(SyntaxCode, {
+              code: `notebook search "a slower morning" --format markdown
+# One matching note, on your computer.`,
+              language: "shell"
+            })
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs8("div", {
         className: "design-gallery__lantern-workspace hraness-material-pane",
         "data-depth": "raised",
         children: [
           /* @__PURE__ */ jsx10(TopBar, {
             className: "hraness-material-chrome",
-            position: "sticky",
+            position: "static",
             surface: "glass",
             title: "Your notebook",
             actions: /* @__PURE__ */ jsx10("span", {
@@ -3230,8 +2932,8 @@ function LanternMaterialGallery() {
 }
 
 // src/react/navigation-rail.tsx
-import { Link, cn as cn10 } from "@hraness/ui";
-import * as stylex10 from "@stylexjs/stylex";
+import { Link, cn as cn9 } from "@hraness/ui";
+import * as stylex9 from "@stylexjs/stylex";
 
 // src/react/navigation-rail.stylex.ts
 var navigationRailStyles = {
@@ -3357,31 +3059,31 @@ function NavigationRail({
   className,
   footer,
   header,
-  ...props11
+  ...props10
 }) {
-  const rootPresentation = stylex10.props(navigationRailStyles.rail);
-  const edgePresentation = stylex10.props(navigationRailStyles.railEdge);
-  const navigationPresentation = stylex10.props(navigationRailStyles.navigation);
+  const rootPresentation = stylex9.props(navigationRailStyles.rail);
+  const edgePresentation = stylex9.props(navigationRailStyles.railEdge);
+  const navigationPresentation = stylex9.props(navigationRailStyles.navigation);
   return /* @__PURE__ */ jsxs9("aside", {
     ...rootPresentation,
-    ...props11,
+    ...props10,
     "aria-label": ariaLabel,
-    className: cn10("hraness-design-navigation-rail", rootPresentation.className, className),
+    className: cn9("hraness-design-navigation-rail", rootPresentation.className, className),
     children: [
       header === undefined ? null : /* @__PURE__ */ jsx11("header", {
         ...edgePresentation,
-        className: cn10("hraness-design-navigation-rail__header", edgePresentation.className),
+        className: cn9("hraness-design-navigation-rail__header", edgePresentation.className),
         children: header
       }),
       /* @__PURE__ */ jsx11("nav", {
         ...navigationPresentation,
         "aria-label": ariaLabel,
-        className: cn10("hraness-design-navigation-rail__navigation", navigationPresentation.className),
+        className: cn9("hraness-design-navigation-rail__navigation", navigationPresentation.className),
         children
       }),
       footer === undefined ? null : /* @__PURE__ */ jsx11("footer", {
         ...edgePresentation,
-        className: cn10("hraness-design-navigation-rail__footer", edgePresentation.className),
+        className: cn9("hraness-design-navigation-rail__footer", edgePresentation.className),
         children: footer
       })
     ]
@@ -3392,25 +3094,25 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props11
+  ...props10
 }) {
   const Heading = titleAs;
-  const rootPresentation = stylex10.props(navigationRailStyles.section);
-  const titlePresentation = stylex10.props(navigationRailStyles.sectionTitle);
-  const itemsPresentation = stylex10.props(navigationRailStyles.sectionItems);
+  const rootPresentation = stylex9.props(navigationRailStyles.section);
+  const titlePresentation = stylex9.props(navigationRailStyles.sectionTitle);
+  const itemsPresentation = stylex9.props(navigationRailStyles.sectionItems);
   return /* @__PURE__ */ jsxs9("section", {
     ...rootPresentation,
-    ...props11,
-    className: cn10("hraness-design-rail-section", rootPresentation.className, className),
+    ...props10,
+    className: cn9("hraness-design-rail-section", rootPresentation.className, className),
     children: [
       title === undefined ? null : /* @__PURE__ */ jsx11(Heading, {
         ...titlePresentation,
-        className: cn10("hraness-design-rail-section__title", titlePresentation.className),
+        className: cn9("hraness-design-rail-section__title", titlePresentation.className),
         children: title
       }),
       /* @__PURE__ */ jsx11("div", {
         ...itemsPresentation,
-        className: cn10("hraness-design-rail-section__items", itemsPresentation.className),
+        className: cn9("hraness-design-rail-section__items", itemsPresentation.className),
         children
       })
     ]
@@ -3425,37 +3127,37 @@ function RailItem({
   isActive = false,
   label,
   xstyle,
-  ...props11
+  ...props10
 }) {
-  const iconPresentation = stylex10.props(navigationRailStyles.itemIcon);
-  const copyPresentation = stylex10.props(navigationRailStyles.itemCopy);
-  const labelPresentation = stylex10.props(navigationRailStyles.itemLabel);
-  const descriptionPresentation = stylex10.props(navigationRailStyles.itemDescription);
+  const iconPresentation = stylex9.props(navigationRailStyles.itemIcon);
+  const copyPresentation = stylex9.props(navigationRailStyles.itemCopy);
+  const labelPresentation = stylex9.props(navigationRailStyles.itemLabel);
+  const descriptionPresentation = stylex9.props(navigationRailStyles.itemDescription);
   return /* @__PURE__ */ jsxs9(Link, {
-    ...props11,
+    ...props10,
     "aria-current": isActive ? "page" : undefined,
-    className: cn10("hraness-design-rail-item", className),
+    className: cn9("hraness-design-rail-item", className),
     href,
     xstyle: [navigationRailStyles.item, navigationRailStyles.itemNativeInteractionFallbacks, isActive && navigationRailStyles.itemActive, xstyle],
     children: [
       icon === undefined ? null : /* @__PURE__ */ jsx11("span", {
         ...iconPresentation,
         "aria-hidden": "true",
-        className: cn10("hraness-design-rail-item__icon", iconPresentation.className),
+        className: cn9("hraness-design-rail-item__icon", iconPresentation.className),
         children: icon
       }),
       /* @__PURE__ */ jsxs9("span", {
         ...copyPresentation,
-        className: cn10("hraness-design-rail-item__copy", copyPresentation.className),
+        className: cn9("hraness-design-rail-item__copy", copyPresentation.className),
         children: [
           /* @__PURE__ */ jsx11("span", {
             ...labelPresentation,
-            className: cn10("hraness-design-rail-item__label", labelPresentation.className),
+            className: cn9("hraness-design-rail-item__label", labelPresentation.className),
             children: label
           }),
           description === undefined ? null : /* @__PURE__ */ jsx11("span", {
             ...descriptionPresentation,
-            className: cn10("hraness-design-rail-item__description", descriptionPresentation.className),
+            className: cn9("hraness-design-rail-item__description", descriptionPresentation.className),
             children: description
           })
         ]
@@ -3470,8 +3172,8 @@ function RailItem({
 
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
-import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn11 } from "@hraness/ui";
-import * as stylex11 from "@stylexjs/stylex";
+import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
+import * as stylex10 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -3509,11 +3211,11 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex11.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex11.props(playbackTransportStyles.glyph);
+  const rootPresentation = stylex10.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex10.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs10(Toolbar, {
     ...accessibleName,
-    className: cn11("hraness-design-playback-transport", rootPresentation.className, className),
+    className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
     "data-playback-status": status,
     children: [
       /* @__PURE__ */ jsx12(IconButton2, {
@@ -3557,7 +3259,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex12 from "@stylexjs/stylex";
+import * as stylex11 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -3608,8 +3310,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex12.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex12.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex11.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex11.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs11("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -3655,7 +3357,7 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "Jelly presentation", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
 function resolveGalleryTheme(theme, prefersDark) {
   return theme === "system" ? prefersDark ? "dark" : "light" : theme;
 }
@@ -3734,7 +3436,7 @@ function DesignSystemGallery({
             children: "Presentation and composition reference"
           }),
           /* @__PURE__ */ jsx14("p", {
-            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, haptics, and optional Jelly paint."
+            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, and haptics."
           }),
           /* @__PURE__ */ jsx14("p", {
             children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
@@ -3829,15 +3531,6 @@ function DesignSystemGallery({
                     })
                   })
                 ]
-              }),
-              /* @__PURE__ */ jsx14(JellySurface, {
-                className: "design-gallery__jelly",
-                interaction: "press",
-                tone: "neutral",
-                children: /* @__PURE__ */ jsx14(Button3, {
-                  variant: "quiet",
-                  children: "Semantic button with optional Jelly paint"
-                })
               })
             ]
           }),
@@ -4616,7 +4309,7 @@ export const shell = <AppShell rail={null}>Content</AppShell>;`,
   });
 }
 // src/react/haptics.ts
-import { useCallback as useCallback3, useEffect as useEffect6 } from "react";
+import { useCallback as useCallback2, useEffect as useEffect5 } from "react";
 var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
 function isHapticBrowserEnvironment(environment = globalThis) {
   return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
@@ -4754,14 +4447,14 @@ function disposeHapticFeedback() {
   browserHaptics.dispose();
 }
 function useHapticFeedback(enabled = true) {
-  useEffect6(() => {
+  useEffect5(() => {
     if (enabled)
       prepareHapticFeedback();
   }, [enabled]);
-  return useCallback3(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
+  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
 }
 // src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect7, useRef as useRef5 } from "react";
+import { useEffect as useEffect6, useRef as useRef4 } from "react";
 var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
 var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
 function hasClosest(target) {
@@ -4842,7 +4535,7 @@ function isNode2(target) {
   return target !== null && typeof Node !== "undefined" && target instanceof Node;
 }
 function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef5({
+  const latestRef = useRef4({
     bindings,
     isDisabled: options.isDisabled ?? false
   });
@@ -4851,7 +4544,7 @@ function useKeyboardShortcuts(bindings, options = {}) {
     isDisabled: options.isDisabled ?? false
   };
   const scopeRef = options.scopeRef;
-  useEffect7(() => {
+  useEffect6(() => {
     const onKeyDown = (event) => {
       if (scopeRef !== undefined) {
         const scope = scopeRef.current;
@@ -4875,9 +4568,9 @@ function useKeyboardShortcuts(bindings, options = {}) {
   }, [scopeRef]);
 }
 // src/react/route-state.tsx
-import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn13 } from "@hraness/ui";
-import * as stylex14 from "@stylexjs/stylex";
-import { useEffect as useEffect9, useId as useId3 } from "react";
+import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
+import * as stylex13 from "@stylexjs/stylex";
+import { useEffect as useEffect8, useId as useId3 } from "react";
 
 // src/react/route-state.stylex.ts
 var routeStateStyles = {
@@ -4923,10 +4616,10 @@ var routeStateStyles = {
 };
 
 // src/react/theme.tsx
-import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn12 } from "@hraness/ui";
-import * as stylex13 from "@stylexjs/stylex";
+import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
+import * as stylex12 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
-import { useEffect as useEffect8, useRef as useRef6, useSyncExternalStore as useSyncExternalStore2 } from "react";
+import { useEffect as useEffect7, useRef as useRef5, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
 // src/react/theme-resolution.ts
 function resolveEffectiveTheme(forcedTheme, resolvedTheme) {
@@ -5112,23 +4805,10 @@ function PersistedThemeNormalizer() {
     setTheme,
     theme
   } = useTheme();
-  useEffect8(() => {
+  useEffect7(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
-  return null;
-}
-function JellyThemeSync() {
-  const {
-    forcedTheme,
-    resolvedTheme
-  } = useTheme();
-  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-  useEffect8(() => {
-    if (effectiveTheme !== undefined) {
-      setJellyThemeMode(effectiveTheme);
-    }
-  }, [effectiveTheme]);
   return null;
 }
 function PortalThemeBridge({
@@ -5175,7 +4855,6 @@ function DesignThemeProvider({
         themes: [...concreteThemes],
         children: [
           forcedTheme === undefined ? /* @__PURE__ */ jsx15(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx15(JellyThemeSync, {}),
           /* @__PURE__ */ jsx15(PortalThemeBridge, {
             forcedTheme,
             children
@@ -5242,7 +4921,7 @@ function ThemeToggle({
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
-  const presentationStyles = stylex13.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
+  const presentationStyles = stylex12.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -5253,7 +4932,7 @@ function ThemeToggle({
   return /* @__PURE__ */ jsx15("div", {
     ...presentationStyles,
     "aria-busy": !ready || undefined,
-    className: cn12("hraness-design-theme-toggle", presentationStyles.className, className),
+    className: cn11("hraness-design-theme-toggle", presentationStyles.className, className),
     "data-display": resolvedPresentation === "menu" ? "icons" : resolvedDisplay,
     "data-hraness-appearance-menu": resolvedPresentation === "menu" ? "" : undefined,
     "data-hraness-theme-toggle-stylex": "",
@@ -5279,7 +4958,7 @@ function ThemeToggle({
             if (isDesignTheme(key))
               changeTheme(key);
           },
-          popoverClassName: cn12("hraness-design-theme-toggle__popover", portalClassName),
+          popoverClassName: cn11("hraness-design-theme-toggle__popover", portalClassName),
           popoverXstyle: themeStyles.popover,
           selectedKeys: [value],
           selectionMode: "single",
@@ -5305,14 +4984,14 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props14) {
+function ThemeMenuButton(props13) {
   const palette = useDesignPalette();
   if (palette !== null)
     return /* @__PURE__ */ jsx15(DesignPaletteMenuButton, {
-      ...props14
+      ...props13
     });
   return /* @__PURE__ */ jsx15(ThemeToggle, {
-    ...props14,
+    ...props13,
     presentation: "menu"
   });
 }
@@ -5330,16 +5009,16 @@ function ThemeColorSync({
     resolvedTheme
   } = useTheme();
   const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-  const registrationId = useRef6(Symbol("hraness-design-theme-color"));
-  const registration = useRef6(null);
+  const registrationId = useRef5(Symbol("hraness-design-theme-color"));
+  const registration = useRef5(null);
   const resolvedColor = palette !== null ? metaName !== "theme-color" && palette.ready ? palette.background : undefined : effectiveTheme !== undefined ? themeColorFor(effectiveTheme, {
     dark: darkColor,
     light: lightColor
   }) : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
-  const latestColor = useRef6(resolvedColor);
+  const latestColor = useRef5(resolvedColor);
   latestColor.current = resolvedColor;
-  useEffect8(() => {
+  useEffect7(() => {
     if (!hasResolvedColor || latestColor.current === undefined)
       return;
     const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
@@ -5350,7 +5029,7 @@ function ThemeColorSync({
       current.release();
     };
   }, [hasResolvedColor, metaName]);
-  useEffect8(() => {
+  useEffect7(() => {
     if (resolvedColor !== undefined)
       registration.current?.update(resolvedColor);
   }, [resolvedColor]);
@@ -5362,10 +5041,10 @@ import { jsx as jsx16, jsxs as jsxs14, Fragment as Fragment3 } from "react/jsx-r
 function RouteActions({
   children
 }) {
-  const presentation = stylex14.props(routeStateStyles.row);
+  const presentation = stylex13.props(routeStateStyles.row);
   return /* @__PURE__ */ jsx16("div", {
     ...presentation,
-    className: cn13("hraness-design-route-state__actions", presentation.className),
+    className: cn12("hraness-design-route-state__actions", presentation.className),
     children
   });
 }
@@ -5374,21 +5053,21 @@ function RouteNotFoundPage({
   showThemeToggle = false,
   titleAs = "h1"
 } = {}) {
-  const rootPresentation = stylex14.props(routeStateStyles.root);
-  const headerPresentation = stylex14.props(routeStateStyles.header);
-  const contentPresentation = stylex14.props(routeStateStyles.content);
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const headerPresentation = stylex13.props(routeStateStyles.header);
+  const contentPresentation = stylex13.props(routeStateStyles.content);
   return /* @__PURE__ */ jsxs14(PageCanvas, {
     as: canvasAs,
-    className: cn13("hraness-design-route-state", rootPresentation.className),
+    className: cn12("hraness-design-route-state", rootPresentation.className),
     children: [
       showThemeToggle ? /* @__PURE__ */ jsx16("header", {
         ...headerPresentation,
-        className: cn13("hraness-design-route-state__header", headerPresentation.className),
+        className: cn12("hraness-design-route-state__header", headerPresentation.className),
         children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
       }) : null,
       /* @__PURE__ */ jsx16("div", {
         ...contentPresentation,
-        className: cn13("hraness-design-route-state__content", contentPresentation.className),
+        className: cn12("hraness-design-route-state__content", contentPresentation.className),
         children: /* @__PURE__ */ jsx16(EmptyState, {
           action: /* @__PURE__ */ jsx16(LinkButton2, {
             href: "/",
@@ -5417,10 +5096,10 @@ function RouteErrorPage({
   titleAs = "h1"
 }) {
   const focusId = `${useId3()}-route-error`;
-  const rootPresentation = stylex14.props(routeStateStyles.root);
-  const headerPresentation = stylex14.props(routeStateStyles.header);
-  const contentPresentation = stylex14.props(routeStateStyles.content);
-  useEffect9(() => {
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const headerPresentation = stylex13.props(routeStateStyles.header);
+  const contentPresentation = stylex13.props(routeStateStyles.content);
+  useEffect8(() => {
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
@@ -5428,18 +5107,18 @@ function RouteErrorPage({
     "aria-label": "This view could not load",
     "aria-live": announce ? "assertive" : undefined,
     as: canvasAs,
-    className: cn13("hraness-design-route-state", rootPresentation.className),
+    className: cn12("hraness-design-route-state", rootPresentation.className),
     id: focusId,
     tabIndex: -1,
     children: [
       showThemeToggle ? /* @__PURE__ */ jsx16("header", {
         ...headerPresentation,
-        className: cn13("hraness-design-route-state__header", headerPresentation.className),
+        className: cn12("hraness-design-route-state__header", headerPresentation.className),
         children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
       }) : null,
       /* @__PURE__ */ jsx16("div", {
         ...contentPresentation,
-        className: cn13("hraness-design-route-state__content", contentPresentation.className),
+        className: cn12("hraness-design-route-state__content", contentPresentation.className),
         children: /* @__PURE__ */ jsx16(EmptyState, {
           action: /* @__PURE__ */ jsxs14(RouteActions, {
             children: [
@@ -5470,22 +5149,22 @@ function RouteLoadingPage({
   announce = true,
   canvasAs = "main"
 } = {}) {
-  const rootPresentation = stylex14.props(routeStateStyles.root);
-  const loadingPresentation = stylex14.props(routeStateStyles.loading);
-  const titlePresentation = stylex14.props(routeStateStyles.row);
-  const skeletonPresentation = stylex14.props(routeStateStyles.skeletons);
+  const rootPresentation = stylex13.props(routeStateStyles.root);
+  const loadingPresentation = stylex13.props(routeStateStyles.loading);
+  const titlePresentation = stylex13.props(routeStateStyles.row);
+  const skeletonPresentation = stylex13.props(routeStateStyles.skeletons);
   return /* @__PURE__ */ jsx16(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
-    className: cn13("hraness-design-route-state", rootPresentation.className),
+    className: cn12("hraness-design-route-state", rootPresentation.className),
     children: /* @__PURE__ */ jsxs14("section", {
       ...loadingPresentation,
-      className: cn13("hraness-design-route-state__loading", loadingPresentation.className),
+      className: cn12("hraness-design-route-state__loading", loadingPresentation.className),
       role: announce ? "status" : undefined,
       children: [
         /* @__PURE__ */ jsxs14("div", {
           ...titlePresentation,
-          className: cn13("hraness-design-route-state__loading-title", titlePresentation.className),
+          className: cn12("hraness-design-route-state__loading-title", titlePresentation.className),
           children: [
             /* @__PURE__ */ jsx16(Spinner2, {}),
             /* @__PURE__ */ jsx16("strong", {
@@ -5496,7 +5175,7 @@ function RouteLoadingPage({
         /* @__PURE__ */ jsxs14("div", {
           ...skeletonPresentation,
           "aria-hidden": "true",
-          className: cn13("hraness-design-route-state__skeletons", skeletonPresentation.className),
+          className: cn12("hraness-design-route-state__skeletons", skeletonPresentation.className),
           children: [
             /* @__PURE__ */ jsx16(Skeleton, {
               height: "1rem",
@@ -5524,13 +5203,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props15
+  ...props14
 }) {
   const content = /* @__PURE__ */ jsxs14(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx16(RouteErrorPage, {
-        ...props15,
+        ...props14,
         showThemeToggle: false
       })
     ]
@@ -5599,7 +5278,6 @@ export {
   lanternControlStyles,
   isKeyboardTextEntryTarget,
   isKeyboardInteractionTarget,
-  isJellySurfaceDisabled,
   isHapticBrowserEnvironment,
   isDesignTheme,
   hashFoilCardSeed,
@@ -5621,9 +5299,7 @@ export {
   createHapticFeedbackController,
   createFoilCardSeedPose,
   createFoilCardPointerPose,
-  composeJellyCapture,
   cancelHapticFeedback,
-  bindJellyPointerRelease,
   TopBar,
   ThemeToggle,
   ThemeMenuButton,
@@ -5664,7 +5340,6 @@ export {
   MarketingFacts,
   MarketingCallToAction,
   LanternMaterialGallery,
-  JellySurface,
   HAPTIC_FEEDBACK_EVENT_NAME,
   GlobalErrorDocument,
   FoilCardSurface,

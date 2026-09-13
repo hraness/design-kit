@@ -8,6 +8,7 @@ import { chromium, type Browser, type Locator, type Page } from "playwright-core
 import { transform } from "lightningcss";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
 import type * as PublicDesignKit from "../src/index.js";
+import type * as PublicSyntax from "../src/syntax-highlighting.js";
 
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
 import { withTransparencyPreference } from "./browser-transparency.js";
@@ -145,6 +146,19 @@ async function verifyGallery(page: Page) {
   for (const theme of ["light", "dark"]) {
     const workspace = page.locator(`[data-gallery-lantern="${theme}"]`);
     assert.equal(await workspace.locator(".design-gallery__lantern-notes > li").count(), 3);
+    const terminal = workspace.locator(".hraness-material-code");
+    const codePaint = await terminal.evaluate((node) => {
+      const paint = getComputedStyle(node);
+      return { wrap: paint.overflowWrap, space: paint.whiteSpace, break: paint.wordBreak,
+        background: paint.backgroundColor, tabIndex: (node as HTMLElement).tabIndex,
+        tokens: node.querySelectorAll(".syntax-token--string, .syntax-token--comment").length };
+    });
+    assert.equal(codePaint.space, "pre");
+    assert.equal(codePaint.wrap, "normal");
+    assert.equal(codePaint.break, "normal");
+    assert.equal(codePaint.tabIndex, 0);
+    assert(codePaint.tokens > 0, "Terminal example must contain real syntax spans");
+    assert.equal(codePaint.background, await workspace.locator(".hraness-material-pane").evaluate((node) => getComputedStyle(node).backgroundColor), "Terminal must use its local theme plane");
     const filter = workspace.locator("[data-gallery-lantern-filter]");
     await filter.click();
     assert.equal(await filter.getAttribute("aria-pressed"), "true");
@@ -158,6 +172,15 @@ async function verifyGallery(page: Page) {
     assert.equal(await workspace.locator("details").first().getAttribute("open"), "");
     await workspace.getByRole("button", { name: "Save this view" }).click();
     assert.match(await workspace.locator(".design-gallery__lantern-save").textContent() ?? "", /View saved for this example\./u);
+    assert(await workspace.evaluate((node) => {
+      const frame = node.querySelector(".design-gallery__lantern-workspace")?.getBoundingClientRect();
+      const header = node.querySelector(".hraness-design-top-bar")?.getBoundingClientRect();
+      const input = node.querySelector("input")?.getBoundingClientRect();
+      const save = node.querySelector(".design-gallery__lantern-save")?.getBoundingClientRect();
+      return frame !== undefined && header !== undefined && input !== undefined && save !== undefined
+        && header.top >= frame.top && header.bottom <= input.top
+        && save.top >= frame.top && save.bottom <= frame.bottom;
+    }), "Expanded notebook keeps its header above the field and its whole save/status area inside the frame");
     // Return to the selected state for exact matched-pair contrast observations.
     await filter.click();
   }
@@ -246,6 +269,10 @@ function requireSelected(proof: Awaited<ReturnType<typeof paintEvidence>>, force
 
 try {
   const { getDesignPaletteTheme } = await import(join(root, "dist/index.js")) as typeof PublicDesignKit;
+  const { highlightCode } = await import(join(root, "dist/syntax-highlighting.js")) as typeof PublicSyntax;
+  const syntaxSource = 'const message = "Hello, world";\n// Your code, with its original line breaks.\n';
+  const syntax = highlightCode(syntaxSource, "typescript", { styles: "classes" });
+  const syntaxCsp = "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self'; base-uri 'none'";
   assert.equal(typeof getDesignPaletteTheme, "function");
   const [standalone, foundation, kit, ui, material] = await Promise.all([
     bundleBrowserStylesheet(join(root, "src/styles.css"), root),
@@ -285,6 +312,11 @@ try {
       return new Response(await readFile(path), { headers: { "content-type": "font/woff2" } });
     }
     if (url.pathname === "/favicon.ico") return new Response(null, { status: 204 });
+    if (url.pathname === "/syntax") {
+      const theme = url.searchParams.get("theme");
+      if (theme !== "light" && theme !== "dark") return new Response("Invalid theme", { status: 400 });
+      return new Response(`<!doctype html><html lang="en" class="${getDesignPaletteTheme("paper", theme).className}" data-theme="${theme}" data-palette="paper" data-hraness-theme="paper" data-hraness-material="lantern"><head><meta charset="utf-8"><title>Class-only syntax proof</title><link rel="stylesheet" href="/styles.css?route=standalone"><link rel="stylesheet" href="/layout.css"></head><body><main><div class="hraness-material-terminal"><div class="hraness-material-terminal__bar">example.ts</div><pre class="hraness-material-code"><code class="${syntax.className}">${syntax.html}</code></pre></div></main></body></html>`, { headers: { "content-type": "text/html", "content-security-policy": syntaxCsp } });
+    }
     if (url.pathname !== "/") return new Response("Not found", { status: 404 });
     const route = url.searchParams.get("route"), theme = url.searchParams.get("theme");
     if ((route !== "standalone" && route !== "compiler") || (theme !== "light" && theme !== "dark")) return new Response("Invalid fixture", { status: 400 });
@@ -327,7 +359,10 @@ try {
             if (proof.prefixedSupported) assert.equal(chrome.prefixedBlur, "blur(20px) saturate(1.1)");
             assert((chrome.background[3] ?? 0) > 0 && (chrome.background[3] ?? 255) < 255, "Chrome must remain translucent in its supported mode");
           }
-          for (const wall of proof.walls) assert.match(wall.image, /repeating-linear-gradient/u);
+          for (const wall of proof.walls) {
+            assert.match(wall.image, /linear-gradient/u);
+            assert.doesNotMatch(wall.image, /repeating-linear-gradient/u, "Faces must not redraw the bright line grid");
+          }
           requireSelected(proof, false);
           const comparable = { proof, states, focus };
           if (reference === undefined) reference = comparable;
@@ -354,10 +389,33 @@ try {
       } finally { await page.close(); }
     }
   }
+  const syntaxCases: unknown[] = [];
+  for (const theme of ["light", "dark"] as const) {
+    const page = await browser.newPage({ viewport: { width: 900, height: 300 }, colorScheme: theme });
+    page.on("console", message => { if (message.type() === "error") failures.push(message.text()); });
+    try {
+      const response = await page.goto(`http://${server.hostname}:${server.port}/syntax?theme=${theme}`, { waitUntil: "networkidle" });
+      assert.equal(response?.headers()["content-security-policy"], syntaxCsp);
+      assert.equal(await page.locator("code").textContent(), syntaxSource);
+      assert.equal(await page.locator("[style]").count(), 0);
+      const colors = await page.locator("code").evaluate(node => {
+        const keyword = node.querySelector(".sh__token--keyword"), string = node.querySelector(".sh__token--string");
+        if (keyword === null || string === null) throw new Error("Class-only syntax tokens are missing");
+        return { text: getComputedStyle(node).color, keyword: getComputedStyle(keyword).color, string: getComputedStyle(string).color };
+      });
+      assert.notEqual(colors.keyword, colors.text, "Class-only keyword must be visibly highlighted under strict CSP");
+      assert.notEqual(colors.string, colors.text, "Class-only string must be visibly highlighted under strict CSP");
+      await page.screenshot({ path: join(output, `syntax-${theme}.png`), fullPage: true });
+      await page.emulateMedia({ forcedColors: "active" });
+      const forced = await page.locator("code").evaluate(node => [...node.querySelectorAll("span")].every(span => getComputedStyle(span).color === getComputedStyle(node).color));
+      assert(forced, "Forced colors must retain one system ink across syntax spans");
+      syntaxCases.push({ theme, colors, forced, inlineStyles: 0 });
+    } finally { await page.close(); }
+  }
   assert.deepEqual(failures, []);
   await writeFile(join(output, "receipt.json"), JSON.stringify({ materialSha256: hash(material), optimizedSha256: hash(optimizedCss),
     standaloneSha256: hash(styles.standalone), compilerSha256: hash(styles.compiler),
-    packages: [kit, ui].map((manifest) => ({ ...manifest.package, rulesSha256: manifest.rulesSha256, compilerSha256: manifest.compilerSha256 })), cases }, null, 2));
+    packages: [kit, ui].map((manifest) => ({ ...manifest.package, rulesSha256: manifest.rulesSha256, compilerSha256: manifest.compilerSha256 })), cases, syntaxCases }, null, 2));
   console.log(`Lantern material verified: ${cases.length} standalone/compiler cases; ${output}`);
 } catch (error) {
   await writeFile(join(output, "failure.json"), JSON.stringify({ message: error instanceof Error ? error.message : String(error), failures, completedCases: cases.length }, null, 2));

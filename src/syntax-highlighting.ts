@@ -18,6 +18,24 @@ export interface HighlightedCode {
   readonly language: SyntaxLanguage;
 }
 
+export interface HighlightCodeOptions {
+  /** Keep the default inline output, or use the shared stylesheet for strict CSP. */
+  readonly styles?: "inline" | "classes";
+}
+
+function classOnlySyntax(html: string): string {
+  // Sugar High owns this finite serialization. Strip only an exact matching
+  // token color; a new or mismatched style must be reviewed before admission.
+  const result = html.replace(
+    /<span class="sh__token--(class|comment|entity|identifier|jsxliterals|keyword|property|sign|space|string)" style="color:var\(--sh-\1\)">/gu,
+    '<span class="sh__token--$1">',
+  );
+  if (/<[A-Za-z][^<>]*\sstyle\s*=/iu.test(result)) {
+    throw new Error("Unrecognized inline style in class-only syntax output.");
+  }
+  return result;
+}
+
 type SyntaxToken =
   | "command"
   | "comment"
@@ -402,7 +420,12 @@ function highlightShell(value: string): string {
 export function highlightCode(
   code: string,
   language: SyntaxLanguage,
+  options: HighlightCodeOptions = {},
 ): HighlightedCode {
+  const styles = options.styles ?? "inline";
+  if (styles !== "inline" && styles !== "classes") {
+    throw new Error("Syntax styles must be inline or classes.");
+  }
   const html = language === "text"
     ? escapeHtml(code)
     : language === "markdown"
@@ -413,7 +436,7 @@ export function highlightCode(
 
   return Object.freeze({
     className: `syntax-code language-${language}`,
-    html,
+    html: styles === "classes" ? classOnlySyntax(html) : html,
     language,
   });
 }

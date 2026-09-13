@@ -31,10 +31,9 @@
   }
   .design-gallery__lantern-caption p { margin: 0; }
   .design-gallery__lantern-workspace {
-    block-size: 32rem;
-    overflow: auto;
-    scrollbar-color: var(--hraness-material-seam) var(--hraness-material-plane);
-    scrollbar-width: thin;
+    min-block-size: 32rem;
+    margin-block-start: 1.25rem;
+    overflow: clip;
   }
   .design-gallery__lantern-local {
     font-size: 0.75rem;
@@ -178,13 +177,6 @@
 
 .design-gallery__paper-link {
   color: var(--plain-link);
-}
-
-.design-gallery__jelly {
-  display: grid;
-  min-block-size: 8rem;
-  place-items: center;
-  padding: var(--space-4);
 }
 
 .design-gallery__marketing {

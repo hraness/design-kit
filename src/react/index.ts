@@ -10,7 +10,6 @@ export * from "./fader.js";
 export * from "./foil-card-math.js";
 export * from "./foil-card-surface.js";
 export * from "./haptics.js";
-export * from "./jelly-surface.js";
 export * from "./keyboard-shortcuts.js";
 export * from "./lantern-material.stylex.js";
 export * from "./lantern-material-gallery.js";

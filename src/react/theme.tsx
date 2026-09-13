@@ -36,7 +36,6 @@ import {
   DesignPortalThemeProvider,
   useDesignPortalClassName,
 } from "./design-theme-context.js";
-import { setJellyThemeMode } from "./jelly-runtime.js";
 import { resolveEffectiveTheme } from "./theme-resolution.js";
 import { themeStyles } from "./theme.stylex.js";
 import {
@@ -75,19 +74,6 @@ function PersistedThemeNormalizer() {
   useEffect(() => {
     if (theme !== undefined && !isDesignTheme(theme)) setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
-
-  return null;
-}
-
-function JellyThemeSync() {
-  const { forcedTheme, resolvedTheme } = useTheme();
-  const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-
-  useEffect(() => {
-    if (effectiveTheme !== undefined) {
-      void setJellyThemeMode(effectiveTheme);
-    }
-  }, [effectiveTheme]);
 
   return null;
 }
@@ -152,7 +138,6 @@ export function DesignThemeProvider({
         themes={[...concreteThemes]}
       >
         {forcedTheme === undefined ? <PersistedThemeNormalizer /> : null}
-        <JellyThemeSync />
         <PortalThemeBridge forcedTheme={forcedTheme}>{children}</PortalThemeBridge>
       </NextThemeProvider>
     </>

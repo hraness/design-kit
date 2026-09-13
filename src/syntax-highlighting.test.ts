@@ -1,10 +1,68 @@
 import { expect, test } from "bun:test";
 import { parseHTML } from "linkedom";
+import { readFile } from "node:fs/promises";
+import { highlight, SugarHigh } from "sugar-high";
 
 import {
   highlightCode,
   resolveSyntaxLanguage,
+  type HighlightCodeOptions,
 } from "./syntax-highlighting";
+
+const sugarTokens = ["class", "comment", "entity", "identifier", "jsxliterals", "keyword", "property", "sign", "space", "string"] as const;
+
+test("class-only syntax is opt-in and preserves default bytes and token/text structure", () => {
+  const source = 'const answer = "<script> & quoted";\n// retained comment\n';
+  const original = highlightCode(source, "typescript");
+  expect(original.html).toBe(highlight(source));
+  expect(highlightCode(source, "typescript", { styles: "inline" })).toEqual(original);
+  const plain = highlightCode(source, "typescript", { styles: "classes" });
+  const before = parseHTML(`<code>${original.html}</code>`).document;
+  const after = parseHTML(`<code>${plain.html}</code>`).document;
+  expect(after.querySelectorAll("[style]")).toHaveLength(0);
+  expect(after.querySelector("script")).toBeNull();
+  expect(after.querySelector("code")?.textContent).toBe(source);
+  for (const node of before.querySelectorAll("[style]")) node.removeAttribute("style");
+  expect(after.querySelector("code")?.outerHTML).toBe(before.querySelector("code")?.outerHTML);
+  for (const styles of ["stylesheet", "", false, 1]) {
+    expect(() => highlightCode(source, "typescript", { styles } as HighlightCodeOptions)).toThrow("Syntax styles");
+  }
+});
+
+test("class-only admission accepts all fixed token styles and rejects new or mismatched styles", () => {
+  const keyword = SugarHigh.TokenMap.get("keyword");
+  if (keyword === undefined) throw new Error("Pinned highlighter lacks keyword token");
+  const original = SugarHigh.TokenTypes[keyword];
+  if (original === undefined) throw new Error("Pinned keyword token is missing");
+  // Synchronous mutation of the dependency's public token table exercises its
+  // real serializer. No await can expose this temporary fixture to other work.
+  try {
+    for (const token of sugarTokens) {
+      SugarHigh.TokenTypes[keyword] = token;
+      expect(highlightCode("const", "typescript", { styles: "classes" }).html)
+        .toBe(`<span class="sh__line"><span class="sh__token--${token}">const</span></span>`);
+    }
+    SugarHigh.TokenTypes[keyword] = "unexpected";
+    expect(() => highlightCode("const", "typescript", { styles: "classes" })).toThrow("Unrecognized inline style");
+    let reads = 0;
+    SugarHigh.TokenTypes[keyword] = {
+      [Symbol.toPrimitive]() { return reads++ === 0 ? "keyword" : "string"; },
+    } as unknown as string;
+    expect(() => highlightCode("const", "typescript", { styles: "classes" })).toThrow("Unrecognized inline style");
+  } finally {
+    SugarHigh.TokenTypes[keyword] = original;
+  }
+  expect(highlightCode("const", "typescript").html).toBe(highlight("const"));
+});
+
+test("class token CSS retains semantic roles below native forced-color ownership", async () => {
+  const css = await readFile(new URL("./syntax-highlighting.css", import.meta.url), "utf8");
+  for (const token of sugarTokens) {
+    expect(css).toContain(`.syntax-code :where(.sh__token--${token}) { color: var(--sh-${token}); }`);
+  }
+  expect(css).toContain(".syntax-code span {\n    color: CanvasText;\n    forced-color-adjust: auto;");
+  expect(css.indexOf("@media (forced-colors: active)")).toBeGreaterThan(css.indexOf(".syntax-code :where(.sh__token--string)"));
+});
 
 test("foreign language names resolve into the closed supported set", () => {
   expect(resolveSyntaxLanguage("language-tsx extra")).toBe("typescript");

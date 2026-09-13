@@ -293,13 +293,13 @@ test("system resolution remains enabled across forced and ordinary provider rend
   }
 });
 
-test("the provider owns the Jelly repaint bridge for runtime appearance changes", async () => {
+test("the appearance provider retains semantic theme ownership without loading a decorative runtime", async () => {
   const source = await Bun.file(new URL("./theme.tsx", import.meta.url)).text();
 
-  expect(source).toContain('import { setJellyThemeMode } from "./jelly-runtime.js";');
-  expect(source).toContain("void setJellyThemeMode(effectiveTheme);");
-  expect(source).not.toContain('new CustomEvent("jelly-theme-change")');
-  expect(source).toContain("<JellyThemeSync />");
+  expect(source).not.toMatch(/jelly|customElements|import\(/iu);
+  expect(source).toContain('<PortalThemeBridge forcedTheme={forcedTheme}>{children}</PortalThemeBridge>');
+  expect(source).toContain('attribute="data-theme"');
+  expect(source).toContain('storageKey={storageKey}');
 });
 
 test("the provider repairs invalid persisted values before next-themes resolves first paint", () => {

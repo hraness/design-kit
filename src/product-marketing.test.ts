@@ -17,7 +17,9 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css).toContain(".hraness-marketing-question");
   expect(css).toContain(".hraness-marketing-cta");
   expect(css).not.toMatch(/soloterm|atet|slopcamera|ghostget|wrench|message like me|peopleblade|\bhra\b/iu);
-  expect(css).not.toMatch(/#[0-9a-f]{3,8}\b/iu);
+  // This neutral highlight uses an exact alpha byte so standalone CSS and the
+  // compiler serialize identical paint. Product-specific hex colors stay out.
+  expect(css.match(/#[0-9a-f]{3,8}\b/giu)).toEqual(["#ffffff1f"]);
 });
 
 test("the marketing grammar keeps compact, coarse-pointer, and forced-color contracts", () => {
