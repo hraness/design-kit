@@ -14,7 +14,7 @@ The complete `styles.css` and `compiler-foundation.css` entries include the mate
 | `.hraness-material-choice` | Plain HTML selection with a matched fill/text pair, driven by `aria-pressed`, `aria-selected` or React Aria's `data-selected`. |
 | `.hraness-material-terminal` | A quiet window enclosure; its `__bar` is decorative title chrome. |
 | `.hraness-material-code` | A theme-aware `pre` with intact source lines and horizontal overflow. Use `SyntaxCode` or framework-neutral `highlightCode` for syntax; give an overflowing example a keyboard focus target. |
-| `.hraness-material-rows` | Separators for a readable collection. The product owns grouping and responsive structure. |
+| `.hraness-material-rows` | An unruled readable collection. The product owns grouping, separators, and responsive structure. |
 | `.hraness-material-disclosure` | Native disclosure with a touch-sized summary and visible keyboard focus. |
 
 Material tokens resolve inside each marked island. Mark a nested theme island separately. A portalled overlay must carry the complete palette class/attributes, resolved light/dark mode and `data-hraness-material="lantern"` on its actual host (or inherit them from a corresponding wrapper). The marker and material hook can live on the same element. A material class alone cannot transport context across a portal.

@@ -333,9 +333,9 @@
 .hraness-marketing-header__inner {
   display: flex;
   inline-size: min(100%, var(--hraness-marketing-measure));
-  min-block-size: var(--hraness-marketing-header-height, 3.5rem);
+  min-block-size: var(--hraness-marketing-header-height, 2.75rem);
   align-items: center;
-  gap: 0.75rem 1.5rem;
+  gap: 0.5rem 1.25rem;
   margin-inline: auto;
   padding-inline: var(--hraness-marketing-gutter);
 }
@@ -343,16 +343,16 @@
 .hraness-marketing-header__brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   color: var(--hraness-marketing-ink);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   text-decoration: none;
 }
 
 .hraness-marketing-header__brand :where(img, svg) {
-  block-size: 1.375rem;
+  block-size: 1.25rem;
   inline-size: auto;
 }
 
@@ -360,13 +360,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.15rem 1.35rem;
+  gap: 0.15rem 1.15rem;
   margin-inline-start: auto;
 }
 
 .hraness-marketing-header__nav a {
   color: var(--hraness-marketing-muted);
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
 }
@@ -383,10 +383,10 @@
 }
 
 .hraness-marketing-header .hraness-marketing-action {
-  min-block-size: var(--hraness-marketing-header-action-height, 2.25rem);
-  padding-block: 0.4rem;
-  padding-inline: 0.9rem;
-  font-size: 0.9rem;
+  min-block-size: var(--hraness-marketing-header-action-height, 2rem);
+  padding-block: 0.3rem;
+  padding-inline: 0.8rem;
+  font-size: 0.85rem;
 }
 
 /* Hero */
