@@ -831,7 +831,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.8.0" },
+    { name: "@hraness/design-kit", version: "0.8.1" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
