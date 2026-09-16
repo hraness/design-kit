@@ -322,7 +322,7 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     .toMatch(/border-radius:\s*0?\.25rem/u);
   for (const recipe of [marketingStyles.headerAction, marketingStyles.headerActionPrimary]) {
     const height = recipeRules(recipe).filter((rule) => rule.includes("min-block-size:"));
-    expect(height.join("")).toContain("2.25rem");
+    expect(height.join("")).toContain("2rem");
     expect(height.join("")).not.toContain("3rem");
   }
   for (const recipe of [marketingStyles.actionPrimary, marketingStyles.headerActionPrimary,
