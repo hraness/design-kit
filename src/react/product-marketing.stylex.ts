@@ -194,9 +194,9 @@ export const marketingStyles = stylex.create({
   "header__inner": {
     "display": "flex",
     "inline-size": "min(100%, var(--hraness-marketing-measure))",
-    "min-block-size": "var(--hraness-marketing-header-height, 3.5rem)",
+    "min-block-size": "var(--hraness-marketing-header-height, 2.75rem)",
     "align-items": "center",
-    "gap": "0.75rem 1.5rem",
+    "gap": "0.5rem 1.25rem",
     "margin-inline": "auto",
     "padding-inline": "var(--hraness-marketing-gutter)",
     "flex-wrap": {
@@ -209,11 +209,11 @@ export const marketingStyles = stylex.create({
   "header__brand": {
     "display": "inline-flex",
     "align-items": "center",
-    "gap": "0.5rem",
+    "gap": "0.4rem",
     "color": "var(--hraness-marketing-ink)",
-    "font-size": "1rem",
-    "font-weight": "600",
-    "letter-spacing": "-0.01em",
+    "font-size": "0.9375rem",
+    "font-weight": "700",
+    "letter-spacing": "-0.04em",
     "text-decoration": "none"
   },
   "header__nav": {
@@ -221,7 +221,7 @@ export const marketingStyles = stylex.create({
     "flex-wrap": "wrap",
     "align-items": "center",
     "gap": {
-      "default": "0.15rem 1.35rem",
+      "default": "0.15rem 1.15rem",
       "@media (max-width: 48rem)": "0.15rem 1rem"
     },
     "margin-inline-start": "auto",
@@ -237,13 +237,13 @@ export const marketingStyles = stylex.create({
       "default": "var(--hraness-marketing-muted)",
       ":hover": "var(--hraness-marketing-ink)"
     },
-    "font-size": "0.92rem",
+    "font-size": "0.85rem",
     "font-weight": "500",
     "text-decoration": "none"
   },
   "header__linkCurrent": {
     "color": "var(--hraness-marketing-ink)",
-    "font-size": "0.92rem",
+    "font-size": "0.85rem",
     "font-weight": "500",
     "text-decoration": "none"
   },
@@ -2654,7 +2654,7 @@ export const marketingStyles = stylex.create({
   },
   "headerAction": {
     "display": "inline-flex",
-    "min-block-size": "var(--hraness-marketing-header-action-height, 2.25rem)",
+    "min-block-size": "var(--hraness-marketing-header-action-height, 2rem)",
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",
@@ -2741,19 +2741,19 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "CanvasText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "0.9rem",
+    "font-size": "0.85rem",
     "font-weight": "500",
     "line-height": "1.2",
     "text-decoration": {
       "default": "none",
       ":hover": "none"
     },
-    "padding-block": "0.4rem",
-    "padding-inline": "0.9rem"
+    "padding-block": "0.3rem",
+    "padding-inline": "0.8rem"
   },
   "headerActionPrimary": {
     "display": "inline-flex",
-    "min-block-size": "var(--hraness-marketing-header-action-height, 2.25rem)",
+    "min-block-size": "var(--hraness-marketing-header-action-height, 2rem)",
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",
@@ -2843,15 +2843,15 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "Canvas"
     },
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "0.9rem",
+    "font-size": "0.85rem",
     "font-weight": "500",
     "line-height": "1.2",
     "text-decoration": {
       "default": "none",
       ":hover": "none"
     },
-    "padding-block": "0.4rem",
-    "padding-inline": "0.9rem",
+    "padding-block": "0.3rem",
+    "padding-inline": "0.8rem",
     "border-top-color": {
       "default": "var(--hraness-marketing-accent)",
       ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
