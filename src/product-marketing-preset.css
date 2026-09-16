@@ -127,6 +127,9 @@
     min-block-size: var(--hraness-marketing-action-height);
     border-radius: var(--hraness-marketing-radius);
   }
+  :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) .hraness-marketing-header .hraness-marketing-action {
+    min-block-size: var(--hraness-marketing-header-action-height);
+  }
   @media (pointer: coarse) {
     :where([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) {
       --hraness-marketing-header-action-height: 3rem;

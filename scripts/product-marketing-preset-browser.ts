@@ -114,7 +114,7 @@ try {
           assert.equal(proof.standaloneBlur, "blur(14px) saturate(1.4)");
           assert.notEqual(proof.standaloneBackground, "rgba(0, 0, 0, 0)");
           assert.equal(proof.headerPosition, "sticky");
-          assert.equal(proof.actionHeight, 42);
+          assert.equal(proof.actionHeight, 36);
           assert.equal(proof.actionBackground, "rgb(22, 90, 61)");
           assert.deepEqual(proof.primaryActions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode} primary action paint at ${width}/${theme}`);
           assert.equal(proof.label, "omitted");
