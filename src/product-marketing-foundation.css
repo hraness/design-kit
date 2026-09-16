@@ -78,7 +78,7 @@
 }
 
 .hraness-marketing-header__brand :where(img, svg) {
-  block-size: 1.375rem;
+  block-size: 1.25rem;
   inline-size: auto;
 }
 

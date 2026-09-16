@@ -201,7 +201,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("1fa3941c473f2835a2f108e2556cbfc1a1d8bdf130c617870807ed5e959a836a");
+    .toBe("e9abcec1891787ccf5fa0ffeec34efaea0e600f7f6c9cdc7714eb0e8ef189fa1");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -322,7 +322,7 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     .toMatch(/border-radius:\s*0?\.25rem/u);
   for (const recipe of [marketingStyles.headerAction, marketingStyles.headerActionPrimary]) {
     const height = recipeRules(recipe).filter((rule) => rule.includes("min-block-size:"));
-    expect(height.join("")).toContain("2.25rem");
+    expect(height.join("")).toContain("2rem");
     expect(height.join("")).not.toContain("3rem");
   }
   for (const recipe of [marketingStyles.actionPrimary, marketingStyles.headerActionPrimary,

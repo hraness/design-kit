@@ -19,12 +19,12 @@
     --hraness-marketing-display-weight: 400;
     --hraness-marketing-content-measure: 70rem;
     --hraness-marketing-header-measure: 76rem;
-    --hraness-marketing-header-height: 4.5rem;
+    --hraness-marketing-header-height: 3.25rem;
     --hraness-marketing-gutter: 2rem;
     --hraness-marketing-hero-space: 3.5rem 4rem;
     --hraness-marketing-story-space: 5rem;
     --hraness-marketing-summary-leading: 1.6;
-    --hraness-marketing-header-action-height: 2.625rem;
+    --hraness-marketing-header-action-height: 2.25rem;
     --hraness-marketing-field-ink: light-dark(#242a2f, #eceee9);
     --hraness-marketing-field-muted: light-dark(#515d68, #c2c9ce);
     --hraness-marketing-link: light-dark(#345474, #c2d3e4);
@@ -51,7 +51,7 @@
     --hraness-marketing-h2-size: clamp(1.25rem, 2.2vw, 1.75rem);
     --hraness-marketing-h2-leading: 1.15;
     --hraness-marketing-h2-tracking: -.02em;
-    --hraness-marketing-header-height: 2.8125rem;
+    --hraness-marketing-header-height: 2.5rem;
     --hraness-marketing-hero-space: 2rem 3rem;
     --hraness-marketing-story-space: 3rem;
     --hraness-marketing-field-images: none;
@@ -126,6 +126,9 @@
   :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) .hraness-marketing-action {
     min-block-size: var(--hraness-marketing-action-height);
     border-radius: var(--hraness-marketing-radius);
+  }
+  :is([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) .hraness-marketing-header .hraness-marketing-action {
+    min-block-size: var(--hraness-marketing-header-action-height);
   }
   @media (pointer: coarse) {
     :where([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) {
