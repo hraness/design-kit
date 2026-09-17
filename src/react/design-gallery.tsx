@@ -48,6 +48,7 @@ import {
   MarketingQuoteGrid,
   MarketingSection,
   MarketingSectionLabel,
+  MarketingSiteFooter,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -433,6 +434,13 @@ export function DesignSystemGallery({
           <MarketingSiteHeader brand="Relay" brandHref="#marketing" links={[]} sticky={false} />
           <ProductHero name="Relay" heading="A quieter public page." headingId="gallery-minimal-title" headingLevel={3}
             summary="The same shared system, with compact sans headings and a plain surface." />
+          <MarketingSiteFooter
+            brand={<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4h16v16H4z" fill="currentColor" /></svg>}
+            brandHref="#marketing"
+            brandLabel="Relay home"
+            links={[{ href: "#marketing", label: "Marketing" }]}
+            name="Relay"
+          />
         </MarketingPage>
       </section>
 

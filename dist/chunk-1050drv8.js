@@ -1091,6 +1091,63 @@ var marketingStyles = {
     kOIVth: "x13z6uf9",
     $$css: true
   },
+  footer: {
+    kMwMTN: "xs87ocq",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x7oktz0",
+    khsPd: "xlejusl",
+    $$css: true
+  },
+  footer__inner: {
+    k1xSpc: "x78zum5",
+    kR2Kwr: "x1a02dak",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "x1lx4akv",
+    kULEZF: "x19vpta5",
+    kYk0Dm: "xvueqy4",
+    kF3gjK: "xosp1vk",
+    kJVvJu: "xy8kwyo",
+    $$css: true
+  },
+  footer__brand: {
+    k1xSpc: "x3nfvp2",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "x1neeqzj",
+    kMwMTN: "xtylnni",
+    kLh5Sq: "x6u19be",
+    ko3Kzr: "x1xlr1w8",
+    kUEKN5: "xo2cfqc",
+    kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  footer__name: {
+    kVQacm: "xb3r6kr",
+    kd00dl: "xlyipyv",
+    kBYq9C: "xuxw1ft",
+    $$css: true
+  },
+  footer__nav: {
+    k1xSpc: "x78zum5",
+    kR2Kwr: "x1a02dak",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "xrfvb6r",
+    kImiAN: "xvc5jky",
+    $$css: true
+  },
+  footer__link: {
+    kMwMTN: "xs87ocq x16tyrwk",
+    kLh5Sq: "x1qzg9v8",
+    ko3Kzr: "xk50ysn",
+    kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  footer__linkCurrent: {
+    kMwMTN: "xtylnni",
+    kLh5Sq: "x1qzg9v8",
+    ko3Kzr: "xk50ysn",
+    kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
   hero: {
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",
@@ -3102,6 +3159,25 @@ var recipes = {
   "hraness-marketing-header__actions": {
     default: marketingStyles.header__actions
   },
+  "hraness-marketing-footer": {
+    default: marketingStyles.footer
+  },
+  "hraness-marketing-footer__inner": {
+    default: marketingStyles.footer__inner
+  },
+  "hraness-marketing-footer__brand": {
+    default: marketingStyles.footer__brand
+  },
+  "hraness-marketing-footer__name": {
+    default: marketingStyles.footer__name
+  },
+  "hraness-marketing-footer__nav": {
+    default: marketingStyles.footer__nav
+  },
+  "hraness-marketing-footer__link": {
+    default: marketingStyles.footer__link,
+    current: marketingStyles.footer__linkCurrent
+  },
   "hraness-marketing-hero": {
     default: marketingStyles.hero,
     accent: marketingStyles.heroAccent
@@ -3678,6 +3754,54 @@ function MarketingSiteHeader({
             }),
             trailing
           ]
+        })
+      ]
+    })
+  });
+}
+function MarketingSiteFooter({
+  ariaLabel = "Site",
+  brand,
+  brandHref = "/",
+  brandLabel,
+  children,
+  className,
+  links = [],
+  linksLabel = "Footer navigation",
+  name
+}) {
+  const brandProperties = brandLabel === undefined ? {} : {
+    "aria-label": brandLabel
+  };
+  return /* @__PURE__ */ jsx4("footer", {
+    "aria-label": ariaLabel,
+    className: marketingClassName("hraness-marketing-footer", className),
+    "data-hraness-marketing": "footer",
+    children: /* @__PURE__ */ jsxs3("div", {
+      className: marketingClassName("hraness-marketing-footer__inner"),
+      children: [
+        /* @__PURE__ */ jsxs3("a", {
+          className: marketingClassName("hraness-marketing-footer__brand"),
+          href: brandHref,
+          ...brandProperties,
+          children: [
+            brand,
+            /* @__PURE__ */ jsx4("span", {
+              className: marketingClassName("hraness-marketing-footer__name"),
+              children: name
+            })
+          ]
+        }),
+        children,
+        links.length === 0 ? null : /* @__PURE__ */ jsx4("nav", {
+          "aria-label": linksLabel,
+          className: marketingClassName("hraness-marketing-footer__nav"),
+          children: links.map((link) => /* @__PURE__ */ jsx4("a", {
+            "aria-current": link.current === true ? "page" : undefined,
+            className: marketingClassName("hraness-marketing-footer__link", undefined, link.current === true ? "current" : "default"),
+            href: link.href,
+            children: link.label
+          }, `${link.href}-${link.label}`))
         })
       ]
     })
@@ -4621,4 +4745,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };

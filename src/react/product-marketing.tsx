@@ -186,6 +186,67 @@ export function MarketingSiteHeader({
   );
 }
 
+/**
+ * In-flow site footer. The brand lockup is always the product mark followed by
+ * its name; optional children carry a product note and optional links a quiet
+ * footer navigation. It rests at the end of document flow, above any fixed
+ * shared footer a product mounts after it.
+ */
+export function MarketingSiteFooter({
+  ariaLabel = "Site",
+  brand,
+  brandHref = "/",
+  brandLabel,
+  children,
+  className,
+  links = [],
+  linksLabel = "Footer navigation",
+  name,
+}: Readonly<{
+  /** Landmark label; keep it distinct from a fixed network footer on the same page. */
+  ariaLabel?: string;
+  /** The product mark, conventionally one inline SVG; rendered before `name`. */
+  brand: ReactNode;
+  brandHref?: string;
+  brandLabel?: string;
+  /** Product-owned note content between the lockup and the navigation. */
+  children?: ReactNode;
+  className?: string;
+  links?: readonly MarketingLink[];
+  linksLabel?: string;
+  /** The product name rendered inside the home link after `brand`. */
+  name: string;
+}>) {
+  const brandProperties = brandLabel === undefined ? {} : { "aria-label": brandLabel };
+  return (
+    <footer aria-label={ariaLabel} className={classNames("hraness-marketing-footer", className)} data-hraness-marketing="footer">
+      <div className={classNames("hraness-marketing-footer__inner")}>
+        <a className={classNames("hraness-marketing-footer__brand")} href={brandHref} {...brandProperties}>
+          {brand}
+          <span className={classNames("hraness-marketing-footer__name")}>{name}</span>
+        </a>
+        {children}
+        {links.length === 0
+          ? null
+          : (
+            <nav aria-label={linksLabel} className={classNames("hraness-marketing-footer__nav")}>
+              {links.map((link) => (
+                <a
+                  aria-current={link.current === true ? "page" : undefined}
+                  className={classNames("hraness-marketing-footer__link", undefined, link.current === true ? "current" : "default")}
+                  href={link.href}
+                  key={`${link.href}-${link.label}`}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          )}
+      </div>
+    </footer>
+  );
+}
+
 export function MarketingFlow({
   ariaLabel,
   className,

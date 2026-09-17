@@ -138,12 +138,12 @@ test("invalid explicit columns fail closed before rendering even empty collectio
   fc.assert(fc.property(fc.anything().filter((value) => value !== undefined && value !== 1 && value !== 2 && value !== 3 && value !== 4), reject), { numRuns: 50, seed: 41203 });
 });
 
-test("all 19 marketing compositions render real owned atoms with native server-only semantics", () => {
+test("all 20 marketing compositions render real owned atoms with native server-only semantics", () => {
   const html = renderToStaticMarkup(<ProductMarketingFixture api={api} />);
   const { document } = parseHTML(html);
   // MarketingField is a flow/background boundary, not a new owned atom recipe.
   expect(typeof api.MarketingField).toBe("function");
-  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(19);
+  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(20);
   const owned = [...document.querySelectorAll('[class*="hraness-marketing-"]')];
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {
@@ -201,13 +201,13 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("f65b6483c0365b227b6aa57a99e0dd296a35a5466349d531db3002c49ad6b1c9");
+    .toBe("5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
   const tokenRoots = (text: string) => (text.match(/:where\(([^)]*)\)\s*\{/u)?.[1] ?? "")
     .split(",").map((selector) => selector.trim());
-  const expectedRoots = ["page", "header", "hero", "pillars", "install", "section", "primitives", "stats",
+  const expectedRoots = ["page", "header", "footer", "hero", "pillars", "install", "section", "primitives", "stats",
     "interfaces", "trust", "quotes", "pricing", "questions", "maker", "cta", "proof-frame"]
     .map((role) => `.hraness-marketing-${role}`);
   expect(tokenRoots(legacy)).toEqual(expectedRoots);

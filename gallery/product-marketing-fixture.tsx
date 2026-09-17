@@ -4,6 +4,7 @@ import type * as Marketing from "../src/react/product-marketing.js";
 export const productMarketingCoverage = [
   ["MarketingPage", ".hraness-marketing-page", 1],
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
+  ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
   ["MarketingFacts", ".hraness-marketing-facts", 5],
@@ -46,7 +47,7 @@ export const productMarketingConsumerCoverage = [
   "section-first-split-reverse", "section-last-split-reverse", "section-link-split-reverse", "section-code-split-reverse",
   "primitive-pre", "primitive-code", "primitive-paragraph", "interface-paragraph", "interface-pre", "interface-code",
   "question-first", "question-last", "question-single", "maker-portrait", "maker-first", "maker-last", "stats-strong", "stats-span",
-  "hero-notice", "install-note",
+  "hero-notice", "install-note", "footer-brand-svg", "footer-note",
 ] as const;
 
 /** The verifier passes the built server entry. Unit tests pass the source entry. */
@@ -55,7 +56,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
     MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSection,
     MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary,
     MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker,
-    MarketingCallToAction, MarketingSectionLabel } = api;
+    MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
   const actions = [{ href: "#install", label: "Install" }, { href: "#interfaces", label: "Explore" }] as const;
   const facts = Array.from({ length: 4 }, (_, index) => ({
     label: `Fact ${index + 1}`, value: `${index + 1}`, detail: "An exact observation.",
@@ -127,6 +128,14 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         <MarketingSectionLabel className="fixture-body-label" size="body">Body-sized label</MarketingSectionLabel>
         <p>Unlayered caller styles win.</p>
       </MarketingSection>
+      <MarketingSiteFooter
+        brand={<svg data-marketing-oracle="footer-brand-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 2h20v20H2z" /></svg>}
+        brandLabel="Relay home"
+        links={[{ href: "#interfaces", label: "Interfaces" }, { href: "#install", label: "Install", current: true }]}
+        name="Relay"
+      >
+        <p data-marketing-oracle="footer-note">Local by default.</p>
+      </MarketingSiteFooter>
     </MarketingPage>
   );
 }

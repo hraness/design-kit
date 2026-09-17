@@ -7,7 +7,7 @@
   --hraness-marketing-install-inline-size: initial;
 }
 
-:where( .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta, .hraness-marketing-proof-frame ) {
+:where( .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-footer, .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta, .hraness-marketing-proof-frame ) {
   --hraness-marketing-ink: var(--foreground, CanvasText);
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
@@ -133,6 +133,16 @@
 .hraness-marketing-header__brand :where(img, svg) {
   block-size: 1.25rem;
   inline-size: auto;
+}
+
+.hraness-marketing-footer__brand :where(img, svg) {
+  block-size: 1.25rem;
+  inline-size: auto;
+}
+
+.hraness-marketing-footer__inner > :where(p) {
+  margin: 0;
+  max-inline-size: 48ch;
 }
 
 .hraness-marketing-hero[data-tone="accent"] {
