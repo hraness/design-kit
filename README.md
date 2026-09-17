@@ -76,7 +76,8 @@ portfolio reads as one studio's work. The roles are a sticky site header, an
 outcome-led hero with an optional product frame, three pillars, an install
 panel, an ordered flow, fact and stat strips, narrative sections, numbered
 primitives, interface and trust cards, attributed quotes, pricing, native
-questions, a maker section, and a closing call to action. The classes own
+questions, a maker section, a closing call to action, and an in-flow site
+footer. The classes own
 responsive structure and semantics-facing presentation. Products bind the
 `--hraness-marketing-*` roles to their own content and set one accent:
 

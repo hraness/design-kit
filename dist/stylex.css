@@ -372,6 +372,10 @@
     gap: .5rem 1.25rem;
   }
 
+  .x1lx4akv {
+    gap: .5rem 1.5rem;
+  }
+
   .x13z6uf9 {
     gap: .5rem;
   }
@@ -534,6 +538,10 @@
 
   .x2d8rr9 {
     padding-block: max(var(--space-2, .5rem),env(safe-area-inset-top));
+  }
+
+  .xosp1vk {
+    padding-block: var(--hraness-marketing-footer-space, 2rem 4rem);
   }
 
   .xgu4rd8 {
@@ -1716,6 +1724,10 @@
 
   .xgommxb {
     font-size: .8rem;
+  }
+
+  .x7oktz0 {
+    font-size: .92rem;
   }
 
   .x6u19be {

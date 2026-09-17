@@ -42,6 +42,7 @@ import {
   MarketingQuoteGrid,
   MarketingSection,
   MarketingSectionLabel,
+  MarketingSiteFooter,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -56,7 +57,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-fckysd4d.js";
+} from "../chunk-m03zh1ag.js";
 import"../chunk-be8hm55p.js";
 import {
   __require
@@ -4006,6 +4007,23 @@ function DesignSystemGallery({
                 headingId: "gallery-minimal-title",
                 headingLevel: 3,
                 summary: "The same shared system, with compact sans headings and a plain surface."
+              }),
+              /* @__PURE__ */ jsx14(MarketingSiteFooter, {
+                brand: /* @__PURE__ */ jsx14("svg", {
+                  "aria-hidden": "true",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx14("path", {
+                    d: "M4 4h16v16H4z",
+                    fill: "currentColor"
+                  })
+                }),
+                brandHref: "#marketing",
+                brandLabel: "Relay home",
+                links: [{
+                  href: "#marketing",
+                  label: "Marketing"
+                }],
+                name: "Relay"
               })
             ]
           })
@@ -5323,6 +5341,7 @@ export {
   MarketingTrustBoundary,
   MarketingStatStrip,
   MarketingSiteHeader,
+  MarketingSiteFooter,
   MarketingSectionLabel,
   MarketingSection,
   MarketingQuoteGrid,

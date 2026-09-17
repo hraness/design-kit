@@ -252,6 +252,59 @@ export const marketingStyles = stylex.create({
     "align-items": "center",
     "gap": "0.5rem"
   },
+  "footer": {
+    "color": "var(--hraness-marketing-muted)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "0.92rem",
+    "border-block-start": "var(--hraness-marketing-rule)"
+  },
+  "footer__inner": {
+    "display": "flex",
+    "flex-wrap": "wrap",
+    "align-items": "center",
+    "gap": "0.5rem 1.5rem",
+    "inline-size": "min(100%, var(--hraness-marketing-measure))",
+    "margin-inline": "auto",
+    "padding-block": "var(--hraness-marketing-footer-space, 2rem 4rem)",
+    "padding-inline": "var(--hraness-marketing-gutter)"
+  },
+  "footer__brand": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "gap": "0.4rem",
+    "color": "var(--hraness-marketing-ink)",
+    "font-size": "0.9375rem",
+    "font-weight": "700",
+    "letter-spacing": "-0.04em",
+    "text-decoration": "none"
+  },
+  "footer__name": {
+    "overflow": "hidden",
+    "text-overflow": "ellipsis",
+    "white-space": "nowrap"
+  },
+  "footer__nav": {
+    "display": "flex",
+    "flex-wrap": "wrap",
+    "align-items": "center",
+    "gap": "0.15rem 1.15rem",
+    "margin-inline-start": "auto"
+  },
+  "footer__link": {
+    "color": {
+      "default": "var(--hraness-marketing-muted)",
+      ":hover": "var(--hraness-marketing-ink)"
+    },
+    "font-size": "0.85rem",
+    "font-weight": "500",
+    "text-decoration": "none"
+  },
+  "footer__linkCurrent": {
+    "color": "var(--hraness-marketing-ink)",
+    "font-size": "0.85rem",
+    "font-weight": "500",
+    "text-decoration": "none"
+  },
   "hero": {
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",
@@ -3516,6 +3569,12 @@ const recipes = {
   "hraness-marketing-header__nav": { "default": marketingStyles.header__nav },
   "hraness-marketing-header__link": { "default": marketingStyles.header__link, "current": marketingStyles.header__linkCurrent },
   "hraness-marketing-header__actions": { "default": marketingStyles.header__actions },
+  "hraness-marketing-footer": { "default": marketingStyles.footer },
+  "hraness-marketing-footer__inner": { "default": marketingStyles.footer__inner },
+  "hraness-marketing-footer__brand": { "default": marketingStyles.footer__brand },
+  "hraness-marketing-footer__name": { "default": marketingStyles.footer__name },
+  "hraness-marketing-footer__nav": { "default": marketingStyles.footer__nav },
+  "hraness-marketing-footer__link": { "default": marketingStyles.footer__link, "current": marketingStyles.footer__linkCurrent },
   "hraness-marketing-hero": { "default": marketingStyles.hero, "accent": marketingStyles.heroAccent },
   "hraness-marketing-hero__copy": { "default": marketingStyles.hero__copy, "start": marketingStyles.hero__copyStart },
   "hraness-marketing-hero__eyebrow": { "default": marketingStyles.hero__eyebrow, "accent": marketingStyles.hero__eyebrowAccent },
