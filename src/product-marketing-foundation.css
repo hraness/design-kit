@@ -34,6 +34,59 @@
   --hraness-marketing-heading-weight: 500;
   --hraness-marketing-heading-tracking: -0.022em;
   --hraness-marketing-action-height: 2.75rem;
+  --hraness-foil-1: light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340));
+  --hraness-foil-2: light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285));
+  --hraness-foil-3: light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175));
+  --hraness-foil-4: light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100));
+  --hraness-foil-5: light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45));
+  --hraness-foil-6: light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305));
+  --hraness-foil-halo-alpha: 0.3;
+}
+
+/* The shared foil spectrum reads the deeper palette under explicit or
+ * media-resolved dark roots; the standalone stylesheet documents the contract. */
+:where([data-theme="dark"], .dark):where(
+  .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+  .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+  .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+  .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-proof-frame
+),
+:where([data-theme="dark"], .dark) :where(
+  .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+  .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+  .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+  .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-proof-frame
+) {
+  --hraness-foil-1: oklch(0.56 0.16 340);
+  --hraness-foil-2: oklch(0.52 0.15 285);
+  --hraness-foil-3: oklch(0.66 0.14 175);
+  --hraness-foil-4: oklch(0.72 0.13 100);
+  --hraness-foil-5: oklch(0.55 0.15 45);
+  --hraness-foil-6: oklch(0.62 0.16 305);
+  --hraness-foil-halo-alpha: 0.45;
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme="light"]):not(.light)) :where(
+    .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+    .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+    .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+    .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+    .hraness-marketing-proof-frame
+  ) {
+    --hraness-foil-1: oklch(0.56 0.16 340);
+    --hraness-foil-2: oklch(0.52 0.15 285);
+    --hraness-foil-3: oklch(0.66 0.14 175);
+    --hraness-foil-4: oklch(0.72 0.13 100);
+    --hraness-foil-5: oklch(0.55 0.15 45);
+    --hraness-foil-6: oklch(0.62 0.16 305);
+    --hraness-foil-halo-alpha: 0.45;
+  }
 }
 
 .hraness-marketing-page :where(p, li, dd) {

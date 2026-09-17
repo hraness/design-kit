@@ -26,6 +26,7 @@ import { BarListChart, RangePlotChart } from "./charts.js";
 import { ChatComposer, ChatMessage } from "./chat.js";
 import { Fader } from "./fader.js";
 import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
+import { foilClassName } from "./foil.stylex.js";
 import { LanternMaterialGallery } from "./lantern-material-gallery.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
@@ -410,6 +411,17 @@ export function DesignSystemGallery({
             headingId="design-gallery-cta-title"
             headingLevel={3}
           />
+          <div className="design-gallery__foil-note">
+            <p>
+              Every shared metallic surface reads one six-stop spectrum. Wordmarks use{" "}
+              <code>.hraness-foil-text</code>, primary calls to action use <code>.hraness-foil</code>,
+              and <code>attachFoil</code> eases the pointer inputs on <code>data-foil</code> targets.
+            </p>
+            <p className="design-gallery__foil-row">
+              <a className={foilClassName("text", "design-gallery__foil-wordmark")} data-foil="" href="#marketing">Relay</a>
+              <a className={foilClassName("surface", "design-gallery__foil-action")} data-foil="" href="#gallery-install">Install Relay</a>
+            </p>
+          </div>
         </MarketingPage>
         <MarketingPage preset="editorial" className="design-gallery__marketing-preset">
           <MarketingField>

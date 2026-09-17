@@ -197,6 +197,46 @@
   overflow: auto;
 }
 
+.design-gallery__foil-note {
+  padding: var(--space-4) var(--space-5);
+  border-block-start: var(--hraness-marketing-rule);
+}
+
+.design-gallery__foil-note > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  max-inline-size: 68ch;
+}
+
+.design-gallery__foil-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 0.75rem;
+}
+
+.design-gallery__foil-wordmark {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.design-gallery__foil-action {
+  --hraness-foil-surface: var(--hraness-marketing-accent);
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--hraness-marketing-radius);
+  color: var(--hraness-marketing-accent-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+
 .design-gallery__shell-preview {
   block-size: min(42rem, 72vh);
   min-block-size: 26rem;

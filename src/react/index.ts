@@ -9,6 +9,7 @@ export * from "./design-gallery.js";
 export * from "./fader.js";
 export * from "./foil-card-math.js";
 export * from "./foil-card-surface.js";
+export * from "./foil.stylex.js";
 export * from "./haptics.js";
 export * from "./keyboard-shortcuts.js";
 export * from "./lantern-material.stylex.js";

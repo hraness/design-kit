@@ -71,18 +71,22 @@ function MarketingActions({
   if (actions.length === 0) return null;
   return (
     <div className={className}>
-      {actions.map((action, index) => (
-        <a
-          className={classNames("hraness-marketing-action", undefined, tone === "accent"
-            ? `${context}-${action.emphasis ?? (index === 0 ? "primary" : "secondary")}`
-            : (action.emphasis ?? (index === 0 ? "primary" : "secondary")) === "primary" ? "primary" : "default")}
-          data-emphasis={action.emphasis ?? (index === 0 ? "primary" : "secondary")}
-          href={action.href}
-          key={`${action.href}-${action.label}`}
-        >
-          {action.label}
-        </a>
-      ))}
+      {actions.map((action, index) => {
+        const emphasis = action.emphasis ?? (index === 0 ? "primary" : "secondary");
+        return (
+          <a
+            className={classNames("hraness-marketing-action", undefined, tone === "accent"
+              ? `${context}-${emphasis}`
+              : emphasis === "primary" ? "primary" : "default")}
+            data-emphasis={emphasis}
+            data-foil={emphasis === "primary" ? "" : undefined}
+            href={action.href}
+            key={`${action.href}-${action.label}`}
+          >
+            {action.label}
+          </a>
+        );
+      })}
     </div>
   );
 }
@@ -143,7 +147,7 @@ export function MarketingSiteHeader({
   return (
     <header className={classNames("hraness-marketing-header", className, sticky ? "default" : "static")} data-hraness-marketing="header">
       <div className={classNames("hraness-marketing-header__inner")}>
-        <a className={classNames("hraness-marketing-header__brand")} href={brandHref} {...brandProperties}>
+        <a className={classNames("hraness-marketing-header__brand")} data-foil="" href={brandHref} {...brandProperties}>
           {brand}
         </a>
         <nav aria-label={ariaLabel} className={classNames("hraness-marketing-header__nav")}>
@@ -168,6 +172,7 @@ export function MarketingSiteHeader({
                   <a
                     className={classNames("hraness-marketing-action", undefined, `header-${action.emphasis ?? "primary"}`)}
                     data-emphasis={action.emphasis ?? "primary"}
+                    data-foil={(action.emphasis ?? "primary") === "primary" ? "" : undefined}
                     href={action.href}
                   >
                     {action.label}
@@ -932,6 +937,7 @@ export function MarketingPricing({
                 <a
                   className={classNames("hraness-marketing-action", undefined, `plan-${plan.action.emphasis ?? plan.emphasis ?? "secondary"}`)}
                   data-emphasis={plan.action.emphasis ?? plan.emphasis ?? "secondary"}
+                  data-foil={(plan.action.emphasis ?? plan.emphasis ?? "secondary") === "primary" ? "" : undefined}
                   href={plan.action.href}
                 >
                   {plan.action.label}

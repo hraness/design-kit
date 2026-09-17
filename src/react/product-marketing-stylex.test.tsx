@@ -201,7 +201,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
   expect(createHash("sha256").update(legacy).digest("hex"))
-    .toBe("fa16a4da3da46c54ad0ab4e625cb17b4fcec767bb104b4f89febe5d1680022cf");
+    .toBe("5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -330,13 +330,21 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     const forcedHoverBackground = recipeRules(recipe).filter((rule) => rule.includes(":hover")
       && rule.includes("forced-colors") && rule.includes("background-color:"));
     expect(forcedHoverBackground).toHaveLength(1);
-    expect(forcedHoverBackground[0]).toMatch(/background-color:\s*Canvas\b/iu);
+    expect(forcedHoverBackground[0]).toMatch(/background-color:\s*CanvasText/iu);
   }
-  for (const recipe of [marketingStyles.heroActionPrimary, marketingStyles.heroActionSecondary,
-    marketingStyles.ctaActionPrimary, marketingStyles.ctaActionSecondary, marketingStyles.hero__eyebrowAccent]) {
+  for (const recipe of [marketingStyles.heroActionSecondary,
+    marketingStyles.ctaActionSecondary, marketingStyles.hero__eyebrowAccent]) {
     const backgrounds = recipeRules(recipe).filter((rule) => rule.includes("background-"));
     expect(backgrounds.length).toBeGreaterThan(0);
     expect(backgrounds.join("")).not.toContain("forced-colors");
+  }
+  // Accent-tone primaries keep their accent face under forced colors while the
+  // shared foil decoration flattens to the system palette.
+  for (const recipe of [marketingStyles.heroActionPrimary, marketingStyles.ctaActionPrimary]) {
+    const forced = recipeRules(recipe).filter((rule) => rule.includes("forced-colors")).join("");
+    expect(forced).toContain("background-color:var(--hraness-marketing-accent-ink)");
+    expect(forced).toContain("background-image:none");
+    expect(forced).toContain("box-shadow:none");
   }
   for (const side of ["top", "right", "bottom", "left"]) {
     expect(recipeRules(marketingStyles.planPrimary).join("")).toContain(`border-${side}-color:`);
