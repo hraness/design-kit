@@ -6,7 +6,7 @@
       "name": "@hraness/design-kit",
       "path": ".",
       "visibility": "public",
-      "version": "0.9.0"
+      "version": "0.10.0"
     }
   ],
   "contract": "hraness.portfolio-inventory/v1",
