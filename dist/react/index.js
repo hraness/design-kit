@@ -56,7 +56,7 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-fckysd4d.js";
+} from "../chunk-5vctwe2p.js";
 import"../chunk-be8hm55p.js";
 import {
   __require
@@ -2673,6 +2673,69 @@ function FoilCardSurface({
   });
 }
 
+// src/react/foil.stylex.ts
+import * as stylex9 from "@stylexjs/stylex";
+var foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))";
+var foilTextImage = "radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%), conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-2) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-3) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-4) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-5) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-6) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))))";
+var foilHalo = "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))";
+var foilTextHalo = "drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo)))";
+var foilStyles = {
+  surface: {
+    "--_hraness-foil-1": "x35j2r9 x1dscx4y",
+    "--_hraness-foil-2": "xmntjkq x14xjb22",
+    "--_hraness-foil-3": "x1xbl91z x1iiaa4z",
+    "--_hraness-foil-4": "x47qxf1 x1n6b76k",
+    "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
+    "--_hraness-foil-6": "xx7v8hi x1bbyikp",
+    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
+    "--hraness-foil-glow": "x136ldfs x1a9zcsi",
+    kp1lYL: "xamhcws",
+    kj6szv: "xyy74w7",
+    kFnvHg: "xlxy82",
+    kr1EtK: "x19sr0n1",
+    kbouuQ: "x13fuv20",
+    kdrUmJ: "x32b0ac",
+    kk3gbz: "x1q0q8m5",
+    kBLvaE: "x19ypqd9",
+    kQDVEZ: "x1v8p93f xnvbotg",
+    kkqsfi: "xhe5wa1 x1w6ug",
+    k3smXN: "x16stqrj xaj2e6u",
+    kzT0vu: "x1g4hjc xdhbxfy",
+    kL20gf: "xtok3t1 x9yvj25",
+    kb5WsR: "x152klzg xhobzj1",
+    kVHNYi: "x1gqfdwy",
+    kUtEtU: "x188zq58",
+    kTJQHc: "xa67z0c xwaqzdf",
+    kMwMTN: "xs5hli",
+    $$css: true
+  },
+  text: {
+    "--_hraness-foil-1": "x35j2r9 x1dscx4y",
+    "--_hraness-foil-2": "xmntjkq x14xjb22",
+    "--_hraness-foil-3": "x1xbl91z x1iiaa4z",
+    "--_hraness-foil-4": "x47qxf1 x1n6b76k",
+    "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
+    "--_hraness-foil-6": "xx7v8hi x1bbyikp",
+    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
+    "--hraness-foil-glow": "x136ldfs xqglqw9",
+    kb5WsR: "x15smbhz xhobzj1",
+    kKB9KO: "x1t23j8t",
+    kUtEtU: "x1ta4xzc",
+    kMwMTN: "x19co3pv xs5hli",
+    k4aAMt: "xg7jpbn x1iqhqvn",
+    ku685b: "x1crnov3 x1ejh6ix",
+    $$css: true
+  }
+};
+var foilHooks = {
+  surface: "hraness-foil",
+  text: "hraness-foil-text"
+};
+function foilClassName(kind, caller) {
+  const hook = foilHooks[kind];
+  return [hook, stylex9.props(foilStyles[kind]).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
+}
+
 // src/react/lantern-material-gallery.tsx
 import { Button as Button2, TextField } from "@hraness/ui";
 import { useId as useId2, useState as useState3 } from "react";
@@ -2933,7 +2996,7 @@ function LanternMaterialGallery() {
 
 // src/react/navigation-rail.tsx
 import { Link, cn as cn9 } from "@hraness/ui";
-import * as stylex9 from "@stylexjs/stylex";
+import * as stylex10 from "@stylexjs/stylex";
 
 // src/react/navigation-rail.stylex.ts
 var navigationRailStyles = {
@@ -3059,14 +3122,14 @@ function NavigationRail({
   className,
   footer,
   header,
-  ...props10
+  ...props11
 }) {
-  const rootPresentation = stylex9.props(navigationRailStyles.rail);
-  const edgePresentation = stylex9.props(navigationRailStyles.railEdge);
-  const navigationPresentation = stylex9.props(navigationRailStyles.navigation);
+  const rootPresentation = stylex10.props(navigationRailStyles.rail);
+  const edgePresentation = stylex10.props(navigationRailStyles.railEdge);
+  const navigationPresentation = stylex10.props(navigationRailStyles.navigation);
   return /* @__PURE__ */ jsxs9("aside", {
     ...rootPresentation,
-    ...props10,
+    ...props11,
     "aria-label": ariaLabel,
     className: cn9("hraness-design-navigation-rail", rootPresentation.className, className),
     children: [
@@ -3094,15 +3157,15 @@ function RailSection({
   className,
   title,
   titleAs = "h2",
-  ...props10
+  ...props11
 }) {
   const Heading = titleAs;
-  const rootPresentation = stylex9.props(navigationRailStyles.section);
-  const titlePresentation = stylex9.props(navigationRailStyles.sectionTitle);
-  const itemsPresentation = stylex9.props(navigationRailStyles.sectionItems);
+  const rootPresentation = stylex10.props(navigationRailStyles.section);
+  const titlePresentation = stylex10.props(navigationRailStyles.sectionTitle);
+  const itemsPresentation = stylex10.props(navigationRailStyles.sectionItems);
   return /* @__PURE__ */ jsxs9("section", {
     ...rootPresentation,
-    ...props10,
+    ...props11,
     className: cn9("hraness-design-rail-section", rootPresentation.className, className),
     children: [
       title === undefined ? null : /* @__PURE__ */ jsx11(Heading, {
@@ -3127,14 +3190,14 @@ function RailItem({
   isActive = false,
   label,
   xstyle,
-  ...props10
+  ...props11
 }) {
-  const iconPresentation = stylex9.props(navigationRailStyles.itemIcon);
-  const copyPresentation = stylex9.props(navigationRailStyles.itemCopy);
-  const labelPresentation = stylex9.props(navigationRailStyles.itemLabel);
-  const descriptionPresentation = stylex9.props(navigationRailStyles.itemDescription);
+  const iconPresentation = stylex10.props(navigationRailStyles.itemIcon);
+  const copyPresentation = stylex10.props(navigationRailStyles.itemCopy);
+  const labelPresentation = stylex10.props(navigationRailStyles.itemLabel);
+  const descriptionPresentation = stylex10.props(navigationRailStyles.itemDescription);
   return /* @__PURE__ */ jsxs9(Link, {
-    ...props10,
+    ...props11,
     "aria-current": isActive ? "page" : undefined,
     className: cn9("hraness-design-rail-item", className),
     href,
@@ -3173,7 +3236,7 @@ function RailItem({
 // src/react/playback-transport.tsx
 import { PlayIcon, StopIcon } from "@hugeicons/core-free-icons";
 import { Icon as Icon2, IconButton as IconButton2, Spinner, Toolbar, cn as cn10 } from "@hraness/ui";
-import * as stylex10 from "@stylexjs/stylex";
+import * as stylex11 from "@stylexjs/stylex";
 
 // src/react/playback-transport.stylex.ts
 var playbackTransportStyles = {
@@ -3211,8 +3274,8 @@ function PlaybackTransport({
   const isPending = status === "pending";
   const isIdle = status === "idle";
   const commandLabel = isIdle ? playLabel : isPending ? pendingLabel : stopLabel;
-  const rootPresentation = stylex10.props(playbackTransportStyles.root);
-  const glyphPresentation = stylex10.props(playbackTransportStyles.glyph);
+  const rootPresentation = stylex11.props(playbackTransportStyles.root);
+  const glyphPresentation = stylex11.props(playbackTransportStyles.glyph);
   return /* @__PURE__ */ jsxs10(Toolbar, {
     ...accessibleName,
     className: cn10("hraness-design-playback-transport", rootPresentation.className, className),
@@ -3259,7 +3322,7 @@ function PlaybackTransport({
 }
 
 // src/react/production-data-preview-notice.tsx
-import * as stylex11 from "@stylexjs/stylex";
+import * as stylex12 from "@stylexjs/stylex";
 
 // src/react/production-data-preview-notice.stylex.ts
 var productionDataPreviewNoticeStyles = {
@@ -3310,8 +3373,8 @@ function ProductionDataPreviewNotice({
 }) {
   if (surfaceOrigin === undefined || surfaceOrigin === "")
     return null;
-  const noticePresentation = stylex11.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex11.props(productionDataPreviewNoticeStyles.emphasis);
+  const noticePresentation = stylex12.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex12.props(productionDataPreviewNoticeStyles.emphasis);
   return /* @__PURE__ */ jsxs11("aside", {
     ...noticePresentation,
     "aria-label": "Production data preview warning",
@@ -3970,6 +4033,50 @@ function DesignSystemGallery({
                 heading: "Give every job the same room to run in.",
                 headingId: "design-gallery-cta-title",
                 headingLevel: 3
+              }),
+              /* @__PURE__ */ jsxs12("div", {
+                className: "design-gallery__foil-note",
+                children: [
+                  /* @__PURE__ */ jsxs12("p", {
+                    children: [
+                      "Every shared metallic surface reads one six-stop spectrum. Wordmarks use",
+                      " ",
+                      /* @__PURE__ */ jsx14("code", {
+                        children: ".hraness-foil-text"
+                      }),
+                      ", primary calls to action use ",
+                      /* @__PURE__ */ jsx14("code", {
+                        children: ".hraness-foil"
+                      }),
+                      ", and ",
+                      /* @__PURE__ */ jsx14("code", {
+                        children: "attachFoil"
+                      }),
+                      " eases the pointer inputs on ",
+                      /* @__PURE__ */ jsx14("code", {
+                        children: "data-foil"
+                      }),
+                      " targets."
+                    ]
+                  }),
+                  /* @__PURE__ */ jsxs12("p", {
+                    className: "design-gallery__foil-row",
+                    children: [
+                      /* @__PURE__ */ jsx14("a", {
+                        className: foilClassName("text", "design-gallery__foil-wordmark"),
+                        "data-foil": "",
+                        href: "#marketing",
+                        children: "Relay"
+                      }),
+                      /* @__PURE__ */ jsx14("a", {
+                        className: foilClassName("surface", "design-gallery__foil-action"),
+                        "data-foil": "",
+                        href: "#gallery-install",
+                        children: "Install Relay"
+                      })
+                    ]
+                  })
+                ]
               })
             ]
           }),
@@ -4569,7 +4676,7 @@ function useKeyboardShortcuts(bindings, options = {}) {
 }
 // src/react/route-state.tsx
 import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
-import * as stylex13 from "@stylexjs/stylex";
+import * as stylex14 from "@stylexjs/stylex";
 import { useEffect as useEffect8, useId as useId3 } from "react";
 
 // src/react/route-state.stylex.ts
@@ -4617,7 +4724,7 @@ var routeStateStyles = {
 
 // src/react/theme.tsx
 import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
-import * as stylex12 from "@stylexjs/stylex";
+import * as stylex13 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
 import { useEffect as useEffect7, useRef as useRef5, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
@@ -4921,7 +5028,7 @@ function ThemeToggle({
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
-  const presentationStyles = stylex12.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
+  const presentationStyles = stylex13.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -4984,14 +5091,14 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props13) {
+function ThemeMenuButton(props14) {
   const palette = useDesignPalette();
   if (palette !== null)
     return /* @__PURE__ */ jsx15(DesignPaletteMenuButton, {
-      ...props13
+      ...props14
     });
   return /* @__PURE__ */ jsx15(ThemeToggle, {
-    ...props13,
+    ...props14,
     presentation: "menu"
   });
 }
@@ -5041,7 +5148,7 @@ import { jsx as jsx16, jsxs as jsxs14, Fragment as Fragment3 } from "react/jsx-r
 function RouteActions({
   children
 }) {
-  const presentation = stylex13.props(routeStateStyles.row);
+  const presentation = stylex14.props(routeStateStyles.row);
   return /* @__PURE__ */ jsx16("div", {
     ...presentation,
     className: cn12("hraness-design-route-state__actions", presentation.className),
@@ -5053,9 +5160,9 @@ function RouteNotFoundPage({
   showThemeToggle = false,
   titleAs = "h1"
 } = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const headerPresentation = stylex14.props(routeStateStyles.header);
+  const contentPresentation = stylex14.props(routeStateStyles.content);
   return /* @__PURE__ */ jsxs14(PageCanvas, {
     as: canvasAs,
     className: cn12("hraness-design-route-state", rootPresentation.className),
@@ -5096,9 +5203,9 @@ function RouteErrorPage({
   titleAs = "h1"
 }) {
   const focusId = `${useId3()}-route-error`;
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const headerPresentation = stylex14.props(routeStateStyles.header);
+  const contentPresentation = stylex14.props(routeStateStyles.content);
   useEffect8(() => {
     if (autoFocus)
       document.getElementById(focusId)?.focus();
@@ -5149,10 +5256,10 @@ function RouteLoadingPage({
   announce = true,
   canvasAs = "main"
 } = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const loadingPresentation = stylex13.props(routeStateStyles.loading);
-  const titlePresentation = stylex13.props(routeStateStyles.row);
-  const skeletonPresentation = stylex13.props(routeStateStyles.skeletons);
+  const rootPresentation = stylex14.props(routeStateStyles.root);
+  const loadingPresentation = stylex14.props(routeStateStyles.loading);
+  const titlePresentation = stylex14.props(routeStateStyles.row);
+  const skeletonPresentation = stylex14.props(routeStateStyles.skeletons);
   return /* @__PURE__ */ jsx16(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
@@ -5203,13 +5310,13 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props14
+  ...props15
 }) {
   const content = /* @__PURE__ */ jsxs14(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx16(RouteErrorPage, {
-        ...props14,
+        ...props15,
         showThemeToggle: false
       })
     ]
@@ -5282,6 +5389,12 @@ export {
   isDesignTheme,
   hashFoilCardSeed,
   hapticInputForFeedback,
+  foilTextImage,
+  foilTextHalo,
+  foilSurfaceImage,
+  foilStyles,
+  foilHalo,
+  foilClassName,
   foilCardRenderModes,
   foilCardPresets,
   foilCardOrnaments,

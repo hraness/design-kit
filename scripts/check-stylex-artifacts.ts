@@ -1602,8 +1602,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.8.1" },
-  "StyleX manifest must describe design-kit v0.8.1",
+  { name: "@hraness/design-kit", version: "0.9.0" },
+  "StyleX manifest must describe design-kit v0.9.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1684,11 +1684,11 @@ const designPriorityContract = requireSerializedPriorityContract(
 assert.deepEqual(
   designPriorityContract.rawPrioritiesByRank,
   [
-    [0, 0.1, 0.5, 1],
+    [0, 0.1, 0.5, 1, 131, 201, 241, 331],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
     [3000, 3040, 3045, 3092, 3130, 3200, 3330],
-    [4000, 4130],
+    [4000, 4130, 4200],
     [6000],
     [7000],
     [8000, 8040],
@@ -1707,16 +1707,20 @@ assert.equal(
   "priority4",
   "The disabled-field material adapter must stay in the existing fourth rank",
 );
-// The reviewed primary-action hover repair introduces one media-plus-pseudo
-// atom. It stays in rank 4; it does not create a ninth standalone layer.
+// The reviewed foil contract flattens every primary-action decoration under
+// forced colors and keeps only the reviewed hover fallbacks. The six
+// media-plus-pseudo atoms stay in rank 4; they do not create a ninth layer.
 const marketingForcedHoverRules = manifest.rules.filter(([, , priority]) => priority === 3330);
-assert.deepEqual(marketingForcedHoverRules, [[
-  "x6ezp6e",
-  { ltr: "@media (forced-colors: active){.x6ezp6e.x6ezp6e:hover{background-color:Canvas}}", rtl: null },
-  3330,
-]], "Raw priority 3330 must contain only the reviewed forced-color primary hover atom");
+assert.deepEqual(marketingForcedHoverRules, [
+  ["x1gof2l0", { ltr: "@media (forced-colors: active){.x1gof2l0.x1gof2l0:hover{box-shadow:none}}", rtl: null }, 3330],
+  ["x1gsbfz3", { ltr: "@media (forced-colors: active){.x1gsbfz3.x1gsbfz3:hover{background-image:none}}", rtl: null }, 3330],
+  ["x1xh63g1", { ltr: "@media (forced-colors: active){.x1xh63g1.x1xh63g1:hover{background-color:var(--hraness-marketing-accent-ink)}}", rtl: null }, 3330],
+  ["xmi9hcf", { ltr: "@media (forced-colors: active){.xmi9hcf.xmi9hcf:hover{background-color:CanvasText}}", rtl: null }, 3330],
+  ["xnu620s", { ltr: "@media (forced-colors: active){.xnu620s.xnu620s:hover{background-origin:padding-box}}", rtl: null }, 3330],
+  ["xt5c5zx", { ltr: "@media (forced-colors: active){.xt5c5zx.xt5c5zx:hover{background-clip:border-box}}", rtl: null }, 3330],
+], "Raw priority 3330 must contain only the reviewed forced-color primary hover atoms");
 assert.equal(
-  requireRuleSerializedRank(compiledCss, "x6ezp6e", designPriorityContract, "dist/stylex.css"),
+  requireRuleSerializedRank(compiledCss, "xmi9hcf", designPriorityContract, "dist/stylex.css"),
   "priority4",
   "Forced-color primary hover must remain in the existing rank-4 layer",
 );

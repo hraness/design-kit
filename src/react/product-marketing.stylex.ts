@@ -210,11 +210,60 @@ export const marketingStyles = stylex.create({
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.4rem",
-    "color": "var(--hraness-marketing-ink)",
+    "color": {
+      "default": "transparent",
+      "@media (forced-colors: active)": "CanvasText"
+    },
     "font-size": "0.9375rem",
     "font-weight": "700",
     "letter-spacing": "-0.04em",
-    "text-decoration": "none"
+    "text-decoration": "none",
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover": "1" }
+    },
+    "background-image": {
+      "default": "radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%), conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-2) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-3) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-4) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-5) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-6) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))))",
+      "@media (forced-colors: active)": "none"
+    },
+    "-webkit-background-clip": "text",
+    "background-clip": "text",
+    "-webkit-text-fill-color": {
+      "default": "transparent",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "filter": {
+      "default": "drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo)))",
+      "@media (forced-colors: active)": "none"
+    }
   },
   "header__nav": {
     "display": "flex",
@@ -2534,6 +2583,42 @@ export const marketingStyles = stylex.create({
     }
   },
   "actionPrimary": {
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
+    },
+    "--hraness-foil-surface": {
+      "default": "var(--hraness-marketing-accent)",
+      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
+    },
     "display": "inline-flex",
     "min-block-size": {
       "default": "var(--hraness-marketing-action-height)",
@@ -2544,20 +2629,20 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -2581,17 +2666,20 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
-      "default": "var(--hraness-marketing-accent)",
+      "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
       "@media (forced-colors: active)": "CanvasText",
       ":hover": {
-        "default": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)",
-        "@media (forced-colors: active)": "Canvas"
+        "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+        "@media (forced-colors: active)": "CanvasText"
       }
     },
     "background-image": {
-      "default": "none",
+      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
       "@media (forced-colors: active)": "none",
-      ":hover": "none"
+      ":hover": {
+        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "background-position": {
       "default": "0% 0%",
@@ -2609,19 +2697,33 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "padding-box",
+      "default": "border-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": "padding-box"
+      ":hover": {
+        "default": "border-box",
+        "@media (forced-colors: active)": "padding-box"
+      }
     },
     "background-clip": {
-      "default": "border-box",
+      "default": "padding-box, border-box, border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": "border-box"
+      ":hover": {
+        "default": "padding-box, border-box, border-box",
+        "@media (forced-colors: active)": "border-box"
+      }
     },
     "background-attachment": {
       "default": "scroll",
       "@media (forced-colors: active)": "scroll",
       ":hover": "scroll"
+    },
+    "box-shadow": {
+      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
@@ -2635,22 +2737,6 @@ export const marketingStyles = stylex.create({
       "default": "none",
       ":hover": "none"
     },
-    "border-top-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-right-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-bottom-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-left-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    }
   },
   "headerAction": {
     "display": "inline-flex",
@@ -2752,6 +2838,42 @@ export const marketingStyles = stylex.create({
     "padding-inline": "0.8rem"
   },
   "headerActionPrimary": {
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
+    },
+    "--hraness-foil-surface": {
+      "default": "var(--hraness-marketing-accent)",
+      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
+    },
     "display": "inline-flex",
     "min-block-size": "var(--hraness-marketing-header-action-height, 2rem)",
     "align-items": "center",
@@ -2759,20 +2881,20 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -2796,17 +2918,20 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
-      "default": "var(--hraness-marketing-accent)",
+      "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
       "@media (forced-colors: active)": "CanvasText",
       ":hover": {
-        "default": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)",
-        "@media (forced-colors: active)": "Canvas"
+        "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+        "@media (forced-colors: active)": "CanvasText"
       }
     },
     "background-image": {
-      "default": "none",
+      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
       "@media (forced-colors: active)": "none",
-      ":hover": "none"
+      ":hover": {
+        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "background-position": {
       "default": "0% 0%",
@@ -2824,19 +2949,33 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "padding-box",
+      "default": "border-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": "padding-box"
+      ":hover": {
+        "default": "border-box",
+        "@media (forced-colors: active)": "padding-box"
+      }
     },
     "background-clip": {
-      "default": "border-box",
+      "default": "padding-box, border-box, border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": "border-box"
+      ":hover": {
+        "default": "padding-box, border-box, border-box",
+        "@media (forced-colors: active)": "border-box"
+      }
     },
     "background-attachment": {
       "default": "scroll",
       "@media (forced-colors: active)": "scroll",
       ":hover": "scroll"
+    },
+    "box-shadow": {
+      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
@@ -2851,23 +2990,7 @@ export const marketingStyles = stylex.create({
       ":hover": "none"
     },
     "padding-block": "0.3rem",
-    "padding-inline": "0.8rem",
-    "border-top-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-right-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-bottom-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-left-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    }
+    "padding-inline": "0.8rem"
   },
   "planAction": {
     "display": "inline-flex",
@@ -2971,6 +3094,42 @@ export const marketingStyles = stylex.create({
     "justify-self": "start"
   },
   "planActionPrimary": {
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
+    },
+    "--hraness-foil-surface": {
+      "default": "var(--hraness-marketing-accent)",
+      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
+    },
     "display": "inline-flex",
     "min-block-size": {
       "default": "var(--hraness-marketing-action-height)",
@@ -2981,20 +3140,20 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3018,17 +3177,20 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
-      "default": "var(--hraness-marketing-accent)",
+      "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
       "@media (forced-colors: active)": "CanvasText",
       ":hover": {
-        "default": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)",
-        "@media (forced-colors: active)": "Canvas"
+        "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+        "@media (forced-colors: active)": "CanvasText"
       }
     },
     "background-image": {
-      "default": "none",
+      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
       "@media (forced-colors: active)": "none",
-      ":hover": "none"
+      ":hover": {
+        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "background-position": {
       "default": "0% 0%",
@@ -3046,19 +3208,33 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "padding-box",
+      "default": "border-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": "padding-box"
+      ":hover": {
+        "default": "border-box",
+        "@media (forced-colors: active)": "padding-box"
+      }
     },
     "background-clip": {
-      "default": "border-box",
+      "default": "padding-box, border-box, border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": "border-box"
+      ":hover": {
+        "default": "padding-box, border-box, border-box",
+        "@media (forced-colors: active)": "border-box"
+      }
     },
     "background-attachment": {
       "default": "scroll",
       "@media (forced-colors: active)": "scroll",
       ":hover": "scroll"
+    },
+    "box-shadow": {
+      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
@@ -3072,25 +3248,45 @@ export const marketingStyles = stylex.create({
       "default": "none",
       ":hover": "none"
     },
-    "justify-self": "start",
-    "border-top-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-right-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-bottom-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    },
-    "border-left-color": {
-      "default": "var(--hraness-marketing-accent)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
-    }
+    "justify-self": "start"
   },
   "heroActionPrimary": {
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
+    },
+    "--hraness-foil-surface": {
+      "default": "var(--hraness-marketing-accent-ink)",
+      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 90%, var(--hraness-marketing-accent))"
+    },
     "display": "inline-flex",
     "min-block-size": {
       "default": "var(--hraness-marketing-action-height)",
@@ -3101,20 +3297,20 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3138,12 +3334,20 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 90%, var(--hraness-marketing-accent))"
+      "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+      "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)",
+      ":hover": {
+        "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+        "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)"
+      }
     },
     "background-image": {
-      "default": "none",
-      ":hover": "none"
+      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "background-position": {
       "default": "0% 0%",
@@ -3158,16 +3362,32 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "padding-box",
-      ":hover": "padding-box"
+      "default": "border-box",
+      "@media (forced-colors: active)": "padding-box",
+      ":hover": {
+        "default": "border-box",
+        "@media (forced-colors: active)": "padding-box"
+      }
     },
     "background-clip": {
-      "default": "border-box",
-      ":hover": "border-box"
+      "default": "padding-box, border-box, border-box",
+      "@media (forced-colors: active)": "border-box",
+      ":hover": {
+        "default": "padding-box, border-box, border-box",
+        "@media (forced-colors: active)": "border-box"
+      }
     },
     "background-attachment": {
       "default": "scroll",
       ":hover": "scroll"
+    },
+    "box-shadow": {
+      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "color": {
       "default": "var(--hraness-marketing-accent)",
@@ -3181,22 +3401,6 @@ export const marketingStyles = stylex.create({
       "default": "none",
       ":hover": "none"
     },
-    "border-top-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-right-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-bottom-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-left-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    }
   },
   "heroActionSecondary": {
     "display": "inline-flex",
@@ -3307,6 +3511,39 @@ export const marketingStyles = stylex.create({
     }
   },
   "ctaActionPrimary": {
+    "--_hraness-foil-1": {
+      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
+    },
+    "--_hraness-foil-2": {
+      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
+    },
+    "--_hraness-foil-3": {
+      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
+    },
+    "--_hraness-foil-4": {
+      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
+    },
+    "--_hraness-foil-5": {
+      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
+    },
+    "--_hraness-foil-6": {
+      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
+    },
+    "--_hraness-foil-halo": {
+      "default": "var(--hraness-foil-halo-alpha, 0.3)",
+      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
+    },
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
+    },
+    "--hraness-foil-surface": "var(--hraness-marketing-accent-ink)",
     "display": "inline-flex",
     "min-block-size": {
       "default": "var(--hraness-marketing-action-height)",
@@ -3317,20 +3554,20 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "default": "2px solid transparent",
+      "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3354,12 +3591,20 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
+      "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+      "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)",
+      ":hover": {
+        "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
+        "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)"
+      }
     },
     "background-image": {
-      "default": "none",
-      ":hover": "none"
+      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "background-position": {
       "default": "0% 0%",
@@ -3374,16 +3619,32 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "padding-box",
-      ":hover": "padding-box"
+      "default": "border-box",
+      "@media (forced-colors: active)": "padding-box",
+      ":hover": {
+        "default": "border-box",
+        "@media (forced-colors: active)": "padding-box"
+      }
     },
     "background-clip": {
-      "default": "border-box",
-      ":hover": "border-box"
+      "default": "padding-box, border-box, border-box",
+      "@media (forced-colors: active)": "border-box",
+      ":hover": {
+        "default": "padding-box, border-box, border-box",
+        "@media (forced-colors: active)": "border-box"
+      }
     },
     "background-attachment": {
       "default": "scroll",
       ":hover": "scroll"
+    },
+    "box-shadow": {
+      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "@media (forced-colors: active)": "none",
+      ":hover": {
+        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "@media (forced-colors: active)": "none"
+      }
     },
     "color": {
       "default": "var(--hraness-marketing-accent)",
@@ -3397,22 +3658,6 @@ export const marketingStyles = stylex.create({
       "default": "none",
       ":hover": "none"
     },
-    "border-top-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-right-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-bottom-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    },
-    "border-left-color": {
-      "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
-    }
   },
   "ctaActionSecondary": {
     "display": "inline-flex",

@@ -61,6 +61,13 @@
   --hraness-marketing-heading-weight: 500;
   --hraness-marketing-heading-tracking: -0.022em;
   --hraness-marketing-action-height: 2.75rem;
+  --hraness-foil-1: light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340));
+  --hraness-foil-2: light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285));
+  --hraness-foil-3: light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175));
+  --hraness-foil-4: light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100));
+  --hraness-foil-5: light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45));
+  --hraness-foil-6: light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305));
+  --hraness-foil-halo-alpha: 0.3;
   color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-text-font);
 }
@@ -278,14 +285,12 @@
 }
 
 .hraness-marketing-action[data-emphasis="primary"] {
-  border-color: var(--hraness-marketing-accent);
-  background: var(--hraness-marketing-accent);
+  --hraness-foil-surface: var(--hraness-marketing-accent);
   color: var(--hraness-marketing-accent-ink);
 }
 
 .hraness-marketing-action[data-emphasis="primary"]:hover {
-  border-color: color-mix(in oklch, var(--hraness-marketing-accent) 84%, black);
-  background: color-mix(in oklch, var(--hraness-marketing-accent) 84%, black);
+  --hraness-foil-surface: color-mix(in oklch, var(--hraness-marketing-accent) 84%, black);
 }
 
 /* Site header */
@@ -387,6 +392,116 @@
   padding-block: 0.3rem;
   padding-inline: 0.8rem;
   font-size: 0.85rem;
+}
+
+/* Shared foil contract
+ *
+ * One pointer-tracked metallic chrome recipe shared by brand wordmarks,
+ * primary calls to action, and the shared site footer. Elements opt in with
+ * the hraness-foil / hraness-foil-text hooks; the marketing header brand and
+ * primary actions carry the treatment by default. attachFoil() from
+ * @hraness/design-kit/browser eases the three bounded inputs
+ * --hraness-foil-x, --hraness-foil-y, and --hraness-foil-angle on [data-foil]
+ * descendants while --hraness-foil-glow stays CSS-owned. The spectrum lives in
+ * --hraness-foil-1 through --hraness-foil-6 so a site rethemes every foil
+ * surface from one marketing root; dark roots read the deeper palette where
+ * the pointer sheen stands out.
+ */
+
+.hraness-foil,
+.hraness-marketing-action[data-emphasis="primary"] {
+  --hraness-foil-glow: 0;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  background-color: var(--hraness-foil-surface, var(--surface, var(--background, Canvas)));
+  background-image:
+    linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),
+    radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%),
+    conic-gradient(from var(--hraness-foil-angle, 135deg),
+      var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))),
+      var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))),
+      var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))),
+      var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))),
+      var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))),
+      var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))),
+      var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))));
+  background-origin: border-box;
+  background-clip: padding-box, border-box, border-box;
+  box-shadow: 0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--hraness-foil-halo-alpha, 0.3));
+}
+
+.hraness-foil-text,
+.hraness-marketing-header__brand {
+  --hraness-foil-glow: 0;
+  background-image:
+    radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%),
+    conic-gradient(from var(--hraness-foil-angle, 135deg),
+      color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
+      color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--hraness-foil-halo-alpha, 0.3)));
+}
+
+@media (hover: hover) {
+  .hraness-foil:hover:not(:disabled),
+  .hraness-foil-text:hover,
+  .hraness-marketing-header__brand:hover,
+  .hraness-marketing-action[data-emphasis="primary"]:hover:not(:disabled) {
+    --hraness-foil-glow: 1;
+  }
+}
+
+:where([data-theme="dark"], .dark):where(
+  .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+  .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+  .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+  .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-proof-frame
+),
+:where([data-theme="dark"], .dark) :where(
+  .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+  .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+  .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+  .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-proof-frame
+) {
+  --hraness-foil-1: oklch(0.56 0.16 340);
+  --hraness-foil-2: oklch(0.52 0.15 285);
+  --hraness-foil-3: oklch(0.66 0.14 175);
+  --hraness-foil-4: oklch(0.72 0.13 100);
+  --hraness-foil-5: oklch(0.55 0.15 45);
+  --hraness-foil-6: oklch(0.62 0.16 305);
+  --hraness-foil-halo-alpha: 0.45;
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme="light"]):not(.light)) :where(
+    .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-hero,
+    .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
+    .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
+    .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
+    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+    .hraness-marketing-proof-frame
+  ) {
+    --hraness-foil-1: oklch(0.56 0.16 340);
+    --hraness-foil-2: oklch(0.52 0.15 285);
+    --hraness-foil-3: oklch(0.66 0.14 175);
+    --hraness-foil-4: oklch(0.72 0.13 100);
+    --hraness-foil-5: oklch(0.55 0.15 45);
+    --hraness-foil-6: oklch(0.62 0.16 305);
+    --hraness-foil-halo-alpha: 0.45;
+  }
 }
 
 /* Hero */
@@ -499,13 +614,12 @@
 }
 
 .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"] {
-  border-color: var(--hraness-marketing-accent-ink);
-  background: var(--hraness-marketing-accent-ink);
+  --hraness-foil-surface: var(--hraness-marketing-accent-ink);
   color: var(--hraness-marketing-accent);
 }
 
 .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"]:hover {
-  background: color-mix(in oklch, var(--hraness-marketing-accent-ink) 90%, var(--hraness-marketing-accent));
+  --hraness-foil-surface: color-mix(in oklch, var(--hraness-marketing-accent-ink) 90%, var(--hraness-marketing-accent));
 }
 
 .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="secondary"] {
@@ -1310,8 +1424,7 @@
 }
 
 .hraness-marketing-cta[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"] {
-  border-color: var(--hraness-marketing-accent-ink);
-  background: var(--hraness-marketing-accent-ink);
+  --hraness-foil-surface: var(--hraness-marketing-accent-ink);
   color: var(--hraness-marketing-accent);
 }
 
@@ -1410,9 +1523,35 @@
     color: CanvasText;
   }
 
+  .hraness-marketing-action[data-emphasis="primary"],
+  .hraness-foil {
+    border-color: ButtonText;
+    background-image: none;
+    box-shadow: none;
+  }
+
   .hraness-marketing-action[data-emphasis="primary"] {
     background: CanvasText;
     color: Canvas;
+  }
+
+  .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"],
+  .hraness-marketing-cta[data-tone="accent"] .hraness-marketing-action[data-emphasis="primary"] {
+    background: var(--hraness-marketing-accent-ink);
+    color: var(--hraness-marketing-accent);
+  }
+
+  .hraness-foil {
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  .hraness-foil-text,
+  .hraness-marketing-header__brand {
+    background-image: none;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+    filter: none;
   }
 }
 
