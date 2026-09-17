@@ -16,6 +16,7 @@ import {
   MarketingQuestionList,
   MarketingQuoteGrid,
   MarketingSection,
+  MarketingSiteFooter,
   MarketingSiteHeader,
   MarketingStatStrip,
   MarketingTrustBoundary,
@@ -349,4 +350,37 @@ test("optional generic labels omit their slots while factual labels remain visib
 test("empty legacy-compatible React eyebrows omit their atomic display slot", () => {
   const html = renderToStaticMarkup(<ProductHero eyebrow="" name="Relay" heading="Clear" headingId="clear-empty" summary="Factual summary." />);
   expect(html).not.toContain("hraness-marketing-hero__eyebrow");
+});
+
+test("the in-flow site footer renders the product lockup, note, and quiet navigation", () => {
+  const mark = <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 2h20v20H2z" /></svg>;
+  const html = renderToStaticMarkup(
+    <MarketingSiteFooter
+      brand={mark}
+      brandHref="/"
+      brandLabel="Relay home"
+      links={[{ href: "/docs", label: "Docs" }, { current: true, href: "/install", label: "Install" }]}
+      name="Relay"
+    >
+      <p>Local by default.</p>
+    </MarketingSiteFooter>,
+  );
+  expect(html).toMatch(marketingMarkupPattern('<footer aria-label="Site" class="hraness-marketing-footer" data-hraness-marketing="footer">'));
+  expect(html).toMatch(marketingMarkupPattern('<a class="hraness-marketing-footer__brand" href="/" aria-label="Relay home">'));
+  expect(html).toMatch(marketingMarkupPattern('<span class="hraness-marketing-footer__name">Relay</span>'));
+  expect(html.indexOf("<svg")).toBeLessThan(html.indexOf("hraness-marketing-footer__name"));
+  expect(html).toMatch(marketingMarkupPattern('<nav aria-label="Footer navigation" class="hraness-marketing-footer__nav">'));
+  expect(html).toContain('aria-current="page"');
+  expect(html).toContain("Local by default.");
+  expect(html).not.toMatch(/onClick|<script\b|style=/iu);
+});
+
+test("the in-flow site footer omits empty navigation and keeps the landmark distinct", () => {
+  const html = renderToStaticMarkup(
+    <MarketingSiteFooter ariaLabel="Wordcell" brand={<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 2h20v20H2z" /></svg>} name="Wordcell" />,
+  );
+  expect(html).toContain('<footer aria-label="Wordcell"');
+  expect(html).not.toContain("<nav");
+  expect(html).toContain('href="/"');
+  expect(html).toMatch(marketingMarkupPattern('<span class="hraness-marketing-footer__name">Wordcell</span>'));
 });

@@ -8,7 +8,7 @@
  * one accent per product. Roles: site header, hero with optional product
  * frame, pillars, install, ordered flow, fact and stat strips, narrative
  * section, primitives, interfaces, trust boundary, quotes, pricing, native
- * questions, maker, and closing call to action.
+ * questions, maker, closing call to action, and an in-flow site footer.
  *
  * Products bind the `--hraness-marketing-*` custom properties on the marketing
  * root (`.hraness-marketing-page`) or on any role element. Every role reads
@@ -18,6 +18,7 @@
 :where(
   .hraness-marketing-page,
   .hraness-marketing-header,
+  .hraness-marketing-footer,
   .hraness-marketing-hero,
   .hraness-marketing-pillars,
   .hraness-marketing-install,
@@ -387,6 +388,72 @@
   padding-block: 0.3rem;
   padding-inline: 0.8rem;
   font-size: 0.85rem;
+}
+
+/* Site footer */
+
+.hraness-marketing-footer {
+  border-block-start: var(--hraness-marketing-rule);
+  color: var(--hraness-marketing-muted);
+  font-size: 0.92rem;
+}
+
+.hraness-marketing-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  inline-size: min(100%, var(--hraness-marketing-measure));
+  margin-inline: auto;
+  padding-block: var(--hraness-marketing-footer-space, 2rem 4rem);
+  padding-inline: var(--hraness-marketing-gutter);
+}
+
+.hraness-marketing-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--hraness-marketing-ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.hraness-marketing-footer__brand :where(img, svg) {
+  block-size: 1.25rem;
+  inline-size: auto;
+}
+
+.hraness-marketing-footer__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hraness-marketing-footer__inner > :where(p) {
+  margin: 0;
+  max-inline-size: 48ch;
+}
+
+.hraness-marketing-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 1.15rem;
+  margin-inline-start: auto;
+}
+
+.hraness-marketing-footer__nav a {
+  color: var(--hraness-marketing-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.hraness-marketing-footer__nav a:hover,
+.hraness-marketing-footer__nav a[aria-current="page"] {
+  color: var(--hraness-marketing-ink);
 }
 
 /* Hero */
