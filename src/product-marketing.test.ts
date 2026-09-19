@@ -24,11 +24,11 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css.match(/#[0-9a-f]{3,8}\b/giu)).toEqual(["#ffffff1f"]);
 });
 
-test("automatic flow syntax does not override typography owned by the component", async () => {
+test("automatic flow syntax does not override typography or base color owned by the component", async () => {
   const syntax = await Bun.file(new URL("./syntax-highlighting.css", import.meta.url)).text();
   const codeRule = syntax.match(/\.syntax-code\s*\{([^}]+)\}/u)?.[1];
   expect(codeRule).toBeDefined();
-  expect(codeRule).not.toMatch(/(?:^|;)\s*font(?:-[a-z-]+)?\s*:/u);
+  expect(codeRule).not.toMatch(/(?:^|;)\s*(?:font(?:-[a-z-]+)?|color)\s*:/u);
   expect(css).toContain(".hraness-marketing-flow__code");
 });
 
