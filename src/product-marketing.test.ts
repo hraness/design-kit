@@ -4,7 +4,9 @@ const css = await Bun.file(new URL("./product-marketing.css", import.meta.url)).
 const styles = await Bun.file(new URL("./styles.css", import.meta.url)).text();
 
 test("the product-marketing entry is product-neutral and independently importable", () => {
-  expect(css).toStartWith("@layer components.hraness-design-kit.legacy {");
+  expect(css).toStartWith('@import "./syntax-highlighting.css";');
+  expect(css).toContain("@layer components.hraness-design-kit.legacy {");
+  expect(styles).not.toContain('@import "./syntax-highlighting.css";');
   expect(styles).toContain('@import "./product-marketing.css";');
   expect(css).toContain(".hraness-marketing-hero");
   expect(css).toContain(".hraness-marketing-flow");
@@ -20,6 +22,14 @@ test("the product-marketing entry is product-neutral and independently importabl
   // This neutral highlight uses an exact alpha byte so standalone CSS and the
   // compiler serialize identical paint. Product-specific hex colors stay out.
   expect(css.match(/#[0-9a-f]{3,8}\b/giu)).toEqual(["#ffffff1f"]);
+});
+
+test("automatic flow syntax does not override typography or base color owned by the component", async () => {
+  const syntax = await Bun.file(new URL("./syntax-highlighting.css", import.meta.url)).text();
+  const codeRule = syntax.match(/\.syntax-code\s*\{([^}]+)\}/u)?.[1];
+  expect(codeRule).toBeDefined();
+  expect(codeRule).not.toMatch(/(?:^|;)\s*(?:font(?:-[a-z-]+)?|color)\s*:/u);
+  expect(css).toContain(".hraness-marketing-flow__code");
 });
 
 test("the marketing grammar keeps compact, coarse-pointer, and forced-color contracts", () => {

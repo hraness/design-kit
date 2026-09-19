@@ -15,8 +15,6 @@
   --sh-sign: var(--syntax-sign);
   --sh-space: currentColor;
   --sh-string: var(--syntax-string);
-  color: var(--foreground, inherit);
-  font: inherit;
   text-shadow: none;
 }
 

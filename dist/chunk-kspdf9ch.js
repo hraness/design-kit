@@ -1,6 +1,7 @@
 // src/syntax-highlighting.ts
 import { highlight } from "sugar-high";
 var syntaxLanguages = ["css", "html", "json", "markdown", "shell", "text", "typescript"];
+var maximumSyntaxCharacters = 128 * 1024;
 function classOnlySyntax(html) {
   const result = html.replace(/<span class="sh__token--(class|comment|entity|identifier|jsxliterals|keyword|property|sign|space|string)" style="color:var\(--sh-\1\)">/gu, '<span class="sh__token--$1">');
   if (/<[A-Za-z][^<>]*\sstyle\s*=/iu.test(result)) {
@@ -51,6 +52,38 @@ function resolveSyntaxLanguage(input) {
     default:
       return "text";
   }
+}
+function inferSyntaxLanguage(code) {
+  if (code.length > maximumSyntaxCharacters)
+    return "text";
+  const trimmed = code.trim();
+  if (trimmed === "")
+    return "text";
+  if (trimmed[0] === "{" || trimmed[0] === "[") {
+    try {
+      const value = JSON.parse(trimmed);
+      if (value !== null && typeof value === "object")
+        return "json";
+    } catch {}
+  }
+  const first = (trimmed.split(`
+`, 1)[0] ?? "").slice(0, 2048);
+  if (/^#!\s*(?:\/bin\/(?:ba|z)?sh|\/usr\/bin\/env\s+(?:ba|z)?sh)(?:\s|$)/u.test(first) || /^(?:\$\s+)?(?:bun|npm|pnpm|yarn)\s+(?:add|install|run|test|build|remove|update|exec|dlx|create|init|ci|publish|pack)\b/u.test(first) || /^(?:\$\s+)?(?:bunx|npx)\s+(?:skills\s+add\b|create-[\w-]+\b|@[\w-]+\/[\w-]+\b|[\w-]+\s+--?[A-Za-z])/u.test(first) || /^(?:\$\s+)?git\s+(?:clone|status|diff|log|show|fetch|pull|push|checkout|switch|add|commit|branch|tag)\b/u.test(first) || /^(?:\$\s+)?curl\s+(?:--?[A-Za-z]|https?:\/\/)/u.test(first))
+    return "shell";
+  if (/^(?:export\s+)?(?:const|let|var)\s+[A-Za-z_$][\w$]*(?:\s*:[^=]+)?\s*=/u.test(first) || /^import\s+(?:[\w*{].*\s+from\s+)?["']/u.test(first) || /^(?:export\s+)?(?:async\s+)?function\s+[A-Za-z_$][\w$]*\s*\(/u.test(first))
+    return "typescript";
+  if (/^#{1,6}\s+\S/u.test(first) || /^`{3,}\w*/u.test(first))
+    return "markdown";
+  if (/^<!doctype\s+html\b/iu.test(first) || /^<([a-z][\w:-]*)(?:\s[^<>]*|)>(?:[^]*?)<\/\1\s*>/iu.test(trimmed))
+    return "html";
+  const opening = trimmed.indexOf("{");
+  if (opening > 0 && opening < 2048 && /^[.#]?[a-zA-Z_][\w.# :>+~,-]*$/u.test(trimmed.slice(0, opening).trimEnd())) {
+    const declaration = trimmed.slice(opening + 1, opening + 2049).trimStart();
+    const colon = declaration.indexOf(":");
+    if (colon > 0 && /^-{0,2}[a-zA-Z][a-zA-Z-]*$/u.test(declaration.slice(0, colon).trimEnd()) && /^[^{};]+[;}]/u.test(declaration.slice(colon + 1).trimStart()))
+      return "css";
+  }
+  return "text";
 }
 function escapeHtml(value) {
   return value.replace(/[&<>"']/gu, (character) => {
@@ -219,6 +252,11 @@ function highlightShellLine(line) {
       continue;
     }
     if (character === "$") {
+      if (line.slice(0, cursor).trim() === "" && /\s/u.test(line[cursor + 1] ?? "")) {
+        html += token("operator", character);
+        cursor += 1;
+        continue;
+      }
       const variable = /^\$(?:\{[^}\n]*\}|[A-Za-z_][A-Za-z0-9_]*|[?$!#*@0-9-])/u.exec(line.slice(cursor))?.[0] ?? "$";
       html += token("variable", variable);
       cursor += variable.length;
@@ -266,11 +304,12 @@ function highlightShell(value) {
 `).map(highlightShellLine).join(`
 `);
 }
-function highlightCode(code, language, options = {}) {
+function highlightCode(code, languageHint, options = {}) {
   const styles = options.styles ?? "inline";
   if (styles !== "inline" && styles !== "classes") {
     throw new Error("Syntax styles must be inline or classes.");
   }
+  const language = code.length > maximumSyntaxCharacters ? "text" : languageHint === undefined || languageHint.trim() === "" || languageHint === "auto" ? inferSyntaxLanguage(code) : resolveSyntaxLanguage(languageHint);
   const html = language === "text" ? escapeHtml(code) : language === "markdown" ? highlightMarkdown(code) : language === "shell" ? highlightShell(code) : highlight(code);
   return Object.freeze({
     className: `syntax-code language-${language}`,
@@ -279,4 +318,4 @@ function highlightCode(code, language, options = {}) {
   });
 }
 
-export { syntaxLanguages, resolveSyntaxLanguage, highlightCode };
+export { syntaxLanguages, maximumSyntaxCharacters, resolveSyntaxLanguage, inferSyntaxLanguage, highlightCode };

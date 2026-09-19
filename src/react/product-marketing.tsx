@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SyntaxCode } from "./syntax-code.js";
 import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
 import type { MarketingColumnCount } from "./product-marketing.stylex.js";
 
@@ -271,7 +272,7 @@ export function MarketingFlow({
             <strong className={classNames("hraness-marketing-flow__label")}>{step.label}</strong>
             {step.code === undefined
               ? null
-              : <code className={classNames("hraness-marketing-flow__code")}>{step.code}</code>}
+              : <SyntaxCode className={classNames("hraness-marketing-flow__code")} code={step.code} styles="classes" />}
             {step.detail === undefined
               ? null
               : <p className={classNames("hraness-marketing-flow__detail")}>{step.detail}</p>}

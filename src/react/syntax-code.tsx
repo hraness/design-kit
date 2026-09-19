@@ -1,13 +1,13 @@
 import {
   highlightCode,
   type HighlightCodeOptions,
-  type SyntaxLanguage,
 } from "../syntax-highlighting.js";
 
 export interface SyntaxCodeProps {
   readonly className?: string;
   readonly code: string;
-  readonly language: SyntaxLanguage;
+  /** A language/fence hint; omitted hints use conservative automatic selection. */
+  readonly language?: string;
   readonly styles?: HighlightCodeOptions["styles"];
 }
 

@@ -137,9 +137,12 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-hraness-marketing="pillars"');
   expect(html).toContain('data-hraness-marketing="pricing"');
   expect(html).toContain('data-hraness-marketing="maker"');
-  expect(html).toContain("bun add --global relay@1.2.3");
   const marketing = parseHTML(html).document.querySelector(".design-gallery__marketing");
   expect(marketing).not.toBeNull();
+  const installCode = marketing?.querySelector("#gallery-install .design-gallery__marketing-command > code");
+  expect(installCode?.textContent).toBe("bun add --global relay@1.2.3");
+  expect(installCode?.getAttribute("data-language")).toBe("shell");
+  expect(installCode?.querySelector(".syntax-token--command")?.textContent).toBe("bun");
   expect(marketing?.querySelector("[style]")).toBeNull();
   expect(marketing?.querySelectorAll(".hraness-marketing-facts__item")).toHaveLength(6);
   expect(marketing?.querySelectorAll(".hraness-marketing-pillars__item")).toHaveLength(3);

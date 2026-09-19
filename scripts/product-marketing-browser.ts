@@ -25,6 +25,16 @@ import {
 } from "./browser-css-parity.js";
 
 const repository = resolve(import.meta.dir, "..");
+
+async function legacyStylesheetHash(): Promise<string> {
+  const source = await readFile(join(repository, "src/product-marketing.css"), "utf8");
+  const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
+  assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
+  const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
+  assert.equal(grammarSha256, "5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2", "The independent static CSS grammar changed");
+  return createHash("sha256").update(source).digest("hex");
+}
+
 // Compiler reference rules belong to a native-only blank page. Never inject a
 // reference stylesheet into the application or relax its style-src policy.
 let compilerProjectionPage: Page | undefined;
@@ -488,8 +498,7 @@ async function colorProbe(page: Page) {
     if (label === "extended gamut differs from clamping") assert.deepEqual(a.colors, [[-0.25, 1.5, 2, 1]], "XYZ observation must not clamp extended channels");
     receipts.push({ label, property, authored: [left, right], computed, nativeEquivalent: equivalent, projectedParity, projectionProof, actual: a, original: b });
   }
-  const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2");
+  const legacySha256 = await legacyStylesheetHash();
   return { space: "xyz-d65", coordinateEpsilon: CSS_COLOR_XYZ_EPSILON, alphaEpsilon: CSS_COLOR_ALPHA_EPSILON,
     compiler: colorProjectionCompilerIdentity(), legacySha256, receipts };
 }
@@ -544,8 +553,7 @@ function recordDeliveryMismatch(
   if (deliveryMismatchSamples.length < 256) deliveryMismatchSamples.push(mismatch);
 }
 try {
-  const legacySha256 = createHash("sha256").update(await readFile(join(repository, "src/product-marketing.css"))).digest("hex");
-  assert.equal(legacySha256, "5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2", "The independent static CSS oracle changed");
+  const legacySha256 = await legacyStylesheetHash();
   // The fixture renders the shipped server entry, not copied component markup or a mock recipe.
   const api: typeof ProductMarketing = await import(join(repository, "dist/react/server.js"));
   const html = renderToStaticMarkup(createElement(ProductMarketingFixture, { api }));

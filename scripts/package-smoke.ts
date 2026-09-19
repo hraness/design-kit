@@ -831,7 +831,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.10.0" },
+    { name: "@hraness/design-kit", version: "0.10.1" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -895,9 +895,9 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
     "The @hraness/ui development dependency must use an exact immutable release tag or full reviewed commit.",
   );
 }
-if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.12") {
+if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.16") {
   throw new Error(
-    "Design-kit v0.8.0 must build and publish against the immutable @hraness/ui v0.5.12 release.",
+    "Design-kit v0.10.1 must build and publish against the immutable @hraness/ui v0.5.16 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -914,8 +914,8 @@ const uiPeerRange = stringField(
   "@hraness/ui",
   "package.json peerDependencies",
 );
-if (uiPeerRange !== ">=0.5.12 <0.6.0") {
-  throw new Error("Design-kit v0.8.0 must declare the exact @hraness/ui v0.5 peer range.");
+if (uiPeerRange !== ">=0.5.16 <0.6.0") {
+  throw new Error("Design-kit v0.10.1 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1280,7 +1280,7 @@ try {
     process.execPath,
     "add",
     uiInstallSource,
-    "@hugeicons/core-free-icons@^4.2.2",
+    "@hugeicons/core-free-icons@4.2.3",
     "@types/bun@^1.3.14",
     "@types/react@^19.2.14",
     "@types/react-dom@^19.2.3",
@@ -1558,8 +1558,8 @@ try {
   );
   assert.deepEqual(
     installedUiManifest.package,
-    { name: "@hraness/ui", version: "0.5.12" },
-    "Compiler consumer must install the immutable UI v0.5.12 manifest.",
+    { name: "@hraness/ui", version: "0.5.16" },
+    "Compiler consumer must install the immutable UI v0.5.16 manifest.",
   );
   assert.notEqual(
     installedUiManifest.standaloneSerializer.prefix,
@@ -1575,7 +1575,7 @@ try {
       ],
       prefix: "components.hraness-ui",
     },
-    "UI v0.5.12 standalone serialization contract changed.",
+    "UI v0.5.16 standalone serialization contract changed.",
   );
   assert.equal(
     installedUiManifest.compilerSha256,
@@ -1585,18 +1585,18 @@ try {
   assert.equal(installedUiManifest.compilerSha256, compilerSha256);
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex-manifest.json")).sha256,
-    "46593d40347a0967a71027dce76e051db4e0c681f1f36597a1b586bf60fe6195",
-    "Installed UI manifest does not match the immutable v0.5.12 release.",
+    "93c49fd2066a3ab80a5251ce2f9376555eebfa0b6b6d0c01705d3e2b0b934696",
+    "Installed UI manifest does not match the immutable v0.5.16 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "src/compiler-foundation.css")).sha256,
     "2b9b3f7d23856b10357599793c649a3af41f83ac7d58f7a1ffae91a03f322e4e",
-    "Installed UI compiler foundation does not match the immutable v0.5.12 release.",
+    "Installed UI compiler foundation does not match the immutable v0.5.16 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex.css")).sha256,
-    "10fefdbe5809b66c863ed08cedac55222b1788f1c444e072e1b08c82a88fbc74",
-    "Installed UI standalone StyleX CSS does not match the immutable v0.5.12 release.",
+    "82a920b6fff1da862d0d153aae791fa07337912c5fb4a00cf194452ed1513510",
+    "Installed UI standalone StyleX CSS does not match the immutable v0.5.16 release.",
   );
   assert.deepEqual(
     stylexUnionPolicy,

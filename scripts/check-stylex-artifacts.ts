@@ -446,7 +446,6 @@ function requireAggregateContract(source: string): void {
     '@import "./tokens.css";',
     '@import "./reset.css";',
     '@import "./typography.css";',
-    '@import "./syntax-highlighting.css";',
     '@import "./effects.css";',
     UI_COMPONENTS_IMPORT,
     UI_STYLEX_IMPORT,
@@ -1602,8 +1601,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.10.0" },
-  "StyleX manifest must describe design-kit v0.10.0",
+  { name: "@hraness/design-kit", version: "0.10.1" },
+  "StyleX manifest must describe design-kit v0.10.1",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");

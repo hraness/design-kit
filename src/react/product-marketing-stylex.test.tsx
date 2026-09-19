@@ -148,8 +148,14 @@ test("all 20 marketing compositions render real owned atoms with native server-o
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {
     const tokens = node.className.split(/\s+/u);
-    expect(tokens[0]).toStartWith("hraness-marketing-");
-    expect(tokens.slice(1).some((token) => /^x[\da-z]+$/u.test(token))).toBe(true);
+    const syntax = node.matches("code.syntax-code");
+    if (syntax) {
+      expect(tokens.slice(0, 2)).toEqual(["syntax-code", `language-${node.getAttribute("data-language")}`]);
+      expect(node.querySelector("[style], script")).toBeNull();
+    }
+    const ownedTokens = syntax ? tokens.slice(2) : tokens;
+    expect(ownedTokens[0]).toStartWith("hraness-marketing-");
+    expect(ownedTokens.slice(1).some((token) => /^x[\da-z]+$/u.test(token))).toBe(true);
   }
   const ids = [...document.querySelectorAll("[id]")].map((node) => node.id);
   expect(new Set(ids).size).toBe(ids.length);
@@ -200,7 +206,9 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
     readFile(new URL("../compiler-foundation.css", import.meta.url), "utf8"),
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
-  expect(createHash("sha256").update(legacy).digest("hex"))
+  const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
+  expect(legacy).toStartWith(syntaxImport);
+  expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
     .toBe("5a9acd5a88169a5e55ac1d726a2cf32a116a0a57cd041ecab70e7fbb444d37f2");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);

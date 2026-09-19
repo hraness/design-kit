@@ -57,8 +57,8 @@ import {
   effectsStyles,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-1050drv8.js";
-import"../chunk-be8hm55p.js";
+} from "../chunk-314bnr58.js";
+import"../chunk-kspdf9ch.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -3798,8 +3798,9 @@ function DesignSystemGallery({
                   title: "relay run job-01",
                   children: /* @__PURE__ */ jsx14("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx14("code", {
-                      children: '{"status":"complete","job":"job-01","durationMs":412}'
+                    children: /* @__PURE__ */ jsx14(SyntaxCode, {
+                      code: '{"status":"complete","job":"job-01","durationMs":412}',
+                      styles: "classes"
                     })
                   })
                 }),
@@ -3840,8 +3841,9 @@ function DesignSystemGallery({
                 children: [
                   /* @__PURE__ */ jsx14("pre", {
                     className: "design-gallery__marketing-command",
-                    children: /* @__PURE__ */ jsx14("code", {
-                      children: "bun add --global relay@1.2.3"
+                    children: /* @__PURE__ */ jsx14(SyntaxCode, {
+                      code: "bun add --global relay@1.2.3",
+                      styles: "classes"
                     })
                   }),
                   /* @__PURE__ */ jsx14(MarketingFlow, {
@@ -4425,7 +4427,7 @@ function DesignSystemGallery({
               code: `import { AppShell } from "@hraness/design-kit/react";
 
 export const shell = <AppShell rail={null}>Content</AppShell>;`,
-              language: "typescript"
+              styles: "classes"
             })
           })
         ]

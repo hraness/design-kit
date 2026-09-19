@@ -11,15 +11,15 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.10.0",
-    "@hraness/ui": "github:hraness/ui#v0.5.12"
+    "@hraness/design-kit": "github:hraness/design-kit#v0.10.1",
+    "@hraness/ui": "github:hraness/ui#v0.5.16"
   }
 }
 ```
 
 `@hraness/ui` is an explicit peer dependency with the supported range
-`>=0.5.12 <0.6.0`; consumers should pin an immutable compatible release such as
-`v0.5.12` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
+`>=0.5.16 <0.6.0`; consumers should pin an immutable compatible release such as
+`v0.5.16` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
@@ -265,11 +265,13 @@ import { BarListChart, SyntaxCode } from "@hraness/design-kit/react";
 />
 
 <pre>
-  <SyntaxCode code={'const ready = true;'} language="typescript" />
+  <SyntaxCode code={'const ready = true;'} />
 </pre>
 ```
 
-The framework-neutral highlighter is also available from `@hraness/design-kit/syntax-highlighting`. For sites that disallow inline styles, call `highlightCode(code, "typescript", { styles: "classes" })` or pass `styles="classes"` to `SyntaxCode`, and load `syntax-highlighting.css`. The default output remains unchanged; both modes share the same theme colors and preserve source line breaks.
+`SyntaxCode` and `highlightCode(code)` choose a language for recognizable code when the language is omitted. The deterministic rules recognize JSON objects and arrays, common package and Git commands, and distinctive TypeScript, Markdown, HTML, and CSS syntax. Prose and uncertain input stay plain text. Pass a language or Markdown fence hint to keep an explicit choice; unsupported hints and `language="text"` remain plain text. Blocks longer than 131,072 characters also remain escaped plain text.
+
+The framework-neutral highlighter is available from `@hraness/design-kit/syntax-highlighting`. For sites that disallow inline styles, call `highlightCode(code, "typescript", { styles: "classes" })` or pass `styles="classes"` to `SyntaxCode`. Import `syntax-highlighting.css` when using the highlighter alone; the complete stylesheet, compiler foundation, and narrow `product-marketing.css` entry include it. The default style mode remains unchanged; both modes share the same theme colors and preserve source line breaks. Markdown renderers should pass each literal code block and its fence hint to this shared highlighter. Stylesheets do not tokenize raw `<pre><code>` markup.
 Server components can import `SyntaxCode`, deterministic procedural effects, and
 static surfaces from `@hraness/design-kit/react/server` without crossing the
 client boundary used by the interactive React barrel.
@@ -414,7 +416,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.12` with `@hraness/design-kit` `v0.10.0`. The previous rollback pair uses design-kit `v0.9.0` with the same UI release. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, peer boundaries and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.16` with `@hraness/design-kit` `v0.10.1`. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
