@@ -3,6 +3,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import { SyntaxCode } from "./syntax-code";
 
+test("SyntaxCode highlights recognizable code by default and honors explicit plain text", () => {
+  expect(renderToStaticMarkup(<SyntaxCode code="bun test --watch" />)).toContain('data-language="shell"');
+  expect(renderToStaticMarkup(<SyntaxCode code="Please run the tests." />)).toContain('data-language="text"');
+  const plain = renderToStaticMarkup(<SyntaxCode code="bun test --watch" language="text" />);
+  expect(plain).toContain('data-language="text"');
+  expect(plain).not.toContain("syntax-token--command");
+});
+
 test("SyntaxCode emits typed language metadata and highlighted server markup", () => {
   const html = renderToStaticMarkup(
     <SyntaxCode

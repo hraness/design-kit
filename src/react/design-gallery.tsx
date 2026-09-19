@@ -278,7 +278,7 @@ export function DesignSystemGallery({
                 credit="Captured 5 September 2026"
                 title="relay run job-01"
               >
-                <pre className="design-gallery__marketing-command"><code>{'{"status":"complete","job":"job-01","durationMs":412}'}</code></pre>
+                <pre className="design-gallery__marketing-command"><SyntaxCode code={'{"status":"complete","job":"job-01","durationMs":412}'} styles="classes" /></pre>
               </MarketingProofFrame>
             )}
             heading="Move one job across every interface"
@@ -305,7 +305,7 @@ export function DesignSystemGallery({
             id="gallery-install"
             note={<p data-gallery-marketing-slot="note">Requires Bun 1.3.14.</p>}
           >
-            <pre className="design-gallery__marketing-command"><code>bun add --global relay@1.2.3</code></pre>
+            <pre className="design-gallery__marketing-command"><SyntaxCode code="bun add --global relay@1.2.3" styles="classes" /></pre>
             <MarketingFlow
               ariaLabel="First Relay job"
               steps={[
@@ -628,7 +628,7 @@ export function DesignSystemGallery({
         <pre className="design-gallery__syntax">
           <SyntaxCode
             code={'import { AppShell } from "@hraness/design-kit/react";\n\nexport const shell = <AppShell rail={null}>Content</AppShell>;'}
-            language="typescript"
+            styles="classes"
           />
         </pre>
       </section>

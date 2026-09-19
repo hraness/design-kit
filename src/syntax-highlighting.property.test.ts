@@ -117,6 +117,17 @@ test("property: every foreign language label resolves to a supported language", 
   }));
 });
 
+test("property: automatic and foreign-hint highlighting preserves text without markup injection", () => {
+  fc.assert(fc.property(fc.string({ maxLength: 1_000 }), fc.option(fc.string({ maxLength: 80 }), { nil: undefined }), (source, hint) => {
+    const highlighted = highlightCode(source, hint, { styles: "classes" });
+    const { document } = parseHTML(`<code>${highlighted.html}</code>`);
+    expect(syntaxLanguages).toContain(highlighted.language);
+    expect(document.querySelector("code")?.textContent).toBe(source);
+    expect(document.querySelector("script")).toBeNull();
+    expect(document.querySelectorAll("[style]")).toHaveLength(0);
+  }), { seed: 20260919, numRuns: 128 });
+});
+
 test("property: Markdown heading and list token boundaries match the legacy grammar", () => {
   fc.assert(fc.property(
     markdownIndentation,

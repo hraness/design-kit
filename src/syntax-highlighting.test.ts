@@ -5,9 +5,46 @@ import { highlight, SugarHigh } from "sugar-high";
 
 import {
   highlightCode,
+  inferSyntaxLanguage,
+  maximumSyntaxCharacters,
   resolveSyntaxLanguage,
   type HighlightCodeOptions,
 } from "./syntax-highlighting";
+
+test("missing hints select only recognizable bounded code", () => {
+  for (const [source, language] of [
+    ["bunx skills add example/skill --skill example", "shell"],
+    ["bun add --exact package@1.2.3", "shell"],
+    ['{"status":"ready","count":2}', "json"],
+    ["const count = 2;", "typescript"],
+    ["# A document\n\n## A section", "markdown"],
+    [".button { color: red; }", "css"],
+    ["<section>Example</section>", "html"],
+    ["Use this skill to summarize the sources.", "text"],
+    ["bun is a JavaScript runtime", "text"],
+    ["npx is a package runner", "text"],
+    ["npm packages are useful", "text"],
+    ["an-unknown-command some arguments", "text"],
+    ["", "text"],
+  ] as const) {
+    expect(inferSyntaxLanguage(source)).toBe(language);
+    expect(highlightCode(source).language).toBe(language);
+  }
+  expect(highlightCode("bun test", "text").language).toBe("text");
+  expect(highlightCode("bun test", "python").language).toBe("text");
+  expect(highlightCode("bun test", "bash").language).toBe("shell");
+  const oversized = "const x = " + "x".repeat(maximumSyntaxCharacters);
+  expect(highlightCode(oversized, "typescript")).toMatchObject({ language: "text", html: oversized });
+});
+
+test("automatic selection stays bounded for ambiguous whitespace-heavy selectors", () => {
+  const start = performance.now();
+  for (let index = 0; index < 8; index += 1) {
+    expect(inferSyntaxLanguage("a" + " ".repeat(120_000) + "!")).toBe("text");
+    expect(inferSyntaxLanguage("a" + " ".repeat(120_000) + "{ color: red; }")).toBe("text");
+  }
+  expect(performance.now() - start).toBeLessThan(500);
+});
 
 const sugarTokens = ["class", "comment", "entity", "identifier", "jsxliterals", "keyword", "property", "sign", "space", "string"] as const;
 
@@ -217,6 +254,7 @@ test("hostile plain text is escaped instead of becoming markup", () => {
 });
 
 test("shell comments and command positions follow shell token boundaries", () => {
+  expect(highlightCode("$ bun test --watch", "shell").html).toContain('syntax-token--command">bun</span>');
   const url = highlightCode("curl https://example.com/#section", "shell").html;
   const conditional = highlightCode(
     "if bun test; then echo yes; fi",

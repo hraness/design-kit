@@ -4,7 +4,6 @@
 @import "./tokens.css";
 @import "./reset.css";
 @import "./typography.css";
-@import "./syntax-highlighting.css";
 @import "./effects.css";
 @import "@hraness/ui/components.css";
 @import "@hraness/ui/stylex.css";
