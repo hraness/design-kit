@@ -218,7 +218,7 @@
     "check:marketing-textures": "bun run ./scripts/marketing-textures.ts"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "^4.2.2",
+    "@hugeicons/core-free-icons": "4.2.3",
     "@stylexjs/stylex": "0.19.0",
     "motion": "12.42.0",
     "next-themes": "0.4.6",

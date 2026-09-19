@@ -1280,7 +1280,7 @@ try {
     process.execPath,
     "add",
     uiInstallSource,
-    "@hugeicons/core-free-icons@^4.2.2",
+    "@hugeicons/core-free-icons@4.2.3",
     "@types/bun@^1.3.14",
     "@types/react@^19.2.14",
     "@types/react-dom@^19.2.3",
