@@ -41,9 +41,11 @@ import {
 } from "./chunk-spvbmw4r.js";
 import {
   highlightCode,
+  inferSyntaxLanguage,
+  maximumSyntaxCharacters,
   resolveSyntaxLanguage,
   syntaxLanguages
-} from "./chunk-be8hm55p.js";
+} from "./chunk-kspdf9ch.js";
 import"./chunk-5gtx3pza.js";
 export {
   typography,
@@ -62,10 +64,12 @@ export {
   normalizeDesignTheme,
   normalizeDesignPalettePreference,
   motion,
+  maximumSyntaxCharacters,
   layout,
   isDesignTheme,
   isDesignPalette,
   interaction,
+  inferSyntaxLanguage,
   iconography,
   highlightCode,
   getDesignPaletteTheme,

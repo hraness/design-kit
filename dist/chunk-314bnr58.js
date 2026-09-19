@@ -1,6 +1,6 @@
 import {
   highlightCode
-} from "./chunk-be8hm55p.js";
+} from "./chunk-kspdf9ch.js";
 
 // src/react/syntax-code.tsx
 import { jsx } from "react/jsx-runtime";
@@ -3831,9 +3831,10 @@ function MarketingFlow({
               className: marketingClassName("hraness-marketing-flow__label"),
               children: step.label
             }),
-            step.code === undefined ? null : /* @__PURE__ */ jsx4("code", {
+            step.code === undefined ? null : /* @__PURE__ */ jsx4(SyntaxCode, {
               className: marketingClassName("hraness-marketing-flow__code"),
-              children: step.code
+              code: step.code,
+              styles: "classes"
             }),
             step.detail === undefined ? null : /* @__PURE__ */ jsx4("p", {
               className: marketingClassName("hraness-marketing-flow__detail"),

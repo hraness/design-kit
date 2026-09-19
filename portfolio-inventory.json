@@ -14,7 +14,7 @@
     {
       "from": "@hraness/design-kit",
       "scope": "peer",
-      "specifier": ">=0.5.12 <0.6.0",
+      "specifier": ">=0.5.16 <0.6.0",
       "to": "@hraness/ui"
     }
   ],
