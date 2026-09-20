@@ -1687,6 +1687,10 @@
     display: none;
   }
 
+  .x1g1hdg2 {
+    display: var(--_hraness-foil-mark-display);
+  }
+
   .xwu42zd {
     filter: blur(var(--hraness-design-procedural-layer-blur));
   }
@@ -2798,12 +2802,6 @@
     z-index: var(--z-tooltip, 3000);
   }
 
-  @supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
-    .x1166v7c.x1166v7c {
-      display: block;
-    }
-  }
-
   .x1whfoju:is([data-focused], [data-hovered], :focus-visible, :hover), .x852r0y:is([data-hovered], :hover) {
     background-attachment: scroll;
   }
@@ -3297,14 +3295,6 @@
 
     .x12w9bfk.x12w9bfk {
       transition-duration: 0s;
-    }
-  }
-
-  @supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
-    @media (forced-colors: active) {
-      .x1agje6k.x1agje6k.x1agje6k {
-        display: none;
-      }
     }
   }
 
@@ -4443,6 +4433,10 @@
   --_hraness-foil-halo: var(--hraness-foil-halo-alpha, .3);
 }
 
+.x543tnb {
+  --_hraness-foil-mark-display: none;
+}
+
 .x1gxadoi {
   --hraness-appearance-accent-foreground: var(--ui-accent-foreground, ButtonText);
 }
@@ -4579,6 +4573,12 @@
   --phaser-dots-trail-opacity: 1;
 }
 
+@supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
+  .xrpgoez.xrpgoez {
+    --_hraness-foil-mark-display: block;
+  }
+}
+
 .x1y7wltu:hover {
   --hraness-foil-surface: color-mix(in oklch,var(--hraness-marketing-accent-ink) 90%,var(--hraness-marketing-accent));
 }
@@ -4650,6 +4650,14 @@
 
   .x11yejcl.x11yejcl {
     --_hraness-foil-halo: var(--hraness-foil-halo-alpha, .45);
+  }
+}
+
+@supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
+  @media (forced-colors: active) {
+    .x1hrs4vd.x1hrs4vd.x1hrs4vd {
+      --_hraness-foil-mark-display: none;
+    }
   }
 }
 

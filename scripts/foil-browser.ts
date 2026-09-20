@@ -16,10 +16,17 @@ const markup = renderToStaticMarkup(createElement("main", null,
   createElement("p", null, "Metallic marks keep their original silhouette."),
   createElement("div", { className: "samples" }, ...[20, 24, 44].map((size) => createElement(FoilMark, { src: mark, size, key: size }))),
 ));
-const [atoms, raw] = await Promise.all([
+const [atoms, raw, siblingAtoms] = await Promise.all([
   readFile(new URL("../dist/stylex.css", import.meta.url), "utf8"),
   readFile(new URL("../src/product-marketing.css", import.meta.url), "utf8"),
+  readFile(new URL(import.meta.resolve("@hraness/ui/stylex.css")), "utf8"),
 ]);
+// Declaration hashes legitimately repeat across independently layered packages.
+// Reproduce the generic hidden atom emitted by a later footer without importing
+// product code or depending on one generated class name.
+const hiddenAtom = siblingAtoms.match(/\.[A-Za-z0-9_-]+\s*\{\s*display:\s*none;?\s*\}/u)?.[0];
+assert(hiddenAtom, "The sibling fixture must contain its emitted display:none atom");
+const laterAtoms = `@layer components.foil-regression-sibling.priority3{${hiddenAtom}}`;
 const base = `body{margin:0;padding:32px;background:var(--background);color:var(--foreground);font:16px system-ui}body[data-theme=light]{color-scheme:light;--foreground:#211d1b;--background:#fbf6f2}body[data-theme=dark]{color-scheme:dark;--foreground:#f2eee9;--background:#171412}.samples{display:flex;align-items:center;gap:24px}.hraness-marketing-header__inner{padding:0}.hraness-marketing-header__brand{font-size:24px}`;
 let executablePath: string | undefined;
 for (const candidate of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
@@ -31,13 +38,13 @@ const browser = await chromium.launch({ executablePath, headless: true, args: ["
 const output = process.env.FOIL_SCREENSHOT_DIR ?? join(tmpdir(), "hraness-foil-browser");
 await mkdir(output, { recursive: true });
 try {
-  for (const route of ["compiled", "raw"] as const) {
+  for (const route of ["compiled", "raw", "compiled-with-later-atoms", "raw-with-later-atoms"] as const) {
   for (const theme of ["light", "dark"] as const) {
     for (const width of [390, 900]) {
       const page = await browser.newPage({ viewport: { width, height: 280 }, colorScheme: theme, reducedMotion: "reduce" });
-      await page.setContent(`<html><head><style>${route === "compiled" ? atoms : raw.replace(/^@import[^;]+;/u, "")}\n${base}</style></head><body data-theme="${theme}">${markup}</body></html>`);
+      await page.setContent(`<html><head><style>${route.startsWith("compiled") ? atoms : raw.replace(/^@import[^;]+;/u, "")}\n${route.endsWith("later-atoms") ? laterAtoms : ""}\n${base}</style></head><body data-theme="${theme}">${markup}</body></html>`);
       await page.locator("img").evaluateAll((images) => Promise.all(images.map((image) => (image as HTMLImageElement).decode())));
-      const evidence = await page.locator(".samples .hraness-foil-mark").evaluateAll((marks) => marks.map((element) => {
+      const evidence = await page.locator(".hraness-foil-mark").evaluateAll((marks) => marks.map((element) => {
         const paint = element.querySelector(".hraness-foil-mark__paint");
         const image = element.querySelector("img");
         if (!paint || !image) throw new Error("Missing mark layers");
@@ -64,7 +71,7 @@ try {
     }
   }
   }
-  console.log(`Foil browser proof passed: light/dark, desktop/mobile, static reduced motion, forced colors, mask fallback. Screenshots: ${output}`);
+  console.log(`Foil browser proof passed: light/dark, desktop/mobile, static reduced motion, forced colors, mask fallback, later-package atom collision. Screenshots: ${output}`);
 } finally {
   await browser.close();
 }

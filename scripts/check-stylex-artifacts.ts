@@ -1601,8 +1601,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.11.0" },
-  "StyleX manifest must describe design-kit v0.11.0",
+  { name: "@hraness/design-kit", version: "0.11.1" },
+  "StyleX manifest must describe design-kit v0.11.1",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1683,10 +1683,10 @@ const designPriorityContract = requireSerializedPriorityContract(
 assert.deepEqual(
   designPriorityContract.rawPrioritiesByRank,
   [
-    [0, 0.1, 0.5, 1, 131, 201, 241, 331],
+    [0, 0.1, 0.5, 1, 31, 131, 201, 231, 241, 331],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
-    [3000, 3030, 3040, 3045, 3092, 3130, 3200, 3230, 3330],
+    [3000, 3040, 3045, 3092, 3130, 3200, 3330],
     [4000, 4130, 4200],
     [6000],
     [7000],
@@ -1694,15 +1694,18 @@ assert.deepEqual(
   ],
   "Design-kit raw StyleX priorities no longer map to the reviewed eight-rank inventory",
 );
-// Foil artwork is progressive paint: unsupported masks and forced colors retain
-// the original vector/image. Both support-qualified rules stay in rank 4.
-assert.deepEqual(manifest.rules.filter(([, , priority]) => priority === 3030 || priority === 3230), [
-  ["x1166v7c", { ltr: "@supports (mask-image: linear-gradient(black, black)){.x1166v7c.x1166v7c{display:block}}", rtl: null }, 3030],
-  ["x1agje6k", { ltr: "@supports (mask-image: linear-gradient(black, black)){@media (forced-colors: active){.x1agje6k.x1agje6k.x1agje6k{display:none}}}", rtl: null }, 3230],
-], "Mask support priorities must contain only the foil fallback rules");
-for (const name of ["x1166v7c", "x1agje6k"]) {
-  assert.equal(requireRuleSerializedRank(compiledCss, name, designPriorityContract, "dist/stylex.css"), "priority4");
+// Foil visibility belongs to mark-specific custom properties in rank 1;
+// the consuming display atom remains rank 4 without sharing generic hidden state.
+assert.deepEqual(manifest.rules.filter(([, rule]) => rule.ltr.includes("--_hraness-foil-mark-display")), [
+  ["x543tnb", { ltr: ".x543tnb{--_hraness-foil-mark-display:none}", rtl: null }, 1],
+  ["xrpgoez", { ltr: "@supports (mask-image: linear-gradient(black, black)){.xrpgoez.xrpgoez{--_hraness-foil-mark-display:block}}", rtl: null }, 31],
+  ["x1hrs4vd", { ltr: "@supports (mask-image: linear-gradient(black, black)){@media (forced-colors: active){.x1hrs4vd.x1hrs4vd.x1hrs4vd{--_hraness-foil-mark-display:none}}}", rtl: null }, 231],
+  ["x1g1hdg2", { ltr: ".x1g1hdg2{display:var(--_hraness-foil-mark-display)}", rtl: null }, 3000],
+], "Mask support must retain the exact mark-owned visibility rules");
+for (const name of ["x543tnb", "xrpgoez", "x1hrs4vd"]) {
+  assert.equal(requireRuleSerializedRank(compiledCss, name, designPriorityContract, "dist/stylex.css"), "priority1");
 }
+assert.equal(requireRuleSerializedRank(compiledCss, "x1g1hdg2", designPriorityContract, "dist/stylex.css"), "priority4");
 // TextField paints a containing control div. Its disabled input remains the
 // authority for inset paint; this :has atom belongs to existing rank 4.
 assert.deepEqual(manifest.rules.filter(([, , priority]) => priority === 3045), [[
