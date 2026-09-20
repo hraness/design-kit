@@ -503,21 +503,25 @@
 .hraness-foil-text,
 .hraness-marketing-header__brand {
   --hraness-foil-glow: 0;
-  background-image:
-    radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%),
-    conic-gradient(from var(--hraness-foil-angle, 135deg),
-      color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))),
-      color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))));
+  background-image: var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--hraness-foil-halo-alpha, 0.3)));
+  filter: none;
+}
+
+
+/* The original image remains underneath as the no-mask/CSP/forced-color fallback.
+ * Only its exact alpha silhouette receives the shared metallic paint. */
+.hraness-foil-mark { display: inline-flex; position: relative; flex-shrink: 0; color: var(--foreground, CanvasText); line-height: 0; vertical-align: middle; inline-size: var(--hraness-foil-size, 1.5rem); block-size: var(--hraness-foil-size, 1.5rem); }
+.hraness-foil-mark__image { display: block; inline-size: 100%; block-size: 100%; object-fit: contain; }
+.hraness-foil-mark__paint { display: none; position: absolute; inset: 0; pointer-events: none; mask-image: var(--hraness-foil-mask, linear-gradient(transparent, transparent)); mask-mode: alpha; mask-repeat: no-repeat; mask-position: center; mask-size: contain; background-image: var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%)); }
+@supports (mask-image: linear-gradient(black, black)) {
+  .hraness-foil-mark__paint { display: block; }
+}
+@media (forced-colors: active) {
+  .hraness-foil-mark__paint { display: none; }
 }
 
 @media (hover: hover) {

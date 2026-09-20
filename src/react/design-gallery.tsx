@@ -26,6 +26,7 @@ import { BarListChart, RangePlotChart } from "./charts.js";
 import { ChatComposer, ChatMessage } from "./chat.js";
 import { Fader } from "./fader.js";
 import { FoilCardDeck, FoilCardSurface } from "./foil-card-surface.js";
+import { FoilMark } from "./foil-mark.js";
 import { foilClassName } from "./foil.stylex.js";
 import { LanternMaterialGallery } from "./lantern-material-gallery.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
@@ -413,12 +414,12 @@ export function DesignSystemGallery({
           />
           <div className="design-gallery__foil-note">
             <p>
-              Every shared metallic surface reads one six-stop spectrum. Wordmarks use{" "}
+              Metallic wordmarks and exact-shape marks share a restrained rainbow reflection. Wordmarks use{" "}
               <code>.hraness-foil-text</code>, primary calls to action use <code>.hraness-foil</code>,
               and <code>attachFoil</code> eases the pointer inputs on <code>data-foil</code> targets.
             </p>
             <p className="design-gallery__foil-row">
-              <a className={foilClassName("text", "design-gallery__foil-wordmark")} data-foil="" href="#marketing">Relay</a>
+              <a className={foilClassName("text", "design-gallery__foil-wordmark")} data-foil="" href="#marketing"><FoilMark src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z'/%3E%3C/svg%3E" /> Relay</a>
               <a className={foilClassName("surface", "design-gallery__foil-action")} data-foil="" href="#gallery-install">Install Relay</a>
             </p>
           </div>

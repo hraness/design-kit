@@ -1127,10 +1127,6 @@
     background-image: radial-gradient(circle at var(--foil-light-x, 50%) var(--foil-light-y, 50%),#fffffff0 0,#ffffff5c 10%,transparent 36%);
   }
 
-  .x15smbhz {
-    background-image: radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in srgb,white calc(48% + var(--hraness-foil-glow, 0) * 32%),transparent) 0%,transparent 56%),conic-gradient(from var(--hraness-foil-angle, 135deg),color-mix(in oklch,var(--_hraness-foil-1) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-2) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-3) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-4) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-5) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-6) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))),color-mix(in oklch,var(--_hraness-foil-1) 70%,var(--hraness-foil-text-base, var(--foreground, CanvasText))));
-  }
-
   .x6wo6xk {
     background-image: radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(90deg, #ffffffc7, #0000), radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(270deg, #ffffffc7, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(0deg, #ffffffad, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(#ffffffad, #0000);
   }
@@ -1197,6 +1193,10 @@
 
   .xivesky {
     background-image: repeating-radial-gradient(at 50% 120%, #0000 0 11px, #ffffff57 12px 13px, #0000 14px 23px);
+  }
+
+  .x17npd8u {
+    background-image: var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg),color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent)),linear-gradient(var(--hraness-foil-angle, 135deg),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%,var(--background, Canvas)) 0%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 18%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%,var(--background, Canvas)) 34%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 43%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%,var(--background, Canvas)) 47%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%,var(--background, Canvas)) 52%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 64%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%,var(--background, Canvas)) 83%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%,var(--background, Canvas)) 100%));
   }
 
   .x1drtmal {
@@ -1329,6 +1329,10 @@
 
   .x1du97gc {
     block-size: var(--hraness-design-fader-track-length);
+  }
+
+  .x3cr0vx {
+    block-size: var(--hraness-foil-size, 1.5rem);
   }
 
   .xmuazpc {
@@ -1691,8 +1695,8 @@
     filter: drop-shadow(0 0 .35rem #ffffff38);
   }
 
-  .x1crnov3 {
-    filter: drop-shadow(0 0 .3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo)));
+  .xkcp37y {
+    filter: none;
   }
 
   .x2g5esg {
@@ -2071,6 +2075,10 @@
     inline-size: var(--hraness-design-fader-thumb-inline-size);
   }
 
+  .x1oizhx2 {
+    inline-size: var(--hraness-foil-size, 1.5rem);
+  }
+
   .x1ool8vb {
     inline-size: var(--hraness-marketing-install-inline-size, min(100%,var(--hraness-marketing-measure)));
   }
@@ -2256,6 +2264,31 @@
     mask-image: radial-gradient(#000 8%, #0000 78%);
   }
 
+  .xm1fs8r {
+    -webkit-mask-image: var(--hraness-foil-mask, linear-gradient(transparent,transparent));
+    mask-image: var(--hraness-foil-mask, linear-gradient(transparent,transparent));
+  }
+
+  .x5e4rk6 {
+    -webkit-mask-source-type: alpha;
+    mask-mode: alpha;
+  }
+
+  .x1rudrqi {
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+
+  .x16fucec {
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+
+  .x2k2kcx {
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+
   .xn0k27n {
     max-block-size: min(24rem, 70vh);
   }
@@ -2398,6 +2431,10 @@
 
   .x1poe65g {
     mix-blend-mode: soft-light;
+  }
+
+  .x19kjcj4 {
+    object-fit: contain;
   }
 
   .xmu36h7 {
@@ -2713,6 +2750,10 @@
     user-select: none;
   }
 
+  .xxymvpz {
+    vertical-align: middle;
+  }
+
   .xuxw1ft {
     white-space: nowrap;
   }
@@ -2755,6 +2796,12 @@
 
   .x1guzgd5 {
     z-index: var(--z-tooltip, 3000);
+  }
+
+  @supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
+    .x1166v7c.x1166v7c {
+      display: block;
+    }
   }
 
   .x1whfoju:is([data-focused], [data-hovered], :focus-visible, :hover), .x852r0y:is([data-hovered], :hover) {
@@ -3250,6 +3297,14 @@
 
     .x12w9bfk.x12w9bfk {
       transition-duration: 0s;
+    }
+  }
+
+  @supports ((-webkit-mask-image: linear-gradient(black, black)) or (mask-image: linear-gradient(black, black))) {
+    @media (forced-colors: active) {
+      .x1agje6k.x1agje6k.x1agje6k {
+        display: none;
+      }
     }
   }
 

@@ -41,11 +41,11 @@ const foilStops = {
 
 export const foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))";
 
-export const foilTextImage = "radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%), conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-2) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-3) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-4) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-5) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-6) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))))";
+export const foilTextImage = "var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%))";
 
 export const foilHalo = "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))";
 
-export const foilTextHalo = "drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo)))";
+export const foilTextHalo = "none";
 
 export const foilStyles = stylex.create({
   surface: {
@@ -93,7 +93,7 @@ export const foilStyles = stylex.create({
     "background-clip": "text",
     "color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" },
     "-webkit-text-fill-color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" },
-    "filter": { "default": foilTextHalo, "@media (forced-colors: active)": "none" },
+    "filter": "none",
   },
 });
 
@@ -109,4 +109,48 @@ export function foilClassName(kind: FoilKind, caller?: string): string {
   const hook = foilHooks[kind];
   return [hook, stylex.props(foilStyles[kind]).className, caller]
     .filter((value) => value !== undefined && value.length > 0).join(" ");
+}
+
+
+const markStyles = stylex.create({
+  root: {
+    "display": "inline-flex",
+    "position": "relative",
+    "flex-shrink": "0",
+    "color": "var(--foreground, CanvasText)",
+    "line-height": "0",
+    "vertical-align": "middle",
+    "inline-size": "var(--hraness-foil-size, 1.5rem)",
+    "block-size": "var(--hraness-foil-size, 1.5rem)",
+  },
+  image: {
+    "display": "block",
+    "inline-size": "100%",
+    "block-size": "100%",
+    "object-fit": "contain",
+  },
+  paint: {
+    ...foilStops,
+    "display": {
+      "default": "none",
+      "@supports (mask-image: linear-gradient(black, black))": {
+        "default": "block",
+        "@media (forced-colors: active)": "none",
+      },
+    },
+    "position": "absolute",
+    "inset": "0",
+    "pointer-events": "none",
+    "background-image": foilTextImage,
+    "mask-image": "var(--hraness-foil-mask, linear-gradient(transparent, transparent))",
+    "mask-mode": "alpha",
+    "mask-repeat": "no-repeat",
+    "mask-position": "center",
+    "mask-size": "contain",
+  },
+});
+
+export function foilMarkClassName(part: keyof typeof markStyles, caller?: string): string {
+  const hook = part === "root" ? "hraness-foil-mark" : `hraness-foil-mark__${part}`;
+  return [hook, stylex.props(markStyles[part]).className, caller].filter(Boolean).join(" ");
 }

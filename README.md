@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.10.1",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.11.0",
     "@hraness/ui": "github:hraness/ui#v0.5.16"
   }
 }
@@ -22,6 +22,31 @@ Pin the immutable GitHub release:
 `v0.5.16` when using the stylesheet, React, or compiler-adopter entries. The peer is optional at
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
+
+### Metallic brand marks
+
+`FoilMark` is available from both React entry points, including the server-safe
+`@hraness/design-kit/react/server`. Give it a transparent same-origin SVG (or a
+data URL); the exact artwork alpha carries the material and the original image
+remains underneath as a fallback. An optional `fallback` accepts the original
+inline vector for currentColor behavior. The mark is decorative unless `label`
+is supplied. Name its enclosing link once.
+
+```tsx
+<MarketingSiteHeader brand="Relay" brandMark="/marks/relay.svg" links={[]} />
+<FoilMark src="/marks/relay.svg" size={44} />
+```
+
+Wordmarks and marks use contrast-bearing metal bands with a faint rainbow
+reflection, including before hydration and on touch devices. The existing
+`attachFoil` controller adds bounded pointer movement only when motion and
+forced-color preferences permit it. `--hraness-foil-reflection` defaults to
+`14%`; `--hraness-foil-image` can replace the shared text/mark paint. Existing
+spectrum tokens and primary-action surfaces remain compatible. A blocked inline
+mask style or unsupported masks retain the original image. Cross-origin masks
+require the asset server's CORS permission; prefer local assets. Forced colors
+remove the overlay entirely.
+
 
 ## Load the presentation layer
 
@@ -416,7 +441,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.16` with `@hraness/design-kit` `v0.10.1`. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.16` with `@hraness/design-kit` `v0.11.0`. Version 0.11 adds server-rendered `FoilMark` artwork and metallic text with subtle rainbow reflections, including a shared header mark seam and original-artwork fallbacks. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

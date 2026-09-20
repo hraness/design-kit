@@ -251,7 +251,7 @@ export const marketingStyles = stylex.create({
       "@media (hover: hover)": { ":hover": "1" }
     },
     "background-image": {
-      "default": "radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(48% + var(--hraness-foil-glow, 0) * 32%), transparent) 0%, transparent 56%), conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-2) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-3) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-4) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-5) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-6) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))), color-mix(in oklch, var(--_hraness-foil-1) 70%, var(--hraness-foil-text-base, var(--foreground, CanvasText))))",
+      "default": "var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%))",
       "@media (forced-colors: active)": "none"
     },
     "-webkit-background-clip": "text",
@@ -261,7 +261,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "CanvasText"
     },
     "filter": {
-      "default": "drop-shadow(0 0 0.3rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo)))",
+      "default": "none",
       "@media (forced-colors: active)": "none"
     }
   },
