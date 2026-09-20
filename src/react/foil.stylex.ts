@@ -131,7 +131,10 @@ const markStyles = stylex.create({
   },
   paint: {
     ...foilStops,
-    "display": {
+    // A generic display:none atom can be repeated by a later package layer and
+    // override our supported-mask state. Keep the conditional state mark-owned.
+    "display": "var(--_hraness-foil-mark-display)",
+    "--_hraness-foil-mark-display": {
       "default": "none",
       "@supports (mask-image: linear-gradient(black, black))": {
         "default": "block",

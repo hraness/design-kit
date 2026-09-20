@@ -65,7 +65,7 @@ import {
   foilTextImage,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-g3sxhh7q.js";
+} from "../chunk-x9hw6qm7.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
