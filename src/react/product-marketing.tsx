@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FoilMark } from "./foil-mark.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
 import type { MarketingColumnCount } from "./product-marketing.stylex.js";
@@ -128,6 +129,7 @@ export function MarketingSiteHeader({
   brand,
   brandHref = "/",
   brandLabel,
+  brandMark,
   className,
   links,
   trailing,
@@ -138,6 +140,8 @@ export function MarketingSiteHeader({
   brand: ReactNode;
   brandHref?: string;
   brandLabel?: string;
+  /** Transparent product mark; the original image remains the fallback. */
+  brandMark?: string;
   className?: string;
   links: readonly MarketingLink[];
   trailing?: ReactNode;
@@ -149,6 +153,7 @@ export function MarketingSiteHeader({
     <header className={classNames("hraness-marketing-header", className, sticky ? "default" : "static")} data-hraness-marketing="header">
       <div className={classNames("hraness-marketing-header__inner")}>
         <a className={classNames("hraness-marketing-header__brand")} data-foil="" href={brandHref} {...brandProperties}>
+          {brandMark === undefined ? null : <FoilMark src={brandMark} />}
           {brand}
         </a>
         <nav aria-label={ariaLabel} className={classNames("hraness-marketing-header__nav")}>

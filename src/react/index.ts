@@ -26,3 +26,4 @@ export * from "./route-state.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./theme.js";
+export * from "./foil-mark.js";

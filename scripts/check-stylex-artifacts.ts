@@ -1601,8 +1601,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.10.1" },
-  "StyleX manifest must describe design-kit v0.10.1",
+  { name: "@hraness/design-kit", version: "0.11.0" },
+  "StyleX manifest must describe design-kit v0.11.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1686,7 +1686,7 @@ assert.deepEqual(
     [0, 0.1, 0.5, 1, 131, 201, 241, 331],
     [1000, 1200],
     [2000, 2040, 2130, 2200],
-    [3000, 3040, 3045, 3092, 3130, 3200, 3330],
+    [3000, 3030, 3040, 3045, 3092, 3130, 3200, 3230, 3330],
     [4000, 4130, 4200],
     [6000],
     [7000],
@@ -1694,6 +1694,15 @@ assert.deepEqual(
   ],
   "Design-kit raw StyleX priorities no longer map to the reviewed eight-rank inventory",
 );
+// Foil artwork is progressive paint: unsupported masks and forced colors retain
+// the original vector/image. Both support-qualified rules stay in rank 4.
+assert.deepEqual(manifest.rules.filter(([, , priority]) => priority === 3030 || priority === 3230), [
+  ["x1166v7c", { ltr: "@supports (mask-image: linear-gradient(black, black)){.x1166v7c.x1166v7c{display:block}}", rtl: null }, 3030],
+  ["x1agje6k", { ltr: "@supports (mask-image: linear-gradient(black, black)){@media (forced-colors: active){.x1agje6k.x1agje6k.x1agje6k{display:none}}}", rtl: null }, 3230],
+], "Mask support priorities must contain only the foil fallback rules");
+for (const name of ["x1166v7c", "x1agje6k"]) {
+  assert.equal(requireRuleSerializedRank(compiledCss, name, designPriorityContract, "dist/stylex.css"), "priority4");
+}
 // TextField paints a containing control div. Its disabled input remains the
 // authority for inset paint; this :has atom belongs to existing rank 4.
 assert.deepEqual(manifest.rules.filter(([, , priority]) => priority === 3045), [[

@@ -106,3 +106,18 @@ test("the compiler-adopter foundation and compiled recipes carry the same foil c
   expect(foilRecipes).toContain('"hraness-foil"');
   expect(foilRecipes).toContain('"hraness-foil-text"');
 });
+
+
+test("metallic text and marks preserve a restrained spectrum and mask fallback", async () => {
+  const recipes = await Bun.file(new URL("./react/foil.stylex.ts", import.meta.url)).text();
+  const compiled = await Bun.file(new URL("./react/product-marketing.stylex.ts", import.meta.url)).text();
+  for (const source of [css, recipes, compiled]) {
+    expect(source).toContain("--hraness-foil-image");
+    expect(source).toContain("--hraness-foil-reflection, 14%");
+    expect(source).toContain("linear-gradient(var(--hraness-foil-angle, 135deg)");
+    expect(source).not.toContain("drop-shadow(0 0 0.3rem");
+  }
+  expect(css).toContain("mask-mode: alpha");
+  expect(css).toContain("--hraness-foil-mask, linear-gradient(transparent, transparent)");
+  expect(css).toMatch(/@media \(forced-colors: active\)\s*\{\s*\.hraness-foil-mark__paint \{ display: none; \}/u);
+});

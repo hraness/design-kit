@@ -143,7 +143,12 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(installCode?.textContent).toBe("bun add --global relay@1.2.3");
   expect(installCode?.getAttribute("data-language")).toBe("shell");
   expect(installCode?.querySelector(".syntax-token--command")?.textContent).toBe("bun");
-  expect(marketing?.querySelector("[style]")).toBeNull();
+  expect(marketing?.querySelector("[style]:not(.hraness-foil-mark):not(.hraness-foil-mark__paint)")).toBeNull();
+  const mark = marketing?.querySelector(".hraness-foil-mark");
+  expect(mark?.getAttribute("style")).toBe("--hraness-foil-size:24px");
+  expect(mark?.querySelector(".hraness-foil-mark__paint")?.getAttribute("style"))
+    .toStartWith('--hraness-foil-mask:url("data:image/svg+xml,');
+  expect(mark?.querySelector("img")?.getAttribute("src")).toStartWith("data:image/svg+xml,");
   expect(marketing?.querySelectorAll(".hraness-marketing-facts__item")).toHaveLength(6);
   expect(marketing?.querySelectorAll(".hraness-marketing-pillars__item")).toHaveLength(3);
   expect(marketing?.querySelector('.hraness-marketing-hero__copy > [data-gallery-marketing-slot="notice"]')?.tagName).toBe("P");

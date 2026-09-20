@@ -9,3 +9,5 @@ Everyday application screens stay quiet. Selection receives a warm paired fill a
 Information architecture precedes texture: bounded reading widths, meaningful groups, rows for collections, secondary details in native disclosures, critical availability visible before action, and one primary next step per section. Avoid equal-height card walls, dense technical labels in marketing and competing footer calls to action.
 
 See [Lantern material](LANTERN_MATERIAL.md) for the implementation contract and architectural sources, and [Marketing preset](MARKETING_PRESET.md) for the existing editorial/minimal roles.
+
+Brand foil uses contrast-bearing neutral metal bands with a restrained rainbow reflection. Apply it to the exact existing logo silhouette and wordmark, retain the original artwork fallback, and keep it legible at rest without animation. Forced colors use the original mark and system text.

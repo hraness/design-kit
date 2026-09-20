@@ -4,3 +4,4 @@ export * from "./procedural-recipe.js";
 export * from "./product-marketing.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";
+export * from "./foil-mark.js";
