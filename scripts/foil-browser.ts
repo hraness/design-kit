@@ -55,7 +55,7 @@ try {
         assert.equal(observed.height, observed.requested, "Mark keeps its requested height");
         assert.equal(observed.display, "block");
         assert(observed.mask.startsWith("url("));
-        assert(observed.paint.includes("conic-gradient") && observed.paint.includes("linear-gradient"));
+        assert(observed.paint.includes("radial-gradient") && observed.paint.includes("linear-gradient") && !observed.paint.includes("conic-gradient"));
       }
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
       await page.screenshot({ path: join(output, `${route}-${theme}-${width}.png`) });

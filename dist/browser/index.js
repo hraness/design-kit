@@ -1362,97 +1362,133 @@ function initDesignPalette(options = {}) {
   return installation.acquire();
 }
 // src/browser/foil.ts
-var REST_X = 50;
-var REST_Y = 50;
-var REST_ANGLE = 135;
-var EASE = 0.22;
+var REST = 50;
 var SETTLE = 0.05;
-var MIN_PCT = -100;
-var MAX_PCT = 200;
-var clamp = (value) => Math.max(MIN_PCT, Math.min(MAX_PCT, value));
-var wrap = (angle) => (angle % 360 + 360) % 360;
-var shortestTurn = (from, to) => wrap(to - from + 180) - 180;
+var RESPONSE_MS = 85;
+var MIN_LIGHT = 8;
+var MAX_LIGHT = 92;
+var INPUTS = ["--hraness-foil-x", "--hraness-foil-y"];
+var clampLight = (value) => Math.max(MIN_LIGHT, Math.min(MAX_LIGHT, value));
 function attachFoil(root) {
-  const view = root.ownerDocument?.defaultView;
-  if (view === null || view === undefined || typeof view.matchMedia !== "function" || typeof view.requestAnimationFrame !== "function")
+  const document = root.ownerDocument;
+  const view = document.defaultView;
+  if (!view || typeof view.matchMedia !== "function" || typeof view.requestAnimationFrame !== "function" || typeof view.cancelAnimationFrame !== "function")
     return () => {};
-  const preference = view.matchMedia("(prefers-reduced-motion: no-preference) and (forced-colors: none)");
+  const preference = view.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)");
   const states = new Map;
-  let pointerX = 0;
-  let pointerY = 0;
-  let frame = 0;
-  const reset = () => {
-    if (frame)
-      view.cancelAnimationFrame(frame);
-    frame = 0;
-    for (const target of states.keys()) {
-      target.style.removeProperty("--hraness-foil-x");
-      target.style.removeProperty("--hraness-foil-y");
-      target.style.removeProperty("--hraness-foil-angle");
-    }
-    states.clear();
+  let targets = [];
+  let needsTargets = true;
+  let pointer;
+  let frame = null;
+  let previousTime;
+  let detached = false;
+  const restore = (target) => {
+    for (const input of INPUTS)
+      target.style.removeProperty(input);
   };
-  const paint = () => {
-    frame = 0;
-    if (!preference.matches) {
+  const reset = () => {
+    if (frame !== null)
+      view.cancelAnimationFrame(frame);
+    frame = null;
+    previousTime = undefined;
+    pointer = undefined;
+    for (const target of states.keys())
+      restore(target);
+    states.clear();
+    targets = [];
+    needsTargets = true;
+  };
+  const refreshTargets = () => {
+    targets = [...root.matches("[data-foil]") ? [root] : [], ...root.querySelectorAll("[data-foil]")].filter((target) => {
+      const ancestor = target.parentElement?.closest("[data-foil]");
+      return !ancestor || !root.contains(ancestor);
+    });
+    const live = new Set(targets);
+    for (const target of states.keys()) {
+      if (!live.has(target)) {
+        restore(target);
+        states.delete(target);
+      }
+    }
+    needsTargets = false;
+  };
+  const paint = (time) => {
+    frame = null;
+    if (detached || !preference.matches || document.hidden || !pointer) {
       reset();
       return;
     }
-    const live = new Set(root.querySelectorAll("[data-foil]"));
-    for (const target of states.keys())
-      if (!live.has(target))
-        states.delete(target);
-    let settled = true;
-    for (const target of live) {
-      if (!target.isConnected) {
-        states.delete(target);
+    if (needsTargets)
+      refreshTargets();
+    const elapsed = previousTime === undefined ? 1000 / 60 : Math.max(0, Math.min(64, time - previousTime));
+    previousTime = time;
+    const ease = 1 - Math.exp(-elapsed / RESPONSE_MS);
+    const measured = targets.map((target) => ({
+      target,
+      bounds: target.getBoundingClientRect()
+    }));
+    let moving = false;
+    for (const {
+      target,
+      bounds
+    } of measured) {
+      if (!target.isConnected || !root.contains(target) || bounds.width <= 0 || bounds.height <= 0 || bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= view.innerHeight || bounds.left >= view.innerWidth) {
+        if (states.has(target)) {
+          restore(target);
+          states.delete(target);
+        }
         continue;
       }
-      const bounds = target.getBoundingClientRect();
-      const tx = clamp((pointerX - bounds.left) / Math.max(1, bounds.width) * 100);
-      const ty = clamp((pointerY - bounds.top) / Math.max(1, bounds.height) * 100);
-      const ta = wrap(Math.atan2(pointerY - (bounds.top + bounds.height / 2), pointerX - (bounds.left + bounds.width / 2)) * (180 / Math.PI) + 90);
-      let state = states.get(target);
-      if (!state) {
-        state = {
-          x: REST_X,
-          y: REST_Y,
-          angle: REST_ANGLE
-        };
-        states.set(target, state);
+      const goal = {
+        x: clampLight(REST + (pointer.x - bounds.left - bounds.width / 2) / Math.max(160, bounds.width) * 60),
+        y: clampLight(REST + (pointer.y - bounds.top - bounds.height / 2) / Math.max(120, bounds.height) * 50)
+      };
+      const light = states.get(target) ?? {
+        x: REST,
+        y: REST
+      };
+      for (const axis of ["x", "y"]) {
+        const distance = goal[axis] - light[axis];
+        if (Math.abs(distance) > SETTLE) {
+          light[axis] += distance * ease;
+          moving = true;
+        } else
+          light[axis] = goal[axis];
       }
-      const dx = tx - state.x;
-      const dy = ty - state.y;
-      const da = shortestTurn(state.angle, ta);
-      if (Math.abs(dx) > SETTLE || Math.abs(dy) > SETTLE || Math.abs(da) > SETTLE) {
-        settled = false;
-        state.x += dx * EASE;
-        state.y += dy * EASE;
-        state.angle = wrap(state.angle + da * EASE);
-      } else {
-        state.x = tx;
-        state.y = ty;
-        state.angle = ta;
+      states.set(target, light);
+      for (const axis of ["x", "y"]) {
+        const input = `--hraness-foil-${axis}`;
+        const value = `${light[axis].toFixed(2)}%`;
+        if (target.style.getPropertyValue(input) !== value)
+          target.style.setProperty(input, value);
       }
-      target.style.setProperty("--hraness-foil-x", `${state.x.toFixed(1)}%`);
-      target.style.setProperty("--hraness-foil-y", `${state.y.toFixed(1)}%`);
-      target.style.setProperty("--hraness-foil-angle", `${state.angle.toFixed(1)}deg`);
     }
-    if (!settled)
+    if (moving)
       frame = view.requestAnimationFrame(paint);
+    else
+      previousTime = undefined;
   };
   const move = (event) => {
-    if (!preference.matches) {
+    if (!preference.matches || document.hidden || event.pointerType === "touch") {
       reset();
       return;
     }
-    pointerX = event.clientX;
-    pointerY = event.clientY;
-    if (!frame)
+    if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY))
+      return;
+    pointer = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    needsTargets = true;
+    if (frame === null)
       frame = view.requestAnimationFrame(paint);
   };
-  const release = (event) => {
-    if (event.pointerType === "touch")
+  const leave = (event) => {
+    if (event.relatedTarget === null)
+      reset();
+  };
+  const visibility = () => {
+    if (document.hidden)
       reset();
   };
   view.addEventListener("pointermove", move, {
@@ -1461,19 +1497,31 @@ function attachFoil(root) {
   view.addEventListener("pointerdown", move, {
     passive: true
   });
-  view.addEventListener("pointerup", release, {
+  view.addEventListener("pointerout", leave, {
     passive: true
   });
   view.addEventListener("pointercancel", reset);
   view.addEventListener("blur", reset);
+  view.addEventListener("scroll", reset, {
+    passive: true,
+    capture: true
+  });
+  view.addEventListener("resize", reset, {
+    passive: true
+  });
+  document.addEventListener("visibilitychange", visibility);
   preference.addEventListener("change", reset);
   return () => {
+    detached = true;
     reset();
     view.removeEventListener("pointermove", move);
     view.removeEventListener("pointerdown", move);
-    view.removeEventListener("pointerup", release);
+    view.removeEventListener("pointerout", leave);
     view.removeEventListener("pointercancel", reset);
     view.removeEventListener("blur", reset);
+    view.removeEventListener("scroll", reset, true);
+    view.removeEventListener("resize", reset);
+    document.removeEventListener("visibilitychange", visibility);
     preference.removeEventListener("change", reset);
   };
 }

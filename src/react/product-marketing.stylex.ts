@@ -1,5 +1,39 @@
 import * as stylex from "@stylexjs/stylex";
 
+// The authored material recipe lives in ../foil-material.ts. These projections
+// must serialize to foilMaterial.stylex exactly; tests bind them to it.
+const foilStops = {
+  "--_hraness-foil-1": {
+    "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))",
+  },
+  "--_hraness-foil-2": {
+    "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))",
+  },
+  "--_hraness-foil-3": {
+    "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))",
+  },
+  "--_hraness-foil-4": {
+    "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))",
+  },
+  "--_hraness-foil-5": {
+    "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))",
+  },
+  "--_hraness-foil-6": {
+    "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))",
+  },
+};
+
+const foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
+const foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(115deg, var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6))";
+const foilSurfaceClip = "padding-box, border-box, border-box, border-box";
+const foilHalo = "0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent)";
+
 export type MarketingColumnCount = 1 | 2 | 3 | 4;
 
 // The public static stylesheet is the legacy reference. These owned slot recipes
@@ -218,40 +252,13 @@ export const marketingStyles = stylex.create({
     "font-weight": "700",
     "letter-spacing": "-0.04em",
     "text-decoration": "none",
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover": "1" }
     },
     "background-image": {
-      "default": "var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%))",
+      "default": foilTextImage,
       "@media (forced-colors: active)": "none"
     },
     "-webkit-background-clip": "text",
@@ -326,6 +333,41 @@ export const marketingStyles = stylex.create({
     "font-weight": "700",
     "letter-spacing": "-0.04em",
     "text-decoration": "none"
+  },
+  // Same foil lockup as the site header: steady glyphs, moving light. The
+  // caller opts in with a transparent `brandMark` so inline-vector `brand`
+  // callers keep their currentColor presentation.
+  "footer__brandFoil": {
+    "display": "inline-flex",
+    "align-items": "center",
+    "gap": "0.4rem",
+    "color": {
+      "default": "transparent",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "font-size": "0.9375rem",
+    "font-weight": "700",
+    "letter-spacing": "-0.04em",
+    "text-decoration": "none",
+    ...foilStops,
+    "--hraness-foil-glow": {
+      "default": "0",
+      "@media (hover: hover)": { ":hover": "1" }
+    },
+    "background-image": {
+      "default": foilTextImage,
+      "@media (forced-colors: active)": "none"
+    },
+    "-webkit-background-clip": "text",
+    "background-clip": "text",
+    "-webkit-text-fill-color": {
+      "default": "transparent",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "filter": {
+      "default": "none",
+      "@media (forced-colors: active)": "none"
+    }
   },
   "footer__name": {
     "overflow": "hidden",
@@ -2636,34 +2678,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "actionPrimary": {
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -2727,10 +2742,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "default": foilSurfaceImage,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "default": foilSurfaceImage,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -2758,10 +2773,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-clip": {
-      "default": "padding-box, border-box, border-box",
+      "default": foilSurfaceClip,
       "@media (forced-colors: active)": "border-box",
       ":hover": {
-        "default": "padding-box, border-box, border-box",
+        "default": foilSurfaceClip,
         "@media (forced-colors: active)": "border-box"
       }
     },
@@ -2771,10 +2786,10 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "box-shadow": {
-      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "default": foilHalo,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "default": foilHalo,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -2891,34 +2906,7 @@ export const marketingStyles = stylex.create({
     "padding-inline": "0.8rem"
   },
   "headerActionPrimary": {
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -2979,10 +2967,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "default": foilSurfaceImage,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "default": foilSurfaceImage,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3010,10 +2998,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-clip": {
-      "default": "padding-box, border-box, border-box",
+      "default": foilSurfaceClip,
       "@media (forced-colors: active)": "border-box",
       ":hover": {
-        "default": "padding-box, border-box, border-box",
+        "default": foilSurfaceClip,
         "@media (forced-colors: active)": "border-box"
       }
     },
@@ -3023,10 +3011,10 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "box-shadow": {
-      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "default": foilHalo,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "default": foilHalo,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3147,34 +3135,7 @@ export const marketingStyles = stylex.create({
     "justify-self": "start"
   },
   "planActionPrimary": {
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3238,10 +3199,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "default": foilSurfaceImage,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "default": foilSurfaceImage,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3269,10 +3230,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-clip": {
-      "default": "padding-box, border-box, border-box",
+      "default": foilSurfaceClip,
       "@media (forced-colors: active)": "border-box",
       ":hover": {
-        "default": "padding-box, border-box, border-box",
+        "default": foilSurfaceClip,
         "@media (forced-colors: active)": "border-box"
       }
     },
@@ -3282,10 +3243,10 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "box-shadow": {
-      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "default": foilHalo,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "default": foilHalo,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3304,34 +3265,7 @@ export const marketingStyles = stylex.create({
     "justify-self": "start"
   },
   "heroActionPrimary": {
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3395,10 +3329,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "default": foilSurfaceImage,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "default": foilSurfaceImage,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3423,10 +3357,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-clip": {
-      "default": "padding-box, border-box, border-box",
+      "default": foilSurfaceClip,
       "@media (forced-colors: active)": "border-box",
       ":hover": {
-        "default": "padding-box, border-box, border-box",
+        "default": foilSurfaceClip,
         "@media (forced-colors: active)": "border-box"
       }
     },
@@ -3435,10 +3369,10 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "box-shadow": {
-      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "default": foilHalo,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "default": foilHalo,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3564,34 +3498,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "ctaActionPrimary": {
-    "--_hraness-foil-1": {
-      "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-1, oklch(0.56 0.16 340))"
-    },
-    "--_hraness-foil-2": {
-      "default": "var(--hraness-foil-2, oklch(0.875 0.05 277))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-2, oklch(0.52 0.15 285))"
-    },
-    "--_hraness-foil-3": {
-      "default": "var(--hraness-foil-3, oklch(0.92 0.05 170))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-3, oklch(0.66 0.14 175))"
-    },
-    "--_hraness-foil-4": {
-      "default": "var(--hraness-foil-4, oklch(0.95 0.045 96))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-4, oklch(0.72 0.13 100))"
-    },
-    "--_hraness-foil-5": {
-      "default": "var(--hraness-foil-5, oklch(0.9 0.05 55))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-5, oklch(0.55 0.15 45))"
-    },
-    "--_hraness-foil-6": {
-      "default": "var(--hraness-foil-6, oklch(0.875 0.06 305))",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-6, oklch(0.62 0.16 305))"
-    },
-    "--_hraness-foil-halo": {
-      "default": "var(--hraness-foil-halo-alpha, 0.3)",
-      "@media (prefers-color-scheme: dark)": "var(--hraness-foil-halo-alpha, 0.45)"
-    },
+    ...foilStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3652,10 +3559,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+      "default": foilSurfaceImage,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))",
+        "default": foilSurfaceImage,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3680,10 +3587,10 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-clip": {
-      "default": "padding-box, border-box, border-box",
+      "default": foilSurfaceClip,
       "@media (forced-colors: active)": "border-box",
       ":hover": {
-        "default": "padding-box, border-box, border-box",
+        "default": foilSurfaceClip,
         "@media (forced-colors: active)": "border-box"
       }
     },
@@ -3692,10 +3599,10 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "box-shadow": {
-      "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+      "default": foilHalo,
       "@media (forced-colors: active)": "none",
       ":hover": {
-        "default": "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))",
+        "default": foilHalo,
         "@media (forced-colors: active)": "none"
       }
     },
@@ -3816,7 +3723,7 @@ const recipes = {
   "hraness-marketing-header__actions": { "default": marketingStyles.header__actions },
   "hraness-marketing-footer": { "default": marketingStyles.footer },
   "hraness-marketing-footer__inner": { "default": marketingStyles.footer__inner },
-  "hraness-marketing-footer__brand": { "default": marketingStyles.footer__brand },
+  "hraness-marketing-footer__brand": { "default": marketingStyles.footer__brand, "foil": marketingStyles.footer__brandFoil },
   "hraness-marketing-footer__name": { "default": marketingStyles.footer__name },
   "hraness-marketing-footer__nav": { "default": marketingStyles.footer__nav },
   "hraness-marketing-footer__link": { "default": marketingStyles.footer__link, "current": marketingStyles.footer__linkCurrent },

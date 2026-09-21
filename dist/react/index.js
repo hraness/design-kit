@@ -60,12 +60,13 @@ import {
   foilHalo,
   foilMarkClassName,
   foilStyles,
+  foilSurfaceBackgroundClip,
   foilSurfaceImage,
   foilTextHalo,
   foilTextImage,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-x9hw6qm7.js";
+} from "../chunk-3gy1dh1z.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -5362,6 +5363,7 @@ export {
   foilTextImage,
   foilTextHalo,
   foilSurfaceImage,
+  foilSurfaceBackgroundClip,
   foilStyles,
   foilMarkClassName,
   foilHalo,
