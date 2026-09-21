@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { foilMaterial } from "./foil-material";
 
 const css = await Bun.file(new URL("./product-marketing.css", import.meta.url)).text();
 const styles = await Bun.file(new URL("./styles.css", import.meta.url)).text();
@@ -52,14 +53,15 @@ test("the soft-accent hero eyebrow keeps readable label ink", () => {
 
 test("the shared foil contract styles brand wordmarks and primary actions", () => {
   expect(css).toMatch(/\.hraness-foil,\s*\.hraness-marketing-action\[data-emphasis="primary"\]/u);
-  expect(css).toMatch(/\.hraness-foil-text,\s*\.hraness-marketing-header__brand/u);
+  expect(css).toMatch(/\.hraness-foil-text,\s*\.hraness-marketing-header__brand,\s*\.hraness-marketing-footer__brand\[data-foil\]/u);
   for (const stop of ["--hraness-foil-1", "--hraness-foil-2", "--hraness-foil-3",
-    "--hraness-foil-4", "--hraness-foil-5", "--hraness-foil-6", "--hraness-foil-halo-alpha"]) {
+    "--hraness-foil-4", "--hraness-foil-5", "--hraness-foil-6"]) {
     expect(css).toContain(`${stop}:`);
   }
-  for (const input of ["--hraness-foil-x", "--hraness-foil-y", "--hraness-foil-angle", "--hraness-foil-glow"]) {
+  for (const input of ["--hraness-foil-x", "--hraness-foil-y", "--hraness-foil-glow"]) {
     expect(css).toContain(input);
   }
+  expect(css).not.toContain("--hraness-foil-angle");
   expect(css).toContain("background-clip: text");
   expect(css).toContain("-webkit-text-fill-color: transparent");
   expect(css).toContain("-webkit-text-fill-color: CanvasText");
@@ -70,7 +72,7 @@ test("the darker dark foil palette keeps the pointer sheen visible", () => {
   expect(css).toContain('[data-theme="dark"], .dark');
   expect(css).toContain("@media (prefers-color-scheme: dark)");
   expect(css).toContain("--hraness-foil-1: oklch(0.56 0.16 340)");
-  expect(css).toContain("--hraness-foil-halo-alpha: 0.45");
+  expect(css).toContain("--hraness-foil-6: oklch(0.62 0.16 305)");
 });
 
 test("the compiler-adopter foundation and compiled recipes carry the same foil contract", async () => {
@@ -82,17 +84,22 @@ test("the compiler-adopter foundation and compiled recipes carry the same foil c
   for (const declaration of css.matchAll(/--hraness-foil-\d+:\s*[^;]+;/gu)) {
     expect(normalize(foundation)).toContain(normalize(declaration[0]));
   }
-  expect(normalize(foundation)).toContain(normalize("--hraness-foil-halo-alpha: 0.3;"));
-  // The compiled route serializes the same image and token literals. Private
-  // --_hraness-foil-* stops carry the public override ahead of each scheme
-  // default so product overrides and the dark palette survive compilation.
+  // The compiled routes serialize the authored material verbatim: the fixed
+  // direction, both moving-light fields, the spectrum band set, the four-stop
+  // surface clip, and the restrained halo. Private --_hraness-foil-* stops
+  // carry the public override ahead of each scheme default so product
+  // overrides and the dark palette survive compilation.
   for (const literal of [
-    "conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1)",
+    "linear-gradient(115deg, var(--_hraness-foil-1)",
     '"--_hraness-foil-1"',
     '"var(--hraness-foil-1, oklch(0.89 0.065 337))"',
     '"var(--hraness-foil-1, oklch(0.56 0.16 340))"',
     "--hraness-foil-surface",
     "--hraness-foil-glow",
+    foilMaterial.stylex.surfaceImage,
+    foilMaterial.stylex.textImage,
+    foilMaterial.surfaceBackgroundClip,
+    foilMaterial.halo,
   ]) {
     expect(compiled).toContain(literal);
     expect(foilRecipes).toContain(literal);
@@ -111,13 +118,19 @@ test("the compiler-adopter foundation and compiled recipes carry the same foil c
 test("metallic text and marks preserve a restrained spectrum and mask fallback", async () => {
   const recipes = await Bun.file(new URL("./react/foil.stylex.ts", import.meta.url)).text();
   const compiled = await Bun.file(new URL("./react/product-marketing.stylex.ts", import.meta.url)).text();
+  const normalize = (text: string) => text.replace(/\s+/gu, "");
   for (const source of [css, recipes, compiled]) {
     expect(source).toContain("--hraness-foil-image");
     expect(source).toContain("--hraness-foil-reflection, 14%");
-    expect(source).toContain("linear-gradient(var(--hraness-foil-angle, 135deg)");
+    expect(source).toContain("linear-gradient(115deg");
+    expect(source).not.toContain("--hraness-foil-angle");
+    expect(source).not.toContain("conic-gradient(");
     expect(source).not.toContain("drop-shadow(0 0 0.3rem");
   }
+  // The handwritten sheet serializes the raw (unprefixed-stop) projection.
+  expect(normalize(css)).toContain(normalize(foilMaterial.raw.textImage));
+  expect(normalize(css)).toContain(normalize(foilMaterial.raw.surfaceImage));
   expect(css).toContain("mask-mode: alpha");
   expect(css).toContain("--hraness-foil-mask, linear-gradient(transparent, transparent)");
-  expect(css).toMatch(/@media \(forced-colors: active\)\s*\{\s*\.hraness-foil-mark__paint \{ display: none; \}/u);
+  expect(css).toMatch(/@media \(forced-colors: active\)\s*\{(?:[^{}]|\{[^}]*\})*\.hraness-foil-mark__paint \{ --_hraness-foil-mark-display: none; \}/u);
 });

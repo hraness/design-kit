@@ -926,8 +926,8 @@
     background-clip: border-box;
   }
 
-  .x188zq58 {
-    background-clip: padding-box, border-box, border-box;
+  .x123zpmm {
+    background-clip: padding-box, border-box, border-box, border-box;
   }
 
   .x1ta4xzc {
@@ -1111,8 +1111,8 @@
     background-image: linear-gradient(to top,var(--hraness-material-warm),var(--hraness-material-warm) 2px,transparent 2px);
   }
 
-  .x152klzg {
-    background-image: linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))),var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in srgb,white calc(64% + var(--hraness-foil-glow, 0) * 28%),transparent) 0%,transparent 46%),conic-gradient(from var(--hraness-foil-angle, 135deg),var(--_hraness-foil-1),var(--_hraness-foil-2),var(--_hraness-foil-3),var(--_hraness-foil-4),var(--_hraness-foil-5),var(--_hraness-foil-6),var(--_hraness-foil-1));
+  .x110o44i {
+    background-image: linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))),var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in srgb,white calc(60% + var(--hraness-foil-glow, 0) * 24%),transparent) 0%,transparent 72%),radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)),color-mix(in srgb,white var(--hraness-foil-sheen-opacity, 28%),transparent) 0%,transparent 78%),linear-gradient(115deg,var(--_hraness-foil-1),var(--_hraness-foil-2),var(--_hraness-foil-3),var(--_hraness-foil-4),var(--_hraness-foil-5),var(--_hraness-foil-6));
   }
 
   .x18o3ruo {
@@ -1195,8 +1195,8 @@
     background-image: repeating-radial-gradient(at 50% 120%, #0000 0 11px, #ffffff57 12px 13px, #0000 14px 23px);
   }
 
-  .x17npd8u {
-    background-image: var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg),color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent)),linear-gradient(var(--hraness-foil-angle, 135deg),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%,var(--background, Canvas)) 0%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 18%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%,var(--background, Canvas)) 34%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 43%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%,var(--background, Canvas)) 47%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%,var(--background, Canvas)) 52%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 64%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%,var(--background, Canvas)) 83%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%,var(--background, Canvas)) 100%));
+  .x1en47v2 {
+    background-image: var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%,var(--background, Canvas)) 0%,transparent 68%),radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 0%,transparent 72%),linear-gradient(115deg,color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%),transparent)),linear-gradient(115deg,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%,var(--background, Canvas)) 0%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 24%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%,var(--background, Canvas)) 39%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 56%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%,var(--background, Canvas)) 82%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 100%));
   }
 
   .x1drtmal {
@@ -1491,10 +1491,6 @@
     border-inline-start-width: 2px;
   }
 
-  .xa67z0c {
-    box-shadow: 0 0 .375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo));
-  }
-
   .x5kubdt {
     box-shadow: 0 0 0 100vmax var(--hraness-marketing-accent);
   }
@@ -1525,6 +1521,10 @@
 
   .xl1q07f {
     box-shadow: 0 1.75rem 5rem #04060c52, 0 0 2.4rem #70b1ff1f, inset 0 1px #ffffff57;
+  }
+
+  .x1csdrso {
+    box-shadow: 0 1px 4px color-mix(in srgb,var(--foreground, CanvasText) 12%,transparent);
   }
 
   .xlmpfgd {
@@ -2914,8 +2914,8 @@
     background-clip: border-box;
   }
 
-  .x1wba8d2:hover {
-    background-clip: padding-box, border-box, border-box;
+  .xbnmzcp:hover {
+    background-clip: padding-box, border-box, border-box, border-box;
   }
 
   .x1612i37:hover {
@@ -2930,8 +2930,8 @@
     background-color: var(--hraness-foil-surface, var(--surface, var(--background, Canvas)));
   }
 
-  .x1rpfruf:hover {
-    background-image: linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))),var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in srgb,white calc(64% + var(--hraness-foil-glow, 0) * 28%),transparent) 0%,transparent 46%),conic-gradient(from var(--hraness-foil-angle, 135deg),var(--_hraness-foil-1),var(--_hraness-foil-2),var(--_hraness-foil-3),var(--_hraness-foil-4),var(--_hraness-foil-5),var(--_hraness-foil-6),var(--_hraness-foil-1));
+  .x1388job:hover {
+    background-image: linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))),var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in srgb,white calc(60% + var(--hraness-foil-glow, 0) * 24%),transparent) 0%,transparent 72%),radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)),color-mix(in srgb,white var(--hraness-foil-sheen-opacity, 28%),transparent) 0%,transparent 78%),linear-gradient(115deg,var(--_hraness-foil-1),var(--_hraness-foil-2),var(--_hraness-foil-3),var(--_hraness-foil-4),var(--_hraness-foil-5),var(--_hraness-foil-6));
   }
 
   .xn3cpwa:hover {
@@ -2954,8 +2954,8 @@
     background-size: auto;
   }
 
-  .x1pd8fiw:hover {
-    box-shadow: 0 0 .375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo));
+  .x1njw758:hover {
+    box-shadow: 0 1px 4px color-mix(in srgb,var(--foreground, CanvasText) 12%,transparent);
   }
 
   .xucth70:hover {
@@ -4429,10 +4429,6 @@
   }
 }
 
-.x1ciovt3 {
-  --_hraness-foil-halo: var(--hraness-foil-halo-alpha, .3);
-}
-
 .x543tnb {
   --_hraness-foil-mark-display: none;
 }
@@ -4646,10 +4642,6 @@
     .x1bbyikp.x1bbyikp {
       --_hraness-foil-6: var(--hraness-foil-6, lab(53.5209% 36.7413 -47.0617));
     }
-  }
-
-  .x11yejcl.x11yejcl {
-    --_hraness-foil-halo: var(--hraness-foil-halo-alpha, .45);
   }
 }
 

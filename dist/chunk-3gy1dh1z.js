@@ -4,9 +4,10 @@ import {
 
 // src/react/foil.stylex.ts
 import * as stylex from "@stylexjs/stylex";
-var foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(circle at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(64% + var(--hraness-foil-glow, 0) * 28%), transparent) 0%, transparent 46%), conic-gradient(from var(--hraness-foil-angle, 135deg), var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6), var(--_hraness-foil-1))";
-var foilTextImage = "var(--hraness-foil-image, conic-gradient(from var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(var(--hraness-foil-angle, 135deg), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 78%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 18%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 72%, var(--background, Canvas)) 34%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 43%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 64%, var(--background, Canvas)) 47%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 52%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 64%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 70%, var(--background, Canvas)) 83%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 96%, var(--background, Canvas)) 100%))";
-var foilHalo = "0 0 0.375rem hsl(var(--hraness-foil-angle, 135deg) 55% 75% / var(--_hraness-foil-halo))";
+var foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(115deg, var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6))";
+var foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
+var foilSurfaceBackgroundClip = "padding-box, border-box, border-box, border-box";
+var foilHalo = "0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent)";
 var foilTextHalo = "none";
 var foilStyles = {
   surface: {
@@ -16,7 +17,6 @@ var foilStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     kp1lYL: "xamhcws",
     kj6szv: "xyy74w7",
@@ -31,10 +31,10 @@ var foilStyles = {
     k3smXN: "x16stqrj xaj2e6u",
     kzT0vu: "x1g4hjc xdhbxfy",
     kL20gf: "xtok3t1 x9yvj25",
-    kb5WsR: "x152klzg xhobzj1",
+    kb5WsR: "x110o44i xhobzj1",
     kVHNYi: "x1gqfdwy",
-    kUtEtU: "x188zq58",
-    kTJQHc: "xa67z0c xwaqzdf",
+    kUtEtU: "x123zpmm",
+    kTJQHc: "x1csdrso xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -45,9 +45,8 @@ var foilStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs xqglqw9",
-    kb5WsR: "x17npd8u xhobzj1",
+    kb5WsR: "x1en47v2 xhobzj1",
     kKB9KO: "x1t23j8t",
     kUtEtU: "x1ta4xzc",
     kMwMTN: "x19co3pv xs5hli",
@@ -90,13 +89,12 @@ var markStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     k1xSpc: "x1g1hdg2",
     "--_hraness-foil-mark-display": "x543tnb xrpgoez x1hrs4vd",
     kVAEAm: "x10l6tqk",
     kpwlN0: "x10a8y8t",
     kLXb5Q: "x47corl",
-    kb5WsR: "x17npd8u",
+    kb5WsR: "x1en47v2",
     kPmxSn: "xm1fs8r",
     kerMeY: "x5e4rk6",
     kUpoC4: "x16fucec",
@@ -1200,9 +1198,8 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs xqglqw9",
-    kb5WsR: "x17npd8u xhobzj1",
+    kb5WsR: "x1en47v2 xhobzj1",
     kKB9KO: "x1t23j8t",
     kUtEtU: "x1ta4xzc",
     k4aAMt: "xg7jpbn x1iqhqvn",
@@ -1266,6 +1263,29 @@ var marketingStyles = {
     ko3Kzr: "x1xlr1w8",
     kUEKN5: "xo2cfqc",
     kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  footer__brandFoil: {
+    k1xSpc: "x3nfvp2",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "x1neeqzj",
+    kMwMTN: "x19co3pv xs5hli",
+    kLh5Sq: "x6u19be",
+    ko3Kzr: "x1xlr1w8",
+    kUEKN5: "xo2cfqc",
+    kyVV8l: "x1hl2dhg",
+    "--_hraness-foil-1": "x35j2r9 x1dscx4y",
+    "--_hraness-foil-2": "xmntjkq x14xjb22",
+    "--_hraness-foil-3": "x1xbl91z x1iiaa4z",
+    "--_hraness-foil-4": "x47qxf1 x1n6b76k",
+    "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
+    "--_hraness-foil-6": "xx7v8hi x1bbyikp",
+    "--hraness-foil-glow": "x136ldfs xqglqw9",
+    kb5WsR: "x1en47v2 xhobzj1",
+    kKB9KO: "x1t23j8t",
+    kUtEtU: "x1ta4xzc",
+    k4aAMt: "xg7jpbn x1iqhqvn",
+    ku685b: "xkcp37y x1ejh6ix",
     $$css: true
   },
   footer__name: {
@@ -2932,7 +2952,6 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x8txlsq x13ub6g4",
     k1xSpc: "x3nfvp2",
@@ -2952,14 +2971,14 @@ var marketingStyles = {
     kzSjEv: "xgkqhyc x4aylkk",
     kvZwPi: "x19hin1r",
     kL20gf: "xtok3t1 xr4j8zq xmi9hcf xwvh9j7",
-    kb5WsR: "x152klzg x1rpfruf x1gsbfz3 xhobzj1",
+    kb5WsR: "x110o44i x1388job x1gsbfz3 xhobzj1",
     k2EZ2Y: "x1y4qj14 xduu9rl x2c5uud",
     kevRTx: "x103pssi x1vgyi1t x1ug5rqp",
     kt02CW: "x182nak8 x1ddkqqy x1pjo12s",
     kVHNYi: "x1gqfdwy xavt58p xnu620s xzln6ae",
-    kUtEtU: "x188zq58 x1wba8d2 xt5c5zx x1tzqu68",
+    kUtEtU: "x123zpmm xbnmzcp xt5c5zx x1tzqu68",
     kdutIq: "x1fdtg7e xgildtf xcrev8p",
-    kTJQHc: "xa67z0c x1pd8fiw x1gof2l0 xwaqzdf",
+    kTJQHc: "x1csdrso x1njw758 x1gof2l0 xwaqzdf",
     kMwMTN: "x102ovp5 x1a46atw",
     knIRL8: "xrtw95r",
     kLh5Sq: "xyr29y3",
@@ -3010,7 +3029,6 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x8txlsq x13ub6g4",
     k1xSpc: "x3nfvp2",
@@ -3030,14 +3048,14 @@ var marketingStyles = {
     kzSjEv: "xgkqhyc x4aylkk",
     kvZwPi: "x19hin1r",
     kL20gf: "xtok3t1 xr4j8zq xmi9hcf xwvh9j7",
-    kb5WsR: "x152klzg x1rpfruf x1gsbfz3 xhobzj1",
+    kb5WsR: "x110o44i x1388job x1gsbfz3 xhobzj1",
     k2EZ2Y: "x1y4qj14 xduu9rl x2c5uud",
     kevRTx: "x103pssi x1vgyi1t x1ug5rqp",
     kt02CW: "x182nak8 x1ddkqqy x1pjo12s",
     kVHNYi: "x1gqfdwy xavt58p xnu620s xzln6ae",
-    kUtEtU: "x188zq58 x1wba8d2 xt5c5zx x1tzqu68",
+    kUtEtU: "x123zpmm xbnmzcp xt5c5zx x1tzqu68",
     kdutIq: "x1fdtg7e xgildtf xcrev8p",
-    kTJQHc: "xa67z0c x1pd8fiw x1gof2l0 xwaqzdf",
+    kTJQHc: "x1csdrso x1njw758 x1gof2l0 xwaqzdf",
     kMwMTN: "x102ovp5 x1a46atw",
     knIRL8: "xrtw95r",
     kLh5Sq: "x1qzg9v8",
@@ -3089,7 +3107,6 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x8txlsq x13ub6g4",
     k1xSpc: "x3nfvp2",
@@ -3109,14 +3126,14 @@ var marketingStyles = {
     kzSjEv: "xgkqhyc x4aylkk",
     kvZwPi: "x19hin1r",
     kL20gf: "xtok3t1 xr4j8zq xmi9hcf xwvh9j7",
-    kb5WsR: "x152klzg x1rpfruf x1gsbfz3 xhobzj1",
+    kb5WsR: "x110o44i x1388job x1gsbfz3 xhobzj1",
     k2EZ2Y: "x1y4qj14 xduu9rl x2c5uud",
     kevRTx: "x103pssi x1vgyi1t x1ug5rqp",
     kt02CW: "x182nak8 x1ddkqqy x1pjo12s",
     kVHNYi: "x1gqfdwy xavt58p xnu620s xzln6ae",
-    kUtEtU: "x188zq58 x1wba8d2 xt5c5zx x1tzqu68",
+    kUtEtU: "x123zpmm xbnmzcp xt5c5zx x1tzqu68",
     kdutIq: "x1fdtg7e xgildtf xcrev8p",
-    kTJQHc: "xa67z0c x1pd8fiw x1gof2l0 xwaqzdf",
+    kTJQHc: "x1csdrso x1njw758 x1gof2l0 xwaqzdf",
     kMwMTN: "x102ovp5 x1a46atw",
     knIRL8: "xrtw95r",
     kLh5Sq: "xyr29y3",
@@ -3133,7 +3150,6 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x12pzqlm x1y7wltu",
     k1xSpc: "x3nfvp2",
@@ -3153,14 +3169,14 @@ var marketingStyles = {
     kzSjEv: "xgkqhyc x4aylkk",
     kvZwPi: "x19hin1r",
     kL20gf: "xtok3t1 xr4j8zq x1xh63g1 x1pjirtg",
-    kb5WsR: "x152klzg x1rpfruf x1gsbfz3 xhobzj1",
+    kb5WsR: "x110o44i x1388job x1gsbfz3 xhobzj1",
     k2EZ2Y: "x1y4qj14 xduu9rl",
     kevRTx: "x103pssi x1vgyi1t",
     kt02CW: "x182nak8 x1ddkqqy",
     kVHNYi: "x1gqfdwy xavt58p xnu620s xzln6ae",
-    kUtEtU: "x188zq58 x1wba8d2 xt5c5zx x1tzqu68",
+    kUtEtU: "x123zpmm xbnmzcp xt5c5zx x1tzqu68",
     kdutIq: "x1fdtg7e xgildtf",
-    kTJQHc: "xa67z0c x1pd8fiw x1gof2l0 xwaqzdf",
+    kTJQHc: "x1csdrso x1njw758 x1gof2l0 xwaqzdf",
     kMwMTN: "xoh73e0 x1ac5u26",
     knIRL8: "xrtw95r",
     kLh5Sq: "xyr29y3",
@@ -3213,7 +3229,6 @@ var marketingStyles = {
     "--_hraness-foil-4": "x47qxf1 x1n6b76k",
     "--_hraness-foil-5": "x13hwd88 x1z0t8xj",
     "--_hraness-foil-6": "xx7v8hi x1bbyikp",
-    "--_hraness-foil-halo": "x1ciovt3 x11yejcl",
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x12pzqlm",
     k1xSpc: "x3nfvp2",
@@ -3233,14 +3248,14 @@ var marketingStyles = {
     kzSjEv: "xgkqhyc x4aylkk",
     kvZwPi: "x19hin1r",
     kL20gf: "xtok3t1 xr4j8zq x1xh63g1 x1pjirtg",
-    kb5WsR: "x152klzg x1rpfruf x1gsbfz3 xhobzj1",
+    kb5WsR: "x110o44i x1388job x1gsbfz3 xhobzj1",
     k2EZ2Y: "x1y4qj14 xduu9rl",
     kevRTx: "x103pssi x1vgyi1t",
     kt02CW: "x182nak8 x1ddkqqy",
     kVHNYi: "x1gqfdwy xavt58p xnu620s xzln6ae",
-    kUtEtU: "x188zq58 x1wba8d2 xt5c5zx x1tzqu68",
+    kUtEtU: "x123zpmm xbnmzcp xt5c5zx x1tzqu68",
     kdutIq: "x1fdtg7e xgildtf",
-    kTJQHc: "xa67z0c x1pd8fiw x1gof2l0 xwaqzdf",
+    kTJQHc: "x1csdrso x1njw758 x1gof2l0 xwaqzdf",
     kMwMTN: "xoh73e0 x1ac5u26",
     knIRL8: "xrtw95r",
     kLh5Sq: "xyr29y3",
@@ -3314,7 +3329,8 @@ var recipes = {
     default: marketingStyles.footer__inner
   },
   "hraness-marketing-footer__brand": {
-    default: marketingStyles.footer__brand
+    default: marketingStyles.footer__brand,
+    foil: marketingStyles.footer__brandFoil
   },
   "hraness-marketing-footer__name": {
     default: marketingStyles.footer__name
@@ -3918,6 +3934,7 @@ function MarketingSiteFooter({
   brand,
   brandHref = "/",
   brandLabel,
+  brandMark,
   children,
   className,
   links = [],
@@ -3927,6 +3944,7 @@ function MarketingSiteFooter({
   const brandProperties = brandLabel === undefined ? {} : {
     "aria-label": brandLabel
   };
+  const foilBrand = brandMark !== undefined;
   return /* @__PURE__ */ jsx5("footer", {
     "aria-label": ariaLabel,
     className: marketingClassName("hraness-marketing-footer", className),
@@ -3935,11 +3953,16 @@ function MarketingSiteFooter({
       className: marketingClassName("hraness-marketing-footer__inner"),
       children: [
         /* @__PURE__ */ jsxs4("a", {
-          className: marketingClassName("hraness-marketing-footer__brand"),
+          className: marketingClassName("hraness-marketing-footer__brand", undefined, foilBrand ? "foil" : "default"),
+          "data-foil": foilBrand ? "" : undefined,
           href: brandHref,
           ...brandProperties,
           children: [
-            brand,
+            foilBrand ? /* @__PURE__ */ jsx5(FoilMark, {
+              fallback: brand,
+              size: 18,
+              src: brandMark
+            }) : brand,
             /* @__PURE__ */ jsx5("span", {
               className: marketingClassName("hraness-marketing-footer__name"),
               children: name
@@ -4900,4 +4923,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, foilSurfaceImage, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };

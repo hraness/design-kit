@@ -203,6 +203,7 @@ export function MarketingSiteFooter({
   brand,
   brandHref = "/",
   brandLabel,
+  brandMark,
   children,
   className,
   links = [],
@@ -215,6 +216,12 @@ export function MarketingSiteFooter({
   brand: ReactNode;
   brandHref?: string;
   brandLabel?: string;
+  /**
+   * Transparent product mark. When set, the lockup renders the shared foil
+   * icon-plus-text treatment like the site header; `brand` remains the
+   * forced-color and no-mask fallback for that mark.
+   */
+  brandMark?: string;
   /** Product-owned note content between the lockup and the navigation. */
   children?: ReactNode;
   className?: string;
@@ -224,11 +231,17 @@ export function MarketingSiteFooter({
   name: string;
 }>) {
   const brandProperties = brandLabel === undefined ? {} : { "aria-label": brandLabel };
+  const foilBrand = brandMark !== undefined;
   return (
     <footer aria-label={ariaLabel} className={classNames("hraness-marketing-footer", className)} data-hraness-marketing="footer">
       <div className={classNames("hraness-marketing-footer__inner")}>
-        <a className={classNames("hraness-marketing-footer__brand")} href={brandHref} {...brandProperties}>
-          {brand}
+        <a
+          className={classNames("hraness-marketing-footer__brand", undefined, foilBrand ? "foil" : "default")}
+          data-foil={foilBrand ? "" : undefined}
+          href={brandHref}
+          {...brandProperties}
+        >
+          {foilBrand ? <FoilMark fallback={brand} size={18} src={brandMark} /> : brand}
           <span className={classNames("hraness-marketing-footer__name")}>{name}</span>
         </a>
         {children}
