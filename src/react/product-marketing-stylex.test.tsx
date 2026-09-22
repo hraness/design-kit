@@ -138,12 +138,12 @@ test("invalid explicit columns fail closed before rendering even empty collectio
   fc.assert(fc.property(fc.anything().filter((value) => value !== undefined && value !== 1 && value !== 2 && value !== 3 && value !== 4), reject), { numRuns: 50, seed: 41203 });
 });
 
-test("all 23 marketing compositions render real owned atoms with native server-only semantics", () => {
+test("all 24 marketing compositions render real owned atoms with native server-only semantics", () => {
   const html = renderToStaticMarkup(<ProductMarketingFixture api={api} />);
   const { document } = parseHTML(html);
   // MarketingField is a flow/background boundary, not a new owned atom recipe.
   expect(typeof api.MarketingField).toBe("function");
-  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(23);
+  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(24);
   const owned = [...document.querySelectorAll('[class*="hraness-marketing-"]')];
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {
@@ -209,7 +209,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("7d4627358eac5f19634ebad679b36d7357fcc054bf726aade8694631f70c3b78");
+    .toBe("4eb6903ff08191fdedecea0c425bd064c44cbe03516b97886164f33c4efe436f");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));

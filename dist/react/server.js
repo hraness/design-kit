@@ -5,6 +5,7 @@ import {
   FoilMark,
   MarketingCallToAction,
   MarketingCard,
+  MarketingCardArt,
   MarketingCardRow,
   MarketingFacts,
   MarketingField,
@@ -36,7 +37,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-wrygexc0.js";
+} from "../chunk-1dma1y9m.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -71,6 +72,7 @@ export {
   MarketingField,
   MarketingFacts,
   MarketingCardRow,
+  MarketingCardArt,
   MarketingCard,
   MarketingCallToAction,
   FoilMark,

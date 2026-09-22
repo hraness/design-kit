@@ -8,6 +8,7 @@ export const productMarketingCoverage = [
   ["sticky sibling", "[data-hraness-sticky]", 1],
   ["MarketingCardRow", ".hraness-marketing-card-row", 1],
   ["MarketingCard", ".hraness-marketing-card", 2],
+  ["MarketingCardArt", ".hraness-marketing-card__art", 2],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
@@ -108,8 +109,8 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         { label: "SDK", summary: "For typed code.", example: <pre data-marketing-oracle="interface-pre"><code data-marketing-oracle="interface-code">relay.run()</code></pre> },
       ]} />
       <MarketingCardRow ariaLabel="Release radar" cards={[
-        { href: "#fixture", title: "Grok 4.7", meta: "First observed 21 September 2026." },
-        { href: "#quotes", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1 across four runs on OpenRouter." },
+        { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#fixture", title: "Grok 4.7", meta: "First observed 21 September 2026." },
+        { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#quotes", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1 across four runs on OpenRouter." },
       ]} />
       <MarketingTrustBoundary heading="Make authority visible." headingId="trust" label="Trust" summary="No implicit sharing." items={[
         { label: "Local", detail: "Your source." }, { label: "Shared", detail: "An explicit receipt." },

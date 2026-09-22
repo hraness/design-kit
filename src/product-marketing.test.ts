@@ -54,6 +54,18 @@ test("marketing card rows stretch to the tallest item and reserve two-line meta"
   expect(css).not.toMatch(/hraness-marketing-card__title[^}]*line-clamp/u);
 });
 
+test("marketing card art wells clip overflow and contain background paint", () => {
+  expect(css).toMatch(/\.hraness-marketing-card\s*\{[^}]*position: relative/u);
+  expect(css).toMatch(/\.hraness-marketing-card\s*\{[^}]*isolation: isolate/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*overflow: hidden/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*contain: paint/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*isolation: isolate/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-clip: padding-box/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-origin: padding-box/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*max-inline-size: 100%/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*min-inline-size: 0/u);
+});
+
 test("the marketing grammar keeps compact, coarse-pointer, and forced-color contracts", () => {
   expect(css).toContain("@media (max-width: 48rem)");
   expect(css).toContain("@media (pointer: coarse)");

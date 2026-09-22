@@ -938,6 +938,10 @@
     background-clip: padding-box, border-box, border-box, border-box;
   }
 
+  .xx83zyx {
+    background-clip: padding-box;
+  }
+
   .x1ta4xzc {
     -webkit-background-clip: text;
     background-clip: text;
@@ -969,6 +973,10 @@
 
   .x162bimy {
     background-color: color-mix(in oklch,var(--hraness-marketing-ink) 7%,transparent);
+  }
+
+  .x13ysuu0 {
+    background-color: color-mix(in oklch,var(--hraness-marketing-ink) 8%,var(--hraness-marketing-surface));
   }
 
   .x1cmuqeg {
@@ -3013,6 +3021,10 @@
 
     .x1tzqu68.x1tzqu68 {
       background-clip: border-box;
+    }
+
+    .x1ayuxuj.x1ayuxuj {
+      background-clip: padding-box;
     }
 
     .x9yvj25.x9yvj25 {

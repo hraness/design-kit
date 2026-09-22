@@ -29,6 +29,7 @@ import {
   FoilMark,
   MarketingCallToAction,
   MarketingCard,
+  MarketingCardArt,
   MarketingCardRow,
   MarketingFacts,
   MarketingField,
@@ -69,7 +70,7 @@ import {
   foilTextImage,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-wrygexc0.js";
+} from "../chunk-1dma1y9m.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -3881,10 +3882,34 @@ function DesignSystemGallery({
                   /* @__PURE__ */ jsx14(MarketingCardRow, {
                     ariaLabel: "Release radar",
                     cards: [{
+                      art: /* @__PURE__ */ jsx14("svg", {
+                        "aria-hidden": "true",
+                        viewBox: "0 0 24 24",
+                        width: "24",
+                        height: "24",
+                        children: /* @__PURE__ */ jsx14("circle", {
+                          cx: "12",
+                          cy: "12",
+                          r: "8"
+                        })
+                      }),
                       href: "#marketing",
                       title: "Grok 4.7",
                       meta: "First observed 21 September 2026."
                     }, {
+                      art: /* @__PURE__ */ jsx14("svg", {
+                        "aria-hidden": "true",
+                        viewBox: "0 0 24 24",
+                        width: "24",
+                        height: "24",
+                        children: /* @__PURE__ */ jsx14("rect", {
+                          x: "4",
+                          y: "4",
+                          width: "16",
+                          height: "16",
+                          rx: "4"
+                        })
+                      }),
                       href: "#gallery-install",
                       title: "GLM 5.3 Flash",
                       meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter."
@@ -5528,6 +5553,7 @@ export {
   MarketingField,
   MarketingFacts,
   MarketingCardRow,
+  MarketingCardArt,
   MarketingCard,
   MarketingCallToAction,
   LanternMaterialGallery,

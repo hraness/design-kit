@@ -155,6 +155,7 @@ export function MarketingMain({
 }
 
 export interface MarketingCardItem {
+  readonly art?: ReactNode;
   readonly href?: string;
   readonly meta?: ReactNode;
   readonly title: string;
@@ -163,7 +164,8 @@ export interface MarketingCardItem {
 /**
  * Stretching product card row. Direct children share the tallest item's
  * height. Meta sits in a reserved two-line block; titles wrap without
- * clamping.
+ * clamping. Per-card art wells clip overflow so a logo surface cannot
+ * paint through the gutter.
  */
 export function MarketingCardRow({
   ariaLabel,
@@ -183,20 +185,47 @@ export function MarketingCardRow({
       data-hraness-marketing="card-row"
     >
       {cards?.map((card) => (
-        <MarketingCard key={card.title} title={card.title} {...(card.href === undefined ? {} : { href: card.href })} {...(card.meta === undefined ? {} : { meta: card.meta })} />
+        <MarketingCard
+          key={card.title}
+          title={card.title}
+          {...(card.art === undefined ? {} : { art: card.art })}
+          {...(card.href === undefined ? {} : { href: card.href })}
+          {...(card.meta === undefined ? {} : { meta: card.meta })}
+        />
       ))}
       {children}
     </div>
   );
 }
 
+/** Clipped media well. Keep logo and background paint inside the card. */
+export function MarketingCardArt({
+  children,
+  className,
+}: Readonly<{
+  children?: ReactNode;
+  className?: string;
+}>) {
+  return (
+    <div className={classNames("hraness-marketing-card__art", className)} data-hraness-marketing="card-art">
+      {children}
+    </div>
+  );
+}
+
+function isPresentNode(value: ReactNode): boolean {
+  return value !== undefined && value !== false && value !== null && value !== "";
+}
+
 export function MarketingCard({
+  art,
   children,
   className,
   href,
   meta,
   title,
 }: Readonly<{
+  art?: ReactNode;
   children?: ReactNode;
   className?: string;
   href?: string;
@@ -205,11 +234,10 @@ export function MarketingCard({
 }>) {
   const body = (
     <>
+      {isPresentNode(art) ? <MarketingCardArt>{art}</MarketingCardArt> : null}
       <h3 className={classNames("hraness-marketing-card__title")}>{title}</h3>
       {meta === undefined || meta === "" ? null : <p className={classNames("hraness-marketing-card__meta")}>{meta}</p>}
-      {children === undefined || children === false || children === null || children === ""
-        ? null
-        : <div className={classNames("hraness-marketing-card__body")}>{children}</div>}
+      {isPresentNode(children) ? <div className={classNames("hraness-marketing-card__body")}>{children}</div> : null}
     </>
   );
   if (href === undefined) {

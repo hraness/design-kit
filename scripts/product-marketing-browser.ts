@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "7d4627358eac5f19634ebad679b36d7357fcc054bf726aade8694631f70c3b78", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "4eb6903ff08191fdedecea0c425bd064c44cbe03516b97886164f33c4efe436f", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -794,10 +794,28 @@ try {
             const cards = [...document.querySelectorAll(".hraness-marketing-card-row > *")].map((node) => {
               const card = node as HTMLElement;
               const box = card.getBoundingClientRect();
+              const art = card.querySelector(".hraness-marketing-card__art");
+              const artBox = art instanceof HTMLElement ? art.getBoundingClientRect() : null;
+              const artStyle = art instanceof HTMLElement ? getComputedStyle(art) : null;
               return {
                 height: Math.round(box.height),
                 top: Math.round(box.top),
+                left: box.left,
+                right: box.right,
                 stretch: getComputedStyle(card).alignSelf,
+                isolation: getComputedStyle(card).isolation,
+                position: getComputedStyle(card).position,
+                art: artBox === null || artStyle === null ? null : {
+                  left: artBox.left,
+                  right: artBox.right,
+                  top: artBox.top,
+                  bottom: artBox.bottom,
+                  overflow: artStyle.overflow,
+                  contain: artStyle.contain,
+                  isolation: artStyle.isolation,
+                  clip: artStyle.backgroundClip,
+                  origin: artStyle.backgroundOrigin,
+                },
               };
             });
             return {
@@ -816,11 +834,32 @@ try {
           assert.equal(clearance.siblingTop, clearance.usedOffset, `${settings.name}/${mode}: first sticky sibling must clear the header`);
           assert.equal(clearance.mainScrollMargin, clearance.usedOffset);
           assert.equal(clearance.cards.length, 2);
-          for (const card of clearance.cards) assert.equal(card.stretch, "stretch");
+          for (const card of clearance.cards) {
+            assert.equal(card.stretch, "stretch");
+            assert.equal(card.position, "relative");
+            assert.equal(card.isolation, "isolate");
+            assert.ok(card.art, `${settings.name}/${mode}: each card must own a clipped art well`);
+            assert.equal(card.art?.overflow, "hidden");
+            assert.match(card.art?.contain ?? "", /paint/u);
+            assert.equal(card.art?.isolation, "isolate");
+            assert.equal(card.art?.clip, "padding-box");
+            assert.equal(card.art?.origin, "padding-box");
+            assert.ok((card.art?.left ?? 0) + 0.5 >= card.left, `${settings.name}/${mode}: art must stay inside the card inline-start`);
+            assert.ok((card.art?.right ?? 0) - 0.5 <= card.right, `${settings.name}/${mode}: art must stay inside the card inline-end`);
+          }
           const row = clearance.cards.filter((card) => card.top === clearance.cards[0]?.top);
           if (row.length > 1) {
             assert.ok(row.every((card) => card.height === row[0]?.height),
               `${settings.name}/${mode}: card row items must share the tallest height`);
+            const ordered = [...row].sort((left, right) => left.left - right.left);
+            for (let index = 1; index < ordered.length; index += 1) {
+              const previous = ordered[index - 1];
+              const next = ordered[index];
+              assert.ok(previous && next && previous.right + 8 < next.left,
+                `${settings.name}/${mode}: stretched cards must keep a gutter`);
+              assert.ok(previous.art && next.art && previous.art.right + 8 < next.art.left,
+                `${settings.name}/${mode}: art wells must not paint through the gutter`);
+            }
           }
         }
         const summary = page.locator("details > summary").first();

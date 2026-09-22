@@ -2037,6 +2037,8 @@ export const marketingStyles = stylex.create({
   "card": {
     "display": "flex",
     "flex-direction": "column",
+    "position": "relative",
+    "isolation": "isolate",
     "min-inline-size": "0",
     "min-block-size": "100%",
     "align-self": "stretch",
@@ -2119,6 +2121,73 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "CanvasText"
     },
     "text-decoration": "none"
+  },
+  "card__art": {
+    "display": "flex",
+    "flex-grow": "0",
+    "flex-shrink": "0",
+    "flex-basis": "auto",
+    "align-items": "center",
+    "justify-content": "center",
+    "position": "relative",
+    "isolation": "isolate",
+    "contain": "paint",
+    "overflow": "hidden",
+    "min-inline-size": "0",
+    "max-inline-size": "100%",
+    "inline-size": "100%",
+    "min-block-size": "2.75rem",
+    "border-top": {
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-right": {
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-bottom": {
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-left": {
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-radius": "var(--hraness-marketing-radius)",
+    "background-color": {
+      "default": "color-mix(in oklch, var(--hraness-marketing-ink) 8%, var(--hraness-marketing-surface))",
+      "@media (forced-colors: active)": "Canvas"
+    },
+    "background-image": {
+      "default": "none",
+      "@media (forced-colors: active)": "none"
+    },
+    "background-position": {
+      "default": "0% 0%",
+      "@media (forced-colors: active)": "0% 0%"
+    },
+    "background-size": {
+      "default": "auto auto",
+      "@media (forced-colors: active)": "auto auto"
+    },
+    "background-repeat": {
+      "default": "repeat",
+      "@media (forced-colors: active)": "repeat"
+    },
+    "background-origin": {
+      "default": "padding-box",
+      "@media (forced-colors: active)": "padding-box"
+    },
+    "background-clip": {
+      "default": "padding-box",
+      "@media (forced-colors: active)": "padding-box"
+    },
+    "background-attachment": {
+      "default": "scroll",
+      "@media (forced-colors: active)": "scroll"
+    },
+    "box-shadow": {
+      "@media (forced-colors: active)": "none"
+    },
+    "color": {
+      "@media (forced-colors: active)": "CanvasText"
+    }
   },
   "card__title": {
     "margin": "0",
@@ -3968,6 +4037,7 @@ const recipes = {
   "hraness-marketing-trust-item__detail": { "default": marketingStyles.trust_item__detail },
   "hraness-marketing-card-row": { "default": marketingStyles.card_row },
   "hraness-marketing-card": { "default": marketingStyles.card },
+  "hraness-marketing-card__art": { "default": marketingStyles.card__art },
   "hraness-marketing-card__title": { "default": marketingStyles.card__title },
   "hraness-marketing-card__meta": { "default": marketingStyles.card__meta },
   "hraness-marketing-card__body": { "default": marketingStyles.card__body },

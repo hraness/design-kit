@@ -2568,6 +2568,8 @@ var marketingStyles = {
   card: {
     k1xSpc: "x78zum5",
     kvQiKF: "xdt5ytf",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
     kdYMnH: "xesnm00",
     kVQ08L: "x1ljpu7r",
     k29mPU: "xkh2ocl",
@@ -2594,6 +2596,38 @@ var marketingStyles = {
     kTJQHc: "xwaqzdf",
     kMwMTN: "x1heor9g xs5hli",
     kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  card__art: {
+    k1xSpc: "x78zum5",
+    kVZ5iK: "x1c4vz4f",
+    kEE5IU: "x2lah0s",
+    kR2Kky: "xdl72j9",
+    kkeX5w: "x6s0dn4",
+    kGmCso: "xl56j7k",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
+    ktR8K2: "x16qrkmw",
+    kVQacm: "xb3r6kr",
+    kdYMnH: "xesnm00",
+    k2kXS: "xgyk9h7",
+    kULEZF: "xiuoait",
+    kVQ08L: "x4q3qzj",
+    k99D8V: "x18z9243",
+    kNdqCV: "xv2i73l",
+    kLjGic: "xtthz4l",
+    kpfRUI: "xug5yj",
+    kvZwPi: "x19hin1r",
+    kL20gf: "x13ysuu0 x9yvj25",
+    kb5WsR: "x18o3ruo xhobzj1",
+    k2EZ2Y: "x1y4qj14 x2c5uud",
+    kevRTx: "x103pssi x1ug5rqp",
+    kt02CW: "x182nak8 x1pjo12s",
+    kVHNYi: "x12koezg xzln6ae",
+    kUtEtU: "xx83zyx x1ayuxuj",
+    kdutIq: "x1fdtg7e xcrev8p",
+    kTJQHc: "xwaqzdf",
+    kMwMTN: "xs5hli",
     $$css: true
   },
   card__title: {
@@ -3755,6 +3789,9 @@ var recipes = {
   "hraness-marketing-card": {
     default: marketingStyles.card
   },
+  "hraness-marketing-card__art": {
+    default: marketingStyles.card__art
+  },
   "hraness-marketing-card__title": {
     default: marketingStyles.card__title
   },
@@ -4006,6 +4043,9 @@ function MarketingCardRow({
     children: [
       cards?.map((card) => /* @__PURE__ */ jsx5(MarketingCard, {
         title: card.title,
+        ...card.art === undefined ? {} : {
+          art: card.art
+        },
         ...card.href === undefined ? {} : {
           href: card.href
         },
@@ -4017,7 +4057,21 @@ function MarketingCardRow({
     ]
   });
 }
+function MarketingCardArt({
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsx5("div", {
+    className: marketingClassName("hraness-marketing-card__art", className),
+    "data-hraness-marketing": "card-art",
+    children
+  });
+}
+function isPresentNode(value) {
+  return value !== undefined && value !== false && value !== null && value !== "";
+}
 function MarketingCard({
+  art,
   children,
   className,
   href,
@@ -4026,6 +4080,9 @@ function MarketingCard({
 }) {
   const body = /* @__PURE__ */ jsxs4(Fragment, {
     children: [
+      isPresentNode(art) ? /* @__PURE__ */ jsx5(MarketingCardArt, {
+        children: art
+      }) : null,
       /* @__PURE__ */ jsx5("h3", {
         className: marketingClassName("hraness-marketing-card__title"),
         children: title
@@ -4034,10 +4091,10 @@ function MarketingCard({
         className: marketingClassName("hraness-marketing-card__meta"),
         children: meta
       }),
-      children === undefined || children === false || children === null || children === "" ? null : /* @__PURE__ */ jsx5("div", {
+      isPresentNode(children) ? /* @__PURE__ */ jsx5("div", {
         className: marketingClassName("hraness-marketing-card__body"),
         children
-      })
+      }) : null
     ]
   });
   if (href === undefined) {
@@ -5109,4 +5166,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };

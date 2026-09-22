@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import {
   MarketingCallToAction,
   MarketingCard,
+  MarketingCardArt,
   MarketingCardRow,
   MarketingFlow,
   MarketingField,
@@ -337,7 +338,7 @@ test("the main landmark binds skip and hash targets to the sticky offset", () =>
 test("marketing card rows stretch equal-height items and reserve two-line meta", () => {
   const html = renderToStaticMarkup(
     <MarketingCardRow ariaLabel="Release radar" cards={[
-      { href: "#short", title: "Grok 4.7", meta: "First observed 21 September 2026." },
+      { art: <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>, href: "#short", title: "Grok 4.7", meta: "First observed 21 September 2026." },
       { title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1." },
     ]}>
       <MarketingCard title="A wrapped product title that must stay complete">Extra body.</MarketingCard>
@@ -351,8 +352,15 @@ test("marketing card rows stretch equal-height items and reserve two-line meta",
   expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__title"'));
   expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__meta"'));
   expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__body"'));
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__art"'));
+  expect(html).toContain('data-hraness-marketing="card-art"');
   expect(html.match(/data-hraness-marketing="card"/gu)).toHaveLength(3);
+  expect(html.match(/data-hraness-marketing="card-art"/gu)).toHaveLength(1);
   expect(html).not.toMatch(/line-clamp|text-overflow: ellipsis/u);
+  expect(renderToStaticMarkup(<MarketingCard title="No art" />)).not.toContain("hraness-marketing-card__art");
+  expect(renderToStaticMarkup(<MarketingCardArt>Mark</MarketingCardArt>)).toMatch(
+    marketingMarkupPattern('class="hraness-marketing-card__art"'),
+  );
 });
 
 test("empty quote and pillar collections render nothing", () => {

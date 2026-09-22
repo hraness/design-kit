@@ -10,7 +10,8 @@
  * one accent per product. Roles: site header with a published sticky
  * clearance offset, hero with optional product frame, pillars, install,
  * ordered flow, fact and stat strips, narrative section, primitives,
- * interfaces, trust boundary, equal-height card rows, quotes, pricing,
+ * interfaces, trust boundary, equal-height card rows with contained art
+ * wells, quotes, pricing,
  * native questions, maker, closing call to action, and an in-flow site
  * footer.
  *
@@ -1251,7 +1252,9 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 
 /* Equal-height product card rows. Direct children stretch to the tallest
  * item. Meta occupies a reserved two-line block so one long blurb does not
- * stagger the row. Titles wrap without clamping. */
+ * stagger the row. Titles wrap without clamping. Each card is a containing
+ * block. The art well clips overflow and contains backgrounds so a logo
+ * surface cannot paint through the gutter as one bar. */
 .hraness-marketing-card-row {
   display: grid;
   align-items: stretch;
@@ -1268,6 +1271,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-card {
   display: flex;
   flex-direction: column;
+  position: relative;
+  isolation: isolate;
   min-inline-size: 0;
   min-block-size: 100%;
   gap: 0.5rem;
@@ -1277,6 +1282,32 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   background: var(--hraness-marketing-surface);
   color: inherit;
   text-decoration: none;
+}
+
+.hraness-marketing-card__art {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  isolation: isolate;
+  contain: paint;
+  overflow: hidden;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  border-radius: var(--hraness-marketing-radius);
+  background-color: color-mix(in oklch, var(--hraness-marketing-ink) 8%, var(--hraness-marketing-surface));
+  background-clip: padding-box;
+  background-origin: padding-box;
+  background-attachment: scroll;
+}
+
+.hraness-marketing-card__art > :is(img, svg, canvas, video) {
+  max-inline-size: 100%;
+  max-block-size: 100%;
+  object-fit: contain;
 }
 
 .hraness-marketing-card__title {
@@ -1726,6 +1757,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   .hraness-marketing-interface,
   .hraness-marketing-trust-item,
   .hraness-marketing-card,
+  .hraness-marketing-card__art,
   .hraness-marketing-quote,
   .hraness-marketing-plan {
     border: 1px solid CanvasText;
