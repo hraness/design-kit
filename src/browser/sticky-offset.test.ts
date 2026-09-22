@@ -45,16 +45,36 @@ test("publish writes the offset onto the marketing page so siblings inherit it",
   expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
 });
 
+function withResizeObserver<T>(
+  window: Window,
+  document: Document,
+  implementation: typeof ResizeObserver | undefined,
+  run: () => T,
+): T {
+  const original = Object.getOwnPropertyDescriptor(window, "ResizeObserver");
+  Object.defineProperty(window, "ResizeObserver", { configurable: true, value: implementation });
+  Object.defineProperty(document, "defaultView", { configurable: true, value: window });
+  try {
+    return run();
+  } finally {
+    if (original === undefined) {
+      Reflect.deleteProperty(window, "ResizeObserver");
+    } else {
+      Object.defineProperty(window, "ResizeObserver", original);
+    }
+  }
+}
+
 test("sync publishes once without ResizeObserver and removes the property on stop", () => {
   const { document, header, window } = fixture();
   assert.ok(header !== null);
-  Object.defineProperty(window, "ResizeObserver", { configurable: true, value: undefined });
-  Object.defineProperty(document, "defaultView", { configurable: true, value: window });
-  const stop = syncStickyOffset({ header, root: document });
-  const page = document.querySelector(".hraness-marketing-page") as HTMLElement;
-  expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
-  stop();
-  expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("");
+  withResizeObserver(window, document, undefined, () => {
+    const stop = syncStickyOffset({ header, root: document });
+    const page = document.querySelector(".hraness-marketing-page") as HTMLElement;
+    expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+    stop();
+    expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("");
+  });
 });
 
 test("sync observes the header when ResizeObserver is present", () => {
@@ -66,19 +86,23 @@ test("sync observes the header when ResizeObserver is present", () => {
       observed.push(target);
       this.callback([], this as unknown as ResizeObserver);
     }
+    unobserve(target: Element) {
+      const index = observed.indexOf(target);
+      if (index >= 0) observed.splice(index, 1);
+    }
     disconnect() {
       observed.length = 0;
     }
   }
-  Object.defineProperty(window, "ResizeObserver", { configurable: true, value: FakeObserver });
-  Object.defineProperty(document, "defaultView", { configurable: true, value: window });
   assert.ok(header !== null);
-  const stop = syncStickyOffset({ root: document });
-  expect(observed).toEqual([header]);
-  expect((document.querySelector(".hraness-marketing-page") as HTMLElement)
-    .style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
-  stop();
-  expect(observed).toEqual([]);
+  withResizeObserver(window, document, FakeObserver, () => {
+    const stop = syncStickyOffset({ root: document });
+    expect(observed).toEqual([header]);
+    expect((document.querySelector(".hraness-marketing-page") as HTMLElement)
+      .style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+    stop();
+    expect(observed).toEqual([]);
+  });
 });
 
 test("sync is a no-op when the header is missing", () => {
