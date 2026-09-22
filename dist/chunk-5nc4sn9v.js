@@ -2624,7 +2624,7 @@ var marketingStyles = {
     kevRTx: "x103pssi x1ug5rqp",
     kt02CW: "x182nak8 x1pjo12s",
     kVHNYi: "x12koezg xzln6ae",
-    kUtEtU: "xx83zyx x1ayuxuj",
+    kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
     kTJQHc: "xwaqzdf",
     kMwMTN: "xs5hli",

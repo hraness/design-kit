@@ -44,7 +44,7 @@ Skip links should target `#main-content`. Hash targets and the main landmark use
 
 `.hraness-marketing-card-row` / `MarketingCardRow` stretches every direct child to the tallest item in the row. Meta sits in a reserved two-line block (`--hraness-marketing-card-meta-lines`, default 2). Titles wrap and are not clamped. Product-owned flex rows that `align-items: start` should switch to this hook so a longer blurb cannot stagger the row.
 
-`.hraness-marketing-card__art` / `MarketingCardArt` is the per-card media well. It clips overflow, isolates paint, and contains backgrounds to the padding box so a logo or art surface cannot run through the gutter as one bar. Pass `art` on `MarketingCard` or `MarketingCardItem`, or put the class on a well inside a `.hraness-marketing-card`. Each card is a containing block (`position: relative; isolation: isolate`). Do not place the well as a row sibling or give it `background-attachment: fixed`.
+`.hraness-marketing-card__art` / `MarketingCardArt` is the per-card media well. It clips overflow, isolates paint, and keeps backgrounds attached and originated on the well so a logo or art surface cannot run through the gutter as one bar. Pass `art` on `MarketingCard` or `MarketingCardItem`, or put the class on a well inside a `.hraness-marketing-card`. Each card is a containing block (`position: relative; isolation: isolate`). Do not place the well as a row sibling or give it `background-attachment: fixed`.
 
 ## Tokens for custom compositions
 

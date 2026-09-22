@@ -1299,7 +1299,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   min-block-size: 2.75rem;
   border-radius: var(--hraness-marketing-radius);
   background-color: color-mix(in oklch, var(--hraness-marketing-ink) 8%, var(--hraness-marketing-surface));
-  background-clip: padding-box;
+  background-clip: border-box;
   background-origin: padding-box;
   background-attachment: scroll;
 }

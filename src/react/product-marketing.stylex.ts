@@ -2175,8 +2175,8 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "padding-box"
     },
     "background-clip": {
-      "default": "padding-box",
-      "@media (forced-colors: active)": "padding-box"
+      "default": "border-box",
+      "@media (forced-colors: active)": "border-box"
     },
     "background-attachment": {
       "default": "scroll",

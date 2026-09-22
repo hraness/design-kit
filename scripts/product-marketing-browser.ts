@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "4eb6903ff08191fdedecea0c425bd064c44cbe03516b97886164f33c4efe436f", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "4a427a379158fff4f310b5a447e568ec782ba69640f78e5d8076ea1fdb238b5b", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -842,7 +842,7 @@ try {
             assert.equal(card.art?.overflow, "hidden");
             assert.match(card.art?.contain ?? "", /paint/u);
             assert.equal(card.art?.isolation, "isolate");
-            assert.equal(card.art?.clip, "padding-box");
+            assert.equal(card.art?.clip, "border-box");
             assert.equal(card.art?.origin, "padding-box");
             assert.ok((card.art?.left ?? 0) + 0.5 >= card.left, `${settings.name}/${mode}: art must stay inside the card inline-start`);
             assert.ok((card.art?.right ?? 0) - 0.5 <= card.right, `${settings.name}/${mode}: art must stay inside the card inline-end`);

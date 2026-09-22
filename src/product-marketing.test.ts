@@ -60,7 +60,7 @@ test("marketing card art wells clip overflow and contain background paint", () =
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*overflow: hidden/u);
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*contain: paint/u);
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*isolation: isolate/u);
-  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-clip: padding-box/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-clip: border-box/u);
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-origin: padding-box/u);
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*max-inline-size: 100%/u);
   expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*min-inline-size: 0/u);
