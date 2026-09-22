@@ -4,6 +4,10 @@ import type * as Marketing from "../src/react/product-marketing.js";
 export const productMarketingCoverage = [
   ["MarketingPage", ".hraness-marketing-page", 1],
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
+  ["MarketingMain", ".hraness-marketing-main", 1],
+  ["sticky sibling", "[data-hraness-sticky]", 1],
+  ["MarketingCardRow", ".hraness-marketing-card-row", 1],
+  ["MarketingCard", ".hraness-marketing-card", 2],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
@@ -52,11 +56,11 @@ export const productMarketingConsumerCoverage = [
 
 /** The verifier passes the built server entry. Unit tests pass the source entry. */
 export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketing }>) {
-  const { MarketingPage, MarketingSiteHeader, ProductHero, MarketingFlow, MarketingFacts,
-    MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSection,
-    MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary,
-    MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker,
-    MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
+  const { MarketingPage, MarketingSiteHeader, MarketingMain, MarketingCardRow, ProductHero,
+    MarketingFlow, MarketingFacts, MarketingPillars, MarketingInstallPanel, MarketingProofFrame,
+    MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid,
+    MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList,
+    MarketingMaker, MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
   const actions = [{ href: "#install", label: "Install" }, { href: "#interfaces", label: "Explore" }] as const;
   const facts = Array.from({ length: 4 }, (_, index) => ({
     label: `Fact ${index + 1}`, value: `${index + 1}`, detail: "An exact observation.",
@@ -68,6 +72,8 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       <MarketingSiteHeader action={actions[0]} brand={<><svg data-marketing-oracle="brand-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 2h20v20H2z" /></svg>Relay</>}
         links={[{ href: "#interfaces", label: "Interfaces", current: true }, { href: "#install", label: "Install" }]} />
       <MarketingSiteHeader action={{ ...actions[1], emphasis: "secondary" }} brand="Embedded" className="fixture-static-header" links={[]} sticky={false} trailing={<span>Consumer trailing</span>} />
+      <MarketingMain>
+      <div className="hraness-sticky-below-chrome" data-hraness-sticky>Index</div>
       {(["paper", "accent"] as const).flatMap((tone) => (["center", "start"] as const).map((align) => (
         <ProductHero actions={actions} align={align} boundary="Local, optional sync." eyebrow="Reference tool"
           className={tone === "paper" && align === "start" ? "fixture-role-tokens" : ""}
@@ -101,6 +107,10 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         { label: "CLI", summary: "For terminal users.", example: <p data-marketing-oracle="interface-paragraph">Consumer paragraph.</p> },
         { label: "SDK", summary: "For typed code.", example: <pre data-marketing-oracle="interface-pre"><code data-marketing-oracle="interface-code">relay.run()</code></pre> },
       ]} />
+      <MarketingCardRow ariaLabel="Release radar" cards={[
+        { href: "#fixture", title: "Grok 4.7", meta: "First observed 21 September 2026." },
+        { href: "#quotes", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1 across four runs on OpenRouter." },
+      ]} />
       <MarketingTrustBoundary heading="Make authority visible." headingId="trust" label="Trust" summary="No implicit sharing." items={[
         { label: "Local", detail: "Your source." }, { label: "Shared", detail: "An explicit receipt." },
       ]} />
@@ -128,6 +138,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         <MarketingSectionLabel className="fixture-body-label" size="body">Body-sized label</MarketingSectionLabel>
         <p>Unlayered caller styles win.</p>
       </MarketingSection>
+      </MarketingMain>
       <MarketingSiteFooter
         brand={<svg data-marketing-oracle="footer-brand-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 2h20v20H2z" /></svg>}
         brandLabel="Relay home"

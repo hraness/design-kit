@@ -11,7 +11,7 @@ Pin the immutable GitHub release:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.12.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.13.0",
     "@hraness/ui": "github:hraness/ui#v0.5.16"
   }
 }
@@ -101,12 +101,12 @@ See the [material contract and examples](LANTERN_MATERIAL.md) for palette island
 `product-marketing.css` is an opt-in narrative grammar for technical product
 sites. It gives every Hraness product one typeface, one measured type scale,
 sentence-case labels, hairline chrome, soft radii, and one accent color, so the
-portfolio reads as one studio's work. The roles are a sticky site header, an
-outcome-led hero with an optional product frame, three pillars, an install
-panel, an ordered flow, fact and stat strips, narrative sections, numbered
-primitives, interface and trust cards, attributed quotes, pricing, native
-questions, a maker section, a closing call to action, and an in-flow site
-footer. The classes own
+portfolio reads as one studio's work. The roles are a sticky site header, a main landmark that clears that header,
+equal-height product card rows, an outcome-led hero with an optional product
+frame, three pillars, an install panel, an ordered flow, fact and stat strips,
+narrative sections, numbered primitives, interface and trust cards, attributed
+quotes, pricing, native questions, a maker section, a closing call to action,
+and an in-flow site footer. The classes own
 responsive structure and semantics-facing presentation. Products bind the
 `--hraness-marketing-*` roles to their own content and set one accent:
 
@@ -125,6 +125,7 @@ the server-safe compositions from either React entry:
 ```tsx
 import {
   MarketingCallToAction,
+  MarketingMain,
   MarketingPage,
   MarketingPillars,
   MarketingProofFrame,
@@ -138,6 +139,7 @@ import {
     brand="Relay"
     links={[{ href: "#how", label: "How it works" }, { href: "#pricing", label: "Pricing" }]}
   />
+  <MarketingMain>
   <ProductHero
     actions={[
       { href: "#install", label: "Install Relay" },
@@ -171,8 +173,22 @@ import {
     heading="Give every job the same room to run in."
     headingId="cta-title"
   />
+  </MarketingMain>
 </MarketingPage>
 ```
+
+A sticky `MarketingSiteHeader` publishes `--hraness-sticky-offset` on the
+page and on `html`, so siblings inherit it. Wrap page content in
+`MarketingMain` (`id="main-content"`) so skip links and hash targets use that
+offset as scroll-margin. Do not add extra padding when the header stays in
+flow; pass `clearance="pad"` only for a `data-position="fixed"` header. The
+next sticky strip should use `.hraness-sticky-below-chrome` or
+`data-hraness-sticky` instead of `top: 0`. When the header wraps, render
+`StickyOffsetSync` once from `@hraness/design-kit/react` or call
+`syncStickyOffset` from `@hraness/design-kit/browser` to replace the token
+fallback with the measured border box. `MarketingCardRow` stretches every
+direct child to the tallest item in the row and reserves a two-line meta
+block; titles wrap and are not clamped.
 
 `tone="accent"` on the hero or the call to action paints that role edge to
 edge in the product accent. `layout="split"` or `"split-reverse"` on a
@@ -445,7 +461,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.16` with `@hraness/design-kit` `v0.12.0`. Version 0.12.0 replaces pointer-driven gradient rotation with a steady material and a moving light: the spectrum and its 115deg direction stay fixed while `--hraness-foil-x`/`--hraness-foil-y` highlights travel across each lockup, and marketing footers can opt into the same icon-plus-wordmark foil as the site header with `brandMark`. Version 0.11.1 preserves visible metallic marks when another package repeats a generic hidden atom in a later CSS layer. React consumers load `components.css` or `styles.css`; the raw marketing entry supports authored HTML hooks. Version 0.11 adds server-rendered `FoilMark` artwork and metallic text with subtle rainbow reflections, including a shared header mark seam and original-artwork fallbacks. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.16` with `@hraness/design-kit` `v0.13.0`. Version 0.13.0 publishes `--hraness-sticky-offset` from sticky marketing chrome, gives `MarketingMain` and the next sticky sibling a clearance contract, and stretches marketing card rows to the tallest item with a reserved two-line meta block. Version 0.12.0 replaces pointer-driven gradient rotation with a steady material and a moving light: the spectrum and its 115deg direction stay fixed while `--hraness-foil-x`/`--hraness-foil-y` highlights travel across each lockup, and marketing footers can opt into the same icon-plus-wordmark foil as the site header with `brandMark`. Version 0.11.1 preserves visible metallic marks when another package repeats a generic hidden atom in a later CSS layer. React consumers load `components.css` or `styles.css`; the raw marketing entry supports authored HTML hooks. Version 0.11 adds server-rendered `FoilMark` artwork and metallic text with subtle rainbow reflections, including a shared header mark seam and original-artwork fallbacks. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 

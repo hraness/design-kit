@@ -20,6 +20,7 @@
     --hraness-marketing-content-measure: 70rem;
     --hraness-marketing-header-measure: 76rem;
     --hraness-marketing-header-height: 3.25rem;
+    --hraness-sticky-offset: calc(var(--hraness-marketing-header-height) + 1px);
     --hraness-marketing-gutter: 2rem;
     --hraness-marketing-hero-space: 3.5rem 4rem;
     --hraness-marketing-story-space: 5rem;

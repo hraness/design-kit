@@ -23,6 +23,27 @@ Raw HTML and older components use `data-hraness-marketing-preset="editorial"` on
 
 For a custom or older component header, add `class="hraness-marketing-header-surface"` to the header itself. This class explicitly opts in to paint without requiring a preset ancestor. Add `data-hraness-marketing-preset="minimal"` on the same element only when you also need its compact role tokens. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Coarse pointers retain 48px action targets.
 
+## Sticky clearance and equal-height card rows
+
+A sticky `.hraness-marketing-header` or `.hraness-marketing-header-surface` publishes `--hraness-sticky-offset` on `html` and on `.hraness-marketing-page`. The token height is the fallback; `StickyOffsetSync` from `@hraness/design-kit/react` or `syncStickyOffset` from `@hraness/design-kit/browser` replaces it with the measured header border box when the chrome wraps. Attach the site header as a direct child of the page, then put the main landmark immediately after it:
+
+```tsx
+import { MarketingMain, MarketingPage, MarketingSiteHeader, StickyOffsetSync } from "@hraness/design-kit/react";
+
+<MarketingPage>
+  <MarketingSiteHeader brand="Relay" links={[{ href: "#work", label: "Work" }]} />
+  <StickyOffsetSync />
+  <MarketingMain>
+    <div className="hraness-sticky-below-chrome" data-hraness-sticky>Index</div>
+    {children}
+  </MarketingMain>
+</MarketingPage>
+```
+
+Skip links should target `#main-content`. Hash targets and the main landmark use the offset as `scroll-margin`. Do not add a second padding gap while the header stays in flow. Use `clearance="pad"` or `data-hraness-clearance="pad"` only when the header is `data-position="fixed"`. The next sticky sibling must use `.hraness-sticky-below-chrome` or `data-hraness-sticky` (`inset-block-start: var(--hraness-sticky-offset)`), not `top: 0`. This is the same publish-on-ancestor pattern as `@hraness/ui` next-adopter sticky-offset sync, under the kit-owned `--hraness-sticky-offset` name.
+
+`.hraness-marketing-card-row` / `MarketingCardRow` stretches every direct child to the tallest item in the row. Meta sits in a reserved two-line block (`--hraness-marketing-card-meta-lines`, default 2). Titles wrap and are not clamped. Product-owned flex rows that `align-items: start` should switch to this hook so a longer blurb cannot stagger the row.
+
 ## Tokens for custom compositions
 
 | Role | Public tokens |

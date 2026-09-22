@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "fb793e4eae6317c1aa820bee699e7a2acbc53e0bea8f8dee075c63115ebfaba0", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "7d4627358eac5f19634ebad679b36d7357fcc054bf726aade8694631f70c3b78", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -778,6 +778,50 @@ try {
             node.classList.add("fixture-static-header");
             return position;
           }), "static");
+          const clearance = await page.evaluate(() => {
+            const pageRoot = document.querySelector(".hraness-marketing-page");
+            const sibling = document.querySelector("[data-hraness-sticky]");
+            const main = document.querySelector(".hraness-marketing-main");
+            if (pageRoot === null || sibling === null || main === null) {
+              throw new Error("Missing sticky clearance fixture");
+            }
+            const probe = document.createElement("div");
+            probe.style.position = "sticky";
+            probe.style.insetBlockStart = "var(--hraness-sticky-offset)";
+            pageRoot.append(probe);
+            const usedOffset = getComputedStyle(probe).insetBlockStart;
+            probe.remove();
+            const cards = [...document.querySelectorAll(".hraness-marketing-card-row > *")].map((node) => {
+              const card = node as HTMLElement;
+              const box = card.getBoundingClientRect();
+              return {
+                height: Math.round(box.height),
+                top: Math.round(box.top),
+                stretch: getComputedStyle(card).alignSelf,
+              };
+            });
+            return {
+              offset: getComputedStyle(pageRoot).getPropertyValue("--hraness-sticky-offset").trim(),
+              usedOffset,
+              siblingPosition: getComputedStyle(sibling).position,
+              siblingTop: getComputedStyle(sibling).insetBlockStart,
+              mainScrollMargin: getComputedStyle(main).scrollMarginBlockStart,
+              cards,
+            };
+          });
+          assert.ok(clearance.offset.length > 0, `${settings.name}/${mode}: page must publish --hraness-sticky-offset`);
+          assert.match(clearance.usedOffset, /^[\d.]+px$/u);
+          assert.ok(Number.parseFloat(clearance.usedOffset) > 0);
+          assert.equal(clearance.siblingPosition, "sticky");
+          assert.equal(clearance.siblingTop, clearance.usedOffset, `${settings.name}/${mode}: first sticky sibling must clear the header`);
+          assert.equal(clearance.mainScrollMargin, clearance.usedOffset);
+          assert.equal(clearance.cards.length, 2);
+          for (const card of clearance.cards) assert.equal(card.stretch, "stretch");
+          const row = clearance.cards.filter((card) => card.top === clearance.cards[0]?.top);
+          if (row.length > 1) {
+            assert.ok(row.every((card) => card.height === row[0]?.height),
+              `${settings.name}/${mode}: card row items must share the tallest height`);
+          }
         }
         const summary = page.locator("details > summary").first();
         await page.keyboard.press("Shift");

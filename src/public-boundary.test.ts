@@ -48,6 +48,7 @@ test("the repository contains only redistributable public identities", async () 
 test("the package exposes compositions without a second primitive barrel", async () => {
   const packageJson = await Bun.file(new URL("../package.json", import.meta.url)).json();
   const reactBarrel = await Bun.file(new URL("./react/index.ts", import.meta.url)).text();
+  const browserBarrel = await Bun.file(new URL("./browser/index.ts", import.meta.url)).text();
   const excludedPrimitiveModules = [
     "button",
     "card",
@@ -64,7 +65,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.12.0");
+  expect(packageJson.version).toBe("0.13.0");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.16 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.16");
@@ -106,6 +107,8 @@ test("the package exposes compositions without a second primitive barrel", async
     "src/compiler-palettes.css",
     "src/compiler-tokens.css",
     "src/product-marketing-foundation.css",
+    "src/browser/sticky-offset.ts",
+    "src/react/sticky-offset.tsx",
     "src/react/app-shell.stylex.ts",
     "src/react/navigation-rail.stylex.ts",
     "src/react/product-marketing.stylex.ts",
@@ -115,6 +118,8 @@ test("the package exposes compositions without a second primitive barrel", async
     expect(packageJson.files).toContain(path);
   }
   expect(reactBarrel).toContain('./product-marketing.js');
+  expect(reactBarrel).toContain('./sticky-offset.js');
+  expect(browserBarrel).toContain('./sticky-offset.js');
   expect(
     await Bun.file(new URL("./react/server.ts", import.meta.url)).text(),
   ).toContain('./product-marketing.js');

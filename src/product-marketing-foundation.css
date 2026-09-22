@@ -279,4 +279,53 @@
     --hraness-marketing-header-backdrop: none;
   }
 }
+
+.hraness-marketing-header:not([data-position="static"]) {
+  --hraness-sticky-offset: calc(var(--hraness-marketing-header-height, 2.75rem) + 1px);
+}
+
+html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([data-position="static"])),
+.hraness-marketing-page:has(> :is(.hraness-marketing-header, .hraness-marketing-header-surface):not([data-position="static"])) {
+  --hraness-sticky-offset: calc(var(--hraness-marketing-header-height, 2.75rem) + 1px);
+}
+
+html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([data-position="static"])) {
+  scroll-padding-block-start: var(--hraness-sticky-offset);
+}
+
+.hraness-marketing-main,
+.hraness-marketing-header + :is(main, .hraness-marketing-main) {
+  scroll-margin-block-start: var(--hraness-sticky-offset);
+}
+
+.hraness-marketing-main[data-hraness-clearance="pad"],
+.hraness-marketing-header[data-position="fixed"] + :is(main, .hraness-marketing-main) {
+  padding-block-start: var(--hraness-sticky-offset);
+}
+
+.hraness-sticky-below-chrome,
+[data-hraness-sticky] {
+  position: sticky;
+  inset-block-start: var(--hraness-sticky-offset);
+  z-index: 30;
+}
+
+.hraness-marketing-card-row,
+.hraness-marketing-interface-grid,
+.hraness-marketing-trust-grid,
+.hraness-marketing-quote-grid,
+.hraness-marketing-plan-grid,
+.hraness-marketing-primitives__list {
+  align-items: stretch;
+}
+
+.hraness-marketing-card-row > *,
+.hraness-marketing-interface-grid > *,
+.hraness-marketing-trust-grid > *,
+.hraness-marketing-quote-grid > *,
+.hraness-marketing-plan-grid > *,
+.hraness-marketing-primitives__list > * {
+  min-block-size: 100%;
+  align-self: stretch;
+}
 }
