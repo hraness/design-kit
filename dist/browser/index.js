@@ -1525,6 +1525,69 @@ function attachFoil(root) {
     preference.removeEventListener("change", reset);
   };
 }
+// src/browser/sticky-offset.ts
+var stickyOffsetCustomProperty = "--hraness-sticky-offset";
+var stickyOffsetHeaderSelector = [".hraness-marketing-header:not([data-position='static'])", ".hraness-marketing-header-surface:not([data-position='static'])"].join(", ");
+function canQuery(root) {
+  return typeof root.querySelector === "function";
+}
+function ownerDocumentOf(node) {
+  if (node === undefined)
+    return globalThis.document;
+  if (node.nodeType === 9)
+    return node;
+  const owner = node.ownerDocument;
+  return owner ?? undefined;
+}
+function resolveHeader(root, header) {
+  if (typeof header === "object")
+    return header;
+  if (!canQuery(root))
+    return null;
+  if (typeof header === "string")
+    return root.querySelector(header);
+  return root.querySelector(stickyOffsetHeaderSelector);
+}
+function resolveTarget(header, target) {
+  if (target !== undefined)
+    return target;
+  const page = header.closest(".hraness-marketing-page");
+  return page ?? header.ownerDocument.documentElement;
+}
+function measureStickyOffset(header) {
+  return `${header.getBoundingClientRect().height}px`;
+}
+function publishStickyOffset(header, target) {
+  const value = measureStickyOffset(header);
+  resolveTarget(header, target).style.setProperty(stickyOffsetCustomProperty, value);
+  return value;
+}
+function syncStickyOffset(options = {}) {
+  const document = typeof options.header === "object" ? options.header.ownerDocument : ownerDocumentOf(options.root);
+  if (document === undefined)
+    return () => {};
+  const root = options.root ?? document;
+  const header = resolveHeader(root, options.header);
+  if (header === null)
+    return () => {};
+  const target = resolveTarget(header, options.target);
+  const publish = () => {
+    publishStickyOffset(header, target);
+  };
+  publish();
+  const view = document.defaultView;
+  if (view === null || typeof view.ResizeObserver !== "function") {
+    return () => {
+      target.style.removeProperty(stickyOffsetCustomProperty);
+    };
+  }
+  const observer = new view.ResizeObserver(publish);
+  observer.observe(header);
+  return () => {
+    observer.disconnect();
+    target.style.removeProperty(stickyOffsetCustomProperty);
+  };
+}
 
 // src/browser/index.ts
 var defaultDesignTheme2 = defaultDesignTheme;
@@ -1536,12 +1599,17 @@ var isDesignTheme2 = isDesignTheme;
 var normalizeDesignTheme2 = normalizeDesignTheme;
 var resolveDesignTheme2 = resolveDesignTheme;
 export {
+  syncStickyOffset,
+  stickyOffsetHeaderSelector,
+  stickyOffsetCustomProperty,
   shareFileNatively,
   resolveDesignTheme2 as resolveDesignTheme,
   resolveDesignPalettePreference,
+  publishStickyOffset,
   parseDesignPalettePreference,
   normalizeDesignTheme2 as normalizeDesignTheme,
   normalizeDesignPalettePreference,
+  measureStickyOffset,
   isDesignTheme2 as isDesignTheme,
   installAppearanceMenus2 as installAppearanceMenus,
   initDesignPalette,
