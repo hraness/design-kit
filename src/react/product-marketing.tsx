@@ -123,6 +123,137 @@ export function MarketingField({ children, className }: Readonly<{ children: Rea
   return <div className={["hraness-marketing-field", className].filter(Boolean).join(" ")} data-hraness-marketing="field">{children}</div>;
 }
 
+export type MarketingMainClearance = "scroll" | "pad";
+
+/**
+ * Main landmark that inherits --hraness-sticky-offset from a preceding sticky
+ * header. Hash and skip targets use the offset as scroll-margin. Pass
+ * clearance="pad" when the header is out of flow.
+ */
+export function MarketingMain({
+  children,
+  className,
+  clearance = "scroll",
+  id = "main-content",
+}: Readonly<{
+  children: ReactNode;
+  className?: string;
+  clearance?: MarketingMainClearance;
+  id?: string;
+}>) {
+  if (clearance !== "scroll" && clearance !== "pad") throw new RangeError("Marketing main clearance must be scroll or pad.");
+  return (
+    <main
+      className={classNames("hraness-marketing-main", className, clearance === "pad" ? "pad" : "default")}
+      data-hraness-clearance={clearance === "pad" ? "pad" : undefined}
+      data-hraness-marketing="main"
+      id={id}
+    >
+      {children}
+    </main>
+  );
+}
+
+export interface MarketingCardItem {
+  readonly art?: ReactNode;
+  readonly href?: string;
+  readonly meta?: ReactNode;
+  readonly title: string;
+}
+
+/**
+ * Stretching product card row. Direct children share the tallest item's
+ * height. Meta sits in a reserved two-line block; titles wrap without
+ * clamping. Per-card art wells clip overflow so a logo surface cannot
+ * paint through the gutter.
+ */
+export function MarketingCardRow({
+  ariaLabel,
+  cards,
+  children,
+  className,
+}: Readonly<{
+  ariaLabel?: string;
+  cards?: readonly MarketingCardItem[];
+  children?: ReactNode;
+  className?: string;
+}>) {
+  return (
+    <div
+      aria-label={ariaLabel}
+      className={classNames("hraness-marketing-card-row", className)}
+      data-hraness-marketing="card-row"
+    >
+      {cards?.map((card) => (
+        <MarketingCard
+          key={card.title}
+          title={card.title}
+          {...(card.art === undefined ? {} : { art: card.art })}
+          {...(card.href === undefined ? {} : { href: card.href })}
+          {...(card.meta === undefined ? {} : { meta: card.meta })}
+        />
+      ))}
+      {children}
+    </div>
+  );
+}
+
+/** Clipped media well. Keep logo and background paint inside the card. */
+export function MarketingCardArt({
+  children,
+  className,
+}: Readonly<{
+  children?: ReactNode;
+  className?: string;
+}>) {
+  return (
+    <div className={classNames("hraness-marketing-card__art", className)} data-hraness-marketing="card-art">
+      {children}
+    </div>
+  );
+}
+
+function isPresentNode(value: ReactNode): boolean {
+  return value !== undefined && value !== false && value !== null && value !== "";
+}
+
+export function MarketingCard({
+  art,
+  children,
+  className,
+  href,
+  meta,
+  title,
+}: Readonly<{
+  art?: ReactNode;
+  children?: ReactNode;
+  className?: string;
+  href?: string;
+  meta?: ReactNode;
+  title: string;
+}>) {
+  const body = (
+    <>
+      {isPresentNode(art) ? <MarketingCardArt>{art}</MarketingCardArt> : null}
+      <h3 className={classNames("hraness-marketing-card__title")}>{title}</h3>
+      {meta === undefined || meta === "" ? null : <p className={classNames("hraness-marketing-card__meta")}>{meta}</p>}
+      {isPresentNode(children) ? <div className={classNames("hraness-marketing-card__body")}>{children}</div> : null}
+    </>
+  );
+  if (href === undefined) {
+    return (
+      <article className={classNames("hraness-marketing-card", className)} data-hraness-marketing="card">
+        {body}
+      </article>
+    );
+  }
+  return (
+    <a className={classNames("hraness-marketing-card", className)} data-hraness-marketing="card" href={href}>
+      {body}
+    </a>
+  );
+}
+
 export function MarketingSiteHeader({
   action,
   ariaLabel = "Site",
@@ -150,7 +281,11 @@ export function MarketingSiteHeader({
 }>) {
   const brandProperties = brandLabel === undefined ? {} : { "aria-label": brandLabel };
   return (
-    <header className={classNames("hraness-marketing-header", className, sticky ? "default" : "static")} data-hraness-marketing="header">
+    <header
+      className={classNames("hraness-marketing-header", className, sticky ? "default" : "static")}
+      data-hraness-marketing="header"
+      data-position={sticky ? "sticky" : "static"}
+    >
       <div className={classNames("hraness-marketing-header__inner")}>
         <a className={classNames("hraness-marketing-header__brand")} data-foil="" href={brandHref} {...brandProperties}>
           {brandMark === undefined ? null : <FoilMark src={brandMark} />}

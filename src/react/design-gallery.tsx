@@ -35,10 +35,12 @@ import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import {
   MarketingCallToAction,
+  MarketingCardRow,
   MarketingFlow,
   MarketingField,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
+  MarketingMain,
   MarketingMaker,
   MarketingPage,
   MarketingPillars,
@@ -258,6 +260,7 @@ export function DesignSystemGallery({
               { href: "#shells", label: "Docs" },
             ]}
           />
+          <MarketingMain>
           <ProductHero
             actions={[
               { href: "#gallery-install", label: "Install Relay" },
@@ -335,6 +338,10 @@ export function DesignSystemGallery({
           <MarketingInterfaceGrid heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
             { label: "CLI", summary: "Run a named job.", example: <pre><code>relay run job-01</code></pre> },
             { label: "SDK", summary: "Use typed application code." },
+          ]} />
+          <MarketingCardRow ariaLabel="Release radar" cards={[
+            { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },
+            { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#gallery-install", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter." },
           ]} />
           <MarketingTrustBoundary heading="Keep authority visible." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
             { label: "Local", detail: "Source files and credentials." },
@@ -423,6 +430,7 @@ export function DesignSystemGallery({
               <a className={foilClassName("surface", "design-gallery__foil-action")} data-foil="" href="#gallery-install">Install Relay</a>
             </p>
           </div>
+          </MarketingMain>
         </MarketingPage>
         <MarketingPage preset="editorial" className="design-gallery__marketing-preset">
           <MarketingField>

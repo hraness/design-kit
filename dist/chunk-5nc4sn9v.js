@@ -1114,6 +1114,7 @@ var marketingStyles = {
     $$css: true
   },
   header: {
+    "--hraness-sticky-offset": "x1ez4kp7",
     kMwMTN: "xtylnni xs5hli",
     knIRL8: "xrtw95r",
     kVAEAm: "x7wzq59",
@@ -1169,6 +1170,17 @@ var marketingStyles = {
     kCh6Gp: "x1sz4vi2",
     kzSjEv: "x4aylkk",
     kTJQHc: "xwaqzdf",
+    $$css: true
+  },
+  main: {
+    kdYMnH: "xesnm00",
+    ksh8PN: "xtnlt7k",
+    $$css: true
+  },
+  mainPad: {
+    kdYMnH: "xesnm00",
+    kS5dFF: "xln4sw3",
+    ksh8PN: "xtnlt7k",
     $$css: true
   },
   header__inner: {
@@ -1920,7 +1932,7 @@ var marketingStyles = {
     kdutIq: "x1fdtg7e xcrev8p",
     kOIVth: "xmpxahs",
     kg9kkx: "x1xdnkkc xj7gdfw",
-    ksh8PN: "x1bd8y6n",
+    ksh8PN: "x1ctcpvu",
     kTJQHc: "xwaqzdf",
     $$css: true
   },
@@ -1967,7 +1979,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -1980,7 +1992,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     kkeX5w: "x6s0dn4",
@@ -2054,7 +2066,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2103,7 +2115,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2152,7 +2164,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2201,7 +2213,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2250,7 +2262,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2299,7 +2311,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kOIVth: "x13p3q8k",
     $$css: true
@@ -2348,7 +2360,7 @@ var marketingStyles = {
     kYk0Dm: "xvueqy4",
     kF3gjK: "x1e7ni4k",
     khsPd: "xlejusl",
-    ksh8PN: "xaqnleg",
+    ksh8PN: "x1ctcpvu",
     k1xSpc: "xrvj5dj",
     kkeX5w: "x7a106z",
     kOIVth: "x13p3q8k",
@@ -2385,6 +2397,7 @@ var marketingStyles = {
   },
   primitives__list: {
     k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1717udv",
     kohv2D: "xe8uvvx",
@@ -2395,6 +2408,7 @@ var marketingStyles = {
   primitive: {
     k1xSpc: "xrvj5dj",
     kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
     kNk6WL: "x10ukxgv",
     kOIVth: "x1uma3xh",
     kmVPX3: "x1nn0urv",
@@ -2443,6 +2457,7 @@ var marketingStyles = {
   },
   interface_grid: {
     k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kOIVth: "x8fetqu",
     kg9kkx: "x1p797x9",
@@ -2450,6 +2465,7 @@ var marketingStyles = {
   },
   trust_grid: {
     k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kOIVth: "x8fetqu",
     kg9kkx: "x1p797x9",
@@ -2458,6 +2474,7 @@ var marketingStyles = {
   interface: {
     k1xSpc: "xrvj5dj",
     kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
     kNk6WL: "x10ukxgv",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
@@ -2486,6 +2503,7 @@ var marketingStyles = {
   trust_item: {
     k1xSpc: "xrvj5dj",
     kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
     kNk6WL: "x10ukxgv",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
@@ -2539,8 +2557,110 @@ var marketingStyles = {
     kN5DiO: "x1evy7pa",
     $$css: true
   },
+  card_row: {
+    k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
+    kogj98: "x1ghz6dp",
+    kOIVth: "x8fetqu",
+    kg9kkx: "x1p797x9",
+    $$css: true
+  },
+  card: {
+    k1xSpc: "x78zum5",
+    kvQiKF: "xdt5ytf",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
+    kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
+    k29mPU: "xkh2ocl",
+    kOIVth: "x13z6uf9",
+    kmVPX3: "x1nn0urv",
+    k99D8V: "xzdcvt0 x18z9243",
+    kNdqCV: "xl0qb3l xv2i73l",
+    kLjGic: "x1ld2yh7 xtthz4l",
+    kpfRUI: "xm9c49u xug5yj",
+    kbZlsR: "x18sabzy x1cfjbvc",
+    kAFNHU: "x1jleocg x1a4igh8",
+    kyY1tn: "x1pjjote xsdpl10",
+    kCh6Gp: "x1e53mt7 x1sz4vi2",
+    kzSjEv: "xgkqhyc x4aylkk",
+    kvZwPi: "x1eubfot",
+    kL20gf: "x1itpb23 x9yvj25",
+    kb5WsR: "x18o3ruo xhobzj1",
+    k2EZ2Y: "x1y4qj14 x2c5uud",
+    kevRTx: "x103pssi x1ug5rqp",
+    kt02CW: "x182nak8 x1pjo12s",
+    kVHNYi: "x12koezg xzln6ae",
+    kUtEtU: "x1u7o2vf x1tzqu68",
+    kdutIq: "x1fdtg7e xcrev8p",
+    kTJQHc: "xwaqzdf",
+    kMwMTN: "x1heor9g xs5hli",
+    kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  card__art: {
+    k1xSpc: "x78zum5",
+    kVZ5iK: "x1c4vz4f",
+    kEE5IU: "x2lah0s",
+    kR2Kky: "xdl72j9",
+    kkeX5w: "x6s0dn4",
+    kGmCso: "xl56j7k",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
+    ktR8K2: "x16qrkmw",
+    kVQacm: "xb3r6kr",
+    kdYMnH: "xesnm00",
+    k2kXS: "xgyk9h7",
+    kULEZF: "xiuoait",
+    kVQ08L: "x4q3qzj",
+    k99D8V: "x18z9243",
+    kNdqCV: "xv2i73l",
+    kLjGic: "xtthz4l",
+    kpfRUI: "xug5yj",
+    kvZwPi: "x19hin1r",
+    kL20gf: "x13ysuu0 x9yvj25",
+    kb5WsR: "x18o3ruo xhobzj1",
+    k2EZ2Y: "x1y4qj14 x2c5uud",
+    kevRTx: "x103pssi x1ug5rqp",
+    kt02CW: "x182nak8 x1pjo12s",
+    kVHNYi: "x12koezg xzln6ae",
+    kUtEtU: "x1u7o2vf x1tzqu68",
+    kdutIq: "x1fdtg7e xcrev8p",
+    kTJQHc: "xwaqzdf",
+    kMwMTN: "xs5hli",
+    $$css: true
+  },
+  card__title: {
+    kogj98: "x1ghz6dp",
+    kLh5Sq: "x1ksoetq",
+    ko3Kzr: "x1s688f",
+    kUEKN5: "xjat59b",
+    k7QVf6: "xj0a0fe",
+    $$css: true
+  },
+  card__meta: {
+    kVQacm: "xb3r6kr",
+    kVQ08L: "x1rmki91",
+    kLO5vc: "xeutgw3",
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xs87ocq",
+    kLh5Sq: "x1qzg9v8",
+    kN5DiO: "xfrs9s4",
+    $$css: true
+  },
+  card__body: {
+    k1xSpc: "x78zum5",
+    kVZ5iK: "x1iyjqo2",
+    kEE5IU: "xs83m0k",
+    kR2Kky: "xdl72j9",
+    kvQiKF: "xdt5ytf",
+    kVQ08L: "x159srwy",
+    kOIVth: "x73f2yu",
+    $$css: true
+  },
   quote_grid: {
     k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1717udv",
     kohv2D: "xe8uvvx",
@@ -2551,6 +2671,7 @@ var marketingStyles = {
   quote: {
     k1xSpc: "xrvj5dj",
     kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
     kNk6WL: "xcdzlcm",
     kOIVth: "x15iy025",
     kogj98: "x1ghz6dp",
@@ -2608,6 +2729,7 @@ var marketingStyles = {
   },
   plan_grid: {
     k1xSpc: "xrvj5dj",
+    kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1717udv",
     kohv2D: "xe8uvvx",
@@ -2618,6 +2740,7 @@ var marketingStyles = {
   plan: {
     k1xSpc: "xrvj5dj",
     kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
     kNk6WL: "x10ukxgv",
     kOIVth: "x8fetqu",
     kmVPX3: "xe0tb4u",
@@ -3322,6 +3445,10 @@ var recipes = {
   "hraness-marketing-header__actions": {
     default: marketingStyles.header__actions
   },
+  "hraness-marketing-main": {
+    default: marketingStyles.main,
+    pad: marketingStyles.mainPad
+  },
   "hraness-marketing-footer": {
     default: marketingStyles.footer
   },
@@ -3656,6 +3783,24 @@ var recipes = {
   "hraness-marketing-trust-item__detail": {
     default: marketingStyles.trust_item__detail
   },
+  "hraness-marketing-card-row": {
+    default: marketingStyles.card_row
+  },
+  "hraness-marketing-card": {
+    default: marketingStyles.card
+  },
+  "hraness-marketing-card__art": {
+    default: marketingStyles.card__art
+  },
+  "hraness-marketing-card__title": {
+    default: marketingStyles.card__title
+  },
+  "hraness-marketing-card__meta": {
+    default: marketingStyles.card__meta
+  },
+  "hraness-marketing-card__body": {
+    default: marketingStyles.card__body
+  },
   "hraness-marketing-quote-grid": {
     default: marketingStyles.quote_grid
   },
@@ -3793,7 +3938,7 @@ function marketingFactCellVariant(index) {
 }
 
 // src/react/product-marketing.tsx
-import { jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs4, Fragment } from "react/jsx-runtime";
 var MARKETING_HEADING_TAGS = {
   1: "h1",
   2: "h2",
@@ -3869,6 +4014,103 @@ function MarketingField({
     children
   });
 }
+function MarketingMain({
+  children,
+  className,
+  clearance = "scroll",
+  id = "main-content"
+}) {
+  if (clearance !== "scroll" && clearance !== "pad")
+    throw new RangeError("Marketing main clearance must be scroll or pad.");
+  return /* @__PURE__ */ jsx5("main", {
+    className: marketingClassName("hraness-marketing-main", className, clearance === "pad" ? "pad" : "default"),
+    "data-hraness-clearance": clearance === "pad" ? "pad" : undefined,
+    "data-hraness-marketing": "main",
+    id,
+    children
+  });
+}
+function MarketingCardRow({
+  ariaLabel,
+  cards,
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsxs4("div", {
+    "aria-label": ariaLabel,
+    className: marketingClassName("hraness-marketing-card-row", className),
+    "data-hraness-marketing": "card-row",
+    children: [
+      cards?.map((card) => /* @__PURE__ */ jsx5(MarketingCard, {
+        title: card.title,
+        ...card.art === undefined ? {} : {
+          art: card.art
+        },
+        ...card.href === undefined ? {} : {
+          href: card.href
+        },
+        ...card.meta === undefined ? {} : {
+          meta: card.meta
+        }
+      }, card.title)),
+      children
+    ]
+  });
+}
+function MarketingCardArt({
+  children,
+  className
+}) {
+  return /* @__PURE__ */ jsx5("div", {
+    className: marketingClassName("hraness-marketing-card__art", className),
+    "data-hraness-marketing": "card-art",
+    children
+  });
+}
+function isPresentNode(value) {
+  return value !== undefined && value !== false && value !== null && value !== "";
+}
+function MarketingCard({
+  art,
+  children,
+  className,
+  href,
+  meta,
+  title
+}) {
+  const body = /* @__PURE__ */ jsxs4(Fragment, {
+    children: [
+      isPresentNode(art) ? /* @__PURE__ */ jsx5(MarketingCardArt, {
+        children: art
+      }) : null,
+      /* @__PURE__ */ jsx5("h3", {
+        className: marketingClassName("hraness-marketing-card__title"),
+        children: title
+      }),
+      meta === undefined || meta === "" ? null : /* @__PURE__ */ jsx5("p", {
+        className: marketingClassName("hraness-marketing-card__meta"),
+        children: meta
+      }),
+      isPresentNode(children) ? /* @__PURE__ */ jsx5("div", {
+        className: marketingClassName("hraness-marketing-card__body"),
+        children
+      }) : null
+    ]
+  });
+  if (href === undefined) {
+    return /* @__PURE__ */ jsx5("article", {
+      className: marketingClassName("hraness-marketing-card", className),
+      "data-hraness-marketing": "card",
+      children: body
+    });
+  }
+  return /* @__PURE__ */ jsx5("a", {
+    className: marketingClassName("hraness-marketing-card", className),
+    "data-hraness-marketing": "card",
+    href,
+    children: body
+  });
+}
 function MarketingSiteHeader({
   action,
   ariaLabel = "Site",
@@ -3887,6 +4129,7 @@ function MarketingSiteHeader({
   return /* @__PURE__ */ jsx5("header", {
     className: marketingClassName("hraness-marketing-header", className, sticky ? "default" : "static"),
     "data-hraness-marketing": "header",
+    "data-position": sticky ? "sticky" : "static",
     children: /* @__PURE__ */ jsxs4("div", {
       className: marketingClassName("hraness-marketing-header__inner"),
       children: [
@@ -4923,4 +5166,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };

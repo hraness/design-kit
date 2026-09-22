@@ -3,10 +3,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   MarketingCallToAction,
+  MarketingCard,
+  MarketingCardArt,
+  MarketingCardRow,
   MarketingFlow,
   MarketingField,
   MarketingInstallPanel,
   MarketingInterfaceGrid,
+  MarketingMain,
   MarketingMaker,
   MarketingPage,
   MarketingPillars,
@@ -307,6 +311,56 @@ test("the premium roles render semantic, server-only HTML with the shared data h
   expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-cta__footnote">Free for local use.</p>'));
   expect(html.match(/<h1\b/gu)).toHaveLength(1);
   expect(html).not.toMatch(/onClick|<script\b/iu);
+});
+
+test("the site header publishes a sticky position hook for clearance", () => {
+  const sticky = renderToStaticMarkup(<MarketingSiteHeader brand="Relay" links={[]} />);
+  expect(sticky).toContain('data-position="sticky"');
+  expect(sticky).toMatch(marketingMarkupPattern('class="hraness-marketing-header"'));
+  const embedded = renderToStaticMarkup(<MarketingSiteHeader brand="Relay" links={[]} sticky={false} />);
+  expect(embedded).toContain('data-position="static"');
+  expect(embedded).toMatch(marketingMarkupPattern('class="hraness-marketing-header"'));
+});
+
+test("the main landmark binds skip and hash targets to the sticky offset", () => {
+  const html = renderToStaticMarkup(<MarketingMain><p>Owned content.</p></MarketingMain>);
+  expect(html).toContain('id="main-content"');
+  expect(html).toContain('data-hraness-marketing="main"');
+  expect(html).not.toContain("data-hraness-clearance");
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-main"'));
+  const padded = renderToStaticMarkup(<MarketingMain clearance="pad" id="article"><p>Owned content.</p></MarketingMain>);
+  expect(padded).toContain('id="article"');
+  expect(padded).toContain('data-hraness-clearance="pad"');
+  expect(() => renderToStaticMarkup(<MarketingMain clearance={"fixed" as "scroll"}>Bad</MarketingMain>))
+    .toThrow("Marketing main clearance must be scroll or pad.");
+});
+
+test("marketing card rows stretch equal-height items and reserve two-line meta", () => {
+  const html = renderToStaticMarkup(
+    <MarketingCardRow ariaLabel="Release radar" cards={[
+      { art: <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>, href: "#short", title: "Grok 4.7", meta: "First observed 21 September 2026." },
+      { title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1." },
+    ]}>
+      <MarketingCard title="A wrapped product title that must stay complete">Extra body.</MarketingCard>
+    </MarketingCardRow>,
+  );
+  expect(html).toContain('aria-label="Release radar"');
+  expect(html).toContain('data-hraness-marketing="card-row"');
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card-row"'));
+  expect(html).toContain('href="#short"');
+  expect(html).toContain("A wrapped product title that must stay complete");
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__title"'));
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__meta"'));
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__body"'));
+  expect(html).toMatch(marketingMarkupPattern('class="hraness-marketing-card__art"'));
+  expect(html).toContain('data-hraness-marketing="card-art"');
+  expect(html.match(/data-hraness-marketing="card"/gu)).toHaveLength(3);
+  expect(html.match(/data-hraness-marketing="card-art"/gu)).toHaveLength(1);
+  expect(html).not.toMatch(/line-clamp|text-overflow: ellipsis/u);
+  expect(renderToStaticMarkup(<MarketingCard title="No art" />)).not.toContain("hraness-marketing-card__art");
+  expect(renderToStaticMarkup(<MarketingCardArt>Mark</MarketingCardArt>)).toMatch(
+    marketingMarkupPattern('class="hraness-marketing-card__art"'),
+  );
 });
 
 test("empty quote and pillar collections render nothing", () => {

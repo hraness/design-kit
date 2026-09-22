@@ -23,6 +23,7 @@ export * from "./procedural-recipe.js";
 export * from "./production-data-preview-notice.js";
 export * from "./product-marketing.js";
 export * from "./route-state.js";
+export * from "./sticky-offset.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./theme.js";

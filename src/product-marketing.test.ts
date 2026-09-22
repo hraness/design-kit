@@ -16,6 +16,9 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css).toContain(".hraness-marketing-proof-frame");
   expect(css).toContain(".hraness-marketing-section");
   expect(css).toContain(".hraness-marketing-interface-grid");
+  expect(css).toContain(".hraness-marketing-card-row");
+  expect(css).toContain(".hraness-marketing-main");
+  expect(css).toContain("--hraness-sticky-offset");
   expect(css).toContain(".hraness-marketing-trust-grid");
   expect(css).toContain(".hraness-marketing-question");
   expect(css).toContain(".hraness-marketing-cta");
@@ -31,6 +34,36 @@ test("automatic flow syntax does not override typography or base color owned by 
   expect(codeRule).toBeDefined();
   expect(codeRule).not.toMatch(/(?:^|;)\s*(?:font(?:-[a-z-]+)?|color)\s*:/u);
   expect(css).toContain(".hraness-marketing-flow__code");
+});
+
+test("sticky marketing chrome publishes a document offset for siblings and skip targets", () => {
+  expect(css).toContain("html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([data-position=\"static\"]))");
+  expect(css).toContain("scroll-padding-block-start: var(--hraness-sticky-offset)");
+  expect(css).toContain("scroll-margin-block-start: var(--hraness-sticky-offset)");
+  expect(css).toContain('.hraness-marketing-main[data-hraness-clearance="pad"]');
+  expect(css).toContain(".hraness-sticky-below-chrome");
+  expect(css).toContain("[data-hraness-sticky]");
+  expect(css).toContain("inset-block-start: var(--hraness-sticky-offset)");
+});
+
+test("marketing card rows stretch to the tallest item and reserve two-line meta", () => {
+  expect(css).toMatch(/\.hraness-marketing-card-row\s*\{[^}]*align-items: stretch/u);
+  expect(css).toContain(".hraness-marketing-card-row > *");
+  expect(css).toMatch(/\.hraness-marketing-card__meta\s*\{[^}]*min-block-size: calc\(var\(--hraness-marketing-card-meta-lines, 2\) \* 1\.45em\)/u);
+  expect(css).toMatch(/\.hraness-marketing-card__title\s*\{[^}]*overflow-wrap: anywhere/u);
+  expect(css).not.toMatch(/hraness-marketing-card__title[^}]*line-clamp/u);
+});
+
+test("marketing card art wells clip overflow and contain background paint", () => {
+  expect(css).toMatch(/\.hraness-marketing-card\s*\{[^}]*position: relative/u);
+  expect(css).toMatch(/\.hraness-marketing-card\s*\{[^}]*isolation: isolate/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*overflow: hidden/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*contain: paint/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*isolation: isolate/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-clip: border-box/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*background-origin: padding-box/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*max-inline-size: 100%/u);
+  expect(css).toMatch(/\.hraness-marketing-card__art\s*\{[^}]*min-inline-size: 0/u);
 });
 
 test("the marketing grammar keeps compact, coarse-pointer, and forced-color contracts", () => {
