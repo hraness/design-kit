@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import assert from "node:assert/strict";
 import { parseHTML } from "linkedom";
 
 import {
@@ -29,8 +30,8 @@ function fixture(markup = `
 
 test("the sticky offset helper measures the header border box", () => {
   const { header } = fixture();
-  expect(header).not.toBeNull();
-  expect(measureStickyOffset(header!)).toBe("56px");
+  assert.ok(header !== null);
+  expect(measureStickyOffset(header)).toBe("56px");
   expect(stickyOffsetCustomProperty).toBe("--hraness-sticky-offset");
   expect(stickyOffsetHeaderSelector).toContain(".hraness-marketing-header");
   expect(stickyOffsetHeaderSelector).toContain(".hraness-marketing-header-surface");
@@ -38,14 +39,15 @@ test("the sticky offset helper measures the header border box", () => {
 
 test("publish writes the offset onto the marketing page so siblings inherit it", () => {
   const { document, header } = fixture();
-  expect(header).not.toBeNull();
-  expect(publishStickyOffset(header!)).toBe("56px");
+  assert.ok(header !== null);
+  expect(publishStickyOffset(header)).toBe("56px");
   const page = document.querySelector(".hraness-marketing-page") as HTMLElement;
   expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
 });
 
 test("sync publishes once without ResizeObserver and removes the property on stop", () => {
   const { document, header, window } = fixture();
+  assert.ok(header !== null);
   Object.defineProperty(window, "ResizeObserver", { configurable: true, value: undefined });
   Object.defineProperty(document, "defaultView", { configurable: true, value: window });
   const stop = syncStickyOffset({ header, root: document });
@@ -70,6 +72,7 @@ test("sync observes the header when ResizeObserver is present", () => {
   }
   Object.defineProperty(window, "ResizeObserver", { configurable: true, value: FakeObserver });
   Object.defineProperty(document, "defaultView", { configurable: true, value: window });
+  assert.ok(header !== null);
   const stop = syncStickyOffset({ root: document });
   expect(observed).toEqual([header]);
   expect((document.querySelector(".hraness-marketing-page") as HTMLElement)

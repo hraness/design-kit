@@ -183,7 +183,7 @@ export function MarketingCardRow({
       data-hraness-marketing="card-row"
     >
       {cards?.map((card) => (
-        <MarketingCard href={card.href} key={card.title} meta={card.meta} title={card.title} />
+        <MarketingCard key={card.title} title={card.title} {...(card.href === undefined ? {} : { href: card.href })} {...(card.meta === undefined ? {} : { meta: card.meta })} />
       ))}
       {children}
     </div>

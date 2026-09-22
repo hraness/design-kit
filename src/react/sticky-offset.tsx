@@ -28,6 +28,6 @@ export function StickyOffsetSync({
 }: Readonly<{
   header?: string;
 }> = {}) {
-  useEffect(() => syncStickyOffset({ header }), [header]);
+  useEffect(() => syncStickyOffset(header === undefined ? {} : { header }), [header]);
   return null;
 }
