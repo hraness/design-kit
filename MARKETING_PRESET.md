@@ -31,7 +31,7 @@ A sticky `.hraness-marketing-header` or `.hraness-marketing-header-surface` publ
 import { MarketingMain, MarketingPage, MarketingSiteHeader, StickyOffsetSync } from "@hraness/design-kit/react";
 
 <MarketingPage>
-  <MarketingSiteHeader brand="Relay" links={[{ href: "#work", label: "Work" }]} />
+  <MarketingSiteHeader brand="Relay" brandMark="/marks/relay.svg" links={[{ href: "#work", label: "Work" }]} />
   <StickyOffsetSync />
   <MarketingMain>
     <div className="hraness-sticky-below-chrome" data-hraness-sticky>Index</div>
