@@ -2205,6 +2205,37 @@ var marketingStyles = {
     kN5DiO: "x1evy7pa",
     $$css: true
   },
+  related__group: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xru8eyw",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  related__group_header: {
+    k1xSpc: "xrvj5dj",
+    k2kXS: "x1l2wkh2",
+    kOIVth: "x13z6uf9",
+    $$css: true
+  },
+  related__group_heading: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xtylnni",
+    knIRL8: "xb0810w",
+    ko3Kzr: "x7cedwp",
+    kUEKN5: "xjat59b",
+    kN5DiO: "xwn7fz2",
+    kYjUv9: "x1w2vvpw",
+    kLh5Sq: "x1603h9y",
+    $$css: true
+  },
+  related__group_summary: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xs87ocq",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x1jchvi3",
+    kN5DiO: "x1evy7pa",
+    $$css: true
+  },
   trust: {
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",
@@ -3736,6 +3767,18 @@ var recipes = {
   "hraness-marketing-related__summary": {
     default: marketingStyles.related__summary
   },
+  "hraness-marketing-related__group": {
+    default: marketingStyles.related__group
+  },
+  "hraness-marketing-related__group-header": {
+    default: marketingStyles.related__group_header
+  },
+  "hraness-marketing-related__group-heading": {
+    default: marketingStyles.related__group_heading
+  },
+  "hraness-marketing-related__group-summary": {
+    default: marketingStyles.related__group_summary
+  },
   "hraness-marketing-trust": {
     default: marketingStyles.trust
   },
@@ -5107,6 +5150,21 @@ function MarketingMaker({
     ]
   });
 }
+function MarketingRelatedCards({
+  items
+}) {
+  return /* @__PURE__ */ jsx5(Fragment, {
+    children: items.map((item) => /* @__PURE__ */ jsx5(MarketingCard, {
+      href: item.href,
+      meta: item.role,
+      title: item.name,
+      ...item.art === undefined ? {} : {
+        art: item.art
+      },
+      children: item.relationship
+    }, item.name))
+  });
+}
 function MarketingRelated({
   className,
   heading,
@@ -5114,6 +5172,7 @@ function MarketingRelated({
   headingLevel = 2,
   id,
   items,
+  groups,
   label,
   summary
 }) {
@@ -5131,17 +5190,36 @@ function MarketingRelated({
         prefix: "related",
         summary
       }),
-      /* @__PURE__ */ jsx5(MarketingCardRow, {
-        children: items.map((item) => /* @__PURE__ */ jsx5(MarketingCard, {
-          href: item.href,
-          meta: item.role,
-          title: item.name,
-          ...item.art === undefined ? {} : {
-            art: item.art
-          },
-          children: item.relationship
-        }, item.name))
-      })
+      groups === undefined ? /* @__PURE__ */ jsx5(MarketingCardRow, {
+        children: /* @__PURE__ */ jsx5(MarketingRelatedCards, {
+          items
+        })
+      }) : groups.map((group) => /* @__PURE__ */ jsxs4("div", {
+        className: marketingClassName("hraness-marketing-related__group"),
+        children: [
+          /* @__PURE__ */ jsxs4("div", {
+            className: marketingClassName("hraness-marketing-related__group-header"),
+            children: [
+              /* @__PURE__ */ jsx5(Heading, {
+                className: marketingClassName("hraness-marketing-related__group-heading"),
+                id: group.headingId,
+                level: childHeadingLevel(headingLevel),
+                children: group.heading
+              }),
+              group.summary === undefined ? null : /* @__PURE__ */ jsx5("p", {
+                className: marketingClassName("hraness-marketing-related__group-summary"),
+                children: group.summary
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx5(MarketingCardRow, {
+            ariaLabel: group.heading,
+            children: /* @__PURE__ */ jsx5(MarketingRelatedCards, {
+              items: group.items
+            })
+          })
+        ]
+      }, group.headingId))
     ]
   });
 }

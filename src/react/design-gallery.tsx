@@ -404,23 +404,42 @@ export function DesignSystemGallery({
             ]}
           />
           <MarketingRelated
+            groups={[
+              {
+                heading: "Sibling tools",
+                headingId: "design-gallery-related-tools",
+                items: [
+                  {
+                    href: "#gallery-install",
+                    name: "Ledger",
+                    relationship: "Ledger keeps the receipt Relay writes for each finished job.",
+                    role: "A local receipt store",
+                  },
+                  {
+                    href: "#marketing",
+                    name: "Index",
+                    relationship: "Index searches the receipts Relay and Ledger produce.",
+                    role: "A local search index",
+                  },
+                ],
+              },
+              {
+                heading: "Shared infrastructure",
+                headingId: "design-gallery-related-infra",
+                items: [
+                  {
+                    href: "#marketing",
+                    name: "Relay",
+                    relationship: "Relay carries the receipts every sibling produces.",
+                    role: "A typed job transport",
+                  },
+                ],
+                summary: "One capability layer every product in the family builds on.",
+              },
+            ]}
             heading="The rest of the reference stack."
             headingId="design-gallery-related-title"
             headingLevel={3}
-            items={[
-              {
-                href: "#gallery-install",
-                name: "Ledger",
-                relationship: "Ledger keeps the receipt Relay writes for each finished job.",
-                role: "A local receipt store",
-              },
-              {
-                href: "#marketing",
-                name: "Index",
-                relationship: "Index searches the receipts Relay and Ledger produce.",
-                role: "A local search index",
-              },
-            ]}
             label="Related"
             summary="Sibling tools stay separate releases; each card names its relationship to this product."
           />

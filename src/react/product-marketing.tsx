@@ -1217,6 +1217,40 @@ export interface MarketingRelatedProduct {
   readonly role: string;
 }
 
+export interface MarketingRelatedGroup {
+  /** Heading naming this tier of siblings, rendered one level below the section heading. */
+  readonly heading: string;
+  readonly headingId: string;
+  readonly items: readonly MarketingRelatedProduct[];
+  readonly summary?: string;
+}
+
+function MarketingRelatedCards({
+  items,
+}: Readonly<{
+  items: readonly MarketingRelatedProduct[];
+}>) {
+  return (
+    <>
+      {items.map((item) => (
+        <MarketingCard
+          key={item.name}
+          href={item.href}
+          meta={item.role}
+          title={item.name}
+          {...(item.art === undefined ? {} : { art: item.art })}
+        >
+          {item.relationship}
+        </MarketingCard>
+      ))}
+    </>
+  );
+}
+
+type MarketingRelatedBody =
+  | Readonly<{ groups: readonly MarketingRelatedGroup[]; items?: undefined }>
+  | Readonly<{ groups?: undefined; items: readonly MarketingRelatedProduct[] }>;
+
 /** Linked cards for sibling products, each framed by its relationship to the featured product. */
 export function MarketingRelated({
   className,
@@ -1225,6 +1259,7 @@ export function MarketingRelated({
   headingLevel = 2,
   id,
   items,
+  groups,
   label,
   summary,
 }: Readonly<{
@@ -1233,10 +1268,10 @@ export function MarketingRelated({
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
   id?: string;
-  items: readonly MarketingRelatedProduct[];
   label?: string;
   summary?: string;
-}>) {
+}> &
+  MarketingRelatedBody) {
   return (
     <section
       aria-labelledby={headingId}
@@ -1252,19 +1287,31 @@ export function MarketingRelated({
         prefix="related"
         summary={summary}
       />
-      <MarketingCardRow>
-        {items.map((item) => (
-          <MarketingCard
-            key={item.name}
-            href={item.href}
-            meta={item.role}
-            title={item.name}
-            {...(item.art === undefined ? {} : { art: item.art })}
-          >
-            {item.relationship}
-          </MarketingCard>
+      {groups === undefined
+        ? (
+          <MarketingCardRow>
+            <MarketingRelatedCards items={items} />
+          </MarketingCardRow>
+        )
+        : groups.map((group) => (
+          <div className={classNames("hraness-marketing-related__group")} key={group.headingId}>
+            <div className={classNames("hraness-marketing-related__group-header")}>
+              <Heading
+                className={classNames("hraness-marketing-related__group-heading")}
+                id={group.headingId}
+                level={childHeadingLevel(headingLevel)}
+              >
+                {group.heading}
+              </Heading>
+              {group.summary === undefined
+                ? null
+                : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
+            </div>
+            <MarketingCardRow ariaLabel={group.heading}>
+              <MarketingRelatedCards items={group.items} />
+            </MarketingCardRow>
+          </div>
         ))}
-      </MarketingCardRow>
     </section>
   );
 }

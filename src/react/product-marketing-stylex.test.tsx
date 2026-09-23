@@ -209,7 +209,7 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("129f708f2ec210d532d2000b5691a8ff73e3ef8c3ef3b270226d230a75504554");
+    .toBe("61917d2ecfa68f909a4604c60b5a9d8638f5ba3f139f90af8f78f4362656f237");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(26);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
