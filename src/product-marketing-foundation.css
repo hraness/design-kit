@@ -7,7 +7,7 @@
   --hraness-marketing-install-inline-size: initial;
 }
 
-:where( .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-footer, .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta, .hraness-marketing-proof-frame ) {
+:where( .hraness-marketing-page, .hraness-marketing-header, .hraness-marketing-footer, .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related, .hraness-marketing-cta, .hraness-marketing-proof-frame ) {
   --hraness-marketing-ink: var(--foreground, CanvasText);
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
@@ -49,7 +49,8 @@
   .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
   .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
   .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+  .hraness-marketing-cta,
   .hraness-marketing-proof-frame
 ),
 :where([data-theme="dark"], .dark) :where(
@@ -57,7 +58,8 @@
   .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
   .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
   .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+  .hraness-marketing-cta,
   .hraness-marketing-proof-frame
 ) {
   --hraness-foil-1: oklch(0.56 0.16 340);
@@ -74,7 +76,8 @@
     .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
     .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
     .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+    .hraness-marketing-cta,
     .hraness-marketing-proof-frame
   ) {
     --hraness-foil-1: oklch(0.56 0.16 340);
@@ -123,7 +126,7 @@
   font-size: 0.9em;
 }
 
-.hraness-marketing-page > :where( .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta ) {
+.hraness-marketing-page > :where( .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related, .hraness-marketing-cta ) {
   padding-inline: var(--hraness-marketing-gutter);
 }
 

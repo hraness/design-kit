@@ -45,6 +45,7 @@ import {
   MarketingProofFrame,
   MarketingQuestionList,
   MarketingQuoteGrid,
+  MarketingRelated,
   MarketingSection,
   MarketingSectionLabel,
   MarketingSiteFooter,
@@ -70,7 +71,7 @@ import {
   foilTextImage,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-5nc4sn9v.js";
+} from "../chunk-rp7g0gvd.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -4001,6 +4002,24 @@ function DesignSystemGallery({
                       question: "Does it phone home?"
                     }]
                   }),
+                  /* @__PURE__ */ jsx14(MarketingRelated, {
+                    heading: "The rest of the reference stack.",
+                    headingId: "design-gallery-related-title",
+                    headingLevel: 3,
+                    items: [{
+                      href: "#gallery-install",
+                      name: "Ledger",
+                      relationship: "Ledger keeps the receipt Relay writes for each finished job.",
+                      role: "A local receipt store"
+                    }, {
+                      href: "#marketing",
+                      name: "Index",
+                      relationship: "Index searches the receipts Relay and Ledger produce.",
+                      role: "A local search index"
+                    }],
+                    label: "Related",
+                    summary: "Sibling tools stay separate releases; each card names its relationship to this product."
+                  }),
                   /* @__PURE__ */ jsx14(MarketingMaker, {
                     heading: "Built by a reference maker.",
                     headingId: "design-gallery-maker-title",
@@ -5538,6 +5557,7 @@ export {
   MarketingSiteFooter,
   MarketingSectionLabel,
   MarketingSection,
+  MarketingRelated,
   MarketingQuoteGrid,
   MarketingQuestionList,
   MarketingProofFrame,

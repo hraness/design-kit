@@ -19,6 +19,7 @@ import {
   MarketingProofFrame,
   MarketingQuestionList,
   MarketingQuoteGrid,
+  MarketingRelated,
   MarketingSection,
   MarketingSiteFooter,
   MarketingSiteHeader,
@@ -149,6 +150,45 @@ test("the marketing compositions preserve headings, native disclosure, and produ
   expect(html).toContain("For typed application code.");
   expect(html).toContain("Source files and credentials.");
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-interface__heading">CLI</h3>'));
+});
+
+test("the related-products composition links each sibling through the featured product", () => {
+  const html = renderToStaticMarkup(
+    <MarketingRelated
+      heading="The rest of the local stack."
+      headingId="related-title"
+      items={[
+        {
+          href: "https://relay.example",
+          name: "Relay",
+          relationship: "Relay runs the exact job the featured product prepares.",
+          role: "A reference job runner",
+        },
+        {
+          art: <img alt="" src="/mark.svg" />,
+          href: "https://ledger.example",
+          name: "Ledger",
+          relationship: "Ledger keeps the receipt the featured product writes.",
+          role: "A local receipt store",
+        },
+      ]}
+      label="Related"
+      summary="Separate tools with separate release cadences."
+    />,
+  );
+
+  expect(html).toContain('<section aria-labelledby="related-title"');
+  expect(html).toContain('data-hraness-marketing="related"');
+  expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-related__label">Related</p>'));
+  expect(html).toMatch(marketingMarkupPattern('<h2 class="hraness-marketing-related__heading" id="related-title">'));
+  expect(html).toContain("Separate tools with separate release cadences.");
+  const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-card[^"]*" data-hraness-marketing="card" href="([^"]+)"/gu)];
+  expect(cards.map((match) => match[1])).toEqual(["https://relay.example", "https://ledger.example"]);
+  expect(html.match(/hraness-marketing-card__title/gu)).toHaveLength(2);
+  expect(html).toContain("A reference job runner");
+  expect(html).toContain("Ledger keeps the receipt the featured product writes.");
+  expect(html).toContain('src="/mark.svg"');
+  expect(html).not.toMatch(/onClick|<script\b/iu);
 });
 
 test("an embedded hero advances its proof heading without adding another h1", () => {
