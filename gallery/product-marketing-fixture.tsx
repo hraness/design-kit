@@ -6,9 +6,9 @@ export const productMarketingCoverage = [
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
   ["MarketingMain", ".hraness-marketing-main", 1],
   ["sticky sibling", "[data-hraness-sticky]", 1],
-  ["MarketingCardRow", ".hraness-marketing-card-row", 1],
-  ["MarketingCard", ".hraness-marketing-card", 2],
-  ["MarketingCardArt", ".hraness-marketing-card__art", 2],
+  ["MarketingCardRow", ".hraness-marketing-card-row", 2],
+  ["MarketingCard", ".hraness-marketing-card", 4],
+  ["MarketingCardArt", ".hraness-marketing-card__art", 3],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
@@ -26,6 +26,7 @@ export const productMarketingCoverage = [
   ["MarketingPricing", ".hraness-marketing-pricing", 1],
   ["MarketingQuestionList", ".hraness-marketing-questions", 1],
   ["MarketingMaker", ".hraness-marketing-maker", 1],
+  ["MarketingRelated", ".hraness-marketing-related", 1],
   ["MarketingCallToAction", ".hraness-marketing-cta", 2],
   ["hero paper center", '.hraness-marketing-hero[data-tone="paper"][data-align="center"]', 1],
   ["hero paper start", '.hraness-marketing-hero[data-tone="paper"][data-align="start"]', 1],
@@ -61,7 +62,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
     MarketingFlow, MarketingFacts, MarketingPillars, MarketingInstallPanel, MarketingProofFrame,
     MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid,
     MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList,
-    MarketingMaker, MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
+    MarketingMaker, MarketingRelated, MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
   const actions = [{ href: "#install", label: "Install" }, { href: "#interfaces", label: "Explore" }] as const;
   const facts = Array.from({ length: 4 }, (_, index) => ({
     label: `Fact ${index + 1}`, value: `${index + 1}`, detail: "An exact observation.",
@@ -131,6 +132,10 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         portrait={<svg data-marketing-oracle="maker-portrait" viewBox="0 0 24 24" aria-label="Illustrated portrait"><circle cx="12" cy="12" r="10" /></svg>}>
         <p data-marketing-oracle="maker-first">First biography paragraph.</p><p data-marketing-oracle="maker-last">Last biography paragraph.</p>
       </MarketingMaker>
+      <MarketingRelated heading="The rest of the stack." headingId="related" label="Related" summary="Sibling releases, one relationship each." items={[
+        { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path d="M4 4h16v16H4z" /></svg>, href: "#fixture", name: "Ledger", relationship: "Ledger keeps the receipt Relay writes.", role: "A local receipt store" },
+        { href: "#interfaces", name: "Index", relationship: "Index searches Relay receipts.", role: "A local search index" },
+      ]} />
       {(["paper", "accent"] as const).map((tone) => (
         <MarketingCallToAction actions={actions} eyebrow="Ready" heading="Keep the next result." headingId={`cta-${tone}`} key={tone}
           summary="Run one exact job." footnote="Local use remains available." tone={tone} />

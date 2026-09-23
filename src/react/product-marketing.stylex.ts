@@ -1495,6 +1495,50 @@ export const marketingStyles = stylex.create({
     "font-size": "1.125rem",
     "line-height": "1.5"
   },
+  "related": {
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "inline-size": "min(100%, var(--hraness-marketing-measure))",
+    "min-inline-size": "0",
+    "margin-inline": "auto",
+    "padding-block": "var(--hraness-marketing-section-space)",
+    "border-block-start": "var(--hraness-marketing-rule)",
+    "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
+    "display": "grid",
+    "gap": "clamp(1.5rem, 4vw, 3rem)"
+  },
+  "related__header": {
+    "display": "grid",
+    "max-inline-size": "var(--hraness-marketing-copy-measure)",
+    "gap": "0.75rem"
+  },
+  "related__label": {
+    "margin": "0",
+    "color": "var(--hraness-marketing-muted)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "0.875rem",
+    "font-weight": "500",
+    "letter-spacing": "0",
+    "line-height": "1.4",
+    "text-transform": "none"
+  },
+  "related__heading": {
+    "margin": "0",
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-heading-font)",
+    "font-weight": "var(--hraness-marketing-heading-weight)",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
+    "text-wrap": "balance",
+    "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
+  },
+  "related__summary": {
+    "margin": "0",
+    "color": "var(--hraness-marketing-muted)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "1.125rem",
+    "line-height": "1.5"
+  },
   "trust": {
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",
@@ -3998,6 +4042,11 @@ const recipes = {
   "hraness-marketing-interfaces__label": { "default": marketingStyles.interfaces__label },
   "hraness-marketing-interfaces__heading": { "default": marketingStyles.interfaces__heading },
   "hraness-marketing-interfaces__summary": { "default": marketingStyles.interfaces__summary },
+  "hraness-marketing-related": { "default": marketingStyles.related },
+  "hraness-marketing-related__header": { "default": marketingStyles.related__header },
+  "hraness-marketing-related__label": { "default": marketingStyles.related__label },
+  "hraness-marketing-related__heading": { "default": marketingStyles.related__heading },
+  "hraness-marketing-related__summary": { "default": marketingStyles.related__summary },
   "hraness-marketing-trust": { "default": marketingStyles.trust },
   "hraness-marketing-trust__header": { "default": marketingStyles.trust__header },
   "hraness-marketing-trust__label": { "default": marketingStyles.trust__label },

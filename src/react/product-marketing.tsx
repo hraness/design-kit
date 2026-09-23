@@ -740,7 +740,7 @@ export function MarketingSection({
   );
 }
 
-type MarketingCollectionPrefix = "interfaces" | "pricing" | "primitives" | "questions" | "quotes" | "trust";
+type MarketingCollectionPrefix = "interfaces" | "pricing" | "primitives" | "questions" | "quotes" | "related" | "trust";
 
 interface MarketingCollectionHeaderProps {
   readonly heading: string;
@@ -1205,6 +1205,66 @@ export function MarketingMaker({
             </ul>
           )}
       </div>
+    </section>
+  );
+}
+
+export interface MarketingRelatedProduct {
+  readonly art?: ReactNode;
+  readonly href: string;
+  readonly name: string;
+  readonly relationship: ReactNode;
+  readonly role: string;
+}
+
+/** Linked cards for sibling products, each framed by its relationship to the featured product. */
+export function MarketingRelated({
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  items,
+  label,
+  summary,
+}: Readonly<{
+  className?: string;
+  heading: string;
+  headingId: string;
+  headingLevel?: MarketingHeadingLevel;
+  id?: string;
+  items: readonly MarketingRelatedProduct[];
+  label?: string;
+  summary?: string;
+}>) {
+  return (
+    <section
+      aria-labelledby={headingId}
+      className={classNames("hraness-marketing-related", className)}
+      data-hraness-marketing="related"
+      id={id}
+    >
+      <MarketingCollectionHeader
+        heading={heading}
+        headingId={headingId}
+        headingLevel={headingLevel}
+        label={label}
+        prefix="related"
+        summary={summary}
+      />
+      <MarketingCardRow>
+        {items.map((item) => (
+          <MarketingCard
+            key={item.name}
+            href={item.href}
+            meta={item.role}
+            title={item.name}
+            {...(item.art === undefined ? {} : { art: item.art })}
+          >
+            {item.relationship}
+          </MarketingCard>
+        ))}
+      </MarketingCardRow>
     </section>
   );
 }

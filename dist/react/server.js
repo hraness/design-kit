@@ -21,6 +21,7 @@ import {
   MarketingProofFrame,
   MarketingQuestionList,
   MarketingQuoteGrid,
+  MarketingRelated,
   MarketingSection,
   MarketingSectionLabel,
   MarketingSiteFooter,
@@ -37,7 +38,7 @@ import {
   createProceduralBackdropRecipe,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-5nc4sn9v.js";
+} from "../chunk-rp7g0gvd.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -57,6 +58,7 @@ export {
   MarketingSiteFooter,
   MarketingSectionLabel,
   MarketingSection,
+  MarketingRelated,
   MarketingQuoteGrid,
   MarketingQuestionList,
   MarketingProofFrame,

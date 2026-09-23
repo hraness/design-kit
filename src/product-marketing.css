@@ -36,6 +36,7 @@
   .hraness-marketing-pricing,
   .hraness-marketing-questions,
   .hraness-marketing-maker,
+  .hraness-marketing-related,
   .hraness-marketing-cta,
   .hraness-marketing-proof-frame
 ) {
@@ -139,6 +140,7 @@
   .hraness-marketing-pricing__label,
   .hraness-marketing-questions__label,
   .hraness-marketing-maker__label,
+  .hraness-marketing-related__label,
   .hraness-marketing-cta__eyebrow
 ) {
   margin: 0;
@@ -168,6 +170,7 @@
   .hraness-marketing-pricing__heading,
   .hraness-marketing-questions__heading,
   .hraness-marketing-maker__heading,
+  .hraness-marketing-related__heading,
   .hraness-marketing-cta__heading
 ) {
   margin: 0;
@@ -187,7 +190,8 @@
   .hraness-marketing-quotes__heading,
   .hraness-marketing-pricing__heading,
   .hraness-marketing-questions__heading,
-  .hraness-marketing-maker__heading
+  .hraness-marketing-maker__heading,
+  .hraness-marketing-related__heading
 ) {
   font-size: var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem));
 }
@@ -203,6 +207,7 @@
   .hraness-marketing-quotes__header > p:last-child,
   .hraness-marketing-pricing__header > p:last-child,
   .hraness-marketing-questions__header > p:last-child,
+  .hraness-marketing-related__header > p:last-child,
   .hraness-marketing-cta__summary
 ) {
   margin: 0;
@@ -226,6 +231,7 @@
   .hraness-marketing-pricing,
   .hraness-marketing-questions,
   .hraness-marketing-maker,
+  .hraness-marketing-related,
   .hraness-marketing-cta
 ) {
   inline-size: min(100%, var(--hraness-marketing-measure));
@@ -246,6 +252,7 @@
   .hraness-marketing-pricing,
   .hraness-marketing-questions,
   .hraness-marketing-maker,
+  .hraness-marketing-related,
   .hraness-marketing-cta
 ) {
   padding-inline: var(--hraness-marketing-gutter);
@@ -598,7 +605,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
   .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
   .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+  .hraness-marketing-cta,
   .hraness-marketing-proof-frame
 ),
 :where([data-theme="dark"], .dark) :where(
@@ -607,7 +615,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
   .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
   .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+  .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+  .hraness-marketing-cta,
   .hraness-marketing-proof-frame
 ) {
   --hraness-foil-1: oklch(0.56 0.16 340);
@@ -625,7 +634,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section,
     .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces,
     .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing,
-    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-cta,
+    .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related,
+    .hraness-marketing-cta,
     .hraness-marketing-proof-frame
   ) {
     --hraness-foil-1: oklch(0.56 0.16 340);
@@ -1078,7 +1088,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-quotes,
 .hraness-marketing-pricing,
 .hraness-marketing-questions,
-.hraness-marketing-maker {
+.hraness-marketing-maker,
+.hraness-marketing-related {
   padding-block: var(--hraness-marketing-section-space);
   border-block-start: var(--hraness-marketing-rule);
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem);
@@ -1087,7 +1098,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-section,
 .hraness-marketing-interfaces,
 .hraness-marketing-trust,
-.hraness-marketing-questions {
+.hraness-marketing-questions,
+.hraness-marketing-related {
   display: grid;
   gap: clamp(1.5rem, 4vw, 3rem);
 }
@@ -1099,7 +1111,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-quotes__header,
 .hraness-marketing-pricing__header,
 .hraness-marketing-questions__header,
-.hraness-marketing-maker__header {
+.hraness-marketing-maker__header,
+.hraness-marketing-related__header {
   display: grid;
   max-inline-size: var(--hraness-marketing-copy-measure);
   gap: 0.75rem;

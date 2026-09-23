@@ -48,6 +48,7 @@ import {
   MarketingPrimitives,
   MarketingProofFrame,
   MarketingQuestionList,
+  MarketingRelated,
   MarketingQuoteGrid,
   MarketingSection,
   MarketingSectionLabel,
@@ -401,6 +402,27 @@ export function DesignSystemGallery({
               { answer: <p>No. The local workflow works without one.</p>, question: "Does it require an account?" },
               { answer: <p>Nothing leaves your machine unless you turn on sync.</p>, question: "Does it phone home?" },
             ]}
+          />
+          <MarketingRelated
+            heading="The rest of the reference stack."
+            headingId="design-gallery-related-title"
+            headingLevel={3}
+            items={[
+              {
+                href: "#gallery-install",
+                name: "Ledger",
+                relationship: "Ledger keeps the receipt Relay writes for each finished job.",
+                role: "A local receipt store",
+              },
+              {
+                href: "#marketing",
+                name: "Index",
+                relationship: "Index searches the receipts Relay and Ledger produce.",
+                role: "A local search index",
+              },
+            ]}
+            label="Related"
+            summary="Sibling tools stay separate releases; each card names its relationship to this product."
           />
           <MarketingMaker
             heading="Built by a reference maker."

@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "4a427a379158fff4f310b5a447e568ec782ba69640f78e5d8076ea1fdb238b5b", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "129f708f2ec210d532d2000b5691a8ff73e3ef8c3ef3b270226d230a75504554", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -791,7 +791,7 @@ try {
             pageRoot.append(probe);
             const usedOffset = getComputedStyle(probe).insetBlockStart;
             probe.remove();
-            const cards = [...document.querySelectorAll(".hraness-marketing-card-row > *")].map((node) => {
+            const cards = [...document.querySelectorAll('.hraness-marketing-card-row[aria-label="Release radar"] > *')].map((node) => {
               const card = node as HTMLElement;
               const box = card.getBoundingClientRect();
               const art = card.querySelector(".hraness-marketing-card__art");

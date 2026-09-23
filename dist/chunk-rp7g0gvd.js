@@ -2156,6 +2156,55 @@ var marketingStyles = {
     kN5DiO: "x1evy7pa",
     $$css: true
   },
+  related: {
+    kMwMTN: "xtylnni",
+    knIRL8: "xrtw95r",
+    kULEZF: "x19vpta5",
+    kdYMnH: "xesnm00",
+    kYk0Dm: "xvueqy4",
+    kF3gjK: "x1e7ni4k",
+    khsPd: "xlejusl",
+    ksh8PN: "x1ctcpvu",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x13p3q8k",
+    $$css: true
+  },
+  related__header: {
+    k1xSpc: "xrvj5dj",
+    k2kXS: "x1l2wkh2",
+    kOIVth: "x8233eu",
+    $$css: true
+  },
+  related__label: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xs87ocq",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "xkpwil5",
+    ko3Kzr: "xk50ysn",
+    kUEKN5: "x12oo3zp",
+    kN5DiO: "x37zpob",
+    ksq1ai: "x6mezaz",
+    $$css: true
+  },
+  related__heading: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xtylnni",
+    knIRL8: "xb0810w",
+    ko3Kzr: "x7cedwp",
+    kUEKN5: "x154du55",
+    kN5DiO: "xjnvrkt",
+    kYjUv9: "x1w2vvpw",
+    kLh5Sq: "xixn193",
+    $$css: true
+  },
+  related__summary: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xs87ocq",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x1c3i2sq",
+    kN5DiO: "x1evy7pa",
+    $$css: true
+  },
   trust: {
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",
@@ -3672,6 +3721,21 @@ var recipes = {
   "hraness-marketing-interfaces__summary": {
     default: marketingStyles.interfaces__summary
   },
+  "hraness-marketing-related": {
+    default: marketingStyles.related
+  },
+  "hraness-marketing-related__header": {
+    default: marketingStyles.related__header
+  },
+  "hraness-marketing-related__label": {
+    default: marketingStyles.related__label
+  },
+  "hraness-marketing-related__heading": {
+    default: marketingStyles.related__heading
+  },
+  "hraness-marketing-related__summary": {
+    default: marketingStyles.related__summary
+  },
   "hraness-marketing-trust": {
     default: marketingStyles.trust
   },
@@ -5043,6 +5107,44 @@ function MarketingMaker({
     ]
   });
 }
+function MarketingRelated({
+  className,
+  heading,
+  headingId,
+  headingLevel = 2,
+  id,
+  items,
+  label,
+  summary
+}) {
+  return /* @__PURE__ */ jsxs4("section", {
+    "aria-labelledby": headingId,
+    className: marketingClassName("hraness-marketing-related", className),
+    "data-hraness-marketing": "related",
+    id,
+    children: [
+      /* @__PURE__ */ jsx5(MarketingCollectionHeader, {
+        heading,
+        headingId,
+        headingLevel,
+        label,
+        prefix: "related",
+        summary
+      }),
+      /* @__PURE__ */ jsx5(MarketingCardRow, {
+        children: items.map((item) => /* @__PURE__ */ jsx5(MarketingCard, {
+          href: item.href,
+          meta: item.role,
+          title: item.name,
+          ...item.art === undefined ? {} : {
+            art: item.art
+          },
+          children: item.relationship
+        }, item.name))
+      })
+    ]
+  });
+}
 function MarketingCallToAction({
   actions,
   className,
@@ -5166,4 +5268,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ParticleHalo };
