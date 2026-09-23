@@ -85,12 +85,15 @@ body.plain-site > main {
   }
 }
 
-/* An explicit palette supplies the same semantic colors as application surfaces. */
+/* An explicit palette supplies the same semantic colors as application surfaces.
+ * Match the neutral dark and no-script root fallback specificity so this later
+ * bridge owns the aliases. Resolve them on each plain surface so nested palette
+ * boundaries retain their own colors, including forced-color system roles. */
 :root[data-palette]:has(> body.plain-site) {
   background: var(--background, Canvas);
 }
-[data-palette] .plain-site,
-.plain-site[data-palette] {
+[data-palette][data-palette] .plain-site,
+.plain-site[data-palette][data-palette] {
   --plain-background: var(--background, Canvas);
   --plain-foreground: var(--foreground, CanvasText);
   --plain-link: var(--primary, LinkText);

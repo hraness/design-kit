@@ -164,7 +164,8 @@ test("the complete browser stylesheet includes the publication extension", () =>
 
 
 test("reading surfaces preserve palette roles and long code without shrinking captions", () => {
-  expect(plainSiteCss).toContain("[data-palette] .plain-site");
+  expect(plainSiteCss).toContain("[data-palette][data-palette] .plain-site");
+  expect(plainSiteCss).toContain(".plain-site[data-palette][data-palette]");
   expect(plainSiteCss).toContain("--plain-background: var(--background, Canvas)");
   expect(plainSiteCss).toContain("--plain-link: var(--primary, LinkText)");
   expect(publicationCss).toContain("max-inline-size: var(--hraness-type-reading-measure, 66ch)");

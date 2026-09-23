@@ -35,13 +35,20 @@ The narrower `palette-system.css` export contains only raw palette values and
 color-scheme, for build pipelines that already supply their own role mapping.
 Neither stylesheet needs a browser script or an animation runtime.
 
+Plain reading surfaces inherit the selected palette through their existing
+`--plain-*` roles. Put `data-palette` on the document, a containing element, or
+the `.plain-site` surface itself. A nested boundary resolves its own palette
+and appearance, including inside a neutral dark document. Standalone and
+compiled foundations use the same precedence; products need no additional
+color overrides.
+
 ## Preferences and embedded views
 
 The controller stores only `{ "palette": "catppuccin", "mode": "dark" }` under `hraness-design-palette-v1` in the current origin's local storage. It supports all five palette identifiers and `light`, `dark`, or `system`. Invalid or inaccessible storage falls back to Catppuccin dark. Storage events synchronize other tabs, and system mode follows operating-system appearance changes.
 
 Use `forcedPreference` for an embedded example or fixed preview in its own document. A document has one palette controller; conflicting nested providers are rejected. Forced providers do not persist preferences or adopt the parent document's controller. Each document still needs its initial attributes and compiled palette class. The host owns any propagation between iframe documents.
 
-Portalled controls receive the resolved palette class through the shared portal theme context. Keep explicit palette islands complete: each needs its palette class and concrete `data-theme` value. Color selection never changes typography, layout, or application data.
+Portalled controls receive the resolved palette class through the shared portal theme context. React portal roots retain the complete generated palette class and resolved `data-theme` value. Authored static islands can use the attribute-only system contract described above. Color selection never changes typography, layout, or application data.
 
 ## StyleX and semantic roles
 

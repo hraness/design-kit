@@ -5,13 +5,81 @@ import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
 import { chromium, type BrowserContext, type Page } from "playwright-core";
 import { designPalettes, paletteColors } from "../src/palettes.js";
-import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
+import { bundleBrowserStylesheet, nativeBrowserStylesheetAssets } from "./browser-stylesheet.js";
 
 const storageKey = "hraness-design-palette-v1";
 const repository = resolve(import.meta.dir, "..");
 const work = await mkdtemp(join(tmpdir(), "hraness-palette-browser-"));
 const errors: string[] = [];
 const forcedRoutes = ["standalone", "standalone-full", "compiler-minimal", "compiler-full"] as const;
+const plainRoutes = ["native-plain", "standalone-full", "compiler-full"] as const;
+const plainRoles = ["background", "foreground", "link", "muted", "surface", "syntax-keyword", "syntax-string", "syntax-number", "syntax-name"] as const;
+type Palette = (typeof designPalettes)[number];
+type Mode = "light" | "dark";
+
+function nestedPlainPalettes(palette: Palette): readonly [Palette, Palette] {
+  const index = designPalettes.indexOf(palette);
+  const nested = designPalettes[(index + 1) % designPalettes.length];
+  const self = designPalettes[(index + 2) % designPalettes.length];
+  assert(nested !== undefined && self !== undefined, "Plain palette fixture requires two nested palette families.");
+  return [nested, self];
+}
+
+function plainHtml(stylesheets: readonly string[], palette: Palette, mode: Mode | "system"): string {
+  const [nested, self] = nestedPlainPalettes(palette);
+  const probes = `<div data-plain-probes aria-hidden="true">${plainRoles.map((role) => `<span data-plain-role="${role}"></span>`).join("")}</div>`;
+  return `<!doctype html><html lang="en" data-palette="${palette}"${mode === "system" ? "" : ` data-theme="${mode}"`}><head><meta charset="utf-8"><title>Plain palette verification</title>${stylesheets.map((href) => `<link rel="stylesheet" href="${href}">`).join("")}</head><body class="plain-site">${probes}<main>Selected document palette<section data-palette="${nested}" data-theme="light"><article class="plain-site" data-plain-nested>${probes}Nested light document</article></section><section class="plain-site" data-palette="${self}" data-plain-self>${probes}Nested system document</section><div data-forced-reference>System colors</div></main></body></html>`;
+}
+
+async function assertPlainPalette(page: Page, palette: Palette, mode: Mode, systemMode: Mode, nestedOnly = false): Promise<void> {
+  const [nested, self] = nestedPlainPalettes(palette);
+  for (const [selector, expectedPalette, expectedMode] of [
+    ["body.plain-site", palette, mode],
+    ["[data-plain-nested]", nested, "light"],
+    ["[data-plain-self]", self, systemMode],
+  ] as const) {
+    if (nestedOnly && selector === "body.plain-site") continue;
+    const expected = paletteColors[expectedPalette][expectedMode];
+    const actual = await page.locator(selector).evaluate((element) => {
+      const css = getComputedStyle(element);
+      return {
+        background: css.backgroundColor, foreground: css.color,
+        roles: [...element.querySelectorAll(":scope > [data-plain-probes] > [data-plain-role]")].map((probe) => getComputedStyle(probe).backgroundColor),
+      };
+    });
+    assert.deepEqual(actual, {
+      background: rgb(expected.background), foreground: rgb(expected.foreground),
+      roles: [expected.background, expected.foreground, expected.primary, expected.muted, expected.surface, expected.warning, expected.success, expected.danger, expected.info].map(rgb),
+    }, `${selector}: plain-site palette paint and semantic aliases (${palette}/${mode}/${systemMode})`);
+  }
+  if (!nestedOnly) assert.equal(await page.locator("html").evaluate((element) => getComputedStyle(element).backgroundColor), rgb(paletteColors[palette][mode].background), "Plain document canvas must match its body.");
+}
+
+async function assertForcedPlainPalette(page: Page): Promise<void> {
+  const state = await page.evaluate(() => {
+    const reference = document.querySelector("[data-forced-reference]");
+    if (reference === null) throw new Error("Missing plain forced-color reference.");
+    const paint = (element: Element) => {
+      const css = getComputedStyle(element);
+      return [css.backgroundColor, css.color];
+    };
+    return {
+      forced: matchMedia("(forced-colors: active)").matches,
+      reference: paint(reference),
+      surfaces: [document.body, document.querySelector("[data-plain-nested]"), document.querySelector("[data-plain-self]")].map((element) => {
+        if (element === null) throw new Error("Missing plain palette surface.");
+        const css = getComputedStyle(element);
+        return { paint: paint(element), roles: ["background", "foreground", "link", "muted", "surface"].map((role) => css.getPropertyValue(`--plain-${role}`).trim()), adjustment: css.forcedColorAdjust };
+      }),
+    };
+  });
+  assert.equal(state.forced, true);
+  for (const surface of state.surfaces) {
+    assert.deepEqual(surface.roles, ["Canvas", "CanvasText", "Highlight", "CanvasText", "Canvas"], "Plain aliases must retain forced semantic values, not merely browser-adjusted paint.");
+    assert.deepEqual(surface.paint, state.reference);
+    assert.equal(surface.adjustment, "auto");
+  }
+}
 
 function captureErrors(page: Page): void {
   page.on("pageerror", (error) => errors.push(error.message));
@@ -171,7 +239,7 @@ try {
   const union = serializeStylexRuleUnionV1([...uiManifest.rules, ...designManifest.rules],
     [uiManifest.standaloneSerializer, designManifest.standaloneSerializer]);
   await writeFile(join(work, "palette-union.css"), union);
-  await writeFile(join(work, "palette-layout.css"), `${layout}\n[data-raw-island], [data-raw-system-island] { background-color: var(--background); color: var(--foreground); }\n`);
+  await writeFile(join(work, "palette-layout.css"), `${layout}\n[data-raw-island], [data-raw-system-island] { background-color: var(--background); color: var(--foreground); }\n${plainRoles.map((role) => `[data-plain-role="${role}"] { background-color: var(--plain-${role}); }`).join("\n")}\n`);
   const deliveries = { standalone, "standalone-full": standaloneFull, "compiler-minimal": minimal, "compiler-full": full };
   for (const route of forcedRoutes) {
     await writeFile(join(work, `${route}.css`), deliveries[route]);
@@ -179,6 +247,44 @@ try {
       `${route}.css`, ...(route.startsWith("compiler-") ? ["palette-union.css"] : []), "palette-layout.css",
     ]));
   }
+  // Exercise the real document grammar, not a body painted only by fixture CSS.
+  // The native route serves exact source bytes and native relative imports;
+  // standalone and compiler routes retain their complete production ordering.
+  const [nativePlain, nativeBridge, plainCss] = await Promise.all([
+    nativeBrowserStylesheetAssets(join(repository, "src/plain-site.css"), repository),
+    nativeBrowserStylesheetAssets(join(repository, "src/palette-bridge.css"), repository),
+    readFile(join(repository, "src/plain-site.css"), "utf8"),
+  ]);
+  const plainAssets = new Map([...nativePlain.assets, ...nativeBridge.assets]);
+  for (const route of plainRoutes) {
+    const stylesheets = route === "native-plain"
+      ? [nativeBridge.entryHref, nativePlain.entryHref, "/palette-layout.css"]
+      : [`/${route}.css`, ...(route === "compiler-full" ? ["/palette-union.css"] : []), "/palette-layout.css"];
+    for (const palette of designPalettes) for (const mode of ["system", "light", "dark"] as const) {
+      await writeFile(join(work, `plain-${route}-${palette}-${mode}.html`), plainHtml(stylesheets, palette, mode));
+    }
+  }
+  // With no root palette, only the island's own boundary can override the
+  // document's neutral dark rule. This independently covers the self selector.
+  for (const palette of designPalettes) for (const preference of ["dark", "system"] as const) {
+    const islands = plainHtml([nativeBridge.entryHref, nativePlain.entryHref, "/palette-layout.css"], palette, preference)
+      .replace(`<html lang="en" data-palette="${palette}"`, '<html lang="en"')
+      .replace('<body class="plain-site">', "<body>");
+    await writeFile(join(work, `plain-islands-${palette}-${preference}.html`), islands);
+  }
+  const oldPlain = plainCss
+    .replace("[data-palette][data-palette] .plain-site,", "[data-palette] .plain-site,")
+    .replace(".plain-site[data-palette][data-palette] {", ".plain-site[data-palette] {");
+  assert.notEqual(oldPlain, plainCss, "The plain-site negative control did not restore the old bridge selectors.");
+  await writeFile(join(work, "plain-old.css"), oldPlain);
+  for (const preference of ["dark", "system"] as const) {
+    await writeFile(join(work, `plain-old-${preference}.html`), plainHtml([nativeBridge.entryHref, "/plain-old.css", "/palette-layout.css"], "tokyo-night", preference));
+  }
+  const nestedBridgeSelector = /(,\s+)\[data-palette\]\[data-palette\](\s*\{)/gu;
+  assert.equal([...full.matchAll(nestedBridgeSelector)].length, 1, "The nested-palette negative control requires exactly one generic semantic bridge selector.");
+  const oldNestedFull = full.replace(nestedBridgeSelector, "$1[data-palette]$2");
+  await writeFile(join(work, "plain-old-nested.css"), oldNestedFull);
+  await writeFile(join(work, "plain-old-nested.html"), plainHtml(["/plain-old-nested.css", "/palette-union.css", "/palette-layout.css"], "catppuccin", "light"));
   await writeFile(join(work, "legacy-paper.css"), await readFile(join(repository, "src/paper-theme.css"), "utf8"));
   // Static sites need system and explicit modes before, and without, JavaScript.
   for (const palette of designPalettes) for (const mode of ["system", "light", "dark"] as const) {
@@ -195,6 +301,8 @@ try {
     async fetch(request) {
       const pathname = new URL(request.url).pathname;
       if (pathname === "/favicon.ico") return new Response(null, { status: 204 });
+      const nativeAsset = plainAssets.get(pathname);
+      if (nativeAsset !== undefined) return new Response(new Uint8Array(nativeAsset.body), { headers: { "content-type": nativeAsset.contentType } });
       if (pathname.startsWith("/fonts/")) {
         const fontRoot = join(repository, "src/fonts");
         const font = resolve(fontRoot, decodeURIComponent(pathname.slice("/fonts/".length)));
@@ -247,6 +355,39 @@ try {
         }), ["Canvas", "CanvasText", "Highlight", "Highlight"], `${selector}: classless nested palette must preserve forced-color semantic roles`);
       }
       await staticContext.close();
+      const plainContext = await browser.newContext({ javaScriptEnabled: false });
+      const plainPage = await isolatedPage(plainContext);
+      for (const route of plainRoutes) {
+        for (const palette of designPalettes) for (const systemMode of ["light", "dark"] as const) {
+          await plainPage.emulateMedia({ colorScheme: systemMode, forcedColors: "none" });
+          for (const preference of ["system", "light", "dark"] as const) {
+            await plainPage.goto(`${origin}/plain-${route}-${palette}-${preference}.html`);
+            await assertPlainPalette(plainPage, palette, preference === "system" ? systemMode : preference, systemMode);
+          }
+        }
+        await plainPage.emulateMedia({ colorScheme: "dark", forcedColors: "active" });
+        for (const palette of designPalettes) for (const preference of ["dark", "system"] as const) {
+          await plainPage.goto(`${origin}/plain-${route}-${palette}-${preference}.html`);
+          await assertForcedPlainPalette(plainPage);
+        }
+        console.log(`Plain palette checks passed: ${route}, all five palettes, body/nested boundaries, explicit/system light/dark and forced colors.`);
+      }
+      await plainPage.emulateMedia({ colorScheme: "dark", forcedColors: "none" });
+      for (const palette of designPalettes) for (const preference of ["dark", "system"] as const) {
+        await plainPage.goto(`${origin}/plain-islands-${palette}-${preference}.html`);
+        await assertPlainPalette(plainPage, palette, "dark", "dark", true);
+      }
+      for (const preference of ["dark", "system"] as const) {
+        await plainPage.goto(`${origin}/plain-old-${preference}.html`);
+        await assert.rejects(assertPlainPalette(plainPage, "tokyo-night", "dark", "dark"), /plain-site palette paint and semantic aliases/u,
+          `The original plain-site bridge must fail in ${preference} dark mode.`);
+        assert.equal(await plainPage.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(21, 21, 21)", "The negative control must reproduce the reported neutral dark paint.");
+      }
+      await plainPage.goto(`${origin}/plain-old-nested.html`);
+      await assert.rejects(assertPlainPalette(plainPage, "catppuccin", "light", "dark"), /\[data-plain-nested\]: plain-site palette paint and semantic aliases/u,
+        "The original compiler island bridge must fail the nested palette assertion.");
+      assert.equal(await plainPage.locator("[data-plain-nested]").evaluate((element) => getComputedStyle(element).backgroundColor), "rgb(251, 246, 242)", "The negative control must reproduce the legacy compiler island paint.");
+      await plainContext.close();
       const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: "light" });
       const page = await isolatedPage(context);
       await ready(page, origin);
@@ -326,7 +467,7 @@ try {
         "The original compiled cascade must fail the same forced-color assertion.");
       await forcedContext.close();
       assert.deepEqual(errors, [], "Browser errors occurred.");
-      console.log(`Palette browser checks passed: ${String(designPalettes.length * 2)} variants, first paint, persistence, cross-tab/system changes, denied/malformed storage, native menu, portals, strict CSP, and forced colors across standalone and compiled foundations with the original-cascade negative control.`);
+      console.log(`Palette browser checks passed: ${String(designPalettes.length * 2)} variants, first paint, persistence, cross-tab/system changes, denied/malformed storage, native menu, portals, strict CSP, and forced colors across standalone and compiled foundations; 100 plain-site palette cases plus 30 forced-color cases and original-cascade negative controls for document, island and forced-color boundaries.`);
     } finally { await browser.close(); }
   } finally { await server.stop(true); }
 } finally { await rm(work, { recursive: true, force: true }); }
