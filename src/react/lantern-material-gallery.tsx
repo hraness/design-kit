@@ -35,7 +35,7 @@ function MaterialWorkspace({ mode }: Readonly<{ mode: "light" | "dark" }>) {
     >
       <div className="design-gallery__lantern-caption">
         <h3>{mode === "light" ? "Daylight" : "Lamplight"}</h3>
-        <p>The same notebook in the light and dark Paper palettes.</p>
+        <p>The same notebook in the Paper palette, light and dark.</p>
       </div>
       <div className="hraness-material-terminal">
         <div className="hraness-material-terminal__bar">notebook · terminal</div>

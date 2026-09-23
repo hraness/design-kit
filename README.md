@@ -1,6 +1,6 @@
 # hraness/design-kit
 
-React components and CSS that give Hraness apps and product sites a shared look: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on `@hraness/ui`.
+React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on `@hraness/ui`.
 
 `@hraness/ui` supplies the accessible React Aria primitives: actions, form fields, overlays, collections, navigation, and basic surfaces. This package builds on them with application shells, loading and error pages, saved light and dark appearance, charts and instrument controls, haptics, decorative effects, server-side syntax highlighting, plain-site CSS, and a gallery you can run.
 
@@ -170,7 +170,7 @@ import {
   <MarketingCallToAction
     actions={[{ href: "#install", label: "Install Relay" }]}
     footnote="Free for local use on macOS and Linux."
-    heading="Start with one job."
+    heading="Start with one job"
     headingId="cta-title"
   />
   </MarketingMain>

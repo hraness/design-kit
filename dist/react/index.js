@@ -2745,7 +2745,7 @@ function MaterialWorkspace({
             children: mode === "light" ? "Daylight" : "Lamplight"
           }),
           /* @__PURE__ */ jsx10("p", {
-            children: "The same notebook in the light and dark Paper palettes."
+            children: "The same notebook in the Paper palette, light and dark."
           })
         ]
       }),
