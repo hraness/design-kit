@@ -479,4 +479,6 @@ MIT. Vendored Nebula Sans, Geist Mono, and other upstream artifacts retain their
 
 Import `@hraness/design-kit/product-marketing-preset.css` after your existing marketing styles, then opt in with `<MarketingPage preset="editorial">`. Wrap the opening in `<MarketingField>` for the checked grain, seams, and gradient. `preset="minimal"` retains a compact sans hierarchy and omits the field texture. Product accents and copy remain product-owned.
 
+[Writing for the marketing components](MARKETING_COPY.md) says what each slot is for and which copy patterns to avoid.
+
 [Marketing preset contract](MARKETING_PRESET.md) documents the native HTML hooks, shared tokens, paint-only header hook, and immutable CSS/font/asset snapshots for consumers that retain an older component release. The preset leaves application UI outside its explicit scope untouched.

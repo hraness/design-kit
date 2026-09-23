@@ -5,6 +5,7 @@
 - `src/react/foil-mark.tsx` provides the server-safe exact-alpha metallic mark; `scripts/foil-browser.ts` checks compiled and raw delivery, fixed sizing, forced colors, and mask fallback.
 - `src/react/` contains application compositions, appearance persistence, charts, haptics, instruments, decorative effects, and the executable public gallery.
 - `src/product-marketing-preset.css` defines the opt-in editorial/minimal marketing roles; `MARKETING_PRESET.md` documents their tokens, HTML hooks, and immutable snapshot contract.
+- `MARKETING_COPY.md` says what each product-marketing slot is for and which copy patterns to avoid. Keep the gallery's reference copy consistent with it.
 - `src/fonts/instrument-serif/` contains the opt-in marketing display face and its OFL/provenance; `src/marketing-assets/` contains the checked static grain/seams and MIT provenance.
 - `src/fonts/geist-mono/` contains the optional Geist Mono webfont, SIL Open Font License, and provenance.
 - `src/fonts/nebula-sans/` contains the default Nebula Sans proportional webfont family, generated OTF payloads for deterministic social images, SIL Open Font License, and exact upstream provenance.

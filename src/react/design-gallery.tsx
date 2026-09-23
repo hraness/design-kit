@@ -269,42 +269,42 @@ export function DesignSystemGallery({
             ]}
             boundary="Free for local use on macOS and Linux · version 1.2.3"
             className="design-gallery__marketing-hero"
-            example="Ask your agent to run the nightly job and show you the receipt."
+            example="Ask your agent to run the nightly job and show you the log."
             eyebrow="A reference developer tool"
             facts={[
-              { detail: "One exact source.", label: "Input", value: "Repository" },
-              { detail: "One inspectable result.", label: "Output", value: "Receipt" },
-              { detail: "Terminal and typed code.", label: "Interfaces", value: "CLI + SDK" },
+              { detail: "Any Git checkout.", label: "Input", value: "Repository" },
+              { detail: "Plain JSON you can read.", label: "Output", value: "Run log" },
+              { detail: "Terminal or TypeScript.", label: "Interfaces", value: "CLI + SDK" },
             ]}
             factsColumns={3}
             frame={(
               <MarketingProofFrame
-                caption="Receipt produced by the checked example."
+                caption="The log written by the example job."
                 credit="Captured 5 September 2026"
                 title="relay run job-01"
               >
                 <pre className="design-gallery__marketing-command"><SyntaxCode code={'{"status":"complete","job":"job-01","durationMs":412}'} styles="classes" /></pre>
               </MarketingProofFrame>
             )}
-            heading="Move one job across every interface"
+            heading="Run a job from your terminal, your code, or your agent"
             headingId="design-gallery-marketing-title"
             headingLevel={3}
             name="Relay"
             notice={<p data-gallery-marketing-slot="notice">This example release runs locally.</p>}
-            summary="Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
+            summary="Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
           />
           <MarketingPillars
             ariaLabel="Relay in three points"
             columns={3}
             pillars={[
-              { label: "Fast", summary: "Runs locally with no service in the loop." },
-              { label: "Legible", summary: "Every run leaves a receipt you can open." },
-              { label: "Yours", summary: "Source files and credentials stay on your machine." },
+              { label: "No hosted service", summary: "Jobs run on your machine and never wait on a server." },
+              { label: "A log for every run", summary: "Open it to see what went in, what came out, and when." },
+              { label: "Your files stay put", summary: "Source files and credentials never leave your machine." },
             ]}
           />
           <MarketingInstallPanel
             eyebrow="Local release"
-            heading="Install the verified tool."
+            heading="Install Relay and run your first job."
             headingId="design-gallery-install-title"
             headingLevel={3}
             id="gallery-install"
@@ -314,25 +314,25 @@ export function DesignSystemGallery({
             <MarketingFlow
               ariaLabel="First Relay job"
               steps={[
-                { code: "relay init", detail: "Create one workspace.", label: "Initialize" },
-                { code: "relay run job-01", detail: "Run the named job.", label: "Execute" },
-                { code: "relay inspect job-01", detail: "Read the resulting receipt.", label: "Inspect" },
+                { code: "relay init", detail: "Create a workspace.", label: "Initialize" },
+                { code: "relay run job-01", detail: "Run a job by name.", label: "Run" },
+                { code: "relay inspect job-01", detail: "Read its log.", label: "Inspect" },
               ]}
             />
           </MarketingInstallPanel>
           <MarketingPrimitives
-            heading="Small building blocks for serious workflows."
+            heading="Three objects cover most work."
             headingId="design-gallery-primitives-title"
             headingLevel={3}
             items={[
-              { label: "Jobs", summary: "A named unit of work with declared inputs and outputs." },
-              { label: "Receipts", summary: "The durable record of one run, readable by people and agents." },
-              { label: "Schedules", summary: "Run a job on a cadence without another daemon." },
+              { label: "Jobs", summary: "A named task with declared inputs and outputs." },
+              { label: "Logs", summary: "The record of one run, readable by people and agents." },
+              { label: "Schedules", summary: "Run a job on a schedule without a separate daemon." },
             ]}
             label="Primitives"
-            summary="Relay gives agents a few durable objects to compose around the work in front of them."
+            summary="People and agents use the same three objects, so a job you start by hand is one an agent can rerun."
           />
-          <MarketingSection heading="One durable object." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Interfaces share the same identity.">
+          <MarketingSection heading="A job keeps its name everywhere." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Start it from the CLI and check on it from code; both see the same job.">
             <MarketingSectionLabel size="body">Reference</MarketingSectionLabel>
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>
@@ -344,9 +344,9 @@ export function DesignSystemGallery({
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#gallery-install", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter." },
           ]} />
-          <MarketingTrustBoundary heading="Keep authority visible." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
-            { label: "Local", detail: "Source files and credentials." },
-            { label: "Shared", detail: "Only the chosen receipt." },
+          <MarketingTrustBoundary heading="What leaves your machine." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
+            { label: "Stays local", detail: "Source files and credentials." },
+            { label: "Shared", detail: "Only the logs you choose to sync." },
           ]} />
           <MarketingStatStrip
             ariaLabel="Relay usage"
@@ -389,7 +389,7 @@ export function DesignSystemGallery({
                 note: "Cancel any time.",
                 period: "per year",
                 price: "$49",
-                summary: "Keep receipts in step across your machines.",
+                summary: "Keep logs in step across your machines.",
               },
             ]}
           />
@@ -412,13 +412,13 @@ export function DesignSystemGallery({
                   {
                     href: "#gallery-install",
                     name: "Ledger",
-                    relationship: "Ledger keeps the receipt Relay writes for each finished job.",
-                    role: "A local receipt store",
+                    relationship: "Ledger keeps every log Relay writes, so old runs stay searchable.",
+                    role: "Long-term storage for run logs",
                   },
                   {
                     href: "#marketing",
                     name: "Index",
-                    relationship: "Index searches the receipts Relay and Ledger produce.",
+                    relationship: "Index searches the logs Relay and Ledger keep.",
                     role: "A local search index",
                   },
                 ],
@@ -430,18 +430,18 @@ export function DesignSystemGallery({
                   {
                     href: "#marketing",
                     name: "Relay",
-                    relationship: "Relay carries the receipts every sibling produces.",
-                    role: "A typed job transport",
+                    relationship: "Every other tool in the family starts its jobs through Relay.",
+                    role: "The shared job runner",
                   },
                 ],
-                summary: "One capability layer every product in the family builds on.",
+                summary: "The runner the other tools depend on.",
               },
             ]}
-            heading="The rest of the reference stack."
+            heading="Related tools."
             headingId="design-gallery-related-title"
             headingLevel={3}
             label="Related"
-            summary="Sibling tools stay separate releases; each card names its relationship to this product."
+            summary="Each is a separate release. Its card says how it works with Relay."
           />
           <MarketingMaker
             heading="Built by a reference maker."
@@ -456,7 +456,7 @@ export function DesignSystemGallery({
           <MarketingCallToAction
             actions={[{ href: "#gallery-install", label: "Install Relay" }]}
             footnote="Free for local use on macOS and Linux."
-            heading="Give every job the same room to run in."
+            heading="Start with one job."
             headingId="design-gallery-cta-title"
             headingLevel={3}
           />
