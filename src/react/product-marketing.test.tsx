@@ -191,6 +191,56 @@ test("the related-products composition links each sibling through the featured p
   expect(html).not.toMatch(/onClick|<script\b/iu);
 });
 
+test("the related-products composition groups sibling tiers under their own headings", () => {
+  const html = renderToStaticMarkup(
+    <MarketingRelated
+      groups={[
+        {
+          heading: "Sibling tools",
+          headingId: "related-tools",
+          items: [
+            {
+              href: "https://relay.example",
+              name: "Relay",
+              relationship: "Relay runs the exact job the featured product prepares.",
+              role: "A reference job runner",
+            },
+          ],
+        },
+        {
+          heading: "Shared infrastructure",
+          headingId: "related-infra",
+          items: [
+            {
+              href: "https://conduit.example",
+              name: "Conduit",
+              relationship: "Conduit carries the receipt every sibling produces.",
+              role: "A typed job transport",
+            },
+          ],
+          summary: "One capability layer under every product.",
+        },
+      ]}
+      heading="The rest of the local stack."
+      headingId="related-title"
+      label="Related"
+    />,
+  );
+
+  expect(html).toContain('<section aria-labelledby="related-title"');
+  expect(html).toContain('data-hraness-marketing="related"');
+  const groups = [...html.matchAll(/<div class="[^"]*hraness-marketing-related__group(?!-)[^"]*">/gu)];
+  expect(groups).toHaveLength(2);
+  expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-related__group-heading" id="related-tools">Sibling tools</h3>'));
+  expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-related__group-heading" id="related-infra">Shared infrastructure</h3>'));
+  expect(html).toContain("One capability layer under every product.");
+  const rows = [...html.matchAll(/<div aria-label="([^"]+)" class="[^"]*hraness-marketing-card-row[^"]*"/gu)];
+  expect(rows.map((match) => match[1])).toEqual(["Sibling tools", "Shared infrastructure"]);
+  const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-card[^"]*" data-hraness-marketing="card" href="([^"]+)"/gu)];
+  expect(cards.map((match) => match[1])).toEqual(["https://relay.example", "https://conduit.example"]);
+  expect(html).not.toMatch(/onClick|<script\b/iu);
+});
+
 test("an embedded hero advances its proof heading without adding another h1", () => {
   const html = renderToStaticMarkup(
     <ProductHero

@@ -6,9 +6,9 @@ export const productMarketingCoverage = [
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
   ["MarketingMain", ".hraness-marketing-main", 1],
   ["sticky sibling", "[data-hraness-sticky]", 1],
-  ["MarketingCardRow", ".hraness-marketing-card-row", 2],
-  ["MarketingCard", ".hraness-marketing-card", 4],
-  ["MarketingCardArt", ".hraness-marketing-card__art", 3],
+  ["MarketingCardRow", ".hraness-marketing-card-row", 3],
+  ["MarketingCard", ".hraness-marketing-card", 5],
+  ["MarketingCardArt", ".hraness-marketing-card__art", 4],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
@@ -27,6 +27,9 @@ export const productMarketingCoverage = [
   ["MarketingQuestionList", ".hraness-marketing-questions", 1],
   ["MarketingMaker", ".hraness-marketing-maker", 1],
   ["MarketingRelated", ".hraness-marketing-related", 1],
+  ["related group", ".hraness-marketing-related__group", 2],
+  ["related group heading", ".hraness-marketing-related__group-heading", 2],
+  ["related group summary", ".hraness-marketing-related__group-summary", 1],
   ["MarketingCallToAction", ".hraness-marketing-cta", 2],
   ["hero paper center", '.hraness-marketing-hero[data-tone="paper"][data-align="center"]', 1],
   ["hero paper start", '.hraness-marketing-hero[data-tone="paper"][data-align="start"]', 1],
@@ -132,9 +135,14 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         portrait={<svg data-marketing-oracle="maker-portrait" viewBox="0 0 24 24" aria-label="Illustrated portrait"><circle cx="12" cy="12" r="10" /></svg>}>
         <p data-marketing-oracle="maker-first">First biography paragraph.</p><p data-marketing-oracle="maker-last">Last biography paragraph.</p>
       </MarketingMaker>
-      <MarketingRelated heading="The rest of the stack." headingId="related" label="Related" summary="Sibling releases, one relationship each." items={[
-        { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path d="M4 4h16v16H4z" /></svg>, href: "#fixture", name: "Ledger", relationship: "Ledger keeps the receipt Relay writes.", role: "A local receipt store" },
-        { href: "#interfaces", name: "Index", relationship: "Index searches Relay receipts.", role: "A local search index" },
+      <MarketingRelated heading="The rest of the stack." headingId="related" label="Related" summary="Sibling releases, one relationship each." groups={[
+        { heading: "Sibling tools", headingId: "related-tools", items: [
+          { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path d="M4 4h16v16H4z" /></svg>, href: "#fixture", name: "Ledger", relationship: "Ledger keeps the receipt Relay writes.", role: "A local receipt store" },
+          { href: "#interfaces", name: "Index", relationship: "Index searches Relay receipts.", role: "A local search index" },
+        ] },
+        { heading: "Shared infrastructure", headingId: "related-infra", summary: "One capability layer under every product.", items: [
+          { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="9" /></svg>, href: "#fixture", name: "Conduit", relationship: "Conduit carries the receipts every sibling produces.", role: "A typed job transport" },
+        ] },
       ]} />
       {(["paper", "accent"] as const).map((tone) => (
         <MarketingCallToAction actions={actions} eyebrow="Ready" heading="Keep the next result." headingId={`cta-${tone}`} key={tone}
