@@ -23,6 +23,9 @@ import {
   RangePlotChart
 } from "../chunk-y6dcd8h8.js";
 import {
+  HeroBackdrop
+} from "../chunk-vczys3ct.js";
+import {
   BottomBar,
   DitherSurface,
   DockedFooter,
@@ -69,9 +72,10 @@ import {
   foilSurfaceImage,
   foilTextHalo,
   foilTextImage,
+  marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-yf4w3epa.js";
+} from "../chunk-qrn9z03t.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -2712,6 +2716,32 @@ var lanternControlStyles = {
 
 // src/react/lantern-material-gallery.tsx
 import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
+var materialPatterns = [{
+  pattern: "cells",
+  palette: "paper",
+  label: "Glass cells",
+  description: "Broad planes of light for an opening promise."
+}, {
+  pattern: "weave",
+  palette: "gruvbox",
+  label: "Woven paper",
+  description: "A warm, close texture for words and unfinished thoughts."
+}, {
+  pattern: "contour",
+  palette: "rose-pine",
+  label: "Sound contours",
+  description: "Gentle rings for creative tools and flowing ideas."
+}, {
+  pattern: "mesh",
+  palette: "tokyo-night",
+  label: "Precision mesh",
+  description: "A measured field for technical systems."
+}, {
+  pattern: "none",
+  palette: "paper",
+  label: "Reading room",
+  description: "An uninterrupted surface for reference and long reading."
+}];
 var exampleNotes = [{
   title: "A place for unfinished thoughts",
   detail: "Personal · edited today"
@@ -2887,6 +2917,36 @@ function LanternMaterialGallery() {
             mode: "dark"
           })
         ]
+      }),
+      /* @__PURE__ */ jsx10("h3", {
+        children: "One material, different rhythms"
+      }),
+      /* @__PURE__ */ jsx10("div", {
+        className: "design-gallery__lantern-pair",
+        children: materialPatterns.map(({
+          pattern,
+          palette,
+          label,
+          description
+        }) => /* @__PURE__ */ jsx10("div", {
+          className: `design-gallery__lantern-wall hraness-material-wall ${getDesignPaletteTheme(palette, "light").className}`,
+          "data-gallery-pattern": pattern,
+          "data-hraness-material": "lantern",
+          "data-hraness-pattern": pattern,
+          "data-palette": palette,
+          "data-theme": "light",
+          children: /* @__PURE__ */ jsxs8("div", {
+            className: "design-gallery__lantern-caption",
+            children: [
+              /* @__PURE__ */ jsx10("h4", {
+                children: label
+              }),
+              /* @__PURE__ */ jsx10("p", {
+                children: description
+              })
+            ]
+          })
+        }, pattern))
       }),
       /* @__PURE__ */ jsxs8("div", {
         className: `design-gallery__lantern-states hraness-material-pane ${getDesignPaletteTheme("paper", "light").className}`,
@@ -5511,6 +5571,7 @@ export {
   normalizeDesignTheme,
   measureStickyOffset,
   matchesKeyboardShortcut,
+  marketingPatterns,
   lanternControlStyles,
   isKeyboardTextEntryTarget,
   isKeyboardInteractionTarget,
@@ -5591,6 +5652,7 @@ export {
   MarketingCard,
   MarketingCallToAction,
   LanternMaterialGallery,
+  HeroBackdrop,
   HAPTIC_FEEDBACK_EVENT_NAME,
   GlobalErrorDocument,
   FoilMark,

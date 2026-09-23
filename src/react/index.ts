@@ -11,6 +11,7 @@ export * from "./foil-card-math.js";
 export * from "./foil-card-surface.js";
 export * from "./foil.stylex.js";
 export * from "./haptics.js";
+export * from "./hero-backdrop.js";
 export * from "./keyboard-shortcuts.js";
 export * from "./lantern-material.stylex.js";
 export * from "./lantern-material-gallery.js";

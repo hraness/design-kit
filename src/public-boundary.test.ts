@@ -65,10 +65,10 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.15.0");
+  expect(packageJson.version).toBe("0.16.0");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.16 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
-  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.16");
+  expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.17");
   expect(packageJson.devDependencies).toMatchObject({
     "@babel/core": "7.29.7",
     "@stylexjs/babel-plugin": "0.19.0",

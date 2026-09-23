@@ -16,7 +16,7 @@ test("the preset retains the approved static assets and source-relative URLs", (
   for (const [name, contents] of Object.entries(marketingTextures())) expect(sources[`marketing-assets/${name}` as keyof typeof sources].toString()).toBe(contents);
   const hashes = {
     "marketing-assets/grain.svg": "b40c33a0e382c8e9d0518b4720321b5c262a929c28d40a190a902d07acd06553",
-    "marketing-assets/cells.svg": "be9b12eefeae91772f024ed24ccda5be6173fb626921374b7e5270c298611b01",
+    "marketing-assets/cells.svg": "2391e9b3ee964e1178fedc55c766d12ac43bfeda92cfa44aab16c64a15f9d712",
     "fonts/instrument-serif/instrument-serif-latin-400.woff2": "60c06664b5a95c7de6cc3e00d1f9034d78bd1e40b564016b241674449a067d4d",
   } as const;
   for (const [name, digest] of Object.entries(hashes)) {
@@ -27,6 +27,24 @@ test("the preset retains the approved static assets and source-relative URLs", (
   expect(css).toContain('--hraness-marketing-field-images: none');
   expect(css).toContain('--hraness-marketing-display-font: var(--font-text');
   expect(css).not.toContain('--hraness-marketing-accent:');
+});
+
+test("the soft cell field retains all seamless faces and dark-mode highlights", async () => {
+  const cells = sources["marketing-assets/cells.svg"].toString();
+  expect(cells).toContain('viewBox="0 0 768 768"');
+  expect(cells).not.toMatch(/\bstroke(?:-|=)/u);
+  expect([...cells.matchAll(/<linearGradient\b/gu)]).toHaveLength(64);
+  expect([...cells.matchAll(/<path\b/gu)]).toHaveLength(64);
+  for (let index = 0; index < 64; index++) {
+    expect(cells).toContain(`<path d="M${index % 8 * 96} ${Math.floor(index / 8) * 96}h96v96h-96z" fill="url(#p${index})"/>`);
+  }
+  const highlights = [...cells.matchAll(/<stop stop-color="#fff" stop-opacity="([\d.]+)"/gu)].map(match => Number(match[1]));
+  const shades = [...cells.matchAll(/<stop offset="1" stop-color="#000" stop-opacity="([\d.]+)"/gu)].map(match => Number(match[1]));
+  expect(highlights).toHaveLength(64); expect(shades).toHaveLength(64);
+  for (const value of highlights) { expect(value).toBeGreaterThanOrEqual(.025); expect(value).toBeLessThanOrEqual(.07); }
+  for (const value of shades) { expect(value).toBeGreaterThanOrEqual(.008); expect(value).toBeLessThanOrEqual(.034); }
+  const material = await readFile(new URL("./lantern-material.css", import.meta.url), "utf8");
+  expect(material).toContain('--hraness-pattern-cells: linear-gradient(145deg, rgb(255 255 255 / 0.05), transparent 48%, rgb(0 0 0 / 0.035));');
 });
 
 test("both native header blur paths survive the installed optimizer", () => {
@@ -105,4 +123,27 @@ test("immutable snapshot installation rejects binary edits, unowned files, and s
     await symlink(join(source, marketingSnapshotPaths[font]), join(output, font));
     await expect(checkMarketingSnapshot(output)).rejects.toThrow("symbolic link");
   } finally { await rm(root, { recursive: true, force: true }); }
+});
+
+test("independent material and preset snapshots keep the same finite pattern contract", async () => {
+  const material = await readFile(new URL("./lantern-material.css", import.meta.url), "utf8");
+  for (const pattern of ["cells", "weave", "contour", "mesh", "none"]) {
+    const selector = `[data-hraness-pattern="${pattern}"] {`;
+    const block = (source: string) => {
+      const start = source.indexOf(selector);
+      expect(start).toBeGreaterThan(-1);
+      return source.slice(start, source.indexOf("\n  }", start));
+    };
+    expect(block(css)).toBe(block(material));
+  }
+  for (const [filename, source] of [["preset.css", css], ["material.css", material]] as const) {
+    const optimized = transform({ filename, code: Buffer.from(source), minify: true }).code.toString();
+    expect(optimized).toContain("repeating-conic-gradient");
+    expect(optimized).toContain("repeating-radial-gradient");
+    expect(optimized).toContain("prefers-reduced-transparency:reduce");
+    expect(optimized).toContain("forced-colors:active");
+  }
+  // A quiet document default must survive a descendant marketing scope.
+  expect(css).toContain("--hraness-marketing-field-images: var(--hraness-pattern-decoration,");
+  expect(css).not.toMatch(/--hraness-marketing-(?:field|terminal)-[\w-]+:\s*light-dark\(/u);
 });

@@ -34,6 +34,23 @@ test("portable header paint keeps both browser paths after CSS optimization", ()
   expect(old).toBe(".header{-webkit-backdrop-filter:blur(14px)}");
 });
 
+test("UI owns application depth while standalone Paper supplies palette-derived layered fallbacks", async () => {
+  const compiler = await readFile(new URL("./compiler-tokens.css", import.meta.url), "utf8");
+  expect(compiler).not.toMatch(/--elevation-(?:low|raised|overlay|inset)\s*:/u);
+  const fallback = paperThemeCss.match(/@layer base\s*\{([\s\S]*?)\n\}\n\}/u)?.[1];
+  expect(fallback).toBeDefined();
+  if (fallback === undefined) throw new Error("Paper depth fallback layer missing");
+  expect(fallback).toContain("--ui-surface-light: color-mix(in oklch, var(--card) 94%, white)");
+  expect(fallback).toContain("--ui-surface-shade: color-mix(in oklch, var(--background) 55%, black)");
+  for (const role of ["low", "raised", "overlay", "inset"]) {
+    expect(fallback).toContain(`--elevation-${role}: inset`);
+    const outsideFallback = paperThemeCss.replace(fallback, "");
+    expect([...outsideFallback.matchAll(new RegExp(`--elevation-${role}: ([^;]+);`, "gu"))].map(match => match[1])).toEqual(["none"]);
+  }
+  expect(fallback).not.toMatch(/rgb\(|oklch\(0 0 0/u);
+  expect(paperThemeCss).not.toMatch(/@import\b|url\(/u);
+});
+
 test("snapshot verification is offline and detects changes to either redistributed artifact", async () => {
   const directory = await mkdtemp(join(tmpdir(), "paper-snapshot-test-"));
   try {

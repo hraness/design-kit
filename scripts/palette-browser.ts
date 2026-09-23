@@ -171,13 +171,18 @@ try {
   const union = serializeStylexRuleUnionV1([...uiManifest.rules, ...designManifest.rules],
     [uiManifest.standaloneSerializer, designManifest.standaloneSerializer]);
   await writeFile(join(work, "palette-union.css"), union);
-  await writeFile(join(work, "palette-layout.css"), layout);
+  await writeFile(join(work, "palette-layout.css"), `${layout}\n[data-raw-island], [data-raw-system-island] { background-color: var(--background); color: var(--foreground); }\n`);
   const deliveries = { standalone, "standalone-full": standaloneFull, "compiler-minimal": minimal, "compiler-full": full };
   for (const route of forcedRoutes) {
     await writeFile(join(work, `${route}.css`), deliveries[route]);
     await writeFile(join(work, `${route}.html`), html([
       `${route}.css`, ...(route.startsWith("compiler-") ? ["palette-union.css"] : []), "palette-layout.css",
     ]));
+  }
+  await writeFile(join(work, "legacy-paper.css"), await readFile(join(repository, "src/paper-theme.css"), "utf8"));
+  // Static sites need system and explicit modes before, and without, JavaScript.
+  for (const palette of designPalettes) for (const mode of ["system", "light", "dark"] as const) {
+    await writeFile(join(work, `raw-${palette}-${mode}.html`), `<!doctype html><html lang="en" data-hraness-theme="paper" data-palette="${palette}"${mode === "system" ? "" : ` data-theme="${mode}"`}><head><meta charset="utf-8"><title>Static palette</title><link rel="stylesheet" href="/compiler-minimal.css"><link rel="stylesheet" href="/palette-layout.css"><link rel="stylesheet" href="/legacy-paper.css"></head><body><main data-palette-surface>Readable before JavaScript</main><section data-palette="tokyo-night" data-theme="dark" data-raw-island>Static nested palette</section><section data-palette="rose-pine" data-raw-system-island>System nested palette</section></body></html>`);
   }
   // Reproduce the former selectors without changing the real union or product
   // fixture. Native paint alone would hide this broken custom-property cascade.
@@ -211,6 +216,37 @@ try {
     const browser = await chromium.launch({ executablePath: await executable(), headless: true, args: ["--no-sandbox"] });
     try {
       const origin = `http://127.0.0.1:${String(server.port)}`;
+      const staticContext = await browser.newContext({ javaScriptEnabled: false });
+      const staticPage = await isolatedPage(staticContext);
+      for (const palette of designPalettes) for (const systemMode of ["light", "dark"] as const) {
+        await staticPage.emulateMedia({ colorScheme: systemMode });
+        for (const preference of ["system", "light", "dark"] as const) {
+          await staticPage.goto(`${origin}/raw-${palette}-${preference}.html`);
+          const expected = paletteColors[palette][preference === "system" ? systemMode : preference];
+          const colors = await staticPage.evaluate(() => ({ background: getComputedStyle(document.body).backgroundColor, foreground: getComputedStyle(document.body).color }));
+          assert.deepEqual(colors, { background: rgb(expected.background), foreground: rgb(expected.foreground) }, `${palette}/${preference}/${systemMode}: static palette`);
+          for (const [selector, islandPalette, islandMode] of [
+            ["[data-raw-island]", "tokyo-night", "dark"],
+            ["[data-raw-system-island]", "rose-pine", systemMode],
+          ] as const) {
+            const islandExpected = paletteColors[islandPalette][islandMode];
+            const island = await staticPage.locator(selector).evaluate((element) => {
+              const css = getComputedStyle(element);
+              return { background: css.backgroundColor, foreground: css.color, colorScheme: css.colorScheme };
+            });
+            assert.deepEqual(island, { background: rgb(islandExpected.background), foreground: rgb(islandExpected.foreground), colorScheme: selector === "[data-raw-system-island]" ? "light dark" : islandMode }, `${palette}/${preference}/${systemMode}: ${selector} owns its palette before JavaScript`);
+          }
+        }
+      }
+      await staticPage.emulateMedia({ forcedColors: "active" });
+      await staticPage.goto(`${origin}/raw-gruvbox-system.html`);
+      for (const selector of ["[data-raw-island]", "[data-raw-system-island]"]) {
+        assert.deepEqual(await staticPage.locator(selector).evaluate((element) => {
+          const css = getComputedStyle(element);
+          return ["background", "foreground", "primary", "focus"].map((role) => css.getPropertyValue(`--hraness-palette-${role}`).trim());
+        }), ["Canvas", "CanvasText", "Highlight", "Highlight"], `${selector}: classless nested palette must preserve forced-color semantic roles`);
+      }
+      await staticContext.close();
       const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: "light" });
       const page = await isolatedPage(context);
       await ready(page, origin);

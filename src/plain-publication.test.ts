@@ -140,7 +140,7 @@ test("plain-publication adds a complete long-form grammar without product identi
   expect(publicationCss).toMatch(
     /\.plain-site\.plain-publication\s*\{[^}]*min-height:\s*100vh;[^}]*min-height:\s*100svh;[^}]*min-height:\s*100dvh;/su,
   );
-  expect(publicationCss).toContain("line-height: 1.7;");
+  expect(publicationCss).toContain("line-height: var(--hraness-type-reading-leading, 1.7);");
   expect(publicationCss).toMatch(
     /\.plain-site\.plain-publication \.plain-publication__toc\s*\{[^}]*position:\s*static;/su,
   );
@@ -160,4 +160,15 @@ test("the complete browser stylesheet includes the publication extension", () =>
   expect(stylesCss.indexOf("plain-site.css")).toBeLessThan(
     stylesCss.indexOf("plain-publication.css"),
   );
+});
+
+
+test("reading surfaces preserve palette roles and long code without shrinking captions", () => {
+  expect(plainSiteCss).toContain("[data-palette] .plain-site");
+  expect(plainSiteCss).toContain("--plain-background: var(--background, Canvas)");
+  expect(plainSiteCss).toContain("--plain-link: var(--primary, LinkText)");
+  expect(publicationCss).toContain("max-inline-size: var(--hraness-type-reading-measure, 66ch)");
+  expect(publicationCss).toContain("scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem)");
+  expect(publicationCss).toMatch(/article-body pre\s*\{[^}]*overflow-x: auto;[^}]*white-space: pre;[^}]*overflow-wrap: normal;/su);
+  expect(publicationCss).not.toMatch(/font-size: 0\.(?:8|82|85)rem;/u);
 });

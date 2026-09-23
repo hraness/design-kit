@@ -1,3 +1,14 @@
+/* Shared semantic rhythm. Surface grammars choose their own heading scale. */
+@layer base {
+  :root {
+    --hraness-type-reading-leading: 1.7;
+    --hraness-type-reading-measure: 66ch;
+    --hraness-type-caption-size: .9375rem;
+    --hraness-type-code-size: .9rem;
+    --hraness-type-heading-leading: 1.2;
+  }
+}
+
 .hraness-design-text-chrome {
   background: var(--chrome-text-gradient);
   background-clip: text;

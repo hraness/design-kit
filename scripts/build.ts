@@ -34,6 +34,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/fonts.css",
   "src/lantern-material.css",
   "src/palette-bridge.css",
+  "src/palette-system.css",
   "src/palettes.css",
   "src/paper-theme.css",
   "src/plain-publication.css",
@@ -164,6 +165,7 @@ export async function buildPackage(
         // Recharts' legacy main/module package root into their build graph.
         join(sourceRoot, "react/charts.tsx"),
         join(sourceRoot, "react/index.ts"),
+        join(sourceRoot, "react/hero-backdrop.tsx"),
         join(sourceRoot, "react/server.ts"),
         join(sourceRoot, "syntax-highlighting.ts"),
       ],
@@ -210,27 +212,27 @@ export async function buildPackage(
     const rules = collector.seal();
     assert.ok(rules.length > 0, "Package build collected no StyleX rules");
 
-    const reactEntry = join(outdir, "react/index.js");
+    const clientEntries = new Set([join(outdir, "react/index.js"), join(outdir, "react/hero-backdrop.js")]);
     const directive = '"use client";\n';
     const directiveLine = /^"use client";\r?\n?/gmu;
     for (const relativePath of (await filesBelow(outdir)).filter((path) => path.endsWith(".js"))) {
       const path = join(outdir, relativePath);
       const builtSource = await Bun.file(path).text();
       // Bun may carry a source directive into a shared split chunk. Normalize
-      // every emitted module, then mark only the public aggregate React entry
-      // as the client boundary consumers import.
-      const normalizedSource = path === reactEntry
+      // every emitted module, then mark the explicit public client boundaries.
+      // Server compositions reference the isolated backdrop by package export.
+      const normalizedSource = clientEntries.has(path)
         ? directive + builtSource.replace(directiveLine, "")
         : builtSource.replace(directiveLine, "");
       if (normalizedSource !== builtSource) await writeFile(path, normalizedSource);
       const directives = normalizedSource.match(/^"use client";\r?$/gmu) ?? [];
-      if (path === reactEntry) {
+      if (clientEntries.has(path)) {
         if (!normalizedSource.startsWith(directive) || directives.length !== 1) {
           throw new Error("The React client entry must contain one leading use-client directive.");
         }
       } else if (directives.length > 0) {
         throw new Error(
-          `Only the React client entry may contain a use-client directive: ${relativePath}`,
+          `Only declared React client entries may contain a use-client directive: ${relativePath}`,
         );
       }
     }
