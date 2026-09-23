@@ -200,7 +200,7 @@ export function DesignSystemGallery({
             </CardHeader>
             <CardContent>
               <div className="design-gallery__type-specimen">
-                <p data-gallery-font="proportional">More shape, less noise.</p>
+                <p data-gallery-font="proportional">Nebula Sans sets both headings and body text.</p>
                 <code data-gallery-font="mono">const role = "mono";</code>
               </div>
             </CardContent>
@@ -444,7 +444,7 @@ export function DesignSystemGallery({
             summary="Each is a separate release. Its card says how it works with Relay."
           />
           <MarketingMaker
-            heading="Built by a reference maker."
+            heading="Who builds Relay"
             headingId="design-gallery-maker-title"
             headingLevel={3}
             label="Built by"
@@ -475,8 +475,8 @@ export function DesignSystemGallery({
         </MarketingPage>
         <MarketingPage preset="editorial" className="design-gallery__marketing-preset">
           <MarketingField>
-            <ProductHero name="Relay" heading="One clear next step." headingId="gallery-editorial-title" headingLevel={3}
-              summary="Give people a short promise, then show the product at work."
+            <ProductHero name="Relay" heading="Run a job from your terminal, your code, or your agent" headingId="gallery-editorial-title" headingLevel={3}
+              summary="The editorial preset sets a serif display heading on a textured field."
               actions={[{ href: "#gallery-minimal-title", label: "See the compact preset" }]} />
           </MarketingField>
         </MarketingPage>

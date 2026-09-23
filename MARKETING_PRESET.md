@@ -1,6 +1,6 @@
 # Marketing preset contract 1
 
-The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the approved editorial marketing treatment to the existing product-marketing grammar. It shares Paper's `light-dark()` browser baseline: Chrome 123+, Firefox 120+, and Safari 17.5+. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet; CSS URL assets are part of the final consumer's captured asset closure.
+The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the approved editorial marketing treatment to the existing product-marketing grammar. It shares Paper's `light-dark()` browser baseline: Chrome 123+, Firefox 120+, and Safari 17.5+. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet. Bundle the fonts and textures its CSS URLs reference along with it.
 
 ```tsx
 import "@hraness/design-kit/product-marketing-preset.css";
@@ -8,11 +8,11 @@ import { MarketingPage, MarketingField, ProductHero, MarketingSection } from "@h
 
 <MarketingPage preset="editorial">
   <MarketingField>
-    <ProductHero name="Relay" heading="One clear product promise." headingId="title"
-      summary="A short account of what the product makes possible." />
+    <ProductHero name="Relay" heading="Run a job from your terminal, your code, or your agent" headingId="title"
+      summary="Relay runs the same job wherever you start it and writes a log you can read afterward." />
   </MarketingField>
-  <MarketingSection heading="A concrete next step." headingId="next">
-    <p>Product-owned explanation and evidence.</p>
+  <MarketingSection heading="Install Relay and run your first job." headingId="next">
+    <p>Run <code>relay init</code>, then <code>relay run job-01</code> to write your first log.</p>
   </MarketingSection>
 </MarketingPage>
 ```
@@ -74,4 +74,4 @@ Import `vendor/hraness-marketing/product-marketing-preset.css`. Keep the entire 
 
 The source texture generator is `scripts/marketing-textures.ts`; its check verifies byte-identical deterministic SVGs. Instrument Serif retains its OFL license and upstream provenance. The existing Paper CSS snapshot remains separate and unchanged. Neither snapshot executes code at runtime or upgrades UI/compiler dependencies.
 
-For a build graph, import `checkMarketingSnapshot` from the vendored `check.mjs` and await it with the snapshot directory (default: the checker's directory). It returns the validated source identity and finite `files` record; each entry contains its source path and SHA-256. The included `check.d.mts` provides TypeScript declarations. Bind those admitted CSS/font/SVG bytes into the final graph; validation does not copy or modify files.
+For a build graph, import `checkMarketingSnapshot` from the vendored `check.mjs` and await it with the snapshot directory (default: the checker's directory). It returns the validated source identity and finite `files` record; each entry contains its source path and SHA-256. The included `check.d.mts` provides TypeScript declarations. Include those checked CSS, font, and SVG files in your build; validation does not copy or modify files.

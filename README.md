@@ -1,17 +1,17 @@
 # hraness/design-kit
 
-Opinionated application compositions, charts, effects, and syntax presentation built on `@hraness/ui`.
+React components and CSS that give Hraness apps and product sites a shared look: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on `@hraness/ui`.
 
-`@hraness/design-kit` is the presentation layer above the portable React Aria core. It owns application shells, route states, appearance persistence, charts, instrument controls, haptics, decorative effects, server syntax highlighting, quiet-site CSS, and an executable gallery. Forms, actions, overlays, collections, navigation primitives, and low-level surfaces remain in `@hraness/ui`.
+`@hraness/ui` supplies the accessible React Aria primitives: actions, form fields, overlays, collections, navigation, and basic surfaces. This package builds on them with application shells, loading and error pages, saved light and dark appearance, charts and instrument controls, haptics, decorative effects, server-side syntax highlighting, plain-site CSS, and a gallery you can run.
 
 ## Install
 
-Pin the immutable GitHub release:
+Pin a GitHub release tag:
 
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.13.0",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.15.0",
     "@hraness/ui": "github:hraness/ui#v0.5.16"
   }
 }
@@ -103,7 +103,7 @@ sites. It gives every Hraness product one typeface, one measured type scale,
 sentence-case labels, hairline chrome, soft radii, and one accent color, so the
 portfolio reads as one studio's work. The roles are a sticky site header, a main landmark that clears that header,
 equal-height product card rows, an outcome-led hero with an optional product
-frame, three pillars, an install panel, an ordered flow, fact and stat strips,
+frame, a row of pillars, an install panel, an ordered flow, fact and stat strips,
 narrative sections, numbered primitives, interface and trust cards, attributed
 quotes, pricing, native questions, a maker section, a closing call to action,
 and an in-flow site footer. The classes own
@@ -146,31 +146,31 @@ import {
       { href: "#how", label: "See how it works" },
     ]}
     boundary="Free for local use on macOS and Linux · version 1.2.3"
-    example="Ask your agent to run the nightly job and show you the receipt."
+    example="Ask your agent to run the nightly job and show you the log."
     eyebrow="A reference developer tool"
     frame={(
-      <MarketingProofFrame caption="Receipt from the checked example." credit="Captured 5 September 2026" title="relay run job-01">
-        <img alt="Relay printing one receipt in a terminal" src="/relay-receipt.png" />
+      <MarketingProofFrame caption="The log written by the example job." credit="Captured 5 September 2026" title="relay run job-01">
+        <img alt="Relay printing a run log in a terminal" src="/relay-log.png" />
       </MarketingProofFrame>
     )}
-    heading="Move one job across every interface"
+    heading="Run a job from your terminal, your code, or your agent"
     headingId="relay-title"
     name="Relay"
-    summary="Relay runs the same job from a terminal, typed code, or a coding agent, and hands back one receipt you can read."
+    summary="Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
   />
   <MarketingPillars
     ariaLabel="Relay in three points"
     columns={3}
     pillars={[
-      { label: "Fast", summary: "Runs locally with no service in the loop." },
-      { label: "Legible", summary: "Every run leaves a receipt you can open." },
-      { label: "Yours", summary: "Source files and credentials stay on your machine." },
+      { label: "No hosted service", summary: "Jobs run on your machine and never wait on a server." },
+      { label: "A log for every run", summary: "Open it to see what went in, what came out, and when." },
+      { label: "Your files stay put", summary: "Source files and credentials never leave your machine." },
     ]}
   />
   <MarketingCallToAction
     actions={[{ href: "#install", label: "Install Relay" }]}
     footnote="Free for local use on macOS and Linux."
-    heading="Give every job the same room to run in."
+    heading="Start with one job."
     headingId="cta-title"
   />
   </MarketingMain>
@@ -220,16 +220,17 @@ as `MarketingSection`. Its default preserves the existing label presentation;
 the hero example's maximum inline size. When absent, it uses
 `--hraness-marketing-copy-measure`; the summary's measure is unchanged.
 
-Homepage copy on this grammar follows a few rules on top of `STYLE.md`. The
-headline is the reader's outcome in eight words or fewer, sentence case, no
-period. The summary says what the product is, who it is for, and the one thing
-it does differently in 40 words or fewer, in the second person. The `example`
-is a concrete request a reader could make. Section headings are sentences with
-periods. Limits stay, written the way a person would say them, and release
-caveats move to the questions list. Words such as "bounded", "exact",
-"authority", "custody", "immutable", and "inspectable" stay out of the hero and
-leads. Every number has a date or a source, and no quote appears without an
-attributed author who agreed to it.
+Homepage copy on this grammar follows [`STYLE.md`](STYLE.md) and
+[`MARKETING_COPY.md`](MARKETING_COPY.md), which gives each slot its job and its
+length limit. The headline states what the reader can do, in sentence case with
+no period. The summary says what the product is, who it is for, and the one
+thing it does differently. The `example` is a concrete request a reader could
+make. State the release status once, plainly, in `boundary`, and keep each other
+limit beside the feature it limits. A full-sentence section heading in the
+editorial preset may end with a period; other headings do not. Words such as
+"bounded", "exact", "authority", "custody", "immutable", and "inspectable" stay
+out of the hero and leads. Every number has a date or a source, and no quote
+appears without an attributed author who agreed to it.
 
 Import only the grammar when a site owns its reset and tokens:
 
