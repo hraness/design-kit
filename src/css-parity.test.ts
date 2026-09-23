@@ -24,6 +24,7 @@ function ruleBody(css: string, selector: string): string {
 function declarations(body: string): ReadonlyMap<string, string> {
   return new Map(
     body
+      .replace(/\/\*[\s\S]*?\*\//gu, "")
       .split(";")
       .map((declaration) => declaration.trim())
       .filter(Boolean)

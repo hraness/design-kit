@@ -85,7 +85,7 @@ export const marketingStyles = stylex.create({
     "position": "sticky",
     "inset-block-start": "0",
     "z-index": "40",
-    "border-block-end": "var(--hraness-marketing-rule)",
+    "border-block-end": { "default": "var(--hraness-marketing-chrome-rule)", "@media (forced-colors: active)": "1px solid CanvasText" },
     "background-color": {
       "default": "var(--hraness-marketing-header-background, var(--hraness-marketing-background))",
       "@media (forced-colors: active)": "Canvas"
@@ -148,6 +148,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "stretch"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-chrome-shadow)",
       "@media (forced-colors: active)": "none"
     }
   },
@@ -160,7 +161,7 @@ export const marketingStyles = stylex.create({
     "position": "static",
     "inset-block-start": "0",
     "z-index": "40",
-    "border-block-end": "var(--hraness-marketing-rule)",
+    "border-block-end": { "default": "var(--hraness-marketing-chrome-rule)", "@media (forced-colors: active)": "1px solid CanvasText" },
     "background-color": {
       "default": "var(--hraness-marketing-header-background, var(--hraness-marketing-background))",
       "@media (forced-colors: active)": "Canvas"
@@ -223,6 +224,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "stretch"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-chrome-shadow)",
       "@media (forced-colors: active)": "none"
     }
   },
@@ -407,6 +409,8 @@ export const marketingStyles = stylex.create({
     "text-decoration": "none"
   },
   "hero": {
+    "position": "relative",
+    "isolation": "isolate",
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",
     "inline-size": "min(100%, var(--hraness-marketing-measure))",
@@ -417,6 +421,8 @@ export const marketingStyles = stylex.create({
     "padding-block": "var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem))"
   },
   "heroAccent": {
+    "position": "relative",
+    "isolation": "isolate",
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
       "@media (forced-colors: active)": "CanvasText"
@@ -693,7 +699,7 @@ export const marketingStyles = stylex.create({
     "text-wrap": "balance",
     "max-inline-size": {
       "default": "18ch",
-      "@media (max-width: 48rem)": "14ch"
+      "@media (max-width: 48rem)": "16ch"
     },
     "font-size": "var(--hraness-paper-heading-size, clamp(2.5rem, 5vw, 4.25rem))"
   },
@@ -702,7 +708,7 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem))",
-    "line-height": "var(--hraness-marketing-summary-leading, 1.45)",
+    "line-height": "var(--hraness-marketing-summary-leading, 1.6)",
     "max-inline-size": "var(--hraness-marketing-copy-measure)"
   },
   "hero__example": {
@@ -746,19 +752,19 @@ export const marketingStyles = stylex.create({
     "gap": "1rem",
     "padding": "clamp(1.25rem, 3vw, 2rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -1076,19 +1082,19 @@ export const marketingStyles = stylex.create({
     "margin": "0",
     "overflow": "clip",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -1155,8 +1161,8 @@ export const marketingStyles = stylex.create({
     "gap": "0.75rem",
     "padding": "0.8rem 1rem",
     "background-image": { default: "var(--hraness-marketing-frame-chrome, none)", "@media (forced-colors: active)": "none" },
-    "box-shadow": { default: "inset 0 1px 0 #ffffff1f", "@media (forced-colors: active)": "none" },
-    "border-block-end": "var(--hraness-marketing-rule)",
+    "box-shadow": { default: "var(--hraness-marketing-chrome-shadow)", "@media (forced-colors: active)": "none" },
+    "border-block-end": { "default": "var(--hraness-marketing-chrome-rule)", "@media (forced-colors: active)": "1px solid CanvasText" },
     "color": "var(--hraness-marketing-muted)",
     "font-size": "0.78rem"
   },
@@ -1801,19 +1807,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.6rem",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -1870,6 +1876,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -1916,19 +1923,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.5rem",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -1985,6 +1992,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -1999,19 +2007,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.5rem",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -2068,6 +2076,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -2116,19 +2125,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.5rem",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -2185,6 +2194,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -2303,19 +2313,19 @@ export const marketingStyles = stylex.create({
     "margin": "0",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -2372,6 +2382,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -2422,19 +2433,19 @@ export const marketingStyles = stylex.create({
     "gap": "1rem",
     "padding": "clamp(1.5rem, 3vw, 2rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -2491,6 +2502,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "scroll"
     },
     "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -2504,19 +2516,19 @@ export const marketingStyles = stylex.create({
     "gap": "1rem",
     "padding": "clamp(1.5rem, 3vw, 2rem)",
     "border-top": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "var(--hraness-marketing-rule)",
+      "default": "var(--hraness-marketing-surface-rule)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -2572,14 +2584,14 @@ export const marketingStyles = stylex.create({
       "default": "scroll",
       "@media (forced-colors: active)": "scroll"
     },
-    "box-shadow": "0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 35%, transparent)",
+    "box-shadow": { "default": "inset 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow)", "@media (forced-colors: active)": "none" },
     "color": {
       "@media (forced-colors: active)": "CanvasText"
     },
-    "border-top-color": "color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent)",
-    "border-right-color": "color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent)",
-    "border-bottom-color": "color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent)",
-    "border-left-color": "color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent)"
+    "border-top-color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" },
+    "border-right-color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" },
+    "border-bottom-color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" },
+    "border-left-color": { "default": "transparent", "@media (forced-colors: active)": "CanvasText" }
   },
   "plan__name": {
     "margin": "0",

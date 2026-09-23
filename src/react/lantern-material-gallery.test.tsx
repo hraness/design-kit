@@ -28,3 +28,16 @@ test("Lantern examples keep reading planes, real controls and explicit theme isl
   expect(document.querySelector('input[aria-invalid="true"]')).not.toBeNull();
   expect(document.querySelector('[role="menu"]')).toBeNull();
 });
+
+
+test("the gallery demonstrates the finite pattern vocabulary with palette islands", () => {
+  const { document } = parseHTML(renderToStaticMarkup(<LanternMaterialGallery />));
+  const samples = [...document.querySelectorAll("[data-gallery-pattern]")];
+  expect(samples.map((node) => node.getAttribute("data-hraness-pattern"))).toEqual(["cells", "weave", "contour", "mesh", "none"]);
+  expect(samples.map((node) => node.getAttribute("data-palette"))).toEqual(["paper", "gruvbox", "rose-pine", "tokyo-night", "paper"]);
+  for (const node of samples) {
+    expect(node.getAttribute("data-hraness-material")).toBe("lantern");
+    expect(node.querySelector("h4")?.textContent).toBeTruthy();
+    expect(node.querySelector("[style], canvas, script")).toBeNull();
+  }
+});

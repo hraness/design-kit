@@ -29,9 +29,9 @@
 
   background: var(--plain-background);
   color: var(--plain-foreground);
-  font-family: var(--font-text);
+  font-family: var(--font-text, var(--ui-font-sans, ui-sans-serif, system-ui, sans-serif));
   font-size: 1rem;
-  line-height: 1.55;
+  line-height: var(--hraness-type-reading-leading, 1.7);
   margin: 0;
   overflow-x: clip;
 }
@@ -83,6 +83,24 @@ body.plain-site > main {
     --plain-syntax-number: #e18982;
     --plain-syntax-name: #6aa9ed;
   }
+}
+
+/* An explicit palette supplies the same semantic colors as application surfaces. */
+:root[data-palette]:has(> body.plain-site) {
+  background: var(--background, Canvas);
+}
+[data-palette] .plain-site,
+.plain-site[data-palette] {
+  --plain-background: var(--background, Canvas);
+  --plain-foreground: var(--foreground, CanvasText);
+  --plain-link: var(--primary, LinkText);
+  --plain-line: color-mix(in oklch, var(--foreground, CanvasText) 14%, var(--background, Canvas));
+  --plain-muted: var(--muted, CanvasText);
+  --plain-surface: var(--surface, Canvas);
+  --plain-syntax-keyword: var(--warning, CanvasText);
+  --plain-syntax-string: var(--success, CanvasText);
+  --plain-syntax-number: var(--danger, CanvasText);
+  --plain-syntax-name: var(--info, CanvasText);
 }
 
 .plain-site .syntax-code {
@@ -224,10 +242,14 @@ body.plain-site > main {
 }
 
 .plain-page :where(h1, h2, h3) {
-  line-height: inherit;
+  font-family: var(--font-heading, var(--font-text, ui-sans-serif, system-ui, sans-serif));
+  line-height: var(--hraness-type-heading-leading, 1.2);
+  letter-spacing: -.02em;
+  text-wrap: balance;
 }
 
 .plain-page h1 {
+  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
   font-weight: 700;
   margin: 0 0 1rem;
 }
@@ -239,6 +261,7 @@ body.plain-site > main {
 
 .plain-page > p {
   margin: 0;
+  text-wrap: pretty;
 }
 
 .plain-page section {
@@ -246,6 +269,7 @@ body.plain-site > main {
 }
 
 .plain-page h2 {
+  font-size: 1.25rem;
   font-weight: 700;
   margin: 0 0 0.3rem;
 }
@@ -277,12 +301,15 @@ body.plain-site > main {
 .plain-code {
   color: var(--plain-foreground);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.84rem;
+  font-size: var(--hraness-type-code-size, .9rem);
   line-height: 1.55;
   margin: 0;
-  overflow-wrap: anywhere;
-  padding-block: 0.65rem;
-  white-space: pre-wrap;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  padding-block: 0.75rem;
+  tab-size: 2;
+  white-space: pre;
 }
 
 .plain-code code {

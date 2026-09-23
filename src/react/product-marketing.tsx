@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { FoilMark } from "./foil-mark.js";
 import { SyntaxCode } from "./syntax-code.js";
+import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";
 import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
 import type { MarketingColumnCount } from "./product-marketing.stylex.js";
 
@@ -19,6 +20,12 @@ const MARKETING_HEADING_TAGS = {
 
 export type MarketingTone = "paper" | "accent";
 export type MarketingPreset = "editorial" | "minimal";
+export const marketingPatterns = ["cells", "weave", "contour", "mesh", "none"] as const;
+export type MarketingPattern = (typeof marketingPatterns)[number];
+
+function assertMarketingPattern(pattern: MarketingPattern | undefined): void {
+  if (pattern !== undefined && !marketingPatterns.includes(pattern)) throw new RangeError("Unknown marketing pattern.");
+}
 
 export interface MarketingAction {
   readonly emphasis?: "primary" | "secondary";
@@ -103,24 +110,29 @@ export function MarketingPage({
   className,
   id,
   preset,
+  pattern,
 }: Readonly<{
   children: ReactNode;
   className?: string;
   id?: string;
   /** Opt in to the separately imported product-marketing-preset.css contract. */
   preset?: MarketingPreset;
+  /** Material pattern independent of the selected color palette. */
+  pattern?: MarketingPattern;
 }>) {
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal") throw new RangeError("Unknown marketing preset.");
+  assertMarketingPattern(pattern);
   return (
-    <div className={classNames("hraness-marketing-page", className)} data-hraness-marketing="page" data-hraness-marketing-preset={preset} id={id}>
+    <div className={classNames("hraness-marketing-page", className)} data-hraness-marketing="page" data-hraness-marketing-preset={preset} data-hraness-pattern={pattern} id={id}>
       {children}
     </div>
   );
 }
 
 /** Static decorative field; it never creates an overlay or a fixed-position containing block. */
-export function MarketingField({ children, className }: Readonly<{ children: ReactNode; className?: string }>) {
-  return <div className={["hraness-marketing-field", className].filter(Boolean).join(" ")} data-hraness-marketing="field">{children}</div>;
+export function MarketingField({ children, className, pattern }: Readonly<{ children: ReactNode; className?: string; pattern?: MarketingPattern }>) {
+  assertMarketingPattern(pattern);
+  return <div className={["hraness-marketing-field", className].filter(Boolean).join(" ")} data-hraness-marketing="field" data-hraness-pattern={pattern}>{children}</div>;
 }
 
 export type MarketingMainClearance = "scroll" | "pad";
@@ -470,6 +482,8 @@ export function MarketingFacts({
 export interface ProductHeroProps {
   readonly actions?: readonly MarketingAction[];
   readonly align?: "center" | "start";
+  /** Decorative artwork within shared light/motion custody. False opts out. */
+  readonly backdrop?: ReactNode | false;
   readonly boundary?: string;
   readonly className?: string;
   /** A concrete request a reader could make, shown under the summary. */
@@ -498,6 +512,7 @@ export interface ProductHeroProps {
 export function ProductHero({
   actions = [],
   align = "center",
+  backdrop,
   boundary,
   className,
   example,
@@ -522,6 +537,7 @@ export function ProductHero({
       data-hraness-marketing="hero"
       data-tone={tone}
     >
+      {backdrop === false ? null : <HeroBackdrop seed={headingId}>{backdrop}</HeroBackdrop>}
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
         {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
         <p className={classNames("hraness-marketing-hero__name")}>{name}</p>

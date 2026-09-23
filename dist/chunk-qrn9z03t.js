@@ -298,6 +298,7 @@ var layoutSurfaceStyles = {
     $$css: true
   },
   topBar: {
+    k4V0xq: "x8dl5b2 x14bdpvh",
     krFJ6x: "xn5uptl",
     kP1A0P: "x1ae7zus",
     kVQ08L: "x8k30ic",
@@ -1052,6 +1053,9 @@ function ProceduralBackdrop({
   });
 }
 
+// src/react/product-marketing.tsx
+import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";
+
 // src/react/product-marketing.stylex.ts
 import * as stylex4 from "@stylexjs/stylex";
 var questionMarker = {
@@ -1120,7 +1124,7 @@ var marketingStyles = {
     kVAEAm: "x7wzq59",
     kUvb1J: "xlb5a52",
     kVCA4M: "xf5e64p",
-    ke4D0g: "xknh1wj",
+    ke4D0g: "xothggy x1j9yjdw",
     kL20gf: "x1vch632 x9yvj25",
     kb5WsR: "x18o3ruo xhobzj1",
     k2EZ2Y: "x1y4qj14 x2c5uud",
@@ -1140,7 +1144,7 @@ var marketingStyles = {
     kyY1tn: "xsdpl10",
     kCh6Gp: "x1sz4vi2",
     kzSjEv: "x4aylkk",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "xs301gt xwaqzdf",
     $$css: true
   },
   headerStatic: {
@@ -1149,7 +1153,7 @@ var marketingStyles = {
     kVAEAm: "x1uhb9sk",
     kUvb1J: "xlb5a52",
     kVCA4M: "xf5e64p",
-    ke4D0g: "xknh1wj",
+    ke4D0g: "xothggy x1j9yjdw",
     kL20gf: "x1vch632 x9yvj25",
     kb5WsR: "x18o3ruo xhobzj1",
     k2EZ2Y: "x1y4qj14 x2c5uud",
@@ -1169,7 +1173,7 @@ var marketingStyles = {
     kyY1tn: "xsdpl10",
     kCh6Gp: "x1sz4vi2",
     kzSjEv: "x4aylkk",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "xs301gt xwaqzdf",
     $$css: true
   },
   main: {
@@ -1329,6 +1333,8 @@ var marketingStyles = {
     $$css: true
   },
   hero: {
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",
     kULEZF: "x19vpta5",
@@ -1340,6 +1346,8 @@ var marketingStyles = {
     $$css: true
   },
   heroAccent: {
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
     kMwMTN: "x102ovp5 xs5hli",
     knIRL8: "xrtw95r",
     kULEZF: "x19vpta5",
@@ -1491,7 +1499,7 @@ var marketingStyles = {
     kUEKN5: "x1y508rd",
     kN5DiO: "xkj4vsn",
     kYjUv9: "x1w2vvpw",
-    k2kXS: "x17152no x11ndyap",
+    k2kXS: "x17152no x6ri7ij",
     kLh5Sq: "xbs339",
     $$css: true
   },
@@ -1500,7 +1508,7 @@ var marketingStyles = {
     kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
     kLh5Sq: "x1h87l4j",
-    kN5DiO: "xf4jco4",
+    kN5DiO: "x1nt6xn0",
     k2kXS: "x1l2wkh2",
     $$css: true
   },
@@ -1549,10 +1557,10 @@ var marketingStyles = {
     kdYMnH: "xesnm00",
     kOIVth: "x8fetqu",
     kmVPX3: "x12fqarx",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -1823,10 +1831,10 @@ var marketingStyles = {
     kdYMnH: "xesnm00",
     kogj98: "x1ghz6dp",
     kVQacm: "x7giv3",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -1850,8 +1858,8 @@ var marketingStyles = {
     kOIVth: "x8233eu",
     kmVPX3: "x86o7ao",
     kb5WsR: "x1drtmal xhobzj1",
-    kTJQHc: "xcykd28 xwaqzdf",
-    ke4D0g: "xknh1wj",
+    kTJQHc: "xs301gt xwaqzdf",
+    ke4D0g: "xothggy x1j9yjdw",
     kMwMTN: "xs87ocq",
     kLh5Sq: "xp1qmoa",
     $$css: true
@@ -2492,10 +2500,10 @@ var marketingStyles = {
     kNk6WL: "x10ukxgv",
     kOIVth: "x1uma3xh",
     kmVPX3: "x1nn0urv",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2510,7 +2518,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -2558,10 +2566,10 @@ var marketingStyles = {
     kNk6WL: "x10ukxgv",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2576,7 +2584,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -2587,10 +2595,10 @@ var marketingStyles = {
     kNk6WL: "x10ukxgv",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2605,7 +2613,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -2655,10 +2663,10 @@ var marketingStyles = {
     k29mPU: "xkh2ocl",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2673,7 +2681,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "x1heor9g xs5hli",
     kyVV8l: "x1hl2dhg",
     $$css: true
@@ -2756,10 +2764,10 @@ var marketingStyles = {
     kOIVth: "x15iy025",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1nn0urv",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2774,7 +2782,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -2824,10 +2832,10 @@ var marketingStyles = {
     kNk6WL: "x10ukxgv",
     kOIVth: "x8fetqu",
     kmVPX3: "xe0tb4u",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2842,7 +2850,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "xwaqzdf",
+    kTJQHc: "x1io0m3d xwaqzdf",
     kMwMTN: "xs5hli",
     $$css: true
   },
@@ -2852,10 +2860,10 @@ var marketingStyles = {
     kNk6WL: "x10ukxgv",
     kOIVth: "x8fetqu",
     kmVPX3: "xe0tb4u",
-    k99D8V: "xzdcvt0 x18z9243",
-    kNdqCV: "xl0qb3l xv2i73l",
-    kLjGic: "x1ld2yh7 xtthz4l",
-    kpfRUI: "xm9c49u xug5yj",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
     kbZlsR: "x18sabzy x1cfjbvc",
     kAFNHU: "x1jleocg x1a4igh8",
     kyY1tn: "x1pjjote xsdpl10",
@@ -2870,12 +2878,12 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "x1sh3gjm",
+    kTJQHc: "x1cwdql1 xwaqzdf",
     kMwMTN: "xs5hli",
-    kQDVEZ: "x8aei3e",
-    kkqsfi: "x1f1t1ax",
-    k3smXN: "xjmpsza",
-    kzT0vu: "x1ipoqgi",
+    kQDVEZ: "x1v8p93f x19dwuzr",
+    kkqsfi: "xhe5wa1 x13dgt7z",
+    k3smXN: "x16stqrj xszdk7l",
+    kzT0vu: "x1g4hjc xiqg0gh",
     $$css: true
   },
   plan__name: {
@@ -4054,6 +4062,11 @@ var MARKETING_HEADING_TAGS = {
   5: "h5",
   6: "h6"
 };
+var marketingPatterns = ["cells", "weave", "contour", "mesh", "none"];
+function assertMarketingPattern(pattern) {
+  if (pattern !== undefined && !marketingPatterns.includes(pattern))
+    throw new RangeError("Unknown marketing pattern.");
+}
 function Heading({
   children,
   className,
@@ -4099,25 +4112,31 @@ function MarketingPage({
   children,
   className,
   id,
-  preset
+  preset,
+  pattern
 }) {
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal")
     throw new RangeError("Unknown marketing preset.");
+  assertMarketingPattern(pattern);
   return /* @__PURE__ */ jsx5("div", {
     className: marketingClassName("hraness-marketing-page", className),
     "data-hraness-marketing": "page",
     "data-hraness-marketing-preset": preset,
+    "data-hraness-pattern": pattern,
     id,
     children
   });
 }
 function MarketingField({
   children,
-  className
+  className,
+  pattern
 }) {
+  assertMarketingPattern(pattern);
   return /* @__PURE__ */ jsx5("div", {
     className: ["hraness-marketing-field", className].filter(Boolean).join(" "),
     "data-hraness-marketing": "field",
+    "data-hraness-pattern": pattern,
     children
   });
 }
@@ -4414,6 +4433,7 @@ function MarketingFacts({
 function ProductHero({
   actions = [],
   align = "center",
+  backdrop,
   boundary,
   className,
   example,
@@ -4437,6 +4457,10 @@ function ProductHero({
     "data-hraness-marketing": "hero",
     "data-tone": tone,
     children: [
+      backdrop === false ? null : /* @__PURE__ */ jsx5(HeroBackdrop, {
+        seed: headingId,
+        children: backdrop
+      }),
       /* @__PURE__ */ jsxs4("div", {
         className: marketingClassName("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default"),
         children: [
@@ -5346,4 +5370,4 @@ function ParticleHalo({
   });
 }
 
-export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ParticleHalo };
+export { effectsStyles, foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ParticleHalo };

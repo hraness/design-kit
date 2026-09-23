@@ -14,6 +14,27 @@ Wrap React content in `DesignPaletteProvider` and retain one `ThemeMenuButton` a
 
 A product can use the browser controller without React. Its snapshot, subscription, and `setPreference` methods support native controls. Initialization is explicit; importing the browser package does not change the document or register listeners.
 
+## Product defaults and static pages
+
+Choose a default for the product family, then pass the same `defaultPreference`
+to the head bootstrap and `DesignPaletteProvider`. For example,
+`{ palette: "gruvbox", mode: "system" }` gives a writing suite a warm default
+while preserving a visitor's saved choice. Keep browser theme-color metadata
+aligned with the chosen palette and use `ThemeColorSync` for later changes.
+
+For a system-first document, render `data-palette="gruvbox"` without a
+`data-theme` attribute. The generated CSS uses `light-dark()` before JavaScript,
+including when scripting is disabled. A concrete `data-theme="light"` or
+`data-theme="dark"` takes precedence. Static palette islands use the same two
+attributes; React portals retain their complete generated class.
+
+The full and minimal foundations include this behavior. Static sites with an
+existing stylesheet can import `@hraness/design-kit/palette-bridge.css`; it
+includes `palette-system.css` and maps the raw values onto the semantic roles.
+The narrower `palette-system.css` export contains only raw palette values and
+color-scheme, for build pipelines that already supply their own role mapping.
+Neither stylesheet needs a browser script or an animation runtime.
+
 ## Preferences and embedded views
 
 The controller stores only `{ "palette": "catppuccin", "mode": "dark" }` under `hraness-design-palette-v1` in the current origin's local storage. It supports all five palette identifiers and `light`, `dark`, or `system`. Invalid or inaccessible storage falls back to Catppuccin dark. Storage events synchronize other tabs, and system mode follows operating-system appearance changes.
@@ -24,7 +45,7 @@ Portalled controls receive the resolved palette class through the shared portal 
 
 ## StyleX and semantic roles
 
-`src/palettes.ts` owns the source colors and their application adaptations. `bun run generate:palettes` writes ten complete `stylex.createTheme` recipes against one `stylex.defineVars` contract in `src/palette-tokens.stylex.ts`. The build verifies that the generated source is current, then compiles the recipes with runtime CSS injection disabled.
+`src/palettes.ts` owns the source colors and their application adaptations. `bun run generate:palettes` writes the static system palette sheet and ten complete `stylex.createTheme` recipes against one `stylex.defineVars` contract in `src/palette-tokens.stylex.ts`. The build verifies that the generated source is current, then compiles the recipes with runtime CSS injection disabled.
 
 The global CSS boundary maps existing `--primary`, `--danger`, `--warning`, `--success`, surface, text, focus, and `--ui-*` roles to the compiled `--hraness-palette-*` properties. Product CSS and shared controls consume the same values. Use semantic roles for meaning; keep text or an icon with each status so color is not its only cue.
 

@@ -6,7 +6,7 @@
  * Product-marketing grammar
  *
  * An opt-in narrative grammar for technical product sites. One typeface, one
- * measured type scale, sentence-case labels, hairline chrome, soft radii, and
+ * measured type scale, sentence-case labels, sculpted surfaces, soft radii, and
  * one accent per product. Roles: site header with a published sticky
  * clearance offset, hero with optional product frame, pillars, install,
  * ordered flow, fact and stat strips, narrative section, primitives,
@@ -44,7 +44,7 @@
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
   --hraness-marketing-surface: var(--surface, Canvas);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 12%, transparent);
+  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
   --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-ink) 22%, transparent);
   --hraness-marketing-inverse: var(--inverse, CanvasText);
   --hraness-marketing-inverse-ink: var(--inverse-foreground, Canvas);
@@ -55,12 +55,16 @@
   --hraness-marketing-heading-font: var(--font-heading, var(--hraness-marketing-text-font));
   --hraness-marketing-mono-font: var(--font-mono, ui-monospace, monospace);
   --hraness-marketing-measure: 72rem;
-  --hraness-marketing-copy-measure: 40rem;
+  --hraness-marketing-copy-measure: 54ch;
   --hraness-marketing-prose-measure: 62ch;
   --hraness-marketing-gutter: clamp(1.25rem, 4vw, 3rem);
-  --hraness-marketing-radius: 0.625rem;
-  --hraness-marketing-frame-radius: 0.875rem;
+  --hraness-marketing-radius: 0.75rem;
+  --hraness-marketing-frame-radius: 1.125rem;
   --hraness-marketing-rule: 1px solid var(--hraness-marketing-line);
+  --hraness-marketing-surface-rule: 1px solid transparent;
+  --hraness-marketing-chrome-rule: 1px solid transparent;
+  --hraness-marketing-surface-shadow: var(--hraness-material-rest, inset 0 1px 0 rgb(255 255 255 / 0.12), 0 2px 5px rgb(0 0 0 / 0.05), 0 12px 28px -16px rgb(0 0 0 / 0.15));
+  --hraness-marketing-chrome-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 4px 16px -8px rgb(0 0 0 / 0.1);
   --hraness-marketing-shadow:
     0 1px 2px oklch(0 0 0 / 0.06),
     0 24px 48px -24px oklch(0 0 0 / 0.28);
@@ -312,7 +316,8 @@
   position: sticky;
   inset-block-start: 0;
   z-index: 40;
-  border-block-end: var(--hraness-marketing-rule);
+  border-block-end: var(--hraness-marketing-chrome-rule);
+  box-shadow: var(--hraness-marketing-chrome-shadow);
 }
 
 /* marketing-header-paint:start */
@@ -650,9 +655,52 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 /* Hero */
 
 .hraness-marketing-hero {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: clamp(2rem, 5vw, 3.5rem);
   padding-block: var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem));
+}
+
+/* Stable raw hooks keep inert light artwork out of the grid when compiler
+ * atoms are absent. These rules mirror HeroBackdrop's public recipe. */
+.hraness-marketing-hero-backdrop {
+  display: var(--hraness-pattern-decoration, block);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  pointer-events: none;
+  user-select: none;
+  contain: paint;
+  opacity: 1;
+  mask-image: linear-gradient(to bottom, black 65%, transparent);
+}
+.hraness-marketing-hero-backdrop__atmosphere {
+  position: absolute;
+  inset: -2rem;
+  opacity: 0.24;
+  transform: translate(var(--hraness-hero-drift-x, 0px), var(--hraness-hero-drift-y, 0px));
+  background-image: radial-gradient(ellipse at 68% 25%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 32%, transparent), transparent 60%), radial-gradient(ellipse at 15% 80%, color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 26%, transparent), transparent 65%);
+}
+.hraness-marketing-hero-backdrop__atmosphere[data-variation="center"] {
+  background-position: 50% 50%;
+}
+.hraness-marketing-hero-backdrop__atmosphere[data-variation="east"] {
+  background-position: 100% 25%;
+  background-size: 140% 120%;
+}
+.hraness-marketing-hero-backdrop__atmosphere[data-variation="west"] {
+  background-position: 0px 75%;
+  background-size: 125% 150%;
+}
+.hraness-marketing-hero-backdrop__light {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%);
+}
+@media (forced-colors: active), (prefers-reduced-transparency: reduce) {
+  .hraness-marketing-hero-backdrop { opacity: 0; }
 }
 
 .hraness-marketing-hero__copy {
@@ -702,7 +750,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-hero__summary {
   max-inline-size: var(--hraness-marketing-copy-measure);
   font-size: var(--hraness-paper-summary-size, clamp(1.125rem, 1.6vw, 1.3rem));
-  line-height: var(--hraness-marketing-summary-leading, 1.45);
+  line-height: var(--hraness-marketing-summary-leading, 1.6);
 }
 
 .hraness-marketing-hero__example {
@@ -777,7 +825,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   min-inline-size: 0;
   gap: 1rem;
   padding: clamp(1.25rem, 3vw, 2rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
   box-shadow: var(--hraness-marketing-shadow);
@@ -971,7 +1019,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   min-inline-size: 0;
   margin: 0;
   overflow: clip;
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
   box-shadow: var(--hraness-marketing-shadow);
@@ -983,8 +1031,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   gap: 0.75rem;
   padding: 0.8rem 1rem;
   background-image: var(--hraness-marketing-frame-chrome, none);
-  box-shadow: inset 0 1px 0 #ffffff1f;
-  border-block-end: var(--hraness-marketing-rule);
+  box-shadow: var(--hraness-marketing-chrome-shadow);
+  border-block-end: var(--hraness-marketing-chrome-rule);
   color: var(--hraness-marketing-muted);
   font-size: 0.78rem;
 }
@@ -1213,9 +1261,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   align-content: start;
   gap: 0.6rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-primitive__number {
@@ -1268,9 +1317,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   align-content: start;
   gap: 0.5rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-interface :where(.hraness-marketing-interface__heading, p),
@@ -1323,11 +1373,12 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   min-block-size: 100%;
   gap: 0.5rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
   color: inherit;
   text-decoration: none;
+  box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-card__art {
@@ -1412,9 +1463,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   gap: 1.25rem;
   margin: 0;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-quote blockquote {
@@ -1479,14 +1531,15 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   align-content: start;
   gap: 1rem;
   padding: clamp(1.5rem, 3vw, 2rem);
-  border: var(--hraness-marketing-rule);
+  border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
+  box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-plan[data-emphasis="primary"] {
-  border-color: color-mix(in oklch, var(--hraness-marketing-accent) 55%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 35%, transparent);
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-plan__name {
@@ -1742,7 +1795,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   }
 
   .hraness-marketing-hero__heading {
-    max-inline-size: 14ch;
+    max-inline-size: 16ch;
   }
 
   .hraness-marketing-install,
@@ -1793,6 +1846,14 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 @media (forced-colors: active) {
+  .hraness-marketing-plan[data-emphasis="primary"] {
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+  .hraness-marketing-proof-frame__chrome {
+    border-block-end: 1px solid CanvasText;
+    box-shadow: none;
+  }
   .hraness-marketing-header,
   .hraness-marketing-hero[data-tone="accent"],
   .hraness-marketing-cta[data-tone="accent"],
@@ -1849,6 +1910,12 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     -webkit-text-fill-color: CanvasText;
     filter: none;
   }
+}
+
+/* Keep all meaningful hero content above the inert decorative backdrop. */
+.hraness-marketing-hero > :where(.hraness-marketing-hero__copy, .hraness-marketing-hero__frame, .hraness-marketing-proof, .hraness-marketing-facts) {
+  position: relative;
+  z-index: 1;
 }
 
 }

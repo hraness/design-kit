@@ -85,6 +85,7 @@ try {
     "dist/browser/index.js",
     "dist/index.js",
     "dist/react/charts.js",
+    "dist/react/hero-backdrop.js",
     "dist/react/index.js",
     "dist/react/server.js",
     "dist/stylex.css",

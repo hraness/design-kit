@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "61917d2ecfa68f909a4604c60b5a9d8638f5ba3f139f90af8f78f4362656f237", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "d00000012a0948816efc232f596a63c82570729af7b8e57158222f4c1f0fd7fa", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -99,11 +99,19 @@ function required<T>(value: T | undefined, label: string): T {
   return value;
 }
 async function settle(page: Page): Promise<void> {
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)));
-    await new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
-  });
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await Promise.race([
+      page.evaluate(async () => {
+        await document.fonts.ready;
+        await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined)));
+        await new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
+      }),
+      new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(() => reject(new Error(`Marketing fixture did not settle within 15 seconds: ${page.url()}`)), 15_000);
+      }),
+    ]);
+  } finally { clearTimeout(timer); }
 }
 
 async function strictGridSnapshot(page: Page) {
@@ -138,6 +146,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
   ] as const;
   for (const configuration of configurations) for (const mode of deliveryModes) {
     const label = `${configuration.name}/${mode}/strict-csp`;
+    console.error(`[marketing-browser] ${label}`);
     const page = await browser.newPage({ viewport: { width: configuration.width, height: 900 },
       colorScheme: configuration.dark ? "dark" : "light", hasTouch: configuration.coarse,
       forcedColors: configuration.forced ? "active" : "none", reducedMotion: "reduce" });
@@ -569,6 +578,7 @@ try {
     return `class="${hooks.join(" ")}"`;
   });
   assert.notEqual(staticHtml, html, "The shipped marketing components have no compiled atoms");
+  console.error("[marketing-browser] Building standalone, compiler and original-source stylesheets");
   const [staticCss, standalone, foundation, designManifest, uiManifest] = await Promise.all([
     bundleBrowserStylesheet(join(repository, "gallery/product-marketing-static.css"), repository),
     bundleBrowserStylesheet(join(repository, "src/styles.css"), repository),
@@ -584,6 +594,7 @@ try {
   assert(!foundation.includes("components.hraness-design-kit.priority"), "Compiler foundation imported standalone atoms");
   const nativeOracle = await nativeBrowserStylesheetAssets(join(repository, "gallery/product-marketing-static.css"), repository);
   const projectedOracle = await projectedNativeBrowserStylesheetAssets(join(repository, "gallery/product-marketing-static.css"), repository);
+  console.error("[marketing-browser] Original-source stylesheet closures verified");
   assert(projectedOracle.projections.some(({ projections }) => projections.length > 0),
     "Projected original-source oracle has no pinned compiler color spans");
   const rawPaths = [...nativeOracle.assets.keys()].map((path) => path.replace(/^\/native-oracle\//u, "")).sort();
@@ -714,6 +725,7 @@ try {
     const results = new Map<Mode, readonly Observation[]>();
     const interactions = new Map<Mode, readonly Observation[]>();
     for (const mode of modes) {
+      console.error(`[marketing-browser] ${settings.name}/${mode}`);
       const page = await browser.newPage({ viewport: { width: settings.width, height: 900 }, hasTouch: settings.touch ?? false,
         colorScheme: settings.theme === "dark" ? "dark" : "light", forcedColors: settings.forced ? "active" : "none", reducedMotion: "reduce" });
       try {
@@ -758,14 +770,30 @@ try {
         const labels = await page.locator(".fixture-caller-last .hraness-marketing-section__label")
           .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).fontSize));
         assert.deepEqual(labels, ["14px", settings.tokens ? "19px" : "16px"], `${settings.name}/${mode}: finite body recipe and caller override`);
-        const examples = await page.locator(".hraness-marketing-hero").evaluateAll((elements) => elements.map((element) => {
+        const measuredExamples = await page.locator(".hraness-marketing-hero").evaluateAll((elements, tokens) => elements.map((element, index) => {
           const example = element.querySelector(".hraness-marketing-hero__example");
           const summary = element.querySelector(".hraness-marketing-hero__summary");
           if (example === null || summary === null) throw new Error("Missing hero measure fixture");
-          return { example: getComputedStyle(example).maxInlineSize, summary: getComputedStyle(summary).maxInlineSize };
-        }));
-        assert.deepEqual(examples, Array.from({ length: 4 }, (_, index) => settings.tokens && index === 1
-          ? { example: "576px", summary: "496px" } : { example: "640px", summary: "640px" }),
+          // Resolve the literal authored reading measure in each text role's
+          // font. ch intentionally changes with typography and writing mode.
+          const literalMeasure = (target: Element, value: string) => {
+            const probe = target.cloneNode(false) as HTMLElement;
+            probe.style.maxInlineSize = value;
+            target.after(probe);
+            try { return getComputedStyle(probe).maxInlineSize; }
+            finally { probe.remove(); }
+          };
+          return {
+            actual: { example: getComputedStyle(example).maxInlineSize, summary: getComputedStyle(summary).maxInlineSize },
+            expected: {
+              example: literalMeasure(example, tokens && index === 1 ? "36rem" : "54ch"),
+              summary: literalMeasure(summary, tokens && index === 1 ? "31rem" : "54ch"),
+            },
+          };
+        }), settings.tokens ?? false);
+        const examples = measuredExamples.map(({ actual }) => actual);
+        assert.equal(examples.length, 4, "All hero measure fixtures remain covered");
+        assert.deepEqual(examples, measuredExamples.map(({ expected }) => expected),
         `${settings.name}/${mode}: example-only measure and omitted fallback`);
         assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "fixture-maker-link");
         compositionSeams.push({ label: `${settings.name}/${mode}`, labels, examples });
