@@ -37,8 +37,9 @@ change in light or clarity. Keep text, controls, and document layout still.
 
 Light settles and stops requesting frames. Leaving the hero, switching tabs,
 moving offscreen, changing motion preferences, or disposing the controller
-restores the authored static field. Touch, forced colors, and reduced motion
-retain that static composition. No global pointer listeners, storage,
+restores the authored static field. Touch and reduced motion retain that static
+composition. Forced colors and reduced transparency hide the decorative field;
+the copy and controls remain available. No global pointer listeners, storage,
 provider calls, or animation libraries are needed.
 
 Choose the palette and material pattern independently. The material's `cells`,

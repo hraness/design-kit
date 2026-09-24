@@ -156,7 +156,8 @@ var heroBackdropStyles = {
     kfzvcC: "x47corl",
     kfSwDN: "x87ps6o",
     ktR8K2: "x16qrkmw",
-    kSiTet: "x1hc1fzr xiz9159 x129l13m",
+    kSiTet: "x14f51jl",
+    "--_hraness-hero-backdrop-opacity": "xkbz0ap x1tsymki x1ksytfy",
     kX1K2I: "xne3dcs",
     $$css: true
   },
