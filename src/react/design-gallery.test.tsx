@@ -128,7 +128,7 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain(">blue links</a> stay quiet until interaction.");
   expect(html).toContain('data-gallery-font="proportional"');
   expect(html).toContain('data-gallery-font="mono"');
-  expect(html).toContain("More shape, less noise.");
+  expect(html).toContain("Nebula Sans sets both headings and body text.");
   expect(html).toContain('data-hraness-marketing="hero"');
   expect(html).toContain('data-hraness-marketing="flow"');
   expect(html).toContain('data-hraness-marketing="facts"');
