@@ -14,10 +14,10 @@ test("README install pins match the package release and its UI pair", () => {
 });
 
 test("the package ships the copy guides that the README and STYLE.md link to", () => {
-  for (const guide of ["MARKETING_COPY.md", "MARKETING_PRESET.md", "STYLE.md"]) {
+  for (const guide of ["ARTICLE_COPY.md", "MARKETING_COPY.md", "MARKETING_PRESET.md", "STYLE.md"]) {
     expect(readme).toContain(`](${guide})`);
   }
-  for (const guide of ["MARKETING_COPY.md", "MARKETING_PRESET.md", "STYLE.md", "WRITING.md"]) {
+  for (const guide of ["ARTICLE_COPY.md", "MARKETING_COPY.md", "MARKETING_PRESET.md", "STYLE.md", "WRITING.md"]) {
     expect(manifest.files).toContain(guide);
   }
 });

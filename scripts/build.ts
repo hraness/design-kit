@@ -160,6 +160,7 @@ export async function buildPackage(
       entrypoints: [
         join(sourceRoot, "index.ts"),
         join(sourceRoot, "fonts/nebula-sans/social-fonts.generated.ts"),
+        join(sourceRoot, "portfolio.ts"),
         // Keep the optional chart runtime behind its own split boundary. This
         // lets consumers tree-shake the React barrel without first loading
         // Recharts' legacy main/module package root into their build graph.

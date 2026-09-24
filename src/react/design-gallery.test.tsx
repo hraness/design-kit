@@ -16,6 +16,7 @@ test("the public gallery covers the composition boundary", () => {
     "paper-theme",
     "lantern",
     "marketing",
+    "articles",
     "shells",
     "data",
     "effects",
@@ -23,6 +24,7 @@ test("the public gallery covers the composition boundary", () => {
   ]);
   expect(designGalleryRecipeCoverage).toContain("@hraness/ui primitives");
   expect(designGalleryRecipeCoverage).toContain("animated rail stage");
+  expect(designGalleryRecipeCoverage).toContain("article layer");
   expect(designGalleryRecipeCoverage).toContain("chat message and composer");
   expect(designGalleryRecipeCoverage).toContain("foil card surface");
   expect(designGalleryRecipeCoverage).not.toContain("Jelly presentation");

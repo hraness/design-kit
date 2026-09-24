@@ -21,6 +21,12 @@ import { useState } from "react";
 
 import { AnimatedRailStage } from "./animated-rail-stage.js";
 import { AppShell } from "./app-shell.js";
+import {
+  ArticleCallout,
+  ArticleIndex,
+  ArticleSources,
+  MarketingArticle,
+} from "./article.js";
 import { AuroraDotsBackground } from "./aurora-dots-background.js";
 import { BarListChart, RangePlotChart } from "./charts.js";
 import { ChatComposer, ChatMessage } from "./chat.js";
@@ -73,6 +79,7 @@ export const designGallerySections = [
   { id: "paper-theme", label: "Paper theme" },
   { id: "lantern", label: "Lantern" },
   { id: "marketing", label: "Marketing" },
+  { id: "articles", label: "Articles" },
   { id: "shells", label: "Shells" },
   { id: "data", label: "Data" },
   { id: "effects", label: "Effects" },
@@ -91,6 +98,7 @@ export const designGalleryRecipeCoverage = [
   "@hraness/ui primitives",
   "animated rail stage",
   "application shells",
+  "article layer",
   "charts",
   "chat message and composer",
   "dither surface",
@@ -492,6 +500,81 @@ export function DesignSystemGallery({
             name="Relay"
           />
         </MarketingPage>
+      </section>
+
+      <section className="design-gallery__section" id="articles">
+        <h2>Article layer</h2>
+        <MarketingArticle
+          after={(
+            <ArticleSources
+              headingId="gallery-article-sources"
+              sources={[
+                { checkedOn: "2026-09-20", href: "#articles", publisher: "Relay", title: "Relay 2.4 release notes" },
+              ]}
+            />
+          )}
+          author={{ kind: "organization", name: "Hraness" }}
+          dek="Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed."
+          eyebrow="Technique"
+          heading="Replaying webhooks without breaking signatures"
+          headingId="gallery-article-title"
+          provenance={{
+            drafting: "ai-from-source",
+            review: { reviewer: "an independent AI editorial review", reviewerType: "ai" },
+          }}
+          published="2026-09-10"
+          toc={[
+            { href: "#gallery-article-problem", label: "The problem" },
+            { href: "#gallery-article-approach", label: "The approach" },
+          ]}
+          updated="2026-09-20"
+        >
+          <h2 id="gallery-article-problem">The problem</h2>
+          <p>
+            A provider signs the exact request body. Parsing the JSON and serializing it again changes
+            whitespace and key order, and the signature check then fails on every retry.
+          </p>
+          <ArticleCallout label="Limit" tone="limit">
+            This applies to providers that sign the raw body. Header-only schemes need no stored copy.
+          </ArticleCallout>
+          <h2 id="gallery-article-approach">The approach</h2>
+          <p>Store the body as bytes next to the parsed event, and send those bytes on replay.</p>
+          <pre><code>{"await replay(event.id, { body: stored.raw });"}</code></pre>
+          <figure>
+            <table>
+              <thead>
+                <tr><th scope="col">Step</th><th scope="col">Stored</th><th scope="col">Sent on replay</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Receive</td><td>Raw body and headers</td><td>Nothing</td></tr>
+                <tr><td>Retry</td><td>Attempt count</td><td>The stored raw body</td></tr>
+              </tbody>
+            </table>
+            <figcaption>What Relay keeps for each delivery, and what a replay sends.</figcaption>
+          </figure>
+        </MarketingArticle>
+        <ArticleIndex
+          heading="Recent writing"
+          headingId="gallery-article-index"
+          headingLevel={3}
+          items={[
+            {
+              dek: "Relay replays a failed webhook from the stored request body.",
+              eyebrow: "Technique",
+              href: "#gallery-article-title",
+              published: "2026-09-10",
+              title: "Replaying webhooks without breaking signatures",
+              updated: "2026-09-20",
+            },
+            {
+              dek: "Relay 2.4 adds per-endpoint retry limits.",
+              eyebrow: "Release",
+              href: "#articles",
+              published: "2026-09-02",
+              title: "Relay 2.4 adds per-endpoint retry limits",
+            },
+          ]}
+        />
       </section>
 
       <section className="design-gallery__section" id="shells">

@@ -1,5 +1,6 @@
 export * from "./animated-rail-stage.js";
 export * from "./app-shell.js";
+export * from "./article.js";
 export * from "./aurora-dots-background.js";
 export * from "./charts.js";
 export * from "./chat.js";

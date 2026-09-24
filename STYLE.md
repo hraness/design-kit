@@ -242,3 +242,4 @@ A prompt, skill, or template that makes a model write published text is public c
 ## Repository additions
 
 - Copy written for the product-marketing components also follows [`MARKETING_COPY.md`](MARKETING_COPY.md), which says what each slot holds and how long it can be.
+- Articles follow [`ARTICLE_COPY.md`](ARTICLE_COPY.md). By the owner's 2026-09-23 decision, articles on every host show the drafting and review note, which takes precedence over the hraness.com-only disclosure rule above for articles.

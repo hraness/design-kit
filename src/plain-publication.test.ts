@@ -173,3 +173,42 @@ test("reading surfaces preserve palette roles and long code without shrinking ca
   expect(publicationCss).toMatch(/article-body pre\s*\{[^}]*overflow-x: auto;[^}]*white-space: pre;[^}]*overflow-wrap: normal;/su);
   expect(publicationCss).not.toMatch(/font-size: 0\.(?:8|82|85)rem;/u);
 });
+
+test("the embedded article layer keeps a 68ch measure, host roles, and forced colors without motion", () => {
+  const start = publicationCss.indexOf("/* Article layer");
+  expect(start).toBeGreaterThan(0);
+  const articleCss = publicationCss.slice(start);
+
+  expect(articleCss).toContain("--plain-article-measure: 68ch;");
+  expect(articleCss).toMatch(
+    /\.plain-publication--embedded\s*\{[^}]*--plain-foreground:\s*var\(--foreground, CanvasText\);[^}]*--plain-link:\s*var\(--primary, LinkText\);[^}]*display:\s*block;[^}]*min-height:\s*0;[^}]*font-family:\s*inherit;/su,
+  );
+  expect(articleCss).toMatch(
+    /\.plain-site \.plain-site\.plain-publication\.plain-publication--embedded\s*\{[^}]*--plain-foreground:\s*inherit;/su,
+  );
+  expect(articleCss).toMatch(
+    /\.plain-publication--embedded \.plain-publication__article-body\s*\{[^}]*max-inline-size:\s*var\(--plain-article-measure\);/su,
+  );
+  for (const hook of [
+    ".plain-publication__byline",
+    ".plain-publication__provenance",
+    ".plain-publication__article-footer",
+    ".plain-publication__entry-title",
+    ".plain-publication__entry-dek",
+    "figcaption",
+    "table:not(.plain-publication__table)",
+    "blockquote",
+  ]) {
+    expect(articleCss).toContain(hook);
+  }
+  expect(articleCss).toMatch(
+    /@media \(min-width: 64rem\)\s*\{[\s\S]*?\[data-toc="aside"\] \.plain-publication__toc\s*\{[^}]*position:\s*sticky;[^}]*top:\s*calc\(var\(--hraness-sticky-offset, 0px\) \+ 1\.5rem\);/u,
+  );
+  expect(articleCss).toMatch(
+    /@media \(forced-colors: active\)\s*\{[\s\S]*?border-color:\s*CanvasText;[\s\S]*?\.plain-publication__callout\[data-tone\]\s*\{[^}]*border-left-color:\s*CanvasText;/u,
+  );
+  expect(articleCss).not.toMatch(/#[0-9a-f]{3,8}\b/iu);
+  expect(articleCss).not.toMatch(/\b(?:transition|animation)(?:-[a-z]+)?\s*:/iu);
+  expect(articleCss).not.toMatch(/(?:linear|radial|conic)-gradient/iu);
+  expect(articleCss).not.toMatch(/:is\(\s*>/u);
+});
