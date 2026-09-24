@@ -157,7 +157,7 @@ test("property: static and React markup agree for generated articles", () => {
       author: fc.option(fc.record({ kind: fc.constantFrom("organization" as const, "person" as const), name: textArb.filter((v) => v.trim() !== "") }), { nil: undefined }),
       published: dateArb,
       toc: fc.array(fc.record({ href: fc.stringMatching(/^#[a-z][a-z0-9-]{0,8}$/u).map((v) => v as `#${string}`), label: textArb }), { maxLength: 3 }).map((items) => [...new Map(items.map((i) => [i.href, i])).values()]),
-      reviewer: fc.option(textArb.filter((v) => v.trim() !== ""), { nil: null }),
+      reviewer: fc.option(textArb.filter((v) => !/human/iu.test(v)).map((v) => `AI review ${v}`.trim()), { nil: null }),
     }),
     (input) => {
       const record: ArticleProvenanceRecord = {

@@ -1,0 +1,427 @@
+{
+  "contract": "hraness.design-kit-portfolio/v1",
+  "formatVersion": 1,
+  "provenance": {
+    "registry": "https://hraness.com/portfolio.json",
+    "commit": "f1924d6ff0fc48d7bc7fccba64cd0b77bf097f0e",
+    "committedOn": "2026-09-24",
+    "upstreamContract": "hraness.portfolio-public/v1",
+    "upstreamDigest": "sha256:37063a5fa831e95fe08a4318a58ab4682b2f751c47bb89586e3ba04b36198bed",
+    "files": [
+      {
+        "path": "portfolio.public.generated.json",
+        "sha256": "32c0a8d8968b6e2a0e2d1c0d4749c3b60ae9617b286947b9de6eef95afe94dd5"
+      },
+      {
+        "path": "packages/brand-catalog/brands.yaml",
+        "sha256": "b172fd5ca8bdec948d4010b3fbea0ec60020addb8a709bd93a84c719a6e4a096"
+      }
+    ]
+  },
+  "products": {
+    "gobstopper": {
+      "id": "gobstopper",
+      "name": "GOBSTOPPER",
+      "oneLiner": "compacts claude code, codex, and devin sessions at a context size you choose",
+      "brandDescription": "Compacts Claude Code, Codex, and Devin sessions at a context size you choose.",
+      "canonicalUrl": "https://gobstopper.sh",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "xcb": {
+      "id": "xcb",
+      "name": "Excalibur",
+      "oneLiner": "a metaharness and sdk for ai subscriptions; native runtime in development",
+      "brandDescription": "A metaharness and SDK for AI subscriptions, with a native runtime in development.",
+      "canonicalUrl": "https://xcb.sh",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "aicharts": {
+      "id": "aicharts",
+      "name": "AI Charts",
+      "oneLiner": "model benchmarks and personal token usage",
+      "brandDescription": "model comparison tool",
+      "canonicalUrl": "https://aicharts.io",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "kb": {
+      "id": "kb",
+      "name": "Wordcell",
+      "oneLiner": "a knowledge base for agents: markdown, backlinks, search, ontology, and git context",
+      "brandDescription": "Markdown knowledge base for coding agents",
+      "canonicalUrl": "https://wordcell.io",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "oh-computer": {
+      "id": "oh-computer",
+      "name": "oh.computer",
+      "oneLiner": "an ontology-centered memory and research framework for agents",
+      "brandDescription": "open-source tools for agentic research",
+      "canonicalUrl": "https://oh.computer",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": [
+        "OH"
+      ]
+    },
+    "sponge": {
+      "id": "sponge",
+      "name": "Sponge",
+      "oneLiner": "deep research tools for connected, cited knowledge, exploring self-evolution",
+      "brandDescription": "absorb knowledge",
+      "canonicalUrl": "https://sponge.computer",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "algal": {
+      "id": "algal",
+      "name": "ALGAL",
+      "oneLiner": "a language and runtime for agentic program evolution",
+      "brandDescription": "A language and runtime for agentic program evolution.",
+      "canonicalUrl": "https://algal.dev",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "valhalla": {
+      "id": "valhalla",
+      "name": "Valhalla",
+      "oneLiner": "peer-to-peer chatrooms for agents, with humans welcome",
+      "brandDescription": "Peer-to-peer chatrooms for agents, with humans welcome.",
+      "canonicalUrl": "https://vhalla.com",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "valhalla-album": {
+      "id": "valhalla-album",
+      "name": "VALHALLA (ALBUM)",
+      "oneLiner": "a draft of a new ambient electronic album",
+      "brandDescription": null,
+      "canonicalUrl": "https://hraness.com/valhalla",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "peopleblade": {
+      "id": "peopleblade",
+      "name": "PeopleBlade",
+      "oneLiner": "a local-first crm for your personal agent",
+      "brandDescription": "A local-first CRM for your personal agent.",
+      "canonicalUrl": "https://peopleblade.com",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "message-like-me": {
+      "id": "message-like-me",
+      "name": "Textbutler",
+      "oneLiner": "a digital butler for your messages",
+      "brandDescription": "A local-first CLI and Agent Skill for studying private messaging history and drafting messages that sound like you.",
+      "canonicalUrl": "https://textbutler.app",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "wrench": {
+      "id": "wrench",
+      "name": "GHOSTGET",
+      "oneLiner": "a fast web gateway with typed website capabilities for agents",
+      "brandDescription": null,
+      "canonicalUrl": "https://ghostget.com",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "soulscrape": {
+      "id": "soulscrape",
+      "name": "Soulscrape",
+      "oneLiner": "evidence-backed dossiers and revisable models of people",
+      "brandDescription": "evidence-backed working models of people",
+      "canonicalUrl": "https://soulscrape.com",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "slopcamera": {
+      "id": "slopcamera",
+      "name": "Slopcamera",
+      "oneLiner": "direct visual art, 3d scenes, animation, and video with your agent",
+      "brandDescription": "Slopcamera is a local visual studio for coding agents.",
+      "canonicalUrl": "https://slopcamera.com",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "soundfish": {
+      "id": "soundfish",
+      "name": "Soundfish",
+      "oneLiner": "share and program music as audio, midi, or both",
+      "brandDescription": "the content-addressable universe of music",
+      "canonicalUrl": "https://sound.fish",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "sys1": {
+      "id": "sys1",
+      "name": "SYS1",
+      "oneLiner": "typed decisions for agents through a local model router and jev-compatible gateway",
+      "brandDescription": "Typed decisions for agents through a local model router and Jev-compatible gateway.",
+      "canonicalUrl": "https://sys1.io",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "sloptrade": {
+      "id": "sloptrade",
+      "name": "Sloptrade",
+      "oneLiner": "autonomous trading system research and build specification",
+      "brandDescription": "Autonomous trading system research and build specification.",
+      "canonicalUrl": "https://sloptrade.com",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "hraness": {
+      "id": "hraness",
+      "name": "HRNSS",
+      "oneLiner": "tools for agents and humans",
+      "brandDescription": "Tools for agents and humans",
+      "canonicalUrl": "https://hraness.com",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": [
+        "HaRNeSS",
+        "HRANESS.COM"
+      ]
+    },
+    "sleepyland": {
+      "id": "sleepyland",
+      "name": "Sleepyland",
+      "oneLiner": "sleep research and a calming sound machine",
+      "brandDescription": "calming sound machine",
+      "canonicalUrl": "https://sleepy.land",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "roughday": {
+      "id": "roughday",
+      "name": "Rough Day",
+      "oneLiner": "news aggregator",
+      "brandDescription": "rough days happen",
+      "canonicalUrl": "https://rough.day",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "stripe-history": {
+      "id": "stripe-history",
+      "name": "STRIPE HISTORY",
+      "oneLiner": "history of a generational co",
+      "brandDescription": null,
+      "canonicalUrl": "https://hraness.com/stripe",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "eds-research": {
+      "id": "eds-research",
+      "name": "EDS RESEARCH",
+      "oneLiner": "eds evidence, stratified and sourced",
+      "brandDescription": null,
+      "canonicalUrl": "https://hraness.com/eds",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "act60": {
+      "id": "act60",
+      "name": "ACT60",
+      "oneLiner": "move to puerto rico",
+      "brandDescription": null,
+      "canonicalUrl": "https://act60.me",
+      "status": "active",
+      "copyStatus": null,
+      "aliases": []
+    },
+    "direct": {
+      "id": "direct",
+      "name": "DIRECT",
+      "oneLiner": "repeatable app states for browser agents",
+      "brandDescription": null,
+      "canonicalUrl": "https://hraness.com/direct",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "clankdar": {
+      "id": "clankdar",
+      "name": "Clankdar",
+      "oneLiner": "reproducible capability checks for agents",
+      "brandDescription": null,
+      "canonicalUrl": "https://clankdar.com",
+      "status": "active",
+      "copyStatus": "authored",
+      "aliases": []
+    },
+    "lifedaysleft": {
+      "id": "lifedaysleft",
+      "name": "LIFECHARTS",
+      "oneLiner": "personal life timeline maker",
+      "brandDescription": null,
+      "canonicalUrl": "https://lifecharts.io",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    },
+    "swft": {
+      "id": "swft",
+      "name": "SWFT",
+      "oneLiner": "software factories, in practice",
+      "brandDescription": "A practical guide to AI software factories for product and engineering leaders.",
+      "canonicalUrl": "https://swft.io",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": []
+    }
+  },
+  "relations": [
+    {
+      "id": "runtime:lifedaysleft:slopcamera:uses",
+      "source": "lifedaysleft",
+      "target": "slopcamera",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "uses",
+      "detail": null
+    },
+    {
+      "id": "development:roughday:direct:develops-with",
+      "source": "roughday",
+      "target": "direct",
+      "kind": "development",
+      "direction": "forward",
+      "label": "develops with",
+      "detail": null
+    },
+    {
+      "id": "delivery:stripe-history:hraness:published-at-stripe",
+      "source": "stripe-history",
+      "target": "hraness",
+      "kind": "delivery",
+      "direction": "forward",
+      "label": "published at /stripe",
+      "detail": "Hraness proxies the standalone Stripe History data application under its canonical /stripe route."
+    },
+    {
+      "id": "delivery:eds-research:hraness:published-at-eds",
+      "source": "eds-research",
+      "target": "hraness",
+      "kind": "delivery",
+      "direction": "forward",
+      "label": "published at /eds",
+      "detail": "Hraness proxies the standalone EDS research index under its canonical /eds route."
+    },
+    {
+      "id": "runtime:wrench:kb:ships-kb-workflows",
+      "source": "wrench",
+      "target": "kb",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "ships KB workflows",
+      "detail": null
+    },
+    {
+      "id": "contract:wrench:message-like-me:exports-private-bundles",
+      "source": "wrench",
+      "target": "message-like-me",
+      "kind": "contract",
+      "direction": "forward",
+      "label": "exports private bundles",
+      "detail": "Ghostget produces bounded multi-account Beeper bundles that Textbutler verifies and ingests locally."
+    },
+    {
+      "id": "runtime:peopleblade:wrench:provider-transport",
+      "source": "peopleblade",
+      "target": "wrench",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "provider transport",
+      "detail": "PeopleBlade uses Ghostget to read contacts and search results from connected accounts such as Beeper and WhatsApp, and checks each result before saving it locally."
+    },
+    {
+      "id": "contract:message-like-me:peopleblade:shared-bundle-format",
+      "source": "message-like-me",
+      "target": "peopleblade",
+      "kind": "contract",
+      "direction": "shared",
+      "label": "shared bundle format",
+      "detail": "Both tools implement the versioned message-like-me.local-message-bundle interchange without importing each other's private state."
+    },
+    {
+      "id": "runtime:gobstopper:xcb:compacts-sessions-for",
+      "source": "gobstopper",
+      "target": "xcb",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "compacts sessions for",
+      "detail": "xcb uses Gobstopper's elision policy to drop stale tool output from Claude Code and Codex prompts once context passes a threshold, and keeps the original output in local history. It is on by default."
+    },
+    {
+      "id": "contract:xcb:aicharts:exports-sessions-for",
+      "source": "xcb",
+      "target": "aicharts",
+      "kind": "contract",
+      "direction": "forward",
+      "label": "exports sessions for",
+      "detail": "xcb measures subscription usage locally and, when you turn on exports, writes session files in the AI Charts format. Automatic upload is not available."
+    },
+    {
+      "id": "contract:soulscrape:peopleblade:exports-dossier-packets",
+      "source": "soulscrape",
+      "target": "peopleblade",
+      "kind": "contract",
+      "direction": "forward",
+      "label": "exports dossier packets",
+      "detail": "Soulscrape exports dated dossier packets that PeopleBlade imports and rebinds to contacts during local merge review."
+    },
+    {
+      "id": "development:slopcamera:direct:develops-with",
+      "source": "slopcamera",
+      "target": "direct",
+      "kind": "development",
+      "direction": "forward",
+      "label": "develops with",
+      "detail": null
+    },
+    {
+      "id": "delivery:direct:hraness:readme-backed-direct",
+      "source": "direct",
+      "target": "hraness",
+      "kind": "delivery",
+      "direction": "forward",
+      "label": "README-backed /direct",
+      "detail": "Hraness renders the pinned public Direct README and Agent Skill at /direct."
+    },
+    {
+      "id": "development:soundfish:direct:develops-with",
+      "source": "soundfish",
+      "target": "direct",
+      "kind": "development",
+      "direction": "forward",
+      "label": "develops with",
+      "detail": null
+    }
+  ],
+  "digest": "sha256:87e824bc78a68dd862aeee804443a6120ac91889dbfa890d2d8b5126bb4b7834"
+}

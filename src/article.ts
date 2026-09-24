@@ -185,6 +185,16 @@ const REVIEWER_SUFFIXES = {
 
 /** The word the provenance sentence reserves for human-editor reviews. */
 const HUMAN_WORD = /human/iu;
+/**
+ * An AI reviewer's name must tell the reader it is AI, because the sentence
+ * adds no suffix for it: "AI", "LLM", "model", or a model family name.
+ */
+const AI_WORD = /\b(?:ai|llm|model|claude|gpt|gemini|codex)\b/iu;
+
+/** True when an AI reviewer's name says it is AI. */
+export function articleReviewerNameDisclosesAi(reviewer: string): boolean {
+  return AI_WORD.test(reviewer);
+}
 
 function isOneOf<const T extends readonly string[]>(values: T, value: unknown): value is T[number] {
   return typeof value === "string" && (values as readonly string[]).includes(value);
@@ -208,6 +218,9 @@ export function articleProvenanceSentence(provenance: ArticleProvenanceRecord): 
   if (!nonBlank(review.reviewer)) throw new RangeError("An article review must name its reviewer.");
   if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(review.reviewer)) {
     throw new RangeError("Only a human-editor review may use the word \"human\" in its reviewer name.");
+  }
+  if (review.reviewerType === "ai" && !AI_WORD.test(review.reviewer)) {
+    throw new RangeError("An AI review must name a reviewer that says it is AI, for example \"Claude Opus 5.5 (claude-opus-5-5) editorial review\".");
   }
   const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
@@ -385,6 +398,9 @@ function parseReview(issues: Issues, where: string, value: unknown, field: strin
   if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(reviewer)) {
     issues.push(`${where}: ${field}.reviewer may use the word "human" only when reviewerType is human-editor.`);
   }
+  if (review.reviewerType === "ai" && !AI_WORD.test(reviewer)) {
+    issues.push(`${where}: ${field}.reviewer must say it is AI when reviewerType is ai, for example by naming the model.`);
+  }
   return { reviewer, reviewerType: review.reviewerType, reviewedOn };
 }
 
@@ -528,6 +544,7 @@ function admissionRuleIssues(admission: ArticleAdmission): string[] {
       );
     }
     if (review === null) issues.push(`${where}: indexable articles need a review with reviewer, reviewerType, and reviewedOn.`);
+    else if (review.reviewerType === "author") issues.push(`${where}: indexable articles need an independent review; the author cannot admit their own post.`);
     if (admission.sources.length === 0) issues.push(`${where}: indexable articles need at least one source with a check date.`);
     if (admission.observations.length < 2) issues.push(`${where}: indexable articles need two observations that are not paraphrases of the sources.`);
     if (admission.refreshTriggers.length === 0) issues.push(`${where}: indexable articles need at least one refresh trigger.`);

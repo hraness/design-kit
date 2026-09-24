@@ -9,6 +9,7 @@ import {
   articleDaysBetween,
   articleDraftingKinds,
   articleProvenanceSentence,
+  articleReviewerNameDisclosesAi,
   articleReviewerTypes,
   articleScoreKeys,
   assertArticleAdmissions,
@@ -94,6 +95,10 @@ test("provenance never says human unless a human editor reviewed", () => {
     (drafting, reviewerType, reviewer) => {
       if (reviewerType !== "human-editor" && /human/iu.test(reviewer)) {
         expect(() => articleProvenanceSentence({ drafting, review: { reviewer, reviewerType } })).toThrow(RangeError);
+        return;
+      }
+      if (reviewerType === "ai" && !articleReviewerNameDisclosesAi(reviewer)) {
+        expect(() => articleProvenanceSentence({ drafting, review: { reviewer, reviewerType } })).toThrow(/says it is AI/u);
         return;
       }
       const sentence = articleProvenanceSentence({ drafting, review: { reviewer, reviewerType } });

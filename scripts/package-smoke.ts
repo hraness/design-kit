@@ -1203,15 +1203,35 @@ try {
     "-e",
     "const [, , , syntax] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')]); const output = syntax.highlightCode('const answer = 42;', 'typescript', { styles: 'classes' }); if (output.html.includes('style=') || !output.html.includes('sh__token--keyword')) throw new Error('Packed class-only syntax is unavailable');",
   ], neutralConsumer);
+  await run([
+    "node",
+    "--input-type=module",
+    "-e",
+    [
+      "import { readFile } from 'node:fs/promises';",
+      "import { createRequire } from 'node:module';",
+      "const portfolio = await import('@hraness/design-kit/portfolio');",
+      "const json = JSON.parse(await readFile(createRequire(import.meta.url).resolve('@hraness/design-kit/portfolio.json'), 'utf8'));",
+      "if (json.digest !== portfolio.portfolioDigest || JSON.stringify(json) !== JSON.stringify(portfolio.portfolioFacts)) throw new Error('Packed portfolio JSON and module disagree.');",
+      "const [first] = portfolio.portfolioProductIds;",
+      "if (portfolio.product(first).id !== first || !Array.isArray(portfolio.relatedFor(first)) || !Array.isArray(portfolio.usesPairs()) || !Object.isFrozen(portfolio.portfolioFacts)) throw new Error('Packed portfolio helpers are unavailable.');",
+      "if (!/^[0-9a-f]{40}$/u.test(portfolio.portfolioProvenance.commit)) throw new Error('Packed portfolio provenance lost its commit.');",
+    ].join(" "),
+  ], neutralConsumer);
   await writeFile(
     join(neutralConsumer, "index.ts"),
     [
       'import * as core from "@hraness/design-kit";',
       'import { nebulaSansSocialFonts } from "@hraness/design-kit/fonts/nebula-sans/social";',
       'import * as syntax from "@hraness/design-kit/syntax-highlighting";',
+      'import { product, relatedFor, usesPairs, type PortfolioProductId, type PortfolioRelatedItem } from "@hraness/design-kit/portfolio";',
       'const styles: syntax.HighlightCodeOptions = { styles: "classes" };',
       'syntax.highlightCode("const answer = 42;", "typescript", styles);',
-      "void [core, nebulaSansSocialFonts, syntax];",
+      'const firstProduct: PortfolioProductId = "sponge";',
+      'const related: readonly PortfolioRelatedItem[] = relatedFor(firstProduct);',
+      '// @ts-expect-error Portfolio ids are a closed union.',
+      'product("not-a-product");',
+      "void [core, nebulaSansSocialFonts, syntax, related, usesPairs(), product(firstProduct).name];",
       "",
     ].join("\n"),
   );

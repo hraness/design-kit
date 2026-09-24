@@ -80,6 +80,11 @@
     "./marketing-assets/*": "./src/marketing-assets/*",
     "./palette-system.css": "./src/palette-system.css",
     "./palette-bridge.css": "./src/palette-bridge.css",
+    "./portfolio": {
+      "types": "./src/portfolio.ts",
+      "import": "./dist/portfolio.js"
+    },
+    "./portfolio.json": "./src/portfolio.generated.json",
     "./react/hero-backdrop": {
       "types": "./src/react/hero-backdrop.tsx",
       "import": "./dist/react/hero-backdrop.js"
@@ -114,6 +119,9 @@
     "src/index.ts",
     "src/plain-publication.css",
     "src/plain-site.css",
+    "src/portfolio.generated.json",
+    "src/portfolio.generated.ts",
+    "src/portfolio.ts",
     "src/product-marketing-foundation.css",
     "src/product-marketing.css",
     "src/react/animated-rail-stage.stylex.ts",
@@ -230,6 +238,8 @@
     "check": "bun run lint && bun run typecheck && bun run build && bun run check:stylex-artifacts && bun run check:stylex-determinism && bun run test:package && bun run test && bun run test:browser",
     "prepack": "bun run check",
     "prepublishOnly": "bun run check:publication-ready",
+    "sync:portfolio": "bun run ./scripts/sync-portfolio-facts.ts --write",
+    "check:portfolio": "bun run ./scripts/sync-portfolio-facts.ts",
     "generate:palettes": "bun run ./scripts/generate-palettes.ts --write",
     "check:palettes": "bun run ./scripts/generate-palettes.ts",
     "test:palettes": "bun run build && bun run ./scripts/palette-browser.ts",

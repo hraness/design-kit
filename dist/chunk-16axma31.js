@@ -83,6 +83,10 @@ var REVIEWER_SUFFIXES = {
   "subject-expert": ", a subject expert"
 };
 var HUMAN_WORD = /human/iu;
+var AI_WORD = /\b(?:ai|llm|model|claude|gpt|gemini|codex)\b/iu;
+function articleReviewerNameDisclosesAi(reviewer) {
+  return AI_WORD.test(reviewer);
+}
 function isOneOf(values, value) {
   return typeof value === "string" && values.includes(value);
 }
@@ -104,6 +108,9 @@ function articleProvenanceSentence(provenance) {
     throw new RangeError("An article review must name its reviewer.");
   if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(review.reviewer)) {
     throw new RangeError('Only a human-editor review may use the word "human" in its reviewer name.');
+  }
+  if (review.reviewerType === "ai" && !AI_WORD.test(review.reviewer)) {
+    throw new RangeError('An AI review must name a reviewer that says it is AI, for example "Claude Opus 5.5 (claude-opus-5-5) editorial review".');
   }
   const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
@@ -189,6 +196,9 @@ function parseReview(issues, where, value, field) {
     return null;
   if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(reviewer)) {
     issues.push(`${where}: ${field}.reviewer may use the word "human" only when reviewerType is human-editor.`);
+  }
+  if (review.reviewerType === "ai" && !AI_WORD.test(reviewer)) {
+    issues.push(`${where}: ${field}.reviewer must say it is AI when reviewerType is ai, for example by naming the model.`);
   }
   return {
     reviewer,
@@ -328,6 +338,8 @@ function admissionRuleIssues(admission) {
     }
     if (review === null)
       issues.push(`${where}: indexable articles need a review with reviewer, reviewerType, and reviewedOn.`);
+    else if (review.reviewerType === "author")
+      issues.push(`${where}: indexable articles need an independent review; the author cannot admit their own post.`);
     if (admission.sources.length === 0)
       issues.push(`${where}: indexable articles need at least one source with a check date.`);
     if (admission.observations.length < 2)
@@ -359,4 +371,4 @@ function parseArticleAdmissions(value) {
   return value;
 }
 
-export { isArticleIsoDate, articleDaysBetween, formatArticleDate, assertArticleDates, assertArticleHref, articleCalloutTones, assertArticleCalloutTone, ARTICLE_BYLINE_PREFIX, ARTICLE_TOC_LABEL, ARTICLE_SOURCES_HEADING, assertArticleAuthor, articleReviewerTypes, articleDraftingKinds, articleProvenanceSentence, articleScoreKeys, ARTICLE_ADMISSION_MINIMUM, ARTICLE_REASSESS_WINDOW, articleLifecycles, articleAdmissionScore, articleAdmissionPasses, isArticleIndexable, articleProvenanceFromAdmission, articleAdmissionsDue, ArticleAdmissionError, assertArticleAdmissions, parseArticleAdmissions };
+export { isArticleIsoDate, articleDaysBetween, formatArticleDate, assertArticleDates, assertArticleHref, articleCalloutTones, assertArticleCalloutTone, ARTICLE_BYLINE_PREFIX, ARTICLE_TOC_LABEL, ARTICLE_SOURCES_HEADING, assertArticleAuthor, articleReviewerTypes, articleDraftingKinds, articleReviewerNameDisclosesAi, articleProvenanceSentence, articleScoreKeys, ARTICLE_ADMISSION_MINIMUM, ARTICLE_REASSESS_WINDOW, articleLifecycles, articleAdmissionScore, articleAdmissionPasses, isArticleIndexable, articleProvenanceFromAdmission, articleAdmissionsDue, ArticleAdmissionError, assertArticleAdmissions, parseArticleAdmissions };

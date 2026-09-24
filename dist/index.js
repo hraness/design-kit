@@ -46,7 +46,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-3stf6113.js";
+} from "./chunk-xa6m15dm.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,
@@ -63,6 +63,7 @@ import {
   articleLifecycles,
   articleProvenanceFromAdmission,
   articleProvenanceSentence,
+  articleReviewerNameDisclosesAi,
   articleReviewerTypes,
   articleScoreKeys,
   assertArticleAdmissions,
@@ -74,7 +75,7 @@ import {
   isArticleIndexable,
   isArticleIsoDate,
   parseArticleAdmissions
-} from "./chunk-bn00zwqx.js";
+} from "./chunk-16axma31.js";
 import {
   highlightCode,
   inferSyntaxLanguage,
@@ -147,6 +148,7 @@ export {
   assertArticleAdmissions,
   articleScoreKeys,
   articleReviewerTypes,
+  articleReviewerNameDisclosesAi,
   articleProvenanceSentence,
   articleProvenanceFromAdmission,
   articleLifecycles,

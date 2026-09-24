@@ -102,7 +102,7 @@ Every article URL has an `ArticleAdmission` record in its host's registry, check
 
 - A new post starts `quarantined`: readable, `noindex`, and absent from the sitemap, feeds, `llms.txt`, and index lists.
 - It becomes `indexable` only when the record passes: six scores of 0 to 2 totalling at least 9 with no zero, a review with reviewer and `reviewerType`, at least one source with a check date, two observations that are not paraphrases of the sources, and at least one refresh trigger.
-- An independent, disclosed AI review can admit a post. Record it as `reviewerType: "ai"`.
+- An independent, disclosed AI review can admit a post. Record it as `reviewerType: "ai"`. The validator rejects an AI reviewer name that does not say it is AI (for example by naming the model), and it rejects `reviewerType: "author"` for an indexable post, because the author cannot admit their own post.
 - `archived` keeps an old URL working without listing it.
 
 ## Freshness

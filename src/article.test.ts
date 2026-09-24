@@ -129,8 +129,8 @@ describe("provenance", () => {
 
   test("names each reviewer type and says human only for a human editor", () => {
     for (const reviewerType of articleReviewerTypes) {
-      const sentence = articleProvenanceSentence({ drafting: "ai", review: { reviewer: "Reviewer.", reviewerType } });
-      expect(sentence.startsWith("Drafted with AI and reviewed by Reviewer")).toBe(true);
+      const sentence = articleProvenanceSentence({ drafting: "ai", review: { reviewer: "Model Reviewer.", reviewerType } });
+      expect(sentence.startsWith("Drafted with AI and reviewed by Model Reviewer")).toBe(true);
       expect(sentence.endsWith(".")).toBe(true);
       expect(sentence).not.toContain("..");
       expect(/human/iu.test(sentence)).toBe(reviewerType === "human-editor");
@@ -150,6 +150,23 @@ describe("provenance", () => {
     expect(() => articleProvenanceSentence({ drafting: "ghost" as "ai", review: null })).toThrow(RangeError);
     expect(() => articleProvenanceSentence({ drafting: "ai", review: { reviewer: "X", reviewerType: "robot" as "ai" } })).toThrow(RangeError);
     expect(() => articleProvenanceSentence({ drafting: "ai", review: { reviewer: "  ", reviewerType: "ai" } })).toThrow(/name/u);
+  });
+
+  test("an AI reviewer's name must say it is AI", () => {
+    for (const reviewer of ["Editorial team", "Sam", "Aide", "Remodel desk"]) {
+      expect(() => articleProvenanceSentence({ drafting: "ai", review: { reviewer, reviewerType: "ai" } })).toThrow(/says it is AI/u);
+    }
+    for (const reviewer of ["Claude Opus 5.5 (claude-opus-5-5) editorial review", "An AI editor", "GPT-6 review", "LLM check", "Gemini review", "Codex review", "model review"]) {
+      expect(articleProvenanceSentence({ drafting: "ai", review: { reviewer, reviewerType: "ai" } })).toContain(reviewer);
+    }
+    expect(issuesOf([admission({ review: { reviewer: "Editorial team", reviewerType: "ai", reviewedOn: "2026-09-23" } })])[0])
+      .toContain("must say it is AI");
+  });
+
+  test("the author cannot admit their own post", () => {
+    expect(issuesOf([admission({ review: { reviewer: "Sam", reviewerType: "author", reviewedOn: "2026-09-23" } })]))
+      .toEqual([expect.stringContaining("independent review")]);
+    expect(issuesOf([admission({ lifecycle: "quarantined", review: { reviewer: "Sam", reviewerType: "author", reviewedOn: "2026-09-23" } })])).toEqual([]);
   });
 
   test("a reviewer name cannot smuggle the word human past a non-human reviewer type", () => {

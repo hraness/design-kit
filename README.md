@@ -280,6 +280,25 @@ assertArticleAdmissions(registry);
 
 A record passes when its six 0 to 2 scores total at least 9 with no zero. An `indexable` record also needs a review with a reviewer type, dated sources, two observations, and a refresh trigger, and every reviewed record needs `reassessOn` 28 to 56 days after the review. The provenance sentence says "human" only for a human editor's review.
 
+### Share product facts
+
+`@hraness/design-kit/portfolio` holds the public facts about Hraness products: each product's name, one-liner, canonical URL, status, and other names, plus the registered relations between products. It is a snapshot generated from one commit of the portfolio registry, recorded in `portfolioProvenance`, and it renders nothing.
+
+```tsx
+import { ArticleRelatedProducts } from "@hraness/design-kit/react/server";
+import { product, relatedFor, usesPairs } from "@hraness/design-kit/portfolio";
+
+const textbutler = product("message-like-me");
+
+<ArticleRelatedProducts headingId="related" items={relatedFor("message-like-me")} />;
+
+for (const { relation, source, target } of usesPairs()) {
+  console.log(source.name, relation.label, target.name, relation.detail);
+}
+```
+
+`relatedFor(id)` returns one card per related product, and only for relations with a written detail sentence, which becomes the card text. `usesPairs()` lists the integration relations that have one. Static sites read the same data from `@hraness/design-kit/portfolio.json`. Pin `portfolioDigest` in a test so an upgrade that changes the facts shows up in review.
+
 ## Use application compositions
 
 ```tsx
