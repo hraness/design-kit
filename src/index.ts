@@ -3,6 +3,8 @@ export * from "./palette-appearance.js";
 export * from "./palette-themes.js";
 export * from "./syntax-highlighting.js";
 export * from "./appearance.js";
+export * from "./article.js";
+export * from "./article-html.js";
 
 export const colors = {
   light: {

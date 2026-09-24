@@ -16,7 +16,7 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   resolveDesignPalettePreference
-} from "../chunk-spvbmw4r.js";
+} from "../chunk-9rb5jf41.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -26,10 +26,17 @@ import {
   HeroBackdrop
 } from "../chunk-es5ebwpj.js";
 import {
+  ArticleByline,
+  ArticleCallout,
+  ArticleIndex,
+  ArticleProvenance,
+  ArticleRelatedProducts,
+  ArticleSources,
   BottomBar,
   DitherSurface,
   DockedFooter,
   FoilMark,
+  MarketingArticle,
   MarketingCallToAction,
   MarketingCard,
   MarketingCardArt,
@@ -75,7 +82,8 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-3kb6af5y.js";
+} from "../chunk-4drbgh9s.js";
+import"../chunk-4gv94thr.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -3419,6 +3427,9 @@ var designGallerySections = [{
   id: "marketing",
   label: "Marketing"
 }, {
+  id: "articles",
+  label: "Articles"
+}, {
   id: "shells",
   label: "Shells"
 }, {
@@ -3432,7 +3443,7 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
 function resolveGalleryTheme(theme, prefersDark) {
   return theme === "system" ? prefersDark ? "dark" : "light" : theme;
 }
@@ -4223,6 +4234,154 @@ function DesignSystemGallery({
                 name: "Relay"
               })
             ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs12("section", {
+        className: "design-gallery__section",
+        id: "articles",
+        children: [
+          /* @__PURE__ */ jsx14("h2", {
+            children: "Article layer"
+          }),
+          /* @__PURE__ */ jsxs12(MarketingArticle, {
+            after: /* @__PURE__ */ jsx14(ArticleSources, {
+              headingId: "gallery-article-sources",
+              sources: [{
+                checkedOn: "2026-09-20",
+                href: "#articles",
+                publisher: "Relay",
+                title: "Relay 2.4 release notes"
+              }]
+            }),
+            author: {
+              kind: "organization",
+              name: "Relay"
+            },
+            dek: "Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed.",
+            eyebrow: "Technique",
+            heading: "Replaying webhooks without breaking signatures",
+            headingId: "gallery-article-title",
+            provenance: {
+              drafting: "ai-from-source",
+              review: {
+                reviewer: "an independent AI editorial review",
+                reviewerType: "ai"
+              }
+            },
+            published: "2026-09-10",
+            toc: [{
+              href: "#gallery-article-problem",
+              label: "The problem"
+            }, {
+              href: "#gallery-article-approach",
+              label: "The approach"
+            }],
+            updated: "2026-09-20",
+            children: [
+              /* @__PURE__ */ jsx14("h2", {
+                id: "gallery-article-problem",
+                children: "The problem"
+              }),
+              /* @__PURE__ */ jsx14("p", {
+                children: "A provider signs the exact request body. Parsing the JSON and serializing it again changes whitespace and key order, and the signature check then fails on every retry."
+              }),
+              /* @__PURE__ */ jsx14(ArticleCallout, {
+                label: "Limit",
+                tone: "limit",
+                children: "This applies to providers that sign the raw body. Header-only schemes need no stored copy."
+              }),
+              /* @__PURE__ */ jsx14("h2", {
+                id: "gallery-article-approach",
+                children: "The approach"
+              }),
+              /* @__PURE__ */ jsx14("p", {
+                children: "Store the body as bytes next to the parsed event, and send those bytes on replay."
+              }),
+              /* @__PURE__ */ jsx14("pre", {
+                children: /* @__PURE__ */ jsx14("code", {
+                  children: "await replay(event.id, { body: stored.raw });"
+                })
+              }),
+              /* @__PURE__ */ jsxs12("figure", {
+                children: [
+                  /* @__PURE__ */ jsxs12("table", {
+                    children: [
+                      /* @__PURE__ */ jsx14("thead", {
+                        children: /* @__PURE__ */ jsxs12("tr", {
+                          children: [
+                            /* @__PURE__ */ jsx14("th", {
+                              scope: "col",
+                              children: "Step"
+                            }),
+                            /* @__PURE__ */ jsx14("th", {
+                              scope: "col",
+                              children: "Stored"
+                            }),
+                            /* @__PURE__ */ jsx14("th", {
+                              scope: "col",
+                              children: "Sent on replay"
+                            })
+                          ]
+                        })
+                      }),
+                      /* @__PURE__ */ jsxs12("tbody", {
+                        children: [
+                          /* @__PURE__ */ jsxs12("tr", {
+                            children: [
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "Receive"
+                              }),
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "Raw body and headers"
+                              }),
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "Nothing"
+                              })
+                            ]
+                          }),
+                          /* @__PURE__ */ jsxs12("tr", {
+                            children: [
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "Retry"
+                              }),
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "Attempt count"
+                              }),
+                              /* @__PURE__ */ jsx14("td", {
+                                children: "The stored raw body"
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx14("figcaption", {
+                    children: "What Relay keeps for each delivery, and what a replay sends."
+                  })
+                ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx14(ArticleIndex, {
+            heading: "Recent writing",
+            headingId: "gallery-article-index",
+            headingLevel: 3,
+            items: [{
+              dek: "Relay replays a failed webhook from the stored request body.",
+              eyebrow: "Technique",
+              href: "#gallery-article-title",
+              published: "2026-09-10",
+              title: "Replaying webhooks without breaking signatures",
+              updated: "2026-09-20"
+            }, {
+              dek: "Relay 2.4 adds per-endpoint retry limits.",
+              eyebrow: "Release",
+              href: "#articles",
+              published: "2026-09-02",
+              title: "Introducing Relay 2.4"
+            }]
           })
         ]
       }),
@@ -5651,6 +5810,7 @@ export {
   MarketingCardArt,
   MarketingCard,
   MarketingCallToAction,
+  MarketingArticle,
   LanternMaterialGallery,
   HeroBackdrop,
   HAPTIC_FEEDBACK_EVENT_NAME,
@@ -5671,6 +5831,12 @@ export {
   BottomBar,
   BarListChart,
   AuroraDotsBackground,
+  ArticleSources,
+  ArticleRelatedProducts,
+  ArticleProvenance,
+  ArticleIndex,
+  ArticleCallout,
+  ArticleByline,
   AppShell,
   AnimatedRailStage
 };

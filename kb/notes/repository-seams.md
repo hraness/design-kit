@@ -32,6 +32,8 @@ Compiler identity includes the property-validation policy. Design Kit v0.6.3 pai
 
 Forced-color overrides depend on the serialized theme selectors. The pinned StyleX serializer repeats each theme class, so its root selector has the same specificity as the original `:root.hraness-palette[data-theme]` bridge selector. Loading the finalized union after the foundation then lets palette colors replace the operating system's colors. Repeating the stable palette marker in the forced-color boundary gives that boundary higher specificity for both document roots and palette islands. Browser regression coverage must preserve the real foundation-before-union order; inspecting raw manifest selectors alone misses the serializer's added specificity.
 
+Product facts are the one data exception to product neutrality. The reserved `./portfolio` subpath will carry generated public portfolio facts for article and marketing consumers, with no product-specific components; [[plans/article-layer-and-portfolio-subpath|the article layer plan]] records its design.
+
 ## Related
 
 The normative rules remain in the root `AGENTS.md`. [[documentation-ownership|Documentation ownership]] explains how those rules relate to executable contracts and this pull-based context.

@@ -11,7 +11,7 @@ Pin a GitHub release tag:
 ```json
 {
   "dependencies": {
-    "@hraness/design-kit": "github:hraness/design-kit#v0.16.2",
+    "@hraness/design-kit": "github:hraness/design-kit#v0.17.0",
     "@hraness/ui": "github:hraness/ui#v0.5.17"
   }
 }
@@ -243,6 +243,43 @@ analytics runtime. A
 product may enhance a command with its own accessible copy control while
 keeping selectable text as the fallback.
 
+## Publish articles
+
+The article layer renders long-form posts with a title, a one-sentence dek, a byline, published and updated dates, a visible drafting and review note, an optional contents list, sources, and related products. React and static sites get identical markup, styled by `plain-publication.css` (included in `styles.css`). The body keeps a 68ch measure, and the contents list moves beside it on wide screens. [`ARTICLE_COPY.md`](ARTICLE_COPY.md) gives the article shapes and the rules for provenance, freshness, and links.
+
+```tsx
+import {
+  ArticleSources,
+  MarketingArticle,
+} from "@hraness/design-kit/react/server";
+import { articleProvenanceFromAdmission } from "@hraness/design-kit";
+
+<MarketingArticle
+  author={{ kind: "organization", name: "Hraness" }}
+  dek="Relay replays a failed webhook from the stored request body."
+  eyebrow="Technique"
+  heading="Replaying webhooks without breaking signatures"
+  provenance={articleProvenanceFromAdmission(admission)}
+  published="2026-09-10"
+  toc={[{ href: "#approach", label: "The approach" }]}
+  after={<ArticleSources sources={sources} />}
+>
+  {body}
+</MarketingArticle>
+```
+
+`ArticleIndex` lists posts, `ArticleCallout` marks a note, limit, or warning, and `ArticleRelatedProducts` wraps `MarketingRelated`. Static site builders import `renderArticleHtml`, `renderArticleIndexHtml`, `renderArticleSourcesHtml`, `renderArticleCalloutHtml`, and `renderArticleRelatedHtml` from the framework-neutral root and load `@hraness/design-kit/plain-publication.css` after `plain-site.css`. Text arguments are escaped; `bodyHtml` and `afterHtml` take HTML the site already rendered.
+
+Each host keeps an `ArticleAdmission` record per article and checks the registry in a test:
+
+```ts
+import { assertArticleAdmissions } from "@hraness/design-kit";
+
+assertArticleAdmissions(registry);
+```
+
+A record passes when its six 0 to 2 scores total at least 9 with no zero. An `indexable` record also needs a review with a reviewer type, dated sources, two observations, and a refresh trigger, and every reviewed record needs `reassessOn` 28 to 56 days after the review. The provenance sentence says "human" only for a human editor's review.
+
 ## Use application compositions
 
 ```tsx
@@ -464,7 +501,7 @@ bun install --frozen-lockfile
 bun run check
 ```
 
-The stable dependency pair for this release is `@hraness/ui` `v0.5.17` with `@hraness/design-kit` `v0.16.2`. Version 0.16.2 preserves palette hues in translucent headers, material surfaces, and decorative highlights. Version 0.16.1 keeps plain reading pages and nested compiled surfaces in their selected palette, including system appearance without JavaScript. Version 0.16.0 adds a shared bounded hero light, product-owned backdrop slots, five Lantern patterns, palette-derived soft surfaces, and responsive typography across marketing and reading layouts. Static sites can use the palette bridge for system appearance before JavaScript. See [HERO_FIELDS.md](HERO_FIELDS.md), [LANTERN_MATERIAL.md](LANTERN_MATERIAL.md), and [MARKETING_PRESET.md](MARKETING_PRESET.md). Version 0.15.0 lets `MarketingRelated` present labeled tiers of sibling products: a `groups` collection renders each tier under its own heading with an accessible card-row label, while the flat `items` shape stays available for a single group. Version 0.14.0 adds `MarketingRelated`, a collection section that presents sibling products as linked cards, each framed by its relationship to the featured product. Version 0.13.0 publishes `--hraness-sticky-offset` from sticky marketing chrome, gives `MarketingMain` and the next sticky sibling a clearance contract, stretches marketing card rows to the tallest item with a reserved two-line meta block, and clips per-card art wells so a logo surface cannot paint through the gutter. Version 0.12.0 replaces pointer-driven gradient rotation with a steady material and a moving light: the spectrum and its 115deg direction stay fixed while `--hraness-foil-x`/`--hraness-foil-y` highlights travel across each lockup, and marketing footers can opt into the same icon-plus-wordmark foil as the site header with `brandMark`. Version 0.11.1 preserves visible metallic marks when another package repeats a generic hidden atom in a later CSS layer. React consumers load `components.css` or `styles.css`; the raw marketing entry supports authored HTML hooks. Version 0.11 adds server-rendered `FoilMark` artwork and metallic text with subtle rainbow reflections, including a shared header mark seam and original-artwork fallbacks. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
+The stable dependency pair for this release is `@hraness/ui` `v0.5.17` with `@hraness/design-kit` `v0.17.0`. Version 0.17.0 adds the article layer: server-safe `MarketingArticle`, byline, provenance, sources, callout, related-product, and index components, a matching static HTML renderer for sites without React, long-form article styles in `plain-publication.css`, and the `ArticleAdmission` rubric with `assertArticleAdmissions()`. See [ARTICLE_COPY.md](ARTICLE_COPY.md). Version 0.16.2 preserves palette hues in translucent headers, material surfaces, and decorative highlights. Version 0.16.1 keeps plain reading pages and nested compiled surfaces in their selected palette, including system appearance without JavaScript. Version 0.16.0 adds a shared bounded hero light, product-owned backdrop slots, five Lantern patterns, palette-derived soft surfaces, and responsive typography across marketing and reading layouts. Static sites can use the palette bridge for system appearance before JavaScript. See [HERO_FIELDS.md](HERO_FIELDS.md), [LANTERN_MATERIAL.md](LANTERN_MATERIAL.md), and [MARKETING_PRESET.md](MARKETING_PRESET.md). Version 0.15.0 lets `MarketingRelated` present labeled tiers of sibling products: a `groups` collection renders each tier under its own heading with an accessible card-row label, while the flat `items` shape stays available for a single group. Version 0.14.0 adds `MarketingRelated`, a collection section that presents sibling products as linked cards, each framed by its relationship to the featured product. Version 0.13.0 publishes `--hraness-sticky-offset` from sticky marketing chrome, gives `MarketingMain` and the next sticky sibling a clearance contract, stretches marketing card rows to the tallest item with a reserved two-line meta block, and clips per-card art wells so a logo surface cannot paint through the gutter. Version 0.12.0 replaces pointer-driven gradient rotation with a steady material and a moving light: the spectrum and its 115deg direction stay fixed while `--hraness-foil-x`/`--hraness-foil-y` highlights travel across each lockup, and marketing footers can opt into the same icon-plus-wordmark foil as the site header with `brandMark`. Version 0.11.1 preserves visible metallic marks when another package repeats a generic hidden atom in a later CSS layer. React consumers load `components.css` or `styles.css`; the raw marketing entry supports authored HTML hooks. Version 0.11 adds server-rendered `FoilMark` artwork and metallic text with subtle rainbow reflections, including a shared header mark seam and original-artwork fallbacks. Version 0.10.1 adds conservative server syntax defaults, includes their styles in the narrow marketing entry, and pins the icon dependency to preserve fresh Linux installs. Version 0.10 adds the shared foil contract: `.hraness-foil` surfaces and `.hraness-foil-text` wordmarks render a pointer-following metallic spectrum from the `--hraness-foil-*` custom properties, applied by default to marketing header brands and primary actions. The `attachFoil` browser export drives the bounded `x`/`y`/`angle` inputs with damped easing, reduced-motion and forced-color fallbacks, and no style injection; the same spectrum feeds `@hraness/site-footer` signup controls. Dark appearances use a deeper palette so the sheen stays visible. Version 0.8 removes Jelly's optional API, stylesheet, vendor runtime and theme-provider side effect. Migrate direct Jelly surfaces to native shared primitives before upgrading. Lantern now uses softer directional depth and shaded faces; the marketing preset adds individually shaded static cells, theme-aware terminal colors and window chrome. Code blocks retain source lines and follow the active palette. Paper preferences, semantic palettes, and compiler identity stay stable. Compiler adopters must regenerate their finalized stylesheet with the new package manifest.
 
 The complete check runs linting, typechecking, production builds, an installed-package smoke test, deterministic examples, property tests, server rendering, vendor-integrity checks, and headless Chromium regressions. The browser gate verifies responsive shell ownership, extracted AnimatedRailStage, Fader, layout-surface, and playback-transport delivery, reduced-motion stage fallback, Fader keyboard and focus behavior, forced-color behavior, keyboard-operable appearance, browser-chrome synchronization across opposing device and saved preferences, global-error static metadata and runtime lifecycle, accessible title and copy, deterministic procedural layers, viewport containment, and the absence of the excluded canvas effect. Set `CHROMIUM_EXECUTABLE_PATH` when Chromium or Chrome is installed outside the standard macOS and Linux paths.
 
