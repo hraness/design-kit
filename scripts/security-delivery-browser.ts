@@ -355,7 +355,7 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/--hraness-design-dither-size:\s*3px/u, "fine density variable"],
   [/--hraness-design-dither-size:\s*7px/u, "coarse density variable"],
   [
-    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
+    /background-image:\s*radial-gradient\(color-mix\(in srgb,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
     "radial texture",
   ],
   [

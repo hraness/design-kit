@@ -421,7 +421,7 @@ function requireCompilerComponentsContract(source: string): void {
     "The shared visually-hidden utility must retain its exact accessibility declarations");
   const selector = '.hraness-design-top-bar[data-surface="glass"]';
   const opaque = "--hraness-design-top-bar-background:var(--background);--hraness-design-top-bar-backdrop:none;";
-  const glass = "--hraness-design-top-bar-background:color-mix(inoklch,var(--background)90%,transparent);--hraness-design-top-bar-backdrop:blur(18px)saturate(1.08);";
+  const glass = "--hraness-design-top-bar-background:color-mix(insrgb,var(--background)90%,transparent);--hraness-design-top-bar-backdrop:blur(18px)saturate(1.08);";
   const tokenRule = (text: string, values: string) => {
     assert.equal(text.slice(0, text.indexOf("{")).trim(), selector, "Only glass TopBar owns these media tokens");
     assert.equal(text.slice(text.indexOf("{") + 1, -1).replace(/\s+/gu, ""), values, "Header media rules may contain only the reviewed paint tokens");
@@ -1602,8 +1602,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.16.1" },
-  "StyleX manifest must describe design-kit v0.16.1",
+  { name: "@hraness/design-kit", version: "0.16.2" },
+  "StyleX manifest must describe design-kit v0.16.2",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1779,7 +1779,7 @@ const ditherDeclarations: readonly (readonly [RegExp, string])[] = [
     "literal fine and coarse density variables in the manifest-derived priority1 bucket",
   ],
   [
-    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\);/u,
+    /background-image:\s*radial-gradient\(color-mix\(in srgb,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\);/u,
     "radial texture",
   ],
   [

@@ -10,7 +10,7 @@ export const ditherSurfaceStyles = stylex.create({
   texture: {
     backgroundImage: {
       default:
-        "radial-gradient(color-mix(in oklch, currentColor 18%, transparent) 0.75px, transparent 0.75px)",
+        "radial-gradient(color-mix(in srgb, currentColor 18%, transparent) 0.75px, transparent 0.75px)",
       "@media (forced-colors: active)": "none",
     },
     backgroundSize:

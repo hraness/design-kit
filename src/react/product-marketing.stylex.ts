@@ -29,7 +29,7 @@ const foilStops = {
   },
 };
 
-const foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in oklch, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
+const foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in srgb, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
 const foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(115deg, var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6))";
 const foilSurfaceClip = "padding-box, border-box, border-box, border-box";
 const foilHalo = "0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent)";
@@ -439,7 +439,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "Canvas"
     },
     "background-image": {
-      "default": "linear-gradient(color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), none",
+      "default": "linear-gradient(color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), none",
       "@media (forced-colors: active)": "none"
     },
     "background-position": {
@@ -530,19 +530,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.3rem 0.8rem",
     "border-top": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -613,19 +613,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.3rem 0.8rem",
     "border-top": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-right": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-bottom": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-left": {
-      "default": "1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent)",
+      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
       "@media (forced-colors: active)": "1px solid CanvasText"
     },
     "border-image-source": {
@@ -649,7 +649,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "stretch"
     },
     "border-radius": "999px",
-    "background-color": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 14%, transparent)",
+    "background-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 14%, transparent)",
     "background-image": "none",
     "background-position": "0% 0%",
     "background-size": "auto auto",
@@ -657,10 +657,10 @@ export const marketingStyles = stylex.create({
     "background-origin": "padding-box",
     "background-clip": "border-box",
     "background-attachment": "scroll",
-    "border-top-color": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-right-color": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-bottom-color": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-left-color": "color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent)"
+    "border-top-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
+    "border-right-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
+    "border-bottom-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
+    "border-left-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)"
   },
   "hero__name": {
     "margin": "-1px",
@@ -897,7 +897,7 @@ export const marketingStyles = stylex.create({
     "max-inline-size": "100%",
     "padding": "0.35rem 0.6rem",
     "border-radius": "0.4rem",
-    "background-color": "color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent)",
+    "background-color": "color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent)",
     "background-image": "none",
     "background-position": "0% 0%",
     "background-size": "auto auto",
@@ -1174,7 +1174,7 @@ export const marketingStyles = stylex.create({
     "inline-size": "0.6rem",
     "block-size": "0.6rem",
     "border-radius": "999px",
-    "background-color": "color-mix(in oklch, var(--hraness-marketing-ink) 18%, transparent)",
+    "background-color": "color-mix(in srgb, var(--hraness-marketing-ink) 18%, transparent)",
     "background-image": "none",
     "background-position": "0% 0%",
     "background-size": "auto auto",
@@ -2584,7 +2584,7 @@ export const marketingStyles = stylex.create({
       "default": "scroll",
       "@media (forced-colors: active)": "scroll"
     },
-    "box-shadow": { "default": "inset 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow)", "@media (forced-colors: active)": "none" },
+    "box-shadow": { "default": "inset 0 0 0 1px color-mix(in srgb, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow)", "@media (forced-colors: active)": "none" },
     "color": {
       "@media (forced-colors: active)": "CanvasText"
     },

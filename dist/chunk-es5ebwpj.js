@@ -165,7 +165,7 @@ var heroBackdropStyles = {
     kpwlN0: "x1p0kdj6",
     kSiTet: "x19pb5yz",
     k3aq6I: "x1bmltzs",
-    kKwaWg: "x1uo5g9p",
+    kKwaWg: "xo15lgq",
     $$css: true
   },
   center: {
@@ -185,7 +185,7 @@ var heroBackdropStyles = {
   light: {
     kVAEAm: "x10l6tqk",
     kpwlN0: "x10a8y8t",
-    kKwaWg: "xrv8c07",
+    kKwaWg: "xlzqqbi",
     $$css: true
   }
 };

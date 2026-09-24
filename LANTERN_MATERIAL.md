@@ -2,6 +2,8 @@
 
 Lantern adds luminous edges, palette-tinted selection states and restrained depth to the shared component system. It is independent of the selected palette, the Paper theme and editorial typography. The default application treatment is quiet. Glazing belongs at key transitions and on chrome with real content behind it.
 
+Opacity-only color mixes use sRGB so translucent surfaces keep the source color's hue. Blends between two colored paints use OKLCH. The native browser checks compare translucent paint with an independent RGB and alpha reference in both appearances.
+
 The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, remote URL or inline-style dependency. Its CSS-only shaded faces work independently; the marketing preset supplies original grain and individually shaded SVG cells through optional background tokens. Existing controls continue to own their semantics, dimensions, state and accessible names.
 
 | Hook | Purpose |

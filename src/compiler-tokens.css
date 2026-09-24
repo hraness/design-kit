@@ -51,12 +51,12 @@
   --canvas-background: var(--background);
   --chrome-foil-gradient: linear-gradient(
     118deg,
-    color-mix(in oklch, var(--aurora-cyan) 78%, transparent) 0%,
-    color-mix(in oklch, var(--aurora-violet) 78%, transparent) 22%,
-    color-mix(in oklch, var(--aurora-rose) 72%, transparent) 42%,
-    color-mix(in oklch, var(--aurora-gold) 78%, transparent) 62%,
-    color-mix(in oklch, var(--aurora-mint) 78%, transparent) 82%,
-    color-mix(in oklch, var(--aurora-cyan) 78%, transparent) 100%
+    color-mix(in srgb, var(--aurora-cyan) 78%, transparent) 0%,
+    color-mix(in srgb, var(--aurora-violet) 78%, transparent) 22%,
+    color-mix(in srgb, var(--aurora-rose) 72%, transparent) 42%,
+    color-mix(in srgb, var(--aurora-gold) 78%, transparent) 62%,
+    color-mix(in srgb, var(--aurora-mint) 78%, transparent) 82%,
+    color-mix(in srgb, var(--aurora-cyan) 78%, transparent) 100%
   );
   --chrome-text-gradient: linear-gradient(
     170deg,

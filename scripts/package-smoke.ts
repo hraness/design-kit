@@ -273,7 +273,7 @@ const ditherDeclarationPatterns: readonly (readonly [RegExp, string])[] = [
   [/--hraness-design-dither-size:\s*3px/u, "fine density variable"],
   [/--hraness-design-dither-size:\s*7px/u, "coarse density variable"],
   [
-    /background-image:\s*radial-gradient\(color-mix\(in oklch,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
+    /background-image:\s*radial-gradient\(color-mix\(in srgb,\s*currentColor 18%,\s*transparent\)\s*0?\.75px,\s*transparent\s*0?\.75px\)/u,
     "radial texture",
   ],
   [
@@ -627,7 +627,7 @@ function requireTopBarPaintFoundation(css: string, label: string, lantern = fals
     "--hraness-design-top-bar-backdrop:none",
   ].sort();
   const glass = [
-    "--hraness-design-top-bar-background:color-mix(inoklch,var(--background)90%,transparent)",
+    "--hraness-design-top-bar-background:color-mix(insrgb,var(--background)90%,transparent)",
     "--hraness-design-top-bar-backdrop:blur(18px)saturate(1.08)",
   ].sort();
   for (const [index, rule] of tokenRules.entries()) {
@@ -833,7 +833,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.16.1" },
+    { name: "@hraness/design-kit", version: "0.16.2" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -899,7 +899,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.16.1 must build and publish against the immutable @hraness/ui v0.5.17 release.",
+    "Design-kit v0.16.2 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -917,7 +917,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.16.1 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.16.2 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
