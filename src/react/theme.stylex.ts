@@ -174,7 +174,7 @@ export const themeStyles = stylex.create({
     boxShadow: {
       default: null,
       [focusVisible]:
-        "0 0 0 4px color-mix(in oklch, var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%, transparent)",
+        "0 0 0 4px color-mix(in srgb, var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%, transparent)",
       [forcedColors]: "none",
     },
     color: {

@@ -116,10 +116,10 @@ ${Object.entries(aliases).map(([name, target]) => `  --${name}: var(--${target})
 ${colors} {
   --ui-surface-light: color-mix(in oklch, var(--card) 94%, white);
   --ui-surface-shade: color-mix(in oklch, var(--background) 55%, black);
-  --elevation-low: inset 0 1px 0 color-mix(in oklch, var(--ui-surface-light) 72%, transparent), 0 1px 2px -1px color-mix(in oklch, var(--ui-surface-shade) 20%, transparent), 0 4px 10px -6px color-mix(in oklch, var(--ui-surface-shade) 22%, transparent);
-  --elevation-raised: inset 0 1px 0 color-mix(in oklch, var(--ui-surface-light) 72%, transparent), 0 2px 4px -2px color-mix(in oklch, var(--ui-surface-shade) 18%, transparent), 0 14px 28px -16px color-mix(in oklch, var(--ui-surface-shade) 30%, transparent);
-  --elevation-overlay: inset 0 1px 0 color-mix(in oklch, var(--ui-surface-light) 80%, transparent), 0 4px 12px -4px color-mix(in oklch, var(--ui-surface-shade) 24%, transparent), 0 24px 64px -20px color-mix(in oklch, var(--ui-surface-shade) 38%, transparent);
-  --elevation-inset: inset 0 2px 4px -2px color-mix(in oklch, var(--ui-surface-shade) 24%, transparent), inset 0 -1px 0 color-mix(in oklch, var(--ui-surface-light) 44%, transparent);
+  --elevation-low: inset 0 1px 0 color-mix(in srgb, var(--ui-surface-light) 72%, transparent), 0 1px 2px -1px color-mix(in srgb, var(--ui-surface-shade) 20%, transparent), 0 4px 10px -6px color-mix(in srgb, var(--ui-surface-shade) 22%, transparent);
+  --elevation-raised: inset 0 1px 0 color-mix(in srgb, var(--ui-surface-light) 72%, transparent), 0 2px 4px -2px color-mix(in srgb, var(--ui-surface-shade) 18%, transparent), 0 14px 28px -16px color-mix(in srgb, var(--ui-surface-shade) 30%, transparent);
+  --elevation-overlay: inset 0 1px 0 color-mix(in srgb, var(--ui-surface-light) 80%, transparent), 0 4px 12px -4px color-mix(in srgb, var(--ui-surface-shade) 24%, transparent), 0 24px 64px -20px color-mix(in srgb, var(--ui-surface-shade) 38%, transparent);
+  --elevation-inset: inset 0 2px 4px -2px color-mix(in srgb, var(--ui-surface-shade) 24%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--ui-surface-light) 44%, transparent);
 }
 }
 

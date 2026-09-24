@@ -1307,13 +1307,13 @@ async function requireEffectBackgrounds(page: Page, dark: boolean, label: string
     try {
       const mixtures = isDark ? [15, 13, 13, 12, 90] : [26, 24, 22, 20, 86];
       const auroraBackground = [
-        `radial-gradient(ellipse 54% 40% at 16% 24%, color-mix(in oklch, var(--aurora-cyan) ${mixtures[0]}%, transparent) 0%, transparent 62%)`,
-        `radial-gradient(ellipse 52% 38% at 82% 20%, color-mix(in oklch, var(--aurora-gold) ${mixtures[1]}%, transparent) 0%, transparent 60%)`,
-        `radial-gradient(ellipse 58% 42% at 58% 76%, color-mix(in oklch, var(--aurora-violet) ${mixtures[2]}%, transparent) 0%, transparent 62%)`,
-        `radial-gradient(ellipse 48% 34% at 24% 78%, color-mix(in oklch, var(--aurora-mint) ${mixtures[3]}%, transparent) 0%, transparent 58%)`,
-        `color-mix(in oklch, var(--background) ${mixtures[4]}%, transparent)`,
+        `radial-gradient(ellipse 54% 40% at 16% 24%, color-mix(in srgb, var(--aurora-cyan) ${mixtures[0]}%, transparent) 0%, transparent 62%)`,
+        `radial-gradient(ellipse 52% 38% at 82% 20%, color-mix(in srgb, var(--aurora-gold) ${mixtures[1]}%, transparent) 0%, transparent 60%)`,
+        `radial-gradient(ellipse 58% 42% at 58% 76%, color-mix(in srgb, var(--aurora-violet) ${mixtures[2]}%, transparent) 0%, transparent 62%)`,
+        `radial-gradient(ellipse 48% 34% at 24% 78%, color-mix(in srgb, var(--aurora-mint) ${mixtures[3]}%, transparent) 0%, transparent 58%)`,
+        `color-mix(in srgb, var(--background) ${mixtures[4]}%, transparent)`,
       ].join(", ");
-      const cloudBackground = "radial-gradient(ellipse at center, color-mix(in oklch, var(--hraness-design-procedural-layer-color) 58%, transparent) 0%, color-mix(in oklch, var(--hraness-design-procedural-layer-color) 24%, transparent) 48%, transparent 74%)";
+      const cloudBackground = "radial-gradient(ellipse at center, color-mix(in srgb, var(--hraness-design-procedural-layer-color) 58%, transparent) 0%, color-mix(in srgb, var(--hraness-design-procedural-layer-color) 24%, transparent) 48%, transparent 74%)";
       const properties = ["background-color", "background-image", "background-attachment", "background-clip", "background-origin", "background-position", "background-repeat", "background-size"];
       const rows = [
         { element: aurora, background: auroraBackground },

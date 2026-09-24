@@ -17,7 +17,7 @@ const surface = "var(--hraness-foil-surface, var(--surface, var(--background, Ca
 
 function images(resolve: (index: number) => string) {
   const stops = spectrum.map((_, index) => resolve(index));
-  const tint = stops.map((stop) => `color-mix(in oklch, ${stop} var(--hraness-foil-reflection, 14%), transparent)`);
+  const tint = stops.map((stop) => `color-mix(in srgb, ${stop} var(--hraness-foil-reflection, 14%), transparent)`);
   return {
     textImage: `var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at ${x} ${y}, ${metal(80)} 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - ${x}) calc(100% - ${y}), ${metal(98)} 0%, transparent 72%), linear-gradient(${direction}, ${tint.join(", ")}), linear-gradient(${direction}, ${metal(90)} 0%, ${metal(100)} 24%, ${metal(86)} 39%, ${metal(100)} 56%, ${metal(84)} 82%, ${metal(100)} 100%))`,
     surfaceImage: `linear-gradient(${surface}, ${surface}), radial-gradient(ellipse 28% 100% at ${x} ${y}, color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - ${x}) calc(100% - ${y}), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(${direction}, ${stops.join(", ")})`,

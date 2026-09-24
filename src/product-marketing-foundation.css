@@ -12,13 +12,13 @@
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
   --hraness-marketing-surface: var(--surface, Canvas);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-ink) 22%, transparent);
+  --hraness-marketing-line: color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-ink) 22%, transparent);
   --hraness-marketing-inverse: var(--inverse, CanvasText);
   --hraness-marketing-inverse-ink: var(--inverse-foreground, Canvas);
-  --hraness-marketing-accent: var(--hraness-site-accent, oklch(0.55 0.21 262));
-  --hraness-marketing-accent-ink: var(--hraness-site-accent-ink, white);
-  --hraness-marketing-accent-soft: color-mix(in oklch, var(--hraness-marketing-accent) 10%, transparent);
+  --hraness-marketing-accent: var(--hraness-site-accent, var(--primary, oklch(0.55 0.21 262)));
+  --hraness-marketing-accent-ink: var(--hraness-site-accent-ink, var(--primary-foreground, white));
+  --hraness-marketing-accent-soft: color-mix(in srgb, var(--hraness-marketing-accent) 10%, transparent);
   --hraness-marketing-text-font: var(--font-text, ui-sans-serif, system-ui, sans-serif);
   --hraness-marketing-heading-font: var(--font-heading, var(--hraness-marketing-text-font));
   --hraness-marketing-mono-font: var(--font-mono, ui-monospace, monospace);
@@ -126,7 +126,7 @@
 .hraness-marketing-page :where(:not(pre) > code) {
   padding: 0.08em 0.38em;
   border-radius: 0.3em;
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
+  background: color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent);
   font-size: 0.9em;
 }
 
@@ -151,10 +151,10 @@
 
 .hraness-marketing-hero[data-tone="accent"] {
   --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
-  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-accent-ink) 22%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
-  --hraness-marketing-surface: color-mix(in oklch, var(--hraness-marketing-accent-ink) 12%, transparent);
+  --hraness-marketing-muted: color-mix(in srgb, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line: color-mix(in srgb, var(--hraness-marketing-accent-ink) 22%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-surface: color-mix(in srgb, var(--hraness-marketing-accent-ink) 12%, transparent);
 }
 
 .hraness-marketing-proof-frame__content > :where(img, video) {
@@ -235,8 +235,8 @@
 
 .hraness-marketing-cta[data-tone="accent"] {
   --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
-  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-muted: color-mix(in srgb, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
   --hraness-marketing-surface: transparent;
 }
 
@@ -268,14 +268,14 @@
 
 @supports (-webkit-backdrop-filter: blur(1px)) {
   .hraness-marketing-header {
-    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-background: color-mix(in srgb, var(--hraness-marketing-background) 82%, transparent);
     --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
   }
 }
 
 @supports (backdrop-filter: blur(1px)) {
   .hraness-marketing-header {
-    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-background: color-mix(in srgb, var(--hraness-marketing-background) 82%, transparent);
     --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
   }
 }

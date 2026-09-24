@@ -46,9 +46,9 @@ export const effectsStyles = stylex.create({
     backgroundAttachment: "scroll",
     backgroundClip: "border-box",
     backgroundColor:
-      "color-mix(in oklch, var(--background) var(--hraness-design-aurora-background-mix, 86%), transparent)",
+      "color-mix(in srgb, var(--background) var(--hraness-design-aurora-background-mix, 86%), transparent)",
     backgroundImage:
-      "radial-gradient(ellipse 54% 40% at 16% 24%, color-mix(in oklch, var(--aurora-cyan) var(--hraness-design-aurora-cyan-mix, 26%), transparent) 0%, transparent 62%), radial-gradient(ellipse 52% 38% at 82% 20%, color-mix(in oklch, var(--aurora-gold) var(--hraness-design-aurora-gold-mix, 24%), transparent) 0%, transparent 60%), radial-gradient(ellipse 58% 42% at 58% 76%, color-mix(in oklch, var(--aurora-violet) var(--hraness-design-aurora-violet-mix, 22%), transparent) 0%, transparent 62%), radial-gradient(ellipse 48% 34% at 24% 78%, color-mix(in oklch, var(--aurora-mint) var(--hraness-design-aurora-mint-mix, 20%), transparent) 0%, transparent 58%), none",
+      "radial-gradient(ellipse 54% 40% at 16% 24%, color-mix(in srgb, var(--aurora-cyan) var(--hraness-design-aurora-cyan-mix, 26%), transparent) 0%, transparent 62%), radial-gradient(ellipse 52% 38% at 82% 20%, color-mix(in srgb, var(--aurora-gold) var(--hraness-design-aurora-gold-mix, 24%), transparent) 0%, transparent 60%), radial-gradient(ellipse 58% 42% at 58% 76%, color-mix(in srgb, var(--aurora-violet) var(--hraness-design-aurora-violet-mix, 22%), transparent) 0%, transparent 62%), radial-gradient(ellipse 48% 34% at 24% 78%, color-mix(in srgb, var(--aurora-mint) var(--hraness-design-aurora-mint-mix, 20%), transparent) 0%, transparent 58%), none",
     backgroundOrigin: "padding-box",
     backgroundPosition: "0% 0%",
     backgroundRepeat: "repeat",
@@ -85,7 +85,7 @@ export const effectsStyles = stylex.create({
       backgroundClip: "border-box",
       backgroundColor: "transparent",
       backgroundImage:
-        "linear-gradient(136deg, transparent 0%, rgb(255 255 255 / 0.16) 18%, transparent 34%), radial-gradient(ellipse 42% 32% at 76% 26%, color-mix(in oklch, var(--aurora-rose) 16%, transparent) 0%, transparent 62%), radial-gradient(ellipse 46% 32% at 22% 54%, color-mix(in oklch, white 16%, transparent) 0%, transparent 64%)",
+        "linear-gradient(136deg, transparent 0%, rgb(255 255 255 / 0.16) 18%, transparent 34%), radial-gradient(ellipse 42% 32% at 76% 26%, color-mix(in srgb, var(--aurora-rose) 16%, transparent) 0%, transparent 62%), radial-gradient(ellipse 46% 32% at 22% 54%, color-mix(in srgb, white 16%, transparent) 0%, transparent 64%)",
       backgroundOrigin: "padding-box",
       backgroundPosition: "0% 0%",
       backgroundRepeat: "repeat",
@@ -99,7 +99,7 @@ export const effectsStyles = stylex.create({
     },
   },
   auroraDots: {
-    "--phaser-dots-static-color": "color-mix(in oklch, var(--phaser-dots-accent, oklch(0.572 0.1561 254.537)) 20%, transparent)",
+    "--phaser-dots-static-color": "color-mix(in srgb, var(--phaser-dots-accent, oklch(0.572 0.1561 254.537)) 20%, transparent)",
     "--phaser-dots-static-opacity": "0.3",
     "--phaser-dots-trail-color": "var(--phaser-dots-accent, oklch(0.572 0.1561 254.537))",
     "--phaser-dots-trail-opacity": "1",
@@ -182,7 +182,7 @@ export const effectsStyles = stylex.create({
     backgroundClip: "border-box",
     backgroundColor: "transparent",
     backgroundImage:
-      "radial-gradient(ellipse at center, color-mix(in oklch, var(--hraness-design-procedural-layer-color) 58%, transparent) 0%, color-mix(in oklch, var(--hraness-design-procedural-layer-color) 24%, transparent) 48%, transparent 74%)",
+      "radial-gradient(ellipse at center, color-mix(in srgb, var(--hraness-design-procedural-layer-color) 58%, transparent) 0%, color-mix(in srgb, var(--hraness-design-procedural-layer-color) 24%, transparent) 48%, transparent 74%)",
     backgroundOrigin: "padding-box",
     backgroundPosition: "0% 0%",
     backgroundRepeat: "repeat",
@@ -211,7 +211,7 @@ export const effectsStyles = stylex.create({
     },
     animationTimingFunction: "linear",
     backgroundImage:
-      "linear-gradient(color-mix(in oklch, var(--hraness-design-procedural-support) 44%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklch, var(--hraness-design-procedural-shadow) 38%, transparent) 1px, transparent 1px)",
+      "linear-gradient(color-mix(in srgb, var(--hraness-design-procedural-support) 44%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--hraness-design-procedural-shadow) 38%, transparent) 1px, transparent 1px)",
     backgroundPosition:
       "var(--hraness-design-procedural-grid-offset-x) var(--hraness-design-procedural-grid-offset-y), var(--hraness-design-procedural-grid-offset-x) var(--hraness-design-procedural-grid-offset-y)",
     backgroundSize:
@@ -256,12 +256,12 @@ export const effectsStyles = stylex.create({
     animationTimingFunction: "var(--motion-easing-standard)",
     aspectRatio: "1 / var(--hraness-design-procedural-ripple-aspect)",
     borderColor:
-      "color-mix(in oklch, var(--hraness-design-procedural-ripple-color) 46%, transparent)",
+      "color-mix(in srgb, var(--hraness-design-procedural-ripple-color) 46%, transparent)",
     borderRadius: "50%",
     borderStyle: "solid",
     borderWidth: 1,
     boxShadow:
-      "inset 0 0 24px color-mix(in oklch, var(--hraness-design-procedural-ripple-color) 8%, transparent), 0 0 28px color-mix(in oklch, var(--hraness-design-procedural-ripple-color) 6%, transparent)",
+      "inset 0 0 24px color-mix(in srgb, var(--hraness-design-procedural-ripple-color) 8%, transparent), 0 0 28px color-mix(in srgb, var(--hraness-design-procedural-ripple-color) 6%, transparent)",
     left: "var(--hraness-design-procedural-ripple-x)",
     opacity: "var(--hraness-design-procedural-ripple-opacity)",
     position: "absolute",
@@ -308,7 +308,7 @@ export const effectsStyles = stylex.create({
     backgroundSize: "auto auto",
     borderRadius: "var(--radius-round)",
     boxShadow:
-      "0 0 calc(var(--hraness-design-particle-size) + var(--hraness-design-particle-size)) color-mix(in oklch, var(--hraness-design-particle-color) 34%, transparent)",
+      "0 0 calc(var(--hraness-design-particle-size) + var(--hraness-design-particle-size)) color-mix(in srgb, var(--hraness-design-particle-color) 34%, transparent)",
     height: "var(--hraness-design-particle-size)",
     left: "var(--hraness-design-particle-x)",
     opacity: "var(--hraness-design-particle-opacity)",

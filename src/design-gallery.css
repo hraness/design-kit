@@ -318,7 +318,7 @@
   align-content: space-between;
   gap: var(--space-8);
   padding: var(--space-5);
-  background: color-mix(in oklch, var(--surface) 78%, transparent);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
 }
 
 .design-gallery__foil-card > :where(div) {

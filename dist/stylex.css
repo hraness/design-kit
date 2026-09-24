@@ -192,8 +192,8 @@
     border-bottom: 0;
   }
 
-  .xp7h2jl {
-    border-bottom: 1px solid color-mix(in oklch,var(--hraness-marketing-accent) 32%,transparent);
+  .xh5xj37 {
+    border-bottom: 1px solid color-mix(in srgb,var(--hraness-marketing-accent) 32%,transparent);
   }
 
   .xu8467y {
@@ -212,8 +212,8 @@
     border-bottom: var(--hraness-marketing-surface-rule);
   }
 
-  .xc2unut {
-    border-color: color-mix(in oklch,var(--hraness-design-procedural-ripple-color) 46%,transparent);
+  .x1agitey {
+    border-color: color-mix(in srgb,var(--hraness-design-procedural-ripple-color) 46%,transparent);
   }
 
   .x1g4gko8 {
@@ -236,8 +236,8 @@
     border-left: 0;
   }
 
-  .x1gy1ewl {
-    border-left: 1px solid color-mix(in oklch,var(--hraness-marketing-accent) 32%,transparent);
+  .x10c7sm8 {
+    border-left: 1px solid color-mix(in srgb,var(--hraness-marketing-accent) 32%,transparent);
   }
 
   .x1q5zsyi {
@@ -320,8 +320,8 @@
     border-right: 0;
   }
 
-  .xrtjd90 {
-    border-right: 1px solid color-mix(in oklch,var(--hraness-marketing-accent) 32%,transparent);
+  .x10bp9g4 {
+    border-right: 1px solid color-mix(in srgb,var(--hraness-marketing-accent) 32%,transparent);
   }
 
   .x8a5x8j {
@@ -348,8 +348,8 @@
     border-top: 0;
   }
 
-  .x1mfatxx {
-    border-top: 1px solid color-mix(in oklch,var(--hraness-marketing-accent) 32%,transparent);
+  .x1ycrnls {
+    border-top: 1px solid color-mix(in srgb,var(--hraness-marketing-accent) 32%,transparent);
   }
 
   .xn57pnr {
@@ -991,36 +991,36 @@
     background-color: #fc3;
   }
 
-  .xdx376k {
-    background-color: color-mix(in oklch,var(--background) var(--hraness-design-aurora-background-mix, 86%),transparent);
-  }
-
-  .x8fiqwk {
-    background-color: color-mix(in oklch,var(--foreground) 7%,transparent);
-  }
-
-  .x1uh4jhl {
-    background-color: color-mix(in oklch,var(--foreground) 8%,transparent);
-  }
-
-  .xbo1qdt {
-    background-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 14%,transparent);
-  }
-
-  .xsuzxoi {
-    background-color: color-mix(in oklch,var(--hraness-marketing-ink) 18%,transparent);
-  }
-
-  .x162bimy {
-    background-color: color-mix(in oklch,var(--hraness-marketing-ink) 7%,transparent);
-  }
-
   .x13ysuu0 {
     background-color: color-mix(in oklch,var(--hraness-marketing-ink) 8%,var(--hraness-marketing-surface));
   }
 
-  .x1cmuqeg {
-    background-color: color-mix(in oklch,var(--popover) 94%,transparent);
+  .xk26fvh {
+    background-color: color-mix(in srgb,var(--background) var(--hraness-design-aurora-background-mix, 86%),transparent);
+  }
+
+  .xrs6pst {
+    background-color: color-mix(in srgb,var(--foreground) 7%,transparent);
+  }
+
+  .xrj7itd {
+    background-color: color-mix(in srgb,var(--foreground) 8%,transparent);
+  }
+
+  .x3bf0mw {
+    background-color: color-mix(in srgb,var(--hraness-marketing-accent-ink) 14%,transparent);
+  }
+
+  .xw7x07y {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink) 18%,transparent);
+  }
+
+  .x1218lln {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink) 7%,transparent);
+  }
+
+  .x1jmv06j {
+    background-color: color-mix(in srgb,var(--popover) 94%,transparent);
   }
 
   .xjbqb8w {
@@ -1131,8 +1131,8 @@
     background-image: linear-gradient(142deg, #d8dce7 0, #666d7d 22%, #f4f5f8 43%, #4f5563 67%, #c9ced9 100%);
   }
 
-  .x1mfw0er {
-    background-image: linear-gradient(90deg,color-mix(in oklch,var(--hraness-design-chart-color) 55%,transparent),var(--hraness-design-chart-color));
+  .x1ooxb7 {
+    background-image: linear-gradient(90deg,color-mix(in srgb,var(--hraness-design-chart-color) 55%,transparent),var(--hraness-design-chart-color));
   }
 
   .xk14mg1 {
@@ -1147,12 +1147,12 @@
     background-image: linear-gradient(calc(var(--foil-spectrum-angle, 0deg) + 96deg),transparent 12%,#90d9ff7a 34%,#ffe8a485 48%,#dfafff75 62%,transparent 86%);
   }
 
-  .xxolgms {
-    background-image: linear-gradient(color-mix(in oklch,var(--hraness-design-procedural-support) 44%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklch,var(--hraness-design-procedural-shadow) 38%,transparent) 1px,transparent 1px);
+  .x1ejv2sn {
+    background-image: linear-gradient(color-mix(in srgb,var(--hraness-design-procedural-support) 44%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--hraness-design-procedural-shadow) 38%,transparent) 1px,transparent 1px);
   }
 
-  .x14zxsdj {
-    background-image: linear-gradient(color-mix(in oklch,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in oklch,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),none;
+  .x1tu0gag {
+    background-image: linear-gradient(color-mix(in srgb,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--hraness-marketing-accent-ink) 7%,transparent) 1px,transparent 1px),none;
   }
 
   .x1ypvk0y {
@@ -1187,32 +1187,32 @@
     background-image: radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(90deg, #ffffffc7, #0000), radial-gradient(circle, #fffffff5 0 1px, #0000 1.5px), linear-gradient(270deg, #ffffffc7, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(0deg, #ffffffad, #0000), radial-gradient(circle, #ffffffdb 0 1px, #0000 1.5px), linear-gradient(#ffffffad, #0000);
   }
 
-  .xtuv73v {
-    background-image: radial-gradient(color-mix(in oklch,currentColor 18%,transparent) .75px,transparent .75px);
+  .xa4utgr {
+    background-image: radial-gradient(color-mix(in srgb,currentColor 18%,transparent) .75px,transparent .75px);
   }
 
   .x1q249qf {
     background-image: radial-gradient(currentColor 1px, #0000 1px);
   }
 
-  .xrv8c07 {
-    background-image: radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%),color-mix(in oklch,var(--hraness-material-warm, var(--accent, CanvasText)) 13%,transparent),transparent 76%),radial-gradient(ellipse 60% 90% at 8% 15%,color-mix(in oklch,var(--hraness-material-cool, var(--focus, CanvasText)) 9%,transparent),transparent 76%);
+  .xlzqqbi {
+    background-image: radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%),color-mix(in srgb,var(--hraness-material-warm, var(--accent, CanvasText)) 13%,transparent),transparent 76%),radial-gradient(ellipse 60% 90% at 8% 15%,color-mix(in srgb,var(--hraness-material-cool, var(--focus, CanvasText)) 9%,transparent),transparent 76%);
   }
 
-  .xy9acls {
-    background-image: radial-gradient(ellipse 54% 40% at 16% 24%,color-mix(in oklch,var(--aurora-cyan) var(--hraness-design-aurora-cyan-mix, 26%),transparent) 0%,transparent 62%),radial-gradient(ellipse 52% 38% at 82% 20%,color-mix(in oklch,var(--aurora-gold) var(--hraness-design-aurora-gold-mix, 24%),transparent) 0%,transparent 60%),radial-gradient(ellipse 58% 42% at 58% 76%,color-mix(in oklch,var(--aurora-violet) var(--hraness-design-aurora-violet-mix, 22%),transparent) 0%,transparent 62%),radial-gradient(ellipse 48% 34% at 24% 78%,color-mix(in oklch,var(--aurora-mint) var(--hraness-design-aurora-mint-mix, 20%),transparent) 0%,transparent 58%),none;
+  .x1xeixd2 {
+    background-image: radial-gradient(ellipse 54% 40% at 16% 24%,color-mix(in srgb,var(--aurora-cyan) var(--hraness-design-aurora-cyan-mix, 26%),transparent) 0%,transparent 62%),radial-gradient(ellipse 52% 38% at 82% 20%,color-mix(in srgb,var(--aurora-gold) var(--hraness-design-aurora-gold-mix, 24%),transparent) 0%,transparent 60%),radial-gradient(ellipse 58% 42% at 58% 76%,color-mix(in srgb,var(--aurora-violet) var(--hraness-design-aurora-violet-mix, 22%),transparent) 0%,transparent 62%),radial-gradient(ellipse 48% 34% at 24% 78%,color-mix(in srgb,var(--aurora-mint) var(--hraness-design-aurora-mint-mix, 20%),transparent) 0%,transparent 58%),none;
   }
 
   .x16epytu {
     background-image: radial-gradient(at 16% 18%, #9cf7de 0, #0000 42%), radial-gradient(at 82% 22%, #82b5ff 0, #0000 46%), radial-gradient(at 54% 88%, #c69bff 0, #0000 48%), linear-gradient(145deg, #152743, #2b1841);
   }
 
-  .x1uo5g9p {
-    background-image: radial-gradient(ellipse at 68% 25%,color-mix(in oklch,var(--hraness-material-cool, var(--focus, CanvasText)) 32%,transparent),transparent 60%),radial-gradient(ellipse at 15% 80%,color-mix(in oklch,var(--hraness-material-warm, var(--accent, CanvasText)) 26%,transparent),transparent 65%);
+  .xo15lgq {
+    background-image: radial-gradient(ellipse at 68% 25%,color-mix(in srgb,var(--hraness-material-cool, var(--focus, CanvasText)) 32%,transparent),transparent 60%),radial-gradient(ellipse at 15% 80%,color-mix(in srgb,var(--hraness-material-warm, var(--accent, CanvasText)) 26%,transparent),transparent 65%);
   }
 
-  .x122lgh4 {
-    background-image: radial-gradient(ellipse at center,color-mix(in oklch,var(--hraness-design-procedural-layer-color) 58%,transparent) 0%,color-mix(in oklch,var(--hraness-design-procedural-layer-color) 24%,transparent) 48%,transparent 74%);
+  .x154ao60 {
+    background-image: radial-gradient(ellipse at center,color-mix(in srgb,var(--hraness-design-procedural-layer-color) 58%,transparent) 0%,color-mix(in srgb,var(--hraness-design-procedural-layer-color) 24%,transparent) 48%,transparent 74%);
   }
 
   .xnxuazn {
@@ -1259,8 +1259,8 @@
     background-image: repeating-radial-gradient(at 50% 120%, #0000 0 11px, #ffffff57 12px 13px, #0000 14px 23px);
   }
 
-  .x1en47v2 {
-    background-image: var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%,var(--background, Canvas)) 0%,transparent 68%),radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 0%,transparent 72%),linear-gradient(115deg,color-mix(in oklch,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%),transparent),color-mix(in oklch,var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%),transparent)),linear-gradient(115deg,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%,var(--background, Canvas)) 0%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 24%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%,var(--background, Canvas)) 39%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 56%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%,var(--background, Canvas)) 82%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 100%));
+  .x1cbihlw {
+    background-image: var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%,var(--background, Canvas)) 0%,transparent 68%),radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)),color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%,var(--background, Canvas)) 0%,transparent 72%),linear-gradient(115deg,color-mix(in srgb,var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%),transparent),color-mix(in srgb,var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%),transparent),color-mix(in srgb,var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%),transparent),color-mix(in srgb,var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%),transparent),color-mix(in srgb,var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%),transparent),color-mix(in srgb,var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%),transparent)),linear-gradient(115deg,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%,var(--background, Canvas)) 0%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 24%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%,var(--background, Canvas)) 39%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 56%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%,var(--background, Canvas)) 82%,color-mix(in oklch,var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%,var(--background, Canvas)) 100%));
   }
 
   .x1drtmal {
@@ -1571,20 +1571,20 @@
     box-shadow: 0 0 0 100vmax var(--hraness-marketing-accent);
   }
 
-  .x18sgsy5 {
-    box-shadow: 0 0 0 1px color-mix(in oklch,var(--foreground) 42%,transparent);
+  .xtcdp43 {
+    box-shadow: 0 0 0 1px color-mix(in srgb,var(--foreground) 42%,transparent);
   }
 
   .x123c105 {
     box-shadow: 0 0 0 1px var(--line);
   }
 
-  .x4ytacr {
-    box-shadow: 0 0 18px color-mix(in oklch,var(--hraness-design-chart-color) 20%,transparent);
+  .xpbr0ci {
+    box-shadow: 0 0 18px color-mix(in srgb,var(--hraness-design-chart-color) 20%,transparent);
   }
 
-  .x1wvilhj {
-    box-shadow: 0 0 calc(var(--hraness-design-particle-size) + var(--hraness-design-particle-size)) color-mix(in oklch,var(--hraness-design-particle-color) 34%,transparent);
+  .x5bbp7p {
+    box-shadow: 0 0 calc(var(--hraness-design-particle-size) + var(--hraness-design-particle-size)) color-mix(in srgb,var(--hraness-design-particle-color) 34%,transparent);
   }
 
   .xt1wfgu {
@@ -1603,12 +1603,12 @@
     box-shadow: 0 3px 12px #24140059;
   }
 
-  .x1cwdql1 {
-    box-shadow: inset 0 0 0 1px color-mix(in oklch,var(--hraness-marketing-accent) 30%,transparent),var(--hraness-marketing-surface-shadow);
+  .xcbldvc {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb,var(--hraness-marketing-accent) 30%,transparent),var(--hraness-marketing-surface-shadow);
   }
 
-  .xqsdg55 {
-    box-shadow: inset 0 0 24px color-mix(in oklch,var(--hraness-design-procedural-ripple-color) 8%,transparent),0 0 28px color-mix(in oklch,var(--hraness-design-procedural-ripple-color) 6%,transparent);
+  .x1i3fbbh {
+    box-shadow: inset 0 0 24px color-mix(in srgb,var(--hraness-design-procedural-ripple-color) 8%,transparent),0 0 28px color-mix(in srgb,var(--hraness-design-procedural-ripple-color) 6%,transparent);
   }
 
   .xl8zne6 {
@@ -2939,8 +2939,8 @@
     background-clip: border-box;
   }
 
-  .x133yyvb:is(:hover, :focus-visible) {
-    background-color: color-mix(in oklch,var(--foreground) 7%,transparent);
+  .x13wtpdm:is(:hover, :focus-visible) {
+    background-color: color-mix(in srgb,var(--foreground) 7%,transparent);
   }
 
   .x6j457c:is([data-hovered], :hover), .xffqgfc:is([data-focused], [data-hovered], :focus-visible, :hover) {
@@ -2971,8 +2971,8 @@
     background-size: auto;
   }
 
-  .x1tc5apr:is([data-focus-visible], :focus-visible) {
-    box-shadow: 0 0 0 4px color-mix(in oklch,var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%,transparent);
+  .x1jbwuzb:is([data-focus-visible], :focus-visible) {
+    box-shadow: 0 0 0 4px color-mix(in srgb,var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%,transparent);
   }
 
   .x11ffpz8:is([data-hovered], :hover) {
@@ -3467,8 +3467,8 @@
 }
 
 @layer components.hraness-design-kit.priority5 {
-  .x1dp554n {
-    border-bottom-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 40%,transparent);
+  .x1h0034l {
+    border-bottom-color: color-mix(in srgb,var(--hraness-marketing-accent-ink) 40%,transparent);
   }
 
   .x16stqrj {
@@ -3487,8 +3487,8 @@
     border-bottom-width: 2px;
   }
 
-  .xqgmwx {
-    border-left-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 40%,transparent);
+  .x14bglue {
+    border-left-color: color-mix(in srgb,var(--hraness-marketing-accent-ink) 40%,transparent);
   }
 
   .x1g4hjc {
@@ -3507,8 +3507,8 @@
     border-left-width: 2px;
   }
 
-  .x7oefzn {
-    border-right-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 40%,transparent);
+  .x5nxu0g {
+    border-right-color: color-mix(in srgb,var(--hraness-marketing-accent-ink) 40%,transparent);
   }
 
   .xhe5wa1 {
@@ -3527,8 +3527,8 @@
     border-right-width: 2px;
   }
 
-  .xpkc6jc {
-    border-top-color: color-mix(in oklch,var(--hraness-marketing-accent-ink) 40%,transparent);
+  .xvsa0ys {
+    border-top-color: color-mix(in srgb,var(--hraness-marketing-accent-ink) 40%,transparent);
   }
 
   .x1v8p93f {
@@ -3831,14 +3831,8 @@
     background-color: var(--hraness-marketing-accent-soft);
   }
 
-  .xryc3un:after {
-    background-image: linear-gradient(136deg,transparent 0%,#ffffff29 18%,transparent 34%),radial-gradient(ellipse 42% 32% at 76% 26%,color-mix(in oklch,var(--aurora-rose) 16%,transparent) 0%,transparent 62%),radial-gradient(ellipse 46% 32% at 22% 54%,#ffffff29 0%,transparent 64%);
-  }
-
-  @supports (color: lab(0% 0 0)) {
-    .xryc3un:after {
-      background-image: linear-gradient(136deg,transparent 0%,#ffffff29 18%,transparent 34%),radial-gradient(ellipse 42% 32% at 76% 26%,color-mix(in oklch,var(--aurora-rose) 16%,transparent) 0%,transparent 62%),radial-gradient(ellipse 46% 32% at 22% 54%,lab(100% 0 0 / .16) 0%,transparent 64%);
-    }
+  .x1rlmepj:after {
+    background-image: linear-gradient(136deg,transparent 0%,#ffffff29 18%,transparent 34%),radial-gradient(ellipse 42% 32% at 76% 26%,color-mix(in srgb,var(--aurora-rose) 16%,transparent) 0%,transparent 62%),radial-gradient(ellipse 46% 32% at 22% 54%,#ffffff29 0%,transparent 64%);
   }
 
   .xccne2d:before {
@@ -4686,13 +4680,13 @@
   --hraness-sticky-offset: calc(var(--hraness-marketing-header-height, 2.75rem) + 1px);
 }
 
-.x3947z3 {
-  --phaser-dots-static-color: color-mix(in oklch,var(--phaser-dots-accent, #2a78d1) 20%,transparent);
+.x18tcw9x {
+  --phaser-dots-static-color: color-mix(in srgb,var(--phaser-dots-accent, #2a78d1) 20%,transparent);
 }
 
 @supports (color: lab(0% 0 0)) {
-  .x3947z3 {
-    --phaser-dots-static-color: color-mix(in oklch,var(--phaser-dots-accent, lab(49.3077% .859261 -53.6375)) 20%,transparent);
+  .x18tcw9x {
+    --phaser-dots-static-color: color-mix(in srgb,var(--phaser-dots-accent, lab(49.3077% .859261 -53.6375)) 20%,transparent);
   }
 }
 

@@ -5,7 +5,7 @@ const reducedMotion = "@media (prefers-reduced-motion: reduce)";
 const selectableInteraction = ":is(:hover, :focus-visible)";
 const focusVisible = ":focus-visible";
 const selectedRowBackground =
-  "color-mix(in oklch, var(--foreground) 7%, transparent)";
+  "color-mix(in srgb, var(--foreground) 7%, transparent)";
 
 export const chartBarRevealKeyframes = stylex.keyframes({
   from: { transform: "scaleX(0)" },
@@ -38,7 +38,7 @@ export const chartStyles = stylex.create({
     },
     backgroundImage: {
       default:
-        "linear-gradient(90deg, color-mix(in oklch, var(--hraness-design-chart-color) 55%, transparent), var(--hraness-design-chart-color))",
+        "linear-gradient(90deg, color-mix(in srgb, var(--hraness-design-chart-color) 55%, transparent), var(--hraness-design-chart-color))",
       [forcedColors]: "none",
     },
     backgroundOrigin: "padding-box",
@@ -96,7 +96,7 @@ export const chartStyles = stylex.create({
     borderRadius: "inherit",
     bottom: 0,
     boxShadow:
-      "0 0 18px color-mix(in oklch, var(--hraness-design-chart-color) 20%, transparent)",
+      "0 0 18px color-mix(in srgb, var(--hraness-design-chart-color) 20%, transparent)",
     forcedColorAdjust: {
       default: null,
       [forcedColors]: "auto",
@@ -215,7 +215,7 @@ export const chartStyles = stylex.create({
     },
     borderRadius: "50%",
     boxShadow:
-      "0 0 0 1px color-mix(in oklch, var(--foreground) 42%, transparent)",
+      "0 0 0 1px color-mix(in srgb, var(--foreground) 42%, transparent)",
     forcedColorAdjust: {
       default: null,
       [forcedColors]: "auto",
@@ -420,7 +420,7 @@ export const chartStyles = stylex.create({
     borderImageRepeat: "stretch",
     backgroundAttachment: "scroll",
     backgroundClip: "border-box",
-    backgroundColor: "color-mix(in oklch, var(--popover) 94%, transparent)",
+    backgroundColor: "color-mix(in srgb, var(--popover) 94%, transparent)",
     backgroundImage: "none",
     backgroundOrigin: "padding-box",
     backgroundPosition: "0% 0%",
@@ -485,7 +485,7 @@ export const chartStyles = stylex.create({
     backgroundAttachment: "scroll",
     backgroundClip: "border-box",
     backgroundColor: {
-      default: "color-mix(in oklch, var(--foreground) 8%, transparent)",
+      default: "color-mix(in srgb, var(--foreground) 8%, transparent)",
       [forcedColors]: "Canvas",
     },
     backgroundImage: "none",

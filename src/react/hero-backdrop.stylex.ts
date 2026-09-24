@@ -21,7 +21,7 @@ export const heroBackdropStyles = stylex.create({
     inset: "-2rem",
     opacity: 0.24,
     transform: "translate(var(--hraness-hero-drift-x, 0px), var(--hraness-hero-drift-y, 0px))",
-    backgroundImage: "radial-gradient(ellipse at 68% 25%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 32%, transparent), transparent 60%), radial-gradient(ellipse at 15% 80%, color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 26%, transparent), transparent 65%)",
+    backgroundImage: "radial-gradient(ellipse at 68% 25%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 32%, transparent), transparent 60%), radial-gradient(ellipse at 15% 80%, color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 26%, transparent), transparent 65%)",
   },
   center: { backgroundPosition: "50% 50%" },
   east: { backgroundPosition: "100% 25%", backgroundSize: "140% 120%" },
@@ -29,6 +29,6 @@ export const heroBackdropStyles = stylex.create({
   light: {
     position: "absolute",
     inset: 0,
-    backgroundImage: "radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%)",
+    backgroundImage: "radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%)",
   },
 });

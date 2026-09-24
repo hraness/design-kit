@@ -44,13 +44,13 @@
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
   --hraness-marketing-surface: var(--surface, Canvas);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-ink) 22%, transparent);
+  --hraness-marketing-line: color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-ink) 22%, transparent);
   --hraness-marketing-inverse: var(--inverse, CanvasText);
   --hraness-marketing-inverse-ink: var(--inverse-foreground, Canvas);
-  --hraness-marketing-accent: var(--hraness-site-accent, oklch(0.55 0.21 262));
-  --hraness-marketing-accent-ink: var(--hraness-site-accent-ink, white);
-  --hraness-marketing-accent-soft: color-mix(in oklch, var(--hraness-marketing-accent) 10%, transparent);
+  --hraness-marketing-accent: var(--hraness-site-accent, var(--primary, oklch(0.55 0.21 262)));
+  --hraness-marketing-accent-ink: var(--hraness-site-accent-ink, var(--primary-foreground, white));
+  --hraness-marketing-accent-soft: color-mix(in srgb, var(--hraness-marketing-accent) 10%, transparent);
   --hraness-marketing-text-font: var(--font-text, ui-sans-serif, system-ui, sans-serif);
   --hraness-marketing-heading-font: var(--font-heading, var(--hraness-marketing-text-font));
   --hraness-marketing-mono-font: var(--font-mono, ui-monospace, monospace);
@@ -124,7 +124,7 @@
 .hraness-marketing-page :where(:not(pre) > code) {
   padding: 0.08em 0.38em;
   border-radius: 0.3em;
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
+  background: color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent);
   font-size: 0.9em;
 }
 
@@ -331,7 +331,7 @@
 
 @supports (-webkit-backdrop-filter: blur(1px)) {
   .hraness-marketing-header {
-    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-background: color-mix(in srgb, var(--hraness-marketing-background) 82%, transparent);
     --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
     -webkit-backdrop-filter: var(--hraness-marketing-header-backdrop);
   }
@@ -339,7 +339,7 @@
 
 @supports (backdrop-filter: blur(1px)) {
   .hraness-marketing-header {
-    --hraness-marketing-header-background: color-mix(in oklch, var(--hraness-marketing-background) 82%, transparent);
+    --hraness-marketing-header-background: color-mix(in srgb, var(--hraness-marketing-background) 82%, transparent);
     --hraness-marketing-header-backdrop: blur(14px) saturate(1.4);
     backdrop-filter: var(--hraness-marketing-header-backdrop);
   }
@@ -553,7 +553,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   background-image: var(--hraness-foil-image,
       radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%),
       radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%),
-      linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent)),
+      linear-gradient(115deg, color-mix(in srgb, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent)),
       linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%));
   -webkit-background-clip: text;
   background-clip: text;
@@ -570,7 +570,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-foil-mark__paint { --_hraness-foil-mark-display: none; display: var(--_hraness-foil-mark-display); position: absolute; inset: 0; pointer-events: none; mask-image: var(--hraness-foil-mask, linear-gradient(transparent, transparent)); mask-mode: alpha; mask-repeat: no-repeat; mask-position: center; mask-size: contain; background-image: var(--hraness-foil-image,
       radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%),
       radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%),
-      linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in oklch, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent)),
+      linear-gradient(115deg, color-mix(in srgb, var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))) var(--hraness-foil-reflection, 14%), transparent)),
       linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%)); }
 @supports (mask-image: linear-gradient(black, black)) {
   .hraness-foil-mark__paint { --_hraness-foil-mark-display: block; }
@@ -681,7 +681,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   inset: -2rem;
   opacity: 0.24;
   transform: translate(var(--hraness-hero-drift-x, 0px), var(--hraness-hero-drift-y, 0px));
-  background-image: radial-gradient(ellipse at 68% 25%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 32%, transparent), transparent 60%), radial-gradient(ellipse at 15% 80%, color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 26%, transparent), transparent 65%);
+  background-image: radial-gradient(ellipse at 68% 25%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 32%, transparent), transparent 60%), radial-gradient(ellipse at 15% 80%, color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 26%, transparent), transparent 65%);
 }
 .hraness-marketing-hero-backdrop__atmosphere[data-variation="center"] {
   background-position: 50% 50%;
@@ -697,7 +697,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-hero-backdrop__light {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in oklch, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in oklch, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%);
+  background-image: radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%);
 }
 @media (forced-colors: active), (prefers-reduced-transparency: reduce) {
   .hraness-marketing-hero-backdrop { opacity: 0; }
@@ -721,7 +721,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   align-items: center;
   gap: 0.45rem;
   padding: 0.3rem 0.8rem;
-  border: 1px solid color-mix(in oklch, var(--hraness-marketing-accent) 32%, transparent);
+  border: 1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent);
   border-radius: 999px;
   background: var(--hraness-marketing-accent-soft);
   color: var(--hraness-marketing-muted);
@@ -784,13 +784,13 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 /* Accent band: the hero paints edge to edge in the product accent. */
 .hraness-marketing-hero[data-tone="accent"] {
   --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
-  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-accent-ink) 22%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
-  --hraness-marketing-surface: color-mix(in oklch, var(--hraness-marketing-accent-ink) 12%, transparent);
+  --hraness-marketing-muted: color-mix(in srgb, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line: color-mix(in srgb, var(--hraness-marketing-accent-ink) 22%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-surface: color-mix(in srgb, var(--hraness-marketing-accent-ink) 12%, transparent);
   background:
-    linear-gradient(color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px),
     var(--hraness-marketing-accent);
   background-size: 3.5rem 3.5rem, 3.5rem 3.5rem, auto;
   box-shadow: 0 0 0 100vmax var(--hraness-marketing-accent);
@@ -799,8 +799,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-hero__eyebrow {
-  border-color: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
-  background: color-mix(in oklch, var(--hraness-marketing-accent-ink) 14%, transparent);
+  border-color: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
+  background: color-mix(in srgb, var(--hraness-marketing-accent-ink) 14%, transparent);
   color: var(--hraness-marketing-accent-ink);
 }
 
@@ -894,7 +894,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   max-inline-size: 100%;
   padding: 0.35rem 0.6rem;
   border-radius: 0.4rem;
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
+  background: color-mix(in srgb, var(--hraness-marketing-ink) 7%, transparent);
   color: inherit;
   font-family: var(--hraness-marketing-mono-font);
   font-size: 0.8rem;
@@ -1046,7 +1046,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   inline-size: 0.6rem;
   block-size: 0.6rem;
   border-radius: 999px;
-  background: color-mix(in oklch, var(--hraness-marketing-ink) 18%, transparent);
+  background: color-mix(in srgb, var(--hraness-marketing-ink) 18%, transparent);
 }
 
 .hraness-marketing-proof-frame__title {
@@ -1539,7 +1539,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 
 .hraness-marketing-plan[data-emphasis="primary"] {
   border-color: transparent;
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hraness-marketing-accent) 30%, transparent), var(--hraness-marketing-surface-shadow);
 }
 
 .hraness-marketing-plan__name {
@@ -1760,8 +1760,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 
 .hraness-marketing-cta[data-tone="accent"] {
   --hraness-marketing-ink: var(--hraness-marketing-accent-ink);
-  --hraness-marketing-muted: color-mix(in oklch, var(--hraness-marketing-accent-ink) 78%, transparent);
-  --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-accent-ink) 40%, transparent);
+  --hraness-marketing-muted: color-mix(in srgb, var(--hraness-marketing-accent-ink) 78%, transparent);
+  --hraness-marketing-line-strong: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
   --hraness-marketing-surface: transparent;
   border-block-start: 0;
   background: var(--hraness-marketing-accent);

@@ -52,14 +52,15 @@ assert(optimized.includes(";backdrop-filter:"), "Optimized preset lost native bl
 const compiled = foundation + "\n" + serializeStylexRuleUnionV1([...ui.rules, ...kit.rules], [ui.standaloneSerializer, kit.standaloneSerializer]);
 const styles = { raw: raw + "\n" + optimized, standalone: standalone + "\n" + optimized, compiler: compiled + "\n" + optimized };
 const failures: string[] = [];
-const fixtureCss = 'body{margin:0}.fixture-quiet-header,.fixture-standalone-header{position:sticky;top:0;padding:12px 20px;z-index:50}.fixture-product-heading{font:600 19px/1.3 system-ui}.hraness-marketing-page{--hraness-site-accent:rgb(22,90,61)}';
+const explicitInk = '--hraness-site-accent-ink:rgb(255,255,255);';
+const fixtureCss = `body{margin:0}.fixture-quiet-header,.fixture-standalone-header{position:sticky;top:0;padding:12px 20px;z-index:50}.fixture-product-heading{font:600 19px/1.3 system-ui}.hraness-marketing-page{--hraness-site-accent:rgb(22,90,61);${explicitInk}}`;
 const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
   const url = new URL(request.url);
   if (url.pathname === "/styles.css") {
     const mode = url.searchParams.get("mode") as keyof typeof styles;
     return new Response(styles[mode] ?? "", { headers: { "content-type": "text/css" } });
   }
-  if (url.pathname === "/fixture.css") return new Response(fixtureCss, { headers: { "content-type": "text/css" } });
+  if (url.pathname === "/fixture.css") return new Response(url.searchParams.get("ink") === "palette" ? fixtureCss.replace(explicitInk, "") : fixtureCss, { headers: { "content-type": "text/css" } });
   if (url.pathname.startsWith("/fonts/") || url.pathname.startsWith("/marketing-assets/")) {
     const path = resolve(root, "src", decodeURIComponent(url.pathname.slice(1)));
     const logical = relative(join(root, "src"), path);
@@ -68,7 +69,8 @@ const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) 
   }
   const mode = url.searchParams.get("mode") ?? "raw";
   const theme = url.searchParams.get("theme") === "dark" ? "dark" : "light";
-  return new Response(`<!doctype html><html lang="en" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Marketing presets</title><link rel="stylesheet" href="/styles.css?mode=${mode}"><link rel="stylesheet" href="/fixture.css"></head><body>${mode === "raw" ? rawHtml : html}</body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self'; base-uri 'none'" } });
+  const ink = url.searchParams.get("ink") === "palette" ? "palette" : "explicit";
+  return new Response(`<!doctype html><html lang="en" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Marketing presets</title><link rel="stylesheet" href="/styles.css?mode=${mode}"><link rel="stylesheet" href="/fixture.css?ink=${ink}"></head><body>${mode === "raw" ? rawHtml : html}</body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self'; base-uri 'none'" } });
 } });
 let executablePath: string | undefined;
 for (const candidate of [process.env.CHROME_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"]) {
@@ -78,6 +80,7 @@ for (const candidate of [process.env.CHROME_PATH, "/Applications/Google Chrome.a
 assert(executablePath, "A local Chromium executable is required");
 const browser = await chromium.launch({ executablePath, headless: true, args: process.platform === "linux" ? ["--no-sandbox"] : [] });
 const receipts: unknown[] = [];
+const missingInkControls: unknown[] = [];
 try {
   for (const width of [320, 800, 1280]) for (const theme of ["light", "dark"] as const) {
     let reference: unknown;
@@ -175,6 +178,28 @@ try {
       } finally { await page.close(); }
     }
   }
+  // Removing only the explicit ink must resolve the canonical palette pair's
+  // foreground. Keep the green action paint and all four real actions intact,
+  // and prove that this incomplete override cannot satisfy the white-ink proof.
+  for (const theme of ["light", "dark"] as const) for (const mode of ["raw", "standalone", "compiler"] as const) {
+    const page = await browser.newPage({ viewport: { width: 320, height: 1000 }, colorScheme: theme });
+    page.on("pageerror", (error) => failures.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") failures.push(message.text()); });
+    page.on("response", (response) => { if (response.status() >= 400) failures.push(`${response.status()} ${response.url()}`); });
+    try {
+      await page.goto(`http://${server.hostname}:${server.port}/?mode=${mode}&theme=${theme}&ink=palette`, { waitUntil: "networkidle" });
+      const actions = await page.locator('.hraness-marketing-action[data-emphasis="primary"]').evaluateAll((nodes) => nodes.map((node) => {
+        const style = getComputedStyle(node);
+        return { color: style.color, fill: style.webkitTextFillColor, background: style.backgroundColor, opacity: style.opacity };
+      }));
+      const color = rgb(builtDesignKit.colors[theme].primaryForeground);
+      const expected = Array.from({ length: 4 }, () => ({ color, fill: color, background: "rgb(22, 90, 61)", opacity: "1" }));
+      assert.deepEqual(actions, expected, `${mode}/${theme} omitted ink must follow canonical primary foreground`);
+      assert.notEqual(color, "rgb(255, 255, 255)", "Missing-ink control must distinguish the explicit white ink");
+      assert.notDeepEqual(actions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode}/${theme} incomplete pair cannot satisfy the explicit-pair proof`);
+      missingInkControls.push({ mode, theme, actions });
+    } finally { await page.close(); }
+  }
   const coarse = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
   try {
     await coarse.goto(`http://${server.hostname}:${server.port}/?mode=compiler`, { waitUntil: "networkidle" });
@@ -190,6 +215,6 @@ try {
     });
   } finally { await coarse.close(); }
   assert.deepEqual(failures, []);
-  await writeFile(join(output, "receipt.json"), JSON.stringify({ sourceSha256: createHash("sha256").update(preset).digest("hex"), cases: receipts }, null, 2));
-  console.log(`Marketing preset parity verified: ${receipts.length} cases; ${output}`);
+  await writeFile(join(output, "receipt.json"), JSON.stringify({ sourceSha256: createHash("sha256").update(preset).digest("hex"), cases: receipts, missingInkControls }, null, 2));
+  console.log(`Marketing preset parity verified: ${receipts.length} cases and ${missingInkControls.length} missing-ink controls; ${output}`);
 } finally { await browser.close(); server.stop(true); }

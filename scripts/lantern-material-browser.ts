@@ -12,6 +12,7 @@ import type * as PublicSyntax from "../src/syntax-highlighting.js";
 
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
 import { withTransparencyPreference } from "./browser-transparency.js";
+import { verifyLanternOpacity, verifySharedHeaderOpacity, verifyMarketingPaletteActions } from "./lantern-opacity-proof.js";
 
 const root = resolve(import.meta.dir, "..");
 const output = await mkdtemp(join(tmpdir(), "lantern-material-browser-"));
@@ -329,6 +330,9 @@ try {
   }
   assert(executablePath, "A local Chromium executable is required");
   browser = await chromium.launch({ executablePath, headless: true, args: process.platform === "linux" ? ["--no-sandbox"] : [] });
+  const opacityProof = await verifyLanternOpacity(browser, material, output);
+  const headerOpacityProof = await verifySharedHeaderOpacity(browser, root);
+  const marketingPaletteProof = await verifyMarketingPaletteActions(browser, root);
   for (const width of [390, 1280]) for (const theme of ["light", "dark"] as const) {
     let reference: unknown;
     for (const route of ["standalone", "compiler"] as const) {
@@ -415,7 +419,7 @@ try {
   assert.deepEqual(failures, []);
   await writeFile(join(output, "receipt.json"), JSON.stringify({ materialSha256: hash(material), optimizedSha256: hash(optimizedCss),
     standaloneSha256: hash(styles.standalone), compilerSha256: hash(styles.compiler),
-    packages: [kit, ui].map((manifest) => ({ ...manifest.package, rulesSha256: manifest.rulesSha256, compilerSha256: manifest.compilerSha256 })), cases, syntaxCases }, null, 2));
+    packages: [kit, ui].map((manifest) => ({ ...manifest.package, rulesSha256: manifest.rulesSha256, compilerSha256: manifest.compilerSha256 })), cases, syntaxCases, opacityProof, headerOpacityProof, marketingPaletteProof }, null, 2));
   console.log(`Lantern material verified: ${cases.length} standalone/compiler cases; ${output}`);
 } catch (error) {
   await writeFile(join(output, "failure.json"), JSON.stringify({ message: error instanceof Error ? error.message : String(error), failures, completedCases: cases.length }, null, 2));
