@@ -446,7 +446,7 @@ try {
         assert.equal(await gesturePage.locator("#outside").evaluate((element) => element === document.activeElement), true);
         assert.equal(await menu.getAttribute("open"), null, "Tab outside must still dismiss the menu");
         await openMenu(gesturePage);
-        await gesturePage.locator("#outside").click();
+        await gesturePage.locator("header strong").click();
         assert.equal(await menu.getAttribute("open"), null, "An outside pointer must still dismiss the menu");
         await openMenu(gesturePage);
         await gesturePage.keyboard.press("Escape");

@@ -114,7 +114,17 @@ export function DesignPaletteMenuButton({
         if (details.open && !details.contains(document.activeElement)) details.open = false;
       }, 0);
     };
+    const releasePointer = (event: PointerEvent): void => {
+      // Touch compatibility mouse events may follow pointerup in a later task.
+      // An inside release stays guarded until native click activation completes.
+      if (event.button !== 0 || !isNode(event.target) || !details.contains(event.target)) settlePointer();
+    };
     const escape = (event: KeyboardEvent): void => {
+      if (event.key === "Tab") {
+        clearSettlement();
+        pointerInside.current = false;
+        return;
+      }
       if (event.key !== "Escape" || !details.open) return;
       event.preventDefault();
       clearSettlement();
@@ -123,7 +133,8 @@ export function DesignPaletteMenuButton({
       details.querySelector("summary")?.focus();
     };
     document.addEventListener("pointerdown", outside, true);
-    document.addEventListener("pointerup", settlePointer, true);
+    document.addEventListener("pointerup", releasePointer, true);
+    document.addEventListener("click", settlePointer, true);
     document.addEventListener("pointercancel", settlePointer, true);
     document.defaultView?.addEventListener("blur", settlePointer);
     details.addEventListener("keydown", escape);
@@ -131,7 +142,8 @@ export function DesignPaletteMenuButton({
       clearSettlement();
       pointerInside.current = false;
       document.removeEventListener("pointerdown", outside, true);
-      document.removeEventListener("pointerup", settlePointer, true);
+      document.removeEventListener("pointerup", releasePointer, true);
+      document.removeEventListener("click", settlePointer, true);
       document.removeEventListener("pointercancel", settlePointer, true);
       document.defaultView?.removeEventListener("blur", settlePointer);
       details.removeEventListener("keydown", escape);

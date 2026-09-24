@@ -1438,27 +1438,67 @@ function DesignPaletteMenuButton({
 }) {
   const palette = useDesignPalette();
   const detailsRef = useRef2(null);
+  const pointerInside = useRef2(false);
   const groupId = useId();
   useEffect3(() => {
     const details = detailsRef.current;
     if (details === null)
       return;
     const document2 = details.ownerDocument;
+    let settlement;
+    const clearSettlement = () => {
+      clearTimeout(settlement);
+      settlement = undefined;
+    };
     const outside = (event) => {
-      if (details.open && isNode(event.target) && !details.contains(event.target))
+      clearSettlement();
+      pointerInside.current = isNode(event.target) && details.contains(event.target);
+      if (details.open && !pointerInside.current)
         details.open = false;
     };
+    const settlePointer = () => {
+      if (!pointerInside.current)
+        return;
+      clearSettlement();
+      settlement = setTimeout(() => {
+        settlement = undefined;
+        pointerInside.current = false;
+        if (details.open && !details.contains(document2.activeElement))
+          details.open = false;
+      }, 0);
+    };
+    const releasePointer = (event) => {
+      if (event.button !== 0 || !isNode(event.target) || !details.contains(event.target))
+        settlePointer();
+    };
     const escape = (event) => {
+      if (event.key === "Tab") {
+        clearSettlement();
+        pointerInside.current = false;
+        return;
+      }
       if (event.key !== "Escape" || !details.open)
         return;
       event.preventDefault();
+      clearSettlement();
+      pointerInside.current = false;
       details.open = false;
       details.querySelector("summary")?.focus();
     };
-    document2.addEventListener("pointerdown", outside);
+    document2.addEventListener("pointerdown", outside, true);
+    document2.addEventListener("pointerup", releasePointer, true);
+    document2.addEventListener("click", settlePointer, true);
+    document2.addEventListener("pointercancel", settlePointer, true);
+    document2.defaultView?.addEventListener("blur", settlePointer);
     details.addEventListener("keydown", escape);
     return () => {
-      document2.removeEventListener("pointerdown", outside);
+      clearSettlement();
+      pointerInside.current = false;
+      document2.removeEventListener("pointerdown", outside, true);
+      document2.removeEventListener("pointerup", releasePointer, true);
+      document2.removeEventListener("click", settlePointer, true);
+      document2.removeEventListener("pointercancel", settlePointer, true);
+      document2.defaultView?.removeEventListener("blur", settlePointer);
       details.removeEventListener("keydown", escape);
     };
   }, []);
@@ -1475,7 +1515,7 @@ function DesignPaletteMenuButton({
     "data-ready": ready ? "true" : "false",
     ref: detailsRef,
     onBlur: (event) => {
-      if (isNode(event.relatedTarget) && !event.currentTarget.contains(event.relatedTarget))
+      if (!pointerInside.current && isNode(event.relatedTarget) && !event.currentTarget.contains(event.relatedTarget))
         event.currentTarget.open = false;
     },
     children: [
