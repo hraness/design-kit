@@ -90,6 +90,12 @@ function articleReviewerNameDisclosesAi(reviewer) {
 function isOneOf(values, value) {
   return typeof value === "string" && values.includes(value);
 }
+function withoutTrailingPeriods(value) {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 46)
+    end -= 1;
+  return value.slice(0, end);
+}
 function nonBlank(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -112,7 +118,7 @@ function articleProvenanceSentence(provenance) {
   if (review.reviewerType === "ai" && !AI_WORD.test(review.reviewer)) {
     throw new RangeError('An AI review must name a reviewer that says it is AI, for example "Claude Opus 5.5 (claude-opus-5-5) editorial review".');
   }
-  const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
+  const reviewer = withoutTrailingPeriods(review.reviewer.trim());
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
 }
 var articleScoreKeys = ["readerUtility", "originalEvidence", "factualConfidence", "hostFit", "voiceIntegrity", "maintenanceValue"];

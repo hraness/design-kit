@@ -200,6 +200,13 @@ function isOneOf<const T extends readonly string[]>(values: T, value: unknown): 
   return typeof value === "string" && (values as readonly string[]).includes(value);
 }
 
+/** Linear-time trailing-period trim; a `/[.]+$/` replace is quadratic on long runs of periods. */
+function withoutTrailingPeriods(value: string): string {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 46) end -= 1;
+  return value.slice(0, end);
+}
+
 function nonBlank(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -222,7 +229,7 @@ export function articleProvenanceSentence(provenance: ArticleProvenanceRecord): 
   if (review.reviewerType === "ai" && !AI_WORD.test(review.reviewer)) {
     throw new RangeError("An AI review must name a reviewer that says it is AI, for example \"Claude Opus 5.5 (claude-opus-5-5) editorial review\".");
   }
-  const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
+  const reviewer = withoutTrailingPeriods(review.reviewer.trim());
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
 }
 

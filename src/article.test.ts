@@ -137,6 +137,14 @@ describe("provenance", () => {
     }
   });
 
+  test("trims trailing periods from a reviewer name in linear time", () => {
+    const reviewer = `AI review${".".repeat(200_000)}x${".".repeat(200_000)}`;
+    const started = performance.now();
+    const sentence = articleProvenanceSentence({ drafting: "ai", review: { reviewer, reviewerType: "ai" } });
+    expect(performance.now() - started).toBeLessThan(1_000);
+    expect(sentence.endsWith("x.")).toBe(true);
+  });
+
   test("a missing review makes no review claim", () => {
     expect(articleProvenanceSentence({ drafting: "ai-from-source", review: null }))
       .toBe("Drafted with AI from the source code. It has not been reviewed yet.");
