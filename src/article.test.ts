@@ -152,6 +152,15 @@ describe("provenance", () => {
     expect(() => articleProvenanceSentence({ drafting: "ai", review: { reviewer: "  ", reviewerType: "ai" } })).toThrow(/name/u);
   });
 
+  test("a reviewer name cannot smuggle the word human past a non-human reviewer type", () => {
+    for (const reviewerType of articleReviewerTypes.filter((type) => type !== "human-editor")) {
+      expect(() => articleProvenanceSentence({ drafting: "ai", review: { reviewer: "Human-level editorial review", reviewerType } }))
+        .toThrow(/human-editor/u);
+    }
+    expect(articleProvenanceSentence({ drafting: "ai", review: { reviewer: "Sam (human review)", reviewerType: "human-editor" } }))
+      .toBe("Drafted with AI and reviewed by Sam (human review), a human editor.");
+  });
+
   test("derives the rendered provenance from the admission record", () => {
     const record = parseArticleAdmissions([admission()])[0];
     expect(record).toBeDefined();
@@ -210,6 +219,8 @@ describe("admission rubric", () => {
     expect(issuesOf([admission({ review: null, lifecycle: "quarantined", humanReview: { reviewer: "Sam", reviewerType: "human-editor", reviewedOn: "2026-09-23" } })])[0])
       .toContain("before adding humanReview");
     expect(issuesOf([admission({ humanReview: { reviewer: "Sam", reviewerType: "subject-expert", reviewedOn: "2026-09-23" } })])).toEqual([]);
+    expect(issuesOf([admission({ review: { reviewer: "Claude human-grade review", reviewerType: "ai", reviewedOn: "2026-09-23" } })])[0])
+      .toContain('may use the word "human" only when reviewerType is human-editor');
   });
 
   test("sources checked after the review, duplicates, and malformed fields are reported together", () => {
@@ -226,6 +237,11 @@ describe("admission rubric", () => {
     expect(issues.some((issue) => issue.includes("at most three"))).toBe(true);
     expect(issues.some((issue) => issue.includes("drafting must be one of"))).toBe(true);
     expect(issues.some((issue) => issue.includes("admission 3: must be a record"))).toBe(true);
+  });
+
+  test("source links must be web, mail, or relative links", () => {
+    expect(issuesOf([admission({ sources: [{ title: "Bad", url: "javascript:alert(1)", checkedOn: "2026-09-20" }] })])[0])
+      .toContain("sources[0].url must be a web, mail, or relative link");
   });
 
   test("the registry must be a list", () => {

@@ -90,8 +90,13 @@ export function assertArticleDates(dates: ArticleDates): void {
 const SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
 
 /** Accept web, mail, and relative links. Reject script, data, and protocol-relative URLs. */
+function isSafeHref(href: string): boolean {
+  return SAFE_HREF.test(href) && !/[\p{Cc}\s]/u.test(href);
+}
+
+/** Throw a RangeError unless `href` is a web, mail, or relative link. */
 export function assertArticleHref(href: string): void {
-  if (!SAFE_HREF.test(href) || /[\p{Cc}\s]/u.test(href)) {
+  if (!isSafeHref(href)) {
     throw new RangeError(`Unsupported article link: ${JSON.stringify(href)}.`);
   }
 }
@@ -178,6 +183,9 @@ const REVIEWER_SUFFIXES = {
   "subject-expert": ", a subject expert",
 } as const satisfies Record<ArticleReviewerType, string>;
 
+/** The word the provenance sentence reserves for human-editor reviews. */
+const HUMAN_WORD = /human/iu;
+
 function isOneOf<const T extends readonly string[]>(values: T, value: unknown): value is T[number] {
   return typeof value === "string" && (values as readonly string[]).includes(value);
 }
@@ -198,6 +206,9 @@ export function articleProvenanceSentence(provenance: ArticleProvenanceRecord): 
   if (review === null) return `${drafted}. It has not been reviewed yet.`;
   if (!isOneOf(articleReviewerTypes, review.reviewerType)) throw new RangeError("Unknown article reviewer type.");
   if (!nonBlank(review.reviewer)) throw new RangeError("An article review must name its reviewer.");
+  if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(review.reviewer)) {
+    throw new RangeError("Only a human-editor review may use the word \"human\" in its reviewer name.");
+  }
   const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
 }
@@ -371,6 +382,9 @@ function parseReview(issues: Issues, where: string, value: unknown, field: strin
   }
   const reviewedOn = date(issues, where, review.reviewedOn, `${field}.reviewedOn`);
   if (!isOneOf(articleReviewerTypes, review.reviewerType) || reviewedOn === null) return null;
+  if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(reviewer)) {
+    issues.push(`${where}: ${field}.reviewer may use the word "human" only when reviewerType is human-editor.`);
+  }
   return { reviewer, reviewerType: review.reviewerType, reviewedOn };
 }
 
@@ -441,9 +455,11 @@ function parseArticleAdmission(value: unknown, index: number, issues: Issues): A
       return null;
     }
     const checkedOn = date(issues, where, source.checkedOn, `sources[${position}].checkedOn`);
+    const url = text(issues, where, source.url, `sources[${position}].url`);
+    if (url !== "" && !isSafeHref(url)) issues.push(`${where}: sources[${position}].url must be a web, mail, or relative link.`);
     return {
       title: text(issues, where, source.title, `sources[${position}].title`),
-      url: text(issues, where, source.url, `sources[${position}].url`),
+      url,
       checkedOn: checkedOn ?? "0000-00-00" as ArticleIsoDate,
     };
   }).filter((source) => source !== null);

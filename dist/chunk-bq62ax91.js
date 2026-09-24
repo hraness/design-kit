@@ -8,7 +8,7 @@ import {
   assertArticleDates,
   assertArticleHref,
   formatArticleDate
-} from "./chunk-4gv94thr.js";
+} from "./chunk-bn00zwqx.js";
 import {
   highlightCode
 } from "./chunk-kspdf9ch.js";

@@ -13,7 +13,7 @@ Limits are maximums. Count characters in the rendered text.
 | `heading` | The question or the result, in sentence case with no period. | 70 characters | Clickbait, a question the article does not answer, and a colon followed by a second title. |
 | `dek` | One concrete claim, as a complete sentence, that a reader could check. | 200 characters | A summary of the article's sections, "In this post", and claims with no source in the body. |
 | `eyebrow` | The series or post type: "Technique", "Release", "Integration". | Three words | A tagline. |
-| `author` | The organization byline: `{ kind: "organization", name: "Hraness" }`, or the product's own name on its host. | | A person's name on a post that person did not write. |
+| `author` | The organization byline on every host: `{ kind: "organization", name: "Hraness" }`. | | A person's name on a post that person did not adopt. |
 | `provenance` | The drafting kind and the review on record. | | Omitting it on an AI-drafted post. |
 | `toc` | One entry per `h2`, only when the article has four or more. | Eight entries | Entries for `h3` headings. |
 | Body headings | Sentence case, each naming what the section shows. | 70 characters | Signpost headings such as "Overview", "Conclusion", or "Key takeaways". |
@@ -25,12 +25,13 @@ Limits are maximums. Count characters in the rendered text.
 
 ### Introducing a product
 
-Title: "Introducing <product>". It lives on the product's own host, and each product gets one.
+Title: "Introducing <product>". It lives on the product's own host, and each active product gets one.
 
-1. The problem, in the reader's terms, with one concrete case.
-2. What the product does about it, and the mechanism in plain words.
-3. What it is like to use: one real session, command, or screen.
-4. The status sentence and how to start today.
+1. **What it is.** One plain sentence, then the problem it solves in the reader's terms, with one concrete case.
+2. **Who it is for.** The reader who has that problem, and who should use something else.
+3. **What it does today.** Only shipped behavior, shown with one real session, command, or screen. Say how to start.
+4. **The vision.** Where the product is going and why, stated as intent, not as a shipped feature or a date.
+5. **Honest limits and status.** What it does not do yet, and the status sentence.
 
 It explains the reason for the product. It does not repeat the feature grid on the home page. A paused product says so in the status sentence; a retired or legacy product gets no introduction.
 
@@ -38,21 +39,27 @@ It explains the reason for the product. It does not repeat the feature grid on t
 
 Title: "How <consumer> uses <provider>". It lives on the consumer's host.
 
+1. **The reader's problem.** The job the consumer's user is trying to get done.
+2. **What the provider does.** In plain words, for a reader who has never used it.
+3. **How the consumer uses it.** The code path, configuration, or data flow, from the consumer's side.
+4. **What that buys the user.** The concrete result a user of the consumer sees.
+5. **Limits.** What the integration does not cover, once, at its true scope.
+6. **Links.** The provider's home page and hub page, and the consumer's introduction.
+
 - Write one only for a relation registered in `@hraness/design-kit/portfolio` that has a reviewed `detail` sentence. The post expands that sentence; it does not claim more.
-- Show the integration from the consumer's side: what the consumer needed, why the provider fits, the code path or configuration, and one limit.
-- The provider's host may add at most one descriptive link to the post, and only after both pages are live.
+- Outside its hub page, the provider's host adds at most one descriptive link to the post, and only after both pages are live.
 - When the relation changes or is removed, update or archive the post in the same change.
 
 ### Provider hub page
 
-A provider may keep one page that lists the products using it. Each entry is the registered relation's own sentence and a link to the consumer's "How <consumer> uses <provider>" post when one exists. The hub is an index. It does not restate each post.
+A provider may keep one page, such as "Built on <provider>", that lists the products using it. Each entry is the registered relation's own sentence and a link to the consumer's "How <consumer> uses <provider>" post when one exists. The hub is an index. It does not restate each post.
 
 ### Technique posts in two halves
 
-A technique post teaches one method, such as property tests, model checking, or proofs.
+A technique post teaches one method, such as property tests, model checking, or proofs. It lives on hraness.com, and a product host may carry a product-specific version that shows the technique inside that product.
 
-- **First half, for any reader.** Open with a familiar failure ("It only breaks if you save, lose connection, then reopen") and explain what the technique does about it without code or notation.
-- **Second half, for practitioners.** Show the method with durable examples: laws, invariants, and small code excerpts that still read correctly after a refactor. Cite the repository file that holds the real example. Avoid line numbers and file names that change often.
+- **First half, for any reader.** Ground it in problems people already know, such as vibe-coded slop (software a model wrote quickly that looks finished and breaks on the second use) and fragile foundations (a product built on code nobody checked). Use one familiar failure ("It only breaks if you save, lose connection, then reopen"). Then describe the brighter alternative: what it is like when a whole class of that failure cannot happen. No code or notation in this half.
+- **Second half, how Hraness does it.** Show the method with durable examples: laws, invariants, and small code excerpts that still read correctly after a refactor. Cite the repository file that holds the real example. Avoid line numbers and file names that change often, and keep internal jargon to the one term the technique needs.
 - End on the last supported fact. State what the technique does not prove, once, at its true scope.
 
 ## Titles and formulas
@@ -86,7 +93,7 @@ Every article states who drafted it and who reviewed it, visibly, on every host.
 - An AI-drafted post from repository sources reads: "Drafted with AI from the source code and reviewed by <reviewer>."
 - Name the reviewer as it is. An AI reviewer has `reviewerType: "ai"` and a name that says it is AI, for example "Claude Opus 5.5 (claude-opus-5-5) editorial review". The sentence says "human" only when `reviewerType` is `human-editor`.
 - Keep `humanReview` null unless a person reviewed the article. Never describe AI review as human review.
-- The byline is the organization ("Hraness", or the product on its own host). Do not credit a person for an AI-drafted post.
+- The byline is "Hraness" on every host. Do not credit a person, including the owner, for an AI-drafted post. A person who later adopts a post may switch the byline to their own name; the drafting and review note stays.
 - A post with no review on record renders "It has not been reviewed yet." and stays quarantined.
 
 ## Admission and indexing

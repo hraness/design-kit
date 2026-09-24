@@ -89,8 +89,13 @@ test("provenance never says human unless a human editor reviewed", () => {
   fc.assert(fc.property(
     fc.constantFrom(...articleDraftingKinds),
     fc.constantFrom(...articleReviewerTypes),
-    fc.string({ minLength: 1 }).filter((value) => value.trim().length > 0 && !/human/iu.test(value)),
+    fc.oneof(fc.string({ minLength: 1 }), fc.string().map((value) => `${value}Human${value}`))
+      .filter((value) => value.trim().length > 0),
     (drafting, reviewerType, reviewer) => {
+      if (reviewerType !== "human-editor" && /human/iu.test(reviewer)) {
+        expect(() => articleProvenanceSentence({ drafting, review: { reviewer, reviewerType } })).toThrow(RangeError);
+        return;
+      }
       const sentence = articleProvenanceSentence({ drafting, review: { reviewer, reviewerType } });
       expect(/human/iu.test(sentence)).toBe(reviewerType === "human-editor");
       expect(sentence.endsWith(".")).toBe(true);

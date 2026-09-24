@@ -46,7 +46,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-9rb5jf41.js";
+} from "./chunk-3stf6113.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,
@@ -74,7 +74,7 @@ import {
   isArticleIndexable,
   isArticleIsoDate,
   parseArticleAdmissions
-} from "./chunk-4gv94thr.js";
+} from "./chunk-bn00zwqx.js";
 import {
   highlightCode,
   inferSyntaxLanguage,

@@ -44,8 +44,11 @@ function assertArticleDates(dates) {
     throw new RangeError("The updated date cannot precede the published date.");
 }
 var SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
+function isSafeHref(href) {
+  return SAFE_HREF.test(href) && !/[\p{Cc}\s]/u.test(href);
+}
 function assertArticleHref(href) {
-  if (!SAFE_HREF.test(href) || /[\p{Cc}\s]/u.test(href)) {
+  if (!isSafeHref(href)) {
     throw new RangeError(`Unsupported article link: ${JSON.stringify(href)}.`);
   }
 }
@@ -79,6 +82,7 @@ var REVIEWER_SUFFIXES = {
   "human-editor": ", a human editor",
   "subject-expert": ", a subject expert"
 };
+var HUMAN_WORD = /human/iu;
 function isOneOf(values, value) {
   return typeof value === "string" && values.includes(value);
 }
@@ -98,6 +102,9 @@ function articleProvenanceSentence(provenance) {
     throw new RangeError("Unknown article reviewer type.");
   if (!nonBlank(review.reviewer))
     throw new RangeError("An article review must name its reviewer.");
+  if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(review.reviewer)) {
+    throw new RangeError('Only a human-editor review may use the word "human" in its reviewer name.');
+  }
   const reviewer = review.reviewer.trim().replace(/[.]+$/u, "");
   return `${drafted} and reviewed by ${reviewer}${REVIEWER_SUFFIXES[review.reviewerType]}.`;
 }
@@ -180,6 +187,9 @@ function parseReview(issues, where, value, field) {
   const reviewedOn = date(issues, where, review.reviewedOn, `${field}.reviewedOn`);
   if (!isOneOf(articleReviewerTypes, review.reviewerType) || reviewedOn === null)
     return null;
+  if (review.reviewerType !== "human-editor" && HUMAN_WORD.test(reviewer)) {
+    issues.push(`${where}: ${field}.reviewer may use the word "human" only when reviewerType is human-editor.`);
+  }
   return {
     reviewer,
     reviewerType: review.reviewerType,
@@ -251,9 +261,12 @@ function parseArticleAdmission(value, index, issues) {
       return null;
     }
     const checkedOn = date(issues, where, source.checkedOn, `sources[${position}].checkedOn`);
+    const url = text(issues, where, source.url, `sources[${position}].url`);
+    if (url !== "" && !isSafeHref(url))
+      issues.push(`${where}: sources[${position}].url must be a web, mail, or relative link.`);
     return {
       title: text(issues, where, source.title, `sources[${position}].title`),
-      url: text(issues, where, source.url, `sources[${position}].url`),
+      url,
       checkedOn: checkedOn ?? "0000-00-00"
     };
   }).filter((source) => source !== null);

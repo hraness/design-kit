@@ -513,7 +513,7 @@ export function DesignSystemGallery({
               ]}
             />
           )}
-          author={{ kind: "organization", name: "Relay" }}
+          author={{ kind: "organization", name: "Hraness" }}
           dek="Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed."
           eyebrow="Technique"
           heading="Replaying webhooks without breaking signatures"
@@ -571,7 +571,7 @@ export function DesignSystemGallery({
               eyebrow: "Release",
               href: "#articles",
               published: "2026-09-02",
-              title: "Introducing Relay 2.4",
+              title: "Relay 2.4 adds per-endpoint retry limits",
             },
           ]}
         />

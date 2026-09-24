@@ -16,7 +16,7 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   resolveDesignPalettePreference
-} from "../chunk-9rb5jf41.js";
+} from "../chunk-3stf6113.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -82,8 +82,8 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-4drbgh9s.js";
-import"../chunk-4gv94thr.js";
+} from "../chunk-bq62ax91.js";
+import"../chunk-bn00zwqx.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -4256,7 +4256,7 @@ function DesignSystemGallery({
             }),
             author: {
               kind: "organization",
-              name: "Relay"
+              name: "Hraness"
             },
             dek: "Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed.",
             eyebrow: "Technique",
@@ -4380,7 +4380,7 @@ function DesignSystemGallery({
               eyebrow: "Release",
               href: "#articles",
               published: "2026-09-02",
-              title: "Introducing Relay 2.4"
+              title: "Relay 2.4 adds per-endpoint retry limits"
             }]
           })
         ]
