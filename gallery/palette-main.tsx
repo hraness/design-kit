@@ -10,10 +10,11 @@ const { DesignPaletteProvider, ThemeMenuButton, ThemeColorSync, useDesignPalette
 function PalettePreview() {
   const [requestedMode, setRequestedMode] = useState("");
   const controlled = new URL(location.href).searchParams.has("controlled");
+  const focusableAncestor = new URL(location.href).searchParams.has("focusable-ancestor");
   const palette = useDesignPalette();
   const portalClassName = useDesignPortalClassName();
   const mode = useDesignPortalTheme();
-  return <>
+  return <div data-palette-focus-owner tabIndex={focusableAncestor ? -1 : undefined}>
     <header><strong>Design kit palettes</strong>{controlled
       ? <ThemeMenuButton onChange={setRequestedMode} size="default" value="light" />
       : <ThemeMenuButton size="default" />}</header>
@@ -27,7 +28,7 @@ function PalettePreview() {
       <button data-forced-reference-button hidden type="button">Native system action</button>
     </main>
     {createPortal(<div className={portalClassName} data-palette-portal data-theme={mode}>Body portal</div>, document.body)}
-  </>;
+  </div>;
 }
 
 const root = document.querySelector("#root");

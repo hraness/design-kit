@@ -90,23 +90,52 @@ export function DesignPaletteMenuButton({
 }: ThemeMenuButtonProps) {
   const palette = useDesignPalette();
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const pointerInside = useRef(false);
   const groupId = useId();
   useEffect(() => {
     const details = detailsRef.current;
     if (details === null) return;
     const document = details.ownerDocument;
+    let settlement: ReturnType<typeof setTimeout> | undefined;
+    const clearSettlement = (): void => { clearTimeout(settlement); settlement = undefined; };
     const outside = (event: PointerEvent): void => {
-      if (details.open && isNode(event.target) && !details.contains(event.target)) details.open = false;
+      clearSettlement();
+      pointerInside.current = isNode(event.target) && details.contains(event.target);
+      if (details.open && !pointerInside.current) details.open = false;
+    };
+    const settlePointer = (): void => {
+      if (!pointerInside.current) return;
+      clearSettlement();
+      // A label first focuses its focusable ancestor, then its input during
+      // native activation. Keep the disclosure mounted through that sequence.
+      settlement = setTimeout(() => {
+        settlement = undefined;
+        pointerInside.current = false;
+        if (details.open && !details.contains(document.activeElement)) details.open = false;
+      }, 0);
     };
     const escape = (event: KeyboardEvent): void => {
       if (event.key !== "Escape" || !details.open) return;
       event.preventDefault();
+      clearSettlement();
+      pointerInside.current = false;
       details.open = false;
       details.querySelector("summary")?.focus();
     };
-    document.addEventListener("pointerdown", outside);
+    document.addEventListener("pointerdown", outside, true);
+    document.addEventListener("pointerup", settlePointer, true);
+    document.addEventListener("pointercancel", settlePointer, true);
+    document.defaultView?.addEventListener("blur", settlePointer);
     details.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", outside); details.removeEventListener("keydown", escape); };
+    return () => {
+      clearSettlement();
+      pointerInside.current = false;
+      document.removeEventListener("pointerdown", outside, true);
+      document.removeEventListener("pointerup", settlePointer, true);
+      document.removeEventListener("pointercancel", settlePointer, true);
+      document.defaultView?.removeEventListener("blur", settlePointer);
+      details.removeEventListener("keydown", escape);
+    };
   }, []);
   if (palette === null) throw new Error("DesignPaletteMenuButton requires DesignPaletteProvider.");
   const mode = controlledMode ?? palette.preference.mode;
@@ -120,7 +149,7 @@ export function DesignPaletteMenuButton({
     data-ready={ready ? "true" : "false"}
     ref={detailsRef}
     onBlur={(event) => {
-      if (isNode(event.relatedTarget)
+      if (!pointerInside.current && isNode(event.relatedTarget)
         && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false;
     }}
   >
