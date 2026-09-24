@@ -426,6 +426,37 @@ try {
       assert.equal(await page.locator("html").getAttribute("data-bootstrap-palette"), "gruvbox");
       await context.close();
 
+      for (const pointer of ["mouse", "touch"] as const) {
+        const gestureContext = await browser.newContext({ viewport: { width: 320, height: 844 }, colorScheme: "light", hasTouch: pointer === "touch", isMobile: pointer === "touch" });
+        const gesturePage = await isolatedPage(gestureContext);
+        await ready(gesturePage, `${origin}/?focusable-ancestor`);
+        const menu = gesturePage.locator("details.hraness-design-palette-menu");
+        const summary = menu.locator("summary");
+        await summary.focus();
+        await gesturePage.keyboard.press("Enter");
+        for (const value of ["gruvbox", "light"]) {
+          const labelText = menu.locator(`input[value="${value}"] + span`);
+          if (pointer === "touch") await labelText.tap();
+          else await labelText.click();
+          assert.equal(await menu.evaluate((element) => (element as HTMLDetailsElement).open), true, `${pointer}: native label activation must not dismiss its menu`);
+          assert.equal(await menu.locator(`input[value="${value}"]`).isChecked(), true);
+        }
+        await assertPalette(gesturePage, "gruvbox", "light");
+        await gesturePage.keyboard.press("Tab");
+        assert.equal(await gesturePage.locator("#outside").evaluate((element) => element === document.activeElement), true);
+        assert.equal(await menu.getAttribute("open"), null, "Tab outside must still dismiss the menu");
+        await openMenu(gesturePage);
+        await gesturePage.locator("header strong").click();
+        assert.equal(await menu.getAttribute("open"), null, "An outside pointer must still dismiss the menu");
+        await openMenu(gesturePage);
+        await gesturePage.keyboard.press("Escape");
+        assert.equal(await summary.evaluate((element) => element === document.activeElement), true);
+        assert.equal(await menu.getAttribute("open"), null);
+        await gesturePage.reload({ waitUntil: "networkidle" });
+        await assertPalette(gesturePage, "gruvbox", "light");
+        await gestureContext.close();
+      }
+
       for (const scenario of ["malformed", "denied"] as const) {
         const isolated = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: "light" });
         if (scenario === "malformed") await isolated.addInitScript((key) => { localStorage.setItem(key, '{"palette":"missing","mode":"light"}'); }, storageKey);
