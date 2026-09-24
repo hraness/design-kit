@@ -8,6 +8,14 @@ import { lanternControlStyles } from "./lantern-material.stylex.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { TopBar } from "./surfaces.js";
 
+const materialPatterns = [
+  { pattern: "cells", palette: "paper", label: "Glass cells", description: "Broad planes of light for an opening promise." },
+  { pattern: "weave", palette: "gruvbox", label: "Woven paper", description: "A warm, close texture for words and unfinished thoughts." },
+  { pattern: "contour", palette: "rose-pine", label: "Sound contours", description: "Gentle rings for creative tools and flowing ideas." },
+  { pattern: "mesh", palette: "tokyo-night", label: "Precision mesh", description: "A measured field for technical systems." },
+  { pattern: "none", palette: "paper", label: "Reading room", description: "An uninterrupted surface for reference and long reading." },
+] as const;
+
 const exampleNotes = [
   { title: "A place for unfinished thoughts", detail: "Personal · edited today" },
   { title: "What we learned on the walk", detail: "Shared · edited yesterday" },
@@ -109,6 +117,22 @@ export function LanternMaterialGallery() {
       <div className="design-gallery__lantern-pair">
         <MaterialWorkspace mode="light" />
         <MaterialWorkspace mode="dark" />
+      </div>
+      <h3>One material, different rhythms</h3>
+      <div className="design-gallery__lantern-pair">
+        {materialPatterns.map(({ pattern, palette, label, description }) => (
+          <div
+            className={`design-gallery__lantern-wall hraness-material-wall ${getDesignPaletteTheme(palette, "light").className}`}
+            data-gallery-pattern={pattern}
+            data-hraness-material="lantern"
+            data-hraness-pattern={pattern}
+            data-palette={palette}
+            data-theme="light"
+            key={pattern}
+          >
+            <div className="design-gallery__lantern-caption"><h4>{label}</h4><p>{description}</p></div>
+          </div>
+        ))}
       </div>
       <div
         className={`design-gallery__lantern-states hraness-material-pane ${getDesignPaletteTheme("paper", "light").className}`}

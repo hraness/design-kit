@@ -23,9 +23,11 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css).toContain(".hraness-marketing-question");
   expect(css).toContain(".hraness-marketing-cta");
   expect(css).not.toMatch(/soloterm|atet|slopcamera|ghostget|wrench|message like me|peopleblade|\bhra\b/iu);
-  // This neutral highlight uses an exact alpha byte so standalone CSS and the
-  // compiler serialize identical paint. Product-specific hex colors stay out.
-  expect(css.match(/#[0-9a-f]{3,8}\b/giu)).toEqual(["#ffffff1f"]);
+  // Surface depth is shared by raw and compiled recipes. Palette colors and
+  // material highlights stay behind semantic roles, never product literals.
+  expect(css).not.toMatch(/#[0-9a-f]{3,8}\b/giu);
+  expect(css).toContain("box-shadow: var(--hraness-marketing-surface-shadow)");
+  expect(css).toContain("box-shadow: var(--hraness-marketing-chrome-shadow)");
 });
 
 test("automatic flow syntax does not override typography or base color owned by the component", async () => {
@@ -166,4 +168,19 @@ test("metallic text and marks preserve a restrained spectrum and mask fallback",
   expect(css).toContain("mask-mode: alpha");
   expect(css).toContain("--hraness-foil-mask, linear-gradient(transparent, transparent)");
   expect(css).toMatch(/@media \(forced-colors: active\)\s*\{(?:[^{}]|\{[^}]*\})*\.hraness-foil-mark__paint \{ --_hraness-foil-mark-display: none; \}/u);
+});
+
+
+test("raw hero artwork stays inert and outside grid flow with the compiled recipe's exact light fields", async () => {
+  const recipe = await Bun.file(new URL("./react/hero-backdrop.stylex.ts", import.meta.url)).text();
+  const backdrop = css.match(/\.hraness-marketing-hero-backdrop\s*\{([^}]+)\}/u)?.[1] ?? "";
+  for (const declaration of ["position: absolute", "inset: 0", "z-index: -1", "overflow: clip", "pointer-events: none", "contain: paint", "display: var(--hraness-pattern-decoration, block)"]) expect(backdrop).toContain(declaration);
+  expect(backdrop).not.toContain("overflow: hidden");
+  for (const match of recipe.matchAll(/backgroundImage: "([^"]+)"/gu)) expect(css).toContain(`background-image: ${match[1]};`);
+  for (const [variation, position, size] of [["center", "50% 50%", null], ["east", "100% 25%", "140% 120%"], ["west", "0px 75%", "125% 150%"]] as const) {
+    const rule = css.split(`.hraness-marketing-hero-backdrop__atmosphere[data-variation="${variation}"] {`)[1]?.split("}")[0];
+    expect(rule).toContain(`background-position: ${position};`);
+    if (size) expect(rule).toContain(`background-size: ${size};`);
+  }
+  expect(css).toContain('@media (forced-colors: active), (prefers-reduced-transparency: reduce) {\n  .hraness-marketing-hero-backdrop { opacity: 0; }');
 });

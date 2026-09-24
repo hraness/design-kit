@@ -382,13 +382,17 @@ test("glass header atoms preserve separate browser capabilities and accessibilit
   const collector = createStylexTransformCollector(process.cwd());
   await collector.transform(await readFile(filename, "utf8"), filename);
   const media = await readFile(new URL("../compiler-components.css", import.meta.url), "utf8");
-  const css = `${serializeStylexRules(collector.seal())}\n${media}`;
+  const rules = collector.seal();
+  const css = `${serializeStylexRules(rules)}\n${media}`;
   const optimized = transform({ filename: "surface-atoms.css", code: Buffer.from(css), minify: true }).code.toString();
   expect(optimized).toMatch(/@supports[^{}]*-webkit-backdrop-filter:blur\(1px\)/u);
   expect(optimized).toMatch(/@supports[^{}]*[^-]backdrop-filter:blur\(1px\)/u);
   expect(optimized).toContain("-webkit-backdrop-filter:var(--hraness-design-top-bar-backdrop,none)");
   expect(optimized).toMatch(/[;{]backdrop-filter:var\(--hraness-design-top-bar-backdrop,none\)/u);
   expect(optimized).toContain("prefers-reduced-transparency:reduce");
+  expect(optimized).toContain("border-block-end-color:var(--hraness-design-top-bar-edge,var(--line))");
+  expect(rules.some(([, rule]) => /forced-colors:\s*active/iu.test(rule.ltr)
+    && /border-block-end-color:\s*CanvasText/iu.test(rule.ltr))).toBe(true);
   expect(optimized).toContain("background-color:var(--background)");
   expect(optimized).toContain("--hraness-design-top-bar-backdrop:none");
   // Bun is a second optimizer in real consumers. Adjacent duplicate support

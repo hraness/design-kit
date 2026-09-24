@@ -1,6 +1,6 @@
 # Lantern material
 
-Lantern adds luminous edges, warm selection states and restrained depth to the shared component system. It is independent of the selected palette, the Paper theme and editorial typography. The default application treatment is quiet. Glazing belongs at key transitions and on chrome with real content behind it.
+Lantern adds luminous edges, palette-tinted selection states and restrained depth to the shared component system. It is independent of the selected palette, the Paper theme and editorial typography. The default application treatment is quiet. Glazing belongs at key transitions and on chrome with real content behind it.
 
 The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, remote URL or inline-style dependency. Its CSS-only shaded faces work independently; the marketing preset supplies original grain and individually shaded SVG cells through optional background tokens. Existing controls continue to own their semantics, dimensions, state and accessible names.
 
@@ -17,6 +17,10 @@ The complete `styles.css` and `compiler-foundation.css` entries include the mate
 | `.hraness-material-rows` | An unruled readable collection. The product owns grouping, separators, and responsive structure. |
 | `.hraness-material-disclosure` | Native disclosure with a touch-sized summary and visible keyboard focus. |
 
+The wall accepts `data-hraness-pattern="cells"`, `"weave"`, `"contour"`, `"mesh"` or `"none"` on its material boundary. Cells retain the familiar glazed modules; weave adds a fine textile rhythm; contour draws spacious nested curves; mesh uses a precise dot lattice; none provides an uninterrupted reading surface. Every pigment comes from the current semantic palette. The marketing preset supplies the original cell and grain assets when present; the material-only snapshot needs no assets.
+
+Panes use a resting shadow by default. Raised panes use a broader lift, while inset panes use an inner shadow and a quieter fill. Their transparent borders preserve geometry; forced colors replaces those edges with `CanvasText`. Chrome uses a diffused shadow rather than a drawn divider. `--hraness-material-rest`, `--hraness-material-lift`, `--hraness-material-inset` and `--hraness-material-outline` are the shared depth roles. The UI adapters leave error borders and keyboard focus under the control's ownership.
+
 Material tokens resolve inside each marked island. Mark a nested theme island separately. A portalled overlay must carry the complete palette class/attributes, resolved light/dark mode and `data-hraness-material="lantern"` on its actual host (or inherit them from a corresponding wrapper). The marker and material hook can live on the same element. A material class alone cannot transport context across a portal.
 
 For `@hraness/ui` primitives, use the compiled `lanternControlStyles` exported from `@hraness/design-kit/react` through their existing `controlXstyle` prop. Use `edge` on actions, `inset` on a text field's control, and conditionally append `selected` for a real selected state. Do not apply the plain HTML classes to primitive wrappers or controls. The compiled recipes leave the primitive's focus outline, focus shadow, dimensions, error and disabled behavior intact. They work through either the standalone package stylesheet or the final compiler union.
@@ -32,7 +36,7 @@ For `@hraness/ui` primitives, use the compiled `lanternControlStyles` exported f
 <TextField label="Find a note" controlXstyle={lanternControlStyles.inset} />
 ```
 
-`TopBar` accepts the chrome class with `surface="glass"`; the material binds its existing public background/backdrop tokens. The same class also supports a native header. Use sticky chrome only where content actually scrolls behind it.
+`TopBar` accepts the chrome class with `surface="glass"`; the material binds its public background/backdrop tokens. Its `--hraness-design-top-bar-edge` token resolves to the material outline, including an explicit system-color edge in forced colors. The same class also supports a native header. Use sticky chrome only where content actually scrolls behind it.
 
 Older applications can vendor a five-file snapshot without upgrading their primitive peer graph:
 

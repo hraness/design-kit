@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.15.0",
+  "version": "0.16.1",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -77,7 +77,13 @@
     "./paper-theme.css": "./src/paper-theme.css",
     "./product-marketing-preset.css": "./src/product-marketing-preset.css",
     "./fonts/instrument-serif/*": "./src/fonts/instrument-serif/*",
-    "./marketing-assets/*": "./src/marketing-assets/*"
+    "./marketing-assets/*": "./src/marketing-assets/*",
+    "./palette-system.css": "./src/palette-system.css",
+    "./palette-bridge.css": "./src/palette-bridge.css",
+    "./react/hero-backdrop": {
+      "types": "./src/react/hero-backdrop.tsx",
+      "import": "./dist/react/hero-backdrop.js"
+    }
   },
   "main": "./dist/index.js",
   "types": "./src/index.ts",
@@ -195,7 +201,12 @@
     "LANTERN_MATERIAL.md",
     "scripts/lantern-material-snapshot.ts",
     "scripts/check-lantern-material-snapshot.mjs",
-    "scripts/check-lantern-material-snapshot.d.mts"
+    "scripts/check-lantern-material-snapshot.d.mts",
+    "src/browser/hero-light.ts",
+    "src/react/hero-backdrop.tsx",
+    "src/react/hero-backdrop.stylex.ts",
+    "src/palette-system.css",
+    "HERO_FIELDS.md"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -206,7 +217,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
-    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts && bun run ./scripts/foil-browser.ts",
+    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts && bun run ./scripts/foil-browser.ts && bun run ./scripts/hero-light-browser.ts",
     "test:package": "bun run ./scripts/package-smoke.ts",
     "kb:refresh": "bunx --bun github:hraness/kb#v0.15.1 refresh --root kb",
     "kb:check:lane": "bunx --bun github:hraness/kb#v0.15.1 check --root kb --no-catalog",
@@ -246,7 +257,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@babel/core": "7.29.7",
-    "@hraness/ui": "github:hraness/ui#v0.5.16",
+    "@hraness/ui": "github:hraness/ui#v0.5.17",
     "@stylexjs/babel-plugin": "0.19.0",
     "@types/babel__core": "7.20.5",
     "@types/bun": "1.3.14",

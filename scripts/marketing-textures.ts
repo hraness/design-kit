@@ -28,7 +28,7 @@ for (let row = 0; row < 8; row++) {
     const id = `p${row * 8 + column}`;
     const angle = Math.round(20 + random() * 65);
     const light = (0.025 + random() * 0.045).toFixed(3);
-    const shade = (0.02 + random() * 0.055).toFixed(3);
+    const shade = (0.008 + random() * 0.026).toFixed(3);
     gradients.push(`<linearGradient id="${id}" x2="${angle}%" y2="100%"><stop stop-color="#fff" stop-opacity="${light}"/><stop offset=".46" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${shade}"/></linearGradient>`);
     faces.push(`<path d="M${column * 96} ${row * 96}h96v96h-96z" fill="url(#${id})"/>`);
   }

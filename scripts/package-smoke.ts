@@ -1,3 +1,4 @@
+import { assertServerBoundary } from "./assert-server-boundary.js";
 import { marketingSnapshotPaths } from "./product-marketing-snapshot.js";
 import { lanternSnapshotPaths } from "./lantern-material-snapshot.js";
 import assert from "node:assert/strict";
@@ -804,6 +805,7 @@ const compilerStylesheetPaths = [
   "src/fonts.css",
   "src/lantern-material.css",
   "src/palette-bridge.css",
+  "src/palette-system.css",
   "src/palettes.css",
   "src/paper-theme.css",
   "src/plain-publication.css",
@@ -831,7 +833,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.15.0" },
+    { name: "@hraness/design-kit", version: "0.16.1" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -895,9 +897,9 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
     "The @hraness/ui development dependency must use an exact immutable release tag or full reviewed commit.",
   );
 }
-if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.16") {
+if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.15.0 must build and publish against the immutable @hraness/ui v0.5.16 release.",
+    "Design-kit v0.16.1 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -915,7 +917,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.15.0 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.16.1 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1325,6 +1327,9 @@ try {
       'import { AnimatedRailStage, BarListChart, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { Children, createElement, isValidElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
+      'import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";',
+      'const backdropMarkup = renderToStaticMarkup(createElement(HeroBackdrop, { seed: "packed-peer" }));',
+      'if (!/<div(?=[^>]*data-hraness-hero-backdrop="")(?=[^>]*inert="")(?=[^>]*aria-hidden="true")[^>]*>/u.test(backdropMarkup) || backdropMarkup.includes("style=")) throw new Error("Packed hero backdrop lost inert SSR or extracted presentation.");',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
       'if (new URL(stylexUrl).protocol !== "file:") throw new Error("Packed stylex.css is not a file export.");',
       'const stylexCss = await readFile(new URL(stylexUrl), "utf8");',
@@ -1466,6 +1471,10 @@ try {
     "src/product-marketing-foundation.css",
     "src/styles.css",
     "src/browser/artifact-share.ts",
+    "src/browser/hero-light.ts",
+    "src/react/hero-backdrop.tsx",
+    "src/react/hero-backdrop.stylex.ts",
+    "dist/react/hero-backdrop.js",
     "src/browser/sticky-offset.ts",
     "src/react/sticky-offset.tsx",
     "src/react/animated-rail-stage.stylex.ts",
@@ -1476,6 +1485,7 @@ try {
     "src/palette-color.ts",
     "src/palette-appearance.ts",
     "src/palette-bridge.css",
+  "src/palette-system.css",
     "src/palettes.css",
   "src/paper-theme.css",
     "src/browser/design-palette.ts",
@@ -1563,8 +1573,8 @@ try {
   );
   assert.deepEqual(
     installedUiManifest.package,
-    { name: "@hraness/ui", version: "0.5.16" },
-    "Compiler consumer must install the immutable UI v0.5.16 manifest.",
+    { name: "@hraness/ui", version: "0.5.17" },
+    "Compiler consumer must install the immutable UI v0.5.17 manifest.",
   );
   assert.notEqual(
     installedUiManifest.standaloneSerializer.prefix,
@@ -1580,7 +1590,7 @@ try {
       ],
       prefix: "components.hraness-ui",
     },
-    "UI v0.5.16 standalone serialization contract changed.",
+    "UI v0.5.17 standalone serialization contract changed.",
   );
   assert.equal(
     installedUiManifest.compilerSha256,
@@ -1590,18 +1600,18 @@ try {
   assert.equal(installedUiManifest.compilerSha256, compilerSha256);
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex-manifest.json")).sha256,
-    "93c49fd2066a3ab80a5251ce2f9376555eebfa0b6b6d0c01705d3e2b0b934696",
-    "Installed UI manifest does not match the immutable v0.5.16 release.",
+    "4c5e02c5816fc42e279510343fe80bdabe08aba949fd4b87b50624a6c430f4b5",
+    "Installed UI manifest does not match the immutable v0.5.17 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "src/compiler-foundation.css")).sha256,
     "2b9b3f7d23856b10357599793c649a3af41f83ac7d58f7a1ffae91a03f322e4e",
-    "Installed UI compiler foundation does not match the immutable v0.5.16 release.",
+    "Installed UI compiler foundation does not match the immutable v0.5.17 release.",
   );
   assert.equal(
     (await artifactForFile(installedUi, "dist/stylex.css")).sha256,
-    "82a920b6fff1da862d0d153aae791fa07337912c5fb4a00cf194452ed1513510",
-    "Installed UI standalone StyleX CSS does not match the immutable v0.5.16 release.",
+    "e96806af4ed01ff272c8f8486a0be0aedb23ca4d4039ea6e528c7dff9597ad98",
+    "Installed UI standalone StyleX CSS does not match the immutable v0.5.17 release.",
   );
   assert.deepEqual(
     stylexUnionPolicy,
@@ -1624,6 +1634,7 @@ try {
   );
   assert.equal(STYLEX_GENERATION_SCHEMA_VERSION, 2);
   assert.equal(STYLEX_COMPLETE_RECORD_SCHEMA_VERSION, 2);
+  await assertServerBoundary(installed);
   const packedFiles = await filesBelow(installed);
   if (packedFiles.some((path) => path.includes(".test."))) {
     throw new Error("Packed package contains test sources");
@@ -2613,6 +2624,9 @@ try {
       'import { AnimatedRailStage, BottomBar, ChatComposer, ChatMessage, DitherSurface, DockedFooter, Fader, PageCanvas, PlaybackTransport, ProductionDataPreviewNotice, TopBar } from "@hraness/design-kit/react";',
       'import { createElement } from "react";',
       'import { renderToStaticMarkup } from "react-dom/server";',
+      'import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";',
+      'const backdropMarkup = renderToStaticMarkup(createElement(HeroBackdrop, { seed: "packed-peer" }));',
+      'if (!/<div(?=[^>]*data-hraness-hero-backdrop="")(?=[^>]*inert="")(?=[^>]*aria-hidden="true")[^>]*>/u.test(backdropMarkup) || backdropMarkup.includes("style=")) throw new Error("Packed hero backdrop lost inert SSR or extracted presentation.");',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
       'const asideClasses = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
       'const strongClasses = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',

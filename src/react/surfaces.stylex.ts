@@ -133,6 +133,10 @@ export const layoutSurfaceStyles = stylex.create({
     },
   },
   topBar: {
+    "border-block-end-color": {
+      default: "var(--hraness-design-top-bar-edge, var(--line))",
+      [forcedColors]: "CanvasText",
+    },
     "border-block-end-style": "solid",
     "border-block-end-width": 1,
     "min-block-size": "var(--top-bar-height)",

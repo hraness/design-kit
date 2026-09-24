@@ -199,7 +199,7 @@ test("the finite recipes preserve explicit variants and reject unknown states", 
   }
 });
 
-test("the immutable static grammar and 26-token foundation stay separate from owned atoms", async () => {
+test("the reviewed static grammar and 30-token foundation stay separate from owned atoms", async () => {
   const [legacy, foundation, compiler, source] = await Promise.all([
     readFile(new URL("../product-marketing.css", import.meta.url), "utf8"),
     readFile(new URL("../product-marketing-foundation.css", import.meta.url), "utf8"),
@@ -209,9 +209,9 @@ test("the immutable static grammar and 26-token foundation stay separate from ow
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("61917d2ecfa68f909a4604c60b5a9d8638f5ba3f139f90af8f78f4362656f237");
+    .toBe("d00000012a0948816efc232f596a63c82570729af7b8e57158222f4c1f0fd7fa");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
-  expect(tokenNames(foundation)).toHaveLength(26);
+  expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
   const tokenRoots = (text: string) => (text.match(/:where\(([^)]*)\)\s*\{/u)?.[1] ?? "")
     .split(",").map((selector) => selector.trim());
@@ -301,6 +301,23 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     const tokens = new Set(stylex.props(recipe).className?.split(" ") ?? []);
     return rules.filter(([name]) => tokens.has(name)).map(([, rule]) => rule.ltr);
   };
+  for (const recipe of [marketingStyles.primitive, marketingStyles.interface, marketingStyles.trust_item, marketingStyles.card, marketingStyles.quote, marketingStyles.plan]) {
+    const emitted = recipeRules(recipe).join("");
+    expect(emitted).toContain("var(--hraness-marketing-surface-rule)");
+    expect(emitted).toContain("box-shadow:var(--hraness-marketing-surface-shadow)");
+    const forced = recipeRules(recipe).filter((rule) => rule.includes("forced-colors")).join("");
+    expect(forced).toMatch(/1px solid CanvasText/iu);
+    expect(forced).toContain("box-shadow:none");
+  }
+  for (const recipe of [marketingStyles.header, marketingStyles.headerStatic, marketingStyles.proof_frame__chrome]) {
+    const emitted = recipeRules(recipe).join("");
+    expect(emitted).toContain("box-shadow:var(--hraness-marketing-chrome-shadow)");
+  }
+  for (const recipe of [marketingStyles.hero, marketingStyles.heroAccent]) {
+    const emitted = recipeRules(recipe).join("");
+    expect(emitted).toContain("position:relative");
+    expect(emitted).toContain("isolation:isolate");
+  }
   for (const [property, presets] of [
     ["--hraness-marketing-fact-columns", [marketingStyles.factColumns1, marketingStyles.factColumns2, marketingStyles.factColumns3, marketingStyles.factColumns4]],
     ["--hraness-marketing-pillar-columns", [marketingStyles.pillarColumns1, marketingStyles.pillarColumns2, marketingStyles.pillarColumns3, marketingStyles.pillarColumns4]],

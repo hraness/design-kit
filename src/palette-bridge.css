@@ -1,10 +1,15 @@
 /* StyleX owns --hraness-palette-* values. This opt-in global boundary joins
  * portable controls, product CSS, and compiled recipes without new runtime CSS.
  * Import after the existing token boundary. Explicit palette islands carry
- * their own complete theme class, including portalled overlays. */
+ * their own complete theme class, including portalled overlays. Repeating the
+ * palette attribute outranks earlier or later legacy root and island tokens;
+ * bundlers may deduplicate a consumer's second bridge import. */
+@import "./palette-system.css";
+
 :root.hraness-palette[data-theme],
 .hraness-palette[data-theme],
-[data-palette][data-theme] {
+:root[data-palette][data-palette],
+[data-palette][data-palette] {
   --background: var(--hraness-palette-background);
   --foreground: var(--hraness-palette-foreground);
   --muted: var(--hraness-palette-muted);
@@ -92,6 +97,12 @@
 @media (forced-colors: active) {
   /* The pinned StyleX serializer doubles createTheme classes. Outrank those
    * unlayered rules even when a compiler consumer loads its final union last. */
+  :root.hraness-palette.hraness-palette[data-palette],
+  .hraness-palette.hraness-palette[data-palette],
+  :root[data-palette][data-theme],
+  [data-palette][data-theme],
+  :root[data-palette]:not([data-theme]),
+  [data-palette]:not([data-theme]),
   :root.hraness-palette.hraness-palette[data-theme],
   .hraness-palette.hraness-palette[data-theme] {
     --hraness-palette-background: Canvas;

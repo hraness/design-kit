@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { isAbsolute, join, relative, resolve } from "node:path";
-import { chromium } from "playwright-core";
+import { chromium, type Page } from "playwright-core";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { transform } from "lightningcss";
@@ -17,6 +17,22 @@ import { builtDesignKit } from "./built-root.js";
 const root = resolve(import.meta.dir, "..");
 const rgb = (hex: string) => `rgb(${[1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16)).join(", ")})`;
 const headerSelectors = [".fixture-quiet-header", ".fixture-standalone-header"];
+async function patternPaint(page: Page) {
+  return page.evaluate(() => {
+    const field = document.querySelector('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');
+    if (!(field instanceof HTMLElement)) throw new Error("Missing opening field");
+    const original = field.getAttribute("data-hraness-pattern");
+    const paints = ["cells", "weave", "contour", "mesh", "none"].map((pattern) => {
+      field.setAttribute("data-hraness-pattern", pattern);
+      const style = getComputedStyle(field);
+      return { pattern, image: style.backgroundImage, size: style.backgroundSize };
+    });
+    if (original === null) field.removeAttribute("data-hraness-pattern");
+    else field.setAttribute("data-hraness-pattern", original);
+    return paints;
+  });
+}
+
 const output = await mkdtemp(join(tmpdir(), "marketing-preset-browser-"));
 const api: typeof Marketing = await import(join(root, "dist/react/server.js"));
 const html = renderToStaticMarkup(createElement(ProductMarketingPresetFixture, { api }));
@@ -124,15 +140,33 @@ try {
           void _background;
           if (reference === undefined) reference = comparable;
           else assert.deepEqual(comparable, reference, `${mode} differs from raw preset at ${width}/${theme}`);
-          receipts.push({ mode, width, theme, ...proof });
+          const patterns = await patternPaint(page);
+          assert.equal(new Set(patterns.map(({ image }) => image)).size, 5, `${mode} must render five distinct patterns`);
+          assert(patterns[0]?.image.includes("cells.svg"));
+          assert(patterns[1]?.image.includes("repeating-conic-gradient"));
+          assert(patterns[2]?.image.includes("repeating-radial-gradient"));
+          assert(patterns[3]?.image.includes("radial-gradient"));
+          assert.equal(patterns[4]?.image, "none");
+          const quietRoot = await page.evaluate(() => {
+            document.documentElement.setAttribute("data-hraness-pattern", "none");
+            const field = document.querySelector('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');
+            if (!(field instanceof HTMLElement)) throw new Error("Missing opening field");
+            const image = getComputedStyle(field).backgroundImage;
+            document.documentElement.removeAttribute("data-hraness-pattern");
+            return image;
+          });
+          assert.equal(quietRoot, "none", `${mode} quiet root must survive a nested preset`);
+          receipts.push({ mode, width, theme, ...proof, patterns });
           if (mode === "compiler" && width === 1280) await page.screenshot({ path: join(output, `${theme}.png`), fullPage: true });
           await selectTransparency("reduce");
+          assert((await patternPaint(page)).every(({ image }) => image === "none"), `${mode} patterns must flatten with reduced transparency`);
           await requireHeaderPaint(page, headerSelectors.map((selector) => ({
             selector, background: rgb(builtDesignKit.colors[theme].background),
           })), "none");
           await selectTransparency("no-preference");
           await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "blur(14px) saturate(1.4)");
           await selectTransparency("no-preference", { forcedColors: "active" });
+          assert((await patternPaint(page)).every(({ image }) => image === "none"), `${mode} patterns must flatten in forced colors`);
           await requireHeaderPaint(page, headerSelectors.map((selector) => ({ selector })), "none");
           assert.equal(await page.locator('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field').evaluate((node) => getComputedStyle(node).backgroundImage), "none");
           assert.equal(await page.locator(".fixture-quiet-header").evaluate((node) => getComputedStyle(node).backdropFilter), "none");

@@ -12,7 +12,7 @@
   --hraness-marketing-muted: var(--muted, GrayText);
   --hraness-marketing-background: var(--background, Canvas);
   --hraness-marketing-surface: var(--surface, Canvas);
-  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 12%, transparent);
+  --hraness-marketing-line: color-mix(in oklch, var(--hraness-marketing-ink) 7%, transparent);
   --hraness-marketing-line-strong: color-mix(in oklch, var(--hraness-marketing-ink) 22%, transparent);
   --hraness-marketing-inverse: var(--inverse, CanvasText);
   --hraness-marketing-inverse-ink: var(--inverse-foreground, Canvas);
@@ -23,12 +23,16 @@
   --hraness-marketing-heading-font: var(--font-heading, var(--hraness-marketing-text-font));
   --hraness-marketing-mono-font: var(--font-mono, ui-monospace, monospace);
   --hraness-marketing-measure: 72rem;
-  --hraness-marketing-copy-measure: 40rem;
+  --hraness-marketing-copy-measure: 54ch;
   --hraness-marketing-prose-measure: 62ch;
   --hraness-marketing-gutter: clamp(1.25rem, 4vw, 3rem);
-  --hraness-marketing-radius: 0.625rem;
-  --hraness-marketing-frame-radius: 0.875rem;
+  --hraness-marketing-radius: 0.75rem;
+  --hraness-marketing-frame-radius: 1.125rem;
   --hraness-marketing-rule: 1px solid var(--hraness-marketing-line);
+  --hraness-marketing-surface-rule: 1px solid transparent;
+  --hraness-marketing-chrome-rule: 1px solid transparent;
+  --hraness-marketing-surface-shadow: var(--hraness-material-rest, inset 0 1px 0 rgb(255 255 255 / 0.12), 0 2px 5px rgb(0 0 0 / 0.05), 0 12px 28px -16px rgb(0 0 0 / 0.15));
+  --hraness-marketing-chrome-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 4px 16px -8px rgb(0 0 0 / 0.1);
   --hraness-marketing-shadow: 0 1px 2px oklch(0 0 0 / 0.06), 0 24px 48px -24px oklch(0 0 0 / 0.28);
   --hraness-marketing-section-space: clamp(4rem, 9vw, 7.5rem);
   --hraness-marketing-heading-weight: 500;
@@ -331,4 +335,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   min-block-size: 100%;
   align-self: stretch;
 }
+/* Keep all meaningful hero content above the inert decorative backdrop. */
+.hraness-marketing-hero > :where(.hraness-marketing-hero__copy, .hraness-marketing-hero__frame, .hraness-marketing-proof, .hraness-marketing-facts) {
+  position: relative;
+  z-index: 1;
+}
+
 }

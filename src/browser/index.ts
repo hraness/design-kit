@@ -4,6 +4,7 @@ import { installAppearanceMenus as installMenus } from "./appearance-menu.js";
 export * from "./artifact-share.js";
 export * from "./design-palette.js";
 export * from "./foil.js";
+export * from "./hero-light.js";
 export * from "./sticky-offset.js";
 export * from "../palette-appearance.js";
 

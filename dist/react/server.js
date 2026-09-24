@@ -36,14 +36,16 @@ import {
   TopBar,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
+  marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-yf4w3epa.js";
+} from "../chunk-qrn9z03t.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-5gtx3pza.js";
 export {
   proceduralRecipeVersion,
   proceduralBackdropVariants,
+  marketingPatterns,
   createProceduralBackdropRecipe,
   createParticleHaloRecipe,
   TopBar,

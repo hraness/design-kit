@@ -19,9 +19,27 @@ import { MarketingPage, MarketingField, ProductHero, MarketingSection } from "@h
 
 Raw HTML and older components use `data-hraness-marketing-preset="editorial"` on their marketing ancestor and `.hraness-marketing-field` on the opening container. Existing semantic `hraness-marketing-*` hooks receive the same typography, spacing, and action tokens. A field may also be the hero itself. The field is a static background in document flow, with no content overlay or filter. Product imagery and logos stay clean and full color; `.hraness-marketing-brand-mark` is an optional image hook. Existing product accent variables remain authoritative.
 
-`minimal` uses the existing `--font-text` sans face, a compact heading scale and 45px header token, with no textured field. Both presets inherit the existing body face (normally Nebula Sans); the snapshot adds only Instrument Serif 400, not a second body-font system. Nested scopes reset their own display and field tokens. Prefer independent header and main scopes when their presets differ.
+`minimal` uses the existing `--font-text` sans face, a compact responsive heading scale and 40px header token, with no textured field. Both presets inherit the existing body face (normally Nebula Sans); the snapshot adds only Instrument Serif 400, not a second body-font system. Nested scopes reset their own display and field tokens. Prefer independent header and main scopes when their presets differ.
 
 For a custom or older component header, add `class="hraness-marketing-header-surface"` to the header itself. This class explicitly opts in to paint without requiring a preset ancestor. Add `data-hraness-marketing-preset="minimal"` on the same element only when you also need its compact role tokens. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Coarse pointers retain 48px action targets.
+
+## Palette and pattern
+
+The opening field and terminal proof inherit the active palette's foreground, muted, primary, background and surface colors. This keeps a Gruvbox page warm and a Tokyo Night page cool without a separate hardcoded field palette. Existing product accent overrides remain available for actions.
+
+Choose the `pattern` prop on `MarketingPage` or `MarketingField`, or set `data-hraness-pattern` on a native marketing or material boundary. The same finite values work in React markup, raw HTML and immutable CSS snapshots:
+
+| Pattern | Treatment | Typical surface |
+| --- | --- | --- |
+| `cells` | Broad shaded glass modules | A product's opening story |
+| `weave` | Fine woven texture | Writing and knowledge tools |
+| `contour` | Spacious nested curves | Audio and creative work |
+| `mesh` | A precise dot lattice | Developer tools and infrastructure |
+| `none` | An uninterrupted background | Documentation and reference |
+
+Omitting the attribute preserves the editorial cell field and the minimal preset's plain field. An explicit pattern may also be applied to one field. Mark a nested palette island separately so its pigments resolve locally. The decoration remains a background; body text, code and controls stay legible on their own surfaces. Reduced transparency and forced colors remove patterns. A shared hero light controller may update the bounded `--hraness-hero-light-x` and `--hraness-hero-light-y` inputs.
+
+Editorial marketing uses Instrument Serif for its display roles, with a fluid 3rem–5.5rem opening heading and a 52-character summary measure. Minimal marketing uses Nebula Sans and a smaller fluid hierarchy. Application and embedded preview headings retain their own roles. Marketing cards use the shared `--hraness-marketing-surface-shadow` and a transparent perimeter; header chrome uses `--hraness-marketing-chrome-shadow`. Forced colors restores explicit system-color edges.
 
 ## Sticky clearance and equal-height card rows
 
