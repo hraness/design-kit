@@ -13,7 +13,10 @@ export const heroBackdropStyles = stylex.create({
     pointerEvents: "none",
     userSelect: "none",
     contain: "paint",
-    opacity: { default: 1, [forcedColors]: 0, [reducedTransparency]: 0 },
+    // Later standalone packages can repeat generic opacity atoms. Keep this
+    // component's accessibility state independent of their cascade layers.
+    opacity: "var(--_hraness-hero-backdrop-opacity)",
+    "--_hraness-hero-backdrop-opacity": { default: "1", [forcedColors]: "0", [reducedTransparency]: "0" },
     maskImage: "linear-gradient(to bottom, black 65%, transparent)",
   },
   atmosphere: {
