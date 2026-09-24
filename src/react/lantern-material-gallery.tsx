@@ -43,7 +43,7 @@ function MaterialWorkspace({ mode }: Readonly<{ mode: "light" | "dark" }>) {
     >
       <div className="design-gallery__lantern-caption">
         <h3>{mode === "light" ? "Daylight" : "Lamplight"}</h3>
-        <p>Same room. A different light.</p>
+        <p>The same notebook in the Paper palette, light and dark.</p>
       </div>
       <div className="hraness-material-terminal">
         <div className="hraness-material-terminal__bar">notebook · terminal</div>
@@ -113,7 +113,7 @@ export function LanternMaterialGallery() {
   return (
     <section className="design-gallery__section" id="lantern">
       <h2>Lantern material</h2>
-      <p className="design-gallery__lantern-intro">Quiet surfaces. Light at the edges. Warmth where you act.</p>
+      <p className="design-gallery__lantern-intro">Lantern gives reading surfaces a glowing edge and selected controls a warm fill.</p>
       <div className="design-gallery__lantern-pair">
         <MaterialWorkspace mode="light" />
         <MaterialWorkspace mode="dark" />
@@ -142,14 +142,14 @@ export function LanternMaterialGallery() {
         data-theme="light"
       >
         <h3>Controls keep their meaning</h3>
-        <p>Material follows the action. Keyboard focus, errors and unavailable actions remain explicit.</p>
+        <p>Keyboard focus, errors, and unavailable actions stay clearly marked under Lantern.</p>
         <div className="design-gallery__lantern-state-actions">
           <Button controlXstyle={lanternControlStyles.edge} isDisabled>Unavailable action</Button>
           <Button controlXstyle={lanternControlStyles.edge} isPending>Saving changes</Button>
           <Button controlXstyle={lanternControlStyles.edge} onPress={() => setRemoved(true)} variant="danger">Remove example</Button>
           <button className="design-gallery__lantern-plain hraness-material-choice" aria-pressed={plainSelected} onClick={() => setPlainSelected(!plainSelected)} type="button">HTML selection</button>
         </div>
-        <p aria-live="polite">{removed ? "Example removed for this visit." : "These controls demonstrate their real interaction states."}</p>
+        <p aria-live="polite">{removed ? "Example removed for this visit." : ""}</p>
         <TextField
           controlXstyle={lanternControlStyles.inset}
           defaultValue=""

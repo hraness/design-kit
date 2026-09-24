@@ -5,7 +5,7 @@
 - `src/react/foil-mark.tsx` provides the server-safe exact-alpha metallic mark; `scripts/foil-browser.ts` checks compiled and raw delivery, fixed sizing, forced colors, and mask fallback.
 - `src/react/` contains application compositions, appearance persistence, charts, haptics, instruments, decorative effects, and the executable public gallery.
 - `src/product-marketing-preset.css` defines the opt-in editorial/minimal marketing roles; `MARKETING_PRESET.md` documents their tokens, HTML hooks, and immutable snapshot contract.
-- `MARKETING_COPY.md` says what each product-marketing slot is for and which copy patterns to avoid. Keep the gallery's reference copy consistent with it.
+- `MARKETING_COPY.md` says what each product-marketing slot is for, how long it can be, and which copy patterns to avoid. It ships in the package. Keep the gallery's reference copy, the README's Relay example, and the `MARKETING_PRESET.md` example consistent with it.
 - `src/fonts/instrument-serif/` contains the opt-in marketing display face and its OFL/provenance; `src/marketing-assets/` contains the checked static grain/seams and MIT provenance.
 - `src/fonts/geist-mono/` contains the optional Geist Mono webfont, SIL Open Font License, and provenance.
 - `src/fonts/nebula-sans/` contains the default Nebula Sans proportional webfont family, generated OTF payloads for deterministic social images, SIL Open Font License, and exact upstream provenance.
@@ -49,6 +49,13 @@
 - Keep mandatory rules in the closest `AGENTS.md`, current procedures in `docs/` when needed, executable contracts in types and tests, and pull-based rationale and plans in `kb/`.
 - Run `bun run kb:check:lane` in an independent KB lane. The integrating agent runs `bun run kb:refresh` and `bun run kb:check`.
 - Scheduled dependency discovery may regenerate the Bun lock only inside its ephemeral checkout and upload a bounded diff for one immutable release. It must never push, open or approve a pull request, merge, move tags, publish, or mutate provider state.
+
+<!-- hraness-public-copy:start -->
+- Public copy (websites, READMEs, docs, package and GitHub descriptions, CLI help, `llms.txt`, generated pages) follows `STYLE.md`, synced from hraness/.github. Text a model writes for publication also follows `GENERATION_STYLE.md`.
+- The delivery vocabulary in this file (admission, qualification, custody, receipt, bounded, lane, gate, surface, projection) is internal. Translate it into what the reader gets.
+- Take one-line product and sibling descriptions from the portfolio registry and versions from the release record. Tests pin facts, not prose.
+- Run `bun run check:copy` before handoff when the repository has it.
+<!-- hraness-public-copy:end -->
 
 <!-- oompa-local-efficiency:start -->
 - Treat the user's request to change this repository as standing authorization for routine task-owned commits, pushes, pull requests, merges, releases, deployments, and production verification after the gates applicable to that action pass. Do not ask for duplicate confirmation. Build confidence through relevant automated checks, bounded diagnostics, and independent review, not another human approval. Passing checks does not expand task scope or authority.

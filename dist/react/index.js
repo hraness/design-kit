@@ -2775,7 +2775,7 @@ function MaterialWorkspace({
             children: mode === "light" ? "Daylight" : "Lamplight"
           }),
           /* @__PURE__ */ jsx10("p", {
-            children: "Same room. A different light."
+            children: "The same notebook in the Paper palette, light and dark."
           })
         ]
       }),
@@ -2905,7 +2905,7 @@ function LanternMaterialGallery() {
       }),
       /* @__PURE__ */ jsx10("p", {
         className: "design-gallery__lantern-intro",
-        children: "Quiet surfaces. Light at the edges. Warmth where you act."
+        children: "Lantern gives reading surfaces a glowing edge and selected controls a warm fill."
       }),
       /* @__PURE__ */ jsxs8("div", {
         className: "design-gallery__lantern-pair",
@@ -2959,7 +2959,7 @@ function LanternMaterialGallery() {
             children: "Controls keep their meaning"
           }),
           /* @__PURE__ */ jsx10("p", {
-            children: "Material follows the action. Keyboard focus, errors and unavailable actions remain explicit."
+            children: "Keyboard focus, errors, and unavailable actions stay clearly marked under Lantern."
           }),
           /* @__PURE__ */ jsxs8("div", {
             className: "design-gallery__lantern-state-actions",
@@ -2991,7 +2991,7 @@ function LanternMaterialGallery() {
           }),
           /* @__PURE__ */ jsx10("p", {
             "aria-live": "polite",
-            children: removed ? "Example removed for this visit." : "These controls demonstrate their real interaction states."
+            children: removed ? "Example removed for this visit." : ""
           }),
           /* @__PURE__ */ jsx10(TextField, {
             controlXstyle: lanternControlStyles.inset,
@@ -3596,7 +3596,7 @@ function DesignSystemGallery({
                       children: [
                         /* @__PURE__ */ jsx14("p", {
                           "data-gallery-font": "proportional",
-                          children: "More shape, less noise."
+                          children: "Nebula Sans sets both headings and body text."
                         }),
                         /* @__PURE__ */ jsx14("code", {
                           "data-gallery-font": "mono",
@@ -4095,7 +4095,7 @@ function DesignSystemGallery({
                     summary: "Each is a separate release. Its card says how it works with Relay."
                   }),
                   /* @__PURE__ */ jsx14(MarketingMaker, {
-                    heading: "Built by a reference maker.",
+                    heading: "Who builds Relay",
                     headingId: "design-gallery-maker-title",
                     headingLevel: 3,
                     label: "Built by",
@@ -4177,10 +4177,10 @@ function DesignSystemGallery({
             children: /* @__PURE__ */ jsx14(MarketingField, {
               children: /* @__PURE__ */ jsx14(ProductHero, {
                 name: "Relay",
-                heading: "One clear next step.",
+                heading: "Run a job from your terminal, your code, or your agent",
                 headingId: "gallery-editorial-title",
                 headingLevel: 3,
-                summary: "Give people a short promise, then show the product at work.",
+                summary: "The editorial preset sets a serif display heading on a textured field.",
                 actions: [{
                   href: "#gallery-minimal-title",
                   label: "See the compact preset"

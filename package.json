@@ -1,7 +1,7 @@
 {
   "name": "@hraness/design-kit",
   "version": "0.16.2",
-  "description": "Opinionated application compositions, charts, effects, and syntax presentation built on @hraness/ui.",
+  "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -188,6 +188,9 @@
     "src/fonts/instrument-serif",
     "src/marketing-assets",
     "MARKETING_PRESET.md",
+    "MARKETING_COPY.md",
+    "STYLE.md",
+    "WRITING.md",
     "scripts/product-marketing-snapshot.ts",
     "scripts/marketing-textures.ts",
     "scripts/check-marketing-snapshot.mjs",
