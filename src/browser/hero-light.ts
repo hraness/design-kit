@@ -48,8 +48,8 @@ export function attachHeroLight(root: HTMLElement): () => void {
     const bounds = root.getBoundingClientRect();
     if (bounds.width <= 0 || bounds.height <= 0 || bounds.bottom <= 0 || bounds.top >= view.innerHeight) { reset(); return; }
     const goal = {
-      x: Math.max(12, Math.min(88, (point.x - bounds.left) / bounds.width * 100)),
-      y: Math.max(12, Math.min(88, (point.y - bounds.top) / bounds.height * 100)),
+      x: Math.max(20, Math.min(80, (point.x - bounds.left) / bounds.width * 100)),
+      y: Math.max(14, Math.min(64, (point.y - bounds.top) / bounds.height * 100)),
     };
     // Batch layout reads before paint; artwork never changes the document flow.
     const distances = items.map(({ element }) => {
@@ -58,7 +58,7 @@ export function attachHeroLight(root: HTMLElement): () => void {
     });
     const elapsed = previousTime === undefined ? 16 : Math.max(0, Math.min(64, time - previousTime));
     previousTime = time;
-    const blend = 1 - Math.exp(-elapsed / 110);
+    const blend = 1 - Math.exp(-elapsed / 150);
     let moving = Math.abs(goal.x - light.x) + Math.abs(goal.y - light.y) > 0.08;
     light = moving ? { x: light.x + (goal.x - light.x) * blend, y: light.y + (goal.y - light.y) * blend } : goal;
     const values = [light.x, light.y, (light.x - 50) / 38 * 8, (light.y - 50) / 38 * 6];

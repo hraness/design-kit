@@ -68,8 +68,8 @@ function attachHeroLight(root) {
       return;
     }
     const goal = {
-      x: Math.max(12, Math.min(88, (point.x - bounds.left) / bounds.width * 100)),
-      y: Math.max(12, Math.min(88, (point.y - bounds.top) / bounds.height * 100))
+      x: Math.max(20, Math.min(80, (point.x - bounds.left) / bounds.width * 100)),
+      y: Math.max(14, Math.min(64, (point.y - bounds.top) / bounds.height * 100))
     };
     const distances = items.map(({
       element
@@ -79,7 +79,7 @@ function attachHeroLight(root) {
     });
     const elapsed = previousTime === undefined ? 16 : Math.max(0, Math.min(64, time - previousTime));
     previousTime = time;
-    const blend = 1 - Math.exp(-elapsed / 110);
+    const blend = 1 - Math.exp(-elapsed / 150);
     let moving = Math.abs(goal.x - light.x) + Math.abs(goal.y - light.y) > 0.08;
     light = moving ? {
       x: light.x + (goal.x - light.x) * blend,
@@ -186,7 +186,7 @@ var heroBackdropStyles = {
   light: {
     kVAEAm: "x10l6tqk",
     kpwlN0: "x10a8y8t",
-    kKwaWg: "xlzqqbi",
+    kKwaWg: "x98sopq",
     $$css: true
   }
 };
