@@ -74,6 +74,8 @@
     "./typography.css": "./src/typography.css",
     "./vendor/evilcharts/LICENSE": "./vendor/evilcharts/LICENSE",
     "./vendor/evilcharts/UPSTREAM.md": "./vendor/evilcharts/UPSTREAM.md",
+    "./vendor/provider-marks/LICENSE": "./vendor/provider-marks/LICENSE",
+    "./vendor/provider-marks/UPSTREAM.md": "./vendor/provider-marks/UPSTREAM.md",
     "./palettes.css": "./src/palettes.css",
     "./paper-theme.css": "./src/paper-theme.css",
     "./product-marketing-preset.css": "./src/product-marketing-preset.css",
