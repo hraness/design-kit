@@ -30,3 +30,4 @@ export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./theme.js";
 export * from "./foil-mark.js";
+export * from "./provider-mark.js";

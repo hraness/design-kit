@@ -8,7 +8,7 @@ import {
   assertArticleDates,
   assertArticleHref,
   formatArticleDate
-} from "./chunk-m5jbxx9x.js";
+} from "./chunk-mva3yhb9.js";
 
 // src/palette-color.ts
 function channels(hex) {

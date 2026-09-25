@@ -39,6 +39,8 @@ import {
   ParticleHalo,
   ProceduralBackdrop,
   ProductHero,
+  ProviderMark,
+  ProviderMarkChip,
   SyntaxCode,
   TopBar,
   createParticleHaloRecipe,
@@ -46,8 +48,8 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ng8khzf4.js";
-import"../chunk-m5jbxx9x.js";
+} from "../chunk-pwcwnyrv.js";
+import"../chunk-mva3yhb9.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-5gtx3pza.js";
 export {
@@ -58,6 +60,8 @@ export {
   createParticleHaloRecipe,
   TopBar,
   SyntaxCode,
+  ProviderMarkChip,
+  ProviderMark,
   ProductHero,
   ProceduralBackdrop,
   ParticleHalo,

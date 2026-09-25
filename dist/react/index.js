@@ -16,7 +16,7 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   resolveDesignPalettePreference
-} from "../chunk-z102zk05.js";
+} from "../chunk-e3ha2pvb.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -66,6 +66,8 @@ import {
   ParticleHalo,
   ProceduralBackdrop,
   ProductHero,
+  ProviderMark,
+  ProviderMarkChip,
   SyntaxCode,
   TopBar,
   createParticleHaloRecipe,
@@ -82,8 +84,8 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ng8khzf4.js";
-import"../chunk-m5jbxx9x.js";
+} from "../chunk-pwcwnyrv.js";
+import"../chunk-mva3yhb9.js";
 import"../chunk-kspdf9ch.js";
 import {
   __require
@@ -3657,6 +3659,66 @@ function DesignSystemGallery({
                     })
                   })
                 ]
+              }),
+              /* @__PURE__ */ jsxs12(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs12(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx14(CardTitle, {
+                        children: "Provider marks"
+                      }),
+                      /* @__PURE__ */ jsx14(CardDescription, {
+                        children: "Vendored agent and vendor artwork on accent-tinted tiles."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx14(CardContent, {
+                    children: /* @__PURE__ */ jsxs12(WrappingRow, {
+                      children: [
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "claudecode",
+                          label: "Claude Code",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "codex",
+                          label: "Codex",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "opencode",
+                          label: "opencode",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "crush",
+                          label: "Crush",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "aider",
+                          label: "Aider",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "goose",
+                          label: "Goose",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "gemini",
+                          label: "Gemini",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx14(ProviderMark, {
+                          mark: "nvidia",
+                          label: "NVIDIA",
+                          size: 40
+                        })
+                      ]
+                    })
+                  })
+                ]
               })
             ]
           }),
@@ -5834,6 +5896,8 @@ export {
   RailSection,
   RailItem,
   RadarProfileChart,
+  ProviderMarkChip,
+  ProviderMark,
   ProductionDataPreviewNotice,
   ProductHero,
   ProceduralBackdrop,

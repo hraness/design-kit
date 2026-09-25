@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.17.2",
+  "version": "0.18.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -220,7 +220,12 @@
     "src/react/hero-backdrop.tsx",
     "src/react/hero-backdrop.stylex.ts",
     "src/palette-system.css",
-    "HERO_FIELDS.md"
+    "HERO_FIELDS.md",
+    "src/provider-marks.ts",
+    "src/provider-marks.generated.ts",
+    "src/react/provider-mark.tsx",
+    "src/react/provider-mark.stylex.ts",
+    "vendor/provider-marks"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -248,7 +253,9 @@
     "generate:paper-theme": "bun run ./scripts/generate-paper-theme.ts --write",
     "check:paper-theme": "bun run ./scripts/generate-paper-theme.ts",
     "test:paper-theme": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src/paper-theme.test.ts ./src/palettes.test.ts ./src/browser/design-palette.test.ts ./src/react/design-palette.test.tsx && bun run ./scripts/paper-theme-browser.ts",
-    "check:marketing-textures": "bun run ./scripts/marketing-textures.ts"
+    "check:marketing-textures": "bun run ./scripts/marketing-textures.ts",
+    "generate:provider-marks": "bun run ./scripts/generate-provider-marks.ts --write",
+    "check:provider-marks": "bun run ./scripts/generate-provider-marks.ts"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "4.2.3",

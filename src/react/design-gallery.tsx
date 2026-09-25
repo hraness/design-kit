@@ -39,6 +39,7 @@ import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
+import { ProviderMark } from "./provider-mark.js";
 import {
   MarketingCallToAction,
   MarketingCardRow,
@@ -211,6 +212,24 @@ export function DesignSystemGallery({
                 <p data-gallery-font="proportional">Nebula Sans sets both headings and body text.</p>
                 <code data-gallery-font="mono">const role = "mono";</code>
               </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Provider marks</CardTitle>
+              <CardDescription>Vendored agent and vendor artwork on accent-tinted tiles.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <WrappingRow>
+                <ProviderMark mark="claudecode" label="Claude Code" size={40} />
+                <ProviderMark mark="codex" label="Codex" size={40} />
+                <ProviderMark mark="opencode" label="opencode" size={40} />
+                <ProviderMark mark="crush" label="Crush" size={40} />
+                <ProviderMark mark="aider" label="Aider" size={40} />
+                <ProviderMark mark="goose" label="Goose" size={40} />
+                <ProviderMark mark="gemini" label="Gemini" size={40} />
+                <ProviderMark mark="nvidia" label="NVIDIA" size={40} />
+              </WrappingRow>
             </CardContent>
           </Card>
         </div>
