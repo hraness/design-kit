@@ -32,8 +32,8 @@ import {
 } from "./portfolio.js";
 
 // Pinned facts. A snapshot regeneration must update these deliberately.
-const PINNED_DIGEST = "sha256:87e824bc78a68dd862aeee804443a6120ac91889dbfa890d2d8b5126bb4b7834";
-const PINNED_COMMIT = "f1924d6ff0fc48d7bc7fccba64cd0b77bf097f0e";
+const PINNED_DIGEST = "sha256:1ee53065e9e39c2e5bfdd566aad33629760b8389b8332914cfa6bac8a19f305c";
+const PINNED_COMMIT = "a9988b9031327d1d319643b7455439409a2e3842";
 
 const jsonFile = new URL("./portfolio.generated.json", import.meta.url);
 const moduleFile = new URL("./portfolio.generated.ts", import.meta.url);
@@ -68,7 +68,9 @@ describe("portfolio snapshot", () => {
       const entry = portfolioProducts[id];
       expect(Object.keys(entry)).toEqual([
         "id", "name", "oneLiner", "brandDescription", "canonicalUrl", "status", "copyStatus", "aliases",
+        "messaging",
       ]);
+      expect(Object.hasOwn(entry.messaging, "superseded")).toBe(false);
       expect(entry.id).toBe(id);
       expect(id).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u);
       for (const value of [entry.name, entry.oneLiner, entry.brandDescription ?? "x", ...entry.aliases]) {
@@ -213,8 +215,32 @@ function upstream(body: Readonly<{ projects: unknown[]; relations?: unknown[] }>
   return JSON.stringify({ ...document, digest: `sha256:${sha256Hex(JSON.stringify(document))}` });
 }
 
+function messagingRecord(product: string, proseName: string, extra: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    formatVersion: 1,
+    product,
+    names: { name: proseName },
+    category: "test category",
+    tagline: `${proseName} does one thing.`,
+    short: `${product} short line`,
+    meta: `${proseName} is a small test product that exists to pin the portfolio snapshot's shape in tests.`,
+    medium: `${proseName} is a small test product. It pins the snapshot shape in tests.`,
+    status: { default: "proposed" },
+    ...extra,
+  };
+}
+
 function project(id: string, url: string, name: string, extra: Record<string, unknown> = {}): Record<string, unknown> {
-  return { id, canonicalUrl: url, name, description: `${id} one-liner`, ...extra };
+  const proseName = `${id[0]?.toUpperCase() ?? ""}${id.slice(1)}`;
+  const messaging = messagingRecord(id, proseName, (extra.messaging ?? {}) as Record<string, unknown>);
+  return {
+    id,
+    canonicalUrl: url,
+    name,
+    description: String(messaging.short).toLowerCase(),
+    ...extra,
+    messaging,
+  };
 }
 
 const brands = [
@@ -238,7 +264,9 @@ function source(publicPortfolio: string, brandSource = brands): PortfolioSnapsho
 describe("sync-portfolio-facts", () => {
   const fixture = upstream({
     projects: [
-      project("alpha", "https://alpha.example", "ALPHA", { marketing: { status: "authored" } }),
+      project("alpha", "https://alpha.example", "ALPHA", {
+        messaging: { status: { default: "authored" } },
+      }),
       project("beta", "https://beta.example", "BETA"),
       project("gamma", "https://alpha.example/gamma", "GAMMA"),
     ],
@@ -252,16 +280,19 @@ describe("sync-portfolio-facts", () => {
     const snapshot = buildPortfolioSnapshot(source(fixture));
     expect(snapshot.products).toEqual({
       alpha: {
-        id: "alpha", name: "Alpha", oneLiner: "alpha one-liner", brandDescription: "Alpha brand description.",
+        id: "alpha", name: "Alpha", oneLiner: "alpha short line", brandDescription: "Alpha brand description.",
         canonicalUrl: "https://alpha.example", status: "active", copyStatus: "authored", aliases: ["Alpha Expanded"],
+        messaging: messagingRecord("alpha", "Alpha", { status: { default: "authored" } }),
       },
       beta: {
-        id: "beta", name: "beta", oneLiner: "beta one-liner", brandDescription: null,
-        canonicalUrl: "https://beta.example", status: "active", copyStatus: null, aliases: [],
+        id: "beta", name: "beta", oneLiner: "beta short line", brandDescription: null,
+        canonicalUrl: "https://beta.example", status: "active", copyStatus: "proposed", aliases: [],
+        messaging: messagingRecord("beta", "Beta"),
       },
       gamma: {
-        id: "gamma", name: "GAMMA", oneLiner: "gamma one-liner", brandDescription: null,
-        canonicalUrl: "https://alpha.example/gamma", status: "active", copyStatus: null, aliases: [],
+        id: "gamma", name: "GAMMA", oneLiner: "gamma short line", brandDescription: null,
+        canonicalUrl: "https://alpha.example/gamma", status: "active", copyStatus: "proposed", aliases: [],
+        messaging: messagingRecord("gamma", "Gamma"),
       },
     });
     expect(snapshot.relations).toEqual([
@@ -290,8 +321,11 @@ describe("sync-portfolio-facts", () => {
 
   test("any change to the upstream facts changes the digest", () => {
     const base = buildPortfolioSnapshot(source(fixture)).digest;
-    fc.assert(fc.property(fc.string({ minLength: 1, maxLength: 40 }).filter((value) => value.trim() === value && value.trim().length > 0 && value !== "alpha one-liner"), (oneLiner) => {
-      const changed = upstream({ projects: [project("alpha", "https://alpha.example", "ALPHA", { description: oneLiner })] });
+    fc.assert(fc.property(fc.string({ minLength: 1, maxLength: 40 }).filter((value) => value.trim() === value && value.trim().length > 0 && value !== "alpha short line"), (line) => {
+      const changed = upstream({ projects: [project("alpha", "https://alpha.example", "ALPHA", {
+        description: line.toLowerCase(),
+        messaging: { short: line },
+      })] });
       expect(buildPortfolioSnapshot(source(changed)).digest).not.toBe(base);
     }));
   });
@@ -309,7 +343,10 @@ describe("sync-portfolio-facts", () => {
       ["query url", source(upstream({ projects: [project("alpha", "https://alpha.example/?ref=x", "A")] }))],
       ["bad id", source(upstream({ projects: [project("Alpha", "https://alpha.example", "A")] }))],
       ["untrimmed name", source(upstream({ projects: [project("alpha", "https://alpha.example", " A")] }))],
-      ["bad copy status", source(upstream({ projects: [project("alpha", "https://alpha.example", "A", { marketing: { status: "live" } })] }))],
+      ["bad copy status", source(upstream({ projects: [project("alpha", "https://alpha.example", "A", { messaging: { status: { default: "live" } } })] }))],
+      ["private ledger", source(upstream({ projects: [project("alpha", "https://alpha.example", "A", { messaging: { superseded: [{ tier: "tagline", text: "x", replacedOn: "2026-09-24" }] } })] }))],
+      ["missing messaging", source(upstream({ projects: [{ id: "alpha", canonicalUrl: "https://alpha.example", name: "A", description: "x" }] }))],
+      ["stale card line", source(upstream({ projects: [project("alpha", "https://alpha.example", "A", { description: "not the lowercased short" })] }))],
       ["bad relation kind", source(upstream({
         projects: [project("alpha", "https://alpha.example", "A"), project("beta", "https://beta.example", "B")],
         relations: [{ id: "x", source: "alpha", target: "beta", kind: "friendship", direction: "forward", label: "x" }],

@@ -27,20 +27,59 @@ export type PortfolioCopyStatus = (typeof portfolioCopyStatuses)[number];
 
 export type PortfolioProductId = keyof typeof portfolioSnapshot.products;
 
+/** The canonical messaging record for one product, verbatim from the public portfolio contract. */
+export type PortfolioMessaging = Readonly<{
+  formatVersion: 1;
+  /** The canonical product slug, which can differ from the registry id. */
+  product: string;
+  names: Readonly<{
+    /** The prose name, used inside sentences. */
+    name: string;
+    /** The all-caps catalog name hraness.com cards display. */
+    catalog?: string;
+    command?: string;
+    /** Retired names that still route to the product. */
+    formerly?: readonly string[];
+  }>;
+  /** The product class, at most four words. */
+  category: string;
+  tagline: string;
+  /** The card line; sentence case without the product name or a final period. */
+  short: string;
+  /** The 110-to-160-character description for meta tags, GitHub About, and listings. */
+  meta: string;
+  /** Two-sentence copy that opens with the product name. */
+  medium: string;
+  long?: string;
+  headlines?: readonly string[];
+  hero?: Readonly<{
+    heading?: string;
+    summary?: string;
+    primaryAction?: string;
+    secondaryAction?: string;
+  }>;
+  channels?: Readonly<Record<string, unknown>>;
+  /** Per-tier authorship; tiers not listed take `default`. */
+  status: Readonly<{ default: PortfolioCopyStatus } & Partial<Record<string, PortfolioCopyStatus>>>;
+  reviewedOn?: string;
+}>;
+
 export type PortfolioProduct = Readonly<{
   id: PortfolioProductId;
   /** The name in its canonical casing, taken from the product's brand entry when it owns its host. */
   name: string;
-  /** The one-line description the public portfolio at hraness.com/portfolio.json serves. */
+  /** The product's `short` line in canonical casing. */
   oneLiner: string;
   /** The brand catalog's description, or null when it has none. It can differ from `oneLiner`. */
   brandDescription: string | null;
   canonicalUrl: string;
   status: PortfolioProductStatus;
-  /** Null when the registry has no structured marketing copy for the product. */
-  copyStatus: PortfolioCopyStatus | null;
-  /** Other names the registry uses for the product, such as an expanded or display name. */
+  /** Whether the registry's default copy tier is reviewed (`authored`) or a draft (`proposed`). */
+  copyStatus: PortfolioCopyStatus;
+  /** Other names the registry uses for the product, such as an expanded, display, or retired name. */
   aliases: readonly string[];
+  /** The canonical tiered copy record: names, category, tagline, short, meta, medium, long, hero, and channels. */
+  messaging: PortfolioMessaging;
 }>;
 
 export type PortfolioRelation = Readonly<{
