@@ -180,22 +180,42 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
     // Products served under a hraness.com path keep their portfolio name.
     const brand = url.pathname === "/" ? brands.get(url.host) : undefined;
     const name = brand?.name ?? displayName;
+    // The canonical messaging record rides the public contract verbatim; the
+    // private superseded ledger is stripped upstream and must stay absent here.
+    const messaging = record(project.messaging, `${where}.messaging`);
+    if (Object.hasOwn(messaging, "superseded")) {
+      fail(`${where}.messaging must not carry the private superseded ledger.`);
+    }
+    const names = record(messaging.names, `${where}.messaging.names`);
+    const proseName = text(names.name, `${where}.messaging.names.name`);
+    const status = record(messaging.status, `${where}.messaging.status`);
+    const short = text(messaging.short, `${where}.messaging.short`);
+    // The upstream `description` is the lowercased card projection of `short`;
+    // requiring the match keeps a half-regenerated registry from drifting in.
+    const cardLine = text(project.description, `${where}.description`);
+    if (cardLine !== short.toLocaleLowerCase("en-US")) {
+      fail(`${where}.description must equal messaging.short lowercased.`);
+    }
     const aliases: string[] = [];
-    for (const candidate of [brand?.expandedName ?? null, displayName]) {
+    const formerly = names.formerly === undefined
+      ? []
+      : list(names.formerly, `${where}.messaging.names.formerly`)
+        .map((entry, entryIndex) => text(entry, `${where}.messaging.names.formerly[${entryIndex}]`));
+    for (const candidate of [brand?.expandedName ?? null, displayName, proseName, ...formerly]) {
       if (candidate !== null && !sameName(candidate, name) && !aliases.some((alias) => sameName(alias, candidate))) {
         aliases.push(candidate);
       }
     }
-    const marketing = project.marketing === undefined ? undefined : record(project.marketing, `${where}.marketing`);
     products[id] = {
       id,
       name,
-      oneLiner: text(project.description, `${where}.description`),
+      oneLiner: short,
       brandDescription: brand?.description ?? null,
       canonicalUrl: text(project.canonicalUrl, `${where}.canonicalUrl`),
       status: "active",
-      copyStatus: marketing === undefined ? null : oneOf(marketing.status, COPY_STATUSES, `${where}.marketing.status`),
+      copyStatus: oneOf(status.default, COPY_STATUSES, `${where}.messaging.status.default`),
       aliases,
+      messaging,
     };
   });
   if (Object.keys(products).length === 0) fail(`${PUBLIC_PATH} lists no products.`);
