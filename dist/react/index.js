@@ -4422,6 +4422,23 @@ function DesignSystemGallery({
               published: "2026-09-02",
               title: "Relay 2.4 adds per-endpoint retry limits"
             }]
+          }),
+          /* @__PURE__ */ jsxs12("div", {
+            className: "hraness-prose",
+            children: [
+              /* @__PURE__ */ jsx14("h3", {
+                children: "Shared reading scale"
+              }),
+              /* @__PURE__ */ jsx14("p", {
+                children: 'The `.hraness-prose` grammar carries the shared `--hraness-type-*` scale to docs and guide surfaces that do not run the publication shell. Headings step up on wide windows and a serif face opts in with `data-hraness-reading-face="serif"`.'
+              }),
+              /* @__PURE__ */ jsx14("h4", {
+                children: "Section spacing"
+              }),
+              /* @__PURE__ */ jsx14("p", {
+                children: "Sections separate on the shared space token; subsections tighten to the subsection space and small heads keep the text face."
+              })
+            ]
           })
         ]
       }),

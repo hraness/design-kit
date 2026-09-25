@@ -88,11 +88,11 @@
   max-width: none;
   margin: 0.4rem 0 0.8rem;
   color: var(--plain-foreground);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 5vw, 2.35rem);
-  font-weight: 700;
+  font-family: var(--hraness-type-heading-font, var(--font-heading));
+  font-size: var(--hraness-type-h1-size, clamp(2.25rem, 1.8rem + 1.6vw, 3rem));
+  font-weight: var(--hraness-type-heading-weight, 700);
   letter-spacing: -0.025em;
-  line-height: 1.12;
+  line-height: 1.08;
   text-wrap: balance;
 }
 
@@ -330,9 +330,9 @@
 
 .plain-site.plain-publication .plain-publication__article-body {
   color: var(--plain-foreground);
-  font-size: 1rem;
+  font-size: var(--hraness-type-reading-size, clamp(1rem, .95rem + .25vw, 1.0625rem));
   line-height: var(--hraness-type-reading-leading, 1.7);
-  max-inline-size: var(--hraness-type-reading-measure, 66ch);
+  max-inline-size: var(--hraness-type-reading-measure, 70ch);
 }
 
 .plain-site.plain-publication .plain-publication__article-body > :first-child {
@@ -342,21 +342,38 @@
 .plain-site.plain-publication .plain-publication__article-body h2,
 .plain-site.plain-publication .plain-publication__article-body h3 {
   color: var(--plain-foreground);
-  font-weight: 700;
+  font-family: var(--hraness-type-heading-font, var(--font-heading, inherit));
+  font-weight: var(--hraness-type-heading-weight, 700);
   letter-spacing: 0;
-  line-height: 1.35;
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem);
   text-wrap: pretty;
 }
 
 .plain-site.plain-publication .plain-publication__article-body h2 {
-  margin: 2.5rem 0 0.6rem;
-  font-size: 1.35rem;
+  margin: var(--hraness-type-section-space, 3rem) 0 0.6rem;
+  font-size: var(--hraness-type-h2-size, clamp(1.625rem, 1.35rem + .9vw, 2.125rem));
+  line-height: 1.16;
+  letter-spacing: -0.018em;
 }
 
 .plain-site.plain-publication .plain-publication__article-body h3 {
-  margin: 1.75rem 0 0.45rem;
-  font-size: 1.05rem;
+  margin: var(--hraness-type-subsection-space, 2rem) 0 0.45rem;
+  font-size: var(--hraness-type-h3-size, clamp(1.3125rem, 1.15rem + .45vw, 1.4375rem));
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+
+.plain-site.plain-publication .plain-publication__article-body :is(h4, h5, h6) {
+  margin: 1.6rem 0 0.4rem;
+  color: var(--plain-foreground);
+  font-size: var(--hraness-type-h4-size, 1.0625rem);
+  font-weight: 650;
+  line-height: 1.4;
+  scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem);
+}
+
+.plain-site.plain-publication .plain-publication__article-body :is(h1, h2, h3, h4) + :is(h2, h3, h4) {
+  margin-block-start: 0.75rem;
 }
 
 .plain-site.plain-publication .plain-publication__article-body p {
