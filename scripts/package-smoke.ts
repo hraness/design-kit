@@ -813,6 +813,7 @@ const compilerStylesheetPaths = [
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
   "src/product-marketing-preset.css",
+  "src/reading.css",
   "src/reset.css",
   "src/styles.css",
   "src/syntax-highlighting.css",

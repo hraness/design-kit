@@ -1,0 +1,66 @@
+/*
+ * Shared reading scale.
+ *
+ * `.hraness-prose` is the opt-in long-form reading grammar: docs, guides,
+ * methodology pages and article surfaces that do not run the full
+ * plain-publication shell. Put the class on the prose container; the shared
+ * `--hraness-type-*` tokens in typography.css carry the scale, so a site can
+ * retune it in one place.
+ *
+ * Serif display faces opt in with `data-hraness-reading-face="serif"` on the
+ * prose container or an ancestor: their smaller x-height reads ~15% smaller at
+ * the same font-size and they carry no bold cut, so the scale steps up and the
+ * weight drops to the face's single cut.
+ */
+
+:where([data-hraness-reading-face="serif"]) {
+  --hraness-type-h1-size: clamp(2.5rem, 2rem + 1.8vw, 3.375rem);
+  --hraness-type-h2-size: clamp(1.875rem, 1.55rem + 1vw, 2.375rem);
+  --hraness-type-h3-size: clamp(1.5rem, 1.3rem + .5vw, 1.625rem);
+  --hraness-type-heading-weight: 400;
+}
+
+.hraness-prose {
+  max-inline-size: var(--hraness-type-reading-measure, 70ch);
+  font-size: var(--hraness-type-reading-size, clamp(1rem, .95rem + .25vw, 1.0625rem));
+  line-height: var(--hraness-type-reading-leading, 1.7);
+}
+
+.hraness-prose :is(h1, h2, h3) {
+  font-family: var(--hraness-type-heading-font, var(--font-heading, var(--font-text, inherit)));
+  font-weight: var(--hraness-type-heading-weight, 600);
+  text-wrap: balance;
+}
+
+.hraness-prose h1 {
+  margin: 0 0 1rem;
+  font-size: var(--hraness-type-h1-size, clamp(2.25rem, 1.8rem + 1.6vw, 3rem));
+  line-height: 1.08;
+  letter-spacing: -.025em;
+}
+
+.hraness-prose h2 {
+  margin: var(--hraness-type-section-space, 3rem) 0 .6em;
+  font-size: var(--hraness-type-h2-size, clamp(1.625rem, 1.35rem + .9vw, 2.125rem));
+  line-height: 1.16;
+  letter-spacing: -.018em;
+}
+
+.hraness-prose h3 {
+  margin: var(--hraness-type-subsection-space, 2rem) 0 .5em;
+  font-size: var(--hraness-type-h3-size, clamp(1.3125rem, 1.15rem + .45vw, 1.4375rem));
+  line-height: 1.28;
+  letter-spacing: -.01em;
+}
+
+.hraness-prose :is(h4, h5, h6) {
+  margin: 1.6rem 0 .4em;
+  font-family: var(--font-text, inherit);
+  font-size: var(--hraness-type-h4-size, 1.0625rem);
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.hraness-prose :is(h1, h2, h3, h4) + :is(h2, h3, h4) {
+  margin-block-start: .75rem;
+}

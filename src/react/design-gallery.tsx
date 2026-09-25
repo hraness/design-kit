@@ -575,6 +575,19 @@ export function DesignSystemGallery({
             },
           ]}
         />
+        <div className="hraness-prose">
+          <h3>Shared reading scale</h3>
+          <p>
+            The `.hraness-prose` grammar carries the shared `--hraness-type-*` scale to docs
+            and guide surfaces that do not run the publication shell. Headings step up on
+            wide windows and a serif face opts in with `data-hraness-reading-face="serif"`.
+          </p>
+          <h4>Section spacing</h4>
+          <p>
+            Sections separate on the shared space token; subsections tighten to the
+            subsection space and small heads keep the text face.
+          </p>
+        </div>
       </section>
 
       <section className="design-gallery__section" id="shells">
