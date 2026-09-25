@@ -51,10 +51,10 @@ test("hero light coalesces events, remains bounded and settles without idle work
   for (let i = 0; i < 20; i++) f.pointer(1600, -600);
   expect(f.queue.size).toBe(1);
   f.settle();
-  expect(f.root.style.getPropertyValue("--hraness-hero-light-x")).toBe("88.00%");
-  expect(f.root.style.getPropertyValue("--hraness-hero-light-y")).toBe("12.00%");
-  expect(f.root.style.getPropertyValue("--hraness-hero-drift-x")).toBe("8.00px");
-  expect(f.root.style.getPropertyValue("--hraness-hero-drift-y")).toBe("-6.00px");
+  expect(f.root.style.getPropertyValue("--hraness-hero-light-x")).toBe("80.00%");
+  expect(f.root.style.getPropertyValue("--hraness-hero-light-y")).toBe("14.00%");
+  expect(f.root.style.getPropertyValue("--hraness-hero-drift-x")).toBe("6.32px");
+  expect(f.root.style.getPropertyValue("--hraness-hero-drift-y")).toBe("-5.68px");
   expect(f.root.querySelector("a")?.getAttribute("href")).toBe("#docs");
   dispose(); dispose(); expect(f.listeners.size).toBe(0);
 });

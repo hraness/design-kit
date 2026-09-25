@@ -32,6 +32,8 @@ export const heroBackdropStyles = stylex.create({
   light: {
     position: "absolute",
     inset: 0,
-    backgroundImage: "radial-gradient(ellipse 48% 70% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 13%, transparent), transparent 76%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%)",
+    // A small warm core eases toward the pointer inside fixed ambient washes,
+    // so the field reads as daylight rather than a spotlight chasing the cursor.
+    backgroundImage: "radial-gradient(ellipse 30% 44% at var(--hraness-hero-light-x, 68%) var(--hraness-hero-light-y, 32%), color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 10%, transparent), transparent 72%), radial-gradient(ellipse 70% 95% at 62% 18%, color-mix(in srgb, var(--hraness-material-warm, var(--accent, CanvasText)) 6%, transparent), transparent 80%), radial-gradient(ellipse 60% 90% at 8% 15%, color-mix(in srgb, var(--hraness-material-cool, var(--focus, CanvasText)) 9%, transparent), transparent 76%)",
   },
 });
