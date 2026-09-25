@@ -168,7 +168,7 @@ test("reading surfaces preserve palette roles and long code without shrinking ca
   expect(plainSiteCss).toContain(".plain-site[data-palette][data-palette]");
   expect(plainSiteCss).toContain("--plain-background: var(--background, Canvas)");
   expect(plainSiteCss).toContain("--plain-link: var(--primary, LinkText)");
-  expect(publicationCss).toContain("max-inline-size: var(--hraness-type-reading-measure, 66ch)");
+  expect(publicationCss).toContain("max-inline-size: var(--hraness-type-reading-measure, 70ch)");
   expect(publicationCss).toContain("scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem)");
   expect(publicationCss).toMatch(/article-body pre\s*\{[^}]*overflow-x: auto;[^}]*white-space: pre;[^}]*overflow-wrap: normal;/su);
   expect(publicationCss).not.toMatch(/font-size: 0\.(?:8|82|85)rem;/u);
@@ -211,4 +211,56 @@ test("the embedded article layer keeps a 68ch measure, host roles, and forced co
   expect(articleCss).not.toMatch(/\b(?:transition|animation)(?:-[a-z]+)?\s*:/iu);
   expect(articleCss).not.toMatch(/(?:linear|radial|conic)-gradient/iu);
   expect(articleCss).not.toMatch(/:is\(\s*>/u);
+});
+
+test("the shared reading scale ships as an opt-in prose surface on shared tokens", () => {
+  const readingCssPromise = Bun.file(
+    new URL("./reading.css", import.meta.url),
+  ).text();
+  return readingCssPromise.then((readingCss) => {
+    expect(packageManifest.exports?.["./reading.css"]).toBe(
+      "./src/reading.css",
+    );
+    expect(stylesCss).toContain('@import "./reading.css";');
+    expect(stylesCss.indexOf("plain-publication.css")).toBeLessThan(
+      stylesCss.indexOf("reading.css"),
+    );
+
+    expect(readingCss).toMatch(
+      /^\.hraness-prose\s*\{[^}]*max-inline-size:\s*var\(--hraness-type-reading-measure, 70ch\);[^}]*font-size:\s*var\(--hraness-type-reading-size,[^;}]*\);[^}]*line-height:\s*var\(--hraness-type-reading-leading, 1\.7\);/mu,
+    );
+    expect(readingCss).toMatch(
+      /\.hraness-prose h1\s*\{[^}]*font-size:\s*var\(--hraness-type-h1-size,[^;}]*\);/su,
+    );
+    expect(readingCss).toMatch(
+      /\.hraness-prose h2\s*\{[^}]*font-size:\s*var\(--hraness-type-h2-size,[^;}]*\);/su,
+    );
+    expect(readingCss).toMatch(
+      /\.hraness-prose h3\s*\{[^}]*font-size:\s*var\(--hraness-type-h3-size,[^;}]*\);/su,
+    );
+    expect(readingCss).toMatch(
+      /\.hraness-prose :is\(h4, h5, h6\)\s*\{[^}]*font-size:\s*var\(--hraness-type-h4-size,[^;}]*\);/su,
+    );
+    expect(readingCss).toContain('[data-hraness-reading-face="serif"]');
+    expect(readingCss).toMatch(
+      /\.hraness-prose :is\(h1, h2, h3\)\s*\{[^}]*font-family:\s*var\(--hraness-type-heading-font,[^;}]*\);[^}]*font-weight:\s*var\(--hraness-type-heading-weight,[^;}]*\);/su,
+    );
+    expect(readingCss).not.toMatch(/(?:linear|radial|conic)-gradient/iu);
+
+    expect(publicationCss).toContain(
+      "font-size: var(--hraness-type-reading-size,",
+    );
+    expect(publicationCss).toContain(
+      "font-size: var(--hraness-type-h2-size,",
+    );
+    expect(publicationCss).toContain(
+      "font-size: var(--hraness-type-h3-size,",
+    );
+    expect(publicationCss).toContain(
+      "font-size: var(--hraness-type-h1-size,",
+    );
+    expect(publicationCss).toContain(
+      "margin: var(--hraness-type-section-space,",
+    );
+  });
 });

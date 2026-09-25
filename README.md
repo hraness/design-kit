@@ -76,7 +76,7 @@ Import narrower layers when the application does not need the full presentation 
 @import "@hraness/design-kit/syntax-highlighting.css";
 ```
 
-`plain-site.css` provides a compact site shell. `plain-publication.css` adds sourced article, citation, table, callout, and related-reading structure.
+`plain-site.css` provides a compact site shell. `plain-publication.css` adds sourced article, citation, table, callout, and related-reading structure. `reading.css` carries the shared long-form scale on `.hraness-prose` for docs and guide surfaces outside the publication shell; the same `--hraness-type-*` tokens size the publication article, and `data-hraness-reading-face="serif"` adapts the scale to serif display faces.
 
 ## Share the Paper theme
 
