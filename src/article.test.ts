@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { readdir } from "node:fs/promises";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ArticleAdmissionError,
@@ -106,6 +107,28 @@ describe("links and bylines", () => {
   test("rejects script, data, protocol-relative, and whitespace links", () => {
     for (const href of ["javascript:alert(1)", "JavaScript:alert(1)", "data:text/html,x", "//evil.example", "blog/a", "", "https://example.com/a b", "/a\nb", "vbscript:x"]) {
       expect(() => assertArticleHref(href)).toThrow(RangeError);
+    }
+  });
+
+  test("rejects control characters and Unicode whitespace but keeps other non-ASCII text", () => {
+    for (const code of [0x00, 0x09, 0x1f, 0x7f, 0x80, 0x85, 0x9f]) {
+      expect(() => assertArticleHref(`/a${String.fromCodePoint(code)}b`)).toThrow(RangeError);
+    }
+    for (const code of [0x20, 0xa0, 0x2028, 0x3000, 0xfeff]) {
+      expect(() => assertArticleHref(`/a${String.fromCodePoint(code)}b`)).toThrow(RangeError);
+    }
+    for (const href of ["/caf\u00e9", "/\u00a1hola", "https://example.com/\u{1f600}"]) {
+      expect(() => assertArticleHref(href)).not.toThrow();
+    }
+  });
+
+  test("published bundles avoid Unicode property escapes that Next.js Babel cannot compile", async () => {
+    const dist = new URL("../dist/", import.meta.url);
+    const files = (await readdir(dist, { recursive: true })).filter((file) => file.endsWith(".js"));
+    expect(files.length).toBeGreaterThan(0);
+    for (const file of files) {
+      const source = await Bun.file(new URL(file, dist)).text();
+      expect({ file, escapes: source.match(/\\[pP]\{[^}]*\}/gu) ?? [] }).toEqual({ file, escapes: [] });
     }
   });
 

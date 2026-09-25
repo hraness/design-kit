@@ -89,9 +89,23 @@ export function assertArticleDates(dates: ArticleDates): void {
 
 const SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
 
+/**
+ * True when `href` holds a control character (Unicode category Cc: U+0000 to
+ * U+001F and U+007F to U+009F) or whitespace. Code points are compared
+ * directly because Next.js compiles dependencies with a Babel build that
+ * cannot rewrite the `\p{Cc}` property escape.
+ */
+function hasControlOrSpace(href: string): boolean {
+  for (const character of href) {
+    const code = character.codePointAt(0) ?? 0;
+    if (code <= 0x1f || (code >= 0x7f && code <= 0x9f) || /\s/u.test(character)) return true;
+  }
+  return false;
+}
+
 /** Accept web, mail, and relative links. Reject script, data, and protocol-relative URLs. */
 function isSafeHref(href: string): boolean {
-  return SAFE_HREF.test(href) && !/[\p{Cc}\s]/u.test(href);
+  return SAFE_HREF.test(href) && !hasControlOrSpace(href);
 }
 
 /** Throw a RangeError unless `href` is a web, mail, or relative link. */

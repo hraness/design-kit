@@ -65,7 +65,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.17.0");
+  expect(packageJson.version).toBe("0.17.1");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.16 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.17");

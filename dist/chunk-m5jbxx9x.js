@@ -44,8 +44,16 @@ function assertArticleDates(dates) {
     throw new RangeError("The updated date cannot precede the published date.");
 }
 var SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
+function hasControlOrSpace(href) {
+  for (const character of href) {
+    const code = character.codePointAt(0) ?? 0;
+    if (code <= 31 || code >= 127 && code <= 159 || /\s/u.test(character))
+      return true;
+  }
+  return false;
+}
 function isSafeHref(href) {
-  return SAFE_HREF.test(href) && !/[\p{Cc}\s]/u.test(href);
+  return SAFE_HREF.test(href) && !hasControlOrSpace(href);
 }
 function assertArticleHref(href) {
   if (!isSafeHref(href)) {
