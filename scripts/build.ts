@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import "./generate-palettes.js";
+import "./generate-provider-marks.js";
 import { paperThemeCss } from "./generate-paper-theme.js";
 import { readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { extname, join, relative, resolve, sep } from "node:path";

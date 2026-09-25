@@ -7,8 +7,11 @@ import {
   assertArticleCalloutTone,
   assertArticleDates,
   assertArticleHref,
-  formatArticleDate
-} from "./chunk-m5jbxx9x.js";
+  formatArticleDate,
+  providerMark,
+  providerMarkFallback,
+  providerMarkOnAccent
+} from "./chunk-tyq24f9r.js";
 import {
   highlightCode
 } from "./chunk-kspdf9ch.js";
@@ -5670,10 +5673,199 @@ function ProceduralBackdrop({
   });
 }
 
+// src/react/provider-mark.stylex.ts
+import * as stylex5 from "@stylexjs/stylex";
+var providerMarkStyles = {
+  tile: {
+    kGNEyG: "x6s0dn4",
+    kOBAk4: "x1plog1",
+    kWkggS: "x1mpd0sc x9yvj25",
+    kKwaWg: "x1hkejs3 xhobzj1",
+    kaIpWk: "x1qfbufn",
+    kGVxlE: "xdp0uy8 xwaqzdf",
+    kB7OPa: "x9f619",
+    kMwMTN: "x2634if",
+    k1xSpc: "x3nfvp2",
+    kmuXW: "x2lah0s",
+    kzqmXN: "xnsd1i0",
+    kjj79g: "xl56j7k",
+    kI3sdo: "xydrj4t xidp9i6",
+    kInvED: "x1g40iwv",
+    kVAEAm: "x1n2onr6",
+    kXLuUW: "xxymvpz",
+    $$css: true
+  },
+  solid: {
+    kWkggS: "xpipt50 x9yvj25",
+    kKwaWg: "xs51ml9 xhobzj1",
+    kMwMTN: "x3mibv",
+    kI3sdo: "x15sqzv3 xidp9i6",
+    $$css: true
+  },
+  plain: {
+    kWkggS: "xjbqb8w",
+    kKwaWg: "x18o3ruo",
+    kGVxlE: "x1gnnqk1",
+    kMwMTN: "x121n0qk",
+    kI3sdo: "x1a2a7pz",
+    $$css: true
+  },
+  glyph: {
+    kZKoxP: "x1f6yev3",
+    k1xSpc: "x3nfvp2",
+    kzqmXN: "x1endk3i",
+    $$css: true
+  },
+  art: {
+    kZKoxP: "x1n6l62j",
+    k1xSpc: "x3nfvp2 x1c7sf14",
+    kzqmXN: "x19app5s",
+    kpwlN0: "x10a8y8t",
+    kogj98: "x1bpp3o7",
+    kVAEAm: "x10l6tqk",
+    $$css: true
+  },
+  monogram: {
+    kGNEyG: "x6s0dn4",
+    kMwMTN: "x1heor9g",
+    k1xSpc: "x1s85apg x2pbqq",
+    kGuDYH: "x68snkw",
+    k63SB2: "x1xlr1w8",
+    kpwlN0: "x10a8y8t",
+    kjj79g: "xl56j7k",
+    kb6lSQ: "x16q24ku",
+    kLWn49: "xo5v014",
+    kVAEAm: "x10l6tqk",
+    $$css: true
+  },
+  monogramOnly: {
+    k1xSpc: "x3nfvp2",
+    kVAEAm: "x1uhb9sk",
+    $$css: true
+  },
+  chip: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x3nfvp2",
+    kOIVth: "xnromcf",
+    k7Eaqz: "xeuugli",
+    $$css: true
+  },
+  chipName: {
+    kMwMTN: "xm06a53",
+    kGuDYH: "xzsou7g",
+    k63SB2: "xh88oxj",
+    kb6lSQ: "xjat59b",
+    kLWn49: "x1u7k74",
+    k7Eaqz: "xeuugli",
+    kVQacm: "xb3r6kr",
+    kg5iWk: "xlyipyv",
+    khDVqt: "xuxw1ft",
+    $$css: true
+  }
+};
+function providerMarkClassName(part, caller) {
+  const hook = part === "tile" ? "hraness-provider-mark" : `hraness-provider-mark__${part.replaceAll(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`)}`;
+  return [hook, stylex5.props(providerMarkStyles[part]).className, caller].filter(Boolean).join(" ");
+}
+
+// src/react/provider-mark.tsx
+import { jsx as jsx7, jsxs as jsxs6, Fragment as Fragment3 } from "react/jsx-runtime";
+function resolveMark(mark) {
+  if (typeof mark !== "string")
+    return mark;
+  return providerMark(mark) ?? providerMarkFallback(mark);
+}
+function Artwork({
+  mark,
+  tone
+}) {
+  const art = tone === "tile" ? mark.art : null;
+  return /* @__PURE__ */ jsxs6(Fragment3, {
+    children: [
+      /* @__PURE__ */ jsx7("svg", {
+        "aria-hidden": "true",
+        className: providerMarkClassName("glyph"),
+        dangerouslySetInnerHTML: {
+          __html: mark.glyph.body
+        },
+        fill: "currentColor",
+        viewBox: mark.glyph.viewBox
+      }),
+      art === null ? null : /* @__PURE__ */ jsx7("svg", {
+        "aria-hidden": "true",
+        className: providerMarkClassName("art"),
+        dangerouslySetInnerHTML: {
+          __html: art.body
+        },
+        viewBox: art.viewBox
+      })
+    ]
+  });
+}
+function ProviderMark({
+  mark,
+  className,
+  label,
+  size = 32,
+  tone = "tile"
+}) {
+  if (!Number.isFinite(size) || size <= 0)
+    throw new RangeError("ProviderMark size must be positive and finite.");
+  const resolved = resolveMark(mark);
+  const style = {
+    "--_mark-accent": resolved.accent,
+    "--_mark-size": `${size}px`
+  };
+  if (tone === "solid")
+    style["--_mark-on-accent"] = providerMarkOnAccent(resolved);
+  const hasArtwork = resolved.glyph.body !== "";
+  return /* @__PURE__ */ jsxs6("span", {
+    "aria-hidden": label === undefined ? true : undefined,
+    "aria-label": label,
+    className: [providerMarkClassName("tile"), tone === "tile" ? "" : providerMarkClassName(tone), className].filter(Boolean).join(" "),
+    role: label === undefined ? undefined : "img",
+    style,
+    children: [
+      hasArtwork ? /* @__PURE__ */ jsx7(Artwork, {
+        mark: resolved,
+        tone
+      }) : null,
+      /* @__PURE__ */ jsx7("span", {
+        "aria-hidden": "true",
+        className: [providerMarkClassName("monogram"), hasArtwork ? "" : providerMarkClassName("monogramOnly")].filter(Boolean).join(" "),
+        children: resolved.monogram
+      })
+    ]
+  });
+}
+function ProviderMarkChip({
+  mark,
+  name,
+  ...rest
+}) {
+  const resolved = resolveMark(mark);
+  return /* @__PURE__ */ jsxs6("span", {
+    className: providerMarkClassName("chip"),
+    style: {
+      "--_mark-size": `${rest.size ?? 32}px`
+    },
+    children: [
+      /* @__PURE__ */ jsx7(ProviderMark, {
+        mark: resolved,
+        ...rest
+      }),
+      /* @__PURE__ */ jsx7("span", {
+        className: providerMarkClassName("chipName"),
+        children: name ?? resolved.name
+      })
+    ]
+  });
+}
+
 // src/react/particle-halo.tsx
 import { cn as cn3 } from "@hraness/ui";
-import * as stylex5 from "@stylexjs/stylex";
-import { jsx as jsx7, jsxs as jsxs6 } from "react/jsx-runtime";
+import * as stylex6 from "@stylexjs/stylex";
+import { jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
 var colorVariables2 = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -5687,7 +5879,7 @@ function ParticleHalo({
   seed,
   style,
   variation,
-  ...props6
+  ...props7
 }) {
   const recipe = createParticleHaloRecipe({
     seed,
@@ -5705,18 +5897,18 @@ function ParticleHalo({
     "--hraness-design-procedural-support": recipe.palette.support,
     ...style
   };
-  const rootPresentation = stylex5.props(effectsStyles.particleRoot);
-  const fieldPresentation = stylex5.props(effectsStyles.particleField);
-  const particlePresentation = stylex5.props(effectsStyles.particle);
-  const contentPresentation = stylex5.props(effectsStyles.particleContent);
-  return /* @__PURE__ */ jsxs6("div", {
-    ...props6,
+  const rootPresentation = stylex6.props(effectsStyles.particleRoot);
+  const fieldPresentation = stylex6.props(effectsStyles.particleField);
+  const particlePresentation = stylex6.props(effectsStyles.particle);
+  const contentPresentation = stylex6.props(effectsStyles.particleContent);
+  return /* @__PURE__ */ jsxs7("div", {
+    ...props7,
     className: cn3("hraness-design-particle-halo", rootPresentation.className, className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,
     style: rootStyle,
     children: [
-      /* @__PURE__ */ jsx7("span", {
+      /* @__PURE__ */ jsx8("span", {
         "aria-hidden": "true",
         className: cn3("hraness-design-particle-halo__particles", fieldPresentation.className),
         role: "presentation",
@@ -5732,13 +5924,13 @@ function ParticleHalo({
             "--hraness-design-particle-x": `${particle.x}%`,
             "--hraness-design-particle-y": `${particle.y}%`
           };
-          return /* @__PURE__ */ jsx7("i", {
+          return /* @__PURE__ */ jsx8("i", {
             className: cn3("hraness-design-particle-halo__particle", particlePresentation.className),
             style: particleStyle
           }, index);
         })
       }),
-      /* @__PURE__ */ jsx7("div", {
+      /* @__PURE__ */ jsx8("div", {
         className: cn3("hraness-design-particle-halo__content", contentPresentation.className),
         children
       })
@@ -5746,4 +5938,4 @@ function ParticleHalo({
   });
 }
 
-export { foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ParticleHalo };
+export { foilSurfaceImage, foilTextImage, foilSurfaceBackgroundClip, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };

@@ -5,6 +5,7 @@ export * from "./syntax-highlighting.js";
 export * from "./appearance.js";
 export * from "./article.js";
 export * from "./article-html.js";
+export * from "./provider-marks.js";
 
 export const colors = {
   light: {

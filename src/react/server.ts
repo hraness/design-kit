@@ -6,3 +6,4 @@ export * from "./product-marketing.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./foil-mark.js";
+export * from "./provider-mark.js";
