@@ -46,7 +46,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-e3ha2pvb.js";
+} from "./chunk-1zpykee8.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,
@@ -82,7 +82,7 @@ import {
   providerMarkMonogram,
   providerMarkOnAccent,
   providerMarks
-} from "./chunk-mva3yhb9.js";
+} from "./chunk-tyq24f9r.js";
 import {
   highlightCode,
   inferSyntaxLanguage,

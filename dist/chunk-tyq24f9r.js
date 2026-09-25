@@ -734,10 +734,10 @@ function foldedIdentity(identity) {
   return identity.toLowerCase().replaceAll(/[^a-z0-9]/gu, "");
 }
 function perceivedBrightness(hexColor) {
-  const match = /^#(?<red>[0-9a-f]{2})(?<green>[0-9a-f]{2})(?<blue>[0-9a-f]{2})$/u.exec(hexColor.toLowerCase());
-  if (match?.groups === undefined)
+  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/u.exec(hexColor.toLowerCase());
+  if (match === null)
     return null;
-  return (Number.parseInt(match.groups.red ?? "0", 16) * 299 + Number.parseInt(match.groups.green ?? "0", 16) * 587 + Number.parseInt(match.groups.blue ?? "0", 16) * 114) / 1000;
+  return (Number.parseInt(match[1] ?? "0", 16) * 299 + Number.parseInt(match[2] ?? "0", 16) * 587 + Number.parseInt(match[3] ?? "0", 16) * 114) / 1000;
 }
 function providerMarkOnAccent(mark) {
   const brightness = perceivedBrightness(mark.accent);

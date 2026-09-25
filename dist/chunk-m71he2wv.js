@@ -11,7 +11,7 @@ import {
   providerMark,
   providerMarkFallback,
   providerMarkOnAccent
-} from "./chunk-mva3yhb9.js";
+} from "./chunk-tyq24f9r.js";
 import {
   highlightCode
 } from "./chunk-kspdf9ch.js";
