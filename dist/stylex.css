@@ -228,12 +228,12 @@
     border-color: var(--background);
   }
 
-  .x1w4nuvj {
-    border-color: var(--control-border, GrayText);
+  .x1fxznak {
+    border-color: var(--hraness-appearance-control-border, var(--hraness-material-seam, var(--ui-input, GrayText)));
   }
 
-  .x1r32107 {
-    border-color: var(--hraness-appearance-control-border, var(--ui-input, GrayText));
+  .x1aeagfj {
+    border-color: var(--hraness-material-seam, var(--control-border, GrayText));
   }
 
   .x9l8fd4 {
@@ -1079,10 +1079,6 @@
     background-color: var(--_mark-accent);
   }
 
-  .x17tv4j5 {
-    background-color: var(--background, Canvas);
-  }
-
   .x11gw9ax {
     background-color: var(--background);
   }
@@ -1095,12 +1091,12 @@
     background-color: var(--grid);
   }
 
-  .x12dugtb {
-    background-color: var(--hraness-appearance-control-background, var(--ui-background, Canvas));
+  .x1crud6n {
+    background-color: var(--hraness-appearance-control-background, var(--hraness-material-plane, var(--ui-background, Canvas)));
   }
 
-  .x141cw3e {
-    background-color: var(--hraness-appearance-popover-background, var(--ui-popover, Canvas));
+  .x16bncwc {
+    background-color: var(--hraness-appearance-popover-background, var(--hraness-material-plane, var(--ui-popover, Canvas)));
   }
 
   .x1hnzg9s {
@@ -1139,12 +1135,20 @@
     background-color: var(--hraness-marketing-surface);
   }
 
-  .x1esxp0 {
-    background-color: var(--hraness-material-warm-plane);
+  .xvkli0e {
+    background-color: var(--hraness-material-plane, var(--background, Canvas));
   }
 
-  .x1awrtuo {
-    background-color: var(--popover, Canvas);
+  .x1boxfmi {
+    background-color: var(--hraness-material-plane, var(--popover, Canvas));
+  }
+
+  .x1q2m9d8 {
+    background-color: var(--hraness-material-warm-plane, transparent);
+  }
+
+  .x1esxp0 {
+    background-color: var(--hraness-material-warm-plane);
   }
 
   .x8qxh4v {
@@ -1683,10 +1687,6 @@
     box-shadow: none;
   }
 
-  .xl8zne6 {
-    box-shadow: var(--elevation-overlay, 0 18px 48px -18px #00000052);
-  }
-
   .x13akli3 {
     box-shadow: var(--elevation-overlay);
   }
@@ -1701,6 +1701,14 @@
 
   .x1io0m3d {
     box-shadow: var(--hraness-marketing-surface-shadow);
+  }
+
+  .x1io14ym {
+    box-shadow: var(--hraness-material-lift, var(--elevation-overlay, 0 18px 48px -18px #00000052));
+  }
+
+  .xmtrr3x {
+    box-shadow: var(--hraness-material-raised, none);
   }
 
   .x9f619 {
@@ -1755,16 +1763,16 @@
     color: var(--foreground);
   }
 
-  .x2pn0fd {
-    color: var(--hraness-appearance-control-foreground, var(--ui-foreground, CanvasText));
+  .xgsino2 {
+    color: var(--hraness-appearance-control-foreground, var(--hraness-material-ink, var(--ui-foreground, CanvasText)));
   }
 
   .x13y0b37 {
     color: var(--hraness-appearance-control-foreground);
   }
 
-  .xlrt3vh {
-    color: var(--hraness-appearance-popover-foreground, var(--ui-popover-foreground, CanvasText));
+  .xxbt5ds {
+    color: var(--hraness-appearance-popover-foreground, var(--hraness-material-ink, var(--ui-popover-foreground, CanvasText)));
   }
 
   .x102ovp5 {
@@ -1781,6 +1789,14 @@
 
   .xs87ocq {
     color: var(--hraness-marketing-muted);
+  }
+
+  .xurt5rx {
+    color: var(--hraness-material-ink, var(--foreground, CanvasText));
+  }
+
+  .x1s9jiai {
+    color: var(--hraness-material-ink, var(--popover-foreground, CanvasText));
   }
 
   .x1rowbon {
@@ -1801,10 +1817,6 @@
 
   .x1qqhz67 {
     color: var(--phaser-dots-trail-color, var(--foreground));
-  }
-
-  .xxfsttr {
-    color: var(--popover-foreground, CanvasText);
   }
 
   .x1gjcqpb {
@@ -2766,12 +2778,12 @@
     outline-color: currentColor;
   }
 
-  .x1mixbcr {
-    outline-color: var(--focus, Highlight);
-  }
-
   .x1ozvyeg {
     outline-color: var(--focus);
+  }
+
+  .xb2ck1y {
+    outline-color: var(--hraness-material-focus, var(--focus, Highlight));
   }
 
   .x1g40iwv {
@@ -2922,8 +2934,8 @@
     transform: translateY(-50%);
   }
 
-  .x1545fc0 {
-    transition-delay: 0s, 0s, 0s, 0s;
+  .xxsiw8j {
+    transition-delay: 0s, 0s, 0s, 0s, 0s;
   }
 
   .x1ahifba {
@@ -2934,8 +2946,12 @@
     transition-duration: 90ms;
   }
 
-  .x19wcyzb {
-    transition-duration: .12s, .12s, .12s, .12s;
+  .xrw3mvn {
+    transition-duration: .12s, .12s, .12s, .12s, .12s;
+  }
+
+  .xgdialr {
+    transition-duration: .12s;
   }
 
   .x9dyr19 {
@@ -2950,8 +2966,8 @@
     transition-duration: var(--motion-duration-fast);
   }
 
-  .xv65o4f {
-    transition-property: background-color, border-color, color, transform;
+  .x1n72cmf {
+    transition-property: background-color, border-color, box-shadow, color, transform;
   }
 
   .x15406qy {
@@ -2966,6 +2982,10 @@
     transition-property: background-position, opacity;
   }
 
+  .xkdsq27 {
+    transition-property: box-shadow;
+  }
+
   .x13b0p5u {
     transition-property: none;
   }
@@ -2978,8 +2998,12 @@
     transition-timing-function: cubic-bezier(.2, .75, .25, 1);
   }
 
-  .x8rfmps {
-    transition-timing-function: cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1);
+  .xt4xdiv {
+    transition-timing-function: cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1), cubic-bezier(.2, 0, 0, 1);
+  }
+
+  .x1p0hc1o {
+    transition-timing-function: cubic-bezier(.2, 0, 0, 1);
   }
 
   .xcj1dhv {
@@ -3059,8 +3083,8 @@
     background-color: color-mix(in srgb,var(--foreground) 7%,transparent);
   }
 
-  .x6j457c:is([data-hovered], :hover), .xffqgfc:is([data-focused], [data-hovered], :focus-visible, :hover) {
-    background-color: var(--hraness-appearance-accent, var(--ui-accent, ButtonFace));
+  .x1vsujy6:is([data-focused], [data-hovered], :focus-visible, :hover), .xl8i2wo:is([data-hovered], :hover) {
+    background-color: var(--hraness-appearance-accent, var(--hraness-material-warm-plane, var(--ui-accent, ButtonFace)));
   }
 
   .xx8mfso:is([data-hovered], :hover) {
@@ -3087,16 +3111,20 @@
     background-size: auto;
   }
 
-  .x1jbwuzb:is([data-focus-visible], :focus-visible) {
-    box-shadow: 0 0 0 4px color-mix(in srgb,var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%,transparent);
+  .xbb1c6o:is([data-focus-visible], :focus-visible) {
+    box-shadow: 0 0 0 4px color-mix(in srgb,var(--hraness-appearance-focus, var(--hraness-material-focus, var(--ui-ring, Highlight))) 24%,transparent);
+  }
+
+  .x184rbrl:is([data-pressed], :active) {
+    box-shadow: var(--hraness-material-inset, none);
   }
 
   .x11ffpz8:is([data-hovered], :hover) {
     color: var(--foreground);
   }
 
-  .x15kafvc:is([data-hovered], :hover), .xu0bq9:is([data-focused], [data-hovered], :focus-visible, :hover) {
-    color: var(--hraness-appearance-accent-foreground, var(--ui-accent-foreground, ButtonText));
+  .xemv0ly:is([data-hovered], :hover), .xmm8vmt:is([data-focused], [data-hovered], :focus-visible, :hover) {
+    color: var(--hraness-appearance-accent-foreground, var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText)));
   }
 
   .x89zja:is([data-hovered], :hover) {
@@ -3111,8 +3139,8 @@
     outline-color: var(--focus);
   }
 
-  .xybcfi5:is([data-focus-visible], :focus-visible) {
-    outline-color: var(--hraness-appearance-focus, var(--ui-ring, Highlight));
+  .x14pgi42:is([data-focus-visible], :focus-visible) {
+    outline-color: var(--hraness-appearance-focus, var(--hraness-material-focus, var(--ui-ring, Highlight)));
   }
 
   .x13iak60:focus-visible {
@@ -4704,36 +4732,36 @@
   --_hraness-hero-backdrop-opacity: 1;
 }
 
-.x1gxadoi {
-  --hraness-appearance-accent-foreground: var(--ui-accent-foreground, ButtonText);
+.xojny72 {
+  --hraness-appearance-accent-foreground: var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText));
 }
 
-.xwhnx5i {
-  --hraness-appearance-accent: var(--ui-accent, ButtonFace);
+.xewv82x {
+  --hraness-appearance-accent: var(--hraness-material-warm-plane, var(--ui-accent, ButtonFace));
 }
 
-.xuwnfk3 {
-  --hraness-appearance-control-background: var(--ui-background, Canvas);
+.xzk9zvf {
+  --hraness-appearance-control-background: var(--hraness-material-plane, var(--ui-background, Canvas));
 }
 
-.xg6mmvg {
-  --hraness-appearance-control-border: var(--ui-input, GrayText);
+.xpkryfg {
+  --hraness-appearance-control-border: var(--hraness-material-seam, var(--ui-input, GrayText));
 }
 
-.x1q0riu {
-  --hraness-appearance-control-foreground: var(--ui-foreground, CanvasText);
+.x13k4yyn {
+  --hraness-appearance-control-foreground: var(--hraness-material-ink, var(--ui-foreground, CanvasText));
 }
 
-.x14tw958 {
-  --hraness-appearance-focus: var(--ui-ring, Highlight);
+.xro5xsp {
+  --hraness-appearance-focus: var(--hraness-material-focus, var(--ui-ring, Highlight));
 }
 
-.x15khpru {
-  --hraness-appearance-popover-background: var(--ui-popover, Canvas);
+.x152ag9z {
+  --hraness-appearance-popover-background: var(--hraness-material-plane, var(--ui-popover, Canvas));
 }
 
-.xtuecvg {
-  --hraness-appearance-popover-foreground: var(--ui-popover-foreground, CanvasText);
+.x1fwl4gj {
+  --hraness-appearance-popover-foreground: var(--hraness-material-ink, var(--ui-popover-foreground, CanvasText));
 }
 
 .xgcu659 {

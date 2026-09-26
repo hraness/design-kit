@@ -11,6 +11,24 @@ const itemFocusedOrHovered =
   ":is([data-focused], [data-hovered], :focus-visible, :hover)";
 const pressed = ":is([data-pressed], :active)";
 
+// The popover is portalled outside the menu root, so its paint reads the
+// inherited Lantern tokens directly after any caller-set appearance variable.
+const lanternAccent =
+  "var(--hraness-material-warm-plane, var(--ui-accent, ButtonFace))";
+const lanternAccentForeground =
+  "var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText))";
+const lanternPopoverBackground =
+  "var(--hraness-material-plane, var(--ui-popover, Canvas))";
+const lanternPopoverForeground =
+  "var(--hraness-material-ink, var(--ui-popover-foreground, CanvasText))";
+const accent = `var(--hraness-appearance-accent, ${lanternAccent})`;
+const accentForeground =
+  `var(--hraness-appearance-accent-foreground, ${lanternAccentForeground})`;
+const popoverForeground =
+  `var(--hraness-appearance-popover-foreground, ${lanternPopoverForeground})`;
+const controlBorder =
+  "var(--hraness-appearance-control-border, var(--hraness-material-seam, var(--ui-input, GrayText)))";
+
 export const themeStyles = stylex.create({
   item: {
     alignItems: "center",
@@ -23,15 +41,12 @@ export const themeStyles = stylex.create({
     backgroundSize: { default: null, [itemFocusedOrHovered]: "auto auto" },
     backgroundColor: {
       default: null,
-      [itemFocusedOrHovered]:
-        "var(--hraness-appearance-accent, var(--ui-accent, ButtonFace))",
+      [itemFocusedOrHovered]: accent,
     },
     borderRadius: "var(--radius-md, 0.5rem)",
     color: {
-      default:
-        "var(--hraness-appearance-popover-foreground, var(--ui-popover-foreground, CanvasText))",
-      [itemFocusedOrHovered]:
-        "var(--hraness-appearance-accent-foreground, var(--ui-accent-foreground, ButtonText))",
+      default: popoverForeground,
+      [itemFocusedOrHovered]: accentForeground,
     },
     cursor: "default",
     display: "grid",
@@ -56,17 +71,15 @@ export const themeStyles = stylex.create({
     backgroundPosition: { default: null, [itemFocusedOrHovered]: "0% 0%", [forcedColors]: "0% 0%" },
     backgroundRepeat: { default: null, [itemFocusedOrHovered]: "repeat", [forcedColors]: "repeat" },
     backgroundSize: { default: null, [itemFocusedOrHovered]: "auto auto", [forcedColors]: "auto auto" },
+    // Lantern marks the selected appearance with its warm plane at rest.
     backgroundColor: {
-      default: null,
-      [itemFocusedOrHovered]:
-        "var(--hraness-appearance-accent, var(--ui-accent, ButtonFace))",
+      default: "var(--hraness-material-warm-plane, transparent)",
+      [itemFocusedOrHovered]: accent,
       [forcedColors]: "Highlight",
     },
     color: {
-      default:
-        "var(--hraness-appearance-popover-foreground, var(--ui-popover-foreground, CanvasText))",
-      [itemFocusedOrHovered]:
-        "var(--hraness-appearance-accent-foreground, var(--ui-accent-foreground, ButtonText))",
+      default: popoverForeground,
+      [itemFocusedOrHovered]: accentForeground,
       [forcedColors]: "HighlightText",
     },
     fontWeight: "var(--font-weight-medium, 550)",
@@ -80,19 +93,20 @@ export const themeStyles = stylex.create({
     paddingInline: "0.25rem",
   },
   menuRoot: {
-    "--hraness-appearance-accent": "var(--ui-accent, ButtonFace)",
-    "--hraness-appearance-accent-foreground":
-      "var(--ui-accent-foreground, ButtonText)",
+    // Lantern tokens exist only inside a data-hraness-material="lantern"
+    // island, so each chain falls through to the palette outside one.
+    "--hraness-appearance-accent": lanternAccent,
+    "--hraness-appearance-accent-foreground": lanternAccentForeground,
     "--hraness-appearance-control-background":
-      "var(--ui-background, Canvas)",
-    "--hraness-appearance-control-border": "var(--ui-input, GrayText)",
+      "var(--hraness-material-plane, var(--ui-background, Canvas))",
+    "--hraness-appearance-control-border":
+      "var(--hraness-material-seam, var(--ui-input, GrayText))",
     "--hraness-appearance-control-foreground":
-      "var(--ui-foreground, CanvasText)",
-    "--hraness-appearance-focus": "var(--ui-ring, Highlight)",
-    "--hraness-appearance-popover-background":
-      "var(--ui-popover, Canvas)",
-    "--hraness-appearance-popover-foreground":
-      "var(--ui-popover-foreground, CanvasText)",
+      "var(--hraness-material-ink, var(--ui-foreground, CanvasText))",
+    "--hraness-appearance-focus":
+      "var(--hraness-material-focus, var(--ui-ring, Highlight))",
+    "--hraness-appearance-popover-background": lanternPopoverBackground,
+    "--hraness-appearance-popover-foreground": lanternPopoverForeground,
     color: "var(--hraness-appearance-control-foreground)",
     position: "relative",
   },
@@ -113,19 +127,20 @@ export const themeStyles = stylex.create({
     backgroundRepeat: "repeat",
     backgroundSize: "auto auto",
     backgroundColor:
-      "var(--hraness-appearance-popover-background, var(--ui-popover, Canvas))",
+      `var(--hraness-appearance-popover-background, ${lanternPopoverBackground})`,
     borderColor: {
-      default:
-        "var(--hraness-appearance-control-border, var(--ui-input, GrayText))",
+      default: controlBorder,
       [forcedColors]: "CanvasText",
     },
     borderRadius: "var(--radius-lg, 0.75rem)",
     borderStyle: "solid",
     borderWidth: 1,
-    boxShadow:
-      "var(--elevation-overlay, 0 18px 48px -18px rgb(0 0 0 / 32%))",
-    color:
-      "var(--hraness-appearance-popover-foreground, var(--ui-popover-foreground, CanvasText))",
+    boxShadow: {
+      default:
+        "var(--hraness-material-lift, var(--elevation-overlay, 0 18px 48px -18px rgb(0 0 0 / 32%)))",
+      [forcedColors]: "none",
+    },
+    color: popoverForeground,
     display: {
       default: null,
       [hidden]: "none",
@@ -159,29 +174,30 @@ export const themeStyles = stylex.create({
     backgroundSize: { default: "auto auto", [hovered]: "auto auto" },
     backgroundColor: {
       default:
-        "var(--hraness-appearance-control-background, var(--ui-background, Canvas))",
-      [hovered]:
-        "var(--hraness-appearance-accent, var(--ui-accent, ButtonFace))",
+        "var(--hraness-appearance-control-background, var(--hraness-material-plane, var(--ui-background, Canvas)))",
+      [hovered]: accent,
     },
     borderColor: {
-      default:
-        "var(--hraness-appearance-control-border, var(--ui-input, GrayText))",
+      default: controlBorder,
       [forcedColors]: "CanvasText",
     },
     borderRadius: "var(--radius-md, 0.5rem)",
     borderStyle: "solid",
     borderWidth: 1,
+    // Lantern raises the trigger at rest and sets it into the plane while
+    // pressed. Both tokens are undefined outside Lantern and none in forced
+    // colors, so other palettes keep a flat trigger.
     boxShadow: {
-      default: null,
+      default: "var(--hraness-material-raised, none)",
       [focusVisible]:
-        "0 0 0 4px color-mix(in srgb, var(--hraness-appearance-focus, var(--ui-ring, Highlight)) 24%, transparent)",
+        "0 0 0 4px color-mix(in srgb, var(--hraness-appearance-focus, var(--hraness-material-focus, var(--ui-ring, Highlight))) 24%, transparent)",
+      [pressed]: "var(--hraness-material-inset, none)",
       [forcedColors]: "none",
     },
     color: {
       default:
-        "var(--hraness-appearance-control-foreground, var(--ui-foreground, CanvasText))",
-      [hovered]:
-        "var(--hraness-appearance-accent-foreground, var(--ui-accent-foreground, ButtonText))",
+        "var(--hraness-appearance-control-foreground, var(--hraness-material-ink, var(--ui-foreground, CanvasText)))",
+      [hovered]: accentForeground,
     },
     cursor: {
       default: "pointer",
@@ -224,7 +240,7 @@ export const themeStyles = stylex.create({
     outlineColor: {
       default: null,
       [focusVisible]:
-        "var(--hraness-appearance-focus, var(--ui-ring, Highlight))",
+        "var(--hraness-appearance-focus, var(--hraness-material-focus, var(--ui-ring, Highlight)))",
       [forcedColors]: "Highlight",
     },
     outlineOffset: {
@@ -247,13 +263,14 @@ export const themeStyles = stylex.create({
       default: null,
       [pressed]: "translateY(1px)",
     },
-    transitionDelay: "0s, 0s, 0s, 0s",
+    transitionDelay: "0s, 0s, 0s, 0s, 0s",
     transitionDuration: {
-      default: "120ms, 120ms, 120ms, 120ms",
+      default: "120ms, 120ms, 120ms, 120ms, 120ms",
       [reducedMotion]: "0.01ms",
     },
-    transitionProperty: "background-color, border-color, color, transform",
+    transitionProperty:
+      "background-color, border-color, box-shadow, color, transform",
     transitionTimingFunction:
-      "cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1)",
+      "cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1), cubic-bezier(0.2, 0, 0, 1)",
   },
 });

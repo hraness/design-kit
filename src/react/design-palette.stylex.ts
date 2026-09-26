@@ -1,5 +1,9 @@
 import * as stylex from "@stylexjs/stylex";
 
+const forcedColors = "@media (forced-colors: active)";
+const reducedMotion = "@media (prefers-reduced-motion: reduce)";
+const pressed = ":is([data-pressed], :active)";
+
 export const paletteMenuStyles = stylex.create({
   icon: {
     alignItems: "center",
@@ -14,22 +18,38 @@ export const paletteMenuStyles = stylex.create({
   },
   trigger: {
     alignItems: "center",
-    backgroundColor: "var(--background, Canvas)",
-    borderColor: "var(--control-border, GrayText)",
+    // Lantern tokens exist only inside a data-hraness-material="lantern"
+    // island, so each chain falls through to the palette outside one.
+    backgroundColor: "var(--hraness-material-plane, var(--background, Canvas))",
+    borderColor: {
+      default: "var(--hraness-material-seam, var(--control-border, GrayText))",
+      [forcedColors]: "CanvasText",
+    },
     borderRadius: "var(--radius-md, 0.5rem)",
     borderStyle: "solid",
     borderWidth: 1,
-    color: "var(--foreground, CanvasText)",
+    boxShadow: {
+      default: "var(--hraness-material-raised, none)",
+      [pressed]: "var(--hraness-material-inset, none)",
+      [forcedColors]: "none",
+    },
+    color: "var(--hraness-material-ink, var(--foreground, CanvasText))",
     cursor: "pointer",
     display: "inline-flex",
     justifyContent: "center",
     listStyleType: "none",
     "min-block-size": "var(--interactive-target-compact, 2.75rem)",
     "min-inline-size": "var(--interactive-target-compact, 2.75rem)",
-    outlineColor: "var(--focus, Highlight)",
+    outlineColor: "var(--hraness-material-focus, var(--focus, Highlight))",
     outlineOffset: 3,
     paddingBlock: "0.5rem",
     paddingInline: "0.625rem",
+    transitionDuration: {
+      default: "120ms",
+      [reducedMotion]: "0.01ms",
+    },
+    transitionProperty: "box-shadow",
+    transitionTimingFunction: "cubic-bezier(0.2, 0, 0, 1)",
     userSelect: "none",
   },
   triggerDefault: {
@@ -37,13 +57,20 @@ export const paletteMenuStyles = stylex.create({
     "min-inline-size": "var(--interactive-target-min, 3rem)",
   },
   panel: {
-    backgroundColor: "var(--popover, Canvas)",
-    borderColor: "var(--control-border, GrayText)",
+    backgroundColor: "var(--hraness-material-plane, var(--popover, Canvas))",
+    borderColor: {
+      default: "var(--hraness-material-seam, var(--control-border, GrayText))",
+      [forcedColors]: "CanvasText",
+    },
     borderRadius: "var(--radius-lg, 0.75rem)",
     borderStyle: "solid",
     borderWidth: 1,
-    boxShadow: "var(--elevation-overlay, 0 18px 48px -18px rgb(0 0 0 / 32%))",
-    color: "var(--popover-foreground, CanvasText)",
+    boxShadow: {
+      default:
+        "var(--hraness-material-lift, var(--elevation-overlay, 0 18px 48px -18px rgb(0 0 0 / 32%)))",
+      [forcedColors]: "none",
+    },
+    color: "var(--hraness-material-ink, var(--popover-foreground, CanvasText))",
     display: "grid",
     gap: "0.75rem",
     "inset-block-start": "calc(100% + 0.5rem)",

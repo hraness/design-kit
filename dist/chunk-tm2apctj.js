@@ -569,6 +569,154 @@ function renderArticleIndexHtml({
   const entry = `h${headingLevel + 1}`;
   return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="${escapeArticleHtml(classes2(ROOT_CLASS, "plain-publication__list", className))}" data-hraness-article-index=""${id === undefined ? "" : ` id="${escapeArticleHtml(id)}"`}>`, `<div class="plain-publication__section-heading"><${heading1} id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</${heading1}>`, present(summary) ? `<p>${escapeArticleHtml(summary)}</p>` : "", "</div>", '<div class="plain-publication__article-list">', ...items.map((item) => ['<article class="plain-publication__entry">', present(item.eyebrow) ? `<p class="plain-publication__entry-label">${escapeArticleHtml(item.eyebrow)}</p>` : "", `<${entry} class="plain-publication__entry-title"><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.title)}</a></${entry}>`, `<p class="plain-publication__entry-dek">${escapeArticleHtml(item.dek)}</p>`, '<p class="plain-publication__entry-meta">', dateHtml("Published", item.published), item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated), "</p></article>"].join("")), "</div></section>"].join("");
 }
+// src/relative-time.ts
+var second = 1000;
+var minute = 60 * second;
+var hour = 60 * minute;
+var day = 24 * hour;
+var week = 7 * day;
+var year = 365.2425 * day;
+var month = year / 12;
+var buckets = [{
+  unit: "second",
+  milliseconds: second,
+  limit: 60
+}, {
+  unit: "minute",
+  milliseconds: minute,
+  limit: 60
+}, {
+  unit: "hour",
+  milliseconds: hour,
+  limit: 24
+}, {
+  unit: "day",
+  milliseconds: day,
+  limit: 7
+}, {
+  unit: "week",
+  milliseconds: week,
+  limit: 4
+}, {
+  unit: "month",
+  milliseconds: month,
+  limit: 12
+}, {
+  unit: "year",
+  milliseconds: year,
+  limit: Number.POSITIVE_INFINITY
+}];
+var relativeTimeUnits = Object.freeze(buckets.map((bucket) => bucket.unit));
+var maximumTime = 8640000000000000;
+var isoDate = /^(\d{4})-(\d{2})-(\d{2})$/u;
+var isoDateTime = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,9}))?)?(Z|[+-]\d{2}:\d{2})$/u;
+function describe(value) {
+  if (typeof value === "string")
+    return JSON.stringify(value);
+  if (value instanceof Date)
+    return "an invalid Date";
+  return String(value);
+}
+function fromTime(time, label, original) {
+  if (!Number.isFinite(time) || Math.abs(time) > maximumTime) {
+    throw new RangeError(`${label} must be a valid instant; received ${describe(original)}.`);
+  }
+  return new Date(time);
+}
+function parseIsoString(value, label) {
+  const date = isoDate.exec(value);
+  const dateTime = date === null ? isoDateTime.exec(value) : null;
+  const parts = date ?? dateTime;
+  if (parts === null) {
+    throw new RangeError(`${label} must be an ISO 8601 date (YYYY-MM-DD) or a date-time with Z or an offset; received ${describe(value)}.`);
+  }
+  const [yearText, monthText, dayText, hourText = "00", minuteText = "00", secondText = "00", fraction = "", zone = "Z"] = parts.slice(1);
+  const fields = [yearText, monthText, dayText, hourText, minuteText, secondText].map(Number);
+  const [y, mo, d, h, mi, s] = fields;
+  const offsetHours = zone === "Z" ? 0 : Number(zone.slice(1, 3));
+  const offsetRest = zone === "Z" ? 0 : Number(zone.slice(4, 6));
+  const offsetMinutes = (zone.startsWith("-") ? -1 : 1) * (offsetHours * 60 + offsetRest);
+  const milliseconds = Number(fraction.padEnd(3, "0").slice(0, 3));
+  const wall = new Date(0);
+  wall.setUTCFullYear(y, mo - 1, d);
+  wall.setUTCHours(h, mi, s, milliseconds);
+  const valid = h < 24 && mi < 60 && s < 60 && offsetHours < 24 && offsetRest < 60 && wall.getUTCFullYear() === y && wall.getUTCMonth() === mo - 1 && wall.getUTCDate() === d;
+  if (!valid)
+    throw new RangeError(`${label} must name a real calendar instant; received ${describe(value)}.`);
+  return fromTime(wall.getTime() - offsetMinutes * minute, label, value);
+}
+function parseRelativeTimeInput(value, label = "time") {
+  if (value instanceof Date)
+    return fromTime(value.getTime(), label, value);
+  if (typeof value === "number")
+    return fromTime(value, label, value);
+  if (typeof value === "string")
+    return parseIsoString(value.trim(), label);
+  throw new TypeError(`${label} must be a Date, epoch milliseconds, or an ISO 8601 string.`);
+}
+function parseReference(value) {
+  if (value === undefined)
+    return new Date;
+  if (value instanceof Date || typeof value === "number")
+    return parseRelativeTimeInput(value, "now");
+  throw new TypeError("now must be a Date or epoch milliseconds.");
+}
+function parseNumeric(value) {
+  if (value === undefined)
+    return "auto";
+  if (value === "auto" || value === "always")
+    return value;
+  throw new TypeError(`numeric must be "auto" or "always"; received ${describe(value)}.`);
+}
+function parseLocale(value) {
+  if (value === undefined)
+    return;
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new TypeError("locale must be a non-empty BCP 47 language tag.");
+  }
+  return value;
+}
+function resolveRelativeTime(differenceMilliseconds) {
+  if (!Number.isFinite(differenceMilliseconds)) {
+    throw new RangeError("The time difference must be a finite number of milliseconds.");
+  }
+  const magnitude = Math.abs(differenceMilliseconds);
+  const sign = differenceMilliseconds < 0 || Object.is(differenceMilliseconds, -0) ? -1 : 1;
+  for (const bucket of buckets) {
+    const amount = Math.round(magnitude / bucket.milliseconds);
+    if (amount < bucket.limit) {
+      return {
+        unit: bucket.unit,
+        value: sign * amount
+      };
+    }
+  }
+  throw new RangeError("No relative time unit matched.");
+}
+var formatters = new Map;
+function formatterFor(locale, numeric) {
+  const key = `${locale ?? ""}\x00${numeric}`;
+  let formatter = formatters.get(key);
+  if (formatter === undefined) {
+    formatter = new Intl.RelativeTimeFormat(locale, {
+      numeric,
+      style: "long"
+    });
+    formatters.set(key, formatter);
+  }
+  return formatter;
+}
+function formatRelativeTime(target, options = {}) {
+  const instant = parseRelativeTimeInput(target, "target");
+  const reference = parseReference(options.now);
+  const numeric = parseNumeric(options.numeric);
+  const locale = parseLocale(options.locale);
+  const {
+    unit,
+    value
+  } = resolveRelativeTime(instant.getTime() - reference.getTime());
+  return formatterFor(locale, numeric).format(value, unit);
+}
 
 // src/index.ts
 var colors = {
@@ -783,4 +931,4 @@ function themeFor(mode) {
   return colors[mode];
 }
 
-export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };
+export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };

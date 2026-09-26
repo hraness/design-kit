@@ -6,6 +6,7 @@ export * from "./appearance.js";
 export * from "./article.js";
 export * from "./article-html.js";
 export * from "./provider-marks.js";
+export * from "./relative-time.js";
 
 export const colors = {
   light: {

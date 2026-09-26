@@ -40,6 +40,7 @@ import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-tran
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import { ProviderMark } from "./provider-mark.js";
+import { RelativeTime } from "./relative-time.js";
 import {
   MarketingCallToAction,
   MarketingCardRow,
@@ -113,7 +114,17 @@ export const designGalleryRecipeCoverage = [
   "Nebula Sans typography",
   "procedural effects",
   "production preview notice",
+  "relative time",
   "syntax highlighting",
+] as const;
+
+/** A fixed reference keeps the gallery's relative times deterministic. */
+export const designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
+const relativeTimeExamples = [
+  { id: "seconds", value: designGalleryRelativeTimeNow - 12_000 },
+  { id: "minutes", value: designGalleryRelativeTimeNow - 5 * 60_000 },
+  { id: "hours", value: designGalleryRelativeTimeNow + 23 * 3_600_000 },
+  { id: "months", value: designGalleryRelativeTimeNow - 62 * 86_400_000 },
 ] as const;
 
 /** Resolves the gallery's System choice through the live OS preference. */
@@ -724,7 +735,14 @@ export function DesignSystemGallery({
             actions={<Button variant="quiet">Copy response</Button>}
             avatar={<span aria-hidden="true" className="design-gallery__chat-avatar">AI</span>}
             className="design-gallery__chat-message"
-            meta="Now"
+            meta={(
+              <RelativeTime
+                locale="en-US"
+                now={designGalleryRelativeTimeNow}
+                refreshInterval="off"
+                value={designGalleryRelativeTimeNow}
+              />
+            )}
             name="Assistant"
             role="assistant"
           >
@@ -747,6 +765,19 @@ export function DesignSystemGallery({
             value={chatDraft}
           />
         </div>
+        <ul aria-label="Relative time examples" className="design-gallery__relative-times" data-gallery-relative-time="">
+          {relativeTimeExamples.map(({ id, value }) => (
+            <li key={id}>
+              <RelativeTime
+                data-gallery-relative-time-example={id}
+                locale="en-US"
+                now={designGalleryRelativeTimeNow}
+                refreshInterval="off"
+                value={value}
+              />
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="design-gallery__section" id="effects">

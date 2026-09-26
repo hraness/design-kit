@@ -438,3 +438,27 @@ test("theme color synchronization uses a concrete forced or resolved appearance 
   expect(source).toContain("if (!hasResolvedColor || latestColor.current === undefined) return;");
   expect(source).toContain("acquireThemeColorMeta(");
 });
+
+test("the appearance menu takes Lantern material from inherited tokens without an adapter", async () => {
+  const [recipe, palette, fallback, material] = await Promise.all([
+    Bun.file(new URL("./theme.stylex.ts", import.meta.url)).text(),
+    Bun.file(new URL("./design-palette.stylex.ts", import.meta.url)).text(),
+    Bun.file(new URL("../appearance-menu.css", import.meta.url)).text(),
+    Bun.file(new URL("../lantern-material.css", import.meta.url)).text(),
+  ]);
+  // Every Lantern read is a fallback chain, so other palettes keep their paint.
+  for (const source of [recipe, palette, fallback]) {
+    for (const token of ["plane", "ink", "seam", "focus", "lift"]) {
+      expect(source).toMatch(new RegExp(`var\\(\\s*--hraness-material-${token},`, "u"));
+    }
+    expect(source).toContain("var(--hraness-material-raised, none)");
+    expect(source).toContain("var(--hraness-material-inset, none)");
+    expect(source).not.toMatch(/var\(\s*--hraness-material-[a-z-]+\s*\)/u);
+  }
+  expect(recipe).toContain("[pressed]: \"var(--hraness-material-inset, none)\"");
+  expect(recipe).toContain("background-color, border-color, box-shadow, color, transform");
+  expect(material).toMatch(/--hraness-material-raised: inset 0 1px 0 var\(--hraness-material-edge\), /u);
+  const forced = material.slice(material.indexOf("@media (forced-colors: active)"));
+  expect(forced).toContain("--hraness-material-raised: none;");
+  expect(forced).toContain("--hraness-material-inset: none;");
+});
