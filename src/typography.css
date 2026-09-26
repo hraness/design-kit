@@ -39,6 +39,24 @@
     --hraness-type-section-space: clamp(2.75rem, 2rem + 2vw, 4rem);
     --hraness-type-subsection-space: 2rem;
   }
+
+  /* Custom properties resolve where they are declared, so a face token set
+   * on :root would keep :root's face inside a scope that changes the display
+   * or text face (the marketing preset, the Paper theme, the serif reading
+   * face). Re-derive the face and weight tokens in those scopes. */
+  :where([data-hraness-marketing-preset], [data-hraness-theme], [data-hraness-reading-face]) {
+    --hraness-type-heading-font: var(--hraness-marketing-display-font, var(--font-heading, var(--font-text, inherit)));
+    --hraness-type-heading-weight: var(--hraness-marketing-display-weight, 600);
+    --hraness-type-subheading-font: var(--font-text, inherit);
+    --hraness-type-h1-font: var(--hraness-type-heading-font);
+    --hraness-type-h1-weight: var(--hraness-type-heading-weight);
+    --hraness-type-h2-font: var(--hraness-type-heading-font);
+    --hraness-type-h2-weight: var(--hraness-type-heading-weight);
+    --hraness-type-h3-font: var(--hraness-type-subheading-font);
+    --hraness-type-h3-weight: var(--hraness-type-subheading-weight);
+    --hraness-type-h4-font: var(--hraness-type-subheading-font);
+    --hraness-type-h4-weight: var(--hraness-type-subheading-weight);
+  }
 }
 
 .hraness-design-text-chrome {
