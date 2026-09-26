@@ -91,6 +91,11 @@ test("the package exposes compositions without a second primitive barrel", async
     types: "./src/provider-marks.ts",
     import: "./dist/provider-marks.js",
   });
+  expect(packageJson.exports["./icons"]).toEqual({
+    types: "./src/icons.ts",
+    import: "./dist/icons.js",
+  });
+  expect(packageJson.exports["./icons/*"]).toBe("./src/icons/*");
   expect(packageJson.exports["./product-marketing-preset.css"]).toBe("./src/product-marketing-preset.css");
   expect(packageJson.exports["./fonts/instrument-serif/*"]).toBe("./src/fonts/instrument-serif/*");
   expect(packageJson.exports["./marketing-assets/*"]).toBe("./src/marketing-assets/*");

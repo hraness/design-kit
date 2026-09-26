@@ -1,0 +1,483 @@
+{
+  "icons": [],
+  "pending": [
+    {
+      "context": "card",
+      "file": "act60/application.svg",
+      "id": "act60/application",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "application",
+      "subject": "a clipboard holding an application form beside a pen"
+    },
+    {
+      "context": "card",
+      "file": "act60/chapter-compare.svg",
+      "id": "act60/chapter-compare",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "chapter-compare",
+      "subject": "two document cards balanced on a scale"
+    },
+    {
+      "context": "card",
+      "file": "act60/decree-residence.svg",
+      "id": "act60/decree-residence",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "decree-residence",
+      "subject": "a house with a stamped decree seal"
+    },
+    {
+      "context": "card",
+      "file": "act60/estimate.svg",
+      "id": "act60/estimate",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "estimate",
+      "subject": "a calculator beside a bill with a percent mark"
+    },
+    {
+      "context": "card",
+      "file": "act60/export-services.svg",
+      "id": "act60/export-services",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "export-services",
+      "subject": "a briefcase with an arrow leaving it"
+    },
+    {
+      "context": "card",
+      "file": "act60/investor.svg",
+      "id": "act60/investor",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "investor",
+      "subject": "a rising stock chart beside a coin"
+    },
+    {
+      "context": "card",
+      "file": "act60/presence.svg",
+      "id": "act60/presence",
+      "purpose": "illustration",
+      "set": "act60",
+      "slug": "presence",
+      "subject": "a location pin standing over a calendar"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/cost-compare.svg",
+      "id": "aicharts/cost-compare",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "cost-compare",
+      "subject": "a balance scale weighing two price tags"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-audio.svg",
+      "id": "aicharts/task-audio",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-audio",
+      "subject": "a small speaker emitting curved sound waves"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-coding.svg",
+      "id": "aicharts/task-coding",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-coding",
+      "subject": "a code editor window with angle brackets"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-images.svg",
+      "id": "aicharts/task-images",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-images",
+      "subject": "a framed picture of a simple mountain scene"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-reasoning.svg",
+      "id": "aicharts/task-reasoning",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-reasoning",
+      "subject": "a lightbulb over a short checklist"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-research.svg",
+      "id": "aicharts/task-research",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-research",
+      "subject": "a report page with a small chart under a magnifier"
+    },
+    {
+      "context": "card",
+      "file": "aicharts/task-video.svg",
+      "id": "aicharts/task-video",
+      "purpose": "illustration",
+      "set": "aicharts",
+      "slug": "task-video",
+      "subject": "a film frame carrying a play triangle"
+    },
+    {
+      "context": "card",
+      "file": "platonik/conversation.svg",
+      "id": "platonik/conversation",
+      "purpose": "illustration",
+      "set": "platonik",
+      "slug": "conversation",
+      "subject": "two overlapping speech bubbles"
+    },
+    {
+      "context": "card",
+      "file": "platonik/creature.svg",
+      "id": "platonik/creature",
+      "purpose": "illustration",
+      "set": "platonik",
+      "slug": "creature",
+      "subject": "a small friendly robot creature standing on a plain"
+    },
+    {
+      "context": "card",
+      "file": "platonik/economy.svg",
+      "id": "platonik/economy",
+      "purpose": "illustration",
+      "set": "platonik",
+      "slug": "economy",
+      "subject": "a coin beside a conveyor gear"
+    },
+    {
+      "context": "card",
+      "file": "platonik/keep-light.svg",
+      "id": "platonik/keep-light",
+      "purpose": "illustration",
+      "set": "platonik",
+      "slug": "keep-light",
+      "subject": "a small beacon lantern keeping a flame lit"
+    },
+    {
+      "context": "card",
+      "file": "platonik/spark-route.svg",
+      "id": "platonik/spark-route",
+      "purpose": "illustration",
+      "set": "platonik",
+      "slug": "spark-route",
+      "subject": "a winding path between two waypoints with small sparks"
+    },
+    {
+      "context": "card",
+      "file": "shared/agent-skill.svg",
+      "id": "shared/agent-skill",
+      "purpose": "illustration",
+      "set": "shared",
+      "slug": "agent-skill",
+      "subject": "a small instruction booklet with a spark on its cover, a packaged agent skill"
+    },
+    {
+      "context": "card",
+      "file": "shared/cli.svg",
+      "id": "shared/cli",
+      "purpose": "illustration",
+      "set": "shared",
+      "slug": "cli",
+      "subject": "a computer terminal window with a command prompt"
+    },
+    {
+      "context": "card",
+      "file": "shared/privacy.svg",
+      "id": "shared/privacy",
+      "purpose": "illustration",
+      "set": "shared",
+      "slug": "privacy",
+      "subject": "a shield guarding a document"
+    },
+    {
+      "context": "card",
+      "file": "shared/research.svg",
+      "id": "shared/research",
+      "purpose": "illustration",
+      "set": "shared",
+      "slug": "research",
+      "subject": "a magnifying lens over a sheet of notes"
+    },
+    {
+      "context": "card",
+      "file": "shared/sdk.svg",
+      "id": "shared/sdk",
+      "purpose": "illustration",
+      "set": "shared",
+      "slug": "sdk",
+      "subject": "a small toolbox holding software building blocks"
+    },
+    {
+      "context": "card",
+      "file": "slopcamera/diagram.svg",
+      "id": "slopcamera/diagram",
+      "purpose": "illustration",
+      "set": "slopcamera",
+      "slug": "diagram",
+      "subject": "a small node diagram of connected boxes"
+    },
+    {
+      "context": "card",
+      "file": "slopcamera/direct-scene.svg",
+      "id": "slopcamera/direct-scene",
+      "purpose": "illustration",
+      "set": "slopcamera",
+      "slug": "direct-scene",
+      "subject": "a wireframe object on a small 3D stage"
+    },
+    {
+      "context": "card",
+      "file": "slopcamera/edit-video.svg",
+      "id": "slopcamera/edit-video",
+      "purpose": "illustration",
+      "set": "slopcamera",
+      "slug": "edit-video",
+      "subject": "a film strip with an editing splice mark"
+    },
+    {
+      "context": "card",
+      "file": "slopcamera/mcp.svg",
+      "id": "slopcamera/mcp",
+      "purpose": "illustration",
+      "set": "slopcamera",
+      "slug": "mcp",
+      "subject": "a socket plug bridging two rounded blocks"
+    },
+    {
+      "context": "card",
+      "file": "slopcamera/native-world.svg",
+      "id": "slopcamera/native-world",
+      "purpose": "illustration",
+      "set": "slopcamera",
+      "slug": "native-world",
+      "subject": "a small isometric world diorama on a base"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/agent-ui.svg",
+      "id": "soundfish/agent-ui",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "agent-ui",
+      "subject": "a friendly robot head inside an app window"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/collaborate.svg",
+      "id": "soundfish/collaborate",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "collaborate",
+      "subject": "two speech bubbles exchanging a note"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/compose.svg",
+      "id": "soundfish/compose",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "compose",
+      "subject": "a pencil over a small piano-roll grid"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/hear.svg",
+      "id": "soundfish/hear",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "hear",
+      "subject": "headphones resting over a waveform"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/human-ui.svg",
+      "id": "soundfish/human-ui",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "human-ui",
+      "subject": "a person silhouette inside an app window"
+    },
+    {
+      "context": "card",
+      "file": "soundfish/share.svg",
+      "id": "soundfish/share",
+      "purpose": "illustration",
+      "set": "soundfish",
+      "slug": "share",
+      "subject": "an upload arrow rising over a disc"
+    },
+    {
+      "context": "card",
+      "file": "sponge/api.svg",
+      "id": "sponge/api",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "api",
+      "subject": "a plug connector joining two rounded blocks"
+    },
+    {
+      "context": "card",
+      "file": "sponge/documents.svg",
+      "id": "sponge/documents",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "documents",
+      "subject": "a tidy stack of documents with a folded top corner"
+    },
+    {
+      "context": "card",
+      "file": "sponge/library.svg",
+      "id": "sponge/library",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "library",
+      "subject": "a small bookshelf holding a few books"
+    },
+    {
+      "context": "card",
+      "file": "sponge/one-question.svg",
+      "id": "sponge/one-question",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "one-question",
+      "subject": "a single card carrying one large question mark"
+    },
+    {
+      "context": "card",
+      "file": "sponge/people-direct.svg",
+      "id": "sponge/people-direct",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "people-direct",
+      "subject": "two overlapping person silhouettes joined by a direct link"
+    },
+    {
+      "context": "card",
+      "file": "sponge/read.svg",
+      "id": "sponge/read",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "read",
+      "subject": "an open book"
+    },
+    {
+      "context": "card",
+      "file": "sponge/save.svg",
+      "id": "sponge/save",
+      "purpose": "illustration",
+      "set": "sponge",
+      "slug": "save",
+      "subject": "a document with a bookmark ribbon"
+    },
+    {
+      "context": "card",
+      "file": "stripe-history/company-history.svg",
+      "id": "stripe-history/company-history",
+      "purpose": "illustration",
+      "set": "stripe-history",
+      "slug": "company-history",
+      "subject": "a horizontal timeline rail with three dated milestones"
+    },
+    {
+      "context": "card",
+      "file": "stripe-history/evidence.svg",
+      "id": "stripe-history/evidence",
+      "purpose": "illustration",
+      "set": "stripe-history",
+      "slug": "evidence",
+      "subject": "a folder of documents with a checkmarked sheet on top"
+    },
+    {
+      "context": "card",
+      "file": "stripe-history/independence.svg",
+      "id": "stripe-history/independence",
+      "purpose": "illustration",
+      "set": "stripe-history",
+      "slug": "independence",
+      "subject": "a flag standing on its own pole"
+    },
+    {
+      "context": "card",
+      "file": "stripe-history/publications.svg",
+      "id": "stripe-history/publications",
+      "purpose": "illustration",
+      "set": "stripe-history",
+      "slug": "publications",
+      "subject": "a row of three upright published articles"
+    },
+    {
+      "context": "card",
+      "file": "stripe-history/sources.svg",
+      "id": "stripe-history/sources",
+      "purpose": "illustration",
+      "set": "stripe-history",
+      "slug": "sources",
+      "subject": "an open archive box with linked document tabs"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/backlinks.svg",
+      "id": "wordcell/backlinks",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "backlinks",
+      "subject": "two note cards joined by a link"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/capture.svg",
+      "id": "wordcell/capture",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "capture",
+      "subject": "a web page dropping into an archive folder"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/git-provenance.svg",
+      "id": "wordcell/git-provenance",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "git-provenance",
+      "subject": "a note card with a small branch-and-commit history rail"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/markdown.svg",
+      "id": "wordcell/markdown",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "markdown",
+      "subject": "a sheet of notes with a heading line and a hash mark"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/scopes.svg",
+      "id": "wordcell/scopes",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "scopes",
+      "subject": "concentric scope rings over a document"
+    },
+    {
+      "context": "card",
+      "file": "wordcell/search.svg",
+      "id": "wordcell/search",
+      "purpose": "illustration",
+      "set": "wordcell",
+      "slug": "search",
+      "subject": "a magnifying glass over a short list of lines"
+    }
+  ],
+  "version": 1
+}

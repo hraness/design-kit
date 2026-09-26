@@ -1,0 +1,18 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "name": "sponge",
+  "members": [
+    { "slug": "api", "subject": "a plug connector joining two rounded blocks" },
+    { "slug": "documents", "subject": "a tidy stack of documents with a folded top corner" },
+    { "slug": "library", "subject": "a small bookshelf holding a few books" },
+    { "slug": "one-question", "subject": "a single card carrying one large question mark" },
+    { "slug": "people-direct", "subject": "two overlapping person silhouettes joined by a direct link" },
+    { "slug": "read", "subject": "an open book" },
+    { "slug": "save", "subject": "a document with a bookmark ribbon" }
+  ],
+  "references": [
+    { "slug": "research", "svg": "../shared/research.svg" },
+    { "slug": "privacy", "svg": "../shared/privacy.svg" }
+  ]
+}

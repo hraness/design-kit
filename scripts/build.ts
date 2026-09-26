@@ -163,6 +163,7 @@ export async function buildPackage(
       entrypoints: [
         join(sourceRoot, "index.ts"),
         join(sourceRoot, "fonts/nebula-sans/social-fonts.generated.ts"),
+        join(sourceRoot, "icons.ts"),
         join(sourceRoot, "portfolio.ts"),
         join(sourceRoot, "provider-marks.ts"),
         // Keep the optional chart runtime behind its own split boundary. This

@@ -1,0 +1,15 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "name": "stripe-history",
+  "members": [
+    { "slug": "company-history", "subject": "a horizontal timeline rail with three dated milestones" },
+    { "slug": "evidence", "subject": "a folder of documents with a checkmarked sheet on top" },
+    { "slug": "independence", "subject": "a flag standing on its own pole" },
+    { "slug": "publications", "subject": "a row of three upright published articles" },
+    { "slug": "sources", "subject": "an open archive box with linked document tabs" }
+  ],
+  "references": [
+    { "slug": "privacy", "svg": "../shared/privacy.svg" }
+  ]
+}
