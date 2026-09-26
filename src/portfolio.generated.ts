@@ -4,14 +4,14 @@ export const portfolioSnapshot = {
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "cd7ad529c7f821b224300277186f4c533655a8a1",
+    "commit": "6261d1f41238fe885f9df211efeb31ccf4097c70",
     "committedOn": "2026-09-26",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:e678776157418c6242953e52b77513de61878f3bba7a08c1e7dea385f511f18e",
+    "upstreamDigest": "sha256:bfa4f57428be6004857ec6ce0caba9e2e77fbf46f866cdb9b117f3f8ec299575",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "337208b5668145366d9a9536fec71d1dff73decf7eeb8f1a9dc183b2765ad17e"
+        "sha256": "20c63b42248711d4dc0f8fd8f595c7b84d883ecd70246303ac52271475efb045"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
@@ -1326,6 +1326,24 @@ export const portfolioSnapshot = {
       "detail": "Textbutler's opt-in per-contact habitats run as ALGAL programs: a candidate reply plan replaces the current one only after a blind replay shows no regression, and no plan can change the recipient, provider, or permissions."
     },
     {
+      "id": "runtime:sponge:oh-computer:keeps-agent-working-memory-in",
+      "source": "sponge",
+      "target": "oh-computer",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "keeps agent working memory in",
+      "detail": "Sponge keeps its research agents' working memory in a server-side Oh store, separate from the reviewed knowledge in its product database."
+    },
+    {
+      "id": "runtime:kb:oh-computer:answers-graph-queries-with",
+      "source": "kb",
+      "target": "oh-computer",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "answers graph queries with",
+      "detail": "Wordcell rebuilds a disposable Oh graph from your Markdown to answer named graph queries with source proofs; Markdown and Git stay the record, and search does not use Oh's memory retrieval."
+    },
+    {
       "id": "runtime:xcb:algal:replays-task-history-with",
       "source": "xcb",
       "target": "algal",
@@ -1380,5 +1398,5 @@ export const portfolioSnapshot = {
       "detail": "Sponge converts a public soulscrape research exchange offline into an Oh research packet that it does not treat as established fact."
     }
   ],
-  "digest": "sha256:bc450de6ae75caaf12cac87e85904616ecd2f6727bb89e84e9e4551a3a0b93ed"
+  "digest": "sha256:566462ae34618442d01b4be2be73347a0c491e29c1238600ec8d4ffb2b1a62e5"
 } as const;
