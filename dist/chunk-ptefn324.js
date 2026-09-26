@@ -8,7 +8,7 @@ import {
   assertArticleDates,
   assertArticleHref,
   formatArticleDate
-} from "./chunk-m5jbxx9x.js";
+} from "./chunk-zzq7bdj8.js";
 
 // src/palette-color.ts
 function channels(hex) {
@@ -569,6 +569,245 @@ function renderArticleIndexHtml({
   const entry = `h${headingLevel + 1}`;
   return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="${escapeArticleHtml(classes2(ROOT_CLASS, "plain-publication__list", className))}" data-hraness-article-index=""${id === undefined ? "" : ` id="${escapeArticleHtml(id)}"`}>`, `<div class="plain-publication__section-heading"><${heading1} id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</${heading1}>`, present(summary) ? `<p>${escapeArticleHtml(summary)}</p>` : "", "</div>", '<div class="plain-publication__article-list">', ...items.map((item) => ['<article class="plain-publication__entry">', present(item.eyebrow) ? `<p class="plain-publication__entry-label">${escapeArticleHtml(item.eyebrow)}</p>` : "", `<${entry} class="plain-publication__entry-title"><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.title)}</a></${entry}>`, `<p class="plain-publication__entry-dek">${escapeArticleHtml(item.dek)}</p>`, '<p class="plain-publication__entry-meta">', dateHtml("Published", item.published), item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated), "</p></article>"].join("")), "</div></section>"].join("");
 }
+// src/status-page.ts
+var STATUS_PAGE_MAX_NEXT = 3;
+var STATUS_PAGE_MAX_ROUTES = 2000;
+var STATUS_PAGE_BACK_LABEL = "Go back";
+var STATUS_PAGE_HINT_PREFIX = "Did you mean";
+var STATUS_PAGE_NEXT_HEADING_ID = "hraness-status-page-next";
+var STATUS_PAGE_AGENT_PREFIX = "AI agents can start at";
+var defaults = {
+  "not-found": {
+    glyph: "404",
+    title: "We can’t find that page",
+    summary: "The link may be out of date or mistyped."
+  },
+  error: {
+    glyph: "!",
+    title: "This view could not load",
+    summary: "Retry this view, or return home and continue from there."
+  }
+};
+function assertText(name, value, limit) {
+  if (value.trim() === "" || value.length > limit) {
+    throw new RangeError(`Status page ${name} must be 1–${limit} characters.`);
+  }
+}
+function assertLink(name, link) {
+  assertArticleHref(link.href);
+  assertText(`${name} label`, link.label, 48);
+  if (link.description !== undefined)
+    assertText(`${name} description`, link.description, 90);
+}
+function resolveStatusPage(content = {}) {
+  const kind = content.kind ?? "not-found";
+  const base = defaults[kind];
+  const siteName = content.siteName?.trim();
+  if (siteName !== undefined)
+    assertText("siteName", siteName, 40);
+  const glyph = content.glyph ?? base.glyph;
+  assertText("glyph", glyph, 4);
+  const title = content.title ?? base.title;
+  assertText("title", title, 60);
+  const summary = content.summary ?? base.summary;
+  assertText("summary", summary, 160);
+  const primaryAction = content.primaryAction ?? {
+    href: "/",
+    label: siteName ? `Go to ${siteName}` : "Go to the homepage"
+  };
+  assertLink("primaryAction", primaryAction);
+  const next = content.next ?? [];
+  if (next.length > STATUS_PAGE_MAX_NEXT) {
+    throw new RangeError(`A status page lists at most ${STATUS_PAGE_MAX_NEXT} next links; pick the ones that lead to your product.`);
+  }
+  next.forEach((link) => assertLink("next", link));
+  const nextHeading = content.nextHeading ?? "Or start here";
+  assertText("nextHeading", nextHeading, 40);
+  const routes = (content.routes ?? []).slice(0, STATUS_PAGE_MAX_ROUTES);
+  routes.forEach((link) => assertLink("route", link));
+  if (content.agentIndexHref !== undefined)
+    assertArticleHref(content.agentIndexHref);
+  return {
+    kind,
+    glyph,
+    title,
+    summary,
+    primaryAction,
+    next,
+    nextHeading,
+    routes: routes.filter((route) => isSitePath(route.href)),
+    ...content.agentIndexHref === undefined ? {} : {
+      agentIndexHref: content.agentIndexHref
+    }
+  };
+}
+function isSitePath(href) {
+  return /^\/(?![/\\])/u.test(href);
+}
+function statusPageRoutesAttribute(routes) {
+  if (routes.length === 0)
+    return;
+  return JSON.stringify(routes.map(({
+    href,
+    label
+  }) => [href, label]));
+}
+function parseStatusPageRoutes(value) {
+  if (!value)
+    return [];
+  let parsed;
+  try {
+    parsed = JSON.parse(value);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed))
+    return [];
+  const routes = [];
+  for (const entry of parsed.slice(0, STATUS_PAGE_MAX_ROUTES)) {
+    if (!Array.isArray(entry))
+      continue;
+    const [href, label] = entry;
+    if (typeof href !== "string" || typeof label !== "string")
+      continue;
+    if (!isSitePath(href) || label.trim() === "")
+      continue;
+    routes.push({
+      href,
+      label
+    });
+  }
+  return routes;
+}
+var MAX_PATH = 160;
+function normalizeStatusPath(value) {
+  let path = value.slice(0, MAX_PATH * 4);
+  const end = path.search(/[?#]/u);
+  if (end !== -1)
+    path = path.slice(0, end);
+  try {
+    path = decodeURIComponent(path);
+  } catch {}
+  path = path.toLowerCase().split("/").filter((part, index) => index === 0 || part !== "").join("/");
+  path = path.replace(/(?:\/index)?\.html?$/u, "");
+  while (path.length > 1 && path.endsWith("/"))
+    path = path.slice(0, -1);
+  if (!path.startsWith("/"))
+    path = `/${path}`;
+  return path.slice(0, MAX_PATH);
+}
+var MAX_EDITS = 3;
+var BEYOND = MAX_EDITS + 1;
+function editDistance(a, b, limit) {
+  if (Math.abs(a.length - b.length) > limit)
+    return limit + 1;
+  const columns = b.length + 1;
+  let before = new Int32Array(columns).fill(BEYOND);
+  let previous = Int32Array.from({
+    length: columns
+  }, (_, index) => Math.min(index, BEYOND));
+  let current = new Int32Array(columns).fill(BEYOND);
+  for (let i = 1;i <= a.length; i++) {
+    const low = Math.max(1, i - limit);
+    const high = Math.min(b.length, i + limit);
+    current[low - 1] = low === 1 ? Math.min(i, BEYOND) : BEYOND;
+    if (high < b.length)
+      current[high + 1] = BEYOND;
+    let rowMin = BEYOND;
+    for (let j = low;j <= high; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let value = Math.min((previous[j] ?? BEYOND) + 1, (current[j - 1] ?? BEYOND) + 1, (previous[j - 1] ?? BEYOND) + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        value = Math.min(value, (before[j - 2] ?? BEYOND) + 1);
+      }
+      current[j] = Math.min(value, BEYOND);
+      rowMin = Math.min(rowMin, value);
+    }
+    if (rowMin > limit)
+      return limit + 1;
+    [before, previous, current] = [previous, current, before];
+  }
+  return Math.min(previous[b.length] ?? BEYOND, limit + 1);
+}
+function words(path) {
+  return path.split(/[/\-_.]+/u).filter((word) => word.length > 0);
+}
+function wordAllowance(word) {
+  if (word.length < 4)
+    return 0;
+  return word.length < 8 ? 1 : 2;
+}
+function wordsMatch(missing, candidate) {
+  return missing.every((word) => {
+    const allowance = wordAllowance(word);
+    return candidate.some((other) => other === word || allowance > 0 && editDistance(word, other, allowance) <= allowance);
+  });
+}
+function candidate(path) {
+  const parts = words(path);
+  return {
+    path,
+    words: parts,
+    joined: parts.join(""),
+    last: path.slice(path.lastIndexOf("/") + 1)
+  };
+}
+function score(missing, page) {
+  if (page.path === missing.path)
+    return 0;
+  if (missing.joined.length >= 6 && missing.joined === page.joined)
+    return 0.1;
+  const longest = Math.max(missing.path.length, page.path.length);
+  const limit = Math.min(MAX_EDITS, Math.floor(longest / 4));
+  if (limit > 0 && wordsMatch(missing.words, page.words)) {
+    const distance = editDistance(missing.path, page.path, limit);
+    if (distance <= limit)
+      return distance / longest;
+  }
+  if (missing.last.length >= 6 && missing.last === page.last)
+    return 0.5;
+  const longer = missing.words.filter((word) => word.length >= 3);
+  if (longer.length >= 2 && longer.length === missing.words.length && longer.every((word) => page.words.includes(word)))
+    return 0.6;
+  return;
+}
+function suggestStatusRoute(pathname, routes) {
+  const normalized = normalizeStatusPath(pathname);
+  if (normalized === "/")
+    return;
+  const exactOnly = normalized.length < 5;
+  const missing = candidate(normalized);
+  let best;
+  for (const route of routes.slice(0, STATUS_PAGE_MAX_ROUTES)) {
+    if (!isSitePath(route.href))
+      continue;
+    const path = normalizeStatusPath(route.href);
+    if (path === "/" || exactOnly && path !== normalized)
+      continue;
+    const value = score(missing, candidate(path));
+    if (value === undefined)
+      continue;
+    if (best === undefined || value < best.score || value === best.score && (path.length < best.path.length || path.length === best.path.length && path < best.path)) {
+      best = {
+        route,
+        score: value,
+        path
+      };
+    }
+  }
+  return best?.route;
+}
+// src/status-page-html.ts
+function renderStatusPageHtml(options = {}) {
+  const page = resolveStatusPage(options);
+  const level = options.titleLevel ?? 1;
+  const root = options.rootElement ?? "main";
+  const notFound = page.kind === "not-found";
+  const routes = notFound ? statusPageRoutesAttribute(page.routes) : undefined;
+  const next = page.next.length === 0 ? "" : [`<nav aria-labelledby="${STATUS_PAGE_NEXT_HEADING_ID}" class="hraness-status-page__next">`, `<h${level + 1} class="hraness-status-page__next-heading" id="${STATUS_PAGE_NEXT_HEADING_ID}">${escapeArticleHtml(page.nextHeading)}</h${level + 1}>`, '<ul class="hraness-status-page__next-list">', ...page.next.map((link) => [`<li><a class="hraness-status-page__next-link" href="${escapeArticleHtml(link.href)}">`, `<span class="hraness-status-page__next-label">${escapeArticleHtml(link.label)}</span>`, link.description === undefined ? "" : `<span class="hraness-status-page__next-description">${escapeArticleHtml(link.description)}</span>`, "</a></li>"].join("")), "</ul></nav>"].join("");
+  const agent = page.agentIndexHref === undefined ? "" : `<p class="hraness-status-page__agent">${STATUS_PAGE_AGENT_PREFIX} <a href="${escapeArticleHtml(page.agentIndexHref)}">${escapeArticleHtml(page.agentIndexHref)}</a></p>`;
+  return [`<${root} class="hraness-status-page"${routes === undefined ? "" : ` data-hraness-status-routes="${escapeArticleHtml(routes)}"`} data-kind="${page.kind}">`, '<div class="hraness-status-page__inner">', `<div aria-hidden="true" class="hraness-status-page__code"><span class="hraness-status-page__glyph">${escapeArticleHtml(page.glyph)}</span><canvas class="hraness-status-page__field"></canvas></div>`, `<h${level} class="hraness-status-page__title">${escapeArticleHtml(page.title)}</h${level}>`, `<p class="hraness-status-page__summary">${escapeArticleHtml(page.summary)}</p>`, notFound ? `<p class="hraness-status-page__hint" hidden="">${STATUS_PAGE_HINT_PREFIX} <a class="hraness-status-page__hint-link" href="/"></a>?</p>` : "", '<div class="hraness-status-page__actions">', `<a class="hraness-status-page__action hraness-foil" data-emphasis="primary" data-foil="" href="${escapeArticleHtml(page.primaryAction.href)}">${escapeArticleHtml(page.primaryAction.label)}</a>`, `<a class="hraness-status-page__back" hidden="" href="/">${STATUS_PAGE_BACK_LABEL}</a>`, "</div>", next, agent, "</div>", `</${root}>`].join("");
+}
 // src/relative-time.ts
 var second = 1000;
 var minute = 60 * second;
@@ -931,4 +1170,4 @@ function themeFor(mode) {
   return colors[mode];
 }
 
-export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };
+export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, STATUS_PAGE_MAX_NEXT, STATUS_PAGE_MAX_ROUTES, STATUS_PAGE_BACK_LABEL, STATUS_PAGE_HINT_PREFIX, STATUS_PAGE_NEXT_HEADING_ID, STATUS_PAGE_AGENT_PREFIX, resolveStatusPage, statusPageRoutesAttribute, parseStatusPageRoutes, normalizeStatusPath, suggestStatusRoute, renderStatusPageHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };

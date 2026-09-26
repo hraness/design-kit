@@ -244,6 +244,11 @@
   overflow: clip;
 }
 
+.design-gallery__status-preview {
+  border: 1px solid var(--line);
+  overflow: clip;
+}
+
 .design-gallery__docked-footer-preview {
   position: relative;
   min-block-size: 8rem;
@@ -383,6 +388,7 @@
 
 @media (forced-colors: active) {
   .design-gallery__shell-preview,
+  .design-gallery__status-preview,
   .design-gallery__docked-footer-preview,
   .design-gallery__plain-theme,
   .design-gallery__instrument,

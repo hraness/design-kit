@@ -1,5 +1,9 @@
 "use client";
 import {
+  STATUS_PAGE_AGENT_PREFIX,
+  STATUS_PAGE_BACK_LABEL,
+  STATUS_PAGE_HINT_PREFIX,
+  STATUS_PAGE_NEXT_HEADING_ID,
   colors,
   defaultDesignPalettePreference,
   defaultDesignTheme,
@@ -17,9 +21,13 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   parseRelativeTimeInput,
+  parseStatusPageRoutes,
   resolveDesignPalettePreference,
-  resolveRelativeTime
-} from "../chunk-tm2apctj.js";
+  resolveRelativeTime,
+  resolveStatusPage,
+  statusPageRoutesAttribute,
+  suggestStatusRoute
+} from "../chunk-ptefn324.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -87,8 +95,8 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-9se5xb5r.js";
-import"../chunk-m5jbxx9x.js";
+} from "../chunk-kwkjrd4k.js";
+import"../chunk-zzq7bdj8.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-eh71jz57.js";
 import {
@@ -1612,7 +1620,7 @@ function DesignPaletteMenuButton({
   });
 }
 // src/react/design-gallery.tsx
-import { Badge, Button as Button3, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
+import { Badge, Button as Button3, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl as SegmentedControl2, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
 import { useState as useState5 } from "react";
 
@@ -3391,1795 +3399,733 @@ function PlaybackTransport({
   });
 }
 
-// src/react/production-data-preview-notice.tsx
-import * as stylex11 from "@stylexjs/stylex";
+// src/react/route-state.tsx
+import { Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
+import * as stylex12 from "@stylexjs/stylex";
+import { useEffect as useEffect6, useId as useId3, useRef as useRef5 } from "react";
 
-// src/react/production-data-preview-notice.stylex.ts
-var productionDataPreviewNoticeStyles = {
-  emphasis: {
-    k63SB2: "x1yotnlr",
-    kb6lSQ: "x1vyo3qp",
-    kP9fke: "xtvhhri",
-    $$css: true
-  },
-  root: {
-    kGNEyG: "x6s0dn4",
-    kWkggS: "x1gq7pca",
-    ku1ltF: "x1fdtg7e",
-    kHypHr: "x1u7o2vf",
-    kKwaWg: "x18o3ruo",
-    kl9DO0: "x12koezg",
-    k1YJky: "x1y4qj14",
-    kz484i: "x182nak8",
-    kgSjnq: "x1cwfr1t",
-    k4V0xq: "x1djed8t",
-    krFJ6x: "xn5uptl",
-    kP1A0P: "xhjnd2s",
-    kGVxlE: "xlmpfgd",
-    kMwMTN: "xam1lc8",
-    k1xSpc: "x78zum5",
-    kwnvtZ: "x1a02dak",
-    kMv6JI: "xumcc2o",
-    kGuDYH: "xj8twjj",
-    kOIVth: "x5kxhqv",
-    kUvb1J: "xlb5a52",
-    kjj79g: "xl56j7k",
-    kLWn49: "x1xfvgam",
-    kAzted: "xe8gcm",
-    k8WAf4: "x2d8rr9",
-    kg3NbH: "x1yt8f57",
-    kVAEAm: "x7wzq59",
-    k9WMMc: "x2b8uid",
-    kzqmXN: "xh8yej3",
-    kY2c9j: "x1qhe1ue",
-    $$css: true
-  }
-};
-
-// src/react/production-data-preview-notice.tsx
-import { jsx as jsx13, jsxs as jsxs11 } from "react/jsx-runtime";
-function ProductionDataPreviewNotice({
-  surfaceOrigin
-}) {
-  if (surfaceOrigin === undefined || surfaceOrigin === "")
-    return null;
-  const noticePresentation = stylex11.props(productionDataPreviewNoticeStyles.root);
-  const emphasisPresentation = stylex11.props(productionDataPreviewNoticeStyles.emphasis);
-  return /* @__PURE__ */ jsxs11("aside", {
-    ...noticePresentation,
-    "aria-label": "Production data preview warning",
-    className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
-    role: "alert",
-    children: [
-      /* @__PURE__ */ jsx13("strong", {
-        ...emphasisPresentation,
-        children: "Production data preview"
-      }),
-      /* @__PURE__ */ jsx13("span", {
-        children: "This preview uses production data. Actions are real and affect production."
-      })
-    ]
-  });
-}
-
-// src/react/relative-time.tsx
-import { useEffect as useEffect5, useState as useState4 } from "react";
-import { createElement as createElement2 } from "react";
-var maximumTimeout = 2147483647;
-var autoDelays = {
-  second: 1000,
-  minute: 15000,
-  hour: 60000,
-  day: 3600000,
-  week: 3600000,
-  month: 3600000,
-  year: 3600000
-};
-function parseRefresh(value) {
-  if (value === undefined)
-    return "auto";
-  if (value === "auto" || value === "off")
-    return value;
-  if (typeof value === "number" && Number.isInteger(value) && value >= 1000 && value <= maximumTimeout)
-    return value;
-  throw new RangeError(`RelativeTime refreshInterval must be "auto", "off", or whole milliseconds from 1000 to ${maximumTimeout}.`);
-}
-function absoluteFormatter(locale) {
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: "medium",
-    timeStyle: "long"
-  });
-}
-function RelativeTime({
-  locale,
-  now,
-  numeric,
-  refreshInterval,
-  value,
-  ...timeProps
-}) {
-  const instant = parseRelativeTimeInput(value, "RelativeTime value");
-  const refresh = parseRefresh(refreshInterval);
-  const time = instant.getTime();
-  const [clock, setClock] = useState4(null);
-  useEffect5(() => {
-    setClock(Date.now());
-    if (refresh === "off")
-      return;
-    let timer;
-    const schedule = () => {
-      const delay = typeof refresh === "number" ? refresh : autoDelays[resolveRelativeTime(time - Date.now()).unit];
-      timer = setTimeout(() => {
-        setClock(Date.now());
-        schedule();
-      }, delay);
-    };
-    schedule();
-    return () => clearTimeout(timer);
-  }, [refresh, time]);
-  const mounted = clock !== null;
-  const reference = refresh === "off" && now !== undefined ? now : clock ?? now ?? Date.now();
-  const text = formatRelativeTime(instant, {
-    now: reference,
-    ...locale === undefined ? {} : {
-      locale
-    },
-    ...numeric === undefined ? {} : {
-      numeric
+// src/browser/foil.ts
+var REST = 50;
+var SETTLE = 0.05;
+var RESPONSE_MS = 85;
+var MIN_LIGHT = 8;
+var MAX_LIGHT = 92;
+var INPUTS = ["--hraness-foil-x", "--hraness-foil-y"];
+var clampLight = (value) => Math.max(MIN_LIGHT, Math.min(MAX_LIGHT, value));
+function attachFoil(root) {
+  const document2 = root.ownerDocument;
+  const view = document2.defaultView;
+  if (!view || typeof view.matchMedia !== "function" || typeof view.requestAnimationFrame !== "function" || typeof view.cancelAnimationFrame !== "function")
+    return () => {};
+  const preference = view.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)");
+  const states = new Map;
+  let targets = [];
+  let needsTargets = true;
+  let pointer;
+  let frame = null;
+  let previousTime;
+  let detached = false;
+  const restore = (target) => {
+    for (const input of INPUTS)
+      target.style.removeProperty(input);
+  };
+  const reset = () => {
+    if (frame !== null)
+      view.cancelAnimationFrame(frame);
+    frame = null;
+    previousTime = undefined;
+    pointer = undefined;
+    for (const target of states.keys())
+      restore(target);
+    states.clear();
+    targets = [];
+    needsTargets = true;
+  };
+  const refreshTargets = () => {
+    targets = [...root.matches("[data-foil]") ? [root] : [], ...root.querySelectorAll("[data-foil]")].filter((target) => {
+      const ancestor = target.parentElement?.closest("[data-foil]");
+      return !ancestor || !root.contains(ancestor);
+    });
+    const live = new Set(targets);
+    for (const target of states.keys()) {
+      if (!live.has(target)) {
+        restore(target);
+        states.delete(target);
+      }
     }
+    needsTargets = false;
+  };
+  const paint = (time) => {
+    frame = null;
+    if (detached || !preference.matches || document2.hidden || !pointer) {
+      reset();
+      return;
+    }
+    if (needsTargets)
+      refreshTargets();
+    const elapsed = previousTime === undefined ? 1000 / 60 : Math.max(0, Math.min(64, time - previousTime));
+    previousTime = time;
+    const ease = 1 - Math.exp(-elapsed / RESPONSE_MS);
+    const measured = targets.map((target) => ({
+      target,
+      bounds: target.getBoundingClientRect()
+    }));
+    let moving = false;
+    for (const {
+      target,
+      bounds
+    } of measured) {
+      if (!target.isConnected || !root.contains(target) || bounds.width <= 0 || bounds.height <= 0 || bounds.bottom <= 0 || bounds.right <= 0 || bounds.top >= view.innerHeight || bounds.left >= view.innerWidth) {
+        if (states.has(target)) {
+          restore(target);
+          states.delete(target);
+        }
+        continue;
+      }
+      const goal = {
+        x: clampLight(REST + (pointer.x - bounds.left - bounds.width / 2) / Math.max(160, bounds.width) * 60),
+        y: clampLight(REST + (pointer.y - bounds.top - bounds.height / 2) / Math.max(120, bounds.height) * 50)
+      };
+      const light = states.get(target) ?? {
+        x: REST,
+        y: REST
+      };
+      for (const axis of ["x", "y"]) {
+        const distance = goal[axis] - light[axis];
+        if (Math.abs(distance) > SETTLE) {
+          light[axis] += distance * ease;
+          moving = true;
+        } else
+          light[axis] = goal[axis];
+      }
+      states.set(target, light);
+      for (const axis of ["x", "y"]) {
+        const input = `--hraness-foil-${axis}`;
+        const value = `${light[axis].toFixed(2)}%`;
+        if (target.style.getPropertyValue(input) !== value)
+          target.style.setProperty(input, value);
+      }
+    }
+    if (moving)
+      frame = view.requestAnimationFrame(paint);
+    else
+      previousTime = undefined;
+  };
+  const move = (event) => {
+    if (!preference.matches || document2.hidden || event.pointerType === "touch") {
+      reset();
+      return;
+    }
+    if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY))
+      return;
+    pointer = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    needsTargets = true;
+    if (frame === null)
+      frame = view.requestAnimationFrame(paint);
+  };
+  const leave = (event) => {
+    if (event.relatedTarget === null)
+      reset();
+  };
+  const visibility = () => {
+    if (document2.hidden)
+      reset();
+  };
+  view.addEventListener("pointermove", move, {
+    passive: true
   });
-  return /* @__PURE__ */ createElement2("time", {
-    ...timeProps,
-    dateTime: instant.toISOString(),
-    key: mounted ? "client" : "server",
-    suppressHydrationWarning: true,
-    title: absoluteFormatter(locale).format(instant)
-  }, text);
+  view.addEventListener("pointerdown", move, {
+    passive: true
+  });
+  view.addEventListener("pointerout", leave, {
+    passive: true
+  });
+  view.addEventListener("pointercancel", reset);
+  view.addEventListener("blur", reset);
+  view.addEventListener("scroll", reset, {
+    passive: true,
+    capture: true
+  });
+  view.addEventListener("resize", reset, {
+    passive: true
+  });
+  document2.addEventListener("visibilitychange", visibility);
+  preference.addEventListener("change", reset);
+  return () => {
+    detached = true;
+    reset();
+    view.removeEventListener("pointermove", move);
+    view.removeEventListener("pointerdown", move);
+    view.removeEventListener("pointerout", leave);
+    view.removeEventListener("pointercancel", reset);
+    view.removeEventListener("blur", reset);
+    view.removeEventListener("scroll", reset, true);
+    view.removeEventListener("resize", reset);
+    document2.removeEventListener("visibilitychange", visibility);
+    preference.removeEventListener("change", reset);
+  };
 }
 
-// src/react/design-gallery.tsx
-import { jsx as jsx14, jsxs as jsxs12 } from "react/jsx-runtime";
-var designGallerySections = [{
-  id: "foundation",
-  label: "Foundation"
-}, {
-  id: "paper-theme",
-  label: "Paper theme"
-}, {
-  id: "lantern",
-  label: "Lantern"
-}, {
-  id: "marketing",
-  label: "Marketing"
-}, {
-  id: "articles",
-  label: "Articles"
-}, {
-  id: "shells",
-  label: "Shells"
-}, {
-  id: "data",
-  label: "Data"
-}, {
-  id: "effects",
-  label: "Effects"
-}, {
-  id: "syntax",
-  label: "Syntax"
-}];
-var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "relative time", "syntax highlighting"];
-var designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
-var relativeTimeExamples = [{
-  id: "seconds",
-  value: designGalleryRelativeTimeNow - 12000
-}, {
-  id: "minutes",
-  value: designGalleryRelativeTimeNow - 5 * 60000
-}, {
-  id: "hours",
-  value: designGalleryRelativeTimeNow + 23 * 3600000
-}, {
-  id: "months",
-  value: designGalleryRelativeTimeNow - 62 * 86400000
-}];
-function resolveGalleryTheme(theme, prefersDark) {
-  return theme === "system" ? prefersDark ? "dark" : "light" : theme;
+// src/browser/status-field.ts
+var MAX_DOTS = 5200;
+var STRIDE = 4;
+var SPRING = 0.034;
+var DAMPING = 0.86;
+var PUSH = 5.5;
+var BURST = 24;
+var REST_DISTANCE = 0.08;
+var ACCENT_SHARE = 0.14;
+var VERTEX = `
+attribute vec2 a_position;
+attribute float a_heat;
+attribute float a_tone;
+uniform vec2 u_size;
+uniform float u_point;
+varying float v_mix;
+void main() {
+  vec2 clip = a_position / u_size * 2.0 - 1.0;
+  gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
+  gl_PointSize = u_point * (1.0 + a_heat * 0.55);
+  v_mix = clamp(max(a_tone * 0.85, a_heat), 0.0, 1.0);
+}`;
+var FRAGMENT = `
+precision mediump float;
+uniform vec3 u_ink;
+uniform vec3 u_accent;
+uniform float u_alpha;
+varying float v_mix;
+void main() {
+  float d = length(gl_PointCoord - 0.5);
+  float a = smoothstep(0.5, 0.18, d) * u_alpha;
+  gl_FragColor = vec4(mix(u_ink, u_accent, v_mix) * a, a);
+}`;
+function random(seed) {
+  let state = seed >>> 0 || 2654435769;
+  return () => {
+    state ^= state << 13;
+    state >>>= 0;
+    state ^= state >>> 17;
+    state ^= state << 5;
+    state >>>= 0;
+    return state / 4294967296;
+  };
 }
-var barData = [{
-  id: "alpha",
-  label: "Alpha",
-  value: 72,
-  detail: "72 requests"
-}, {
-  id: "beta",
-  label: "Beta",
-  value: 48,
-  detail: "48 requests"
-}, {
-  id: "gamma",
-  label: "Gamma",
-  value: 31,
-  detail: "31 requests"
-}];
-var rangeData = [{
-  id: "north",
-  label: "North",
-  minimum: 24,
-  median: 51,
-  maximum: 78
-}, {
-  id: "south",
-  label: "South",
-  minimum: 38,
-  median: 64,
-  maximum: 82
-}];
-var foilDeckExamples = [{
-  label: "Corner frame",
-  ornament: "corners",
-  preset: "prism"
-}, {
-  label: "Rail frame",
-  ornament: "rails",
-  preset: "etched"
-}, {
-  label: "Circuit frame",
-  ornament: "circuit",
-  preset: "fast"
-}, {
-  label: "Radial frame",
-  ornament: "radial",
-  preset: "aurora"
-}, {
-  label: "Facet frame",
-  ornament: "facets",
-  preset: "max"
-}];
-function DesignSystemGallery({
-  isNestedInMain = false
-}) {
-  const [density, setDensity] = useState5("default");
-  const [chatDraft, setChatDraft] = useState5("Review the presentation contract");
-  const [chatSubmission, setChatSubmission] = useState5("");
-  const [faderValue, setFaderValue] = useState5(64);
-  const [playbackStatus, setPlaybackStatus] = useState5("idle");
-  const Root = isNestedInMain ? "div" : "main";
-  return /* @__PURE__ */ jsxs12(Root, {
-    className: "design-gallery",
-    "data-design-gallery": "public",
-    "data-design-gallery-nested": isNestedInMain ? "true" : "false",
-    children: [
-      /* @__PURE__ */ jsxs12("header", {
-        className: "design-gallery__intro",
-        children: [
-          /* @__PURE__ */ jsx14(Badge, {
-            tone: "info",
-            children: "@hraness/design-kit"
-          }),
-          /* @__PURE__ */ jsx14("h1", {
-            children: "Presentation and composition reference"
-          }),
-          /* @__PURE__ */ jsx14("p", {
-            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, and haptics."
-          }),
-          /* @__PURE__ */ jsx14("p", {
-            children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
-          }),
-          /* @__PURE__ */ jsx14(WrappingRow, {
-            children: /* @__PURE__ */ jsx14(SegmentedControl, {
-              "aria-label": "Gallery density",
-              items: [{
-                id: "compact",
-                label: "Compact"
-              }, {
-                id: "default",
-                label: "Default"
-              }],
-              onChange: setDensity,
-              size: "compact",
-              value: density
-            })
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "foundation",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Foundation boundary"
-          }),
-          /* @__PURE__ */ jsx14(ProductionDataPreviewNotice, {
-            surfaceOrigin: "https://preview.example.test"
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__grid",
-            children: [
-              /* @__PURE__ */ jsxs12(Card, {
-                children: [
-                  /* @__PURE__ */ jsxs12(CardHeader, {
-                    children: [
-                      /* @__PURE__ */ jsx14(CardTitle, {
-                        children: "Portable control"
-                      }),
-                      /* @__PURE__ */ jsx14(CardDescription, {
-                        children: "Rendered directly by @hraness/ui."
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14(CardContent, {
-                    children: /* @__PURE__ */ jsxs12(WrappingRow, {
-                      children: [
-                        /* @__PURE__ */ jsx14(Button3, {
-                          variant: "primary",
-                          children: "Primary action"
-                        }),
-                        /* @__PURE__ */ jsx14(LinkButton, {
-                          href: "#shells",
-                          children: "Open shells"
-                        }),
-                        /* @__PURE__ */ jsx14(Tag, {
-                          variant: "outline",
-                          children: "public core"
-                        })
-                      ]
-                    })
-                  })
-                ]
-              }),
-              /* @__PURE__ */ jsxs12(Card, {
-                children: [
-                  /* @__PURE__ */ jsxs12(CardHeader, {
-                    children: [
-                      /* @__PURE__ */ jsx14(CardTitle, {
-                        children: "Typography roles"
-                      }),
-                      /* @__PURE__ */ jsx14(CardDescription, {
-                        children: "Nebula Sans for proportional text; mono stays explicit."
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14(CardContent, {
-                    children: /* @__PURE__ */ jsxs12("div", {
-                      className: "design-gallery__type-specimen",
-                      children: [
-                        /* @__PURE__ */ jsx14("p", {
-                          "data-gallery-font": "proportional",
-                          children: "Nebula Sans sets both headings and body text."
-                        }),
-                        /* @__PURE__ */ jsx14("code", {
-                          "data-gallery-font": "mono",
-                          children: 'const role = "mono";'
-                        })
-                      ]
-                    })
-                  })
-                ]
-              }),
-              /* @__PURE__ */ jsxs12(Card, {
-                children: [
-                  /* @__PURE__ */ jsxs12(CardHeader, {
-                    children: [
-                      /* @__PURE__ */ jsx14(CardTitle, {
-                        children: "Provider marks"
-                      }),
-                      /* @__PURE__ */ jsx14(CardDescription, {
-                        children: "Vendored agent and vendor artwork on accent-tinted tiles."
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14(CardContent, {
-                    children: /* @__PURE__ */ jsxs12(WrappingRow, {
-                      children: [
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "claudecode",
-                          label: "Claude Code",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "codex",
-                          label: "Codex",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "opencode",
-                          label: "opencode",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "crush",
-                          label: "Crush",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "aider",
-                          label: "Aider",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "goose",
-                          label: "Goose",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "gemini",
-                          label: "Gemini",
-                          size: 40
-                        }),
-                        /* @__PURE__ */ jsx14(ProviderMark, {
-                          mark: "nvidia",
-                          label: "NVIDIA",
-                          size: 40
-                        })
-                      ]
-                    })
-                  })
-                ]
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            "aria-label": "Plain site link presentation",
-            className: "design-gallery__plain-theme plain-site plain-publication",
-            children: [
-              /* @__PURE__ */ jsx14("header", {
-                className: "plain-header",
-                children: /* @__PURE__ */ jsxs12("div", {
-                  className: "plain-header__inner",
-                  "data-layout": "responsive-wrap",
-                  children: [
-                    /* @__PURE__ */ jsx14("a", {
-                      className: "plain-wordmark",
-                      href: "#foundation",
-                      children: "project-name.example"
-                    }),
-                    /* @__PURE__ */ jsxs12("nav", {
-                      "aria-label": "Plain site example",
-                      className: "plain-nav",
-                      children: [
-                        /* @__PURE__ */ jsx14("a", {
-                          href: "#foundation",
-                          children: "Articles"
-                        }),
-                        /* @__PURE__ */ jsx14("a", {
-                          href: "#shells",
-                          children: "About"
-                        })
-                      ]
-                    })
-                  ]
-                })
-              }),
-              /* @__PURE__ */ jsx14("div", {
-                className: "plain-page",
-                children: /* @__PURE__ */ jsxs12("p", {
-                  className: "design-gallery__plain-link-example",
-                  children: [
-                    "Ordinary ",
-                    /* @__PURE__ */ jsx14("a", {
-                      href: "#foundation",
-                      children: "blue links"
-                    }),
-                    " stay quiet until interaction."
-                  ]
-                })
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "paper-theme",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Paper theme"
-          }),
-          /* @__PURE__ */ jsx14("p", {
-            children: "Import paper-theme.css to share warm neutral colors and compact typography without replacing layouts or saved appearance choices."
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__paper",
-            "data-hraness-theme": "paper",
-            "data-theme": "light",
-            children: [
-              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
-                brand: "Light paper",
-                brandHref: "#paper-theme",
-                links: [{
-                  href: "#foundation",
-                  label: "Foundation"
-                }],
-                sticky: false
-              }),
-              /* @__PURE__ */ jsx14(TopBar, {
-                surface: "glass",
-                title: "Glass application header",
-                "data-gallery-glass-top-bar": ""
-              }),
-              /* @__PURE__ */ jsx14("h3", {
-                children: "Light paper"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: "Headers blur scrolling content and become opaque when reduced transparency is preferred."
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: /* @__PURE__ */ jsx14("a", {
-                  className: "design-gallery__paper-link",
-                  href: "#foundation",
-                  children: "Read about the foundation"
-                })
-              }),
-              /* @__PURE__ */ jsx14(Button3, {
-                variant: "primary",
-                children: "Create note"
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__paper",
-            "data-hraness-theme": "paper",
-            "data-theme": "dark",
-            children: [
-              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
-                brand: "Dark paper",
-                brandHref: "#paper-theme",
-                links: [{
-                  href: "#foundation",
-                  label: "Foundation"
-                }],
-                sticky: false
-              }),
-              /* @__PURE__ */ jsx14(TopBar, {
-                surface: "glass",
-                title: "Glass application header",
-                "data-gallery-glass-top-bar": ""
-              }),
-              /* @__PURE__ */ jsx14("h3", {
-                children: "Dark paper"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: "The same header treatment follows an explicit dark preference."
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: /* @__PURE__ */ jsx14("a", {
-                  className: "design-gallery__paper-link",
-                  href: "#foundation",
-                  children: "Read about the foundation"
-                })
-              }),
-              /* @__PURE__ */ jsx14(Button3, {
-                variant: "primary",
-                children: "Open notes"
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsx14(LanternMaterialGallery, {}),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "marketing",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Product-marketing grammar"
-          }),
-          /* @__PURE__ */ jsxs12(MarketingPage, {
-            className: "design-gallery__marketing",
-            children: [
-              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
-                action: {
-                  href: "#gallery-install",
-                  label: "Install Relay"
-                },
-                brand: "Relay",
-                sticky: false,
-                links: [{
-                  current: true,
-                  href: "#marketing",
-                  label: "How it works"
-                }, {
-                  href: "#gallery-install",
-                  label: "Install"
-                }, {
-                  href: "#shells",
-                  label: "Docs"
-                }]
-              }),
-              /* @__PURE__ */ jsxs12(MarketingMain, {
-                children: [
-                  /* @__PURE__ */ jsx14(ProductHero, {
-                    actions: [{
-                      href: "#gallery-install",
-                      label: "Install Relay"
-                    }, {
-                      href: "#shells",
-                      label: "See the workspace"
-                    }],
-                    boundary: "Free for local use on macOS and Linux · version 1.2.3",
-                    className: "design-gallery__marketing-hero",
-                    example: "Ask your agent to run the nightly job and show you the log.",
-                    eyebrow: "A reference developer tool",
-                    facts: [{
-                      detail: "Any Git checkout.",
-                      label: "Input",
-                      value: "Repository"
-                    }, {
-                      detail: "Plain JSON you can read.",
-                      label: "Output",
-                      value: "Run log"
-                    }, {
-                      detail: "Terminal or TypeScript.",
-                      label: "Interfaces",
-                      value: "CLI + SDK"
-                    }],
-                    factsColumns: 3,
-                    frame: /* @__PURE__ */ jsx14(MarketingProofFrame, {
-                      caption: "The log written by the example job.",
-                      credit: "Captured 5 September 2026",
-                      title: "relay run job-01",
-                      children: /* @__PURE__ */ jsx14("pre", {
-                        className: "design-gallery__marketing-command",
-                        children: /* @__PURE__ */ jsx14(SyntaxCode, {
-                          code: '{"status":"complete","job":"job-01","durationMs":412}',
-                          styles: "classes"
-                        })
-                      })
-                    }),
-                    heading: "Run a job from your terminal, your code, or your agent",
-                    headingId: "design-gallery-marketing-title",
-                    headingLevel: 3,
-                    name: "Relay",
-                    notice: /* @__PURE__ */ jsx14("p", {
-                      "data-gallery-marketing-slot": "notice",
-                      children: "This example release runs locally."
-                    }),
-                    summary: "Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingPillars, {
-                    ariaLabel: "Relay in three points",
-                    columns: 3,
-                    pillars: [{
-                      label: "No hosted service",
-                      summary: "Jobs run on your machine and never wait on a server."
-                    }, {
-                      label: "A log for every run",
-                      summary: "Open it to see what went in, what came out, and when."
-                    }, {
-                      label: "Your files stay put",
-                      summary: "Source files and credentials never leave your machine."
-                    }]
-                  }),
-                  /* @__PURE__ */ jsxs12(MarketingInstallPanel, {
-                    eyebrow: "Local release",
-                    heading: "Install Relay and run your first job.",
-                    headingId: "design-gallery-install-title",
-                    headingLevel: 3,
-                    id: "gallery-install",
-                    note: /* @__PURE__ */ jsx14("p", {
-                      "data-gallery-marketing-slot": "note",
-                      children: "Requires Bun 1.3.14."
-                    }),
-                    children: [
-                      /* @__PURE__ */ jsx14("pre", {
-                        className: "design-gallery__marketing-command",
-                        children: /* @__PURE__ */ jsx14(SyntaxCode, {
-                          code: "bun add --global relay@1.2.3",
-                          styles: "classes"
-                        })
-                      }),
-                      /* @__PURE__ */ jsx14(MarketingFlow, {
-                        ariaLabel: "First Relay job",
-                        steps: [{
-                          code: "relay init",
-                          detail: "Create a workspace.",
-                          label: "Initialize"
-                        }, {
-                          code: "relay run job-01",
-                          detail: "Run a job by name.",
-                          label: "Run"
-                        }, {
-                          code: "relay inspect job-01",
-                          detail: "Read its log.",
-                          label: "Inspect"
-                        }]
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingPrimitives, {
-                    heading: "Three objects cover most work.",
-                    headingId: "design-gallery-primitives-title",
-                    headingLevel: 3,
-                    items: [{
-                      label: "Jobs",
-                      summary: "A named task with declared inputs and outputs."
-                    }, {
-                      label: "Logs",
-                      summary: "The record of one run, readable by people and agents."
-                    }, {
-                      label: "Schedules",
-                      summary: "Run a job on a schedule without a separate daemon."
-                    }],
-                    label: "Primitives",
-                    summary: "People and agents use the same three objects, so a job you start by hand is one an agent can rerun."
-                  }),
-                  /* @__PURE__ */ jsxs12(MarketingSection, {
-                    heading: "A job keeps its name everywhere.",
-                    headingId: "gallery-marketing-section",
-                    headingLevel: 3,
-                    label: "Workflow",
-                    layout: "split-reverse",
-                    summary: "Start it from the CLI and check on it from code; both see the same job.",
-                    children: [
-                      /* @__PURE__ */ jsx14(MarketingSectionLabel, {
-                        size: "body",
-                        children: "Reference"
-                      }),
-                      /* @__PURE__ */ jsxs12("p", {
-                        children: [
-                          "Consumer-owned content can include ",
-                          /* @__PURE__ */ jsx14("a", {
-                            href: "#gallery-install",
-                            children: "links"
-                          }),
-                          " and ",
-                          /* @__PURE__ */ jsx14("code", {
-                            children: "inline code"
-                          }),
-                          "."
-                        ]
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingInterfaceGrid, {
-                    heading: "Choose your interface.",
-                    headingId: "gallery-marketing-interfaces",
-                    headingLevel: 3,
-                    label: "Interfaces",
-                    interfaces: [{
-                      label: "CLI",
-                      summary: "Run a named job.",
-                      example: /* @__PURE__ */ jsx14("pre", {
-                        children: /* @__PURE__ */ jsx14("code", {
-                          children: "relay run job-01"
-                        })
-                      })
-                    }, {
-                      label: "SDK",
-                      summary: "Use typed application code."
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingCardRow, {
-                    ariaLabel: "Release radar",
-                    cards: [{
-                      art: /* @__PURE__ */ jsx14("svg", {
-                        "aria-hidden": "true",
-                        viewBox: "0 0 24 24",
-                        width: "24",
-                        height: "24",
-                        children: /* @__PURE__ */ jsx14("circle", {
-                          cx: "12",
-                          cy: "12",
-                          r: "8"
-                        })
-                      }),
-                      href: "#marketing",
-                      title: "Grok 4.7",
-                      meta: "First observed 21 September 2026."
-                    }, {
-                      art: /* @__PURE__ */ jsx14("svg", {
-                        "aria-hidden": "true",
-                        viewBox: "0 0 24 24",
-                        width: "24",
-                        height: "24",
-                        children: /* @__PURE__ */ jsx14("rect", {
-                          x: "4",
-                          y: "4",
-                          width: "16",
-                          height: "16",
-                          rx: "4"
-                        })
-                      }),
-                      href: "#gallery-install",
-                      title: "GLM 5.3 Flash",
-                      meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter."
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingTrustBoundary, {
-                    heading: "What leaves your machine.",
-                    headingId: "gallery-marketing-trust",
-                    headingLevel: 3,
-                    label: "Boundary",
-                    items: [{
-                      label: "Stays local",
-                      detail: "Source files and credentials."
-                    }, {
-                      label: "Shared",
-                      detail: "Only the logs you choose to sync."
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingStatStrip, {
-                    ariaLabel: "Relay usage",
-                    columns: 3,
-                    source: "Counted from the public example repository on 5 September 2026.",
-                    stats: [{
-                      label: "Example jobs",
-                      value: "12"
-                    }, {
-                      label: "Interfaces",
-                      detail: "CLI, SDK, Agent Skill",
-                      value: "3"
-                    }, {
-                      label: "Accounts required",
-                      value: "0"
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingQuoteGrid, {
-                    heading: "From the people building with it.",
-                    headingId: "design-gallery-quotes-title",
-                    headingLevel: 3,
-                    label: "Quotes",
-                    quotes: [{
-                      name: "A. Example",
-                      quote: "A placeholder quote for the gallery only. Product sites render real, attributed quotes or none.",
-                      role: "@example"
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingPricing, {
-                    heading: "Free for local use.",
-                    headingId: "design-gallery-pricing-title",
-                    headingLevel: 3,
-                    label: "Pricing",
-                    plans: [{
-                      action: {
-                        href: "#gallery-install",
-                        label: "Install Relay"
-                      },
-                      emphasis: "primary",
-                      features: ["Every feature", "Unlimited local jobs", "All future updates"],
-                      name: "Local",
-                      period: "forever",
-                      price: "$0",
-                      summary: "Full-featured, with no trial or expiration."
-                    }, {
-                      action: {
-                        href: "#shells",
-                        label: "Read about sync"
-                      },
-                      features: ["Everything in Local", "Encrypted sync", "Priority email support"],
-                      name: "Sync",
-                      note: "Cancel any time.",
-                      period: "per year",
-                      price: "$49",
-                      summary: "Keep logs in step across your machines."
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingQuestionList, {
-                    heading: "Questions before installing.",
-                    headingId: "design-gallery-questions-title",
-                    headingLevel: 3,
-                    label: "Questions",
-                    questions: [{
-                      answer: /* @__PURE__ */ jsx14("p", {
-                        children: "No. The local workflow works without one."
-                      }),
-                      question: "Does it require an account?"
-                    }, {
-                      answer: /* @__PURE__ */ jsx14("p", {
-                        children: "Nothing leaves your machine unless you turn on sync."
-                      }),
-                      question: "Does it phone home?"
-                    }]
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingRelated, {
-                    groups: [{
-                      heading: "Sibling tools",
-                      headingId: "design-gallery-related-tools",
-                      items: [{
-                        href: "#gallery-install",
-                        name: "Ledger",
-                        role: "Long-term storage for run logs"
-                      }, {
-                        href: "#marketing",
-                        name: "Index",
-                        role: "A local search index"
-                      }]
-                    }, {
-                      heading: "Shared infrastructure",
-                      headingId: "design-gallery-related-infra",
-                      items: [{
-                        href: "#marketing",
-                        name: "Relay",
-                        role: "The shared job runner"
-                      }],
-                      summary: "The runner the other tools depend on."
-                    }],
-                    heading: "Related tools.",
-                    headingId: "design-gallery-related-title",
-                    headingLevel: 3,
-                    label: "Related",
-                    summary: "Each is a separate release. Its card says how it works with Relay."
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingMaker, {
-                    heading: "Who builds Relay",
-                    headingId: "design-gallery-maker-title",
-                    headingLevel: 3,
-                    label: "Built by",
-                    linkClassName: "design-gallery__maker-link",
-                    links: [{
-                      href: "#marketing",
-                      label: "Personal site"
-                    }],
-                    children: /* @__PURE__ */ jsx14("p", {
-                      children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
-                    })
-                  }),
-                  /* @__PURE__ */ jsx14(MarketingCallToAction, {
-                    actions: [{
-                      href: "#gallery-install",
-                      label: "Install Relay"
-                    }],
-                    footnote: "Free for local use on macOS and Linux.",
-                    heading: "Start with one job.",
-                    headingId: "design-gallery-cta-title",
-                    headingLevel: 3
-                  }),
-                  /* @__PURE__ */ jsxs12("div", {
-                    className: "design-gallery__foil-note",
-                    children: [
-                      /* @__PURE__ */ jsxs12("p", {
-                        children: [
-                          "Metallic wordmarks and exact-shape marks share a restrained rainbow reflection. Wordmarks use",
-                          " ",
-                          /* @__PURE__ */ jsx14("code", {
-                            children: ".hraness-foil-text"
-                          }),
-                          ", primary calls to action use ",
-                          /* @__PURE__ */ jsx14("code", {
-                            children: ".hraness-foil"
-                          }),
-                          ", and ",
-                          /* @__PURE__ */ jsx14("code", {
-                            children: "attachFoil"
-                          }),
-                          " eases the pointer inputs on ",
-                          /* @__PURE__ */ jsx14("code", {
-                            children: "data-foil"
-                          }),
-                          " targets."
-                        ]
-                      }),
-                      /* @__PURE__ */ jsxs12("p", {
-                        className: "design-gallery__foil-row",
-                        children: [
-                          /* @__PURE__ */ jsxs12("a", {
-                            className: foilClassName("text", "design-gallery__foil-wordmark"),
-                            "data-foil": "",
-                            href: "#marketing",
-                            children: [
-                              /* @__PURE__ */ jsx14(FoilMark, {
-                                src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z'/%3E%3C/svg%3E"
-                              }),
-                              " Relay"
-                            ]
-                          }),
-                          /* @__PURE__ */ jsx14("a", {
-                            className: foilClassName("surface", "design-gallery__foil-action"),
-                            "data-foil": "",
-                            href: "#gallery-install",
-                            children: "Install Relay"
-                          })
-                        ]
-                      })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsx14(MarketingPage, {
-            preset: "editorial",
-            className: "design-gallery__marketing-preset",
-            children: /* @__PURE__ */ jsx14(MarketingField, {
-              children: /* @__PURE__ */ jsx14(ProductHero, {
-                name: "Relay",
-                heading: "Run a job from your terminal, your code, or your agent",
-                headingId: "gallery-editorial-title",
-                headingLevel: 3,
-                summary: "The editorial preset sets a serif display heading on a textured field.",
-                actions: [{
-                  href: "#gallery-minimal-title",
-                  label: "See the compact preset"
-                }]
-              })
-            })
-          }),
-          /* @__PURE__ */ jsxs12(MarketingPage, {
-            preset: "minimal",
-            className: "design-gallery__marketing-preset",
-            children: [
-              /* @__PURE__ */ jsx14(MarketingSiteHeader, {
-                brand: "Relay",
-                brandHref: "#marketing",
-                links: [],
-                sticky: false
-              }),
-              /* @__PURE__ */ jsx14(ProductHero, {
-                name: "Relay",
-                heading: "A quieter public page.",
-                headingId: "gallery-minimal-title",
-                headingLevel: 3,
-                summary: "The same shared system, with compact sans headings and a plain surface."
-              }),
-              /* @__PURE__ */ jsx14(MarketingSiteFooter, {
-                brand: /* @__PURE__ */ jsx14("svg", {
-                  "aria-hidden": "true",
-                  viewBox: "0 0 24 24",
-                  children: /* @__PURE__ */ jsx14("path", {
-                    d: "M4 4h16v16H4z",
-                    fill: "currentColor"
-                  })
-                }),
-                brandHref: "#marketing",
-                brandLabel: "Relay home",
-                links: [{
-                  href: "#marketing",
-                  label: "Marketing"
-                }],
-                name: "Relay"
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "articles",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Article layer"
-          }),
-          /* @__PURE__ */ jsxs12(MarketingArticle, {
-            after: /* @__PURE__ */ jsx14(ArticleSources, {
-              headingId: "gallery-article-sources",
-              sources: [{
-                checkedOn: "2026-09-20",
-                href: "#articles",
-                publisher: "Relay",
-                title: "Relay 2.4 release notes"
-              }]
-            }),
-            author: {
-              kind: "organization",
-              name: "Hraness"
-            },
-            dek: "Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed.",
-            eyebrow: "Technique",
-            heading: "Replaying webhooks without breaking signatures",
-            headingId: "gallery-article-title",
-            provenance: {
-              drafting: "ai-from-source",
-              review: {
-                reviewer: "an independent AI editorial review",
-                reviewerType: "ai"
-              }
-            },
-            published: "2026-09-10",
-            toc: [{
-              href: "#gallery-article-problem",
-              label: "The problem"
-            }, {
-              href: "#gallery-article-approach",
-              label: "The approach"
-            }],
-            updated: "2026-09-20",
-            children: [
-              /* @__PURE__ */ jsx14("h2", {
-                id: "gallery-article-problem",
-                children: "The problem"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: "A provider signs the exact request body. Parsing the JSON and serializing it again changes whitespace and key order, and the signature check then fails on every retry."
-              }),
-              /* @__PURE__ */ jsx14(ArticleCallout, {
-                label: "Limit",
-                tone: "limit",
-                children: "This applies to providers that sign the raw body. Header-only schemes need no stored copy."
-              }),
-              /* @__PURE__ */ jsx14("h2", {
-                id: "gallery-article-approach",
-                children: "The approach"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: "Store the body as bytes next to the parsed event, and send those bytes on replay."
-              }),
-              /* @__PURE__ */ jsx14("pre", {
-                children: /* @__PURE__ */ jsx14("code", {
-                  children: "await replay(event.id, { body: stored.raw });"
-                })
-              }),
-              /* @__PURE__ */ jsxs12("figure", {
-                children: [
-                  /* @__PURE__ */ jsxs12("table", {
-                    children: [
-                      /* @__PURE__ */ jsx14("thead", {
-                        children: /* @__PURE__ */ jsxs12("tr", {
-                          children: [
-                            /* @__PURE__ */ jsx14("th", {
-                              scope: "col",
-                              children: "Step"
-                            }),
-                            /* @__PURE__ */ jsx14("th", {
-                              scope: "col",
-                              children: "Stored"
-                            }),
-                            /* @__PURE__ */ jsx14("th", {
-                              scope: "col",
-                              children: "Sent on replay"
-                            })
-                          ]
-                        })
-                      }),
-                      /* @__PURE__ */ jsxs12("tbody", {
-                        children: [
-                          /* @__PURE__ */ jsxs12("tr", {
-                            children: [
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "Receive"
-                              }),
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "Raw body and headers"
-                              }),
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "Nothing"
-                              })
-                            ]
-                          }),
-                          /* @__PURE__ */ jsxs12("tr", {
-                            children: [
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "Retry"
-                              }),
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "Attempt count"
-                              }),
-                              /* @__PURE__ */ jsx14("td", {
-                                children: "The stored raw body"
-                              })
-                            ]
-                          })
-                        ]
-                      })
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx14("figcaption", {
-                    children: "What Relay keeps for each delivery, and what a replay sends."
-                  })
-                ]
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsx14(ArticleIndex, {
-            heading: "Recent writing",
-            headingId: "gallery-article-index",
-            headingLevel: 3,
-            items: [{
-              dek: "Relay replays a failed webhook from the stored request body.",
-              eyebrow: "Technique",
-              href: "#gallery-article-title",
-              published: "2026-09-10",
-              title: "Replaying webhooks without breaking signatures",
-              updated: "2026-09-20"
-            }, {
-              dek: "Relay 2.4 adds per-endpoint retry limits.",
-              eyebrow: "Release",
-              href: "#articles",
-              published: "2026-09-02",
-              title: "Relay 2.4 adds per-endpoint retry limits"
-            }]
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "hraness-prose",
-            children: [
-              /* @__PURE__ */ jsx14("h3", {
-                children: "Shared reading scale"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: 'The `.hraness-prose` grammar carries the shared `--hraness-type-*` scale to docs and guide surfaces that do not run the publication shell. Headings step up on wide windows and a serif face opts in with `data-hraness-reading-face="serif"`.'
-              }),
-              /* @__PURE__ */ jsx14("h4", {
-                children: "Section spacing"
-              }),
-              /* @__PURE__ */ jsx14("p", {
-                children: "Sections separate on the shared space token; subsections tighten to the subsection space and small heads keep the text face."
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "shells",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Application shells"
-          }),
-          /* @__PURE__ */ jsx14(ViewportFrame, {
-            className: "design-gallery__shell-preview",
-            children: /* @__PURE__ */ jsx14(AppShell, {
-              bottomBar: /* @__PURE__ */ jsx14(BottomBar, {
-                actions: /* @__PURE__ */ jsx14("span", {
-                  children: "Synced"
-                }),
-                "data-gallery-layout-bottom-bar": "",
-                leading: /* @__PURE__ */ jsx14("span", {
-                  children: "Ready"
-                }),
-                children: "Reference footer"
-              }),
-              navigationKey: "gallery",
-              rail: /* @__PURE__ */ jsx14(NavigationRail, {
-                children: /* @__PURE__ */ jsxs12(RailSection, {
-                  title: "Workspace",
-                  children: [
-                    /* @__PURE__ */ jsx14(RailItem, {
-                      href: "#foundation",
-                      icon: /* @__PURE__ */ jsx14(Icon3, {
-                        icon: DashboardSquare01Icon
-                      }),
-                      isActive: true,
-                      label: "Overview"
-                    }),
-                    /* @__PURE__ */ jsx14(RailItem, {
-                      href: "#data",
-                      icon: /* @__PURE__ */ jsx14(Icon3, {
-                        icon: Chart01Icon
-                      }),
-                      label: "Data"
-                    }),
-                    /* @__PURE__ */ jsx14(RailItem, {
-                      href: "#syntax",
-                      icon: /* @__PURE__ */ jsx14(Icon3, {
-                        icon: CodeIcon
-                      }),
-                      label: "Syntax"
-                    })
-                  ]
-                })
-              }),
-              topBar: /* @__PURE__ */ jsx14(TopBar, {
-                "data-gallery-layout-top-bar": "",
-                title: "Reference workspace"
-              }),
-              children: /* @__PURE__ */ jsx14(PageCanvas, {
-                as: "div",
-                "data-gallery-layout-page-canvas": "",
-                children: /* @__PURE__ */ jsx14(AnimatedRailStage, {
-                  className: "design-gallery__animated-rail-stage",
-                  stageKey: density,
-                  children: /* @__PURE__ */ jsxs12(DitherSurface, {
-                    as: "section",
-                    "data-gallery-dither": "",
-                    density: density === "compact" ? "fine" : "medium",
-                    tone: "card",
-                    children: [
-                      /* @__PURE__ */ jsxs12("h3", {
-                        children: [
-                          density === "compact" ? "Compact" : "Default",
-                          " composition"
-                        ]
-                      }),
-                      /* @__PURE__ */ jsx14("p", {
-                        children: "The route body changes while persistent navigation remains in place."
-                      })
-                    ]
-                  })
-                })
-              })
-            })
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__docked-footer-preview",
-            "data-gallery-layout-docked-frame": "",
-            children: [
-              /* @__PURE__ */ jsx14("p", {
-                children: "Docked commands remain inside their positioning owner."
-              }),
-              /* @__PURE__ */ jsx14(DockedFooter, {
-                "data-gallery-layout-docked-footer": "",
-                density: "compact",
-                position: "absolute",
-                children: "Reference commands"
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "data",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Data and instrument compositions"
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__grid",
-            children: [
-              /* @__PURE__ */ jsx14(BarListChart, {
-                "aria-label": "Example request volume",
-                data: barData
-              }),
-              /* @__PURE__ */ jsx14(RangePlotChart, {
-                "aria-label": "Example regional ranges",
-                data: rangeData
-              }),
-              /* @__PURE__ */ jsxs12("div", {
-                className: "design-gallery__instrument",
-                children: [
-                  /* @__PURE__ */ jsx14(Fader, {
-                    "aria-label": "Example level",
-                    className: "design-gallery__vertical-fader",
-                    "data-gallery-fader": "vertical",
-                    density: "default",
-                    label: "Level",
-                    labelAccessory: /* @__PURE__ */ jsx14("span", {
-                      "data-gallery-fader-accessory": "",
-                      children: "dB"
-                    }),
-                    maxValue: 100,
-                    minValue: 0,
-                    onChange: setFaderValue,
-                    showLabel: true,
-                    showOutput: true,
-                    value: faderValue
-                  }),
-                  /* @__PURE__ */ jsx14(Fader, {
-                    "aria-label": "Example horizontal level",
-                    className: "design-gallery__horizontal-fader",
-                    "data-gallery-fader": "horizontal",
-                    density: "compact",
-                    label: "Horizontal level",
-                    maxValue: 100,
-                    minValue: 0,
-                    onChange: setFaderValue,
-                    orientation: "horizontal",
-                    showLabel: true,
-                    showOutput: true,
-                    value: faderValue
-                  }),
-                  /* @__PURE__ */ jsx14(Slider, {
-                    label: "Balance",
-                    maxValue: 100,
-                    minValue: 0,
-                    value: 50
-                  }),
-                  /* @__PURE__ */ jsx14(PlaybackTransport, {
-                    "aria-label": "Preview transport",
-                    buttonAriaKeyShortcuts: "Space",
-                    buttonId: "design-gallery-playback-command",
-                    className: "design-gallery__playback-transport",
-                    onPlay: () => setPlaybackStatus("playing"),
-                    onStop: () => setPlaybackStatus("idle"),
-                    status: playbackStatus
-                  })
-                ]
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__chat",
-            "data-gallery-chat": "",
-            "data-gallery-chat-submission": chatSubmission,
-            children: [
-              /* @__PURE__ */ jsx14(ChatMessage, {
-                actions: /* @__PURE__ */ jsx14(Button3, {
-                  variant: "quiet",
-                  children: "Copy response"
-                }),
-                avatar: /* @__PURE__ */ jsx14("span", {
-                  "aria-hidden": "true",
-                  className: "design-gallery__chat-avatar",
-                  children: "AI"
-                }),
-                className: "design-gallery__chat-message",
-                meta: /* @__PURE__ */ jsx14(RelativeTime, {
-                  locale: "en-US",
-                  now: designGalleryRelativeTimeNow,
-                  refreshInterval: "off",
-                  value: designGalleryRelativeTimeNow
-                }),
-                name: "Assistant",
-                role: "assistant",
-                children: /* @__PURE__ */ jsx14("p", {
-                  children: "A complete message keeps its ordinary article and slot semantics."
-                })
-              }),
-              /* @__PURE__ */ jsx14(ChatMessage, {
-                role: "user",
-                children: /* @__PURE__ */ jsx14("p", {
-                  children: "Responsive composition belongs to the extracted package recipe."
-                })
-              }),
-              /* @__PURE__ */ jsx14(ChatComposer, {
-                action: "/gallery-chat-submit",
-                "aria-label": "Gallery message composer",
-                className: "design-gallery__chat-composer",
-                onSubmit: () => {
-                  setChatSubmission(chatDraft);
-                  setChatDraft("");
-                },
-                onValueChange: setChatDraft,
-                placeholder: "Write a message",
-                sendLabel: "Send message",
-                value: chatDraft
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsx14("ul", {
-            "aria-label": "Relative time examples",
-            className: "design-gallery__relative-times",
-            "data-gallery-relative-time": "",
-            children: relativeTimeExamples.map(({
-              id,
-              value
-            }) => /* @__PURE__ */ jsx14("li", {
-              children: /* @__PURE__ */ jsx14(RelativeTime, {
-                "data-gallery-relative-time-example": id,
-                locale: "en-US",
-                now: designGalleryRelativeTimeNow,
-                refreshInterval: "off",
-                value
-              })
-            }, id))
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "effects",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Decorative effects"
-          }),
-          /* @__PURE__ */ jsx14(FoilCardDeck, {
-            "aria-label": "Delegated foil ornament examples",
-            className: "design-gallery__foil-deck",
-            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx14(FoilCardSurface, {
-              className: "design-gallery__foil-example",
-              intensity: "standard",
-              ornament: example.ornament,
-              preset: example.preset,
-              renderMode: "interactive",
-              seed: `public-gallery-foil-${example.ornament}`,
-              children: /* @__PURE__ */ jsxs12("article", {
-                className: "design-gallery__foil-card",
-                children: [
-                  /* @__PURE__ */ jsx14(Tag, {
-                    variant: "outline",
-                    children: example.label
-                  }),
-                  /* @__PURE__ */ jsxs12("div", {
-                    children: [
-                      /* @__PURE__ */ jsx14("h3", {
-                        children: "Semantic card content"
-                      }),
-                      /* @__PURE__ */ jsx14("p", {
-                        children: "One deck controller decorates ordinary articles."
-                      })
-                    ]
-                  })
-                ]
-              })
-            }, example.ornament))
-          }),
-          /* @__PURE__ */ jsxs12("div", {
-            className: "design-gallery__effect",
-            children: [
-              /* @__PURE__ */ jsx14(AuroraDotsBackground, {}),
-              /* @__PURE__ */ jsx14(ProceduralBackdrop, {
-                seed: "public-gallery",
-                variant: "composite"
-              }),
-              /* @__PURE__ */ jsxs12("div", {
-                className: "design-gallery__effect-copy",
-                children: [
-                  /* @__PURE__ */ jsx14("h3", {
-                    children: "Semantic content stays ordinary DOM"
-                  }),
-                  /* @__PURE__ */ jsx14("p", {
-                    children: "Decorative paint is pointer-transparent and removable in forced colors."
-                  })
-                ]
-              })
-            ]
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsxs12("section", {
-        className: "design-gallery__section",
-        id: "syntax",
-        children: [
-          /* @__PURE__ */ jsx14("h2", {
-            children: "Server syntax"
-          }),
-          /* @__PURE__ */ jsx14("pre", {
-            className: "design-gallery__syntax",
-            children: /* @__PURE__ */ jsx14(SyntaxCode, {
-              code: `import { AppShell } from "@hraness/design-kit/react";
-
-export const shell = <AppShell rail={null}>Content</AppShell>;`,
-              styles: "classes"
-            })
-          })
-        ]
-      })
-    ]
-  });
+function compile(gl, type, source) {
+  const shader = gl.createShader(type);
+  if (!shader)
+    return null;
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  if (gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+    return shader;
+  gl.deleteShader(shader);
+  return null;
 }
-// src/react/haptics.ts
-import { useCallback as useCallback2, useEffect as useEffect6 } from "react";
-var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
-function isHapticBrowserEnvironment(environment = globalThis) {
-  return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
-}
-function hapticInputForFeedback(feedback) {
-  switch (feedback) {
-    case "error":
-      return "error";
-    case "press":
-      return "medium";
-    case "selection":
-      return "selection";
-    case "success":
-      return "success";
-    case "warning":
-      return "warning";
+function attachStatusField(code, options = {}) {
+  const document2 = code.ownerDocument;
+  const view = document2.defaultView;
+  const canvas = code.querySelector("canvas");
+  const glyph = code.querySelector(".hraness-status-page__glyph");
+  if (!view || !canvas || !glyph || typeof view.matchMedia !== "function" || typeof view.requestAnimationFrame !== "function" || typeof view.ResizeObserver !== "function")
+    return () => {};
+  if (view.matchMedia("(forced-colors: active)").matches)
+    return () => {};
+  const motion2 = view.matchMedia("(prefers-reduced-motion: reduce)");
+  let gl = null;
+  try {
+    gl = canvas.getContext("webgl", {
+      alpha: true,
+      antialias: false,
+      depth: false,
+      premultipliedAlpha: true,
+      preserveDrawingBuffer: false,
+      stencil: false
+    });
+  } catch {
+    gl = null;
   }
+  if (!gl || gl.isContextLost())
+    return () => {};
+  const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
+  const fragment = compile(gl, gl.FRAGMENT_SHADER, FRAGMENT);
+  const program = gl.createProgram();
+  if (!vertex || !fragment || !program)
+    return () => {};
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS))
+    return () => {};
+  gl.useProgram(program);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  const attribute = (name, size, offset) => {
+    const location = gl.getAttribLocation(program, name);
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, STRIDE * 4, offset * 4);
+  };
+  attribute("a_position", 2, 0);
+  attribute("a_heat", 1, 2);
+  attribute("a_tone", 1, 3);
+  const uniform = (name) => gl.getUniformLocation(program, name);
+  const uSize = uniform("u_size");
+  const uPoint = uniform("u_point");
+  const uInk = uniform("u_ink");
+  const uAccent = uniform("u_accent");
+  const uAlpha = uniform("u_alpha");
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  const next = random(options.seed ?? 404);
+  let homes = new Float32Array(0);
+  let velocity = new Float32Array(0);
+  let vertices = new Float32Array(0);
+  let count = 0;
+  let width = 0;
+  let height = 0;
+  let pointSize = 2;
+  let pointer;
+  let frame;
+  let previous;
+  let introStart;
+  let delays = new Float32Array(0);
+  let live = false;
+  let disposed = false;
+  let lost = false;
+  const probe = document2.createElement("canvas");
+  probe.width = 1;
+  probe.height = 1;
+  const probeContext = probe.getContext("2d", {
+    willReadFrequently: true
+  });
+  const rgba = (value) => {
+    if (!probeContext)
+      return [0.5, 0.5, 0.5, 1];
+    probeContext.clearRect(0, 0, 1, 1);
+    probeContext.fillStyle = "#808080";
+    probeContext.fillStyle = value;
+    probeContext.fillRect(0, 0, 1, 1);
+    const [r = 128, g = 128, b = 128, a = 255] = probeContext.getImageData(0, 0, 1, 1).data;
+    return [r / 255, g / 255, b / 255, a / 255];
+  };
+  const readColors = () => {
+    const ink = rgba(view.getComputedStyle(glyph).color);
+    const accent = rgba(view.getComputedStyle(canvas).color);
+    gl.uniform3f(uInk, ink[0], ink[1], ink[2]);
+    gl.uniform3f(uAccent, accent[0], accent[1], accent[2]);
+    gl.uniform1f(uAlpha, Math.max(0.35, ink[3]));
+  };
+  const sample = () => {
+    const bounds = canvas.getBoundingClientRect();
+    const box = code.getBoundingClientRect();
+    const centerX = box.left - bounds.left + box.width / 2;
+    const centerY = box.top - bounds.top + box.height / 2;
+    width = Math.round(bounds.width);
+    height = Math.round(bounds.height);
+    if (width < 8 || height < 8)
+      return false;
+    const ratio = Math.min(2, view.devicePixelRatio || 1);
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uSize, width, height);
+    const style = view.getComputedStyle(glyph);
+    const fontSize = Number.parseFloat(style.fontSize) || 96;
+    const mask = document2.createElement("canvas");
+    mask.width = width;
+    mask.height = height;
+    const context = mask.getContext("2d", {
+      willReadFrequently: true
+    });
+    if (!context)
+      return false;
+    context.font = `${style.fontStyle} ${style.fontWeight} ${fontSize}px ${style.fontFamily}`;
+    context.textAlign = "center";
+    context.textBaseline = "alphabetic";
+    const text = glyph.textContent ?? "";
+    const metrics = context.measureText(text);
+    const ascent = metrics.actualBoundingBoxAscent || fontSize * 0.7;
+    const descent = metrics.actualBoundingBoxDescent || 0;
+    context.fillStyle = "#000";
+    context.fillText(text, centerX, centerY + (ascent - descent) / 2);
+    const pixels = context.getImageData(0, 0, width, height).data;
+    let gap = Math.max(3, Math.min(8, fontSize / 30));
+    let points = [];
+    for (let attempt = 0;attempt < 6; attempt++) {
+      points = [];
+      const rowHeight = gap * 0.866;
+      for (let row = 0, y = rowHeight / 2;y < height; row++, y += rowHeight) {
+        for (let x = row % 2 ? gap : gap / 2;x < width; x += gap) {
+          if ((pixels[(Math.floor(y) * width + Math.floor(x)) * 4 + 3] ?? 0) >= 128)
+            points.push(x, y);
+        }
+      }
+      if (points.length / 2 <= MAX_DOTS)
+        break;
+      gap *= 1.2;
+    }
+    const nextCount = points.length / 2;
+    const nextHomes = Float32Array.from(points);
+    const nextVertices = new Float32Array(nextCount * STRIDE);
+    const nextVelocity = new Float32Array(nextCount * 2);
+    const nextDelays = new Float32Array(nextCount);
+    const intro = count === 0 && !motion2.matches;
+    for (let index = 0;index < nextCount; index++) {
+      const base = index * STRIDE;
+      const hx = nextHomes[index * 2] ?? 0;
+      const hy = nextHomes[index * 2 + 1] ?? 0;
+      if (index < count) {
+        nextVertices[base] = vertices[index * STRIDE] ?? 0;
+        nextVertices[base + 1] = vertices[index * STRIDE + 1] ?? 0;
+        nextVertices[base + 3] = vertices[index * STRIDE + 3] ?? 0;
+      } else {
+        const angle = next() * Math.PI * 2;
+        const reach = intro ? (0.25 + next() * 0.6) * Math.max(width, height) * 0.5 : 0;
+        nextVertices[base] = hx + Math.cos(angle) * reach;
+        nextVertices[base + 1] = hy + Math.sin(angle) * reach * 0.6;
+        nextVertices[base + 3] = next() < ACCENT_SHARE ? 1 : 0;
+        nextDelays[index] = intro ? next() * 420 : 0;
+      }
+    }
+    homes = nextHomes;
+    vertices = nextVertices;
+    velocity = nextVelocity;
+    delays = nextDelays;
+    count = nextCount;
+    pointSize = gap * 0.6 * ratio;
+    gl.uniform1f(uPoint, pointSize);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
+    if (intro)
+      introStart = undefined;
+    return count > 0;
+  };
+  const draw = () => {
+    if (disposed || lost)
+      return;
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, vertices);
+    gl.drawArrays(gl.POINTS, 0, count);
+    if (!live) {
+      live = true;
+      options.onLive?.(true);
+    }
+  };
+  const settle = () => {
+    for (let index = 0;index < count; index++) {
+      vertices[index * STRIDE] = homes[index * 2] ?? 0;
+      vertices[index * STRIDE + 1] = homes[index * 2 + 1] ?? 0;
+      vertices[index * STRIDE + 2] = 0;
+      velocity[index * 2] = 0;
+      velocity[index * 2 + 1] = 0;
+    }
+  };
+  const step = (time) => {
+    frame = undefined;
+    if (disposed || lost)
+      return;
+    if (document2.hidden) {
+      previous = undefined;
+      return;
+    }
+    introStart ??= time;
+    const dt = previous === undefined ? 1 : Math.max(0.25, Math.min(2, (time - previous) / 16.67));
+    previous = time;
+    const since = time - introStart;
+    const radius = Math.max(72, width * 0.16);
+    const damping = DAMPING ** dt;
+    let moving = false;
+    for (let index = 0;index < count; index++) {
+      const base = index * STRIDE;
+      if (since < (delays[index] ?? 0)) {
+        moving = true;
+        continue;
+      }
+      let x = vertices[base] ?? 0;
+      let y = vertices[base + 1] ?? 0;
+      let vx = velocity[index * 2] ?? 0;
+      let vy = velocity[index * 2 + 1] ?? 0;
+      let ax = ((homes[index * 2] ?? 0) - x) * SPRING;
+      let ay = ((homes[index * 2 + 1] ?? 0) - y) * SPRING;
+      if (pointer) {
+        const dx = x - pointer.x;
+        const dy = y - pointer.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance < radius) {
+          const force = (1 - distance / radius) ** 2 * PUSH / Math.max(distance, 0.5);
+          ax += dx * force;
+          ay += dy * force;
+        }
+      }
+      vx = (vx + ax * dt) * damping;
+      vy = (vy + ay * dt) * damping;
+      x += vx * dt;
+      y += vy * dt;
+      vertices[base] = x;
+      vertices[base + 1] = y;
+      velocity[index * 2] = vx;
+      velocity[index * 2 + 1] = vy;
+      const speed = Math.hypot(vx, vy);
+      vertices[base + 2] = Math.max((vertices[base + 2] ?? 0) * 0.93 ** dt, Math.min(1, speed / 2));
+      if (speed > REST_DISTANCE * 0.5 || (vertices[base + 2] ?? 0) > 0.02 || !pointer && Math.abs((homes[index * 2] ?? 0) - x) + Math.abs((homes[index * 2 + 1] ?? 0) - y) > REST_DISTANCE)
+        moving = true;
+    }
+    if (!moving && !pointer)
+      settle();
+    draw();
+    if (moving)
+      frame = view.requestAnimationFrame(step);
+    else
+      previous = undefined;
+  };
+  const wake = () => {
+    if (disposed || lost || motion2.matches || frame !== undefined)
+      return;
+    frame = view.requestAnimationFrame(step);
+  };
+  const paintStill = () => {
+    if (disposed || lost)
+      return;
+    if (frame !== undefined)
+      view.cancelAnimationFrame(frame);
+    frame = undefined;
+    settle();
+    draw();
+  };
+  const rebuild = () => {
+    if (disposed || lost)
+      return;
+    if (!sample())
+      return;
+    readColors();
+    if (motion2.matches)
+      paintStill();
+    else {
+      draw();
+      wake();
+    }
+  };
+  const local = (event) => {
+    const bounds = canvas.getBoundingClientRect();
+    return {
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top
+    };
+  };
+  const onMove = (event) => {
+    if (motion2.matches)
+      return;
+    pointer = local(event);
+    wake();
+  };
+  const onLeave = () => {
+    pointer = undefined;
+    wake();
+  };
+  const onDown = (event) => {
+    if (motion2.matches)
+      return;
+    const origin = local(event);
+    const reach = Math.max(120, width * 0.34);
+    for (let index = 0;index < count; index++) {
+      const dx = (vertices[index * STRIDE] ?? 0) - origin.x;
+      const dy = (vertices[index * STRIDE + 1] ?? 0) - origin.y;
+      const distance = Math.hypot(dx, dy);
+      if (distance >= reach)
+        continue;
+      const force = (1 - distance / reach) * BURST / Math.max(distance, 0.5);
+      velocity[index * 2] = (velocity[index * 2] ?? 0) + dx * force;
+      velocity[index * 2 + 1] = (velocity[index * 2 + 1] ?? 0) + dy * force;
+    }
+    if (event.pointerType !== "mouse")
+      pointer = undefined;
+    wake();
+  };
+  const area = code.closest(".hraness-status-page") ?? code;
+  area.addEventListener("pointermove", onMove, {
+    passive: true
+  });
+  area.addEventListener("pointerleave", onLeave, {
+    passive: true
+  });
+  area.addEventListener("pointerdown", onDown, {
+    passive: true
+  });
+  const onVisibility = () => {
+    if (!document2.hidden)
+      wake();
+  };
+  document2.addEventListener("visibilitychange", onVisibility);
+  const onMotion = () => {
+    if (motion2.matches)
+      paintStill();
+    else
+      wake();
+  };
+  motion2.addEventListener?.("change", onMotion);
+  const scheme = view.matchMedia("(prefers-color-scheme: dark)");
+  const onScheme = () => {
+    if (disposed || lost)
+      return;
+    readColors();
+    if (frame === undefined)
+      draw();
+  };
+  scheme.addEventListener?.("change", onScheme);
+  const themeObserver = typeof view.MutationObserver === "function" ? new view.MutationObserver(onScheme) : undefined;
+  themeObserver?.observe(document2.documentElement, {
+    attributeFilter: ["class", "data-theme", "data-palette", "style"],
+    attributes: true
+  });
+  let resizeFrame;
+  const resizeObserver = new view.ResizeObserver(() => {
+    if (resizeFrame !== undefined)
+      view.cancelAnimationFrame(resizeFrame);
+    resizeFrame = view.requestAnimationFrame(() => {
+      resizeFrame = undefined;
+      rebuild();
+    });
+  });
+  const onLost = () => {
+    lost = true;
+    if (frame !== undefined)
+      view.cancelAnimationFrame(frame);
+    frame = undefined;
+    if (live) {
+      live = false;
+      options.onLive?.(false);
+    }
+  };
+  canvas.addEventListener("webglcontextlost", onLost);
+  const fonts = document2.fonts;
+  const onFonts = () => rebuild();
+  let started = false;
+  const start = () => {
+    if (started || disposed)
+      return;
+    started = true;
+    resizeObserver.observe(code);
+    rebuild();
+  };
+  if (fonts?.ready) {
+    fonts.ready.then(start, start);
+    fonts.addEventListener?.("loadingdone", onFonts);
+  } else
+    start();
+  return () => {
+    if (disposed)
+      return;
+    disposed = true;
+    if (frame !== undefined)
+      view.cancelAnimationFrame(frame);
+    if (resizeFrame !== undefined)
+      view.cancelAnimationFrame(resizeFrame);
+    area.removeEventListener("pointermove", onMove);
+    area.removeEventListener("pointerleave", onLeave);
+    area.removeEventListener("pointerdown", onDown);
+    document2.removeEventListener("visibilitychange", onVisibility);
+    motion2.removeEventListener?.("change", onMotion);
+    scheme.removeEventListener?.("change", onScheme);
+    fonts?.removeEventListener?.("loadingdone", onFonts);
+    themeObserver?.disconnect();
+    resizeObserver.disconnect();
+    canvas.removeEventListener("webglcontextlost", onLost);
+    gl.deleteBuffer(buffer);
+    gl.deleteProgram(program);
+    gl.deleteShader(vertex);
+    gl.deleteShader(fragment);
+    if (live)
+      options.onLive?.(false);
+    const release = () => {
+      if (!canvas.isConnected && !gl.isContextLost())
+        gl.getExtension("WEBGL_lose_context")?.loseContext();
+    };
+    release();
+    view.setTimeout(release, 0);
+  };
 }
-function hasCustomEventConstructor(candidate) {
-  return typeof candidate === "object" && candidate !== null && "CustomEvent" in candidate && typeof candidate.CustomEvent === "function";
-}
-function hasEventDispatcher(candidate) {
-  return typeof candidate === "object" && candidate !== null && "dispatchEvent" in candidate && typeof candidate.dispatchEvent === "function";
-}
-function dispatchHapticFeedbackEvent(environment, detail) {
-  if (!hasCustomEventConstructor(environment.window) || !hasEventDispatcher(environment.document))
+
+// src/browser/status-page.ts
+function parseUrl(value) {
+  if (!value)
     return;
   try {
-    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, {
-      detail
-    }));
-  } catch {}
+    return new URL(value);
+  } catch {
+    return;
+  }
 }
-function cancelAndDestroy(candidate) {
-  try {
-    candidate.cancel();
-  } catch {}
-  try {
-    candidate.destroy();
-  } catch {}
+function previousPage(view, document2) {
+  const navigation = view.navigation;
+  const index = navigation?.currentEntry?.index;
+  if (navigation?.entries !== undefined && typeof index === "number") {
+    return index < 1 ? undefined : parseUrl(navigation.entries()[index - 1]?.url);
+  }
+  return view.history.length > 1 ? parseUrl(document2.referrer) : undefined;
 }
-function createHapticFeedbackController(environment, loadModule) {
-  let engine = null;
-  let enginePromise = null;
-  let engineGeneration = 0;
-  const loadEngine = async () => {
-    if (!isHapticBrowserEnvironment(environment))
-      return null;
-    if (engine !== null)
-      return engine;
-    if (enginePromise !== null)
-      return enginePromise;
-    const generation = engineGeneration;
-    const pendingEngine = loadModule().then(({
-      WebHaptics
-    }) => {
-      if (!isHapticBrowserEnvironment(environment))
-        return null;
-      const candidate = new WebHaptics({
-        debug: false,
-        showSwitch: false
+function attachStatusPage(root) {
+  const document2 = root.ownerDocument;
+  const view = document2.defaultView;
+  if (!view)
+    return () => {};
+  const cleanups = [];
+  const hint = root.querySelector(".hraness-status-page__hint");
+  const hintLink = hint?.querySelector("a");
+  if (hint && hintLink && root.dataset.kind === "not-found") {
+    const match = suggestStatusRoute(view.location.pathname, parseStatusPageRoutes(root.getAttribute("data-hraness-status-routes")));
+    const target = match === undefined ? undefined : new URL(match.href, view.location.href);
+    if (match && target && target.origin === view.location.origin) {
+      hintLink.href = target.pathname + target.search + target.hash;
+      hintLink.textContent = match.label;
+      hint.hidden = false;
+      root.dataset.hranessStatusSuggestion = match.href;
+      cleanups.push(() => {
+        hint.hidden = true;
+        hintLink.setAttribute("href", "/");
+        hintLink.textContent = "";
+        delete root.dataset.hranessStatusSuggestion;
       });
-      if (generation !== engineGeneration) {
-        cancelAndDestroy(candidate);
-        return null;
-      }
-      engine = candidate;
-      return candidate;
-    }).catch(() => null);
-    enginePromise = pendingEngine;
-    pendingEngine.finally(() => {
-      if (enginePromise === pendingEngine)
-        enginePromise = null;
-    });
-    return pendingEngine;
-  };
-  return {
-    cancel() {
-      if (engine === null)
-        return false;
-      try {
-        engine.cancel();
-        return true;
-      } catch {
-        return false;
-      }
-    },
-    dispose() {
-      engineGeneration += 1;
-      const activeEngine = engine;
-      engine = null;
-      enginePromise = null;
-      if (activeEngine !== null)
-        cancelAndDestroy(activeEngine);
-    },
-    async prepare() {
-      return await loadEngine() !== null;
-    },
-    async trigger(feedback = "press") {
-      try {
-        const activeEngine = await loadEngine();
-        if (activeEngine === null)
-          return false;
-        const input = hapticInputForFeedback(feedback);
-        await activeEngine.trigger(input);
-        dispatchHapticFeedbackEvent(environment, {
-          feedback,
-          input
-        });
-        return true;
-      } catch {
-        return false;
-      }
     }
-  };
-}
-var browserHaptics = createHapticFeedbackController(globalThis, async () => {
-  const {
-    WebHaptics
-  } = await import("web-haptics");
-  return {
-    WebHaptics
-  };
-});
-async function prepareHapticFeedback() {
-  return await browserHaptics.prepare();
-}
-async function triggerHapticFeedback(feedback = "press") {
-  return await browserHaptics.trigger(feedback);
-}
-function cancelHapticFeedback() {
-  return browserHaptics.cancel();
-}
-function disposeHapticFeedback() {
-  browserHaptics.dispose();
-}
-function useHapticFeedback(enabled = true) {
-  useEffect6(() => {
-    if (enabled)
-      prepareHapticFeedback();
-  }, [enabled]);
-  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
-}
-// src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect7, useRef as useRef4 } from "react";
-var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
-var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
-function hasClosest(target) {
-  return target !== null && "closest" in target && typeof target.closest === "function";
-}
-function isKeyboardInteractionTarget(target) {
-  return hasClosest(target) && target.closest(interactiveTargetSelector) !== null;
-}
-function isKeyboardTextEntryTarget(target) {
-  return hasClosest(target) && target.closest(textEntryTargetSelector) !== null;
-}
-function normalizedKey(key) {
-  switch (key) {
-    case "Esc":
-      return "Escape";
-    case "Left":
-      return "ArrowLeft";
-    case "Right":
-      return "ArrowRight";
-    case "Up":
-      return "ArrowUp";
-    case "Down":
-      return "ArrowDown";
-    case "Space":
-    case "Spacebar":
-      return " ";
-    default:
-      return key.length === 1 ? key.toLocaleLowerCase("en-US") : key;
   }
-}
-function matchesKeyboardShortcut(event, shortcut) {
-  return normalizedKey(event.key) === normalizedKey(shortcut.key) && event.altKey === (shortcut.altKey ?? false) && event.ctrlKey === (shortcut.ctrlKey ?? false) && event.metaKey === (shortcut.metaKey ?? false) && event.shiftKey === (shortcut.shiftKey ?? false);
-}
-function decideKeyboardShortcut(shortcuts, event, context = {}) {
-  if (context.isDisabled === true)
-    return {
-      kind: "ignore",
-      reason: "disabled"
-    };
-  if (event.defaultPrevented)
-    return {
-      kind: "ignore",
-      reason: "default-prevented"
-    };
-  if (event.isComposing)
-    return {
-      kind: "ignore",
-      reason: "composing"
-    };
-  let suppressedReason = null;
-  for (const [bindingIndex, shortcut] of shortcuts.entries()) {
-    if (shortcut.isDisabled === true || !matchesKeyboardShortcut(event, shortcut))
-      continue;
-    if (event.repeat && shortcut.allowRepeat !== true) {
-      suppressedReason ??= "repeat";
-      continue;
-    }
-    if (context.isEditableTarget === true && shortcut.allowWhenEditable !== true) {
-      suppressedReason ??= "editable-target";
-      continue;
-    }
-    if (context.isInteractiveTarget === true && context.isEditableTarget !== true && shortcut.allowWhenInteractive !== true && shortcut.allowWhenInteractiveTarget?.(context.target ?? null) !== true) {
-      suppressedReason ??= "interactive-target";
-      continue;
-    }
-    return {
-      bindingId: shortcut.id,
-      bindingIndex,
-      kind: "handle"
-    };
-  }
-  return {
-    kind: "ignore",
-    reason: suppressedReason ?? "no-match"
-  };
-}
-function isNode2(target) {
-  return target !== null && typeof Node !== "undefined" && target instanceof Node;
-}
-function useKeyboardShortcuts(bindings, options = {}) {
-  const latestRef = useRef4({
-    bindings,
-    isDisabled: options.isDisabled ?? false
-  });
-  latestRef.current = {
-    bindings,
-    isDisabled: options.isDisabled ?? false
-  };
-  const scopeRef = options.scopeRef;
-  useEffect7(() => {
-    const onKeyDown = (event) => {
-      if (scopeRef !== undefined) {
-        const scope = scopeRef.current;
-        if (scope === null || !isNode2(event.target) || !scope.contains(event.target))
+  const back = root.querySelector(".hraness-status-page__back");
+  if (back) {
+    const previous = previousPage(view, document2);
+    if (previous && previous.origin === view.location.origin && previous.pathname !== view.location.pathname) {
+      back.href = previous.href;
+      back.hidden = false;
+      const onBack = (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
           return;
-      }
-      const current = latestRef.current;
-      const decision = decideKeyboardShortcut(current.bindings, event, {
-        isDisabled: current.isDisabled,
-        isEditableTarget: isKeyboardTextEntryTarget(event.target),
-        isInteractiveTarget: isKeyboardInteractionTarget(event.target),
-        target: event.target
+        event.preventDefault();
+        view.history.back();
+      };
+      back.addEventListener("click", onBack);
+      cleanups.push(() => {
+        back.removeEventListener("click", onBack);
+        back.hidden = true;
+        back.setAttribute("href", "/");
       });
-      if (decision.kind === "ignore")
-        return;
-      event.preventDefault();
-      current.bindings[decision.bindingIndex]?.onAction(event);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [scopeRef]);
+    }
+  }
+  const code = root.querySelector(".hraness-status-page__code");
+  if (code) {
+    cleanups.push(attachStatusField(code, {
+      onLive: (live) => {
+        if (live)
+          root.dataset.hranessStatusField = "live";
+        else
+          delete root.dataset.hranessStatusField;
+      }
+    }));
+  }
+  cleanups.push(attachFoil(root));
+  return () => {
+    for (const cleanup of cleanups.splice(0).reverse())
+      cleanup();
+  };
 }
-// src/react/route-state.tsx
-import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
-import * as stylex13 from "@stylexjs/stylex";
-import { useEffect as useEffect9, useId as useId3 } from "react";
 
 // src/react/route-state.stylex.ts
 var routeStateStyles = {
@@ -5192,8 +4138,10 @@ var routeStateStyles = {
   },
   header: {
     kGNEyG: "x6s0dn4",
+    kSGwAc: "x1y8v6su",
     k1xSpc: "x78zum5",
     kjj79g: "x13a6bvl",
+    kFhvOy: "xuy72oy",
     kdYMnH: "xesnm00",
     kmVPX3: "xjhuplf",
     $$css: true
@@ -5225,10 +4173,10 @@ var routeStateStyles = {
 };
 
 // src/react/theme.tsx
-import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
-import * as stylex12 from "@stylexjs/stylex";
+import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl, cn as cn11 } from "@hraness/ui";
+import * as stylex11 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
-import { useEffect as useEffect8, useRef as useRef5, useSyncExternalStore as useSyncExternalStore2 } from "react";
+import { useEffect as useEffect5, useRef as useRef4, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
 // src/react/theme-resolution.ts
 function resolveEffectiveTheme(forcedTheme, resolvedTheme) {
@@ -5403,7 +4351,7 @@ var themeStyles = {
 };
 
 // src/react/theme.tsx
-import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx13, jsxs as jsxs11, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
@@ -5420,7 +4368,7 @@ function PersistedThemeNormalizer() {
     setTheme,
     theme
   } = useTheme();
-  useEffect8(() => {
+  useEffect5(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
@@ -5434,7 +4382,7 @@ function PortalThemeBridge({
     resolvedTheme
   } = useTheme();
   const portalTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-  return /* @__PURE__ */ jsx15(DesignPortalThemeProvider, {
+  return /* @__PURE__ */ jsx13(DesignPortalThemeProvider, {
     theme: portalTheme,
     children
   });
@@ -5445,9 +4393,9 @@ function DesignThemeProvider({
   nonce,
   storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs13(Fragment2, {
+  return /* @__PURE__ */ jsxs11(Fragment2, {
     children: [
-      forcedTheme === undefined ? /* @__PURE__ */ jsx15("script", {
+      forcedTheme === undefined ? /* @__PURE__ */ jsx13("script", {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -5457,7 +4405,7 @@ function DesignThemeProvider({
         },
         suppressHydrationWarning: true
       }) : null,
-      /* @__PURE__ */ jsxs13(NextThemeProvider, {
+      /* @__PURE__ */ jsxs11(NextThemeProvider, {
         ...nonce === undefined ? {} : {
           nonce
         },
@@ -5469,8 +4417,8 @@ function DesignThemeProvider({
         storageKey,
         themes: [...concreteThemes],
         children: [
-          forcedTheme === undefined ? /* @__PURE__ */ jsx15(PersistedThemeNormalizer, {}) : null,
-          /* @__PURE__ */ jsx15(PortalThemeBridge, {
+          forcedTheme === undefined ? /* @__PURE__ */ jsx13(PersistedThemeNormalizer, {}) : null,
+          /* @__PURE__ */ jsx13(PortalThemeBridge, {
             forcedTheme,
             children
           })
@@ -5495,7 +4443,7 @@ function themeToggleItems(labels) {
   }];
 }
 function themeToggleIcon(id) {
-  return /* @__PURE__ */ jsx15(AppearanceIcon2, {
+  return /* @__PURE__ */ jsx13(AppearanceIcon2, {
     name: id
   });
 }
@@ -5536,7 +4484,7 @@ function ThemeToggle({
   const resolvedPresentation = presentation ?? (display === undefined ? "menu" : "segmented");
   const resolvedDisplay = display ?? "icons";
   const items = resolvedDisplay === "icons" ? themeToggleIconItems(labels) : themeToggleItems(labels);
-  const presentationStyles = stylex12.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
+  const presentationStyles = stylex11.props(themeStyles.root, resolvedPresentation === "menu" && themeStyles.menuRoot, !ready && themeStyles.notReady);
   const changeTheme = (nextTheme) => {
     if (controlled)
       onChange?.(nextTheme);
@@ -5544,7 +4492,7 @@ function ThemeToggle({
       setTheme(nextTheme);
   };
   const currentLabel = themeToggleLabel(value, labels);
-  return /* @__PURE__ */ jsx15("div", {
+  return /* @__PURE__ */ jsx13("div", {
     ...presentationStyles,
     "aria-busy": !ready || undefined,
     className: cn11("hraness-design-theme-toggle", presentationStyles.className, className),
@@ -5554,9 +4502,9 @@ function ThemeToggle({
     "data-presentation": resolvedPresentation,
     "data-ready": ready ? "true" : "false",
     "data-theme-value": value,
-    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs13(MenuTrigger, {
+    children: resolvedPresentation === "menu" ? /* @__PURE__ */ jsxs11(MenuTrigger, {
       children: [
-        /* @__PURE__ */ jsx15(IconButton3, {
+        /* @__PURE__ */ jsx13(IconButton3, {
           "aria-label": `${ariaLabel}: ${currentLabel}`,
           controlClassName: "hraness-design-theme-toggle__trigger",
           controlXstyle: themeStyles.trigger,
@@ -5565,7 +4513,7 @@ function ThemeToggle({
           tooltip: `${ariaLabel}: ${currentLabel}`,
           children: themeToggleIcon(value)
         }),
-        /* @__PURE__ */ jsx15(Menu, {
+        /* @__PURE__ */ jsx13(Menu, {
           "aria-label": ariaLabel,
           className: "hraness-design-theme-toggle__menu",
           disallowEmptySelection: true,
@@ -5578,7 +4526,7 @@ function ThemeToggle({
           selectedKeys: [value],
           selectionMode: "single",
           xstyle: themeStyles.menu,
-          children: designThemes.map((id) => /* @__PURE__ */ jsx15(MenuItem, {
+          children: designThemes.map((id) => /* @__PURE__ */ jsx13(MenuItem, {
             className: "hraness-design-theme-toggle__item",
             "data-theme-value": id,
             id,
@@ -5589,7 +4537,7 @@ function ThemeToggle({
           }, id))
         })
       ]
-    }) : /* @__PURE__ */ jsx15(SegmentedControl2, {
+    }) : /* @__PURE__ */ jsx13(SegmentedControl, {
       "aria-label": ariaLabel,
       isDisabled: !ready,
       items,
@@ -5599,14 +4547,14 @@ function ThemeToggle({
     })
   });
 }
-function ThemeMenuButton(props13) {
+function ThemeMenuButton(props12) {
   const palette = useDesignPalette();
   if (palette !== null)
-    return /* @__PURE__ */ jsx15(DesignPaletteMenuButton, {
-      ...props13
+    return /* @__PURE__ */ jsx13(DesignPaletteMenuButton, {
+      ...props12
     });
-  return /* @__PURE__ */ jsx15(ThemeToggle, {
-    ...props13,
+  return /* @__PURE__ */ jsx13(ThemeToggle, {
+    ...props12,
     presentation: "menu"
   });
 }
@@ -5624,16 +4572,16 @@ function ThemeColorSync({
     resolvedTheme
   } = useTheme();
   const effectiveTheme = resolveEffectiveTheme(forcedTheme, resolvedTheme);
-  const registrationId = useRef5(Symbol("hraness-design-theme-color"));
-  const registration = useRef5(null);
+  const registrationId = useRef4(Symbol("hraness-design-theme-color"));
+  const registration = useRef4(null);
   const resolvedColor = palette !== null ? metaName !== "theme-color" && palette.ready ? palette.background : undefined : effectiveTheme !== undefined ? themeColorFor(effectiveTheme, {
     dark: darkColor,
     light: lightColor
   }) : undefined;
   const hasResolvedColor = resolvedColor !== undefined;
-  const latestColor = useRef5(resolvedColor);
+  const latestColor = useRef4(resolvedColor);
   latestColor.current = resolvedColor;
-  useEffect8(() => {
+  useEffect5(() => {
     if (!hasResolvedColor || latestColor.current === undefined)
       return;
     const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
@@ -5644,7 +4592,7 @@ function ThemeColorSync({
       current.release();
     };
   }, [hasResolvedColor, metaName]);
-  useEffect8(() => {
+  useEffect5(() => {
     if (resolvedColor !== undefined)
       registration.current?.update(resolvedColor);
   }, [resolvedColor]);
@@ -5652,53 +4600,179 @@ function ThemeColorSync({
 }
 
 // src/react/route-state.tsx
-import { jsx as jsx16, jsxs as jsxs14, Fragment as Fragment3 } from "react/jsx-runtime";
-function RouteActions({
-  children
-}) {
-  const presentation = stylex13.props(routeStateStyles.row);
-  return /* @__PURE__ */ jsx16("div", {
-    ...presentation,
-    className: cn12("hraness-design-route-state__actions", presentation.className),
-    children
-  });
-}
-function RouteNotFoundPage({
+import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
+var lowerHeading = {
+  h1: "h2",
+  h2: "h3",
+  h3: "h4",
+  h4: "h5",
+  h5: "h6"
+};
+function StatusPage({
+  announce = true,
+  autoFocus = true,
   canvasAs = "main",
+  onRetry,
   showThemeToggle = false,
-  titleAs = "h1"
-} = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
-  return /* @__PURE__ */ jsxs14(PageCanvas, {
-    as: canvasAs,
-    className: cn12("hraness-design-route-state", rootPresentation.className),
+  titleAs = "h1",
+  ...content
+}) {
+  const page = resolveStatusPage(content);
+  const rootRef = useRef5(null);
+  const focusId = `${useId3()}-status`;
+  const error = page.kind === "error";
+  const notFound = page.kind === "not-found";
+  const routes = notFound ? statusPageRoutesAttribute(page.routes) : undefined;
+  const Root = canvasAs;
+  const Title = titleAs;
+  const NextHeading = lowerHeading[titleAs];
+  const headerPresentation = stylex12.props(routeStateStyles.header);
+  useEffect6(() => {
+    const root = rootRef.current;
+    if (!root)
+      return;
+    return attachStatusPage(root);
+  }, [routes]);
+  useEffect6(() => {
+    if (error && autoFocus)
+      rootRef.current?.focus();
+  }, [autoFocus, error]);
+  return /* @__PURE__ */ jsxs12(Root, {
+    "aria-label": error ? page.title : undefined,
+    "aria-live": error && announce ? "assertive" : undefined,
+    className: "hraness-status-page",
+    "data-hraness-status-routes": routes,
+    "data-kind": page.kind,
+    id: error ? focusId : undefined,
+    ref: rootRef,
+    tabIndex: error ? -1 : undefined,
     children: [
-      showThemeToggle ? /* @__PURE__ */ jsx16("header", {
+      showThemeToggle ? /* @__PURE__ */ jsx14("header", {
         ...headerPresentation,
         className: cn12("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
+        children: /* @__PURE__ */ jsx14(ThemeMenuButton, {})
       }) : null,
-      /* @__PURE__ */ jsx16("div", {
-        ...contentPresentation,
-        className: cn12("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx16(EmptyState, {
-          action: /* @__PURE__ */ jsx16(LinkButton2, {
-            href: "/",
-            variant: "primary",
-            children: "Return home"
-          }),
-          description: "The address may be out of date, or this page may have moved.",
-          icon: /* @__PURE__ */ jsx16("span", {
+      /* @__PURE__ */ jsxs12("div", {
+        className: "hraness-status-page__inner",
+        children: [
+          /* @__PURE__ */ jsxs12("div", {
             "aria-hidden": "true",
-            children: "404"
+            className: "hraness-status-page__code",
+            children: [
+              /* @__PURE__ */ jsx14("span", {
+                className: "hraness-status-page__glyph",
+                children: page.glyph
+              }),
+              /* @__PURE__ */ jsx14("canvas", {
+                className: "hraness-status-page__field"
+              })
+            ]
           }),
-          title: "Page not found",
-          titleAs
-        })
+          /* @__PURE__ */ jsx14(Title, {
+            className: "hraness-status-page__title",
+            children: page.title
+          }),
+          /* @__PURE__ */ jsx14("p", {
+            className: "hraness-status-page__summary",
+            children: page.summary
+          }),
+          notFound ? /* @__PURE__ */ jsxs12("p", {
+            className: "hraness-status-page__hint",
+            hidden: true,
+            children: [
+              STATUS_PAGE_HINT_PREFIX,
+              " ",
+              /* @__PURE__ */ jsx14("a", {
+                className: "hraness-status-page__hint-link",
+                href: "/"
+              }),
+              "?"
+            ]
+          }) : null,
+          /* @__PURE__ */ jsxs12("div", {
+            className: "hraness-status-page__actions",
+            children: [
+              onRetry ? /* @__PURE__ */ jsxs12(Fragment3, {
+                children: [
+                  /* @__PURE__ */ jsx14("button", {
+                    className: "hraness-status-page__action hraness-foil",
+                    "data-emphasis": "primary",
+                    "data-foil": "",
+                    onClick: onRetry,
+                    type: "button",
+                    children: "Try again"
+                  }),
+                  /* @__PURE__ */ jsx14("a", {
+                    className: "hraness-status-page__action",
+                    href: page.primaryAction.href,
+                    children: page.primaryAction.label
+                  })
+                ]
+              }) : /* @__PURE__ */ jsx14("a", {
+                className: "hraness-status-page__action hraness-foil",
+                "data-emphasis": "primary",
+                "data-foil": "",
+                href: page.primaryAction.href,
+                children: page.primaryAction.label
+              }),
+              /* @__PURE__ */ jsx14("a", {
+                className: "hraness-status-page__back",
+                hidden: true,
+                href: "/",
+                children: STATUS_PAGE_BACK_LABEL
+              })
+            ]
+          }),
+          page.next.length === 0 ? null : /* @__PURE__ */ jsxs12("nav", {
+            "aria-labelledby": STATUS_PAGE_NEXT_HEADING_ID,
+            className: "hraness-status-page__next",
+            children: [
+              /* @__PURE__ */ jsx14(NextHeading, {
+                className: "hraness-status-page__next-heading",
+                id: STATUS_PAGE_NEXT_HEADING_ID,
+                children: page.nextHeading
+              }),
+              /* @__PURE__ */ jsx14("ul", {
+                className: "hraness-status-page__next-list",
+                children: page.next.map((link, index) => /* @__PURE__ */ jsx14("li", {
+                  children: /* @__PURE__ */ jsxs12("a", {
+                    className: "hraness-status-page__next-link",
+                    href: link.href,
+                    children: [
+                      /* @__PURE__ */ jsx14("span", {
+                        className: "hraness-status-page__next-label",
+                        children: link.label
+                      }),
+                      link.description === undefined ? null : /* @__PURE__ */ jsx14("span", {
+                        className: "hraness-status-page__next-description",
+                        children: link.description
+                      })
+                    ]
+                  })
+                }, `${String(index)}:${link.href}`))
+              })
+            ]
+          }),
+          page.agentIndexHref === undefined ? null : /* @__PURE__ */ jsxs12("p", {
+            className: "hraness-status-page__agent",
+            children: [
+              STATUS_PAGE_AGENT_PREFIX,
+              " ",
+              /* @__PURE__ */ jsx14("a", {
+                href: page.agentIndexHref,
+                children: page.agentIndexHref
+              })
+            ]
+          })
+        ]
       })
     ]
+  });
+}
+function RouteNotFoundPage(props13 = {}) {
+  return /* @__PURE__ */ jsx14(StatusPage, {
+    ...props13,
+    kind: "not-found"
   });
 }
 function RouteErrorPage({
@@ -5706,103 +4780,69 @@ function RouteErrorPage({
   autoFocus = true,
   canvasAs = "main",
   error,
+  homeHref = "/",
   reset,
   showThemeToggle = false,
+  siteName,
   titleAs = "h1"
 }) {
-  const focusId = `${useId3()}-route-error`;
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const headerPresentation = stylex13.props(routeStateStyles.header);
-  const contentPresentation = stylex13.props(routeStateStyles.content);
-  useEffect9(() => {
-    if (autoFocus)
-      document.getElementById(focusId)?.focus();
-  }, [autoFocus, error, focusId]);
-  return /* @__PURE__ */ jsxs14(PageCanvas, {
-    "aria-label": "This view could not load",
-    "aria-live": announce ? "assertive" : undefined,
-    as: canvasAs,
-    className: cn12("hraness-design-route-state", rootPresentation.className),
-    id: focusId,
-    tabIndex: -1,
-    children: [
-      showThemeToggle ? /* @__PURE__ */ jsx16("header", {
-        ...headerPresentation,
-        className: cn12("hraness-design-route-state__header", headerPresentation.className),
-        children: /* @__PURE__ */ jsx16(ThemeMenuButton, {})
-      }) : null,
-      /* @__PURE__ */ jsx16("div", {
-        ...contentPresentation,
-        className: cn12("hraness-design-route-state__content", contentPresentation.className),
-        children: /* @__PURE__ */ jsx16(EmptyState, {
-          action: /* @__PURE__ */ jsxs14(RouteActions, {
-            children: [
-              /* @__PURE__ */ jsx16(Button4, {
-                onPress: reset,
-                variant: "primary",
-                children: "Try again"
-              }),
-              /* @__PURE__ */ jsx16(LinkButton2, {
-                href: "/",
-                children: "Return home"
-              })
-            ]
-          }),
-          description: "Retry this view, or return home and continue from there.",
-          icon: /* @__PURE__ */ jsx16("span", {
-            "aria-hidden": "true",
-            children: "!"
-          }),
-          title: "This view could not load",
-          titleAs
-        })
-      })
-    ]
-  });
+  return /* @__PURE__ */ jsx14(StatusPage, {
+    announce,
+    autoFocus,
+    canvasAs,
+    kind: "error",
+    onRetry: reset,
+    primaryAction: {
+      href: homeHref,
+      label: siteName ? `Go to ${siteName}` : "Return home"
+    },
+    showThemeToggle,
+    titleAs
+  }, error.digest ?? error.message);
 }
 function RouteLoadingPage({
   announce = true,
   canvasAs = "main"
 } = {}) {
-  const rootPresentation = stylex13.props(routeStateStyles.root);
-  const loadingPresentation = stylex13.props(routeStateStyles.loading);
-  const titlePresentation = stylex13.props(routeStateStyles.row);
-  const skeletonPresentation = stylex13.props(routeStateStyles.skeletons);
-  return /* @__PURE__ */ jsx16(PageCanvas, {
+  const rootPresentation = stylex12.props(routeStateStyles.root);
+  const loadingPresentation = stylex12.props(routeStateStyles.loading);
+  const titlePresentation = stylex12.props(routeStateStyles.row);
+  const skeletonPresentation = stylex12.props(routeStateStyles.skeletons);
+  return /* @__PURE__ */ jsx14(PageCanvas, {
     "aria-busy": announce ? "true" : undefined,
     as: canvasAs,
     className: cn12("hraness-design-route-state", rootPresentation.className),
-    children: /* @__PURE__ */ jsxs14("section", {
+    children: /* @__PURE__ */ jsxs12("section", {
       ...loadingPresentation,
       className: cn12("hraness-design-route-state__loading", loadingPresentation.className),
       role: announce ? "status" : undefined,
       children: [
-        /* @__PURE__ */ jsxs14("div", {
+        /* @__PURE__ */ jsxs12("div", {
           ...titlePresentation,
           className: cn12("hraness-design-route-state__loading-title", titlePresentation.className),
           children: [
-            /* @__PURE__ */ jsx16(Spinner2, {}),
-            /* @__PURE__ */ jsx16("strong", {
+            /* @__PURE__ */ jsx14(Spinner2, {}),
+            /* @__PURE__ */ jsx14("strong", {
               children: "Loading page"
             })
           ]
         }),
-        /* @__PURE__ */ jsxs14("div", {
+        /* @__PURE__ */ jsxs12("div", {
           ...skeletonPresentation,
           "aria-hidden": "true",
           className: cn12("hraness-design-route-state__skeletons", skeletonPresentation.className),
           children: [
-            /* @__PURE__ */ jsx16(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "1rem",
               isText: true,
               width: "88%"
             }),
-            /* @__PURE__ */ jsx16(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "1rem",
               isText: true,
               width: "64%"
             }),
-            /* @__PURE__ */ jsx16(Skeleton, {
+            /* @__PURE__ */ jsx14(Skeleton, {
               height: "8rem",
               width: "100%"
             })
@@ -5818,52 +4858,52 @@ function GlobalErrorDocument({
   diagnostics,
   lightColor = colors.light.background,
   theme = defaultDesignTheme,
-  ...props14
+  ...props13
 }) {
-  const content = /* @__PURE__ */ jsxs14(Fragment3, {
+  const content = /* @__PURE__ */ jsxs12(Fragment3, {
     children: [
       diagnostics,
-      /* @__PURE__ */ jsx16(RouteErrorPage, {
-        ...props14,
+      /* @__PURE__ */ jsx14(RouteErrorPage, {
+        ...props13,
         showThemeToggle: false
       })
     ]
   });
-  return /* @__PURE__ */ jsxs14("html", {
+  return /* @__PURE__ */ jsxs12("html", {
     "data-theme": theme === "system" ? "light" : theme,
     lang: "en",
     suppressHydrationWarning: true,
     children: [
-      /* @__PURE__ */ jsxs14("head", {
+      /* @__PURE__ */ jsxs12("head", {
         children: [
-          /* @__PURE__ */ jsx16("meta", {
+          /* @__PURE__ */ jsx14("meta", {
             content: theme === "system" ? "light dark" : theme,
             name: "color-scheme"
           }),
-          theme === "system" ? /* @__PURE__ */ jsxs14(Fragment3, {
+          theme === "system" ? /* @__PURE__ */ jsxs12(Fragment3, {
             children: [
-              /* @__PURE__ */ jsx16("meta", {
+              /* @__PURE__ */ jsx14("meta", {
                 content: lightColor,
                 media: "(prefers-color-scheme: light)",
                 name: "theme-color"
               }),
-              /* @__PURE__ */ jsx16("meta", {
+              /* @__PURE__ */ jsx14("meta", {
                 content: darkColor,
                 media: "(prefers-color-scheme: dark)",
                 name: "theme-color"
               })
             ]
-          }) : /* @__PURE__ */ jsx16("meta", {
+          }) : /* @__PURE__ */ jsx14("meta", {
             content: theme === "dark" ? darkColor : lightColor,
             name: "theme-color"
           })
         ]
       }),
-      /* @__PURE__ */ jsx16("body", {
+      /* @__PURE__ */ jsx14("body", {
         className: bodyClassName,
-        children: theme === "system" ? /* @__PURE__ */ jsxs14(DesignThemeProvider, {
+        children: theme === "system" ? /* @__PURE__ */ jsxs12(DesignThemeProvider, {
           children: [
-            /* @__PURE__ */ jsx16(ThemeColorSync, {
+            /* @__PURE__ */ jsx14(ThemeColorSync, {
               darkColor,
               lightColor
             }),
@@ -5873,6 +4913,1833 @@ function GlobalErrorDocument({
       })
     ]
   });
+}
+
+// src/react/production-data-preview-notice.tsx
+import * as stylex13 from "@stylexjs/stylex";
+
+// src/react/production-data-preview-notice.stylex.ts
+var productionDataPreviewNoticeStyles = {
+  emphasis: {
+    k63SB2: "x1yotnlr",
+    kb6lSQ: "x1vyo3qp",
+    kP9fke: "xtvhhri",
+    $$css: true
+  },
+  root: {
+    kGNEyG: "x6s0dn4",
+    kWkggS: "x1gq7pca",
+    ku1ltF: "x1fdtg7e",
+    kHypHr: "x1u7o2vf",
+    kKwaWg: "x18o3ruo",
+    kl9DO0: "x12koezg",
+    k1YJky: "x1y4qj14",
+    kz484i: "x182nak8",
+    kgSjnq: "x1cwfr1t",
+    k4V0xq: "x1djed8t",
+    krFJ6x: "xn5uptl",
+    kP1A0P: "xhjnd2s",
+    kGVxlE: "xlmpfgd",
+    kMwMTN: "xam1lc8",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kMv6JI: "xumcc2o",
+    kGuDYH: "xj8twjj",
+    kOIVth: "x5kxhqv",
+    kUvb1J: "xlb5a52",
+    kjj79g: "xl56j7k",
+    kLWn49: "x1xfvgam",
+    kAzted: "xe8gcm",
+    k8WAf4: "x2d8rr9",
+    kg3NbH: "x1yt8f57",
+    kVAEAm: "x7wzq59",
+    k9WMMc: "x2b8uid",
+    kzqmXN: "xh8yej3",
+    kY2c9j: "x1qhe1ue",
+    $$css: true
+  }
+};
+
+// src/react/production-data-preview-notice.tsx
+import { jsx as jsx15, jsxs as jsxs13 } from "react/jsx-runtime";
+function ProductionDataPreviewNotice({
+  surfaceOrigin
+}) {
+  if (surfaceOrigin === undefined || surfaceOrigin === "")
+    return null;
+  const noticePresentation = stylex13.props(productionDataPreviewNoticeStyles.root);
+  const emphasisPresentation = stylex13.props(productionDataPreviewNoticeStyles.emphasis);
+  return /* @__PURE__ */ jsxs13("aside", {
+    ...noticePresentation,
+    "aria-label": "Production data preview warning",
+    className: `hraness-design-production-data-preview-notice ${noticePresentation.className}`,
+    role: "alert",
+    children: [
+      /* @__PURE__ */ jsx15("strong", {
+        ...emphasisPresentation,
+        children: "Production data preview"
+      }),
+      /* @__PURE__ */ jsx15("span", {
+        children: "This preview uses production data. Actions are real and affect production."
+      })
+    ]
+  });
+}
+
+// src/react/relative-time.tsx
+import { useEffect as useEffect7, useState as useState4 } from "react";
+import { createElement as createElement2 } from "react";
+var maximumTimeout = 2147483647;
+var autoDelays = {
+  second: 1000,
+  minute: 15000,
+  hour: 60000,
+  day: 3600000,
+  week: 3600000,
+  month: 3600000,
+  year: 3600000
+};
+function parseRefresh(value) {
+  if (value === undefined)
+    return "auto";
+  if (value === "auto" || value === "off")
+    return value;
+  if (typeof value === "number" && Number.isInteger(value) && value >= 1000 && value <= maximumTimeout)
+    return value;
+  throw new RangeError(`RelativeTime refreshInterval must be "auto", "off", or whole milliseconds from 1000 to ${maximumTimeout}.`);
+}
+function absoluteFormatter(locale) {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "long"
+  });
+}
+function RelativeTime({
+  locale,
+  now,
+  numeric,
+  refreshInterval,
+  value,
+  ...timeProps
+}) {
+  const instant = parseRelativeTimeInput(value, "RelativeTime value");
+  const refresh = parseRefresh(refreshInterval);
+  const time = instant.getTime();
+  const [clock, setClock] = useState4(null);
+  useEffect7(() => {
+    setClock(Date.now());
+    if (refresh === "off")
+      return;
+    let timer;
+    const schedule = () => {
+      const delay = typeof refresh === "number" ? refresh : autoDelays[resolveRelativeTime(time - Date.now()).unit];
+      timer = setTimeout(() => {
+        setClock(Date.now());
+        schedule();
+      }, delay);
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, [refresh, time]);
+  const mounted = clock !== null;
+  const reference = refresh === "off" && now !== undefined ? now : clock ?? now ?? Date.now();
+  const text = formatRelativeTime(instant, {
+    now: reference,
+    ...locale === undefined ? {} : {
+      locale
+    },
+    ...numeric === undefined ? {} : {
+      numeric
+    }
+  });
+  return /* @__PURE__ */ createElement2("time", {
+    ...timeProps,
+    dateTime: instant.toISOString(),
+    key: mounted ? "client" : "server",
+    suppressHydrationWarning: true,
+    title: absoluteFormatter(locale).format(instant)
+  }, text);
+}
+
+// src/react/design-gallery.tsx
+import { jsx as jsx16, jsxs as jsxs14 } from "react/jsx-runtime";
+var designGallerySections = [{
+  id: "foundation",
+  label: "Foundation"
+}, {
+  id: "paper-theme",
+  label: "Paper theme"
+}, {
+  id: "lantern",
+  label: "Lantern"
+}, {
+  id: "marketing",
+  label: "Marketing"
+}, {
+  id: "articles",
+  label: "Articles"
+}, {
+  id: "status-pages",
+  label: "Status pages"
+}, {
+  id: "shells",
+  label: "Shells"
+}, {
+  id: "data",
+  label: "Data"
+}, {
+  id: "effects",
+  label: "Effects"
+}, {
+  id: "syntax",
+  label: "Syntax"
+}];
+var designGalleryTouchKinds = ["button", "link", "radio", "range"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "relative time", "status pages", "syntax highlighting"];
+var designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
+var relativeTimeExamples = [{
+  id: "seconds",
+  value: designGalleryRelativeTimeNow - 12000
+}, {
+  id: "minutes",
+  value: designGalleryRelativeTimeNow - 5 * 60000
+}, {
+  id: "hours",
+  value: designGalleryRelativeTimeNow + 23 * 3600000
+}, {
+  id: "months",
+  value: designGalleryRelativeTimeNow - 62 * 86400000
+}];
+function resolveGalleryTheme(theme, prefersDark) {
+  return theme === "system" ? prefersDark ? "dark" : "light" : theme;
+}
+var barData = [{
+  id: "alpha",
+  label: "Alpha",
+  value: 72,
+  detail: "72 requests"
+}, {
+  id: "beta",
+  label: "Beta",
+  value: 48,
+  detail: "48 requests"
+}, {
+  id: "gamma",
+  label: "Gamma",
+  value: 31,
+  detail: "31 requests"
+}];
+var rangeData = [{
+  id: "north",
+  label: "North",
+  minimum: 24,
+  median: 51,
+  maximum: 78
+}, {
+  id: "south",
+  label: "South",
+  minimum: 38,
+  median: 64,
+  maximum: 82
+}];
+var foilDeckExamples = [{
+  label: "Corner frame",
+  ornament: "corners",
+  preset: "prism"
+}, {
+  label: "Rail frame",
+  ornament: "rails",
+  preset: "etched"
+}, {
+  label: "Circuit frame",
+  ornament: "circuit",
+  preset: "fast"
+}, {
+  label: "Radial frame",
+  ornament: "radial",
+  preset: "aurora"
+}, {
+  label: "Facet frame",
+  ornament: "facets",
+  preset: "max"
+}];
+function DesignSystemGallery({
+  isNestedInMain = false
+}) {
+  const [density, setDensity] = useState5("default");
+  const [chatDraft, setChatDraft] = useState5("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState5("");
+  const [faderValue, setFaderValue] = useState5(64);
+  const [playbackStatus, setPlaybackStatus] = useState5("idle");
+  const Root = isNestedInMain ? "div" : "main";
+  return /* @__PURE__ */ jsxs14(Root, {
+    className: "design-gallery",
+    "data-design-gallery": "public",
+    "data-design-gallery-nested": isNestedInMain ? "true" : "false",
+    children: [
+      /* @__PURE__ */ jsxs14("header", {
+        className: "design-gallery__intro",
+        children: [
+          /* @__PURE__ */ jsx16(Badge, {
+            tone: "info",
+            children: "@hraness/design-kit"
+          }),
+          /* @__PURE__ */ jsx16("h1", {
+            children: "Presentation and composition reference"
+          }),
+          /* @__PURE__ */ jsx16("p", {
+            children: "Portable controls come from @hraness/ui. This package adds application shells, charts, effects, syntax, and haptics."
+          }),
+          /* @__PURE__ */ jsx16("p", {
+            children: "System follows your device on the first visit. Choosing Light, Dark, or System saves that preference."
+          }),
+          /* @__PURE__ */ jsx16(WrappingRow, {
+            children: /* @__PURE__ */ jsx16(SegmentedControl2, {
+              "aria-label": "Gallery density",
+              items: [{
+                id: "compact",
+                label: "Compact"
+              }, {
+                id: "default",
+                label: "Default"
+              }],
+              onChange: setDensity,
+              size: "compact",
+              value: density
+            })
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "foundation",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Foundation boundary"
+          }),
+          /* @__PURE__ */ jsx16(ProductionDataPreviewNotice, {
+            surfaceOrigin: "https://preview.example.test"
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__grid",
+            children: [
+              /* @__PURE__ */ jsxs14(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs14(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx16(CardTitle, {
+                        children: "Portable control"
+                      }),
+                      /* @__PURE__ */ jsx16(CardDescription, {
+                        children: "Rendered directly by @hraness/ui."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16(CardContent, {
+                    children: /* @__PURE__ */ jsxs14(WrappingRow, {
+                      children: [
+                        /* @__PURE__ */ jsx16(Button3, {
+                          variant: "primary",
+                          children: "Primary action"
+                        }),
+                        /* @__PURE__ */ jsx16(LinkButton, {
+                          href: "#shells",
+                          children: "Open shells"
+                        }),
+                        /* @__PURE__ */ jsx16(Tag, {
+                          variant: "outline",
+                          children: "public core"
+                        })
+                      ]
+                    })
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsxs14(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs14(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx16(CardTitle, {
+                        children: "Typography roles"
+                      }),
+                      /* @__PURE__ */ jsx16(CardDescription, {
+                        children: "Nebula Sans for proportional text; mono stays explicit."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16(CardContent, {
+                    children: /* @__PURE__ */ jsxs14("div", {
+                      className: "design-gallery__type-specimen",
+                      children: [
+                        /* @__PURE__ */ jsx16("p", {
+                          "data-gallery-font": "proportional",
+                          children: "Nebula Sans sets both headings and body text."
+                        }),
+                        /* @__PURE__ */ jsx16("code", {
+                          "data-gallery-font": "mono",
+                          children: 'const role = "mono";'
+                        })
+                      ]
+                    })
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsxs14(Card, {
+                children: [
+                  /* @__PURE__ */ jsxs14(CardHeader, {
+                    children: [
+                      /* @__PURE__ */ jsx16(CardTitle, {
+                        children: "Provider marks"
+                      }),
+                      /* @__PURE__ */ jsx16(CardDescription, {
+                        children: "Vendored agent and vendor artwork on accent-tinted tiles."
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16(CardContent, {
+                    children: /* @__PURE__ */ jsxs14(WrappingRow, {
+                      children: [
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "claudecode",
+                          label: "Claude Code",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "codex",
+                          label: "Codex",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "opencode",
+                          label: "opencode",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "crush",
+                          label: "Crush",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "aider",
+                          label: "Aider",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "goose",
+                          label: "Goose",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "gemini",
+                          label: "Gemini",
+                          size: 40
+                        }),
+                        /* @__PURE__ */ jsx16(ProviderMark, {
+                          mark: "nvidia",
+                          label: "NVIDIA",
+                          size: 40
+                        })
+                      ]
+                    })
+                  })
+                ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            "aria-label": "Plain site link presentation",
+            className: "design-gallery__plain-theme plain-site plain-publication",
+            children: [
+              /* @__PURE__ */ jsx16("header", {
+                className: "plain-header",
+                children: /* @__PURE__ */ jsxs14("div", {
+                  className: "plain-header__inner",
+                  "data-layout": "responsive-wrap",
+                  children: [
+                    /* @__PURE__ */ jsx16("a", {
+                      className: "plain-wordmark",
+                      href: "#foundation",
+                      children: "project-name.example"
+                    }),
+                    /* @__PURE__ */ jsxs14("nav", {
+                      "aria-label": "Plain site example",
+                      className: "plain-nav",
+                      children: [
+                        /* @__PURE__ */ jsx16("a", {
+                          href: "#foundation",
+                          children: "Articles"
+                        }),
+                        /* @__PURE__ */ jsx16("a", {
+                          href: "#shells",
+                          children: "About"
+                        })
+                      ]
+                    })
+                  ]
+                })
+              }),
+              /* @__PURE__ */ jsx16("div", {
+                className: "plain-page",
+                children: /* @__PURE__ */ jsxs14("p", {
+                  className: "design-gallery__plain-link-example",
+                  children: [
+                    "Ordinary ",
+                    /* @__PURE__ */ jsx16("a", {
+                      href: "#foundation",
+                      children: "blue links"
+                    }),
+                    " stay quiet until interaction."
+                  ]
+                })
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "paper-theme",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Paper theme"
+          }),
+          /* @__PURE__ */ jsx16("p", {
+            children: "Import paper-theme.css to share warm neutral colors and compact typography without replacing layouts or saved appearance choices."
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__paper",
+            "data-hraness-theme": "paper",
+            "data-theme": "light",
+            children: [
+              /* @__PURE__ */ jsx16(MarketingSiteHeader, {
+                brand: "Light paper",
+                brandHref: "#paper-theme",
+                links: [{
+                  href: "#foundation",
+                  label: "Foundation"
+                }],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx16(TopBar, {
+                surface: "glass",
+                title: "Glass application header",
+                "data-gallery-glass-top-bar": ""
+              }),
+              /* @__PURE__ */ jsx16("h3", {
+                children: "Light paper"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: "Headers blur scrolling content and become opaque when reduced transparency is preferred."
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: /* @__PURE__ */ jsx16("a", {
+                  className: "design-gallery__paper-link",
+                  href: "#foundation",
+                  children: "Read about the foundation"
+                })
+              }),
+              /* @__PURE__ */ jsx16(Button3, {
+                variant: "primary",
+                children: "Create note"
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__paper",
+            "data-hraness-theme": "paper",
+            "data-theme": "dark",
+            children: [
+              /* @__PURE__ */ jsx16(MarketingSiteHeader, {
+                brand: "Dark paper",
+                brandHref: "#paper-theme",
+                links: [{
+                  href: "#foundation",
+                  label: "Foundation"
+                }],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx16(TopBar, {
+                surface: "glass",
+                title: "Glass application header",
+                "data-gallery-glass-top-bar": ""
+              }),
+              /* @__PURE__ */ jsx16("h3", {
+                children: "Dark paper"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: "The same header treatment follows an explicit dark preference."
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: /* @__PURE__ */ jsx16("a", {
+                  className: "design-gallery__paper-link",
+                  href: "#foundation",
+                  children: "Read about the foundation"
+                })
+              }),
+              /* @__PURE__ */ jsx16(Button3, {
+                variant: "primary",
+                children: "Open notes"
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx16(LanternMaterialGallery, {}),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "marketing",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Product-marketing grammar"
+          }),
+          /* @__PURE__ */ jsxs14(MarketingPage, {
+            className: "design-gallery__marketing",
+            children: [
+              /* @__PURE__ */ jsx16(MarketingSiteHeader, {
+                action: {
+                  href: "#gallery-install",
+                  label: "Install Relay"
+                },
+                brand: "Relay",
+                sticky: false,
+                links: [{
+                  current: true,
+                  href: "#marketing",
+                  label: "How it works"
+                }, {
+                  href: "#gallery-install",
+                  label: "Install"
+                }, {
+                  href: "#shells",
+                  label: "Docs"
+                }]
+              }),
+              /* @__PURE__ */ jsxs14(MarketingMain, {
+                children: [
+                  /* @__PURE__ */ jsx16(ProductHero, {
+                    actions: [{
+                      href: "#gallery-install",
+                      label: "Install Relay"
+                    }, {
+                      href: "#shells",
+                      label: "See the workspace"
+                    }],
+                    boundary: "Free for local use on macOS and Linux · version 1.2.3",
+                    className: "design-gallery__marketing-hero",
+                    example: "Ask your agent to run the nightly job and show you the log.",
+                    eyebrow: "A reference developer tool",
+                    facts: [{
+                      detail: "Any Git checkout.",
+                      label: "Input",
+                      value: "Repository"
+                    }, {
+                      detail: "Plain JSON you can read.",
+                      label: "Output",
+                      value: "Run log"
+                    }, {
+                      detail: "Terminal or TypeScript.",
+                      label: "Interfaces",
+                      value: "CLI + SDK"
+                    }],
+                    factsColumns: 3,
+                    frame: /* @__PURE__ */ jsx16(MarketingProofFrame, {
+                      caption: "The log written by the example job.",
+                      credit: "Captured 5 September 2026",
+                      title: "relay run job-01",
+                      children: /* @__PURE__ */ jsx16("pre", {
+                        className: "design-gallery__marketing-command",
+                        children: /* @__PURE__ */ jsx16(SyntaxCode, {
+                          code: '{"status":"complete","job":"job-01","durationMs":412}',
+                          styles: "classes"
+                        })
+                      })
+                    }),
+                    heading: "Run a job from your terminal, your code, or your agent",
+                    headingId: "design-gallery-marketing-title",
+                    headingLevel: 3,
+                    name: "Relay",
+                    notice: /* @__PURE__ */ jsx16("p", {
+                      "data-gallery-marketing-slot": "notice",
+                      children: "This example release runs locally."
+                    }),
+                    summary: "Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingPillars, {
+                    ariaLabel: "Relay in three points",
+                    columns: 3,
+                    pillars: [{
+                      label: "No hosted service",
+                      summary: "Jobs run on your machine and never wait on a server."
+                    }, {
+                      label: "A log for every run",
+                      summary: "Open it to see what went in, what came out, and when."
+                    }, {
+                      label: "Your files stay put",
+                      summary: "Source files and credentials never leave your machine."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsxs14(MarketingInstallPanel, {
+                    eyebrow: "Local release",
+                    heading: "Install Relay and run your first job.",
+                    headingId: "design-gallery-install-title",
+                    headingLevel: 3,
+                    id: "gallery-install",
+                    note: /* @__PURE__ */ jsx16("p", {
+                      "data-gallery-marketing-slot": "note",
+                      children: "Requires Bun 1.3.14."
+                    }),
+                    children: [
+                      /* @__PURE__ */ jsx16("pre", {
+                        className: "design-gallery__marketing-command",
+                        children: /* @__PURE__ */ jsx16(SyntaxCode, {
+                          code: "bun add --global relay@1.2.3",
+                          styles: "classes"
+                        })
+                      }),
+                      /* @__PURE__ */ jsx16(MarketingFlow, {
+                        ariaLabel: "First Relay job",
+                        steps: [{
+                          code: "relay init",
+                          detail: "Create a workspace.",
+                          label: "Initialize"
+                        }, {
+                          code: "relay run job-01",
+                          detail: "Run a job by name.",
+                          label: "Run"
+                        }, {
+                          code: "relay inspect job-01",
+                          detail: "Read its log.",
+                          label: "Inspect"
+                        }]
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingPrimitives, {
+                    heading: "Three objects cover most work.",
+                    headingId: "design-gallery-primitives-title",
+                    headingLevel: 3,
+                    items: [{
+                      label: "Jobs",
+                      summary: "A named task with declared inputs and outputs."
+                    }, {
+                      label: "Logs",
+                      summary: "The record of one run, readable by people and agents."
+                    }, {
+                      label: "Schedules",
+                      summary: "Run a job on a schedule without a separate daemon."
+                    }],
+                    label: "Primitives",
+                    summary: "People and agents use the same three objects, so a job you start by hand is one an agent can rerun."
+                  }),
+                  /* @__PURE__ */ jsxs14(MarketingSection, {
+                    heading: "A job keeps its name everywhere.",
+                    headingId: "gallery-marketing-section",
+                    headingLevel: 3,
+                    label: "Workflow",
+                    layout: "split-reverse",
+                    summary: "Start it from the CLI and check on it from code; both see the same job.",
+                    children: [
+                      /* @__PURE__ */ jsx16(MarketingSectionLabel, {
+                        size: "body",
+                        children: "Reference"
+                      }),
+                      /* @__PURE__ */ jsxs14("p", {
+                        children: [
+                          "Consumer-owned content can include ",
+                          /* @__PURE__ */ jsx16("a", {
+                            href: "#gallery-install",
+                            children: "links"
+                          }),
+                          " and ",
+                          /* @__PURE__ */ jsx16("code", {
+                            children: "inline code"
+                          }),
+                          "."
+                        ]
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingInterfaceGrid, {
+                    heading: "Choose your interface.",
+                    headingId: "gallery-marketing-interfaces",
+                    headingLevel: 3,
+                    label: "Interfaces",
+                    interfaces: [{
+                      label: "CLI",
+                      summary: "Run a named job.",
+                      example: /* @__PURE__ */ jsx16("pre", {
+                        children: /* @__PURE__ */ jsx16("code", {
+                          children: "relay run job-01"
+                        })
+                      })
+                    }, {
+                      label: "SDK",
+                      summary: "Use typed application code."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingCardRow, {
+                    ariaLabel: "Release radar",
+                    cards: [{
+                      art: /* @__PURE__ */ jsx16("svg", {
+                        "aria-hidden": "true",
+                        viewBox: "0 0 24 24",
+                        width: "24",
+                        height: "24",
+                        children: /* @__PURE__ */ jsx16("circle", {
+                          cx: "12",
+                          cy: "12",
+                          r: "8"
+                        })
+                      }),
+                      href: "#marketing",
+                      title: "Grok 4.7",
+                      meta: "First observed 21 September 2026."
+                    }, {
+                      art: /* @__PURE__ */ jsx16("svg", {
+                        "aria-hidden": "true",
+                        viewBox: "0 0 24 24",
+                        width: "24",
+                        height: "24",
+                        children: /* @__PURE__ */ jsx16("rect", {
+                          x: "4",
+                          y: "4",
+                          width: "16",
+                          height: "16",
+                          rx: "4"
+                        })
+                      }),
+                      href: "#gallery-install",
+                      title: "GLM 5.3 Flash",
+                      meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingTrustBoundary, {
+                    heading: "What leaves your machine.",
+                    headingId: "gallery-marketing-trust",
+                    headingLevel: 3,
+                    label: "Boundary",
+                    items: [{
+                      label: "Stays local",
+                      detail: "Source files and credentials."
+                    }, {
+                      label: "Shared",
+                      detail: "Only the logs you choose to sync."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingStatStrip, {
+                    ariaLabel: "Relay usage",
+                    columns: 3,
+                    source: "Counted from the public example repository on 5 September 2026.",
+                    stats: [{
+                      label: "Example jobs",
+                      value: "12"
+                    }, {
+                      label: "Interfaces",
+                      detail: "CLI, SDK, Agent Skill",
+                      value: "3"
+                    }, {
+                      label: "Accounts required",
+                      value: "0"
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingQuoteGrid, {
+                    heading: "From the people building with it.",
+                    headingId: "design-gallery-quotes-title",
+                    headingLevel: 3,
+                    label: "Quotes",
+                    quotes: [{
+                      name: "A. Example",
+                      quote: "A placeholder quote for the gallery only. Product sites render real, attributed quotes or none.",
+                      role: "@example"
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingPricing, {
+                    heading: "Free for local use.",
+                    headingId: "design-gallery-pricing-title",
+                    headingLevel: 3,
+                    label: "Pricing",
+                    plans: [{
+                      action: {
+                        href: "#gallery-install",
+                        label: "Install Relay"
+                      },
+                      emphasis: "primary",
+                      features: ["Every feature", "Unlimited local jobs", "All future updates"],
+                      name: "Local",
+                      period: "forever",
+                      price: "$0",
+                      summary: "Full-featured, with no trial or expiration."
+                    }, {
+                      action: {
+                        href: "#shells",
+                        label: "Read about sync"
+                      },
+                      features: ["Everything in Local", "Encrypted sync", "Priority email support"],
+                      name: "Sync",
+                      note: "Cancel any time.",
+                      period: "per year",
+                      price: "$49",
+                      summary: "Keep logs in step across your machines."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingQuestionList, {
+                    heading: "Questions before installing.",
+                    headingId: "design-gallery-questions-title",
+                    headingLevel: 3,
+                    label: "Questions",
+                    questions: [{
+                      answer: /* @__PURE__ */ jsx16("p", {
+                        children: "No. The local workflow works without one."
+                      }),
+                      question: "Does it require an account?"
+                    }, {
+                      answer: /* @__PURE__ */ jsx16("p", {
+                        children: "Nothing leaves your machine unless you turn on sync."
+                      }),
+                      question: "Does it phone home?"
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingRelated, {
+                    groups: [{
+                      heading: "Sibling tools",
+                      headingId: "design-gallery-related-tools",
+                      items: [{
+                        href: "#gallery-install",
+                        name: "Ledger",
+                        role: "Long-term storage for run logs"
+                      }, {
+                        href: "#marketing",
+                        name: "Index",
+                        role: "A local search index"
+                      }]
+                    }, {
+                      heading: "Shared infrastructure",
+                      headingId: "design-gallery-related-infra",
+                      items: [{
+                        href: "#marketing",
+                        name: "Relay",
+                        role: "The shared job runner"
+                      }],
+                      summary: "The runner the other tools depend on."
+                    }],
+                    heading: "Related tools.",
+                    headingId: "design-gallery-related-title",
+                    headingLevel: 3,
+                    label: "Related",
+                    summary: "Each is a separate release. Its card says how it works with Relay."
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingMaker, {
+                    heading: "Who builds Relay",
+                    headingId: "design-gallery-maker-title",
+                    headingLevel: 3,
+                    label: "Built by",
+                    linkClassName: "design-gallery__maker-link",
+                    links: [{
+                      href: "#marketing",
+                      label: "Personal site"
+                    }],
+                    children: /* @__PURE__ */ jsx16("p", {
+                      children: "A short, plain-words bio: who made it, what they did before, where they are, and why this product exists."
+                    })
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingCallToAction, {
+                    actions: [{
+                      href: "#gallery-install",
+                      label: "Install Relay"
+                    }],
+                    footnote: "Free for local use on macOS and Linux.",
+                    heading: "Start with one job.",
+                    headingId: "design-gallery-cta-title",
+                    headingLevel: 3
+                  }),
+                  /* @__PURE__ */ jsxs14("div", {
+                    className: "design-gallery__foil-note",
+                    children: [
+                      /* @__PURE__ */ jsxs14("p", {
+                        children: [
+                          "Metallic wordmarks and exact-shape marks share a restrained rainbow reflection. Wordmarks use",
+                          " ",
+                          /* @__PURE__ */ jsx16("code", {
+                            children: ".hraness-foil-text"
+                          }),
+                          ", primary calls to action use ",
+                          /* @__PURE__ */ jsx16("code", {
+                            children: ".hraness-foil"
+                          }),
+                          ", and ",
+                          /* @__PURE__ */ jsx16("code", {
+                            children: "attachFoil"
+                          }),
+                          " eases the pointer inputs on ",
+                          /* @__PURE__ */ jsx16("code", {
+                            children: "data-foil"
+                          }),
+                          " targets."
+                        ]
+                      }),
+                      /* @__PURE__ */ jsxs14("p", {
+                        className: "design-gallery__foil-row",
+                        children: [
+                          /* @__PURE__ */ jsxs14("a", {
+                            className: foilClassName("text", "design-gallery__foil-wordmark"),
+                            "data-foil": "",
+                            href: "#marketing",
+                            children: [
+                              /* @__PURE__ */ jsx16(FoilMark, {
+                                src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' d='M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z'/%3E%3C/svg%3E"
+                              }),
+                              " Relay"
+                            ]
+                          }),
+                          /* @__PURE__ */ jsx16("a", {
+                            className: foilClassName("surface", "design-gallery__foil-action"),
+                            "data-foil": "",
+                            href: "#gallery-install",
+                            children: "Install Relay"
+                          })
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx16(MarketingPage, {
+            preset: "editorial",
+            className: "design-gallery__marketing-preset",
+            children: /* @__PURE__ */ jsx16(MarketingField, {
+              children: /* @__PURE__ */ jsx16(ProductHero, {
+                name: "Relay",
+                heading: "Run a job from your terminal, your code, or your agent",
+                headingId: "gallery-editorial-title",
+                headingLevel: 3,
+                summary: "The editorial preset sets a serif display heading on a textured field.",
+                actions: [{
+                  href: "#gallery-minimal-title",
+                  label: "See the compact preset"
+                }]
+              })
+            })
+          }),
+          /* @__PURE__ */ jsxs14(MarketingPage, {
+            preset: "minimal",
+            className: "design-gallery__marketing-preset",
+            children: [
+              /* @__PURE__ */ jsx16(MarketingSiteHeader, {
+                brand: "Relay",
+                brandHref: "#marketing",
+                links: [],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx16(ProductHero, {
+                name: "Relay",
+                heading: "A quieter public page.",
+                headingId: "gallery-minimal-title",
+                headingLevel: 3,
+                summary: "The same shared system, with compact sans headings and a plain surface."
+              }),
+              /* @__PURE__ */ jsx16(MarketingSiteFooter, {
+                brand: /* @__PURE__ */ jsx16("svg", {
+                  "aria-hidden": "true",
+                  viewBox: "0 0 24 24",
+                  children: /* @__PURE__ */ jsx16("path", {
+                    d: "M4 4h16v16H4z",
+                    fill: "currentColor"
+                  })
+                }),
+                brandHref: "#marketing",
+                brandLabel: "Relay home",
+                links: [{
+                  href: "#marketing",
+                  label: "Marketing"
+                }],
+                name: "Relay"
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "articles",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Article layer"
+          }),
+          /* @__PURE__ */ jsxs14(MarketingArticle, {
+            after: /* @__PURE__ */ jsx16(ArticleSources, {
+              headingId: "gallery-article-sources",
+              sources: [{
+                checkedOn: "2026-09-20",
+                href: "#articles",
+                publisher: "Relay",
+                title: "Relay 2.4 release notes"
+              }]
+            }),
+            author: {
+              kind: "organization",
+              name: "Hraness"
+            },
+            dek: "Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed.",
+            eyebrow: "Technique",
+            heading: "Replaying webhooks without breaking signatures",
+            headingId: "gallery-article-title",
+            provenance: {
+              drafting: "ai-from-source",
+              review: {
+                reviewer: "an independent AI editorial review",
+                reviewerType: "ai"
+              }
+            },
+            published: "2026-09-10",
+            toc: [{
+              href: "#gallery-article-problem",
+              label: "The problem"
+            }, {
+              href: "#gallery-article-approach",
+              label: "The approach"
+            }],
+            updated: "2026-09-20",
+            children: [
+              /* @__PURE__ */ jsx16("h2", {
+                id: "gallery-article-problem",
+                children: "The problem"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: "A provider signs the exact request body. Parsing the JSON and serializing it again changes whitespace and key order, and the signature check then fails on every retry."
+              }),
+              /* @__PURE__ */ jsx16(ArticleCallout, {
+                label: "Limit",
+                tone: "limit",
+                children: "This applies to providers that sign the raw body. Header-only schemes need no stored copy."
+              }),
+              /* @__PURE__ */ jsx16("h2", {
+                id: "gallery-article-approach",
+                children: "The approach"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: "Store the body as bytes next to the parsed event, and send those bytes on replay."
+              }),
+              /* @__PURE__ */ jsx16("pre", {
+                children: /* @__PURE__ */ jsx16("code", {
+                  children: "await replay(event.id, { body: stored.raw });"
+                })
+              }),
+              /* @__PURE__ */ jsxs14("figure", {
+                children: [
+                  /* @__PURE__ */ jsxs14("table", {
+                    children: [
+                      /* @__PURE__ */ jsx16("thead", {
+                        children: /* @__PURE__ */ jsxs14("tr", {
+                          children: [
+                            /* @__PURE__ */ jsx16("th", {
+                              scope: "col",
+                              children: "Step"
+                            }),
+                            /* @__PURE__ */ jsx16("th", {
+                              scope: "col",
+                              children: "Stored"
+                            }),
+                            /* @__PURE__ */ jsx16("th", {
+                              scope: "col",
+                              children: "Sent on replay"
+                            })
+                          ]
+                        })
+                      }),
+                      /* @__PURE__ */ jsxs14("tbody", {
+                        children: [
+                          /* @__PURE__ */ jsxs14("tr", {
+                            children: [
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "Receive"
+                              }),
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "Raw body and headers"
+                              }),
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "Nothing"
+                              })
+                            ]
+                          }),
+                          /* @__PURE__ */ jsxs14("tr", {
+                            children: [
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "Retry"
+                              }),
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "Attempt count"
+                              }),
+                              /* @__PURE__ */ jsx16("td", {
+                                children: "The stored raw body"
+                              })
+                            ]
+                          })
+                        ]
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx16("figcaption", {
+                    children: "What Relay keeps for each delivery, and what a replay sends."
+                  })
+                ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx16(ArticleIndex, {
+            heading: "Recent writing",
+            headingId: "gallery-article-index",
+            headingLevel: 3,
+            items: [{
+              dek: "Relay replays a failed webhook from the stored request body.",
+              eyebrow: "Technique",
+              href: "#gallery-article-title",
+              published: "2026-09-10",
+              title: "Replaying webhooks without breaking signatures",
+              updated: "2026-09-20"
+            }, {
+              dek: "Relay 2.4 adds per-endpoint retry limits.",
+              eyebrow: "Release",
+              href: "#articles",
+              published: "2026-09-02",
+              title: "Relay 2.4 adds per-endpoint retry limits"
+            }]
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "hraness-prose",
+            children: [
+              /* @__PURE__ */ jsx16("h3", {
+                children: "Shared reading scale"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: 'The `.hraness-prose` grammar carries the shared `--hraness-type-*` scale to docs and guide surfaces that do not run the publication shell. Headings step up on wide windows and a serif face opts in with `data-hraness-reading-face="serif"`.'
+              }),
+              /* @__PURE__ */ jsx16("h4", {
+                children: "Section spacing"
+              }),
+              /* @__PURE__ */ jsx16("p", {
+                children: "Sections separate on the shared space token; subsections tighten to the subsection space and small heads keep the text face."
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "status-pages",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Status pages"
+          }),
+          /* @__PURE__ */ jsx16("p", {
+            children: "One page for missing addresses and recoverable errors. It leads with the product's main action, offers the closest known page for a mistyped link, and lists at most three places to start. Move the pointer over the glyph, or click it."
+          }),
+          /* @__PURE__ */ jsx16(ViewportFrame, {
+            className: "design-gallery__status-preview",
+            children: /* @__PURE__ */ jsx16(StatusPage, {
+              agentIndexHref: "/llms.txt",
+              canvasAs: "div",
+              next: [{
+                description: "What the product does, in one minute.",
+                href: "#status-pages",
+                label: "How it works"
+              }, {
+                description: "Set it up on your own machine.",
+                href: "#status-pages",
+                label: "Docs"
+              }],
+              primaryAction: {
+                href: "#status-pages",
+                label: "Start a project"
+              },
+              routes: [{
+                href: "/docs/getting-started",
+                label: "Getting started"
+              }],
+              siteName: "Example",
+              titleAs: "h3"
+            })
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "shells",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Application shells"
+          }),
+          /* @__PURE__ */ jsx16(ViewportFrame, {
+            className: "design-gallery__shell-preview",
+            children: /* @__PURE__ */ jsx16(AppShell, {
+              bottomBar: /* @__PURE__ */ jsx16(BottomBar, {
+                actions: /* @__PURE__ */ jsx16("span", {
+                  children: "Synced"
+                }),
+                "data-gallery-layout-bottom-bar": "",
+                leading: /* @__PURE__ */ jsx16("span", {
+                  children: "Ready"
+                }),
+                children: "Reference footer"
+              }),
+              navigationKey: "gallery",
+              rail: /* @__PURE__ */ jsx16(NavigationRail, {
+                children: /* @__PURE__ */ jsxs14(RailSection, {
+                  title: "Workspace",
+                  children: [
+                    /* @__PURE__ */ jsx16(RailItem, {
+                      href: "#foundation",
+                      icon: /* @__PURE__ */ jsx16(Icon3, {
+                        icon: DashboardSquare01Icon
+                      }),
+                      isActive: true,
+                      label: "Overview"
+                    }),
+                    /* @__PURE__ */ jsx16(RailItem, {
+                      href: "#data",
+                      icon: /* @__PURE__ */ jsx16(Icon3, {
+                        icon: Chart01Icon
+                      }),
+                      label: "Data"
+                    }),
+                    /* @__PURE__ */ jsx16(RailItem, {
+                      href: "#syntax",
+                      icon: /* @__PURE__ */ jsx16(Icon3, {
+                        icon: CodeIcon
+                      }),
+                      label: "Syntax"
+                    })
+                  ]
+                })
+              }),
+              topBar: /* @__PURE__ */ jsx16(TopBar, {
+                "data-gallery-layout-top-bar": "",
+                title: "Reference workspace"
+              }),
+              children: /* @__PURE__ */ jsx16(PageCanvas, {
+                as: "div",
+                "data-gallery-layout-page-canvas": "",
+                children: /* @__PURE__ */ jsx16(AnimatedRailStage, {
+                  className: "design-gallery__animated-rail-stage",
+                  stageKey: density,
+                  children: /* @__PURE__ */ jsxs14(DitherSurface, {
+                    as: "section",
+                    "data-gallery-dither": "",
+                    density: density === "compact" ? "fine" : "medium",
+                    tone: "card",
+                    children: [
+                      /* @__PURE__ */ jsxs14("h3", {
+                        children: [
+                          density === "compact" ? "Compact" : "Default",
+                          " composition"
+                        ]
+                      }),
+                      /* @__PURE__ */ jsx16("p", {
+                        children: "The route body changes while persistent navigation remains in place."
+                      })
+                    ]
+                  })
+                })
+              })
+            })
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__docked-footer-preview",
+            "data-gallery-layout-docked-frame": "",
+            children: [
+              /* @__PURE__ */ jsx16("p", {
+                children: "Docked commands remain inside their positioning owner."
+              }),
+              /* @__PURE__ */ jsx16(DockedFooter, {
+                "data-gallery-layout-docked-footer": "",
+                density: "compact",
+                position: "absolute",
+                children: "Reference commands"
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "data",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Data and instrument compositions"
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__grid",
+            children: [
+              /* @__PURE__ */ jsx16(BarListChart, {
+                "aria-label": "Example request volume",
+                data: barData
+              }),
+              /* @__PURE__ */ jsx16(RangePlotChart, {
+                "aria-label": "Example regional ranges",
+                data: rangeData
+              }),
+              /* @__PURE__ */ jsxs14("div", {
+                className: "design-gallery__instrument",
+                children: [
+                  /* @__PURE__ */ jsx16(Fader, {
+                    "aria-label": "Example level",
+                    className: "design-gallery__vertical-fader",
+                    "data-gallery-fader": "vertical",
+                    density: "default",
+                    label: "Level",
+                    labelAccessory: /* @__PURE__ */ jsx16("span", {
+                      "data-gallery-fader-accessory": "",
+                      children: "dB"
+                    }),
+                    maxValue: 100,
+                    minValue: 0,
+                    onChange: setFaderValue,
+                    showLabel: true,
+                    showOutput: true,
+                    value: faderValue
+                  }),
+                  /* @__PURE__ */ jsx16(Fader, {
+                    "aria-label": "Example horizontal level",
+                    className: "design-gallery__horizontal-fader",
+                    "data-gallery-fader": "horizontal",
+                    density: "compact",
+                    label: "Horizontal level",
+                    maxValue: 100,
+                    minValue: 0,
+                    onChange: setFaderValue,
+                    orientation: "horizontal",
+                    showLabel: true,
+                    showOutput: true,
+                    value: faderValue
+                  }),
+                  /* @__PURE__ */ jsx16(Slider, {
+                    label: "Balance",
+                    maxValue: 100,
+                    minValue: 0,
+                    value: 50
+                  }),
+                  /* @__PURE__ */ jsx16(PlaybackTransport, {
+                    "aria-label": "Preview transport",
+                    buttonAriaKeyShortcuts: "Space",
+                    buttonId: "design-gallery-playback-command",
+                    className: "design-gallery__playback-transport",
+                    onPlay: () => setPlaybackStatus("playing"),
+                    onStop: () => setPlaybackStatus("idle"),
+                    status: playbackStatus
+                  })
+                ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__chat",
+            "data-gallery-chat": "",
+            "data-gallery-chat-submission": chatSubmission,
+            children: [
+              /* @__PURE__ */ jsx16(ChatMessage, {
+                actions: /* @__PURE__ */ jsx16(Button3, {
+                  variant: "quiet",
+                  children: "Copy response"
+                }),
+                avatar: /* @__PURE__ */ jsx16("span", {
+                  "aria-hidden": "true",
+                  className: "design-gallery__chat-avatar",
+                  children: "AI"
+                }),
+                className: "design-gallery__chat-message",
+                meta: /* @__PURE__ */ jsx16(RelativeTime, {
+                  locale: "en-US",
+                  now: designGalleryRelativeTimeNow,
+                  refreshInterval: "off",
+                  value: designGalleryRelativeTimeNow
+                }),
+                name: "Assistant",
+                role: "assistant",
+                children: /* @__PURE__ */ jsx16("p", {
+                  children: "A complete message keeps its ordinary article and slot semantics."
+                })
+              }),
+              /* @__PURE__ */ jsx16(ChatMessage, {
+                role: "user",
+                children: /* @__PURE__ */ jsx16("p", {
+                  children: "Responsive composition belongs to the extracted package recipe."
+                })
+              }),
+              /* @__PURE__ */ jsx16(ChatComposer, {
+                action: "/gallery-chat-submit",
+                "aria-label": "Gallery message composer",
+                className: "design-gallery__chat-composer",
+                onSubmit: () => {
+                  setChatSubmission(chatDraft);
+                  setChatDraft("");
+                },
+                onValueChange: setChatDraft,
+                placeholder: "Write a message",
+                sendLabel: "Send message",
+                value: chatDraft
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx16("ul", {
+            "aria-label": "Relative time examples",
+            className: "design-gallery__relative-times",
+            "data-gallery-relative-time": "",
+            children: relativeTimeExamples.map(({
+              id,
+              value
+            }) => /* @__PURE__ */ jsx16("li", {
+              children: /* @__PURE__ */ jsx16(RelativeTime, {
+                "data-gallery-relative-time-example": id,
+                locale: "en-US",
+                now: designGalleryRelativeTimeNow,
+                refreshInterval: "off",
+                value
+              })
+            }, id))
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "effects",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Decorative effects"
+          }),
+          /* @__PURE__ */ jsx16(FoilCardDeck, {
+            "aria-label": "Delegated foil ornament examples",
+            className: "design-gallery__foil-deck",
+            children: foilDeckExamples.map((example) => /* @__PURE__ */ jsx16(FoilCardSurface, {
+              className: "design-gallery__foil-example",
+              intensity: "standard",
+              ornament: example.ornament,
+              preset: example.preset,
+              renderMode: "interactive",
+              seed: `public-gallery-foil-${example.ornament}`,
+              children: /* @__PURE__ */ jsxs14("article", {
+                className: "design-gallery__foil-card",
+                children: [
+                  /* @__PURE__ */ jsx16(Tag, {
+                    variant: "outline",
+                    children: example.label
+                  }),
+                  /* @__PURE__ */ jsxs14("div", {
+                    children: [
+                      /* @__PURE__ */ jsx16("h3", {
+                        children: "Semantic card content"
+                      }),
+                      /* @__PURE__ */ jsx16("p", {
+                        children: "One deck controller decorates ordinary articles."
+                      })
+                    ]
+                  })
+                ]
+              })
+            }, example.ornament))
+          }),
+          /* @__PURE__ */ jsxs14("div", {
+            className: "design-gallery__effect",
+            children: [
+              /* @__PURE__ */ jsx16(AuroraDotsBackground, {}),
+              /* @__PURE__ */ jsx16(ProceduralBackdrop, {
+                seed: "public-gallery",
+                variant: "composite"
+              }),
+              /* @__PURE__ */ jsxs14("div", {
+                className: "design-gallery__effect-copy",
+                children: [
+                  /* @__PURE__ */ jsx16("h3", {
+                    children: "Semantic content stays ordinary DOM"
+                  }),
+                  /* @__PURE__ */ jsx16("p", {
+                    children: "Decorative paint is pointer-transparent and removable in forced colors."
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsxs14("section", {
+        className: "design-gallery__section",
+        id: "syntax",
+        children: [
+          /* @__PURE__ */ jsx16("h2", {
+            children: "Server syntax"
+          }),
+          /* @__PURE__ */ jsx16("pre", {
+            className: "design-gallery__syntax",
+            children: /* @__PURE__ */ jsx16(SyntaxCode, {
+              code: `import { AppShell } from "@hraness/design-kit/react";
+
+export const shell = <AppShell rail={null}>Content</AppShell>;`,
+              styles: "classes"
+            })
+          })
+        ]
+      })
+    ]
+  });
+}
+// src/react/haptics.ts
+import { useCallback as useCallback2, useEffect as useEffect8 } from "react";
+var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
+function isHapticBrowserEnvironment(environment = globalThis) {
+  return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
+}
+function hapticInputForFeedback(feedback) {
+  switch (feedback) {
+    case "error":
+      return "error";
+    case "press":
+      return "medium";
+    case "selection":
+      return "selection";
+    case "success":
+      return "success";
+    case "warning":
+      return "warning";
+  }
+}
+function hasCustomEventConstructor(candidate) {
+  return typeof candidate === "object" && candidate !== null && "CustomEvent" in candidate && typeof candidate.CustomEvent === "function";
+}
+function hasEventDispatcher(candidate) {
+  return typeof candidate === "object" && candidate !== null && "dispatchEvent" in candidate && typeof candidate.dispatchEvent === "function";
+}
+function dispatchHapticFeedbackEvent(environment, detail) {
+  if (!hasCustomEventConstructor(environment.window) || !hasEventDispatcher(environment.document))
+    return;
+  try {
+    environment.document.dispatchEvent(new environment.window.CustomEvent(HAPTIC_FEEDBACK_EVENT_NAME, {
+      detail
+    }));
+  } catch {}
+}
+function cancelAndDestroy(candidate) {
+  try {
+    candidate.cancel();
+  } catch {}
+  try {
+    candidate.destroy();
+  } catch {}
+}
+function createHapticFeedbackController(environment, loadModule) {
+  let engine = null;
+  let enginePromise = null;
+  let engineGeneration = 0;
+  const loadEngine = async () => {
+    if (!isHapticBrowserEnvironment(environment))
+      return null;
+    if (engine !== null)
+      return engine;
+    if (enginePromise !== null)
+      return enginePromise;
+    const generation = engineGeneration;
+    const pendingEngine = loadModule().then(({
+      WebHaptics
+    }) => {
+      if (!isHapticBrowserEnvironment(environment))
+        return null;
+      const candidate = new WebHaptics({
+        debug: false,
+        showSwitch: false
+      });
+      if (generation !== engineGeneration) {
+        cancelAndDestroy(candidate);
+        return null;
+      }
+      engine = candidate;
+      return candidate;
+    }).catch(() => null);
+    enginePromise = pendingEngine;
+    pendingEngine.finally(() => {
+      if (enginePromise === pendingEngine)
+        enginePromise = null;
+    });
+    return pendingEngine;
+  };
+  return {
+    cancel() {
+      if (engine === null)
+        return false;
+      try {
+        engine.cancel();
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    dispose() {
+      engineGeneration += 1;
+      const activeEngine = engine;
+      engine = null;
+      enginePromise = null;
+      if (activeEngine !== null)
+        cancelAndDestroy(activeEngine);
+    },
+    async prepare() {
+      return await loadEngine() !== null;
+    },
+    async trigger(feedback = "press") {
+      try {
+        const activeEngine = await loadEngine();
+        if (activeEngine === null)
+          return false;
+        const input = hapticInputForFeedback(feedback);
+        await activeEngine.trigger(input);
+        dispatchHapticFeedbackEvent(environment, {
+          feedback,
+          input
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    }
+  };
+}
+var browserHaptics = createHapticFeedbackController(globalThis, async () => {
+  const {
+    WebHaptics
+  } = await import("web-haptics");
+  return {
+    WebHaptics
+  };
+});
+async function prepareHapticFeedback() {
+  return await browserHaptics.prepare();
+}
+async function triggerHapticFeedback(feedback = "press") {
+  return await browserHaptics.trigger(feedback);
+}
+function cancelHapticFeedback() {
+  return browserHaptics.cancel();
+}
+function disposeHapticFeedback() {
+  browserHaptics.dispose();
+}
+function useHapticFeedback(enabled = true) {
+  useEffect8(() => {
+    if (enabled)
+      prepareHapticFeedback();
+  }, [enabled]);
+  return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
+}
+// src/react/keyboard-shortcuts.ts
+import { useEffect as useEffect9, useRef as useRef6 } from "react";
+var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
+var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
+function hasClosest(target) {
+  return target !== null && "closest" in target && typeof target.closest === "function";
+}
+function isKeyboardInteractionTarget(target) {
+  return hasClosest(target) && target.closest(interactiveTargetSelector) !== null;
+}
+function isKeyboardTextEntryTarget(target) {
+  return hasClosest(target) && target.closest(textEntryTargetSelector) !== null;
+}
+function normalizedKey(key) {
+  switch (key) {
+    case "Esc":
+      return "Escape";
+    case "Left":
+      return "ArrowLeft";
+    case "Right":
+      return "ArrowRight";
+    case "Up":
+      return "ArrowUp";
+    case "Down":
+      return "ArrowDown";
+    case "Space":
+    case "Spacebar":
+      return " ";
+    default:
+      return key.length === 1 ? key.toLocaleLowerCase("en-US") : key;
+  }
+}
+function matchesKeyboardShortcut(event, shortcut) {
+  return normalizedKey(event.key) === normalizedKey(shortcut.key) && event.altKey === (shortcut.altKey ?? false) && event.ctrlKey === (shortcut.ctrlKey ?? false) && event.metaKey === (shortcut.metaKey ?? false) && event.shiftKey === (shortcut.shiftKey ?? false);
+}
+function decideKeyboardShortcut(shortcuts, event, context = {}) {
+  if (context.isDisabled === true)
+    return {
+      kind: "ignore",
+      reason: "disabled"
+    };
+  if (event.defaultPrevented)
+    return {
+      kind: "ignore",
+      reason: "default-prevented"
+    };
+  if (event.isComposing)
+    return {
+      kind: "ignore",
+      reason: "composing"
+    };
+  let suppressedReason = null;
+  for (const [bindingIndex, shortcut] of shortcuts.entries()) {
+    if (shortcut.isDisabled === true || !matchesKeyboardShortcut(event, shortcut))
+      continue;
+    if (event.repeat && shortcut.allowRepeat !== true) {
+      suppressedReason ??= "repeat";
+      continue;
+    }
+    if (context.isEditableTarget === true && shortcut.allowWhenEditable !== true) {
+      suppressedReason ??= "editable-target";
+      continue;
+    }
+    if (context.isInteractiveTarget === true && context.isEditableTarget !== true && shortcut.allowWhenInteractive !== true && shortcut.allowWhenInteractiveTarget?.(context.target ?? null) !== true) {
+      suppressedReason ??= "interactive-target";
+      continue;
+    }
+    return {
+      bindingId: shortcut.id,
+      bindingIndex,
+      kind: "handle"
+    };
+  }
+  return {
+    kind: "ignore",
+    reason: suppressedReason ?? "no-match"
+  };
+}
+function isNode2(target) {
+  return target !== null && typeof Node !== "undefined" && target instanceof Node;
+}
+function useKeyboardShortcuts(bindings, options = {}) {
+  const latestRef = useRef6({
+    bindings,
+    isDisabled: options.isDisabled ?? false
+  });
+  latestRef.current = {
+    bindings,
+    isDisabled: options.isDisabled ?? false
+  };
+  const scopeRef = options.scopeRef;
+  useEffect9(() => {
+    const onKeyDown = (event) => {
+      if (scopeRef !== undefined) {
+        const scope = scopeRef.current;
+        if (scope === null || !isNode2(event.target) || !scope.contains(event.target))
+          return;
+      }
+      const current = latestRef.current;
+      const decision = decideKeyboardShortcut(current.bindings, event, {
+        isDisabled: current.isDisabled,
+        isEditableTarget: isKeyboardTextEntryTarget(event.target),
+        isInteractiveTarget: isKeyboardInteractionTarget(event.target),
+        target: event.target
+      });
+      if (decision.kind === "ignore")
+        return;
+      event.preventDefault();
+      current.bindings[decision.bindingIndex]?.onAction(event);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [scopeRef]);
 }
 // src/react/sticky-offset.tsx
 import { useEffect as useEffect10 } from "react";
@@ -6012,6 +6879,7 @@ export {
   ThemeColorSync,
   SyntaxCode,
   StickyOffsetSync,
+  StatusPage,
   RouteNotFoundPage,
   RouteLoadingPage,
   RouteErrorPage,

@@ -9,8 +9,10 @@ export const routeStateStyles = stylex.create({
   },
   header: {
     alignItems: "center",
+    alignSelf: "start",
     display: "flex",
     justifyContent: "flex-end",
+    justifySelf: "stretch",
     "min-inline-size": 0,
     padding: "var(--layout-chrome-inset)",
   },

@@ -42,6 +42,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",
+  "src/status-page.css",
   "src/styles.css",
   "src/syntax-highlighting.css",
   "src/tokens.css",
@@ -457,6 +458,7 @@ function requireAggregateContract(source: string): void {
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
     '@import "./reading.css";',
+    '@import "./status-page.css";',
     '@import "./product-marketing.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
@@ -487,6 +489,7 @@ function requireCompilerFoundationContract(source: string): void {
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
     '@import "./reading.css";',
+    '@import "./status-page.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
     '@import "./lantern-material.css";',
@@ -1605,8 +1608,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.20.0" },
-  "StyleX manifest must describe design-kit v0.20.0",
+  { name: "@hraness/design-kit", version: "0.21.0" },
+  "StyleX manifest must describe design-kit v0.21.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");

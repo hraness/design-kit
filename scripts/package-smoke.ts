@@ -815,6 +815,7 @@ const compilerStylesheetPaths = [
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",
+  "src/status-page.css",
   "src/styles.css",
   "src/syntax-highlighting.css",
   "src/tokens.css",
@@ -834,7 +835,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.20.0" },
+    { name: "@hraness/design-kit", version: "0.21.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -900,7 +901,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.20.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
+    "Design-kit v0.21.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -918,7 +919,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.20.0 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.21.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1529,6 +1530,7 @@ try {
     "MARKETING_PRESET.md",
     "MARKETING_COPY.md",
     "ARTICLE_COPY.md",
+    "STATUS_PAGES.md",
     "STYLE.md",
     "WRITING.md",
     "LANTERN_MATERIAL.md",

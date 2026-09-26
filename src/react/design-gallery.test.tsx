@@ -17,6 +17,7 @@ test("the public gallery covers the composition boundary", () => {
     "lantern",
     "marketing",
     "articles",
+    "status-pages",
     "shells",
     "data",
     "effects",
@@ -27,6 +28,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("article layer");
   expect(designGalleryRecipeCoverage).toContain("chat message and composer");
   expect(designGalleryRecipeCoverage).toContain("foil card surface");
+  expect(designGalleryRecipeCoverage).toContain("status pages");
   expect(designGalleryRecipeCoverage).not.toContain("Jelly presentation");
   expect(designGalleryRecipeCoverage).toContain("dither surface");
   expect(designGalleryRecipeCoverage).toContain("fader");

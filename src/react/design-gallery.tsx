@@ -38,6 +38,7 @@ import { LanternMaterialGallery } from "./lantern-material-gallery.js";
 import { NavigationRail, RailItem, RailSection } from "./navigation-rail.js";
 import { PlaybackTransport, type PlaybackTransportStatus } from "./playback-transport.js";
 import { ProceduralBackdrop } from "./procedural-backdrop.js";
+import { StatusPage } from "./route-state.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import { ProviderMark } from "./provider-mark.js";
 import { RelativeTime } from "./relative-time.js";
@@ -82,6 +83,7 @@ export const designGallerySections = [
   { id: "lantern", label: "Lantern" },
   { id: "marketing", label: "Marketing" },
   { id: "articles", label: "Articles" },
+  { id: "status-pages", label: "Status pages" },
   { id: "shells", label: "Shells" },
   { id: "data", label: "Data" },
   { id: "effects", label: "Effects" },
@@ -115,6 +117,7 @@ export const designGalleryRecipeCoverage = [
   "procedural effects",
   "production preview notice",
   "relative time",
+  "status pages",
   "syntax highlighting",
 ] as const;
 
@@ -615,6 +618,30 @@ export function DesignSystemGallery({
             subsection space and small heads keep the text face.
           </p>
         </div>
+      </section>
+
+      <section className="design-gallery__section" id="status-pages">
+        <h2>Status pages</h2>
+        <p>
+          One page for missing addresses and recoverable errors. It leads with the
+          product&apos;s main action, offers the closest known page for a mistyped
+          link, and lists at most three places to start. Move the pointer over the
+          glyph, or click it.
+        </p>
+        <ViewportFrame className="design-gallery__status-preview">
+          <StatusPage
+            agentIndexHref="/llms.txt"
+            canvasAs="div"
+            next={[
+              { description: "What the product does, in one minute.", href: "#status-pages", label: "How it works" },
+              { description: "Set it up on your own machine.", href: "#status-pages", label: "Docs" },
+            ]}
+            primaryAction={{ href: "#status-pages", label: "Start a project" }}
+            routes={[{ href: "/docs/getting-started", label: "Getting started" }]}
+            siteName="Example"
+            titleAs="h3"
+          />
+        </ViewportFrame>
       </section>
 
       <section className="design-gallery__section" id="shells">

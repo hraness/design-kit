@@ -87,7 +87,7 @@ export function assertArticleDates(dates: ArticleDates): void {
 /* Links, bylines, and provenance                                            */
 /* ------------------------------------------------------------------------ */
 
-const SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
+const SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?![/\\])|#|\.{1,2}\/|\?)/iu;
 
 /**
  * True when `href` holds a control character (Unicode category Cc: U+0000 to

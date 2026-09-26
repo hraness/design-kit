@@ -1,18 +1,25 @@
 "use client";
 
 import {
-  Button,
-  EmptyState,
-  LinkButton,
   Skeleton,
   Spinner,
   cn,
   type ContentHeadingLevel,
 } from "@hraness/ui";
 import * as stylex from "@stylexjs/stylex";
-import { useEffect, useId, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 
+import { attachStatusPage } from "../browser/status-page.js";
 import { colors } from "../index.js";
+import {
+  STATUS_PAGE_AGENT_PREFIX,
+  STATUS_PAGE_BACK_LABEL,
+  STATUS_PAGE_HINT_PREFIX,
+  STATUS_PAGE_NEXT_HEADING_ID,
+  resolveStatusPage,
+  statusPageRoutesAttribute,
+  type StatusPageContent,
+} from "../status-page.js";
 import { PageCanvas } from "./surfaces.js";
 import { routeStateStyles } from "./route-state.stylex.js";
 import {
@@ -22,6 +29,146 @@ import {
   ThemeColorSync,
   ThemeMenuButton,
 } from "./theme.js";
+
+type StatusHeadingLevel = Exclude<ContentHeadingLevel, "h6">;
+
+export interface StatusPageProps extends StatusPageContent {
+  readonly canvasAs?: "div" | "main";
+  /** Adds a standalone header menu; product layouts should normally own it. */
+  readonly showThemeToggle?: boolean;
+  readonly titleAs?: StatusHeadingLevel;
+  /** Error pages only: renders Try again as the primary action. */
+  readonly onRetry?: () => void;
+  /** Error pages only: moves focus to the page and announces it. */
+  readonly announce?: boolean;
+  readonly autoFocus?: boolean;
+}
+
+const lowerHeading: Readonly<Record<StatusHeadingLevel, ContentHeadingLevel>> = {
+  h1: "h2", h2: "h3", h3: "h4", h4: "h5", h5: "h6",
+};
+
+/**
+ * Shared full-page status composition: the 404 page and recoverable errors.
+ * Markup matches `renderStatusPageHtml`, styled by `status-page.css`; the
+ * browser enhancement adds the dot field, the closest-page hint, and Back.
+ */
+export function StatusPage({
+  announce = true,
+  autoFocus = true,
+  canvasAs = "main",
+  onRetry,
+  showThemeToggle = false,
+  titleAs = "h1",
+  ...content
+}: StatusPageProps) {
+  const page = resolveStatusPage(content);
+  const rootRef = useRef<HTMLElement>(null);
+  const focusId = `${useId()}-status`;
+  const error = page.kind === "error";
+  const notFound = page.kind === "not-found";
+  const routes = notFound ? statusPageRoutesAttribute(page.routes) : undefined;
+  const Root = canvasAs;
+  const Title = titleAs;
+  const NextHeading = lowerHeading[titleAs];
+  const headerPresentation = stylex.props(routeStateStyles.header);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    return attachStatusPage(root);
+  }, [routes]);
+  useEffect(() => {
+    if (error && autoFocus) rootRef.current?.focus();
+  }, [autoFocus, error]);
+
+  return (
+    <Root
+      aria-label={error ? page.title : undefined}
+      aria-live={error && announce ? "assertive" : undefined}
+      className="hraness-status-page"
+      data-hraness-status-routes={routes}
+      data-kind={page.kind}
+      id={error ? focusId : undefined}
+      ref={rootRef as never}
+      tabIndex={error ? -1 : undefined}
+    >
+      {showThemeToggle ? (
+        <header
+          {...headerPresentation}
+          className={cn("hraness-design-route-state__header", headerPresentation.className)}
+        >
+          <ThemeMenuButton />
+        </header>
+      ) : null}
+      <div className="hraness-status-page__inner">
+        <div aria-hidden="true" className="hraness-status-page__code">
+          <span className="hraness-status-page__glyph">{page.glyph}</span>
+          <canvas className="hraness-status-page__field" />
+        </div>
+        <Title className="hraness-status-page__title">{page.title}</Title>
+        <p className="hraness-status-page__summary">{page.summary}</p>
+        {notFound ? (
+          <p className="hraness-status-page__hint" hidden>
+            {STATUS_PAGE_HINT_PREFIX} <a className="hraness-status-page__hint-link" href="/" />?
+          </p>
+        ) : null}
+        <div className="hraness-status-page__actions">
+          {onRetry ? (
+            <>
+              <button
+                className="hraness-status-page__action hraness-foil"
+                data-emphasis="primary"
+                data-foil=""
+                onClick={onRetry}
+                type="button"
+              >
+                Try again
+              </button>
+              <a className="hraness-status-page__action" href={page.primaryAction.href}>
+                {page.primaryAction.label}
+              </a>
+            </>
+          ) : (
+            <a
+              className="hraness-status-page__action hraness-foil"
+              data-emphasis="primary"
+              data-foil=""
+              href={page.primaryAction.href}
+            >
+              {page.primaryAction.label}
+            </a>
+          )}
+          <a className="hraness-status-page__back" hidden href="/">{STATUS_PAGE_BACK_LABEL}</a>
+        </div>
+        {page.next.length === 0 ? null : (
+          <nav aria-labelledby={STATUS_PAGE_NEXT_HEADING_ID} className="hraness-status-page__next">
+            <NextHeading className="hraness-status-page__next-heading" id={STATUS_PAGE_NEXT_HEADING_ID}>
+              {page.nextHeading}
+            </NextHeading>
+            <ul className="hraness-status-page__next-list">
+              {page.next.map((link, index) => (
+                <li key={`${String(index)}:${link.href}`}>
+                  <a className="hraness-status-page__next-link" href={link.href}>
+                    <span className="hraness-status-page__next-label">{link.label}</span>
+                    {link.description === undefined ? null : (
+                      <span className="hraness-status-page__next-description">{link.description}</span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        {page.agentIndexHref === undefined ? null : (
+          <p className="hraness-status-page__agent">
+            {STATUS_PAGE_AGENT_PREFIX} <a href={page.agentIndexHref}>{page.agentIndexHref}</a>
+          </p>
+        )}
+      </div>
+    </Root>
+  );
+}
 
 export interface RouteErrorPageProps {
   /** Set false only for an already-visible, inert demonstration of this state. */
@@ -33,15 +180,13 @@ export interface RouteErrorPageProps {
   readonly reset: () => void;
   /** Adds a standalone header menu; product layouts should normally own it. */
   readonly showThemeToggle?: boolean;
-  readonly titleAs?: ContentHeadingLevel;
+  readonly titleAs?: StatusHeadingLevel;
+  /** Product name for the home action ("Go to Sponge"). */
+  readonly siteName?: string;
+  readonly homeHref?: string;
 }
 
-export interface RouteNotFoundPageProps {
-  readonly canvasAs?: "div" | "main";
-  /** Adds a standalone header menu; product layouts should normally own it. */
-  readonly showThemeToggle?: boolean;
-  readonly titleAs?: ContentHeadingLevel;
-}
+export type RouteNotFoundPageProps = Omit<StatusPageProps, "kind" | "onRetry" | "announce" | "autoFocus">;
 
 export interface RouteLoadingPageProps {
   /** Set false only for an already-visible, inert demonstration of this state. */
@@ -60,67 +205,9 @@ export interface GlobalErrorDocumentProps extends RouteErrorPageProps {
   readonly theme?: DesignTheme;
 }
 
-function RouteActions({ children }: Readonly<{ children: ReactNode }>) {
-  const presentation = stylex.props(routeStateStyles.row);
-  return (
-    <div
-      {...presentation}
-      className={cn(
-        "hraness-design-route-state__actions",
-        presentation.className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
-
 /** Shared root-segment 404 treatment for Next products. */
-export function RouteNotFoundPage({
-  canvasAs = "main",
-  showThemeToggle = false,
-  titleAs = "h1",
-}: RouteNotFoundPageProps = {}) {
-  const rootPresentation = stylex.props(routeStateStyles.root);
-  const headerPresentation = stylex.props(routeStateStyles.header);
-  const contentPresentation = stylex.props(routeStateStyles.content);
-
-  return (
-    <PageCanvas
-      as={canvasAs}
-      className={cn(
-        "hraness-design-route-state",
-        rootPresentation.className,
-      )}
-    >
-      {showThemeToggle ? (
-        <header
-          {...headerPresentation}
-          className={cn(
-            "hraness-design-route-state__header",
-            headerPresentation.className,
-          )}
-        >
-          <ThemeMenuButton />
-        </header>
-      ) : null}
-      <div
-        {...contentPresentation}
-        className={cn(
-          "hraness-design-route-state__content",
-          contentPresentation.className,
-        )}
-      >
-        <EmptyState
-          action={<LinkButton href="/" variant="primary">Return home</LinkButton>}
-          description="The address may be out of date, or this page may have moved."
-          icon={<span aria-hidden="true">404</span>}
-          title="Page not found"
-          titleAs={titleAs}
-        />
-      </div>
-    </PageCanvas>
-  );
+export function RouteNotFoundPage(props: RouteNotFoundPageProps = {}) {
+  return <StatusPage {...props} kind="not-found" />;
 }
 
 /** Shared recoverable route-error treatment for Next products. */
@@ -129,62 +216,24 @@ export function RouteErrorPage({
   autoFocus = true,
   canvasAs = "main",
   error,
+  homeHref = "/",
   reset,
   showThemeToggle = false,
+  siteName,
   titleAs = "h1",
 }: RouteErrorPageProps) {
-  const focusId = `${useId()}-route-error`;
-  const rootPresentation = stylex.props(routeStateStyles.root);
-  const headerPresentation = stylex.props(routeStateStyles.header);
-  const contentPresentation = stylex.props(routeStateStyles.content);
-  useEffect(() => {
-    if (autoFocus) document.getElementById(focusId)?.focus();
-  }, [autoFocus, error, focusId]);
-
   return (
-    <PageCanvas
-      aria-label="This view could not load"
-      aria-live={announce ? "assertive" : undefined}
-      as={canvasAs}
-      className={cn(
-        "hraness-design-route-state",
-        rootPresentation.className,
-      )}
-      id={focusId}
-      tabIndex={-1}
-    >
-      {showThemeToggle ? (
-        <header
-          {...headerPresentation}
-          className={cn(
-            "hraness-design-route-state__header",
-            headerPresentation.className,
-          )}
-        >
-          <ThemeMenuButton />
-        </header>
-      ) : null}
-      <div
-        {...contentPresentation}
-        className={cn(
-          "hraness-design-route-state__content",
-          contentPresentation.className,
-        )}
-      >
-        <EmptyState
-          action={(
-            <RouteActions>
-              <Button onPress={reset} variant="primary">Try again</Button>
-              <LinkButton href="/">Return home</LinkButton>
-            </RouteActions>
-          )}
-          description="Retry this view, or return home and continue from there."
-          icon={<span aria-hidden="true">!</span>}
-          title="This view could not load"
-          titleAs={titleAs}
-        />
-      </div>
-    </PageCanvas>
+    <StatusPage
+      announce={announce}
+      autoFocus={autoFocus}
+      canvasAs={canvasAs}
+      key={error.digest ?? error.message}
+      kind="error"
+      onRetry={reset}
+      primaryAction={{ href: homeHref, label: siteName ? `Go to ${siteName}` : "Return home" }}
+      showThemeToggle={showThemeToggle}
+      titleAs={titleAs}
+    />
   );
 }
 
