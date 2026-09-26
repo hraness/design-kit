@@ -1,6 +1,14 @@
 /* Shared semantic rhythm. The reading scale (sizes, spacing) is consumed by
- * `.hraness-prose` and the plain-publication article grammar; surface grammars
- * outside long-form reading still choose their own heading scale. */
+ * `.hraness-prose` and the plain-publication article grammar. Site headings
+ * outside those grammars read the same per-level tokens: a heading at level N
+ * takes `--hraness-type-hN-size`, `--hraness-type-hN-font`, and
+ * `--hraness-type-hN-weight` instead of a site-local size and face.
+ *
+ * Legibility rule: the display face (often a condensed serif such as
+ * Instrument Serif) is only used at `--hraness-type-display-min` (1.75rem) or
+ * larger. h1 and h2 are display headings and never scale below that floor;
+ * h3 and h4 use the text face, so a small heading is never set in the display
+ * face. */
 @layer base {
   :root {
     --hraness-type-reading-size: clamp(1rem, .95rem + .25vw, 1.0625rem);
@@ -9,12 +17,25 @@
     --hraness-type-caption-size: .9375rem;
     --hraness-type-code-size: .9rem;
     --hraness-type-heading-leading: 1.2;
+    --hraness-type-display-min: 1.75rem;
     --hraness-type-h1-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem);
-    --hraness-type-h2-size: clamp(1.625rem, 1.35rem + .9vw, 2.125rem);
-    --hraness-type-h3-size: clamp(1.3125rem, 1.15rem + .45vw, 1.4375rem);
+    --hraness-type-h2-size: clamp(1.75rem, 1.45rem + .9vw, 2.125rem);
+    --hraness-type-h3-size: clamp(1.25rem, 1.15rem + .4vw, 1.4375rem);
     --hraness-type-h4-size: 1.0625rem;
+    /* The display face, for h1 and h2 only. */
     --hraness-type-heading-font: var(--hraness-marketing-display-font, var(--font-heading, var(--font-text, inherit)));
     --hraness-type-heading-weight: var(--hraness-marketing-display-weight, 600);
+    /* The text face, for h3 and below. */
+    --hraness-type-subheading-font: var(--font-text, inherit);
+    --hraness-type-subheading-weight: 650;
+    --hraness-type-h1-font: var(--hraness-type-heading-font);
+    --hraness-type-h1-weight: var(--hraness-type-heading-weight);
+    --hraness-type-h2-font: var(--hraness-type-heading-font);
+    --hraness-type-h2-weight: var(--hraness-type-heading-weight);
+    --hraness-type-h3-font: var(--hraness-type-subheading-font);
+    --hraness-type-h3-weight: var(--hraness-type-subheading-weight);
+    --hraness-type-h4-font: var(--hraness-type-subheading-font);
+    --hraness-type-h4-weight: var(--hraness-type-subheading-weight);
     --hraness-type-section-space: clamp(2.75rem, 2rem + 2vw, 4rem);
     --hraness-type-subsection-space: 2rem;
   }

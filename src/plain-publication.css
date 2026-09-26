@@ -342,8 +342,8 @@
 .plain-site.plain-publication .plain-publication__article-body h2,
 .plain-site.plain-publication .plain-publication__article-body h3 {
   color: var(--plain-foreground);
-  font-family: var(--hraness-type-heading-font, var(--font-heading, inherit));
-  font-weight: var(--hraness-type-heading-weight, 700);
+  font-family: var(--hraness-type-h2-font, var(--hraness-type-heading-font, var(--font-heading, inherit)));
+  font-weight: var(--hraness-type-h2-weight, var(--hraness-type-heading-weight, 700));
   letter-spacing: 0;
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem);
   text-wrap: pretty;
@@ -351,14 +351,16 @@
 
 .plain-site.plain-publication .plain-publication__article-body h2 {
   margin: var(--hraness-type-section-space, 3rem) 0 0.6rem;
-  font-size: var(--hraness-type-h2-size, clamp(1.625rem, 1.35rem + .9vw, 2.125rem));
+  font-size: var(--hraness-type-h2-size, clamp(1.75rem, 1.45rem + .9vw, 2.125rem));
   line-height: 1.16;
   letter-spacing: -0.018em;
 }
 
 .plain-site.plain-publication .plain-publication__article-body h3 {
   margin: var(--hraness-type-subsection-space, 2rem) 0 0.45rem;
-  font-size: var(--hraness-type-h3-size, clamp(1.3125rem, 1.15rem + .45vw, 1.4375rem));
+  font-family: var(--hraness-type-h3-font, var(--font-text, inherit));
+  font-size: var(--hraness-type-h3-size, clamp(1.25rem, 1.15rem + .4vw, 1.4375rem));
+  font-weight: var(--hraness-type-h3-weight, 650);
   line-height: 1.28;
   letter-spacing: -0.01em;
 }
@@ -366,8 +368,9 @@
 .plain-site.plain-publication .plain-publication__article-body :is(h4, h5, h6) {
   margin: 1.6rem 0 0.4rem;
   color: var(--plain-foreground);
+  font-family: var(--hraness-type-h4-font, var(--font-text, inherit));
   font-size: var(--hraness-type-h4-size, 1.0625rem);
-  font-weight: 650;
+  font-weight: var(--hraness-type-h4-weight, 650);
   line-height: 1.4;
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 0px) + 1.5rem);
 }
