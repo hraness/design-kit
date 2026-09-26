@@ -439,13 +439,11 @@ export function DesignSystemGallery({
                   {
                     href: "#gallery-install",
                     name: "Ledger",
-                    relationship: "Ledger keeps every log Relay writes, so old runs stay searchable.",
                     role: "Long-term storage for run logs",
                   },
                   {
                     href: "#marketing",
                     name: "Index",
-                    relationship: "Index searches the logs Relay and Ledger keep.",
                     role: "A local search index",
                   },
                 ],
@@ -457,7 +455,6 @@ export function DesignSystemGallery({
                   {
                     href: "#marketing",
                     name: "Relay",
-                    relationship: "Every other tool in the family starts its jobs through Relay.",
                     role: "The shared job runner",
                   },
                 ],

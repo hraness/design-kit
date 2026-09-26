@@ -16,7 +16,7 @@ import {
   normalizeDesignTheme,
   parseDesignPalettePreference,
   resolveDesignPalettePreference
-} from "../chunk-22bqscev.js";
+} from "../chunk-q57mxaq6.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -84,7 +84,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-0g9xjjd0.js";
+} from "../chunk-9se5xb5r.js";
 import"../chunk-m5jbxx9x.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-eh71jz57.js";
@@ -4183,12 +4183,10 @@ function DesignSystemGallery({
                       items: [{
                         href: "#gallery-install",
                         name: "Ledger",
-                        relationship: "Ledger keeps every log Relay writes, so old runs stay searchable.",
                         role: "Long-term storage for run logs"
                       }, {
                         href: "#marketing",
                         name: "Index",
-                        relationship: "Index searches the logs Relay and Ledger keep.",
                         role: "A local search index"
                       }]
                     }, {
@@ -4197,7 +4195,6 @@ function DesignSystemGallery({
                       items: [{
                         href: "#marketing",
                         name: "Relay",
-                        relationship: "Every other tool in the family starts its jobs through Relay.",
                         role: "The shared job runner"
                       }],
                       summary: "The runner the other tools depend on."

@@ -5,10 +5,12 @@ import { join, relative } from "node:path";
 import {
   PortfolioSyncError,
   buildPortfolioSnapshot,
+  parseArtworkMarks,
   portfolioSnapshotDigest,
   renderPortfolioJson,
   renderPortfolioModule,
   sha256Hex,
+  svgDataUrl,
   type PortfolioSnapshotSource,
 } from "../scripts/sync-portfolio-facts.ts";
 import { portfolioSnapshot } from "./portfolio.generated.js";
@@ -32,7 +34,7 @@ import {
 } from "./portfolio.js";
 
 // Pinned facts. A snapshot regeneration must update these deliberately.
-const PINNED_DIGEST = "sha256:fa7bcf019c1f92312e51d6d1bf6bfe75710568b19b687497205d2fe0d0a887bb";
+const PINNED_DIGEST = "sha256:bc450de6ae75caaf12cac87e85904616ecd2f6727bb89e84e9e4551a3a0b93ed";
 const PINNED_COMMIT = "cd7ad529c7f821b224300277186f4c533655a8a1";
 
 const jsonFile = new URL("./portfolio.generated.json", import.meta.url);
@@ -47,10 +49,16 @@ describe("portfolio snapshot", () => {
     expect(portfolioProvenance.committedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/u);
     expect(portfolioProvenance.upstreamContract).toBe("hraness.portfolio-public/v1");
     expect(portfolioProvenance.upstreamDigest).toMatch(/^sha256:[0-9a-f]{64}$/u);
-    expect(portfolioProvenance.files.map((file) => file.path)).toEqual([
+    const paths = portfolioProvenance.files.map((file) => file.path);
+    expect(paths.slice(0, 3)).toEqual([
       "portfolio.public.generated.json",
       "packages/brand-catalog/brands.yaml",
+      "brand-artwork.json",
     ]);
+    const markPaths = paths.slice(3);
+    expect(markPaths).toEqual([...markPaths].sort());
+    for (const path of markPaths) expect(path).toMatch(/^projects\/hraness\/public\/marks\/[a-z0-9-]+\.svg$/u);
+    expect(markPaths.length).toBe(portfolioProductIds.length);
   });
 
   test("the JSON export and the module carry the same bytes", async () => {
@@ -68,7 +76,7 @@ describe("portfolio snapshot", () => {
       const entry = portfolioProducts[id];
       expect(Object.keys(entry)).toEqual([
         "id", "name", "oneLiner", "brandDescription", "canonicalUrl", "status", "copyStatus", "aliases",
-        "messaging",
+        "mark", "messaging",
       ]);
       expect(Object.hasOwn(entry.messaging, "superseded")).toBe(false);
       expect(entry.id).toBe(id);
@@ -78,6 +86,9 @@ describe("portfolio snapshot", () => {
         expect(value.length).toBeGreaterThan(0);
       }
       expect(new URL(entry.canonicalUrl).protocol).toBe("https:");
+      // Marks are inert path artwork, safe unquoted in HTML and inside a double-quoted CSS url().
+      expect(entry.mark).toMatch(/^data:image\/svg\+xml,%3Csvg [A-Za-z0-9 \-._~!$&'*+,;=:@/%]+%3C\/svg%3E$/u);
+      expect(decodeURIComponent(entry.mark.slice("data:image/svg+xml,".length))).not.toMatch(/<(?!\/?(?:svg|g|path)[\s>])/u);
       expect(portfolioProductStatuses).toContain(entry.status);
       if (entry.copyStatus !== null) expect(portfolioCopyStatuses).toContain(entry.copyStatus);
       const lowered = entry.aliases.map((alias) => alias.toLowerCase());
@@ -138,6 +149,7 @@ describe("portfolio helpers", () => {
           href: related.canonicalUrl,
           name: related.name,
           role: related.oneLiner,
+          mark: related.mark,
           relationship: relation?.detail ?? "missing",
           productId: related.id,
           relationId: item.relationId,
@@ -257,8 +269,21 @@ const brands = [
   "",
 ].join("\n");
 
+const markSvg = (fill: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">\n  <path fill="${fill}" d="M0 0h16v16H0z"/>\n</svg>\n`;
+const artwork = JSON.stringify({
+  formatVersion: 1,
+  products: ["alpha", "beta", "gamma"].map((id) => ({ id, illustration: `projects/hraness/public/icons/${id}.svg`, mark: `projects/hraness/public/marks/${id}.svg` })),
+  reserved: [],
+});
+const marks: Readonly<Record<string, string>> = {
+  "projects/hraness/public/marks/alpha.svg": markSvg("#2474d4"),
+  "projects/hraness/public/marks/beta.svg": markSvg("#356a54"),
+  "projects/hraness/public/marks/gamma.svg": markSvg("#858982"),
+};
+const markUrl = (fill: string) => svgDataUrl(markSvg(fill).trim());
+
 function source(publicPortfolio: string, brandSource = brands): PortfolioSnapshotSource {
-  return { commit: COMMIT, committedOn: "2026-09-23", publicPortfolio, brands: brandSource };
+  return { commit: COMMIT, committedOn: "2026-09-23", publicPortfolio, brands: brandSource, artwork, marks };
 }
 
 describe("sync-portfolio-facts", () => {
@@ -282,16 +307,19 @@ describe("sync-portfolio-facts", () => {
       alpha: {
         id: "alpha", name: "Alpha", oneLiner: "alpha short line", brandDescription: "Alpha brand description.",
         canonicalUrl: "https://alpha.example", status: "active", copyStatus: "authored", aliases: ["Alpha Expanded"],
+        mark: markUrl("#2474d4"),
         messaging: messagingRecord("alpha", "Alpha", { status: { default: "authored" } }),
       },
       beta: {
         id: "beta", name: "beta", oneLiner: "beta short line", brandDescription: null,
         canonicalUrl: "https://beta.example", status: "active", copyStatus: "proposed", aliases: [],
+        mark: markUrl("#356a54"),
         messaging: messagingRecord("beta", "Beta"),
       },
       gamma: {
         id: "gamma", name: "GAMMA", oneLiner: "gamma short line", brandDescription: null,
         canonicalUrl: "https://alpha.example/gamma", status: "active", copyStatus: "proposed", aliases: [],
+        mark: markUrl("#858982"),
         messaging: messagingRecord("gamma", "Gamma"),
       },
     });
@@ -315,8 +343,29 @@ describe("sync-portfolio-facts", () => {
       files: [
         { path: "portfolio.public.generated.json", sha256: sha256Hex(fixture) },
         { path: "packages/brand-catalog/brands.yaml", sha256: sha256Hex(brands) },
+        { path: "brand-artwork.json", sha256: sha256Hex(artwork) },
+        ...Object.keys(marks).sort().map((path) => ({ path, sha256: sha256Hex(marks[path] ?? "") })),
       ],
     });
+  });
+
+  test("encodes marks as compact data URLs that decode to the collapsed source", () => {
+    const url = svgDataUrl(markSvg("#2474d4").trim());
+    expect(url).toBe("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%232474d4' d='M0 0h16v16H0z'/%3E%3C/svg%3E");
+    expect(decodeURIComponent(url.slice("data:image/svg+xml,".length))).toBe(markSvg("#2474d4").trim().replace(/\s+/gu, " ").replace(/> </gu, "><").replaceAll("\"", "'"));
+    fc.assert(fc.property(fc.string({ maxLength: 80 }), (body) => {
+      const encoded = svgDataUrl(body);
+      expect(encoded).toMatch(/^data:image\/svg\+xml,[A-Za-z0-9 \-._~!$&'*+,;=:@/%]*$/u);
+      expect(decodeURIComponent(encoded.slice("data:image/svg+xml,".length))).toBe(body.replace(/\s+/gu, " ").replace(/> </gu, "><").replaceAll("\"", "'"));
+    }));
+  });
+
+  test("reads one mark path per product from the artwork registry", () => {
+    expect([...parseArtworkMarks(artwork)]).toEqual([
+      ["alpha", "projects/hraness/public/marks/alpha.svg"],
+      ["beta", "projects/hraness/public/marks/beta.svg"],
+      ["gamma", "projects/hraness/public/marks/gamma.svg"],
+    ]);
   });
 
   test("any change to the upstream facts changes the digest", () => {
@@ -357,6 +406,21 @@ describe("sync-portfolio-facts", () => {
       }))],
       ["duplicate brand", source(fixture, `${brands}  - domain: alpha.example\n    name: Again\n`)],
       ["no products", source(upstream({ projects: [] }))],
+      ["missing artwork entry", { ...source(fixture), artwork: JSON.stringify({ formatVersion: 1, products: [], reserved: [] }) }],
+      ["artwork json", { ...source(fixture), artwork: "{" }],
+      ["artwork outside the marks root", { ...source(fixture), artwork: artwork.replace("public/marks/alpha.svg", "public/icons/alpha.svg") }],
+      ["missing mark file", { ...source(fixture), marks: { ...marks, "projects/hraness/public/marks/alpha.svg": undefined as unknown as string } }],
+      ...([
+        ["script", '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'],
+        ["image", '<svg xmlns="http://www.w3.org/2000/svg"><image href="x.png"/></svg>'],
+        ["handler", '<svg xmlns="http://www.w3.org/2000/svg"><path onclick="x()" d="M0 0"/></svg>'],
+        ["style", '<svg xmlns="http://www.w3.org/2000/svg"><path style="fill:red" d="M0 0"/></svg>'],
+        ["reference", '<svg xmlns="http://www.w3.org/2000/svg"><path fill="url(#g)" d="M0 0"/></svg>'],
+        ["single quote", "<svg xmlns=\"http://www.w3.org/2000/svg\"><path d='M0 0'/></svg>"],
+        ["non-ascii", '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" fill="ó"/></svg>'],
+        ["no namespace", '<svg><path d="M0 0"/></svg>'],
+        ["oversized", `<svg xmlns="http://www.w3.org/2000/svg"><path d="${"M0 0 ".repeat(8000)}"/></svg>`],
+      ] as const).map(([name, svg]) => [`${name} mark`, { ...source(fixture), marks: { ...marks, "projects/hraness/public/marks/alpha.svg": svg } }] as [string, PortfolioSnapshotSource]),
     ];
     for (const [name, input] of cases) {
       expect(() => buildPortfolioSnapshot(input), name).toThrow(PortfolioSyncError);

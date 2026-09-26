@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
+import { parseHTML } from "linkedom";
 
 import {
   MarketingCallToAction,
@@ -152,7 +153,8 @@ test("the marketing compositions preserve headings, native disclosure, and produ
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-interface__heading">CLI</h3>'));
 });
 
-test("the related-products composition links each sibling through the featured product", () => {
+test("the related-products composition shows each sibling's mark, name, and one-line role", () => {
+  const mark = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 0h16v16H0z'/%3E%3C/svg%3E";
   const html = renderToStaticMarkup(
     <MarketingRelated
       heading="The rest of the local stack."
@@ -160,6 +162,7 @@ test("the related-products composition links each sibling through the featured p
       items={[
         {
           href: "https://relay.example",
+          mark,
           name: "Relay",
           relationship: "Relay runs the exact job the featured product prepares.",
           role: "A reference job runner",
@@ -167,10 +170,11 @@ test("the related-products composition links each sibling through the featured p
         {
           art: <img alt="" src="/mark.svg" />,
           href: "https://ledger.example",
+          mark,
           name: "Ledger",
-          relationship: "Ledger keeps the receipt the featured product writes.",
           role: "A local receipt store",
         },
+        { href: "https://index.example", name: "Index", role: "A local search index" },
       ]}
       label="Related"
       summary="Separate tools with separate release cadences."
@@ -182,12 +186,27 @@ test("the related-products composition links each sibling through the featured p
   expect(html).toMatch(marketingMarkupPattern('<p class="hraness-marketing-related__label">Related</p>'));
   expect(html).toMatch(marketingMarkupPattern('<h2 class="hraness-marketing-related__heading" id="related-title">'));
   expect(html).toContain("Separate tools with separate release cadences.");
-  const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-card[^"]*" data-hraness-marketing="card" href="([^"]+)"/gu)];
-  expect(cards.map((match) => match[1])).toEqual(["https://relay.example", "https://ledger.example"]);
-  expect(html.match(/hraness-marketing-card__title/gu)).toHaveLength(2);
-  expect(html).toContain("A reference job runner");
-  expect(html).toContain("Ledger keeps the receipt the featured product writes.");
-  expect(html).toContain('src="/mark.svg"');
+  const { document } = parseHTML(html);
+  const cards = [...document.querySelectorAll('a[data-hraness-marketing="card"]')];
+  expect(cards.map((card) => card.getAttribute("href"))).toEqual(["https://relay.example", "https://ledger.example", "https://index.example"]);
+  for (const card of cards) {
+    expect(card.className.split(" ")[0]).toBe("hraness-marketing-related__card");
+    expect(card.hasAttribute("data-foil")).toBe(true);
+    // Card names sit one level below the section heading and never use the card-title hook.
+    expect(card.querySelector("h3")?.className.split(" ")[0]).toBe("hraness-marketing-related__card-name");
+    expect(card.querySelector(".hraness-marketing-card__title, .hraness-marketing-card__meta")).toBeNull();
+  }
+  expect(cards.map((card) => card.querySelector(".hraness-marketing-related__card-role")?.textContent)).toEqual([
+    "A reference job runner", "A local receipt store", "A local search index",
+  ]);
+  // One line per product: the relation sentence is not rendered.
+  expect(html).not.toContain("Relay runs the exact job");
+  // A mark renders as a decorative foil mark; custom art wins; no mark leaves the slot out.
+  const [relay, ledger, index] = cards;
+  expect(relay?.querySelector('.hraness-marketing-related__card-mark[aria-hidden="true"] > [data-foil] img')?.getAttribute("src")).toBe(mark);
+  expect(ledger?.querySelector(".hraness-marketing-related__card-mark img")?.getAttribute("src")).toBe("/mark.svg");
+  expect(ledger?.querySelectorAll(".hraness-marketing-related__card-mark")).toHaveLength(1);
+  expect(index?.querySelector(".hraness-marketing-related__card-mark")).toBeNull();
   expect(html).not.toMatch(/onClick|<script\b/iu);
 });
 
@@ -236,8 +255,10 @@ test("the related-products composition groups sibling tiers under their own head
   expect(html).toContain("One capability layer under every product.");
   const rows = [...html.matchAll(/<div aria-label="([^"]+)" class="[^"]*hraness-marketing-card-row[^"]*"/gu)];
   expect(rows.map((match) => match[1])).toEqual(["Sibling tools", "Shared infrastructure"]);
-  const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-card[^"]*" data-hraness-marketing="card" href="([^"]+)"/gu)];
+  const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-related__card[^"]*" data-foil="" data-hraness-marketing="card" href="([^"]+)"/gu)];
   expect(cards.map((match) => match[1])).toEqual(["https://relay.example", "https://conduit.example"]);
+  // Card names nest under their tier heading.
+  expect(html.match(/<h4 class="hraness-marketing-related__card-name[^"]*">/gu)).toHaveLength(2);
   expect(html).not.toMatch(/onClick|<script\b/iu);
 });
 

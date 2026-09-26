@@ -543,10 +543,14 @@
   background: transparent;
 }
 
+/* One row per related product, as on the hraness.com project index: mark,
+ * name, and one-line description at reading size. */
 .plain-site.plain-publication .plain-publication__related-grid > a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
   min-height: 0;
-  padding: 0.8rem 0;
+  padding: 0.9rem 0;
   border-top: 1px solid var(--plain-line);
   background: transparent;
 }
@@ -555,8 +559,21 @@
   background: transparent;
 }
 
-.plain-site.plain-publication .plain-publication__related-grid span,
-.plain-site.plain-publication .plain-publication__related-grid strong {
+.plain-site.plain-publication .plain-publication__related-mark {
+  flex: 0 0 auto;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  object-fit: contain;
+}
+
+.plain-site.plain-publication .plain-publication__related-text {
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 0;
+}
+
+.plain-site.plain-publication .plain-publication__related-text > span,
+.plain-site.plain-publication .plain-publication__related-text > strong {
   display: block;
   color: inherit;
   font: inherit;
@@ -564,9 +581,16 @@
   text-transform: none;
 }
 
-.plain-site.plain-publication .plain-publication__related-grid span {
+.plain-site.plain-publication .plain-publication__related-text > strong {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.plain-site.plain-publication .plain-publication__related-text > span {
   color: var(--plain-muted);
-  font-size: var(--hraness-type-caption-size, .9375rem);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 42rem) {

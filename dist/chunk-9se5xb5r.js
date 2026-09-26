@@ -731,7 +731,7 @@ var marketingStyles = {
     kN5DiO: "xjnvrkt",
     kYjUv9: "x1w2vvpw",
     k2kXS: "x1nrp9oy",
-    kLh5Sq: "x9s08v2",
+    kLh5Sq: "xksl5lr",
     $$css: true
   },
   flow: {
@@ -1362,18 +1362,91 @@ var marketingStyles = {
     kMwMTN: "xtylnni",
     knIRL8: "xb0810w",
     ko3Kzr: "x7cedwp",
-    kUEKN5: "xjat59b",
-    kN5DiO: "xwn7fz2",
+    kUEKN5: "x154du55",
+    kN5DiO: "x16b8c5l",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "x1603h9y",
+    kLh5Sq: "xksl5lr",
     $$css: true
   },
   related__group_summary: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
-    kLh5Sq: "x1jchvi3",
+    kLh5Sq: "x1c3i2sq",
     kN5DiO: "x1evy7pa",
+    $$css: true
+  },
+  related__card: {
+    k1xSpc: "x78zum5",
+    kvQiKF: "x1q0g3np",
+    kkeX5w: "x6s0dn4",
+    kVAEAm: "x1n2onr6",
+    kHBbk8: "xc8icb0",
+    kdYMnH: "xesnm00",
+    kVQ08L: "x1ljpu7r",
+    k29mPU: "xkh2ocl",
+    kOIVth: "x8fetqu",
+    kmVPX3: "x14nneff",
+    k99D8V: "x17p5ghk x18z9243",
+    kNdqCV: "x16x8cr2 xv2i73l",
+    kLjGic: "x1w0e1mo xtthz4l",
+    kpfRUI: "x72sy0d xug5yj",
+    kbZlsR: "x18sabzy x1cfjbvc",
+    kAFNHU: "x1jleocg x1a4igh8",
+    kyY1tn: "x1pjjote xsdpl10",
+    kCh6Gp: "x1e53mt7 x1sz4vi2",
+    kzSjEv: "xgkqhyc x4aylkk",
+    kvZwPi: "x1eubfot",
+    kL20gf: "x1itpb23 x9yvj25",
+    kb5WsR: "x18o3ruo xhobzj1",
+    k2EZ2Y: "x1y4qj14 x2c5uud",
+    kevRTx: "x103pssi x1ug5rqp",
+    kt02CW: "x182nak8 x1pjo12s",
+    kVHNYi: "x12koezg xzln6ae",
+    kUtEtU: "x1u7o2vf x1tzqu68",
+    kdutIq: "x1fdtg7e xcrev8p",
+    kTJQHc: "x1io0m3d x15rgdgi xwaqzdf",
+    kMwMTN: "x1heor9g xs5hli",
+    kyVV8l: "x1hl2dhg",
+    kI3sdo: "x13mrud1",
+    kVtf5F: "x7s97pk",
+    $$css: true
+  },
+  related__card_mark: {
+    kVZ5iK: "x1c4vz4f",
+    kEE5IU: "x2lah0s",
+    kR2Kky: "xdl72j9",
+    k1xSpc: "x3nfvp2",
+    kkeX5w: "x6s0dn4",
+    kGmCso: "xl56j7k",
+    kULEZF: "x166urtk",
+    kLWsYc: "x1cd9x91",
+    $$css: true
+  },
+  related__card_text: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xvh977a",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  related__card_name: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xtylnni",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x1603h9y",
+    ko3Kzr: "x1xlr1w8",
+    kUEKN5: "xjat59b",
+    kN5DiO: "x132q4wb",
+    k7QVf6: "xj0a0fe",
+    $$css: true
+  },
+  related__card_role: {
+    kogj98: "x1ghz6dp",
+    kMwMTN: "xtylnni",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x1lkfr7t",
+    kN5DiO: "xfrs9s4",
+    kYjUv9: "x1fzhlzt",
     $$css: true
   },
   trust: {
@@ -2919,6 +2992,21 @@ var recipes = {
   "hraness-marketing-related__group-summary": {
     default: marketingStyles.related__group_summary
   },
+  "hraness-marketing-related__card": {
+    default: marketingStyles.related__card
+  },
+  "hraness-marketing-related__card-mark": {
+    default: marketingStyles.related__card_mark
+  },
+  "hraness-marketing-related__card-text": {
+    default: marketingStyles.related__card_text
+  },
+  "hraness-marketing-related__card-name": {
+    default: marketingStyles.related__card_name
+  },
+  "hraness-marketing-related__card-role": {
+    default: marketingStyles.related__card_role
+  },
   "hraness-marketing-trust": {
     default: marketingStyles.trust
   },
@@ -4307,17 +4395,39 @@ function MarketingMaker({
   });
 }
 function MarketingRelatedCards({
-  items
+  items,
+  level
 }) {
   return /* @__PURE__ */ jsx3(Fragment, {
-    children: items.map((item) => /* @__PURE__ */ jsx3(MarketingCard, {
+    children: items.map((item) => /* @__PURE__ */ jsxs2("a", {
+      className: marketingClassName("hraness-marketing-related__card"),
+      "data-foil": "",
+      "data-hraness-marketing": "card",
       href: item.href,
-      meta: item.role,
-      title: item.name,
-      ...item.art === undefined ? {} : {
-        art: item.art
-      },
-      children: item.relationship
+      children: [
+        isPresentNode(item.art) || item.mark !== undefined && item.mark !== "" ? /* @__PURE__ */ jsx3("span", {
+          "aria-hidden": "true",
+          className: marketingClassName("hraness-marketing-related__card-mark"),
+          children: isPresentNode(item.art) ? item.art : /* @__PURE__ */ jsx3(FoilMark, {
+            size: 44,
+            src: item.mark ?? ""
+          })
+        }) : null,
+        /* @__PURE__ */ jsxs2("span", {
+          className: marketingClassName("hraness-marketing-related__card-text"),
+          children: [
+            /* @__PURE__ */ jsx3(Heading, {
+              className: marketingClassName("hraness-marketing-related__card-name"),
+              level,
+              children: item.name
+            }),
+            /* @__PURE__ */ jsx3("span", {
+              className: marketingClassName("hraness-marketing-related__card-role"),
+              children: item.role
+            })
+          ]
+        })
+      ]
     }, item.name))
   });
 }
@@ -4348,7 +4458,8 @@ function MarketingRelated({
       }),
       groups === undefined ? /* @__PURE__ */ jsx3(MarketingCardRow, {
         children: /* @__PURE__ */ jsx3(MarketingRelatedCards, {
-          items
+          items,
+          level: childHeadingLevel(headingLevel)
         })
       }) : groups.map((group) => /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-related__group"),
@@ -4371,7 +4482,8 @@ function MarketingRelated({
           /* @__PURE__ */ jsx3(MarketingCardRow, {
             ariaLabel: group.heading,
             children: /* @__PURE__ */ jsx3(MarketingRelatedCards, {
-              items: group.items
+              items: group.items,
+              level: childHeadingLevel(childHeadingLevel(headingLevel))
             })
           })
         ]

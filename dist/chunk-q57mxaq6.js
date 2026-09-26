@@ -523,6 +523,10 @@ function renderArticleCalloutHtml(input) {
   const body = input.text === undefined ? input.bodyHtml : `<p>${escapeArticleHtml(input.text)}</p>`;
   return `<div class="plain-publication__callout" data-tone="${tone}" role="note">${present(input.label) ? `<strong>${escapeArticleHtml(input.label)}</strong>` : ""}${body}</div>`;
 }
+function assertArticleMark(mark) {
+  if (!mark.startsWith("data:image/svg+xml,"))
+    assertArticleHref(mark);
+}
 function renderArticleRelatedHtml({
   heading = "Related products",
   headingId = "article-related-products",
@@ -530,9 +534,12 @@ function renderArticleRelatedHtml({
 }) {
   if (items.length === 0)
     return "";
-  for (const item of items)
+  for (const item of items) {
     assertArticleHref(item.href);
-  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__related">`, `<div class="plain-publication__section-heading"><h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2></div>`, '<div class="plain-publication__related-grid">', ...items.map((item) => `<a href="${escapeArticleHtml(item.href)}"><strong>${escapeArticleHtml(item.name)}</strong><span>${escapeArticleHtml(item.relationship)}</span></a>`), "</div></section>"].join("");
+    if (present(item.mark))
+      assertArticleMark(item.mark);
+  }
+  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__related">`, `<div class="plain-publication__section-heading"><h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2></div>`, '<div class="plain-publication__related-grid">', ...items.map((item) => [`<a href="${escapeArticleHtml(item.href)}">`, present(item.mark) ? `<img alt="" class="plain-publication__related-mark" decoding="async" height="44" src="${escapeArticleHtml(item.mark)}" width="44">` : "", `<span class="plain-publication__related-text"><strong>${escapeArticleHtml(item.name)}</strong>`, `<span>${escapeArticleHtml(item.role ?? item.relationship)}</span></span></a>`].join("")), "</div></section>"].join("");
 }
 function renderArticleIndexHtml({
   className,

@@ -847,7 +847,7 @@ export const marketingStyles = stylex.create({
     "line-height": "var(--hraness-marketing-h2-leading, 1.15)",
     "text-wrap": "balance",
     "max-inline-size": "24ch",
-    "font-size": "clamp(1.25rem, 2vw, 1.5rem)"
+    "font-size": "var(--hraness-marketing-h3-size, clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem))"
   },
   "flow": {
     "display": "grid",
@@ -1560,17 +1560,143 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-heading-font)",
     "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "-0.01em",
-    "line-height": "1.3",
+    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
+    "line-height": "var(--hraness-marketing-h3-leading, 1.15)",
     "text-wrap": "balance",
-    "font-size": "1.25rem"
+    "font-size": "var(--hraness-marketing-h3-size, clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem))"
   },
   "related__group_summary": {
     "margin": "0",
     "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "1rem",
+    "font-size": "1.125rem",
     "line-height": "1.5"
+  },
+  "related__card": {
+    "display": "flex",
+    "flex-direction": "row",
+    "align-items": "center",
+    "position": "relative",
+    "isolation": "isolate",
+    "min-inline-size": "0",
+    "min-block-size": "100%",
+    "align-self": "stretch",
+    "gap": "1rem",
+    "padding": "clamp(1rem, 2vw, 1.25rem) clamp(1.125rem, 2.5vw, 1.5rem)",
+    "border-top": {
+      "default": "var(--hraness-marketing-surface-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-right": {
+      "default": "var(--hraness-marketing-surface-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-bottom": {
+      "default": "var(--hraness-marketing-surface-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-left": {
+      "default": "var(--hraness-marketing-surface-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-image-source": {
+      "default": "none",
+      "@media (forced-colors: active)": "none"
+    },
+    "border-image-slice": {
+      "default": "100%",
+      "@media (forced-colors: active)": "100%"
+    },
+    "border-image-width": {
+      "default": "1",
+      "@media (forced-colors: active)": "1"
+    },
+    "border-image-outset": {
+      "default": "0",
+      "@media (forced-colors: active)": "0"
+    },
+    "border-image-repeat": {
+      "default": "stretch",
+      "@media (forced-colors: active)": "stretch"
+    },
+    "border-radius": "var(--hraness-marketing-frame-radius)",
+    "background-color": {
+      "default": "var(--hraness-marketing-surface)",
+      "@media (forced-colors: active)": "Canvas"
+    },
+    "background-image": {
+      "default": "none",
+      "@media (forced-colors: active)": "none"
+    },
+    "background-position": {
+      "default": "0% 0%",
+      "@media (forced-colors: active)": "0% 0%"
+    },
+    "background-size": {
+      "default": "auto auto",
+      "@media (forced-colors: active)": "auto auto"
+    },
+    "background-repeat": {
+      "default": "repeat",
+      "@media (forced-colors: active)": "repeat"
+    },
+    "background-origin": {
+      "default": "padding-box",
+      "@media (forced-colors: active)": "padding-box"
+    },
+    "background-clip": {
+      "default": "border-box",
+      "@media (forced-colors: active)": "border-box"
+    },
+    "background-attachment": {
+      "default": "scroll",
+      "@media (forced-colors: active)": "scroll"
+    },
+    "box-shadow": {
+      "default": "var(--hraness-marketing-surface-shadow)",
+      ":hover": "var(--hraness-material-lift, var(--hraness-marketing-surface-shadow))",
+      "@media (forced-colors: active)": "none"
+    },
+    "color": {
+      "default": "inherit",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "text-decoration": "none",
+    outline: { default: null, ":focus-visible": "2px solid var(--hraness-marketing-accent)" },
+    "outline-offset": { default: null, ":focus-visible": "2px" }
+  },
+  "related__card_mark": {
+    "flex-grow": "0",
+    "flex-shrink": "0",
+    "flex-basis": "auto",
+    "display": "inline-flex",
+    "align-items": "center",
+    "justify-content": "center",
+    "inline-size": "2.75rem",
+    "block-size": "2.75rem"
+  },
+  "related__card_text": {
+    "display": "grid",
+    "gap": "0.25rem",
+    "min-inline-size": "0"
+  },
+  "related__card_name": {
+    "margin": "0",
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "1.25rem",
+    "font-weight": "700",
+    "letter-spacing": "-0.01em",
+    "line-height": "1.25",
+    "overflow-wrap": "anywhere"
+  },
+  "related__card_role": {
+    "margin": "0",
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "1.0625rem",
+    "line-height": "1.45",
+    "text-wrap": "pretty"
   },
   "trust": {
     "color": "var(--hraness-marketing-ink)",
@@ -4090,6 +4216,11 @@ const recipes = {
   "hraness-marketing-related__group-header": { "default": marketingStyles.related__group_header },
   "hraness-marketing-related__group-heading": { "default": marketingStyles.related__group_heading },
   "hraness-marketing-related__group-summary": { "default": marketingStyles.related__group_summary },
+  "hraness-marketing-related__card": { "default": marketingStyles.related__card },
+  "hraness-marketing-related__card-mark": { "default": marketingStyles.related__card_mark },
+  "hraness-marketing-related__card-text": { "default": marketingStyles.related__card_text },
+  "hraness-marketing-related__card-name": { "default": marketingStyles.related__card_name },
+  "hraness-marketing-related__card-role": { "default": marketingStyles.related__card_role },
   "hraness-marketing-trust": { "default": marketingStyles.trust },
   "hraness-marketing-trust__header": { "default": marketingStyles.trust__header },
   "hraness-marketing-trust__label": { "default": marketingStyles.trust__label },
