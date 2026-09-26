@@ -556,6 +556,10 @@
     margin-inline: auto;
   }
 
+  .x1cafle {
+    margin-inline: calc(50% - 50vw);
+  }
+
   .xydrj4t {
     outline: 1px solid color-mix(in srgb,var(--_mark-accent) 28%,transparent);
   }
@@ -2491,9 +2495,14 @@
     margin-inline-start: auto;
   }
 
-  .xne3dcs {
-    -webkit-mask-image: linear-gradient(#000 65%, #0000);
-    mask-image: linear-gradient(#000 65%, #0000);
+  .xyo8xb9 {
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+
+  .x1am4smq {
+    -webkit-mask-image: linear-gradient(to right, #0000, #000 9% 91%, #0000);
+    mask-image: linear-gradient(to right, #0000, #000 9% 91%, #0000);
   }
 
   .x885qll {
