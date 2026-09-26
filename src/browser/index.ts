@@ -5,6 +5,7 @@ export * from "./artifact-share.js";
 export * from "./design-palette.js";
 export * from "./foil.js";
 export * from "./hero-light.js";
+export * from "./status-page.js";
 export * from "./sticky-offset.js";
 export * from "../palette-appearance.js";
 

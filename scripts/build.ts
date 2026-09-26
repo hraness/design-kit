@@ -45,6 +45,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",
+  "src/status-page.css",
   "src/styles.css",
   "src/syntax-highlighting.css",
   "src/tokens.css",

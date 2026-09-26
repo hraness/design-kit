@@ -43,7 +43,7 @@ function assertArticleDates(dates) {
   if (updated < published)
     throw new RangeError("The updated date cannot precede the published date.");
 }
-var SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?!\/)|#|\.{1,2}\/|\?)/iu;
+var SAFE_HREF = /^(?:https?:\/\/|mailto:|\/(?![/\\])|#|\.{1,2}\/|\?)/iu;
 function hasControlOrSpace(href) {
   for (const character of href) {
     const code = character.codePointAt(0) ?? 0;
