@@ -8,6 +8,11 @@ export const heroBackdropStyles = stylex.create({
     display: "var(--hraness-pattern-decoration, block)",
     position: "absolute",
     inset: 0,
+    // Heroes sit inside a measure-constrained column; ambient artwork reads as
+    // a bounded rectangle when it dies at the column edge. Negative inline
+    // margins expand the backdrop to the viewport axis it is centered on, so
+    // atmosphere continues to the screen edge instead of clipping mid-fade.
+    marginInline: "calc(50% - 50vw)",
     zIndex: -1,
     overflow: "clip",
     pointerEvents: "none",
@@ -17,7 +22,13 @@ export const heroBackdropStyles = stylex.create({
     // component's accessibility state independent of their cascade layers.
     opacity: "var(--_hraness-hero-backdrop-opacity)",
     "--_hraness-hero-backdrop-opacity": { default: "1", [forcedColors]: "0", [reducedTransparency]: "0" },
-    maskImage: "linear-gradient(to bottom, black 65%, transparent)",
+    // Intersect a bottom dissolve with a horizontal dissolve so the backdrop
+    // never ends in a hard side edge, even where a hero is not view-centered.
+    maskImage: [
+      "linear-gradient(to bottom, black 65%, transparent)",
+      "linear-gradient(to right, transparent, black 9%, black 91%, transparent)",
+    ],
+    maskComposite: "intersect",
   },
   atmosphere: {
     position: "absolute",

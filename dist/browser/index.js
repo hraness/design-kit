@@ -1533,6 +1533,7 @@ function attachHeroLight(root) {
   if (!view?.matchMedia || !view.requestAnimationFrame || !view.cancelAnimationFrame)
     return () => {};
   const media = view.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (forced-colors: none)");
+  const stage = root.querySelector("[data-hraness-hero-backdrop]") ?? root;
   const original = inputs.map((name) => [name, root.style.getPropertyValue(name), root.style.getPropertyPriority(name)]);
   const proximityProperty = "--hraness-hero-proximity";
   const items = [...root.querySelectorAll("[data-hraness-hero-item]")].slice(0, 48).map((element) => ({
@@ -1585,13 +1586,13 @@ function attachHeroLight(root) {
       return;
     }
     const pointer = point;
-    const bounds = root.getBoundingClientRect();
+    const bounds = stage.getBoundingClientRect();
     if (bounds.width <= 0 || bounds.height <= 0 || bounds.bottom <= 0 || bounds.top >= view.innerHeight) {
       reset();
       return;
     }
     const goal = {
-      x: Math.max(20, Math.min(80, (point.x - bounds.left) / bounds.width * 100)),
+      x: Math.max(12, Math.min(88, (point.x - bounds.left) / bounds.width * 100)),
       y: Math.max(14, Math.min(64, (point.y - bounds.top) / bounds.height * 100))
     };
     const distances = items.map(({

@@ -51,9 +51,9 @@ test("hero light coalesces events, remains bounded and settles without idle work
   for (let i = 0; i < 20; i++) f.pointer(1600, -600);
   expect(f.queue.size).toBe(1);
   f.settle();
-  expect(f.root.style.getPropertyValue("--hraness-hero-light-x")).toBe("80.00%");
+  expect(f.root.style.getPropertyValue("--hraness-hero-light-x")).toBe("88.00%");
   expect(f.root.style.getPropertyValue("--hraness-hero-light-y")).toBe("14.00%");
-  expect(f.root.style.getPropertyValue("--hraness-hero-drift-x")).toBe("6.32px");
+  expect(f.root.style.getPropertyValue("--hraness-hero-drift-x")).toBe("8.00px");
   expect(f.root.style.getPropertyValue("--hraness-hero-drift-y")).toBe("-5.68px");
   expect(f.root.querySelector("a")?.getAttribute("href")).toBe("#docs");
   dispose(); dispose(); expect(f.listeners.size).toBe(0);
@@ -69,6 +69,19 @@ test("live motion changes, touch and invalid coordinates leave the static field 
   f.pointer(40, 40); expect(f.queue.size).toBe(0);
   f.preference(true); f.pointer(40, 40); expect(f.queue.size).toBe(1);
   dispose(); expect(f.queue.size).toBe(0);
+});
+
+test("light positions measure the bleeding backdrop box, not the hero column", () => {
+  const f = fixture();
+  const backdrop = f.root.ownerDocument.createElement("div") as unknown as HTMLElement;
+  backdrop.setAttribute("data-hraness-hero-backdrop", "");
+  // A viewport-bleeding stage can sit wider than the attached hero root.
+  backdrop.getBoundingClientRect = () => ({ x: -200, y: 0, left: -200, top: 0, right: 1400, bottom: 600, width: 1600, height: 600, toJSON: () => ({}) });
+  f.root.appendChild(backdrop as unknown as Node);
+  const dispose = attachHeroLight(f.root);
+  f.pointer(800, 300); f.settle();
+  expect(f.root.style.getPropertyValue("--hraness-hero-light-x")).toBe("62.50%");
+  dispose();
 });
 
 test("disposal restores caller values and an offscreen hero stops rendering", () => {
