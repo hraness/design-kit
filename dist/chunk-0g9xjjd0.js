@@ -7,14 +7,16 @@ import {
   assertArticleCalloutTone,
   assertArticleDates,
   assertArticleHref,
-  formatArticleDate,
-  providerMark,
-  providerMarkFallback,
-  providerMarkOnAccent
-} from "./chunk-tyq24f9r.js";
+  formatArticleDate
+} from "./chunk-m5jbxx9x.js";
 import {
   highlightCode
 } from "./chunk-kspdf9ch.js";
+import {
+  providerMark,
+  providerMarkFallback,
+  providerMarkOnAccent
+} from "./chunk-eh71jz57.js";
 
 // src/react/foil.stylex.ts
 import * as stylex from "@stylexjs/stylex";

@@ -37,6 +37,7 @@ const MARK_SOURCES = {
   moonshot: { glyph: "lobehub/moonshot.svg" },
   nvidia: { glyph: "lobehub/nvidia.svg", art: "lobehub/nvidia-color.svg" },
   openai: { glyph: "lobehub/openai.svg" },
+  perplexity: { glyph: "lobehub/perplexity.svg", art: "lobehub/perplexity-color.svg" },
   opencode: { glyph: "lobehub/opencode.svg" },
   qwen: { glyph: "lobehub/qwen.svg", art: "lobehub/qwen-color.svg" },
   xai: { glyph: "lobehub/xai.svg" },

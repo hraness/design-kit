@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.18.0",
+  "version": "0.18.1",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -86,6 +86,10 @@
     "./portfolio": {
       "types": "./src/portfolio.ts",
       "import": "./dist/portfolio.js"
+    },
+    "./provider-marks": {
+      "types": "./src/provider-marks.ts",
+      "import": "./dist/provider-marks.js"
     },
     "./portfolio.json": "./src/portfolio.generated.json",
     "./react/hero-backdrop": {

@@ -46,7 +46,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-1zpykee8.js";
+} from "./chunk-22bqscev.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,
@@ -74,15 +74,8 @@ import {
   formatArticleDate,
   isArticleIndexable,
   isArticleIsoDate,
-  parseArticleAdmissions,
-  providerMark,
-  providerMarkArtDataUri,
-  providerMarkFallback,
-  providerMarkGlyphDataUri,
-  providerMarkMonogram,
-  providerMarkOnAccent,
-  providerMarks
-} from "./chunk-tyq24f9r.js";
+  parseArticleAdmissions
+} from "./chunk-m5jbxx9x.js";
 import {
   highlightCode,
   inferSyntaxLanguage,
@@ -90,6 +83,15 @@ import {
   resolveSyntaxLanguage,
   syntaxLanguages
 } from "./chunk-kspdf9ch.js";
+import {
+  providerMark,
+  providerMarkArtDataUri,
+  providerMarkFallback,
+  providerMarkGlyphDataUri,
+  providerMarkMonogram,
+  providerMarkOnAccent,
+  providerMarks
+} from "./chunk-eh71jz57.js";
 import"./chunk-5gtx3pza.js";
 export {
   typography,

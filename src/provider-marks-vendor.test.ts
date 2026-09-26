@@ -38,6 +38,8 @@ const FILE_HASHES: Readonly<Record<string, string>> = {
   "lobehub/nvidia.svg": "5a419b99e0ffdbfbe8caa7ec25581054eae03024da59cb860c54ea55ac8e7e73",
   "lobehub/openai.svg": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
   "lobehub/opencode.svg": "7cfa6e9d6726f7c9fa26c7d9aef0dfec52d20a137380454340f30f12ccbfd302",
+  "lobehub/perplexity-color.svg": "8353f3ab20822f1a933224b0ea32cc39f0c32d5740f4af8c254b0f418e0a3a70",
+  "lobehub/perplexity.svg": "c66c64e9e3c273ef6c235f743808d67ffa7d482e8cbe4a79496a42b60333e1fe",
   "lobehub/qwen-color.svg": "77f5768c66d08ce1d3d14e73373975c1bc0454be88c81523ddd0ffd7e2974029",
   "lobehub/qwen.svg": "dcb3ba2f2b55ccbacbade0ca0bf98921fbaf8a07848972974b4a9bf8077376cf",
   "lobehub/xai.svg": "89eb7de9f0d02a41cfecd9109e253d7fd3529e27467dee4254faa67f3ac21451",

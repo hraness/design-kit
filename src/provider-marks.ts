@@ -45,6 +45,7 @@ const MARK_SPECS = {
   moonshot: { accent: "#5b5bd6", aliases: ["moonshot", "moonshot ai", "kimi"], kind: "vendor", name: "Moonshot AI" },
   nvidia: { accent: "#74b71b", aliases: ["nvidia"], kind: "vendor", name: "NVIDIA" },
   openai: { accent: "#0f1014", aliases: ["openai", "chatgpt", "gpt"], kind: "vendor", name: "OpenAI" },
+  perplexity: { accent: "#22b8cd", aliases: ["perplexity", "perplexity ai"], kind: "vendor", name: "Perplexity" },
   opencode: { accent: "#d97706", aliases: ["opencode", "open code"], kind: "agent", name: "opencode" },
   qwen: { accent: "#615ced", aliases: ["qwen", "tongyi"], kind: "vendor", name: "Qwen" },
   xai: { accent: "#1a1a1a", aliases: ["xai", "x.ai", "grok", "spacexai"], kind: "vendor", name: "xAI" },
