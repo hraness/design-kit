@@ -48,7 +48,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-kwkjrd4k.js";
+} from "../chunk-n3q7tf7f.js";
 import"../chunk-zzq7bdj8.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-eh71jz57.js";

@@ -1339,7 +1339,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1351,7 +1350,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)",
@@ -1420,7 +1418,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1464,7 +1461,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1508,7 +1504,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1705,7 +1700,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1749,7 +1743,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1793,7 +1786,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1837,7 +1829,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "gap": "clamp(1.5rem, 4vw, 3rem)"
@@ -1881,7 +1872,6 @@ export const marketingStyles = stylex.create({
     "min-inline-size": "0",
     "margin-inline": "auto",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "scroll-margin-block-start": "calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem)",
     "display": "grid",
     "align-items": "start",
@@ -2868,7 +2858,6 @@ export const marketingStyles = stylex.create({
     "justify-items": "center",
     "gap": "1.25rem",
     "padding-block": "var(--hraness-marketing-section-space)",
-    "border-block-start": "var(--hraness-marketing-rule)",
     "text-align": "center"
   },
   "ctaAccent": {

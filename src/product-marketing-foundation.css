@@ -134,6 +134,41 @@
   padding-inline: var(--hraness-marketing-gutter);
 }
 
+/* Section separators are a sibling relationship, not an owned atom: a ruled
+   section draws one boundary above itself, except directly after a framed
+   component whose own border already closes the block. */
+.hraness-marketing-section,
+.hraness-marketing-primitives,
+.hraness-marketing-interfaces,
+.hraness-marketing-trust,
+.hraness-marketing-quotes,
+.hraness-marketing-pricing,
+.hraness-marketing-questions,
+.hraness-marketing-maker,
+.hraness-marketing-related,
+.hraness-marketing-cta {
+  border-block-start: var(--hraness-marketing-rule);
+}
+
+:is(
+  .hraness-marketing-install,
+  .hraness-marketing-proof,
+  .hraness-marketing-proof-frame
+) + :is(
+  .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-interfaces,
+  .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
+  .hraness-marketing-questions,
+  .hraness-marketing-maker,
+  .hraness-marketing-related,
+  .hraness-marketing-cta
+) {
+  border-block-start: 0;
+}
+
 .hraness-marketing-header__brand :where(img, svg) {
   block-size: 1.25rem;
   inline-size: auto;
