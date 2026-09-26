@@ -6,22 +6,22 @@ var portfolioSnapshot = {
   formatVersion: 1,
   provenance: {
     registry: "https://hraness.com/portfolio.json",
-    commit: "a9988b9031327d1d319643b7455439409a2e3842",
-    committedOn: "2026-09-24",
+    commit: "cd7ad529c7f821b224300277186f4c533655a8a1",
+    committedOn: "2026-09-26",
     upstreamContract: "hraness.portfolio-public/v1",
-    upstreamDigest: "sha256:cd04546f896d19dce89208571fe3ac1f88919bc73d9e2563170c2506572da4ff",
+    upstreamDigest: "sha256:e678776157418c6242953e52b77513de61878f3bba7a08c1e7dea385f511f18e",
     files: [{
       path: "portfolio.public.generated.json",
-      sha256: "52164d743221fa3c8e57b4172700cc6f5546ae25273a2d6643c17baac88a7b20"
+      sha256: "337208b5668145366d9a9536fec71d1dff73decf7eeb8f1a9dc183b2765ad17e"
     }, {
       path: "packages/brand-catalog/brands.yaml",
-      sha256: "5b1e560535be0a7fc34d9e644db77773576059fbe007cc09ae1c3350e46e1094"
+      sha256: "8513c6c94db1dc4d6aed90c0faf913f4333c59893140e801d23beda671d5e7ce"
     }]
   },
   products: {
     gobstopper: {
       id: "gobstopper",
-      name: "GOBSTOPPER",
+      name: "Gobstopper",
       oneLiner: "Compacts long agent sessions into smaller copies, keeping every byte",
       brandDescription: "Gobstopper makes long Claude Code and Codex sessions smaller. Preview each cut, write a compacted copy, and keep every original byte in a local vault.",
       canonicalUrl: "https://gobstopper.sh",
@@ -237,7 +237,7 @@ var portfolioSnapshot = {
       name: "ALGAL",
       oneLiner: "Language and VM for agent programs that wait for approval and resume",
       brandDescription: "ALGAL is a programming language and VM for AI agent programs that wait for approval and leave receipts you can replay.",
-      canonicalUrl: "https://algal.dev",
+      canonicalUrl: "https://algal.computer",
       status: "active",
       copyStatus: "proposed",
       aliases: ["Morphogen"],
@@ -273,13 +273,13 @@ var portfolioSnapshot = {
     },
     valhalla: {
       id: "valhalla",
-      name: "Valhalla",
+      name: "vhalla",
       oneLiner: "Peer-to-peer rooms where agents and their owners share signed work",
       brandDescription: "Valhalla is open-source software for peer-to-peer rooms where AI agents and their owners share signed work, with no platform in the middle.",
       canonicalUrl: "https://vhalla.com",
       status: "active",
       copyStatus: "proposed",
-      aliases: [],
+      aliases: ["Valhalla"],
       messaging: {
         formatVersion: 1,
         product: "valhalla",
@@ -408,9 +408,9 @@ var portfolioSnapshot = {
     },
     wrench: {
       id: "wrench",
-      name: "GHOSTGET",
+      name: "Ghostget",
       oneLiner: "Named web actions for AI agents: read pages, save media, use connected accounts",
-      brandDescription: null,
+      brandDescription: "Ghostget lets your AI agent read pages, save media, and use your connected accounts through a fixed list of reviewed actions. Free and MIT licensed.",
       canonicalUrl: "https://ghostget.com",
       status: "active",
       copyStatus: "proposed",
@@ -444,7 +444,7 @@ var portfolioSnapshot = {
     },
     soulscrape: {
       id: "soulscrape",
-      name: "Soulscrape",
+      name: "soulscrape",
       oneLiner: "Free agent skill that writes dated dossiers on people, sources cited",
       brandDescription: "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
       canonicalUrl: "https://soulscrape.com",
@@ -1081,8 +1081,72 @@ var portfolioSnapshot = {
     direction: "forward",
     label: "develops with",
     detail: null
+  }, {
+    id: "runtime:message-like-me:xcb:drafts-replies-through",
+    source: "message-like-me",
+    target: "xcb",
+    kind: "runtime",
+    direction: "forward",
+    label: "drafts replies through",
+    detail: "Textbutler can classify messages and draft replies through xcb on the Claude Code or Codex subscription you already pay for, with xcb holding the sign-in; a separately billed API route also exists."
+  }, {
+    id: "runtime:message-like-me:algal:runs-reply-habitats-on",
+    source: "message-like-me",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "runs reply habitats on",
+    detail: "Textbutler's opt-in per-contact habitats run as ALGAL programs: a candidate reply plan replaces the current one only after a blind replay shows no regression, and no plan can change the recipient, provider, or permissions."
+  }, {
+    id: "runtime:xcb:algal:replays-task-history-with",
+    source: "xcb",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "replays task history with",
+    detail: "xcb embeds the ALGAL runtime for task transitions, route and settle reflexes, and resumable controllers, and its task verifier replays a task's recorded history offline; the managed harness is experimental."
+  }, {
+    id: "runtime:xcb:kb:searches-project-notes-with",
+    source: "xcb",
+    target: "kb",
+    kind: "runtime",
+    direction: "forward",
+    label: "searches project notes with",
+    detail: "xcb can bind one explicit Wordcell vault through a hash-pinned CLI, giving workers a read-only memory search with citations; saving a note back to the vault is always an explicit step."
+  }, {
+    id: "runtime:clankdar:algal:scores-puzzles-with",
+    source: "clankdar",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "scores puzzles with",
+    detail: "Clankdar's default puzzles are small programs in ALGAL's expression language, and ALGAL's official evaluator, pinned by commit and hash, computes each reference answer, so no judge model decides."
+  }, {
+    id: "runtime:slopcamera:algal:bakes-character-behavior-with",
+    source: "slopcamera",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "bakes character behavior with",
+    detail: "Slopcamera's scene behavior bake runs character behavior as ALGAL organisms with no executors or side effects."
+  }, {
+    id: "contract:sponge:wrench:imports-captures-from",
+    source: "sponge",
+    target: "wrench",
+    kind: "contract",
+    direction: "forward",
+    label: "imports captures from",
+    detail: "Sponge recommends Ghostget for local capture and imports its text-only capture bundles offline, without launching Ghostget, a browser, or the network."
+  }, {
+    id: "contract:sponge:soulscrape:imports-research-exchanges-from",
+    source: "sponge",
+    target: "soulscrape",
+    kind: "contract",
+    direction: "forward",
+    label: "imports research exchanges from",
+    detail: "Sponge converts a public soulscrape research exchange offline into an Oh research packet that it does not treat as established fact."
   }],
-  digest: "sha256:1ee53065e9e39c2e5bfdd566aad33629760b8389b8332914cfa6bac8a19f305c"
+  digest: "sha256:fa7bcf019c1f92312e51d6d1bf6bfe75710568b19b687497205d2fe0d0a887bb"
 };
 
 // src/portfolio.ts
