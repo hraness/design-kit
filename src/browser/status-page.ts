@@ -47,8 +47,10 @@ export function attachStatusPage(root: HTMLElement): () => void {
       view.location.pathname,
       parseStatusPageRoutes(root.getAttribute("data-hraness-status-routes")),
     );
-    if (match) {
-      hintLink.href = match.href;
+    // The route data came from the markup; accept only a page on this origin.
+    const target = match === undefined ? undefined : new URL(match.href, view.location.href);
+    if (match && target && target.origin === view.location.origin) {
+      hintLink.href = target.pathname + target.search + target.hash;
       hintLink.textContent = match.label;
       hint.hidden = false;
       root.dataset.hranessStatusSuggestion = match.href;

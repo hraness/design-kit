@@ -1701,13 +1701,17 @@ function parseStatusPageRoutes(value) {
 }
 var MAX_PATH = 160;
 function normalizeStatusPath(value) {
-  let path = value.replace(/[?#].*$/su, "");
+  let path = value.slice(0, MAX_PATH * 4);
+  const end = path.search(/[?#]/u);
+  if (end !== -1)
+    path = path.slice(0, end);
   try {
     path = decodeURIComponent(path);
   } catch {}
-  path = path.toLowerCase().replace(/\/{2,}/gu, "/").replace(/(?:\/index)?\.html?$/u, "");
-  if (path.length > 1)
-    path = path.replace(/\/+$/u, "");
+  path = path.toLowerCase().split("/").filter((part, index) => index === 0 || part !== "").join("/");
+  path = path.replace(/(?:\/index)?\.html?$/u, "");
+  while (path.length > 1 && path.endsWith("/"))
+    path = path.slice(0, -1);
   if (!path.startsWith("/"))
     path = `/${path}`;
   return path.slice(0, MAX_PATH);
@@ -2320,8 +2324,9 @@ function attachStatusPage(root) {
   const hintLink = hint?.querySelector("a");
   if (hint && hintLink && root.dataset.kind === "not-found") {
     const match = suggestStatusRoute(view.location.pathname, parseStatusPageRoutes(root.getAttribute("data-hraness-status-routes")));
-    if (match) {
-      hintLink.href = match.href;
+    const target = match === undefined ? undefined : new URL(match.href, view.location.href);
+    if (match && target && target.origin === view.location.origin) {
+      hintLink.href = target.pathname + target.search + target.hash;
       hintLink.textContent = match.label;
       hint.hidden = false;
       root.dataset.hranessStatusSuggestion = match.href;

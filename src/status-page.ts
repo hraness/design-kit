@@ -157,10 +157,14 @@ const MAX_PATH = 160;
 
 /** Lowercased pathname without query, fragment, index files, or trailing slash. */
 export function normalizeStatusPath(value: string): string {
-  let path = value.replace(/[?#].*$/su, "");
+  // Bound the input first; every step below is linear in its length.
+  let path = value.slice(0, MAX_PATH * 4);
+  const end = path.search(/[?#]/u);
+  if (end !== -1) path = path.slice(0, end);
   try { path = decodeURIComponent(path); } catch { /* keep the raw path */ }
-  path = path.toLowerCase().replace(/\/{2,}/gu, "/").replace(/(?:\/index)?\.html?$/u, "");
-  if (path.length > 1) path = path.replace(/\/+$/u, "");
+  path = path.toLowerCase().split("/").filter((part, index) => index === 0 || part !== "").join("/");
+  path = path.replace(/(?:\/index)?\.html?$/u, "");
+  while (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
   if (!path.startsWith("/")) path = `/${path}`;
   return path.slice(0, MAX_PATH);
 }
