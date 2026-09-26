@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import {
   renderArticleCalloutHtml,
+  renderArticleRelatedHtml,
   renderArticleHtml,
   renderArticleIndexHtml,
   renderArticleProvenanceHtml,
@@ -94,7 +95,30 @@ test("ArticleRelatedProducts wraps MarketingRelated", () => {
   expect(html.startsWith('<div class="plain-publication__related-products">')).toBe(true);
   expect(html).toContain("Related products");
   expect(html).toContain('id="article-related-products"');
-  expect(html).toContain("Stores the files this one renders.");
+  expect(html).toContain("Storage");
+  expect(html).not.toContain("Stores the files this one renders.");
+});
+
+test("renderArticleRelatedHtml draws one mark, name, and role row per product", () => {
+  const mark = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E";
+  expect(renderArticleRelatedHtml({
+    items: [
+      { href: "https://example.com", mark, name: "Example & Co", relationship: "Not shown.", role: "Stores <files>" },
+      { href: "/older", name: "Older", relationship: "Shown when there is no role." },
+    ],
+  })).toBe([
+    '<section aria-labelledby="article-related-products" class="plain-publication__related">',
+    '<div class="plain-publication__section-heading"><h2 id="article-related-products">Related products</h2></div>',
+    '<div class="plain-publication__related-grid">',
+    `<a href="https://example.com"><img alt="" class="plain-publication__related-mark" decoding="async" height="44" src="${mark.replaceAll("'", "&#x27;")}" width="44">`,
+    '<span class="plain-publication__related-text"><strong>Example &amp; Co</strong><span>Stores &lt;files&gt;</span></span></a>',
+    '<a href="/older"><span class="plain-publication__related-text"><strong>Older</strong><span>Shown when there is no role.</span></span></a>',
+    "</div></section>",
+  ].join(""));
+  expect(renderArticleRelatedHtml({ items: [] })).toBe("");
+  for (const unsafe of ["javascript:alert(1)", "data:text/html,<script>x</script>"]) {
+    expect(() => renderArticleRelatedHtml({ items: [{ href: "/x", mark: unsafe, name: "X", role: "x" }] })).toThrow(RangeError);
+  }
 });
 
 test("ArticleIndex lists posts and rejects duplicates", () => {

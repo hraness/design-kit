@@ -71,6 +71,7 @@ Skip links should target `#main-content`. Hash targets and the main landmark use
 | Display | `--hraness-marketing-display-font`, `--hraness-marketing-display-weight` |
 | Hero heading | `--hraness-marketing-h1-size`, `--hraness-marketing-h1-leading`, `--hraness-marketing-h1-tracking` |
 | Section heading | `--hraness-marketing-h2-size`, `--hraness-marketing-h2-leading`, `--hraness-marketing-h2-tracking` |
+| Tier and proof heading | `--hraness-marketing-h3-size`, `--hraness-marketing-h3-leading`. The editorial display face stays at 1.75rem or larger; set smaller headings in the text face. |
 | Layout | `--hraness-marketing-content-measure`, `--hraness-marketing-header-measure`, `--hraness-marketing-header-height`, `--hraness-marketing-gutter`, `--hraness-marketing-hero-space`, `--hraness-marketing-story-space` |
 | Field | `--hraness-marketing-field-ink`, `--hraness-marketing-field-muted`, `--hraness-marketing-link`, `--hraness-marketing-field-images`, `--hraness-marketing-field-size` |
 | Terminal proof | `--hraness-marketing-terminal-background`, `--hraness-marketing-terminal-ink`, `--hraness-marketing-terminal-muted`, `--hraness-marketing-terminal-command`, `--hraness-marketing-terminal-chrome`, `--hraness-marketing-terminal-shadow` |

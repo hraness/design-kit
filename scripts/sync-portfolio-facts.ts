@@ -8,9 +8,11 @@
  *   bun run ./scripts/sync-portfolio-facts.ts --registry <checkout> --ref origin/main --write
  *
  * Only public facts leave the registry: the served public portfolio contract
- * (`portfolio.public.generated.json`) plus the name, expanded name, and
- * description of each public product's brand entry. Nothing else from
- * `brands.yaml` is read into the output.
+ * (`portfolio.public.generated.json`), the name, expanded name, and
+ * description of each public product's brand entry, and each product's
+ * portfolio mark (the same artwork hraness.com serves under `/marks/`, joined
+ * through `brand-artwork.json`). Nothing else from `brands.yaml` or the
+ * artwork registry is read into the output.
  */
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
@@ -22,6 +24,10 @@ export const PORTFOLIO_REGISTRY_URL = "https://hraness.com/portfolio.json";
 const UPSTREAM_CONTRACT = "hraness.portfolio-public/v1";
 const PUBLIC_PATH = "portfolio.public.generated.json";
 const BRANDS_PATH = "packages/brand-catalog/brands.yaml";
+const ARTWORK_PATH = "brand-artwork.json";
+/** Marks are compact path artwork; anything larger is not a registry mark. */
+const MARK_MAX_BYTES = 32 * 1024;
+const MARK_PATH_PATTERN = /^projects\/hraness\/public\/marks\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/u;
 const RELATION_KINDS = ["runtime", "development", "contract", "delivery"] as const;
 const RELATION_DIRECTIONS = ["forward", "shared"] as const;
 const COPY_STATUSES = ["authored", "proposed"] as const;
@@ -42,6 +48,10 @@ export type PortfolioSnapshotSource = Readonly<{
   publicPortfolio: string;
   /** Raw bytes of `packages/brand-catalog/brands.yaml` at that commit. */
   brands: string;
+  /** Raw bytes of `brand-artwork.json` at that commit. */
+  artwork: string;
+  /** Raw bytes of every mark `brand-artwork.json` names, keyed by registry path. */
+  marks: Readonly<Record<string, string>>;
 }>;
 
 export class PortfolioSyncError extends Error {
@@ -143,6 +153,67 @@ function parseBrands(source: string): ReadonlyMap<string, Brand> {
   return brands;
 }
 
+/** Product id to registry mark path, from the artwork registry's `products` list. */
+export function parseArtworkMarks(source: string): ReadonlyMap<string, string> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(source);
+  } catch {
+    fail(`${ARTWORK_PATH} is not valid JSON.`);
+  }
+  const document = record(parsed, ARTWORK_PATH);
+  if (document.formatVersion !== 1) fail(`${ARTWORK_PATH} must have formatVersion 1.`);
+  const marks = new Map<string, string>();
+  list(document.products, `${ARTWORK_PATH} products`).forEach((entry, index) => {
+    const where = `${ARTWORK_PATH} products[${index}]`;
+    const artwork = record(entry, where);
+    const id = text(artwork.id, `${where}.id`);
+    if (marks.has(id)) fail(`${ARTWORK_PATH} lists ${id} twice.`);
+    const mark = text(artwork.mark, `${where}.mark`);
+    if (!MARK_PATH_PATTERN.test(mark)) fail(`${where}.mark must be a portfolio mark path.`);
+    marks.set(id, mark);
+  });
+  return marks;
+}
+
+/**
+ * Checks that a mark is inert path artwork, the same class the registry's
+ * compositor admits: an svg root holding only g and path elements, no
+ * scripts, styles, references, embedded images, or event handlers.
+ */
+function inertMark(svg: string, where: string): string {
+  if (new TextEncoder().encode(svg).byteLength > MARK_MAX_BYTES) fail(`${where} exceeds ${MARK_MAX_BYTES} bytes.`);
+  const trimmed = svg.trim();
+  if (!/^<svg\s[^>]*xmlns="http:\/\/www\.w3\.org\/2000\/svg"[^>]*>[\s\S]*<\/svg>$/u.test(trimmed)) {
+    fail(`${where} must be one svg element.`);
+  }
+  for (const [, name] of trimmed.matchAll(/<\/?([A-Za-z][\w:-]*)/gu)) {
+    if (name !== "svg" && name !== "g" && name !== "path") fail(`${where} contains a <${String(name)}> element.`);
+  }
+  const printable = [...trimmed].every((character) => {
+    const code = character.codePointAt(0) ?? 0;
+    return (code >= 0x20 && code <= 0x7e) || character === "\t" || character === "\n" || character === "\r";
+  });
+  if (!printable || /\s(?:on[a-z]+|style|href|xlink:href|class)\s*=|url\(|<!|<\?|'/iu.test(trimmed)) {
+    fail(`${where} is not inert path artwork.`);
+  }
+  return trimmed;
+}
+
+/**
+ * A compact `data:image/svg+xml` URL for inert path artwork. Whitespace runs
+ * collapse, double quotes become single quotes, and every character outside
+ * the URL-safe set is percent-encoded, so the URL is safe unquoted in HTML
+ * attributes and inside a double-quoted CSS `url()`.
+ */
+export function svgDataUrl(svg: string): string {
+  const compact = svg.replace(/\s+/gu, " ").replace(/> </gu, "><").replaceAll("\"", "'");
+  const bytes = (character: string) => [...new TextEncoder().encode(character)]
+    .map((byte) => `%${byte.toString(16).toUpperCase().padStart(2, "0")}`)
+    .join("");
+  return `data:image/svg+xml,${compact.replace(/[^A-Za-z0-9 \-._~!$&'*+,;=:@/]/gu, bytes)}`;
+}
+
 function sameName(left: string, right: string): boolean {
   return left.localeCompare(right, "en", { sensitivity: "accent" }) === 0;
 }
@@ -166,6 +237,7 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
     fail(`${PUBLIC_PATH} digest does not match its contents; regenerate it in the registry first.`);
   }
   const brands = parseBrands(source.brands);
+  const markPaths = parseArtworkMarks(source.artwork);
 
   const products: Record<string, unknown> = {};
   list(document.projects, `${PUBLIC_PATH}.projects`).forEach((entry, index) => {
@@ -206,6 +278,9 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
         aliases.push(candidate);
       }
     }
+    const markPath = markPaths.get(id) ?? fail(`${ARTWORK_PATH} has no mark for product ${id}.`);
+    const markSource = Object.hasOwn(source.marks, markPath) ? source.marks[markPath] : undefined;
+    if (markSource === undefined) fail(`The registry source is missing ${markPath}.`);
     products[id] = {
       id,
       name,
@@ -215,6 +290,7 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
       status: "active",
       copyStatus: oneOf(status.default, COPY_STATUSES, `${where}.messaging.status.default`),
       aliases,
+      mark: svgDataUrl(inertMark(markSource, markPath)),
       messaging,
     };
   });
@@ -251,6 +327,12 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
       files: [
         { path: PUBLIC_PATH, sha256: sha256Hex(source.publicPortfolio) },
         { path: BRANDS_PATH, sha256: sha256Hex(source.brands) },
+        { path: ARTWORK_PATH, sha256: sha256Hex(source.artwork) },
+        ...Object.keys(products)
+          .map((id) => markPaths.get(id) ?? "")
+          .filter((path, index, paths) => paths.indexOf(path) === index)
+          .sort()
+          .map((path) => ({ path, sha256: sha256Hex(source.marks[path] ?? "") })),
       ],
     },
     products,
@@ -287,11 +369,18 @@ export function readRegistrySource(checkout: string, ref: string, options: Reado
       fail(`${ref} (${commit}) is not on the registry's origin/main. Fetch first, or pass --allow-unmerged for a local preview that must not be committed.`);
     }
   }
+  const artwork = git(checkout, ["show", `${commit}:${ARTWORK_PATH}`]);
+  const marks: Record<string, string> = {};
+  for (const path of new Set(parseArtworkMarks(artwork).values())) {
+    marks[path] = git(checkout, ["show", `${commit}:${path}`]);
+  }
   return {
     commit,
     committedOn: git(checkout, ["show", "-s", "--format=%cs", commit]).trim(),
     publicPortfolio: git(checkout, ["show", `${commit}:${PUBLIC_PATH}`]),
     brands: git(checkout, ["show", `${commit}:${BRANDS_PATH}`]),
+    artwork,
+    marks,
   };
 }
 

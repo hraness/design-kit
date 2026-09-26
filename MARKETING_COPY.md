@@ -19,14 +19,14 @@ Limits are maximums. Count characters in the rendered text.
 | `MarketingPillars`, `MarketingPrimitives` | Two to four items. Labels name a thing or state a fact ("A log for every run"); each summary is one sentence. | Label: five words. Summary: 120 characters | Adjective triads ("Fast / Legible / Yours") and abstract nouns ("durable objects"). |
 | Section `heading` | Sentence case. A full sentence in the editorial preset may end with a period; other headings do not. | 70 characters | Slogans and headings that promise more than the section shows. |
 | `MarketingTrustBoundary` | What stays on the reader's machine, what is shared, and what the product will not do, each stated once on the page. | Four items | Authority, custody, admission, or lease vocabulary. |
-| `MarketingRelated` `role` | The sibling product's own one-line description from the portfolio registry. | | A new description invented for this page. |
-| `MarketingRelated` `relationship` | What the two products do together, in one sentence. | One sentence | Claims about the sibling that its own site does not make. |
+| `MarketingRelated` `role` | The sibling product's own one-line description from the portfolio registry. It is the only text the card shows, under the product's mark and name. | One line | A new description invented for this page. |
+| `MarketingRelated` `mark` | The sibling product's portfolio mark, such as a `relatedFor()` item's `mark`. | | Artwork the sibling does not use. |
 | `MarketingQuestionList` | Questions readers actually ask. The first sentence of each answer answers it. Generate any FAQ JSON-LD from the same array. | Eight questions | Questions written to deliver a talking point. |
 | `MarketingCallToAction` | The next concrete step. | Section heading limit | Decorative closers ("Give every job the same room to run in."). |
 
 ## Plain-string props
 
-Most text props (`summary`, `detail`, `caption`, `boundary`, `role`, `relationship`) are plain strings and render as text. Backticks show up literally on the page. Name a command in prose there, or put code in a slot that accepts elements (`example`, `children`, `answer`).
+Most text props (`summary`, `detail`, `caption`, `boundary`, `role`) are plain strings and render as text. Backticks show up literally on the page. Name a command in prose there, or put code in a slot that accepts elements (`example`, `children`, `answer`).
 
 ## Before and after
 

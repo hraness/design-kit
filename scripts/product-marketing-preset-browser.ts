@@ -143,6 +143,32 @@ try {
           void _background;
           if (reference === undefined) reference = comparable;
           else assert.deepEqual(comparable, reference, `${mode} differs from raw preset at ${width}/${theme}`);
+          if (mode !== "raw") {
+            // Face tokens must re-resolve inside a preset scope, not keep :root's face.
+            const tokenFaces = await page.evaluate(() => [
+              '.hraness-marketing-page[data-hraness-marketing-preset="editorial"]',
+              '.hraness-marketing-page[data-hraness-marketing-preset="minimal"]',
+            ].map((scope) => {
+              const host = document.querySelector(scope);
+              if (!(host instanceof HTMLElement)) throw new Error(`Missing ${scope}`);
+              const probe = (level: string) => {
+                const node = document.createElement(level);
+                node.textContent = "Probe";
+                node.style.fontFamily = `var(--hraness-type-${level}-font)`;
+                node.style.fontWeight = `var(--hraness-type-${level}-weight)`;
+                host.append(node);
+                const { fontFamily, fontWeight } = getComputedStyle(node);
+                node.remove();
+                return { font: fontFamily, weight: fontWeight };
+              };
+              return { h2: probe("h2"), h3: probe("h3") };
+            }));
+            const [editorial, minimal] = tokenFaces;
+            assert(editorial?.h2.font.includes("Instrument Serif"), `${mode} editorial h2 token face: ${editorial?.h2.font}`);
+            assert.equal(editorial?.h2.weight, "400", `${mode} editorial h2 token weight`);
+            assert(!editorial?.h3.font.includes("Instrument Serif"), `${mode} editorial h3 token must use the text face`);
+            assert(!minimal?.h2.font.includes("Instrument Serif"), `${mode} minimal h2 token face: ${minimal?.h2.font}`);
+          }
           const patterns = await patternPaint(page);
           assert.equal(new Set(patterns.map(({ image }) => image)).size, 5, `${mode} must render five distinct patterns`);
           assert(patterns[0]?.image.includes("cells.svg"));

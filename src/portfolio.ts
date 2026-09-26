@@ -78,6 +78,8 @@ export type PortfolioProduct = Readonly<{
   copyStatus: PortfolioCopyStatus;
   /** Other names the registry uses for the product, such as an expanded, display, or retired name. */
   aliases: readonly string[];
+  /** The product's portfolio mark as an inert `data:image/svg+xml` URL, the artwork hraness.com project cards show. */
+  mark: string;
   /** The canonical tiered copy record: names, category, tagline, short, meta, medium, long, hero, and channels. */
   messaging: PortfolioMessaging;
 }>;
@@ -120,9 +122,11 @@ export type PortfolioSnapshot = Readonly<{
 export type PortfolioRelatedItem = Readonly<{
   href: string;
   name: string;
-  /** The related product's one-liner. */
+  /** The related product's one-liner, the line the card shows. */
   role: string;
-  /** The relation's reviewed detail sentence. */
+  /** The related product's portfolio mark, a `data:image/svg+xml` URL. */
+  mark: string;
+  /** The relation's reviewed detail sentence. Cards no longer show it; articles can quote it. */
   relationship: string;
   productId: PortfolioProductId;
   relationId: string;
@@ -198,6 +202,7 @@ export function relatedFor(
       href: other.canonicalUrl,
       name: other.name,
       role: other.oneLiner,
+      mark: other.mark,
       relationship: relation.detail,
       productId: other.id,
       relationId: relation.id,

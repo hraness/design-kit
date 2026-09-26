@@ -1226,10 +1226,18 @@ export function MarketingMaker({
 }
 
 export interface MarketingRelatedProduct {
+  /** Custom artwork in place of `mark`, drawn in the same 44px slot. */
   readonly art?: ReactNode;
   readonly href: string;
+  /** Transparent product mark, such as a portfolio item's `mark`; drawn as a foil mark before the name. */
+  readonly mark?: string;
   readonly name: string;
-  readonly relationship: ReactNode;
+  /**
+   * @deprecated Cards show `role` only. Kept so existing item lists still
+   * type-check; the relation sentence is not rendered.
+   */
+  readonly relationship?: ReactNode;
+  /** The product's one-line description, shown under its name. */
   readonly role: string;
 }
 
@@ -1243,21 +1251,27 @@ export interface MarketingRelatedGroup {
 
 function MarketingRelatedCards({
   items,
+  level,
 }: Readonly<{
   items: readonly MarketingRelatedProduct[];
+  level: MarketingHeadingLevel;
 }>) {
   return (
     <>
       {items.map((item) => (
-        <MarketingCard
-          key={item.name}
-          href={item.href}
-          meta={item.role}
-          title={item.name}
-          {...(item.art === undefined ? {} : { art: item.art })}
-        >
-          {item.relationship}
-        </MarketingCard>
+        <a className={classNames("hraness-marketing-related__card")} data-foil="" data-hraness-marketing="card" href={item.href} key={item.name}>
+          {isPresentNode(item.art) || (item.mark !== undefined && item.mark !== "")
+            ? (
+              <span aria-hidden="true" className={classNames("hraness-marketing-related__card-mark")}>
+                {isPresentNode(item.art) ? item.art : <FoilMark size={44} src={item.mark ?? ""} />}
+              </span>
+            )
+            : null}
+          <span className={classNames("hraness-marketing-related__card-text")}>
+            <Heading className={classNames("hraness-marketing-related__card-name")} level={level}>{item.name}</Heading>
+            <span className={classNames("hraness-marketing-related__card-role")}>{item.role}</span>
+          </span>
+        </a>
       ))}
     </>
   );
@@ -1267,7 +1281,7 @@ type MarketingRelatedBody =
   | Readonly<{ groups: readonly MarketingRelatedGroup[]; items?: undefined }>
   | Readonly<{ groups?: undefined; items: readonly MarketingRelatedProduct[] }>;
 
-/** Linked cards for sibling products, each framed by its relationship to the featured product. */
+/** Linked cards for sibling products: each shows the product's mark, name, and one-line description. */
 export function MarketingRelated({
   className,
   heading,
@@ -1306,7 +1320,7 @@ export function MarketingRelated({
       {groups === undefined
         ? (
           <MarketingCardRow>
-            <MarketingRelatedCards items={items} />
+            <MarketingRelatedCards items={items} level={childHeadingLevel(headingLevel)} />
           </MarketingCardRow>
         )
         : groups.map((group) => (
@@ -1324,7 +1338,7 @@ export function MarketingRelated({
                 : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
             </div>
             <MarketingCardRow ariaLabel={group.heading}>
-              <MarketingRelatedCards items={group.items} />
+              <MarketingRelatedCards items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
             </MarketingCardRow>
           </div>
         ))}

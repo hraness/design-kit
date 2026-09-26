@@ -165,17 +165,34 @@ export function renderArticleCalloutHtml(input: Readonly<{
   return `<div class="plain-publication__callout" data-tone="${tone}" role="note">${present(input.label) ? `<strong>${escapeArticleHtml(input.label)}</strong>` : ""}${body}</div>`;
 }
 
-export interface ArticleRelatedLink {
-  readonly href: string;
-  readonly name: string;
-  /** What the two products do together, in one sentence from the registered relation. */
-  readonly relationship: string;
+export type ArticleRelatedLink = Readonly<{
+  href: string;
+  name: string;
+  /** Transparent product mark, such as a portfolio item's `mark` data URL, drawn before the name. */
+  mark?: string;
+}> & (
+  | Readonly<{
+    /** The product's one-line description, shown under its name. */
+    role: string;
+    /** Not rendered when `role` is present. */
+    relationship?: string;
+  }>
+  | Readonly<{
+    role?: undefined;
+    /** Shown under the name for items that predate `role`. */
+    relationship: string;
+  }>
+);
+
+function assertArticleMark(mark: string): void {
+  if (!mark.startsWith("data:image/svg+xml,")) assertArticleHref(mark);
 }
 
 /**
  * Related products for static pages, using the plain-publication related
- * grid. React hosts use `ArticleRelatedProducts`, which renders the marketing
- * card row instead.
+ * grid: each row shows the product's mark, name, and one-line description.
+ * React hosts use `ArticleRelatedProducts`, which renders the marketing card
+ * row instead.
  */
 export function renderArticleRelatedHtml({
   heading = "Related products",
@@ -183,12 +200,22 @@ export function renderArticleRelatedHtml({
   items,
 }: Readonly<{ heading?: string; headingId?: string; items: readonly ArticleRelatedLink[] }>): string {
   if (items.length === 0) return "";
-  for (const item of items) assertArticleHref(item.href);
+  for (const item of items) {
+    assertArticleHref(item.href);
+    if (present(item.mark)) assertArticleMark(item.mark);
+  }
   return [
     `<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__related">`,
     `<div class="plain-publication__section-heading"><h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2></div>`,
     '<div class="plain-publication__related-grid">',
-    ...items.map((item) => `<a href="${escapeArticleHtml(item.href)}"><strong>${escapeArticleHtml(item.name)}</strong><span>${escapeArticleHtml(item.relationship)}</span></a>`),
+    ...items.map((item) => [
+      `<a href="${escapeArticleHtml(item.href)}">`,
+      present(item.mark)
+        ? `<img alt="" class="plain-publication__related-mark" decoding="async" height="44" src="${escapeArticleHtml(item.mark)}" width="44">`
+        : "",
+      `<span class="plain-publication__related-text"><strong>${escapeArticleHtml(item.name)}</strong>`,
+      `<span>${escapeArticleHtml(item.role ?? item.relationship)}</span></span></a>`,
+    ].join("")),
     "</div></section>",
   ].join("");
 }

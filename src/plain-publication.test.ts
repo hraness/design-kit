@@ -243,8 +243,11 @@ test("the shared reading scale ships as an opt-in prose surface on shared tokens
     );
     expect(readingCss).toContain('[data-hraness-reading-face="serif"]');
     expect(readingCss).toMatch(
-      /\.hraness-prose :is\(h1, h2, h3\)\s*\{[^}]*font-family:\s*var\(--hraness-type-heading-font,[^;}]*\);[^}]*font-weight:\s*var\(--hraness-type-heading-weight,[^;}]*\);/su,
+      /\.hraness-prose :is\(h1, h2\)\s*\{[^}]*font-family:\s*var\(--hraness-type-heading-font,[^;}]*\);[^}]*font-weight:\s*var\(--hraness-type-heading-weight,[^;}]*\);/su,
     );
+    // h3 and below never take the display face.
+    expect(readingCss).toMatch(/\.hraness-prose h3\s*\{[^}]*font-family:\s*var\(--hraness-type-h3-font,/su);
+    expect(readingCss).toMatch(/\.hraness-prose :is\(h4, h5, h6\)\s*\{[^}]*font-family:\s*var\(--hraness-type-h4-font,/su);
     expect(readingCss).not.toMatch(/(?:linear|radial|conic)-gradient/iu);
 
     expect(publicationCss).toContain(
@@ -262,5 +265,33 @@ test("the shared reading scale ships as an opt-in prose surface on shared tokens
     expect(publicationCss).toContain(
       "margin: var(--hraness-type-section-space,",
     );
+    expect(publicationCss).toMatch(/__article-body h3\s*\{[^}]*font-family:\s*var\(--hraness-type-h3-font,/su);
   });
+});
+
+test("the display face never renders below the shared legibility floor", async () => {
+  const [typographyCss, readingCss] = await Promise.all([
+    Bun.file(new URL("./typography.css", import.meta.url)).text(),
+    Bun.file(new URL("./reading.css", import.meta.url)).text(),
+  ]);
+  const token = (css: string, name: string) => new RegExp(`${name}:\\s*([^;]+);`, "u").exec(css)?.[1]?.trim();
+  const floorRem = (value: string | undefined) => {
+    const clamp = /^clamp\(([\d.]+)rem,/u.exec(value ?? "");
+    const plain = /^([\d.]+)rem$/u.exec(value ?? "");
+    return Number((clamp ?? plain)?.[1]);
+  };
+  expect(token(typographyCss, "--hraness-type-display-min")).toBe("1.75rem");
+  for (const level of ["h1", "h2"]) {
+    expect(token(typographyCss, `--hraness-type-${level}-font`)).toBe("var(--hraness-type-heading-font)");
+    expect(floorRem(token(typographyCss, `--hraness-type-${level}-size`))).toBeGreaterThanOrEqual(1.75);
+    // The serif reading face steps the display scale up, never down.
+    const serif = token(readingCss, `--hraness-type-${level}-size`);
+    if (serif !== undefined) expect(floorRem(serif)).toBeGreaterThanOrEqual(1.75);
+  }
+  for (const level of ["h3", "h4"]) {
+    expect(token(typographyCss, `--hraness-type-${level}-font`)).toBe("var(--hraness-type-subheading-font)");
+    expect(token(typographyCss, `--hraness-type-${level}-weight`)).toBe("var(--hraness-type-subheading-weight)");
+  }
+  expect(token(typographyCss, "--hraness-type-subheading-font")).toBe("var(--font-text, inherit)");
+  expect(readingCss).not.toContain("--hraness-type-h3-size:");
 });
