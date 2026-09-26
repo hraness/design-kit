@@ -27,7 +27,7 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-ptefn324.js";
+} from "../chunk-rr7vkqtt.js";
 import {
   BarListChart,
   RadarProfileChart,

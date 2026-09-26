@@ -62,7 +62,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-ptefn324.js";
+} from "./chunk-rr7vkqtt.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,

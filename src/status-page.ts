@@ -85,6 +85,43 @@ function assertLink(name: string, link: StatusPageLink): void {
   if (link.description !== undefined) assertText(`${name} description`, link.description, 90);
 }
 
+const ROUTE_LABEL_LIMIT = 80;
+
+/** True when `href` holds whitespace or a C0/C1 control character. */
+function hasControlOrSpace(href: string): boolean {
+  for (const character of href) {
+    const code = character.codePointAt(0) ?? 0;
+    if (code <= 0x20 || (code >= 0x7f && code <= 0x9f) || /\s/u.test(character)) return true;
+  }
+  return false;
+}
+
+/** Shorten a long page title at a word boundary for the "Did you mean" line. */
+function shortRouteLabel(label: string): string {
+  const text = label.trim().replace(/\s+/gu, " ");
+  if (text.length <= ROUTE_LABEL_LIMIT) return text;
+  const cut = text.slice(0, ROUTE_LABEL_LIMIT - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > ROUTE_LABEL_LIMIT / 2 ? cut.slice(0, space) : cut).trimEnd()}…`;
+}
+
+/**
+ * Routes usually come straight from a sitemap or article index, so they are
+ * cleaned rather than rejected: entries that are not same-site paths or have
+ * no label are dropped, and long titles are shortened.
+ */
+function usableRoutes(routes: readonly unknown[]): StatusPageLink[] {
+  const usable: StatusPageLink[] = [];
+  for (const route of routes.slice(0, STATUS_PAGE_MAX_ROUTES)) {
+    if (typeof route !== "object" || route === null) continue;
+    const { href, label } = route as { href?: unknown; label?: unknown };
+    if (typeof href !== "string" || typeof label !== "string" || label.trim() === "") continue;
+    if (!isSitePath(href) || hasControlOrSpace(href)) continue;
+    usable.push({ href, label: shortRouteLabel(label) });
+  }
+  return usable;
+}
+
 /** Apply defaults and reject content the page cannot show well. */
 export function resolveStatusPage(content: StatusPageContent = {}): ResolvedStatusPage {
   const kind = content.kind ?? "not-found";
@@ -109,8 +146,7 @@ export function resolveStatusPage(content: StatusPageContent = {}): ResolvedStat
   next.forEach((link) => assertLink("next", link));
   const nextHeading = content.nextHeading ?? "Or start here";
   assertText("nextHeading", nextHeading, 40);
-  const routes = (content.routes ?? []).slice(0, STATUS_PAGE_MAX_ROUTES);
-  routes.forEach((link) => assertLink("route", link));
+  const routes = usableRoutes(content.routes ?? []);
   if (content.agentIndexHref !== undefined) assertArticleHref(content.agentIndexHref);
   return {
     kind,
@@ -120,7 +156,7 @@ export function resolveStatusPage(content: StatusPageContent = {}): ResolvedStat
     primaryAction,
     next,
     nextHeading,
-    routes: routes.filter((route) => isSitePath(route.href)),
+    routes,
     ...(content.agentIndexHref === undefined ? {} : { agentIndexHref: content.agentIndexHref }),
   };
 }
