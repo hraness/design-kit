@@ -44,6 +44,23 @@ describe("resolveStatusPage", () => {
     expect(() => resolveStatusPage({ agentIndexHref: "data:text/plain,hi" })).toThrow(RangeError);
   });
 
+  test("cleans sitemap routes instead of rejecting them", () => {
+    const title = "How Sponge keeps every saved page citable after the original site goes away";
+    const page = resolveStatusPage({
+      routes: [
+        { href: "/writing/citable", label: `${title} for good` },
+        { href: "/blank", label: "  " },
+        { href: "/docs", label: "Docs" },
+        "/raw-string" as unknown as { href: string; label: string },
+      ],
+    });
+    expect(page.routes.map((route) => route.href)).toEqual(["/writing/citable", "/docs"]);
+    const short = page.routes[0]?.label ?? "";
+    expect(short.length).toBeLessThanOrEqual(80);
+    expect(short.endsWith("…")).toBe(true);
+    expect(title.startsWith(short.slice(0, -1))).toBe(true);
+  });
+
   test("keeps only same-site routes for suggestions", () => {
     const page = resolveStatusPage({ routes: [...routes, { href: "https://wordcell.io", label: "Wordcell" }] });
     expect(page.routes.map((route) => route.href)).toEqual(routes.map((route) => route.href));

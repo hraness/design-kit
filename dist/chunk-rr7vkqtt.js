@@ -599,6 +599,43 @@ function assertLink(name, link) {
   if (link.description !== undefined)
     assertText(`${name} description`, link.description, 90);
 }
+var ROUTE_LABEL_LIMIT = 80;
+function hasControlOrSpace(href) {
+  for (const character of href) {
+    const code = character.codePointAt(0) ?? 0;
+    if (code <= 32 || code >= 127 && code <= 159 || /\s/u.test(character))
+      return true;
+  }
+  return false;
+}
+function shortRouteLabel(label) {
+  const text = label.trim().replace(/\s+/gu, " ");
+  if (text.length <= ROUTE_LABEL_LIMIT)
+    return text;
+  const cut = text.slice(0, ROUTE_LABEL_LIMIT - 1);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > ROUTE_LABEL_LIMIT / 2 ? cut.slice(0, space) : cut).trimEnd()}…`;
+}
+function usableRoutes(routes) {
+  const usable = [];
+  for (const route of routes.slice(0, STATUS_PAGE_MAX_ROUTES)) {
+    if (typeof route !== "object" || route === null)
+      continue;
+    const {
+      href,
+      label
+    } = route;
+    if (typeof href !== "string" || typeof label !== "string" || label.trim() === "")
+      continue;
+    if (!isSitePath(href) || hasControlOrSpace(href))
+      continue;
+    usable.push({
+      href,
+      label: shortRouteLabel(label)
+    });
+  }
+  return usable;
+}
 function resolveStatusPage(content = {}) {
   const kind = content.kind ?? "not-found";
   const base = defaults[kind];
@@ -623,8 +660,7 @@ function resolveStatusPage(content = {}) {
   next.forEach((link) => assertLink("next", link));
   const nextHeading = content.nextHeading ?? "Or start here";
   assertText("nextHeading", nextHeading, 40);
-  const routes = (content.routes ?? []).slice(0, STATUS_PAGE_MAX_ROUTES);
-  routes.forEach((link) => assertLink("route", link));
+  const routes = usableRoutes(content.routes ?? []);
   if (content.agentIndexHref !== undefined)
     assertArticleHref(content.agentIndexHref);
   return {
@@ -635,7 +671,7 @@ function resolveStatusPage(content = {}) {
     primaryAction,
     next,
     nextHeading,
-    routes: routes.filter((route) => isSitePath(route.href)),
+    routes,
     ...content.agentIndexHref === undefined ? {} : {
       agentIndexHref: content.agentIndexHref
     }
