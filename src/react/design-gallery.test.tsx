@@ -37,6 +37,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("product-marketing grammar");
   expect(designGalleryRecipeCoverage).toContain("Nebula Sans typography");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
+  expect(designGalleryRecipeCoverage).toContain("relative time");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
 });
 
@@ -170,4 +171,20 @@ test("system appearance resolves from the supplied media preference", () => {
   expect(resolveGalleryTheme("system", true)).toBe("dark");
   expect(resolveGalleryTheme("system", false)).toBe("light");
   expect(resolveGalleryTheme("light", true)).toBe("light");
+});
+
+test("the gallery shows deterministic relative times with absolute titles", () => {
+  const html = renderToStaticMarkup(<DesignSystemGallery />);
+  const document = parseHTML(html).document;
+  const examples = [...document.querySelectorAll("[data-gallery-relative-time-example]")];
+  expect(examples.map(element => element.tagName)).toEqual(["TIME", "TIME", "TIME", "TIME"]);
+  expect(examples.map(element => element.textContent)).toEqual([
+    "12 seconds ago",
+    "5 minutes ago",
+    "in 23 hours",
+    "2 months ago",
+  ]);
+  expect(examples.every(element => (element.getAttribute("title") ?? "").length > 0)).toBe(true);
+  expect(html).toContain('dateTime="2026-09-26T11:55:00.000Z"');
+  expect(document.querySelector('[data-gallery-chat] time')?.textContent).toBe("now");
 });

@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -126,6 +126,7 @@
     "src/index.ts",
     "src/plain-publication.css",
     "src/reading.css",
+    "src/relative-time.ts",
     "src/plain-site.css",
     "src/portfolio.generated.json",
     "src/portfolio.generated.ts",
@@ -163,6 +164,7 @@
     "src/react/playback-transport.stylex.ts",
     "src/react/procedural-backdrop.tsx",
     "src/react/procedural-recipe.ts",
+    "src/react/relative-time.tsx",
     "src/react/production-data-preview-notice.tsx",
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/product-marketing.stylex.ts",

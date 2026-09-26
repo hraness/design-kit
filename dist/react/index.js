@@ -9,14 +9,17 @@ import {
   designThemeLabel,
   designThemeStorageKey,
   designThemes,
+  formatRelativeTime,
   getDesignPaletteTheme,
   isDesignTheme,
   motion,
   normalizeDesignPalettePreference,
   normalizeDesignTheme,
   parseDesignPalettePreference,
-  resolveDesignPalettePreference
-} from "../chunk-q57mxaq6.js";
+  parseRelativeTimeInput,
+  resolveDesignPalettePreference,
+  resolveRelativeTime
+} from "../chunk-tm2apctj.js";
 import {
   BarListChart,
   RadarProfileChart,
@@ -1277,22 +1280,26 @@ var paletteMenuStyles = {
   },
   trigger: {
     kGNEyG: "x6s0dn4",
-    kWkggS: "x17tv4j5",
-    kVAM5u: "x1w4nuvj",
+    kWkggS: "xvkli0e",
+    kVAM5u: "x1aeagfj x1w1tqly",
     kaIpWk: "xyz7jqb",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
-    kMwMTN: "xm06a53",
+    kGVxlE: "xmtrr3x x184rbrl xwaqzdf",
+    kMwMTN: "xurt5rx",
     kkrTdU: "x1ypdohk",
     k1xSpc: "x3nfvp2",
     kjj79g: "xl56j7k",
     kH6xsr: "x3ct3a4",
     kVQ08L: "x1qwoi4t",
     kdYMnH: "x9hh0qe",
-    kjBf7l: "x1mixbcr",
+    kjBf7l: "xb2ck1y",
     kInvED: "x1ewu8gn",
     k8WAf4: "x18g2hj5",
     kg3NbH: "xvpgqt4",
+    kIyJzY: "xgdialr xsagj69",
+    k1ekBW: "xkdsq27",
+    kAMwcw: "x1p0hc1o",
     kfSwDN: "x87ps6o",
     $$css: true
   },
@@ -1302,13 +1309,13 @@ var paletteMenuStyles = {
     $$css: true
   },
   panel: {
-    kWkggS: "x1awrtuo",
-    kVAM5u: "x1w4nuvj",
+    kWkggS: "x1boxfmi",
+    kVAM5u: "x1aeagfj x1w1tqly",
     kaIpWk: "xvy3trx",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
-    kGVxlE: "xl8zne6",
-    kMwMTN: "xxfsttr",
+    kGVxlE: "x1io14ym xwaqzdf",
+    kMwMTN: "x1s9jiai",
     k1xSpc: "xrvj5dj",
     kOIVth: "x8233eu",
     kUvb1J: "x1g9am0e",
@@ -1607,7 +1614,7 @@ function DesignPaletteMenuButton({
 // src/react/design-gallery.tsx
 import { Badge, Button as Button3, Card, CardContent, CardDescription, CardHeader, CardTitle, Icon as Icon3, LinkButton, SegmentedControl, Slider, Tag, ViewportFrame, WrappingRow } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
-import { useState as useState4 } from "react";
+import { useState as useState5 } from "react";
 
 // src/react/fader.tsx
 import { Label, Slider as AriaSlider, SliderFill, SliderOutput, SliderThumb, SliderTrack } from "react-aria-components";
@@ -3455,6 +3462,81 @@ function ProductionDataPreviewNotice({
   });
 }
 
+// src/react/relative-time.tsx
+import { useEffect as useEffect5, useState as useState4 } from "react";
+import { createElement as createElement2 } from "react";
+var maximumTimeout = 2147483647;
+var autoDelays = {
+  second: 1000,
+  minute: 15000,
+  hour: 60000,
+  day: 3600000,
+  week: 3600000,
+  month: 3600000,
+  year: 3600000
+};
+function parseRefresh(value) {
+  if (value === undefined)
+    return "auto";
+  if (value === "auto" || value === "off")
+    return value;
+  if (typeof value === "number" && Number.isInteger(value) && value >= 1000 && value <= maximumTimeout)
+    return value;
+  throw new RangeError(`RelativeTime refreshInterval must be "auto", "off", or whole milliseconds from 1000 to ${maximumTimeout}.`);
+}
+function absoluteFormatter(locale) {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "long"
+  });
+}
+function RelativeTime({
+  locale,
+  now,
+  numeric,
+  refreshInterval,
+  value,
+  ...timeProps
+}) {
+  const instant = parseRelativeTimeInput(value, "RelativeTime value");
+  const refresh = parseRefresh(refreshInterval);
+  const time = instant.getTime();
+  const [clock, setClock] = useState4(null);
+  useEffect5(() => {
+    setClock(Date.now());
+    if (refresh === "off")
+      return;
+    let timer;
+    const schedule = () => {
+      const delay = typeof refresh === "number" ? refresh : autoDelays[resolveRelativeTime(time - Date.now()).unit];
+      timer = setTimeout(() => {
+        setClock(Date.now());
+        schedule();
+      }, delay);
+    };
+    schedule();
+    return () => clearTimeout(timer);
+  }, [refresh, time]);
+  const mounted = clock !== null;
+  const reference = refresh === "off" && now !== undefined ? now : clock ?? now ?? Date.now();
+  const text = formatRelativeTime(instant, {
+    now: reference,
+    ...locale === undefined ? {} : {
+      locale
+    },
+    ...numeric === undefined ? {} : {
+      numeric
+    }
+  });
+  return /* @__PURE__ */ createElement2("time", {
+    ...timeProps,
+    dateTime: instant.toISOString(),
+    key: mounted ? "client" : "server",
+    suppressHydrationWarning: true,
+    title: absoluteFormatter(locale).format(instant)
+  }, text);
+}
+
 // src/react/design-gallery.tsx
 import { jsx as jsx14, jsxs as jsxs12 } from "react/jsx-runtime";
 var designGallerySections = [{
@@ -3486,7 +3568,21 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "relative time", "syntax highlighting"];
+var designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
+var relativeTimeExamples = [{
+  id: "seconds",
+  value: designGalleryRelativeTimeNow - 12000
+}, {
+  id: "minutes",
+  value: designGalleryRelativeTimeNow - 5 * 60000
+}, {
+  id: "hours",
+  value: designGalleryRelativeTimeNow + 23 * 3600000
+}, {
+  id: "months",
+  value: designGalleryRelativeTimeNow - 62 * 86400000
+}];
 function resolveGalleryTheme(theme, prefersDark) {
   return theme === "system" ? prefersDark ? "dark" : "light" : theme;
 }
@@ -3543,11 +3639,11 @@ var foilDeckExamples = [{
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
-  const [density, setDensity] = useState4("default");
-  const [chatDraft, setChatDraft] = useState4("Review the presentation contract");
-  const [chatSubmission, setChatSubmission] = useState4("");
-  const [faderValue, setFaderValue] = useState4(64);
-  const [playbackStatus, setPlaybackStatus] = useState4("idle");
+  const [density, setDensity] = useState5("default");
+  const [chatDraft, setChatDraft] = useState5("Review the presentation contract");
+  const [chatSubmission, setChatSubmission] = useState5("");
+  const [faderValue, setFaderValue] = useState5(64);
+  const [playbackStatus, setPlaybackStatus] = useState5("idle");
   const Root = isNestedInMain ? "div" : "main";
   return /* @__PURE__ */ jsxs12(Root, {
     className: "design-gallery",
@@ -4687,7 +4783,12 @@ function DesignSystemGallery({
                   children: "AI"
                 }),
                 className: "design-gallery__chat-message",
-                meta: "Now",
+                meta: /* @__PURE__ */ jsx14(RelativeTime, {
+                  locale: "en-US",
+                  now: designGalleryRelativeTimeNow,
+                  refreshInterval: "off",
+                  value: designGalleryRelativeTimeNow
+                }),
                 name: "Assistant",
                 role: "assistant",
                 children: /* @__PURE__ */ jsx14("p", {
@@ -4714,6 +4815,23 @@ function DesignSystemGallery({
                 value: chatDraft
               })
             ]
+          }),
+          /* @__PURE__ */ jsx14("ul", {
+            "aria-label": "Relative time examples",
+            className: "design-gallery__relative-times",
+            "data-gallery-relative-time": "",
+            children: relativeTimeExamples.map(({
+              id,
+              value
+            }) => /* @__PURE__ */ jsx14("li", {
+              children: /* @__PURE__ */ jsx14(RelativeTime, {
+                "data-gallery-relative-time-example": id,
+                locale: "en-US",
+                now: designGalleryRelativeTimeNow,
+                refreshInterval: "off",
+                value
+              })
+            }, id))
           })
         ]
       }),
@@ -4800,7 +4918,7 @@ export const shell = <AppShell rail={null}>Content</AppShell>;`,
   });
 }
 // src/react/haptics.ts
-import { useCallback as useCallback2, useEffect as useEffect5 } from "react";
+import { useCallback as useCallback2, useEffect as useEffect6 } from "react";
 var HAPTIC_FEEDBACK_EVENT_NAME = "hraness-design:haptic-feedback";
 function isHapticBrowserEnvironment(environment = globalThis) {
   return typeof environment.window === "object" && typeof environment.document === "object" && typeof environment.navigator === "object";
@@ -4938,14 +5056,14 @@ function disposeHapticFeedback() {
   browserHaptics.dispose();
 }
 function useHapticFeedback(enabled = true) {
-  useEffect5(() => {
+  useEffect6(() => {
     if (enabled)
       prepareHapticFeedback();
   }, [enabled]);
   return useCallback2(async (feedback = "press") => enabled ? await triggerHapticFeedback(feedback) : false, [enabled]);
 }
 // src/react/keyboard-shortcuts.ts
-import { useEffect as useEffect6, useRef as useRef4 } from "react";
+import { useEffect as useEffect7, useRef as useRef4 } from "react";
 var interactiveTargetSelector = ["a[href]", "area[href]", "button", "input", "select", "summary", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='button']", "[role='checkbox']", "[role='combobox']", "[role='gridcell']", "[role='link']", "[role='menuitem']", "[role='option']", "[role='radio']", "[role='slider']", "[role='spinbutton']", "[role='switch']", "[role='tab']", "[role='textbox']", "[tabindex]:not([tabindex='-1'])"].join(",");
 var textEntryTargetSelector = ["input:not([type='button']):not([type='checkbox']):not([type='color']):not([type='file']):not([type='hidden']):not([type='image']):not([type='radio']):not([type='range']):not([type='reset']):not([type='submit'])", "select", "textarea", "[contenteditable]:not([contenteditable='false'])", "[role='combobox']", "[role='textbox']"].join(",");
 function hasClosest(target) {
@@ -5035,7 +5153,7 @@ function useKeyboardShortcuts(bindings, options = {}) {
     isDisabled: options.isDisabled ?? false
   };
   const scopeRef = options.scopeRef;
-  useEffect6(() => {
+  useEffect7(() => {
     const onKeyDown = (event) => {
       if (scopeRef !== undefined) {
         const scope = scopeRef.current;
@@ -5061,7 +5179,7 @@ function useKeyboardShortcuts(bindings, options = {}) {
 // src/react/route-state.tsx
 import { Button as Button4, EmptyState, LinkButton as LinkButton2, Skeleton, Spinner as Spinner2, cn as cn12 } from "@hraness/ui";
 import * as stylex13 from "@stylexjs/stylex";
-import { useEffect as useEffect8, useId as useId3 } from "react";
+import { useEffect as useEffect9, useId as useId3 } from "react";
 
 // src/react/route-state.stylex.ts
 var routeStateStyles = {
@@ -5110,7 +5228,7 @@ var routeStateStyles = {
 import { AppearanceIcon as AppearanceIcon2, IconButton as IconButton3, Menu, MenuItem, MenuTrigger, SegmentedControl as SegmentedControl2, cn as cn11 } from "@hraness/ui";
 import * as stylex12 from "@stylexjs/stylex";
 import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes";
-import { useEffect as useEffect7, useRef as useRef5, useSyncExternalStore as useSyncExternalStore2 } from "react";
+import { useEffect as useEffect8, useRef as useRef5, useSyncExternalStore as useSyncExternalStore2 } from "react";
 
 // src/react/theme-resolution.ts
 function resolveEffectiveTheme(forcedTheme, resolvedTheme) {
@@ -5122,6 +5240,12 @@ function resolveEffectiveTheme(forcedTheme, resolvedTheme) {
 }
 
 // src/react/theme.stylex.ts
+var lanternAccent = "var(--hraness-material-warm-plane, var(--ui-accent, ButtonFace))";
+var lanternAccentForeground = "var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText))";
+var lanternPopoverForeground = "var(--hraness-material-ink, var(--ui-popover-foreground, CanvasText))";
+var accent = `var(--hraness-appearance-accent, ${lanternAccent})`;
+var accentForeground = `var(--hraness-appearance-accent-foreground, ${lanternAccentForeground})`;
+var popoverForeground = `var(--hraness-appearance-popover-foreground, ${lanternPopoverForeground})`;
 var themeStyles = {
   item: {
     kGNEyG: "x6s0dn4",
@@ -5132,9 +5256,9 @@ var themeStyles = {
     k1YJky: "x1hv131x",
     kz484i: "x1par0v0",
     kgSjnq: "xroyn9c",
-    kWkggS: "xffqgfc",
+    kWkggS: "x1vsujy6",
     kaIpWk: "xyz7jqb",
-    kMwMTN: "xlrt3vh xu0bq9",
+    kMwMTN: "xxbt5ds xmm8vmt",
     kkrTdU: "xt0e3qv",
     k1xSpc: "xrvj5dj",
     kGuDYH: "xj8twjj",
@@ -5156,8 +5280,8 @@ var themeStyles = {
     k1YJky: "x1hv131x x2c5uud",
     kz484i: "x1par0v0 x1pjo12s",
     kgSjnq: "xroyn9c x1ug5rqp",
-    kWkggS: "xffqgfc x1jzqe4",
-    kMwMTN: "xlrt3vh xu0bq9 x1k5gbb1",
+    kWkggS: "x1q2m9d8 x1vsujy6 x1jzqe4",
+    kMwMTN: "xxbt5ds xmm8vmt x1k5gbb1",
     k63SB2: "x6ynj9m",
     $$css: true
   },
@@ -5171,14 +5295,14 @@ var themeStyles = {
     $$css: true
   },
   menuRoot: {
-    "--hraness-appearance-accent": "xwhnx5i",
-    "--hraness-appearance-accent-foreground": "x1gxadoi",
-    "--hraness-appearance-control-background": "xuwnfk3",
-    "--hraness-appearance-control-border": "xg6mmvg",
-    "--hraness-appearance-control-foreground": "x1q0riu",
-    "--hraness-appearance-focus": "x14tw958",
-    "--hraness-appearance-popover-background": "x15khpru",
-    "--hraness-appearance-popover-foreground": "xtuecvg",
+    "--hraness-appearance-accent": "xewv82x",
+    "--hraness-appearance-accent-foreground": "xojny72",
+    "--hraness-appearance-control-background": "xzk9zvf",
+    "--hraness-appearance-control-border": "xpkryfg",
+    "--hraness-appearance-control-foreground": "x13k4yyn",
+    "--hraness-appearance-focus": "xro5xsp",
+    "--hraness-appearance-popover-background": "x152ag9z",
+    "--hraness-appearance-popover-foreground": "x1fwl4gj",
     kMwMTN: "x13y0b37",
     kVAEAm: "x1n2onr6",
     $$css: true
@@ -5200,13 +5324,13 @@ var themeStyles = {
     k1YJky: "x1y4qj14",
     kz484i: "x182nak8",
     kgSjnq: "x103pssi",
-    kWkggS: "x141cw3e",
-    kVAM5u: "x1r32107 x1w1tqly",
+    kWkggS: "x16bncwc",
+    kVAM5u: "x1fxznak x1w1tqly",
     kaIpWk: "xvy3trx",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
-    kGVxlE: "xl8zne6",
-    kMwMTN: "xlrt3vh",
+    kGVxlE: "x1io14ym xwaqzdf",
+    kMwMTN: "xxbt5ds",
     k1xSpc: "xvgho8r",
     kAXs8y: "xr5dkdi",
     k2kXS: "x1ljtl1n",
@@ -5234,13 +5358,13 @@ var themeStyles = {
     k1YJky: "x1y4qj14 x123h4s9",
     kz484i: "x182nak8 x1xqmp8",
     kgSjnq: "x103pssi xontfw7",
-    kWkggS: "x12dugtb x6j457c",
-    kVAM5u: "x1r32107 x1w1tqly",
+    kWkggS: "x1crud6n xl8i2wo",
+    kVAM5u: "x1fxznak x1w1tqly",
     kaIpWk: "xyz7jqb",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
-    kGVxlE: "x1jbwuzb xwaqzdf",
-    kMwMTN: "x2pn0fd x15kafvc",
+    kGVxlE: "xmtrr3x xbb1c6o x184rbrl xwaqzdf",
+    kMwMTN: "xgsino2 xemv0ly",
     kkrTdU: "x1ypdohk x1s07b3s",
     k1xSpc: "xwz0xwf",
     kMv6JI: "xjb2p0i",
@@ -5261,7 +5385,7 @@ var themeStyles = {
     kVQ08L: "xd0akbl x9me654",
     kdYMnH: "x1o8ym9z x11je3w3",
     kSiTet: "xijokvz",
-    kjBf7l: "xybcfi5 x1x84bn5",
+    kjBf7l: "x14pgi42 x1x84bn5",
     kInvED: "xecyca2",
     k3XXqK: "x1t137rt xq2elj",
     kMeerF: "x19beueo",
@@ -5270,10 +5394,10 @@ var themeStyles = {
     kgQiWS: "x1ku5rj1",
     kFalU9: "xggy1nq",
     k3aq6I: "x1rpfuv1",
-    kIr0Dl: "x1545fc0",
-    kIyJzY: "x19wcyzb xsagj69",
-    k1ekBW: "xv65o4f",
-    kAMwcw: "x8rfmps",
+    kIr0Dl: "xxsiw8j",
+    kIyJzY: "xrw3mvn xsagj69",
+    k1ekBW: "x1n72cmf",
+    kAMwcw: "xt4xdiv",
     $$css: true
   }
 };
@@ -5296,7 +5420,7 @@ function PersistedThemeNormalizer() {
     setTheme,
     theme
   } = useTheme();
-  useEffect7(() => {
+  useEffect8(() => {
     if (theme !== undefined && !isDesignTheme(theme))
       setTheme(defaultDesignTheme);
   }, [setTheme, theme]);
@@ -5509,7 +5633,7 @@ function ThemeColorSync({
   const hasResolvedColor = resolvedColor !== undefined;
   const latestColor = useRef5(resolvedColor);
   latestColor.current = resolvedColor;
-  useEffect7(() => {
+  useEffect8(() => {
     if (!hasResolvedColor || latestColor.current === undefined)
       return;
     const current = acquireThemeColorMeta(document, metaName, registrationId.current, latestColor.current);
@@ -5520,7 +5644,7 @@ function ThemeColorSync({
       current.release();
     };
   }, [hasResolvedColor, metaName]);
-  useEffect7(() => {
+  useEffect8(() => {
     if (resolvedColor !== undefined)
       registration.current?.update(resolvedColor);
   }, [resolvedColor]);
@@ -5590,7 +5714,7 @@ function RouteErrorPage({
   const rootPresentation = stylex13.props(routeStateStyles.root);
   const headerPresentation = stylex13.props(routeStateStyles.header);
   const contentPresentation = stylex13.props(routeStateStyles.content);
-  useEffect8(() => {
+  useEffect9(() => {
     if (autoFocus)
       document.getElementById(focusId)?.focus();
   }, [autoFocus, error, focusId]);
@@ -5751,7 +5875,7 @@ function GlobalErrorDocument({
   });
 }
 // src/react/sticky-offset.tsx
-import { useEffect as useEffect9 } from "react";
+import { useEffect as useEffect10 } from "react";
 
 // src/browser/sticky-offset.ts
 var stickyOffsetCustomProperty = "--hraness-sticky-offset";
@@ -5821,7 +5945,7 @@ function syncStickyOffset(options = {}) {
 function StickyOffsetSync({
   header
 } = {}) {
-  useEffect9(() => syncStickyOffset(header === undefined ? {} : {
+  useEffect10(() => syncStickyOffset(header === undefined ? {} : {
     header
   }), [header]);
   return null;
@@ -5872,6 +5996,7 @@ export {
   designThemeStorageKey,
   designGalleryTouchKinds,
   designGallerySections,
+  designGalleryRelativeTimeNow,
   designGalleryRecipeCoverage,
   defaultDesignTheme,
   decideKeyboardShortcut,
@@ -5890,6 +6015,7 @@ export {
   RouteNotFoundPage,
   RouteLoadingPage,
   RouteErrorPage,
+  RelativeTime,
   RangePlotChart,
   RailSection,
   RailItem,

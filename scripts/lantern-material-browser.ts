@@ -30,7 +30,7 @@ const clientSource = `
 import { createElement as h, useEffect, useState } from ${JSON.stringify(fileURLToPath(import.meta.resolve("react")))};
 import { createRoot } from ${JSON.stringify(fileURLToPath(import.meta.resolve("react-dom/client")))};
 import { Button, TextField } from ${JSON.stringify(fileURLToPath(import.meta.resolve("@hraness/ui")))};
-import { LanternMaterialGallery, lanternControlStyles } from ${JSON.stringify(join(root, "dist/react/index.js"))};
+import { LanternMaterialGallery, ThemeMenuButton, lanternControlStyles } from ${JSON.stringify(join(root, "dist/react/index.js"))};
 import { getDesignPaletteTheme } from ${JSON.stringify(join(root, "dist/index.js"))};
 function Pair({ material, theme }) {
   const [pressed, setPressed] = useState(0);
@@ -43,7 +43,9 @@ function Pair({ material, theme }) {
     h(TextField, { label: "Invalid field", isInvalid: true, errorMessage: "A name is required.", inputProps: { id: id + "-invalid" }, controlXstyle: material ? lanternControlStyles.inset : undefined }),
     h(TextField, { label: "Disabled field", isDisabled: true, defaultValue: "Unavailable", inputProps: { id: id + "-disabled-input" }, controlXstyle: material ? lanternControlStyles.inset : undefined }),
     h(Button, { id: id + "-disabled", isDisabled: true, controlXstyle: material ? lanternControlStyles.edge : undefined, onPress: () => setPressed(pressed + 100) }, "Unavailable action"),
-    h(Button, { id: id + "-pending", isPending: true, controlXstyle: material ? lanternControlStyles.edge : undefined, onPress: () => setPressed(pressed + 100) }, "Saving changes"));
+    h(Button, { id: id + "-pending", isPending: true, controlXstyle: material ? lanternControlStyles.edge : undefined, onPress: () => setPressed(pressed + 100) }, "Saving changes"),
+    // No material adapter is passed: the appearance trigger reads Lantern on its own.
+    h("div", { id: id + "-appearance" }, h(ThemeMenuButton, { "aria-label": "Appearance", onChange: () => undefined, value: "light" })));
 }
 function App() {
   const theme = document.documentElement.dataset.theme;
@@ -187,6 +189,88 @@ async function verifyGallery(page: Page) {
   }
   await page.mouse.move(0, 0);
   await settle(page);
+}
+
+// The appearance trigger takes Lantern paint from the inherited material
+// tokens alone. Its portalled popover follows a document-level material mark.
+async function verifyThemeMenu(page: Page) {
+  const trigger = (id: "reference" | "material") => page.locator(`#${id}-appearance .hraness-design-theme-toggle__trigger`);
+  const paint = (id: "reference" | "material") => trigger(id).evaluate((node) => {
+    const probe = (property: string, value: string) => {
+      const element = document.createElement("span");
+      element.style.setProperty(property, value);
+      node.parentElement?.append(element);
+      const resolved = getComputedStyle(element).getPropertyValue(property);
+      element.remove();
+      return resolved;
+    };
+    const style = getComputedStyle(node);
+    return {
+      background: style.backgroundColor, border: style.borderTopColor, color: style.color, shadow: style.boxShadow,
+      duration: style.transitionDuration, property: style.transitionProperty,
+      plane: probe("background-color", "var(--hraness-material-plane)"),
+      warm: probe("background-color", "var(--hraness-material-warm-plane)"),
+      seam: probe("border-top-color", "var(--hraness-material-seam)"),
+      raised: probe("box-shadow", "var(--hraness-material-raised)"),
+      inset: probe("box-shadow", "var(--hraness-material-inset)"),
+    };
+  });
+  const rest = await paint("material"), reference = await paint("reference");
+  assert.equal(reference.shadow, "none", "Outside Lantern the appearance trigger stays flat");
+  assert.notEqual(reference.background, rest.background, "The Lantern trigger must leave the palette control plane");
+  assert.equal(rest.background, rest.plane, "The Lantern trigger rests on the material plane");
+  assert.equal(rest.border, rest.seam, "The Lantern trigger is bounded by the material seam");
+  assert.equal(rest.shadow, rest.raised, "The Lantern trigger is raised at rest");
+  assert.match(rest.shadow, /inset/u, "The raised trigger keeps its lit top edge");
+  assert.match(rest.property, /box-shadow/u, "The raised-to-inset change must transition");
+  await trigger("material").hover(); await settle(page);
+  const hovered = await paint("material");
+  assert.equal(hovered.background, hovered.warm, "Hover warms the Lantern trigger");
+  await page.mouse.down(); await settle(page);
+  const pressed = await paint("material");
+  assert.equal(pressed.shadow, pressed.inset, "A pressed Lantern trigger sets into the plane");
+  await page.mouse.up(); await page.mouse.move(0, 0); await page.keyboard.press("Escape"); await settle(page);
+  await page.keyboard.press("Tab"); await trigger("material").focus(); await settle(page);
+  assert(await trigger("material").evaluate((node) => node.matches(":focus-visible")), "Keyboard focus must reach the Lantern trigger");
+  const focused = await paint("material");
+  assert.match(focused.shadow, /0px 0px 0px 4px/u, "The focus ring replaces the raised shadow");
+  assert.notEqual(await trigger("material").evaluate((node) => getComputedStyle(node).outlineStyle), "none", "Focus keeps its outline");
+  await trigger("material").evaluate((node) => (node as HTMLElement).blur());
+
+  // A document-level mark reaches the portalled popover.
+  await page.evaluate(() => document.documentElement.setAttribute("data-hraness-material", "lantern"));
+  await trigger("material").click(); await settle(page);
+  const popover = page.locator(".hraness-design-theme-toggle__popover");
+  await popover.waitFor();
+  const popoverPaint = await popover.evaluate((node) => {
+    const selected = node.querySelector('[data-theme-value="light"]');
+    if (!(selected instanceof HTMLElement)) throw new Error("Missing selected appearance item");
+    const probe = document.createElement("span");
+    probe.style.backgroundColor = "var(--hraness-material-warm-plane)";
+    node.append(probe);
+    const warm = getComputedStyle(probe).backgroundColor;
+    probe.style.backgroundColor = "var(--hraness-material-plane)";
+    const plane = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return { background: getComputedStyle(node).backgroundColor, plane, selected: getComputedStyle(selected).backgroundColor, warm };
+  });
+  assert.equal(popoverPaint.background, popoverPaint.plane, "The portalled popover rests on the material plane");
+  assert.equal(popoverPaint.selected, popoverPaint.warm, "The selected appearance uses the warm plane");
+  await page.keyboard.press("Escape"); await popover.waitFor({ state: "detached" });
+  await page.evaluate(() => document.documentElement.removeAttribute("data-hraness-material"));
+  // Closing returns focus to the trigger; release it before the rest checks.
+  await trigger("material").evaluate((node) => (node as HTMLElement).blur());
+  await page.mouse.move(0, 0); await settle(page);
+
+  await page.emulateMedia({ forcedColors: "active" }); await settle(page);
+  const forced = await paint("material");
+  assert.equal(forced.shadow, "none", "Forced colors remove the material shadow");
+  await page.emulateMedia({ forcedColors: "none", reducedMotion: "reduce" }); await settle(page);
+  const reduced = await paint("material");
+  assert(reduced.duration.split(",").every((value) => Number.parseFloat(value) < 0.001), "Reduced motion removes the trigger transition");
+  await page.emulateMedia({ forcedColors: "none", reducedMotion: "no-preference" }); await settle(page);
+  assert.deepEqual(await paint("material"), rest, "The trigger returns to its exact resting paint");
+  return { rest, hovered: hovered.background, pressed: pressed.shadow, focused: focused.shadow, popover: popoverPaint, forced: forced.shadow, reduced: reduced.duration };
 }
 
 async function paintEvidence(page: Page) {
@@ -351,6 +435,7 @@ try {
         assert.match(await page.locator('#material-button').evaluate((node) => getComputedStyle(node).touchAction), /^(?:manipulation|pan-x pan-y pinch-zoom)$/u, "Native touch-action must retain pan and pinch zoom");
         const states = await verifyStates(page), focus = await verifyFocus(page);
         await verifyGallery(page);
+        const themeMenu = await verifyThemeMenu(page);
         await withTransparencyPreference(page, "no-preference", async (selectTransparency) => {
           const proof = await paintEvidence(page);
           assert.equal(proof.overflow, false, "Material gallery must fit the viewport");
@@ -386,7 +471,7 @@ try {
           }
           requireSelected(forced, true);
           await verifyFocus(page);
-          cases.push({ route, width, height, theme, ...comparable, reduced, forced });
+          cases.push({ route, width, height, theme, ...comparable, themeMenu, reduced, forced });
         });
         await page.emulateMedia({ reducedMotion: "reduce" }); await settle(page);
         assert.match((await paintEvidence(page)).motion, /^0(?:ms|s)$/u, "Reduced motion must resolve to zero duration");
