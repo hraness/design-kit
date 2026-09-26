@@ -184,3 +184,9 @@ test("raw hero artwork stays inert and outside grid flow with the compiled recip
   }
   expect(css).toContain('@media (forced-colors: active), (prefers-reduced-transparency: reduce) {\n  .hraness-marketing-hero-backdrop { opacity: 0; }');
 });
+
+test("a ruled section directly after a framed component drops its redundant separator", () => {
+  expect(css).toMatch(
+    /\.hraness-marketing-install,[\s\S]*?\.hraness-marketing-proof-frame[\s\S]*?\+ :is\([\s\S]*?\.hraness-marketing-questions,[\s\S]*?\.hraness-marketing-cta[\s\S]*?\) \{\s*border-block-start: 0;/u,
+  );
+});

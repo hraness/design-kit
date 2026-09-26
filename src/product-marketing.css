@@ -1149,6 +1149,27 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem);
 }
 
+/* A framed component already draws its own boundary; a ruled section directly
+   after it would stack a redundant separator on the card edge. */
+:is(
+  .hraness-marketing-install,
+  .hraness-marketing-proof,
+  .hraness-marketing-proof-frame
+) + :is(
+  .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-interfaces,
+  .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
+  .hraness-marketing-questions,
+  .hraness-marketing-maker,
+  .hraness-marketing-related,
+  .hraness-marketing-cta
+) {
+  border-block-start: 0;
+}
+
 .hraness-marketing-section,
 .hraness-marketing-interfaces,
 .hraness-marketing-trust,
