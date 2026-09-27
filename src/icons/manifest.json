@@ -526,25 +526,25 @@
       "viewBox": "0 0 607 604"
     },
     {
-      "bytes": 23416,
+      "bytes": 5655,
       "context": "inline",
       "file": "roughday/roughday.svg",
       "id": "roughday/roughday",
       "ink": "#2474d4",
       "metrics": {
-        "aspectRatio": 1.5400696864111498,
-        "bytes": 23416,
-        "coverageRatio": 0.2174869666063319,
+        "aspectRatio": 1.1304347826086956,
+        "bytes": 5655,
+        "coverageRatio": 0.34494205444109216,
         "pathCount": 4,
-        "strokePx": 54
+        "strokePx": 64
       },
       "purpose": "mark",
       "receipt": "receipts/roughday.receipt.json",
       "set": "roughday",
       "slug": "roughday",
       "subject": "rough.day product mark",
-      "svgSha256": "355364bedf789974054a76abb75c84a8a2a145999e264d9b61d6430550aa698f",
-      "viewBox": "0 0 596 854"
+      "svgSha256": "7c7c7c1268adf68b68b898d64bac96355e4feecc75cebcd149281b663148c5fc",
+      "viewBox": "0 0 742 668"
     },
     {
       "bytes": 19069,
