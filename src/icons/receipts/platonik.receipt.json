@@ -1,0 +1,1011 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0040567951318458,
+            "bytes": 22893,
+            "coverageRatio": 0.22125514782715594,
+            "pathCount": 1,
+            "strokePx": 20.686868686868685
+          },
+          "pass": false,
+          "problems": [
+            "The overlap is poorly executed, with the tail of the back bubble clipping through the outline of the front bubble.",
+            "The intersection creates small, messy line fragments that clutter the illustration.",
+            "The lack of opacity or filled planes makes the spatial relationship between the two bubbles confusing."
+          ],
+          "requestId": "sha256:4eb067719fdfdb13e497d3ab0ea888a8b29e95274cf5575ad0f446137da96fe1",
+          "round": 1,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "5e242a86099ff501856dc5406e1b99fc4fb4af2df9d6061d3af361814d0cf2bb",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 22893,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 495,
+            "inputBytes": 5512,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08187871,
+              "colorRmse": 0.05671084,
+              "outsideAlphaRatio": 0.0005769,
+              "sampleHeight": 495,
+              "sampleWidth": 493,
+              "supportRecall": 0.96816284
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "82034cc753246c0355c724a3481d2fc6b847488c6c465826a04ea0858dbe0371",
+            "svgSha256": "5e242a86099ff501856dc5406e1b99fc4fb4af2df9d6061d3af361814d0cf2bb",
+            "width": 493
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1661237785016287,
+            "bytes": 15070,
+            "coverageRatio": 0.3690449111058541,
+            "pathCount": 1,
+            "strokePx": 45.76536312849162
+          },
+          "pass": false,
+          "problems": [
+            "Inconsistent visual structure: the background bubble is a hollow frame while the foreground bubble is a solid fill.",
+            "The tails of the speech bubbles taper into sharp hairlines at the tips.",
+            "The subject is poorly centered, with the bottom elements too close to the edge."
+          ],
+          "requestId": "sha256:c807b566fe9f6d976932b23fd52b98aab9936ecb5675ebd44f7384c2f9f93ba1",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "760767b50bbe878157041c664f408c3145b6540e2060ec40011868b7deb16f10",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 15070,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 716,
+            "inputBytes": 7277,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0450141,
+              "colorRmse": 0.03165887,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 439,
+              "supportRecall": 0.99210141
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "ee8bd862ab51c2efc4a948d54e1529e8970f071a2f243b3d5d80d7bd5e09f174",
+            "svgSha256": "760767b50bbe878157041c664f408c3145b6540e2060ec40011868b7deb16f10",
+            "width": 614
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0040567951318458,
+            "bytes": 22893,
+            "coverageRatio": 0.22125514782715594,
+            "pathCount": 1,
+            "strokePx": 20.686868686868685
+          },
+          "round": 1,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1661237785016287,
+            "bytes": 15070,
+            "coverageRatio": 0.3690449111058541,
+            "pathCount": 1,
+            "strokePx": 45.76536312849162
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0040567951318458,
+        "bytes": 22893,
+        "coverageRatio": 0.22125514782715594,
+        "pathCount": 1,
+        "strokePx": 20.686868686868685
+      },
+      "outputPath": "/tmp/iconsets/platonik/conversation.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "conversation",
+      "subject": "two overlapping speech bubbles",
+      "svgSha256": "5e242a86099ff501856dc5406e1b99fc4fb4af2df9d6061d3af361814d0cf2bb"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.146875,
+            "bytes": 20929,
+            "coverageRatio": 0.1678857288828338,
+            "pathCount": 5,
+            "strokePx": 26.506811989100818
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is a front-facing view with a depth offset rather than a true isometric perspective.",
+            "It contains more than three distinct filled planes (head, torso, arm, leg, and eyes all have separate fills).",
+            "The concentric circles in the eyes constitute tiny repeated detail that may blur at small scales.",
+            "The offset fill style acts as a prohibited shadow/shading effect."
+          ],
+          "requestId": "sha256:118078ea975c2c32d865d50da27eb461ce38b00f46297e31c4afa9be4e4d1866",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "cee3564b41815af01a8373b93718bcc1488fa8a8a3b908e177b685f6bf532bdc",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 20929,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 734,
+            "inputBytes": 7841,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04190389,
+              "colorRmse": 0.02980155,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 446,
+              "supportRecall": 0.9772008
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "192babcd4bd1aea0212ebf88a08cd44f9b612bcab3ee3d043b81c7a5bcdac5c1",
+            "svgSha256": "cee3564b41815af01a8373b93718bcc1488fa8a8a3b908e177b685f6bf532bdc",
+            "width": 640
+          },
+          "warnings": []
+        },
+        {
+          "problems": [
+            "the illustration strokes are too thin for the card context"
+          ],
+          "requestId": "sha256:ac81e10906b4027f11b56ad4306c7d8f13afcd59cfeacf170b856ca480761ca4",
+          "round": 2,
+          "status": "failed",
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.146875,
+            "bytes": 20929,
+            "coverageRatio": 0.1678857288828338,
+            "pathCount": 5,
+            "strokePx": 26.506811989100818
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.146875,
+        "bytes": 20929,
+        "coverageRatio": 0.1678857288828338,
+        "pathCount": 5,
+        "strokePx": 26.506811989100818
+      },
+      "outputPath": "/tmp/iconsets/platonik/creature.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "creature",
+      "subject": "a small friendly robot creature standing on a plain",
+      "svgSha256": "cee3564b41815af01a8373b93718bcc1488fa8a8a3b908e177b685f6bf532bdc"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.4210526315789473,
+            "bytes": 27751,
+            "coverageRatio": 0.20253572406682455,
+            "pathCount": 2,
+            "strokePx": 32.754208754208754
+          },
+          "pass": false,
+          "problems": [
+            "The coin lacks a solid face and resembles a wheel or pulley due to the large central hole.",
+            "The gear teeth are too small and numerous, creating tiny repeated details that may blur at 64px.",
+            "The connecting axle merges the two subjects into a single mechanical assembly rather than showing a coin beside a gear.",
+            "Line weights are not perfectly uniform throughout the gear structure."
+          ],
+          "requestId": "sha256:6fcfe77a7a91be7ba9786ccdc42b126c1089f57dda84da91f5336b01054e7936",
+          "round": 1,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "3144853aec4d8bc258dc2f23c234f11f98a4df2aa2dbdc6bce717ce93ad624c6",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 27751,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 418,
+            "inputBytes": 6216,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08425654,
+              "colorRmse": 0.059748,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 360,
+              "sampleWidth": 512,
+              "supportRecall": 0.94964493
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "2aedef060f73a43eb718f7dd6e92d54fbc4b22b849ba1938b5bcdc03a6dcab2c",
+            "svgSha256": "3144853aec4d8bc258dc2f23c234f11f98a4df2aa2dbdc6bce717ce93ad624c6",
+            "width": 594
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1726618705035972,
+            "bytes": 14725,
+            "coverageRatio": 0.24875804877570337,
+            "pathCount": 1,
+            "strokePx": 50.25766871165645
+          },
+          "pass": false,
+          "problems": [
+            "The subject is cramped within the frame, lacking the required modest clear margin.",
+            "The line work is wobbly and inconsistent in weight, failing the uniform structure requirement.",
+            "The geometry of the gear teeth is irregular and contains small artifacts that may disappear or blur at 64px."
+          ],
+          "requestId": "sha256:ae2c1d5240434aa9067b04593008fe2e228dc57ac58f4bac602b0d4d3927373f",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "b9e9e955fb4407d31eccaecc9e6bc43df882afbaafaacd84c6122367835c1353",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 14725,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 489,
+            "inputBytes": 4413,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.10453223,
+              "colorRmse": 0.07238668,
+              "outsideAlphaRatio": 0.00438534,
+              "sampleHeight": 489,
+              "sampleWidth": 417,
+              "supportRecall": 0.96685519
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "d88f6b232c92f98f2e1c948afdf5a1462f510643fec4cd225198b9b8c206874a",
+            "svgSha256": "b9e9e955fb4407d31eccaecc9e6bc43df882afbaafaacd84c6122367835c1353",
+            "width": 417
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.4210526315789473,
+            "bytes": 27751,
+            "coverageRatio": 0.20253572406682455,
+            "pathCount": 2,
+            "strokePx": 32.754208754208754
+          },
+          "round": 1,
+          "pass": false,
+          "score": 65,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1726618705035972,
+            "bytes": 14725,
+            "coverageRatio": 0.24875804877570337,
+            "pathCount": 1,
+            "strokePx": 50.25766871165645
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.4210526315789473,
+        "bytes": 27751,
+        "coverageRatio": 0.20253572406682455,
+        "pathCount": 2,
+        "strokePx": 32.754208754208754
+      },
+      "outputPath": "/tmp/iconsets/platonik/economy.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "economy",
+      "subject": "a coin beside a conveyor gear",
+      "svgSha256": "3144853aec4d8bc258dc2f23c234f11f98a4df2aa2dbdc6bce717ce93ad624c6"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.5094017094017094,
+            "bytes": 18800,
+            "coverageRatio": 0.20979760141708045,
+            "pathCount": 4,
+            "strokePx": 22.033975084937715
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is in a frontal orthographic view rather than an isometric perspective.",
+            "It contains more than three filled planes due to the inclusion of highlights.",
+            "The highlights on the top and base function as shading, which is prohibited.",
+            "The line weight is not perfectly uniform, with thinner lines used for the inner flame detail."
+          ],
+          "requestId": "sha256:79702b8e721a5d37dd49118b988f3d13a9264a284cedb680a2fe528d920e5790",
+          "round": 1,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "7354122657a53e7b7c8e2f073fa0bf8f35339a2507cbc10efd8d1c4b8b21fb3b",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 18800,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 883,
+            "inputBytes": 9223,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.07131809,
+              "colorRmse": 0.05002523,
+              "outsideAlphaRatio": 0.00000803,
+              "sampleHeight": 512,
+              "sampleWidth": 339,
+              "supportRecall": 0.96718445
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "864ed4d9baa59ab7337429db70ca7c6f5adc3796bb25bc2de4334214ad309649",
+            "svgSha256": "7354122657a53e7b7c8e2f073fa0bf8f35339a2507cbc10efd8d1c4b8b21fb3b",
+            "width": 585
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3921259842519684,
+            "bytes": 23621,
+            "coverageRatio": 0.3008711297965582,
+            "pathCount": 4,
+            "strokePx": 37.067873303167424
+          },
+          "pass": false,
+          "problems": [
+            "Exceeds the limit of three filled planes (currently has four: two side panels, the flame, and the base).",
+            "Inconsistent line weights, with hairlines appearing at the bottom corners and base connection.",
+            "The perspective of the oval base does not perfectly align with the isometric hexagonal body."
+          ],
+          "requestId": "sha256:70e48cfcf3bf25cda6b875bd97ac5a92b71541b970092299c90f8beb730db02e",
+          "round": 2,
+          "score": 75,
+          "status": "candidate",
+          "svgSha256": "288959c5bf1bf09e267099059066b6d80f8e9b3700ea81060b6115284effbfb2",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 23621,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 884,
+            "inputBytes": 9163,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05231178,
+              "colorRmse": 0.03661356,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 368,
+              "supportRecall": 0.99226588
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "e1d6bb927ee4a108bca798233e1b3150eddd0f47fa5a23439e404a6a52506542",
+            "svgSha256": "288959c5bf1bf09e267099059066b6d80f8e9b3700ea81060b6115284effbfb2",
+            "width": 635
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.5094017094017094,
+            "bytes": 18800,
+            "coverageRatio": 0.20979760141708045,
+            "pathCount": 4,
+            "strokePx": 22.033975084937715
+          },
+          "round": 1,
+          "pass": false,
+          "score": 65,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.3921259842519684,
+            "bytes": 23621,
+            "coverageRatio": 0.3008711297965582,
+            "pathCount": 4,
+            "strokePx": 37.067873303167424
+          },
+          "round": 2,
+          "pass": false,
+          "score": 75,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.5094017094017094,
+        "bytes": 18800,
+        "coverageRatio": 0.20979760141708045,
+        "pathCount": 4,
+        "strokePx": 22.033975084937715
+      },
+      "outputPath": "/tmp/iconsets/platonik/keep-light.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "keep-light",
+      "subject": "a small beacon lantern keeping a flame lit",
+      "svgSha256": "7354122657a53e7b7c8e2f073fa0bf8f35339a2507cbc10efd8d1c4b8b21fb3b"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0733752620545074,
+            "bytes": 15318,
+            "coverageRatio": 0.17954828354297694,
+            "pathCount": 13,
+            "strokePx": 22
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is a flat 2D graphic rather than an isometric illustration.",
+            "Contains too many small repeated elements (sparks), violating the 'no tiny repeated detail' rule.",
+            "The waypoints are depicted as flat concentric circles instead of isometric forms."
+          ],
+          "requestId": "sha256:4ac3c04f5952ac2e5fcb3d672e3d4eb7a268b1eded3b44c1220c0d84ed68bd64",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "d631bdf1f47371dc9c57692df90a21f2e248f978aecb69633ffef6b0e098c8ad",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 15318,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 512,
+            "inputBytes": 4721,
+            "outputMode": "color",
+            "pathCount": 13,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08109972,
+              "colorRmse": 0.05610142,
+              "outsideAlphaRatio": 0.00034723,
+              "sampleHeight": 512,
+              "sampleWidth": 477,
+              "supportRecall": 0.9934715
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "ce21e27a16e685a6a4a0a8d9c63b3be99a8cc3ed3aa41f8790d616c0f4c592be",
+            "svgSha256": "d631bdf1f47371dc9c57692df90a21f2e248f978aecb69633ffef6b0e098c8ad",
+            "width": 477
+          },
+          "warnings": []
+        },
+        {
+          "critiqueError": "GENERATION_FAILED",
+          "metrics": {
+            "aspectRatio": 1.1132075471698113,
+            "bytes": 15851,
+            "coverageRatio": 0.12222399886294993,
+            "pathCount": 6,
+            "strokePx": 27.480225988700564
+          },
+          "requestId": "sha256:6bc4d876b845edf12e78596257f1ee235559b664f016e99c8e42b81e4759ee90",
+          "round": 2,
+          "status": "candidate",
+          "svgSha256": "eac1aaf0b73affba0e027bcab43e93438c01ce23991853f2a1f363baafd052f7",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 15851,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 708,
+            "inputBytes": 6731,
+            "outputMode": "color",
+            "pathCount": 6,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04883239,
+              "colorRmse": 0.0343364,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 460,
+              "supportRecall": 0.97220958
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "94b3d806d9f51c575141bb6de4df4d82275fd4ebf575c60a66dc1f95d52cb0f9",
+            "svgSha256": "eac1aaf0b73affba0e027bcab43e93438c01ce23991853f2a1f363baafd052f7",
+            "width": 636
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0733752620545074,
+            "bytes": 15318,
+            "coverageRatio": 0.17954828354297694,
+            "pathCount": 13,
+            "strokePx": 22
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1132075471698113,
+            "bytes": 15851,
+            "coverageRatio": 0.12222399886294993,
+            "pathCount": 6,
+            "strokePx": 27.480225988700564
+          },
+          "round": 2,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0733752620545074,
+        "bytes": 15318,
+        "coverageRatio": 0.17954828354297694,
+        "pathCount": 13,
+        "strokePx": 22
+      },
+      "outputPath": "/tmp/iconsets/platonik/spark-route.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "spark-route",
+      "subject": "a winding path between two waypoints with small sparks",
+      "svgSha256": "d631bdf1f47371dc9c57692df90a21f2e248f978aecb69633ffef6b0e098c8ad"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "platonik",
+  "outputDir": "/tmp/iconsets/platonik",
+  "receiptVersion": 1,
+  "setCritiques": [],
+  "setCritiqueErrors": 3,
+  "setRoundsUsed": 3,
+  "target": {
+    "coverageRatio": 0.2061666627419525,
+    "strokePx": 24.270393537019267
+  }
+}

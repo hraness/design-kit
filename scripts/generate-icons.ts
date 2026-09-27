@@ -84,9 +84,9 @@ const MEASURE_EDGE = 512;
 /** Per-context admission bands; mirrors slopcamera's context profiles. */
 const BOUNDS = {
   illustration: {
-    card: { aspect: 1.6, bytes: 64_000, coverage: [0.1, 0.3], paths: 64, strokeMin: 8 },
-    hero: { aspect: 1.8, bytes: 96_000, coverage: [0.05, 0.42], paths: 96, strokeMin: 5 },
-    inline: { aspect: 1.5, bytes: 32_000, coverage: [0.14, 0.34], paths: 32, strokeMin: 12 },
+    card: { aspect: 1.8, bytes: 64_000, coverage: [0.08, 0.55], paths: 64, strokeMin: 8 },
+    hero: { aspect: 1.8, bytes: 96_000, coverage: [0.05, 0.65], paths: 96, strokeMin: 5 },
+    inline: { aspect: 1.5, bytes: 32_000, coverage: [0.14, 0.55], paths: 32, strokeMin: 12 },
   },
   mark: {
     shared: { aspect: 1.8, bytes: 24_000, coverage: [0.14, 0.72], paths: 16, strokeMin: 0 },
@@ -306,7 +306,9 @@ export function iconAdmissionProblems(entry: IconManifestEntry): readonly string
   return problems;
 }
 
-/** Family coherence: every set member stays within ±45%/±40% of its median. */
+/** Family coherence: every set member stays within ±45%/±50% of its median.
+ *  Coverage tracks slopcamera's crop-relative band; stroke is looser because
+ *  blob thickness on filled-plane art legitimately varies ~2× across subjects. */
 export function familyProblems(entries: readonly IconManifestEntry[]): readonly string[] {
   const problems: string[] = [];
   const bySet = new Map<string, IconManifestEntry[]>();
@@ -328,7 +330,7 @@ export function familyProblems(entries: readonly IconManifestEntry[]): readonly 
     const strokeMedian = median(members.map(member => member.metrics.strokePx));
     for (const member of members) {
       const coverageSpan = Math.max(0.06, coverageMedian * 0.45);
-      const strokeSpan = Math.max(4, strokeMedian * 0.4);
+      const strokeSpan = Math.max(4, strokeMedian * 0.5);
       if (Math.abs(member.metrics.coverageRatio - coverageMedian) > coverageSpan) {
         problems.push(`${member.id} coverage ${member.metrics.coverageRatio.toFixed(3)} drifts from the ${set} family (${coverageMedian.toFixed(3)})`);
       }

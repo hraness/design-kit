@@ -1,0 +1,1546 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0206659012629162,
+            "bytes": 25820,
+            "coverageRatio": 0.1633112451069908,
+            "pathCount": 1,
+            "strokePx": 17.277840269966255
+          },
+          "pass": false,
+          "problems": [
+            "The 'solid balance block' is rendered as a hollow wireframe outline rather than a solid object.",
+            "The 'chunky' price tags lack volume and appear as thin outlines.",
+            "The illustration fails to use filled planes to define the primary surfaces, resulting in a lack of visual weight."
+          ],
+          "requestId": "sha256:5755f00077dad4bf21637b1bb0f09a5bb4b21de42d3d961355e8e835cadf9965",
+          "round": 1,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "7f20782065d14ac946277ad28a38f1ac12877f3d397ba81b8adb5dcf7a8f43aa",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 25820,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 871,
+            "inputBytes": 10512,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03912983,
+              "colorRmse": 0.02749158,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 502,
+              "sampleWidth": 512,
+              "supportRecall": 0.9798734
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "2e45d2aef2be91e5212b1100e625d0a650c26afe07fd2232eb42609abb95614b",
+            "svgSha256": "7f20782065d14ac946277ad28a38f1ac12877f3d397ba81b8adb5dcf7a8f43aa",
+            "width": 889
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0288018433179724,
+            "bytes": 38738,
+            "coverageRatio": 0.2499870988383794,
+            "pathCount": 2,
+            "strokePx": 36.694288913773796
+          },
+          "pass": false,
+          "problems": [
+            "The price tags are shaped more like shopping bags or security tags, lacking the characteristic clipped corners or simple string holes of a price tag.",
+            "The handles contain thin, nested lines that risk disappearing or blurring at small scales (64px).",
+            "The illustration lacks the 'chunky' feel requested for the tags due to the thin handle structures."
+          ],
+          "requestId": "sha256:a44908a0ec1ea9747231516cd1cf697512115dcbc7bd2d540d63a6c18b55b528",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "65efc9ad9231bbc0eb129daf3160189f0696cec9e9ef85683a7cd7b25e961fac",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 38738,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 893,
+            "inputBytes": 11443,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0402359,
+              "colorRmse": 0.02839624,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 498,
+              "supportRecall": 0.98315026
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "89da05c32e729eabfc424ae42bb6accaac588e6e9f4e5edb356b677c88310409",
+            "svgSha256": "65efc9ad9231bbc0eb129daf3160189f0696cec9e9ef85683a7cd7b25e961fac",
+            "width": 868
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0206659012629162,
+            "bytes": 25820,
+            "coverageRatio": 0.1633112451069908,
+            "pathCount": 1,
+            "strokePx": 17.277840269966255
+          },
+          "round": 1,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0288018433179724,
+            "bytes": 38738,
+            "coverageRatio": 0.2499870988383794,
+            "pathCount": 2,
+            "strokePx": 36.694288913773796
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0288018433179724,
+        "bytes": 38738,
+        "coverageRatio": 0.2499870988383794,
+        "pathCount": 2,
+        "strokePx": 36.694288913773796
+      },
+      "outputPath": "/tmp/iconsets/aicharts/cost-compare.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "cost-compare",
+      "subject": "two chunky price tags resting on a solid balance block",
+      "svgSha256": "65efc9ad9231bbc0eb129daf3160189f0696cec9e9ef85683a7cd7b25e961fac"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1022927689594357,
+            "bytes": 13576,
+            "coverageRatio": 0.19469488536155202,
+            "pathCount": 5,
+            "strokePx": 27.852800000000002
+          },
+          "pass": false,
+          "problems": [
+            "Contains a white highlight/shading element inside the speaker cone",
+            "Inconsistent line weights between the speaker body and sound waves",
+            "Perspective of the speaker cone does not match the isometric plane of the speaker face",
+            "Subject is not perfectly centered"
+          ],
+          "requestId": "sha256:8999c1838c95e1add1a283390a45411d853917d6bf9dc1e3c1e2d86bdf65d89c",
+          "round": 1,
+          "score": 75,
+          "status": "candidate",
+          "svgSha256": "3ec0ebaf2dc680f621058660ffd9ae9cf6e03df62c49b2187b5f8f24f469e8f4",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 13576,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 625,
+            "inputBytes": 6968,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0510397,
+              "colorRmse": 0.03586232,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 464,
+              "supportRecall": 0.98741275
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "389e81dc0e6da104523dc001952adf0a538b6285bcbcc92f94c8f3a73a4b1411",
+            "svgSha256": "3ec0ebaf2dc680f621058660ffd9ae9cf6e03df62c49b2187b5f8f24f469e8f4",
+            "width": 567
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0188679245283019,
+            "bytes": 16391,
+            "coverageRatio": 0.2253004891684137,
+            "pathCount": 5,
+            "strokePx": 30.340740740740742
+          },
+          "pass": false,
+          "problems": [
+            "Line work is shaky and lacks uniform stroke weight",
+            "Subject is slightly off-center",
+            "Edges are aliased and rough, not meeting the professional brand illustration standard"
+          ],
+          "requestId": "sha256:6724ebb3231c50b3dbd4b628963b3cf64bda61f6cc8277fd91c9ac69f1299950",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "375696e463e365028e13bbaa10fc36864141d1d2b7dcf5c33d13d3235dff7d46",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16391,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 530,
+            "inputBytes": 6274,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06856665,
+              "colorRmse": 0.04826757,
+              "outsideAlphaRatio": 7e-8,
+              "sampleHeight": 503,
+              "sampleWidth": 512,
+              "supportRecall": 0.98086125
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "db41cdd62bd406ab60bc15bfb72b1f4f18e1b30501c647a50faa11e4628378a9",
+            "svgSha256": "375696e463e365028e13bbaa10fc36864141d1d2b7dcf5c33d13d3235dff7d46",
+            "width": 540
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.1022927689594357,
+            "bytes": 13576,
+            "coverageRatio": 0.19469488536155202,
+            "pathCount": 5,
+            "strokePx": 27.852800000000002
+          },
+          "round": 1,
+          "pass": false,
+          "score": 75,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0188679245283019,
+            "bytes": 16391,
+            "coverageRatio": 0.2253004891684137,
+            "pathCount": 5,
+            "strokePx": 30.340740740740742
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0188679245283019,
+        "bytes": 16391,
+        "coverageRatio": 0.2253004891684137,
+        "pathCount": 5,
+        "strokePx": 30.340740740740742
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-audio.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-audio",
+      "subject": "a small speaker emitting curved sound waves",
+      "svgSha256": "375696e463e365028e13bbaa10fc36864141d1d2b7dcf5c33d13d3235dff7d46"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.084033613445378,
+            "bytes": 6864,
+            "coverageRatio": 0.24587567585173603,
+            "pathCount": 4,
+            "strokePx": 21.829457364341085
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is a flat 2D icon rather than an isometric illustration as required.",
+            "The line work is jittery and lacks the clean, geometric precision of a professional brand illustration.",
+            "The subject lacks the requested 'window' depth, appearing more like overlapping squares."
+          ],
+          "requestId": "sha256:0daca3b22b016427f3b01e1851340d85bcc8d91f07c3ba31bd1ce347603720f5",
+          "round": 1,
+          "score": 40,
+          "status": "candidate",
+          "svgSha256": "db398fe7633e8438a38c2d498536bac8e9e81dd7bebc655ff50c7f500f15fe8e",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 6864,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 476,
+            "inputBytes": 3876,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.043438,
+              "colorRmse": 0.03089552,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 472,
+              "sampleWidth": 512,
+              "supportRecall": 0.99404751
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "8ba40d044f1f1c40aa29f6293b5e6397d5f22cebc0f254ae9430f2f91a511def",
+            "svgSha256": "db398fe7633e8438a38c2d498536bac8e9e81dd7bebc655ff50c7f500f15fe8e",
+            "width": 516
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0389294403892944,
+            "bytes": 18542,
+            "coverageRatio": 0.26619115996284837,
+            "pathCount": 4,
+            "strokePx": 38.37002341920375
+          },
+          "pass": false,
+          "problems": [
+            "Confusing wireframe-like geometry with internal lines visible through the front face.",
+            "Awkward fold in the bottom right corner that detracts from a clean window shape.",
+            "The structure lacks a solid feel due to overlapping transparent-looking planes."
+          ],
+          "requestId": "sha256:c4ba2ef49caf60e7a1ba984d87a295fa118e127476115354d66890132c14dffd",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "e3ece87427fe4f1e8e5fa92b2976dca5ffedcf7ea0c075a8ef321f903a31f952",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 18542,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 822,
+            "inputBytes": 8942,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05483865,
+              "colorRmse": 0.03854334,
+              "outsideAlphaRatio": 0.00004197,
+              "sampleHeight": 493,
+              "sampleWidth": 512,
+              "supportRecall": 0.98714138
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "4fcee654a84793e8419a0a613984521e3986e6076214b29a82dd02e03707f197",
+            "svgSha256": "e3ece87427fe4f1e8e5fa92b2976dca5ffedcf7ea0c075a8ef321f903a31f952",
+            "width": 854
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.084033613445378,
+            "bytes": 6864,
+            "coverageRatio": 0.24587567585173603,
+            "pathCount": 4,
+            "strokePx": 21.829457364341085
+          },
+          "round": 1,
+          "pass": false,
+          "score": 40,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0389294403892944,
+            "bytes": 18542,
+            "coverageRatio": 0.26619115996284837,
+            "pathCount": 4,
+            "strokePx": 38.37002341920375
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0389294403892944,
+        "bytes": 18542,
+        "coverageRatio": 0.26619115996284837,
+        "pathCount": 4,
+        "strokePx": 38.37002341920375
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-coding.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-coding",
+      "subject": "a code editor window with angle brackets",
+      "svgSha256": "e3ece87427fe4f1e8e5fa92b2976dca5ffedcf7ea0c075a8ef321f903a31f952"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.2115107913669065,
+            "bytes": 20632,
+            "coverageRatio": 0.3281173635913122,
+            "pathCount": 1,
+            "strokePx": 38.91686460807601
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is not isometric; the perspective is distorted and front-facing with inconsistent depth.",
+            "The line work is wobbly and lacks a clean, uniform professional structure.",
+            "The frame depth is poorly defined and asymmetrical."
+          ],
+          "requestId": "sha256:feda4c4b90cb058caa9ba805d2f7b5c5d9da75d9e9c9699e879c9581430abc2f",
+          "round": 1,
+          "score": 45,
+          "status": "candidate",
+          "svgSha256": "35caa4b5080200748746c20b20c7e5a2345a958382d4623c1ebfcffcef8ce066",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 20632,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 695,
+            "inputBytes": 8633,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08905186,
+              "colorRmse": 0.06275671,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 423,
+              "sampleWidth": 512,
+              "supportRecall": 0.96680177
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "b082c5e3a7181413782e77517688b94cd5ac77cbe5fe0d30600ce5fadbd17226",
+            "svgSha256": "35caa4b5080200748746c20b20c7e5a2345a958382d4623c1ebfcffcef8ce066",
+            "width": 842
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.149618320610687,
+            "bytes": 17883,
+            "coverageRatio": 0.2985290390600448,
+            "pathCount": 1,
+            "strokePx": 43.51660026560425
+          },
+          "pass": false,
+          "problems": [
+            "Line weight is not uniform; the mountain lines are significantly thinner than the frame lines",
+            "Perspective distortion on the left inner edge of the frame makes it look like a hollow box rather than a picture frame",
+            "The subject is slightly off-center with uneven margins"
+          ],
+          "requestId": "sha256:65d94c1bdbe0a74ed7b141737dea7cc95431858c4331635c20a18daa4b538075",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "0ce0d989bca2ec25303906da40d857d9aac7561dec38096ef407ba721e0a5ae2",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 17883,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 655,
+            "inputBytes": 7102,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04348765,
+              "colorRmse": 0.03103601,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 445,
+              "sampleWidth": 512,
+              "supportRecall": 0.98675261
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "83f3b54cebe312eb924962e3b7d42d01f123195832564ec9ec0b8b7b20e8890b",
+            "svgSha256": "0ce0d989bca2ec25303906da40d857d9aac7561dec38096ef407ba721e0a5ae2",
+            "width": 753
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.2115107913669065,
+            "bytes": 20632,
+            "coverageRatio": 0.3281173635913122,
+            "pathCount": 1,
+            "strokePx": 38.91686460807601
+          },
+          "round": 1,
+          "pass": false,
+          "score": 45,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.149618320610687,
+            "bytes": 17883,
+            "coverageRatio": 0.2985290390600448,
+            "pathCount": 1,
+            "strokePx": 43.51660026560425
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.149618320610687,
+        "bytes": 17883,
+        "coverageRatio": 0.2985290390600448,
+        "pathCount": 1,
+        "strokePx": 43.51660026560425
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-images.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-images",
+      "subject": "a framed picture of a simple mountain scene",
+      "svgSha256": "0ce0d989bca2ec25303906da40d857d9aac7561dec38096ef407ba721e0a5ae2"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.010703363914373,
+            "bytes": 36860,
+            "coverageRatio": 0.2379376072765294,
+            "pathCount": 7,
+            "strokePx": 17.040847201210287
+          },
+          "pass": false,
+          "problems": [
+            "Line weights are inconsistent and show visible wobbles and artifacts.",
+            "The gear teeth are too small and numerous, creating cluttered detail that may blur at small sizes.",
+            "The illustration lacks filled planes, resulting in a wireframe appearance rather than a chunky, solid feel.",
+            "The subject lacks a sufficient clear margin from the edges of the frame."
+          ],
+          "requestId": "sha256:8852170066c96ed107d977b72704bbe3c5cf9fc931360ac4c190cfb2e4e8630b",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "ead9acf7e57b868f8b5126862caf60237b37a2c7e43bf638a0e3191718002d28",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 36860,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 661,
+            "inputBytes": 9330,
+            "outputMode": "color",
+            "pathCount": 7,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05797868,
+              "colorRmse": 0.04072725,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 507,
+              "supportRecall": 0.98446412
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "882d9c0da69ebc3b9c17bdf4c701101ca27d843d87bd56fa4d51dd6546d92e36",
+            "svgSha256": "ead9acf7e57b868f8b5126862caf60237b37a2c7e43bf638a0e3191718002d28",
+            "width": 654
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1034897713598075,
+            "bytes": 36780,
+            "coverageRatio": 0.20928654758952112,
+            "pathCount": 7,
+            "strokePx": 35.73391494002181
+          },
+          "pass": false,
+          "problems": [
+            "The checkboxes and lines on the board are too thin (hairlines) and will disappear at small scales.",
+            "The gear and board are overlapping rather than 'meshing' in a clear way.",
+            "The illustration contains tiny repeated details on the board face which violates the style contract.",
+            "The subject is not perfectly centered within the frame."
+          ],
+          "requestId": "sha256:de96fa8e6f44c455f0e1b00137c4f2f457f7fcf5aa67570a0405e409f8c00f21",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "c0c233aa7c69645e637337e273109a1c6226c7ccbc1e0e7e1bcedf64d5103ee4",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 36780,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 917,
+            "inputBytes": 12961,
+            "outputMode": "color",
+            "pathCount": 7,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04071235,
+              "colorRmse": 0.02869198,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 464,
+              "supportRecall": 0.9842461
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "ab87fb7e156ffa854ccd73ed58c9a58e9f3178292018e73acee80a1b4dd27c8b",
+            "svgSha256": "c0c233aa7c69645e637337e273109a1c6226c7ccbc1e0e7e1bcedf64d5103ee4",
+            "width": 831
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.010703363914373,
+            "bytes": 36860,
+            "coverageRatio": 0.2379376072765294,
+            "pathCount": 7,
+            "strokePx": 17.040847201210287
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1034897713598075,
+            "bytes": 36780,
+            "coverageRatio": 0.20928654758952112,
+            "pathCount": 7,
+            "strokePx": 35.73391494002181
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.1034897713598075,
+        "bytes": 36780,
+        "coverageRatio": 0.20928654758952112,
+        "pathCount": 7,
+        "strokePx": 35.73391494002181
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-reasoning.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-reasoning",
+      "subject": "a chunky gear meshing with a checklist board",
+      "svgSha256": "c0c233aa7c69645e637337e273109a1c6226c7ccbc1e0e7e1bcedf64d5103ee4"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3319027181688126,
+            "bytes": 24243,
+            "coverageRatio": 0.23842254317584274,
+            "pathCount": 6,
+            "strokePx": 14.29860365198711
+          },
+          "pass": false,
+          "problems": [
+            "The magnifying glass is not positioned over the chart, failing to depict the 'under a magnifier' relationship.",
+            "The report page is rendered as a thick 3D block rather than a recognizable page or sheet.",
+            "The composition is disjointed, appearing as separate icons placed on a box rather than a cohesive illustration."
+          ],
+          "requestId": "sha256:5ddc8630ba5de851777f82697b8d5c68b5b5914ab6b4c2208f790622465626e9",
+          "round": 1,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "b78cad90d11772b1ad0f62b984ed8fa9adf8be26abed159a1471f16800e91e1b",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 24243,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 931,
+            "inputBytes": 10903,
+            "outputMode": "color",
+            "pathCount": 6,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0369453,
+              "colorRmse": 0.0262492,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 384,
+              "supportRecall": 0.98611163
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "8e268f14499e41c09585582f54852c425a746041c22d8d754a503bb40aec8a8d",
+            "svgSha256": "b78cad90d11772b1ad0f62b984ed8fa9adf8be26abed159a1471f16800e91e1b",
+            "width": 699
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1265060240963856,
+            "bytes": 13178,
+            "coverageRatio": 0.267172075109708,
+            "pathCount": 3,
+            "strokePx": 41.982174688057036
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is not isometric; it is a flat front-facing view with a simple offset.",
+            "It contains more than three distinct filled planes (multiple bars and background elements).",
+            "The magnifier rim contains a thin white gap that functions as a hairline and may disappear at small scales.",
+            "The background stack has irregular, non-geometric shapes that do not match a professional brand style."
+          ],
+          "requestId": "sha256:781202ec7a8824e721b084bde69d499623cb37ed071849d74744a465d1ca9aae",
+          "round": 2,
+          "score": 45,
+          "status": "candidate",
+          "svgSha256": "516f5b250fc719aa7c4b47ce79b7227f40ffa797393e8a5b11439db6ae338a64",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 13178,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 561,
+            "inputBytes": 5333,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08396848,
+              "colorRmse": 0.05879294,
+              "outsideAlphaRatio": 0.00008821,
+              "sampleHeight": 512,
+              "sampleWidth": 455,
+              "supportRecall": 0.98656662
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "adc6ed4ec79ec988e316f976a7432b7cd2ad54ee8e9584e0f7aa5732b43667d3",
+            "svgSha256": "516f5b250fc719aa7c4b47ce79b7227f40ffa797393e8a5b11439db6ae338a64",
+            "width": 498
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.3319027181688126,
+            "bytes": 24243,
+            "coverageRatio": 0.23842254317584274,
+            "pathCount": 6,
+            "strokePx": 14.29860365198711
+          },
+          "round": 1,
+          "pass": false,
+          "score": 65,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1265060240963856,
+            "bytes": 13178,
+            "coverageRatio": 0.267172075109708,
+            "pathCount": 3,
+            "strokePx": 41.982174688057036
+          },
+          "round": 2,
+          "pass": false,
+          "score": 45,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.1265060240963856,
+        "bytes": 13178,
+        "coverageRatio": 0.267172075109708,
+        "pathCount": 3,
+        "strokePx": 41.982174688057036
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-research.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-research",
+      "subject": "a report page with a small chart under a magnifier",
+      "svgSha256": "516f5b250fc719aa7c4b47ce79b7227f40ffa797393e8a5b11439db6ae338a64"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3080495356037152,
+            "bytes": 16263,
+            "coverageRatio": 0.26424423397512226,
+            "pathCount": 2,
+            "strokePx": 38.77869822485207
+          },
+          "pass": false,
+          "problems": [
+            "The subject resembles a generic wireframe box rather than a recognizable film frame.",
+            "The play triangle is floating in empty space, which weakens the isometric composition.",
+            "The line intersections at the corners are slightly messy and lack the precision required for a clean brand illustration."
+          ],
+          "requestId": "sha256:ef4088c627724e177d0e3882a0d2227051e52b75626e17c9056ec03bf022dbc2",
+          "round": 1,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "156f541ea22f5844e19506383a261edb13de2c6c702b1efc89e3a3c39ac3de86",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16263,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 646,
+            "inputBytes": 7066,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04151938,
+              "colorRmse": 0.02949931,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 391,
+              "sampleWidth": 512,
+              "supportRecall": 0.98745174
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "eff59de50ba7bf81dfd514532d5443cfd5128f1dafd25dab025261db3258b90a",
+            "svgSha256": "156f541ea22f5844e19506383a261edb13de2c6c702b1efc89e3a3c39ac3de86",
+            "width": 845
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3347193347193347,
+            "bytes": 24988,
+            "coverageRatio": 0.23322063976269583,
+            "pathCount": 2,
+            "strokePx": 22.330218068535824
+          },
+          "pass": false,
+          "problems": [
+            "The sprocket holes are tiny repeated details that will disappear or blur at 64px.",
+            "The illustration contains too many small, intricate shapes along the edges, violating the simplicity requirement."
+          ],
+          "requestId": "sha256:90a7dc95ff77041f253e7f2a05141331d6339564158423a4b418b522137fcf1c",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "a44ac826fc412a931c4b694ec2fc50f1b058c570e0077568a459a469275755e3",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 24988,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 642,
+            "inputBytes": 7329,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05745044,
+              "colorRmse": 0.04128334,
+              "outsideAlphaRatio": 0.00000148,
+              "sampleHeight": 512,
+              "sampleWidth": 384,
+              "supportRecall": 0.9699676
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "a353d79c11db6f3ba9b1defc6c72ee9a009b1a4aa7227cac5ce51e6d5bad1e88",
+            "svgSha256": "a44ac826fc412a931c4b694ec2fc50f1b058c570e0077568a459a469275755e3",
+            "width": 481
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.3080495356037152,
+            "bytes": 16263,
+            "coverageRatio": 0.26424423397512226,
+            "pathCount": 2,
+            "strokePx": 38.77869822485207
+          },
+          "round": 1,
+          "pass": false,
+          "score": 65,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.3347193347193347,
+            "bytes": 24988,
+            "coverageRatio": 0.23322063976269583,
+            "pathCount": 2,
+            "strokePx": 22.330218068535824
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.3080495356037152,
+        "bytes": 16263,
+        "coverageRatio": 0.26424423397512226,
+        "pathCount": 2,
+        "strokePx": 38.77869822485207
+      },
+      "outputPath": "/tmp/iconsets/aicharts/task-video.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "task-video",
+      "subject": "a film frame carrying a play triangle",
+      "svgSha256": "156f541ea22f5844e19506383a261edb13de2c6c702b1efc89e3a3c39ac3de86"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "aicharts",
+  "outputDir": "/tmp/iconsets/aicharts",
+  "receiptVersion": 1,
+  "setCritiques": [],
+  "setCritiqueErrors": 4,
+  "setRoundsUsed": 4,
+  "target": {
+    "coverageRatio": 0.24206168349100027,
+    "strokePx": 39.9607776838546
+  }
+}

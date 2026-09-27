@@ -3,10 +3,10 @@
   "ink": "#2474d4",
   "name": "wordcell",
   "members": [
-    { "slug": "backlinks", "subject": "two note cards joined by a link" },
+    { "slug": "backlinks", "subject": "two thick-outlined note cards joined by a bold chain link" },
     { "slug": "capture", "subject": "a web page dropping into an archive folder" },
     { "slug": "git-provenance", "subject": "a note card with a small branch-and-commit history rail" },
-    { "slug": "markdown", "subject": "a sheet of notes with a heading line and a hash mark" },
+    { "slug": "markdown", "subject": "a bold note sheet with one thick heading bar" },
     { "slug": "scopes", "subject": "concentric scope rings over a document" },
     { "slug": "search", "subject": "a magnifying glass over a short list of lines" }
   ],

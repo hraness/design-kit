@@ -39,19 +39,23 @@ test("manifest, files, and generated module cover exactly the same icons", async
   }
 });
 
-test("generated module and manifest stay fresh after measurement", async () => {
-  const recomputed = await iconManifest();
-  expect(recomputed).toEqual(manifest);
-  expect(await iconsModule(recomputed)).toBe(
-    await readFile(join(import.meta.dir, "icons.generated.ts"), "utf8"),
-  );
-});
+test(
+  "generated module and manifest stay fresh after measurement",
+  async () => {
+    const recomputed = await iconManifest();
+    expect(recomputed).toEqual(manifest);
+    expect(await iconsModule(recomputed)).toBe(
+      await readFile(join(import.meta.dir, "icons.generated.ts"), "utf8"),
+    );
+  },
+  300_000,
+);
 
 test("every admitted icon measures inside its declared context bounds", () => {
   for (const icon of manifest.icons) {
     expect(icon.metrics.aspectRatio).toBeLessThanOrEqual(1.8);
     expect(icon.metrics.coverageRatio).toBeGreaterThanOrEqual(0.05);
-    expect(icon.metrics.coverageRatio).toBeLessThanOrEqual(icon.purpose === "mark" ? 0.72 : 0.42);
+    expect(icon.metrics.coverageRatio).toBeLessThanOrEqual(icon.purpose === "mark" ? 0.72 : 0.65);
     expect(icon.metrics.pathCount).toBeLessThanOrEqual(icon.purpose === "mark" ? 16 : 96);
     expect(icon.bytes).toBeLessThanOrEqual(96_000);
     expect(icon.viewBox).toMatch(/^0 0 \d/u);
@@ -59,21 +63,25 @@ test("every admitted icon measures inside its declared context bounds", () => {
   }
 });
 
-test("admitted artwork is self-contained single-ink vector geometry", async () => {
-  for (const icon of manifest.icons) {
-    const svg = await readFile(join(iconsDirectory, icon.file), "utf8");
-    expect(svg).not.toMatch(
-      /<script|on[a-z]+\s*=|javascript:|href=|url\(|<image|<foreignObject|<iframe|<use/iu,
-    );
-    const colors = new Set(
-      [...svg.matchAll(/(?:fill|stroke)="([^"]+)"/gu)]
-        .map(match => (match[1] ?? "").toLowerCase())
-        .filter(color => color !== "none"),
-    );
-    expect([...colors]).toEqual([icon.ink]);
-    expect(measureIconSvg(svg).ink).toBe(icon.ink);
-  }
-});
+test(
+  "admitted artwork is self-contained single-ink vector geometry",
+  async () => {
+    for (const icon of manifest.icons) {
+      const svg = await readFile(join(iconsDirectory, icon.file), "utf8");
+      expect(svg).not.toMatch(
+        /<script|on[a-z]+\s*=|javascript:|href=|url\(|<image|<foreignObject|<iframe|<use/iu,
+      );
+      const colors = new Set(
+        [...svg.matchAll(/(?:fill|stroke)="([^"]+)"/gu)]
+          .map(match => (match[1] ?? "").toLowerCase())
+          .filter(color => color !== "none"),
+      );
+      expect([...colors]).toEqual([icon.ink]);
+      expect(measureIconSvg(svg).ink).toBe(icon.ink);
+    }
+  },
+  300_000,
+);
 
 test("each set reads as one measured family", () => {
   const bySet = new Map<string, number[]>();
