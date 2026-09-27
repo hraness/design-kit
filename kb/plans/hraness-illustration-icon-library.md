@@ -147,6 +147,9 @@ icons, and a hosted icon CDN.
    context gained a pictogram-first generation prompt and context-aware
    illustration and contact-sheet critique clauses — the card-style contract
    had been judging chips against isometric semantics they never needed.
+   A follow-up correction (#99, released as v0.22.2) restored roughday's mark
+   to the registry-pinned canonical artwork; the slot had carried the
+   product's stray `public/icons/roughday.svg` illustration.
    Receipts are retained under `src/icons/receipts/`.
 7. Migrate product repos: bump `@hraness/design-kit` to v0.22.0, vendor the
    product's set (members + mark + only the served shared anchors) from the
@@ -155,7 +158,9 @@ icons, and a hosted icon CDN.
    aicharts #510, soundfish #208, stripe-history #65, act60.me #106,
    slopcamera #262. Platonik's repository is archived (read-only): the same
    change is committed locally on `feat/shared-icon-library` and cannot be
-   pushed. Roughday follows the v0.22.1 release that admits its chips.
+   pushed. Roughday #103 lands the same pattern on v0.22.2: sync:icons in
+   the build chain, a byte-exact parity test, and removal of the stray
+   `public/icons/roughday.svg` so `public/icons/` holds exactly the set.
 
 ## Execution log
 
