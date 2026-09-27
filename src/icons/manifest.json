@@ -463,6 +463,69 @@
       "viewBox": "0 0 757 730"
     },
     {
+      "bytes": 18996,
+      "context": "inline",
+      "file": "roughday/finance.svg",
+      "id": "roughday/finance",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.0933660933660934,
+        "bytes": 18996,
+        "coverageRatio": 0.3069014670311699,
+        "pathCount": 5,
+        "strokePx": 32
+      },
+      "purpose": "illustration",
+      "receipt": "receipts/roughday.receipt.json",
+      "set": "roughday",
+      "slug": "finance",
+      "subject": "a small stack of banknotes",
+      "svgSha256": "bb81644e3239a58878d5e7508890964a12cad5653236fe5e0d48a8b84523692b",
+      "viewBox": "0 0 571 531"
+    },
+    {
+      "bytes": 8596,
+      "context": "inline",
+      "file": "roughday/technology.svg",
+      "id": "roughday/technology",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.2,
+        "bytes": 8596,
+        "coverageRatio": 0.23835017012171594,
+        "pathCount": 2,
+        "strokePx": 36
+      },
+      "purpose": "illustration",
+      "receipt": "receipts/roughday.receipt.json",
+      "set": "roughday",
+      "slug": "technology",
+      "subject": "a thick-bordered computer monitor on a small solid stand",
+      "svgSha256": "bcf1c94e5b0634e4f65b9a28f3f1117fcbce1d30caa44e92093a8e9ae02ffd71",
+      "viewBox": "0 0 585 501"
+    },
+    {
+      "bytes": 7619,
+      "context": "inline",
+      "file": "roughday/world.svg",
+      "id": "roughday/world",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.0091324200913243,
+        "bytes": 7619,
+        "coverageRatio": 0.3031662470435645,
+        "pathCount": 2,
+        "strokePx": 38
+      },
+      "purpose": "illustration",
+      "receipt": "receipts/roughday.receipt.json",
+      "set": "roughday",
+      "slug": "world",
+      "subject": "a bold globe with two thick meridian arcs",
+      "svgSha256": "321695519cb1c867c5a7c58a389aabd03114d6061550ccd1843d32b42ae1c71f",
+      "viewBox": "0 0 607 604"
+    },
+    {
       "bytes": 23416,
       "context": "inline",
       "file": "roughday/roughday.svg",
@@ -476,7 +539,7 @@
         "strokePx": 54
       },
       "purpose": "mark",
-      "receipt": null,
+      "receipt": "receipts/roughday.receipt.json",
       "set": "roughday",
       "slug": "roughday",
       "subject": "rough.day product mark",
@@ -1303,34 +1366,6 @@
       "viewBox": "0 0 720 471"
     }
   ],
-  "pending": [
-    {
-      "context": "inline",
-      "file": "roughday/finance.svg",
-      "id": "roughday/finance",
-      "purpose": "illustration",
-      "set": "roughday",
-      "slug": "finance",
-      "subject": "a small stack of banknotes"
-    },
-    {
-      "context": "inline",
-      "file": "roughday/technology.svg",
-      "id": "roughday/technology",
-      "purpose": "illustration",
-      "set": "roughday",
-      "slug": "technology",
-      "subject": "a chunky laptop seen at an angle"
-    },
-    {
-      "context": "inline",
-      "file": "roughday/world.svg",
-      "id": "roughday/world",
-      "purpose": "illustration",
-      "set": "roughday",
-      "slug": "world",
-      "subject": "a small stack of newspapers"
-    }
-  ],
+  "pending": [],
   "version": 1
 }

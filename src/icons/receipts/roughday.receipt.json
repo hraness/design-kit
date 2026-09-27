@@ -1,0 +1,770 @@
+{
+  "context": "inline",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "problems": [
+            "the illustration is too visually dense for the inline context"
+          ],
+          "requestId": "sha256:b60093e1e83140a26dd8c6e9a7cc39cec3f68f8666c82767640c90745fadce77",
+          "round": 1,
+          "status": "failed",
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0243445692883895,
+            "bytes": 6523,
+            "coverageRatio": 0.5449164321563311,
+            "pathCount": 2,
+            "strokePx": 59.90493601462523
+          },
+          "pass": false,
+          "problems": [
+            "The illustration does not clearly depict a stack of banknotes; it appears as an abstract, unrecognizable shape.",
+            "Lacks isometric perspective or structural cues that define the subject.",
+            "The silhouette is too ambiguous for a marketing header or feature section."
+          ],
+          "requestId": "sha256:0db1cdf2314f78fd4667e504018906316bca66cf7cd047bf2490cd457edfed8e",
+          "round": 2,
+          "score": 20,
+          "status": "candidate",
+          "svgSha256": "469218cda3077d3577b40317939a06e0808ac703848286a4aad8a29ac0fd56b8",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 6523,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 534,
+            "inputBytes": 2970,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03940789,
+              "colorRmse": 0.02751931,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 500,
+              "sampleWidth": 512,
+              "supportRecall": 0.99958796
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "535598b4ade9b22f946eb9685c9e447582e2bdcab70f7d68806e21cd938fbb3f",
+            "svgSha256": "469218cda3077d3577b40317939a06e0808ac703848286a4aad8a29ac0fd56b8",
+            "width": 547
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3006833712984054,
+            "bytes": 13933,
+            "coverageRatio": 0.32787061822562824,
+            "pathCount": 3,
+            "strokePx": 30.486865148861646
+          },
+          "pass": false,
+          "problems": [
+            "The subject is too abstract and is easily mistaken for browser windows or generic cards.",
+            "The illustration lacks the requested isometric perspective.",
+            "It lacks defining features of banknotes, such as a central oval or frame, to aid legibility at small sizes."
+          ],
+          "requestId": "sha256:2f23b2de7a3d875b1be1699878ee57b0ed9212fd11d82484e5719ccc3e1ae75a",
+          "round": 1,
+          "score": 55,
+          "status": "candidate",
+          "svgSha256": "dffb4430d319769f4f184937968fb0d42d619a1b34dc215a4754ae5f98239d8d",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 13933,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 439,
+            "inputBytes": 3570,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05795876,
+              "colorRmse": 0.04083018,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 394,
+              "sampleWidth": 512,
+              "supportRecall": 0.99124566
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "159150688b7a79d27aae15a90c2a242f46f5857f3e483b1ee94fff68ceb87341",
+            "svgSha256": "dffb4430d319769f4f184937968fb0d42d619a1b34dc215a4754ae5f98239d8d",
+            "width": 571
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0753295668549905,
+            "bytes": 18996,
+            "coverageRatio": 0.297716696185039,
+            "pathCount": 5,
+            "strokePx": 30.486865148861646
+          },
+          "pass": false,
+          "problems": [
+            "The line work is slightly irregular and lacks geometric precision, particularly in the stack layers.",
+            "The white gaps between the banknotes are too narrow, which may cause them to blur together at 32px.",
+            "The decorative elements on the top banknote are slightly asymmetrical and lack crisp edges."
+          ],
+          "requestId": "sha256:75630a0872ea96dffa4aeef199d4d35b46e76e955eb1d06634e1dae82ce961e8",
+          "round": 2,
+          "score": 78,
+          "status": "candidate",
+          "svgSha256": "bb81644e3239a58878d5e7508890964a12cad5653236fe5e0d48a8b84523692b",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 18996,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 531,
+            "inputBytes": 5637,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06071683,
+              "colorRmse": 0.04247964,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 476,
+              "sampleWidth": 512,
+              "supportRecall": 0.99372476
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "e749457a1e9eff506c15a86b7624dcd3ebb36a040ec1df20a96fa377e02e1916",
+            "svgSha256": "bb81644e3239a58878d5e7508890964a12cad5653236fe5e0d48a8b84523692b",
+            "width": 571
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0243445692883895,
+            "bytes": 6523,
+            "coverageRatio": 0.5449164321563311,
+            "pathCount": 2,
+            "strokePx": 59.90493601462523
+          },
+          "round": 2,
+          "pass": false,
+          "score": 20,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.3006833712984054,
+            "bytes": 13933,
+            "coverageRatio": 0.32787061822562824,
+            "pathCount": 3,
+            "strokePx": 30.486865148861646
+          },
+          "round": 1,
+          "pass": false,
+          "score": 55,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0753295668549905,
+            "bytes": 18996,
+            "coverageRatio": 0.297716696185039,
+            "pathCount": 5,
+            "strokePx": 30.486865148861646
+          },
+          "round": 2,
+          "pass": false,
+          "score": 78,
+          "selected": true
+        }
+      ],
+      "context": "inline",
+      "metrics": {
+        "aspectRatio": 1.0753295668549905,
+        "bytes": 18996,
+        "coverageRatio": 0.297716696185039,
+        "pathCount": 5,
+        "strokePx": 30.486865148861646
+      },
+      "outputPath": "/tmp/roughday-set/finance.svg",
+      "purpose": "illustration",
+      "regenerated": 1,
+      "slug": "finance",
+      "subject": "a small stack of banknotes",
+      "svgSha256": "bb81644e3239a58878d5e7508890964a12cad5653236fe5e0d48a8b84523692b"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueError": "GENERATION_FAILED",
+          "metrics": {
+            "aspectRatio": 1.0652985074626866,
+            "bytes": 8106,
+            "coverageRatio": 0.3129296599315158,
+            "pathCount": 1,
+            "strokePx": 52.007005253940456
+          },
+          "requestId": "sha256:b9ed88aa550563c34907d3633233edcf29256f3b91aa851cd0760da3c27ceb91",
+          "round": 1,
+          "status": "candidate",
+          "svgSha256": "5594c93cace4d9eb0ceb4892eeb5844622702d8557797128a6de3ad0f8289e6d",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 8106,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 536,
+            "inputBytes": 3698,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03062645,
+              "colorRmse": 0.02158875,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 481,
+              "sampleWidth": 512,
+              "supportRecall": 0.99503728
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "fa7c73036fc474e7798a8357219705eac6e2738c1834ca61ec2fe22e1106cc32",
+            "svgSha256": "5594c93cace4d9eb0ceb4892eeb5844622702d8557797128a6de3ad0f8289e6d",
+            "width": 571
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1676646706586826,
+            "bytes": 8596,
+            "coverageRatio": 0.23555964993090742,
+            "pathCount": 2,
+            "strokePx": 35.00854700854701
+          },
+          "pass": false,
+          "problems": [
+            "The left inner edge of the monitor frame is irregular and wobbly, violating the uniform structure requirement.",
+            "The illustration is a flat 2D pictogram rather than the isometric illustration requested in the style contract."
+          ],
+          "requestId": "sha256:fd7e260022021d862d7a183ddf3b18a934ee63850963f82bc6e2b41d5cfc048d",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "bcf1c94e5b0634e4f65b9a28f3f1117fcbce1d30caa44e92093a8e9ae02ffd71",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 8596,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 501,
+            "inputBytes": 3223,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03767703,
+              "colorRmse": 0.02623684,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 438,
+              "sampleWidth": 512,
+              "supportRecall": 0.99075945
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "61682424c0bae74ddc857260a19404028234210fc525827a84b9297e352f7522",
+            "svgSha256": "bcf1c94e5b0634e4f65b9a28f3f1117fcbce1d30caa44e92093a8e9ae02ffd71",
+            "width": 585
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0652985074626866,
+            "bytes": 8106,
+            "coverageRatio": 0.3129296599315158,
+            "pathCount": 1,
+            "strokePx": 52.007005253940456
+          },
+          "round": 1,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1676646706586826,
+            "bytes": 8596,
+            "coverageRatio": 0.23555964993090742,
+            "pathCount": 2,
+            "strokePx": 35.00854700854701
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        }
+      ],
+      "context": "inline",
+      "metrics": {
+        "aspectRatio": 1.1676646706586826,
+        "bytes": 8596,
+        "coverageRatio": 0.23555964993090742,
+        "pathCount": 2,
+        "strokePx": 35.00854700854701
+      },
+      "outputPath": "/tmp/roughday-set/technology.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "technology",
+      "subject": "a thick-bordered computer monitor on a small solid stand",
+      "svgSha256": "bcf1c94e5b0634e4f65b9a28f3f1117fcbce1d30caa44e92093a8e9ae02ffd71"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0145985401459854,
+            "bytes": 4670,
+            "coverageRatio": 0.25534317071889934,
+            "pathCount": 2,
+            "strokePx": 58.935251798561154
+          },
+          "pass": false,
+          "problems": [
+            "Subject is not clearly recognizable as a globe; it appears as an abstract or stylized symbol.",
+            "Strokes are tapered and sharp rather than having a uniform medium-weight structure.",
+            "The illustration lacks isometric perspective or a clear spherical silhouette.",
+            "The subject is too close to the frame edges, lacking the required modest clear margin."
+          ],
+          "requestId": "sha256:5aeb5a735117ce25d38034afbc0e9e81ea53d37d9f5d6624814b9e6f98d57054",
+          "round": 1,
+          "score": 30,
+          "status": "candidate",
+          "svgSha256": "b50eae9ff0f7793cfbfc98a5766e2a43e76eccc8c1bd96365b9d2c37cd59c884",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 4670,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 548,
+            "inputBytes": 5166,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05361353,
+              "colorRmse": 0.03741317,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 505,
+              "sampleWidth": 512,
+              "supportRecall": 0.99605488
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "a8c082798396de523f0c877b80092c31747b035cffe7fa3727b95cfa28a38a56",
+            "svgSha256": "b50eae9ff0f7793cfbfc98a5766e2a43e76eccc8c1bd96365b9d2c37cd59c884",
+            "width": 556
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0049668874172186,
+            "bytes": 7619,
+            "coverageRatio": 0.2991069967378378,
+            "pathCount": 2,
+            "strokePx": 37.113673805601316
+          },
+          "pass": false,
+          "problems": [
+            "Inconsistent line weight and wobbly, jagged geometry",
+            "Messy intersections and broken line segments on the right side",
+            "Lack of clean, geometric precision required for a professional brand mark family"
+          ],
+          "requestId": "sha256:30cf989e0468c44b0039c5c0fae24d002ba1554ba3c6eed2ff77895aa1f73c6d",
+          "round": 2,
+          "score": 45,
+          "status": "candidate",
+          "svgSha256": "321695519cb1c867c5a7c58a389aabd03114d6061550ccd1843d32b42ae1c71f",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 7619,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 604,
+            "inputBytes": 6878,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06689629,
+              "colorRmse": 0.04712757,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 509,
+              "sampleWidth": 512,
+              "supportRecall": 0.98350284
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "392d879405e6394429fee58fd6968445049c2d117b07f42706e2c24927a9796b",
+            "svgSha256": "321695519cb1c867c5a7c58a389aabd03114d6061550ccd1843d32b42ae1c71f",
+            "width": 607
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0145985401459854,
+            "bytes": 4670,
+            "coverageRatio": 0.25534317071889934,
+            "pathCount": 2,
+            "strokePx": 58.935251798561154
+          },
+          "round": 1,
+          "pass": false,
+          "score": 30,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0049668874172186,
+            "bytes": 7619,
+            "coverageRatio": 0.2991069967378378,
+            "pathCount": 2,
+            "strokePx": 37.113673805601316
+          },
+          "round": 2,
+          "pass": false,
+          "score": 45,
+          "selected": true
+        }
+      ],
+      "context": "inline",
+      "metrics": {
+        "aspectRatio": 1.0049668874172186,
+        "bytes": 7619,
+        "coverageRatio": 0.2991069967378378,
+        "pathCount": 2,
+        "strokePx": 37.113673805601316
+      },
+      "outputPath": "/tmp/roughday-set/world.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "world",
+      "subject": "a bold globe with two thick meridian arcs",
+      "svgSha256": "321695519cb1c867c5a7c58a389aabd03114d6061550ccd1843d32b42ae1c71f"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "roughday",
+  "outputDir": "/tmp/roughday-set",
+  "receiptVersion": 1,
+  "setCritiques": [],
+  "setCritiqueErrors": 3,
+  "setRoundsUsed": 4,
+  "target": {
+    "coverageRatio": 0.297716696185039,
+    "strokePx": 35.00854700854701
+  }
+}
