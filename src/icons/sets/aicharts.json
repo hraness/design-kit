@@ -3,19 +3,61 @@
   "ink": "#2474d4",
   "name": "aicharts",
   "members": [
-    { "slug": "cost-compare", "subject": "two chunky price tags resting on a solid balance block" },
-    { "slug": "task-audio", "subject": "a small speaker emitting curved sound waves" },
-    { "slug": "task-coding", "subject": "a code editor window with angle brackets" },
-    { "slug": "task-images", "subject": "a framed picture of a simple mountain scene" },
-    { "slug": "task-reasoning", "subject": "a chunky gear meshing with a checklist board" },
-    { "slug": "task-research", "subject": "a report page with a small chart under a magnifier" },
-    { "slug": "task-video", "subject": "a film frame carrying a play triangle" }
+    {
+      "slug": "cost-compare",
+      "subject": "two chunky price tags resting on a solid balance block"
+    },
+    {
+      "slug": "task-audio",
+      "subject": "a small speaker emitting curved sound waves"
+    },
+    {
+      "slug": "task-coding",
+      "subject": "a code editor window with angle brackets"
+    },
+    {
+      "slug": "task-images",
+      "subject": "a framed picture of a simple mountain scene"
+    },
+    {
+      "slug": "task-reasoning",
+      "subject": "a chunky gear meshing with a checklist board"
+    },
+    {
+      "slug": "task-research",
+      "subject": "a report page with a small chart under a magnifier"
+    },
+    {
+      "slug": "task-video",
+      "subject": "a film frame carrying a play triangle"
+    }
   ],
   "references": [
-    { "slug": "agent-skill", "svg": "../shared/agent-skill.svg" },
-    { "slug": "cli", "svg": "../shared/cli.svg" },
-    { "slug": "privacy", "svg": "../shared/privacy.svg" },
-    { "slug": "research", "svg": "../shared/research.svg" },
-    { "slug": "sdk", "svg": "../shared/sdk.svg" }
+    {
+      "slug": "agent-skill",
+      "svg": "../shared/agent-skill.svg"
+    },
+    {
+      "slug": "cli",
+      "svg": "../shared/cli.svg"
+    },
+    {
+      "slug": "privacy",
+      "svg": "../shared/privacy.svg"
+    },
+    {
+      "slug": "research",
+      "svg": "../shared/research.svg"
+    },
+    {
+      "slug": "sdk",
+      "svg": "../shared/sdk.svg"
+    }
+  ],
+  "marks": [
+    {
+      "slug": "aicharts",
+      "subject": "aicharts product mark"
+    }
   ]
 }

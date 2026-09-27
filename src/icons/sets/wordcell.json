@@ -3,16 +3,49 @@
   "ink": "#2474d4",
   "name": "wordcell",
   "members": [
-    { "slug": "backlinks", "subject": "two thick-outlined note cards joined by a bold chain link" },
-    { "slug": "capture", "subject": "a web page dropping into an archive folder" },
-    { "slug": "git-provenance", "subject": "a note card with a small branch-and-commit history rail" },
-    { "slug": "markdown", "subject": "a bold note sheet with one thick heading bar" },
-    { "slug": "scopes", "subject": "concentric scope rings over a document" },
-    { "slug": "search", "subject": "a magnifying glass over a short list of lines" }
+    {
+      "slug": "backlinks",
+      "subject": "two thick-outlined note cards joined by a bold chain link"
+    },
+    {
+      "slug": "capture",
+      "subject": "a web page dropping into an archive folder"
+    },
+    {
+      "slug": "git-provenance",
+      "subject": "a note card with a small branch-and-commit history rail"
+    },
+    {
+      "slug": "markdown",
+      "subject": "a bold note sheet with one thick heading bar"
+    },
+    {
+      "slug": "scopes",
+      "subject": "concentric scope rings over a document"
+    },
+    {
+      "slug": "search",
+      "subject": "a magnifying glass over a short list of lines"
+    }
   ],
   "references": [
-    { "slug": "agent-skill", "svg": "../shared/agent-skill.svg" },
-    { "slug": "cli", "svg": "../shared/cli.svg" },
-    { "slug": "sdk", "svg": "../shared/sdk.svg" }
+    {
+      "slug": "agent-skill",
+      "svg": "../shared/agent-skill.svg"
+    },
+    {
+      "slug": "cli",
+      "svg": "../shared/cli.svg"
+    },
+    {
+      "slug": "sdk",
+      "svg": "../shared/sdk.svg"
+    }
+  ],
+  "marks": [
+    {
+      "slug": "kb",
+      "subject": "Wordcell product mark"
+    }
   ]
 }

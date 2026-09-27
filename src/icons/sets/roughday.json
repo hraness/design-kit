@@ -1,0 +1,25 @@
+{
+  "context": "inline",
+  "ink": "#2474d4",
+  "name": "roughday",
+  "members": [
+    {
+      "slug": "finance",
+      "subject": "a small stack of banknotes"
+    },
+    {
+      "slug": "technology",
+      "subject": "a chunky laptop seen at an angle"
+    },
+    {
+      "slug": "world",
+      "subject": "a small stack of newspapers"
+    }
+  ],
+  "marks": [
+    {
+      "slug": "roughday",
+      "subject": "rough.day product mark"
+    }
+  ]
+}

@@ -30,6 +30,9 @@ export interface IconSetMemberSpec {
 export interface IconSetSpec {
   readonly context?: "card" | "hero" | "inline" | undefined;
   readonly ink?: string | undefined;
+  /** Product-authored marks admitted for vetting and distribution; a set
+   *  generation run never regenerates them, so they live outside members. */
+  readonly marks?: readonly { slug: string; subject: string }[] | undefined;
   readonly members: readonly IconSetMemberSpec[];
   readonly name?: string | undefined;
   readonly references?: readonly { slug: string; svg: string }[] | undefined;
@@ -89,7 +92,7 @@ const BOUNDS = {
     inline: { aspect: 1.5, bytes: 32_000, coverage: [0.14, 0.55], paths: 32, strokeMin: 12 },
   },
   mark: {
-    shared: { aspect: 1.8, bytes: 24_000, coverage: [0.14, 0.72], paths: 16, strokeMin: 0 },
+    shared: { aspect: 1.8, bytes: 32_000, coverage: [0.1, 0.72], paths: 16, strokeMin: 0 },
   },
 } as const;
 
@@ -168,9 +171,35 @@ export function parseIconSetSpec(value: unknown, file: string): IconSetSpec {
   if (name !== undefined && (typeof name !== "string" || name.length > 120)) {
     problem(`${file} name must be a bounded label.`);
   }
+  const marks = value.marks;
+  const parsedMarks: { slug: string; subject: string }[] = [];
+  if (marks !== undefined) {
+    if (!Array.isArray(marks) || marks.length > 8) {
+      problem(`${file} marks must be an array of at most 8 entries.`);
+    }
+    for (const [index, mark] of marks.entries()) {
+      if (!isRecord(mark)) problem(`${file} mark ${index} must be an object.`);
+      const slug = mark.slug;
+      if (typeof slug !== "string" || !SLUG.test(slug)) {
+        problem(`${file} mark ${index} needs a kebab-case slug.`);
+      }
+      if (seen.has(slug)) problem(`${file} duplicates slug "${slug}".`);
+      seen.add(slug);
+      const subject = mark.subject;
+      if (
+        typeof subject !== "string" ||
+        subject.trim().length === 0 ||
+        Buffer.byteLength(subject, "utf8") > 1024
+      ) {
+        problem(`${file} mark "${slug}" needs a bounded non-empty subject.`);
+      }
+      parsedMarks.push({ slug, subject: subject.trim() });
+    }
+  }
   const parsed: {
     context?: IconSetSpec["context"];
     ink?: string;
+    marks?: { slug: string; subject: string }[];
     members: IconSetMemberSpec[];
     name?: string;
   } = { members: parsedMembers };
@@ -178,6 +207,7 @@ export function parseIconSetSpec(value: unknown, file: string): IconSetSpec {
     parsed.context = context as IconSetSpec["context"];
   }
   if (ink !== undefined) parsed.ink = ink as string;
+  if (parsedMarks.length > 0) parsed.marks = parsedMarks;
   if (name !== undefined) parsed.name = name as string;
   return parsed;
 }
@@ -313,6 +343,7 @@ export function familyProblems(entries: readonly IconManifestEntry[]): readonly 
   const problems: string[] = [];
   const bySet = new Map<string, IconManifestEntry[]>();
   for (const entry of entries) {
+    if (entry.purpose !== "illustration") continue;
     const set = bySet.get(entry.set) ?? [];
     set.push(entry);
     bySet.set(entry.set, set);
@@ -368,7 +399,10 @@ export async function iconManifest(): Promise<IconManifest> {
   const entries: IconManifestEntry[] = [];
   const pending: IconPendingMember[] = [];
   for (const [set, spec] of [...specs.entries()].sort(([a], [b]) => a.localeCompare(b))) {
-    for (const member of spec.members) {
+    for (const member of [
+      ...spec.members,
+      ...(spec.marks ?? []).map(mark => ({ ...mark, context: undefined, purpose: "mark" as const })),
+    ]) {
       const id = `${set}/${member.slug}`;
       const file = `${set}/${member.slug}.svg`;
       let svg: string | undefined;
