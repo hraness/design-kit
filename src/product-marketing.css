@@ -668,13 +668,19 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   display: var(--hraness-pattern-decoration, block);
   position: absolute;
   inset: 0;
+  /* The backdrop bleeds past the measure-constrained hero to the viewport axis
+     it is centered on, so ambient artwork reaches the screen edges instead of
+     clipping into a bounded rectangle. */
+  margin-inline: calc(50% - 50vw);
   z-index: -1;
   overflow: clip;
   pointer-events: none;
   user-select: none;
   contain: paint;
   opacity: 1;
-  mask-image: linear-gradient(to bottom, black 65%, transparent);
+  mask-image: linear-gradient(to bottom, black 65%, transparent),
+    linear-gradient(to right, transparent, black 9%, black 91%, transparent);
+  mask-composite: intersect;
 }
 .hraness-marketing-hero-backdrop__atmosphere {
   position: absolute;
@@ -1141,6 +1147,27 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   padding-block: var(--hraness-marketing-section-space);
   border-block-start: var(--hraness-marketing-rule);
   scroll-margin-block-start: calc(var(--hraness-sticky-offset, 2.75rem) + 0.75rem);
+}
+
+/* A framed component already draws its own boundary; a ruled section directly
+   after it would stack a redundant separator on the card edge. */
+:is(
+  .hraness-marketing-install,
+  .hraness-marketing-proof,
+  .hraness-marketing-proof-frame
+) + :is(
+  .hraness-marketing-section,
+  .hraness-marketing-primitives,
+  .hraness-marketing-interfaces,
+  .hraness-marketing-trust,
+  .hraness-marketing-quotes,
+  .hraness-marketing-pricing,
+  .hraness-marketing-questions,
+  .hraness-marketing-maker,
+  .hraness-marketing-related,
+  .hraness-marketing-cta
+) {
+  border-block-start: 0;
 }
 
 .hraness-marketing-section,
