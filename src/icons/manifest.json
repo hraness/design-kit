@@ -148,6 +148,27 @@
       "viewBox": "0 0 656 854"
     },
     {
+      "bytes": 20963,
+      "context": "card",
+      "file": "act60/act60.svg",
+      "id": "act60/act60",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.1301020408163265,
+        "bytes": 20963,
+        "coverageRatio": 0.18898560428523603,
+        "pathCount": 3,
+        "strokePx": 36
+      },
+      "purpose": "mark",
+      "receipt": "receipts/act60.receipt.json",
+      "set": "act60",
+      "slug": "act60",
+      "subject": "Act60 product mark",
+      "svgSha256": "30ce0aa6dfb816ed74af988f1d5664fd3405a089c457bb6d7af5d3697cf96342",
+      "viewBox": "0 0 679 613"
+    },
+    {
       "bytes": 38738,
       "context": "card",
       "file": "aicharts/cost-compare.svg",
@@ -295,6 +316,27 @@
       "viewBox": "0 0 845 646"
     },
     {
+      "bytes": 25263,
+      "context": "card",
+      "file": "aicharts/aicharts.svg",
+      "id": "aicharts/aicharts",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.0650602409638554,
+        "bytes": 25263,
+        "coverageRatio": 0.20974919901884803,
+        "pathCount": 4,
+        "strokePx": 56
+      },
+      "purpose": "mark",
+      "receipt": "receipts/aicharts.receipt.json",
+      "set": "aicharts",
+      "slug": "aicharts",
+      "subject": "aicharts product mark",
+      "svgSha256": "24002ad17c71635c563ba21db9c8f3e7742a9a060b25d460ca366d2609c39bf9",
+      "viewBox": "0 0 837 886"
+    },
+    {
       "bytes": 22893,
       "context": "card",
       "file": "platonik/conversation.svg",
@@ -398,6 +440,48 @@
       "subject": "a winding path between two waypoints with small sparks",
       "svgSha256": "d631bdf1f47371dc9c57692df90a21f2e248f978aecb69633ffef6b0e098c8ad",
       "viewBox": "0 0 477 512"
+    },
+    {
+      "bytes": 15761,
+      "context": "card",
+      "file": "platonik/platonik.svg",
+      "id": "platonik/platonik",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.044811320754717,
+        "bytes": 15761,
+        "coverageRatio": 0.1757320701534607,
+        "pathCount": 5,
+        "strokePx": 16
+      },
+      "purpose": "mark",
+      "receipt": "receipts/platonik.receipt.json",
+      "set": "platonik",
+      "slug": "platonik",
+      "subject": "Platonik product mark",
+      "svgSha256": "017b03b30d57bdeb8a96e0e05d77accaf1226b12c1761842b89bfd5953fe6645",
+      "viewBox": "0 0 757 730"
+    },
+    {
+      "bytes": 23416,
+      "context": "inline",
+      "file": "roughday/roughday.svg",
+      "id": "roughday/roughday",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.5400696864111498,
+        "bytes": 23416,
+        "coverageRatio": 0.2174869666063319,
+        "pathCount": 4,
+        "strokePx": 54
+      },
+      "purpose": "mark",
+      "receipt": null,
+      "set": "roughday",
+      "slug": "roughday",
+      "subject": "rough.day product mark",
+      "svgSha256": "355364bedf789974054a76abb75c84a8a2a145999e264d9b61d6430550aa698f",
+      "viewBox": "0 0 596 854"
     },
     {
       "bytes": 19069,
@@ -610,6 +694,27 @@
       "viewBox": "0 0 710 598"
     },
     {
+      "bytes": 18157,
+      "context": "card",
+      "file": "slopcamera/slopcamera.svg",
+      "id": "slopcamera/slopcamera",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.2877906976744187,
+        "bytes": 18157,
+        "coverageRatio": 0.3401185586258402,
+        "pathCount": 9,
+        "strokePx": 46
+      },
+      "purpose": "mark",
+      "receipt": "receipts/slopcamera.receipt.json",
+      "set": "slopcamera",
+      "slug": "slopcamera",
+      "subject": "Slopcamera product mark",
+      "svgSha256": "064b6f2bcba374dac5b1fef606267f3988ad11dfaa79e983e8fce00b7d961dcb",
+      "viewBox": "0 0 592 480"
+    },
+    {
       "bytes": 24328,
       "context": "card",
       "file": "soundfish/agent-ui.svg",
@@ -734,6 +839,27 @@
       "subject": "an upload arrow rising over a disc",
       "svgSha256": "eda6d6c0c5a7bbe9cae7794e95cf3a0d103f40c1f4e58389dd412e32f332dc8f",
       "viewBox": "0 0 450 694"
+    },
+    {
+      "bytes": 6961,
+      "context": "card",
+      "file": "soundfish/soundfish.svg",
+      "id": "soundfish/soundfish",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.1105527638190955,
+        "bytes": 6961,
+        "coverageRatio": 0.25822087921185527,
+        "pathCount": 4,
+        "strokePx": 56
+      },
+      "purpose": "mark",
+      "receipt": "receipts/soundfish.receipt.json",
+      "set": "soundfish",
+      "slug": "soundfish",
+      "subject": "Soundfish product mark",
+      "svgSha256": "526f81ab37624d9d353cf5e0729629d924d1679f5bbb95808a7ae7b45e78e8d0",
+      "viewBox": "0 0 446 488"
     },
     {
       "bytes": 31051,
@@ -883,6 +1009,27 @@
       "viewBox": "0 0 565 850"
     },
     {
+      "bytes": 18638,
+      "context": "card",
+      "file": "sponge/sponge.svg",
+      "id": "sponge/sponge",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.2592592592592593,
+        "bytes": 18638,
+        "coverageRatio": 0.12798612835867576,
+        "pathCount": 5,
+        "strokePx": 12
+      },
+      "purpose": "mark",
+      "receipt": "receipts/sponge.receipt.json",
+      "set": "sponge",
+      "slug": "sponge",
+      "subject": "Sponge product mark",
+      "svgSha256": "02e0af47baaf682c2df0006b5cdffab96fae1d052d4c08337a1b2b745ce6175e",
+      "viewBox": "0 0 894 735"
+    },
+    {
       "bytes": 26159,
       "context": "card",
       "file": "stripe-history/company-history.svg",
@@ -986,6 +1133,27 @@
       "subject": "an open archive box with linked document tabs",
       "svgSha256": "9c3a2736e483c80801b11124b633b87f925b3233f4d538e13fcf391f7cde69a8",
       "viewBox": "0 0 626 625"
+    },
+    {
+      "bytes": 17815,
+      "context": "card",
+      "file": "stripe-history/stripe-history.svg",
+      "id": "stripe-history/stripe-history",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.4166666666666667,
+        "bytes": 17815,
+        "coverageRatio": 0.2140736462386511,
+        "pathCount": 1,
+        "strokePx": 24
+      },
+      "purpose": "mark",
+      "receipt": "receipts/stripe-history.receipt.json",
+      "set": "stripe-history",
+      "slug": "stripe-history",
+      "subject": "Stripe History product mark",
+      "svgSha256": "b23609e9f2370402b10a64cb583a343057ffc980627749b0bca725d59286e2d7",
+      "viewBox": "0 0 947 706"
     },
     {
       "bytes": 19570,
@@ -1112,8 +1280,57 @@
       "subject": "a magnifying glass over a short list of lines",
       "svgSha256": "dbbbc823237481aab0d7c2aff07745656262e7b187a3cc0775bab32988794c8f",
       "viewBox": "0 0 610 669"
+    },
+    {
+      "bytes": 8958,
+      "context": "card",
+      "file": "wordcell/kb.svg",
+      "id": "wordcell/kb",
+      "ink": "#2474d4",
+      "metrics": {
+        "aspectRatio": 1.6679245283018869,
+        "bytes": 8958,
+        "coverageRatio": 0.45219896315625396,
+        "pathCount": 2,
+        "strokePx": 64
+      },
+      "purpose": "mark",
+      "receipt": "receipts/wordcell.receipt.json",
+      "set": "wordcell",
+      "slug": "kb",
+      "subject": "Wordcell product mark",
+      "svgSha256": "0558395c7a0e4abf94735c710a23ff9348be623fca5bc0587b3d41552a63711f",
+      "viewBox": "0 0 720 471"
     }
   ],
-  "pending": [],
+  "pending": [
+    {
+      "context": "inline",
+      "file": "roughday/finance.svg",
+      "id": "roughday/finance",
+      "purpose": "illustration",
+      "set": "roughday",
+      "slug": "finance",
+      "subject": "a small stack of banknotes"
+    },
+    {
+      "context": "inline",
+      "file": "roughday/technology.svg",
+      "id": "roughday/technology",
+      "purpose": "illustration",
+      "set": "roughday",
+      "slug": "technology",
+      "subject": "a chunky laptop seen at an angle"
+    },
+    {
+      "context": "inline",
+      "file": "roughday/world.svg",
+      "id": "roughday/world",
+      "purpose": "illustration",
+      "set": "roughday",
+      "slug": "world",
+      "subject": "a small stack of newspapers"
+    }
+  ],
   "version": 1
 }

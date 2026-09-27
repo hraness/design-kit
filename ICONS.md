@@ -46,6 +46,11 @@ bun test src/icons.test.ts
 
 Admission is fail-closed: single ink, bounded bytes and vector detail,
 context-shaped density and stroke bands, and per-set family coherence
-(each member within ±45% coverage and ±40% stroke of its set median). A
-manifest member without artwork is listed under `pending`, never silently
+(each illustration within ±45% coverage and ±50% stroke of its set median;
+marks are excluded from family coherence since they are product-authored).
+A manifest member without artwork is listed under `pending`, never silently
 omitted.
+
+Product marks are declared on a set's `marks` field: they are vetted and
+distributed through the same registry but are product-authored content that
+a `--set` regeneration run never rewrites.

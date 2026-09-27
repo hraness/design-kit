@@ -86,6 +86,7 @@ test(
 test("each set reads as one measured family", () => {
   const bySet = new Map<string, number[]>();
   for (const icon of manifest.icons) {
+    if (icon.purpose !== "illustration") continue;
     const list = bySet.get(icon.set) ?? [];
     list.push(icon.metrics.coverageRatio);
     bySet.set(icon.set, list);

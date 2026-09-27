@@ -3,13 +3,37 @@
   "ink": "#2474d4",
   "name": "platonik",
   "members": [
-    { "slug": "conversation", "subject": "two overlapping speech bubbles" },
-    { "slug": "creature", "subject": "a small friendly robot creature standing on a plain" },
-    { "slug": "economy", "subject": "a coin beside a conveyor gear" },
-    { "slug": "keep-light", "subject": "a small beacon lantern keeping a flame lit" },
-    { "slug": "spark-route", "subject": "a winding path between two waypoints with small sparks" }
+    {
+      "slug": "conversation",
+      "subject": "two overlapping speech bubbles"
+    },
+    {
+      "slug": "creature",
+      "subject": "a small friendly robot creature standing on a plain"
+    },
+    {
+      "slug": "economy",
+      "subject": "a coin beside a conveyor gear"
+    },
+    {
+      "slug": "keep-light",
+      "subject": "a small beacon lantern keeping a flame lit"
+    },
+    {
+      "slug": "spark-route",
+      "subject": "a winding path between two waypoints with small sparks"
+    }
   ],
   "references": [
-    { "slug": "research", "svg": "../shared/research.svg" }
+    {
+      "slug": "research",
+      "svg": "../shared/research.svg"
+    }
+  ],
+  "marks": [
+    {
+      "slug": "platonik",
+      "subject": "Platonik product mark"
+    }
   ]
 }

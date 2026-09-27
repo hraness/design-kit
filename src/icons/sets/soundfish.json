@@ -3,14 +3,41 @@
   "ink": "#2474d4",
   "name": "soundfish",
   "members": [
-    { "slug": "agent-ui", "subject": "a friendly robot head inside an app window" },
-    { "slug": "collaborate", "subject": "two speech bubbles exchanging a note" },
-    { "slug": "compose", "subject": "a pencil over a small piano-roll grid" },
-    { "slug": "hear", "subject": "a pair of bold headphones resting on a small speaker" },
-    { "slug": "human-ui", "subject": "a person silhouette inside an app window" },
-    { "slug": "share", "subject": "an upload arrow rising over a disc" }
+    {
+      "slug": "agent-ui",
+      "subject": "a friendly robot head inside an app window"
+    },
+    {
+      "slug": "collaborate",
+      "subject": "two speech bubbles exchanging a note"
+    },
+    {
+      "slug": "compose",
+      "subject": "a pencil over a small piano-roll grid"
+    },
+    {
+      "slug": "hear",
+      "subject": "a pair of bold headphones resting on a small speaker"
+    },
+    {
+      "slug": "human-ui",
+      "subject": "a person silhouette inside an app window"
+    },
+    {
+      "slug": "share",
+      "subject": "an upload arrow rising over a disc"
+    }
   ],
   "references": [
-    { "slug": "cli", "svg": "../shared/cli.svg" }
+    {
+      "slug": "cli",
+      "svg": "../shared/cli.svg"
+    }
+  ],
+  "marks": [
+    {
+      "slug": "soundfish",
+      "subject": "Soundfish product mark"
+    }
   ]
 }

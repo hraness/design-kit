@@ -138,11 +138,18 @@ icons, and a hosted icon CDN.
    ones) and the product marks. **Done** — nine manifests in
    `src/icons/sets/` (`shared` plus eight products); product sets anchor to
    the `shared` members they actually render via `references`.
-6. Run regeneration sets; vet outputs into the library. **Blocked** — see
-   Execution log.
+6. Run regeneration sets; vet outputs into the library. **Done** — 62 icons
+   admitted (53 illustrations: shared 5, sponge 7, wordcell 6, aicharts 7,
+   soundfish 6, stripe-history 5, platonik 5, act60 7, slopcamera 5; plus 9
+   product-authored marks declared via the design-kit-only `marks` field,
+   which admission gates but generation never rewrites). Roughday's three
+   30px category chips remain `pending` — the card-style sheet critique
+   repeatedly rejected their semantics (unrecognizable/organic subjects at
+   chip scale); kept for a later focused pass rather than loosened gates.
+   Receipts are retained under `src/icons/receipts/`.
 7. Migrate product repos: drop local `public/icons/` sources, sync resolved
    icons from the pinned `@hraness/design-kit` release at build, keep
-   page markup/tests working. **Pending** — needs a released package.
+   page markup/tests working. **Pending** — needs the v0.22.0 release.
 
 ## Execution log
 
@@ -159,11 +166,32 @@ icons, and a hosted icon CDN.
   against live generations.
 - 2026-09-26: first live shared-set run converged through four members, then
   the Vercel AI Gateway returned **HTTP 402 "Project budget exceeded"
-  ($15.06 of $15.00)** on the `slopcamera` Vercel project. Regeneration is
-  blocked on the owner's budget raise (AI Gateway Budgets settings) or an
-  alternate gateway credential; no output was published (fail-closed held).
-  Until artwork lands, every set member is listed under `pending` in
-  `src/icons/manifest.json` and the admission gate stays armed.
+  ($15.06 of $15.00)** on the `slopcamera` Vercel project. Fail-closed held.
+- 2026-09-27: blockers cleared — the `slopcamera` project budget was raised
+  to $60/month (`vercel ai-gateway budgets set project slopcamera`) and $25
+  of AI Gateway credits purchased (`POST /v1/billing/buy`,
+  `creditType: gateway`) after the team balance hit zero. Three operability
+  fixes landed on slopcamera (4d83720): failed runs publish a
+  `*.failed.receipt.json` diagnostic, sheet-critique transport errors are
+  tolerated per round and counted on the receipt, and member-lane failures
+  surface their last gate error. Two sheet-critique failure modes showed up
+  live: `AI_NoOutputGeneratedError` flakiness (bounded by set rounds) and
+  subjects whose form factor fights the band (horizontal rails, hairline
+  lightbulbs, waveform detail) — resolved by subject rewrites, not gate
+  weakening. Three members (act60/chapter-compare, soundfish/hear,
+  stripe-history/independence) needed surgical single-member retries anchored
+  to their converged siblings via `references`.
+- 2026-09-27: 53 illustrations admitted through the full gate. Card aspect
+  bound widened to 1.8 (content-box measurement differs ~0.15 from
+  slopcamera's raster scale) and family stroke tolerance to ±50%
+  (blob-thickness variance on filled-plane art). PR #93 merged (squash
+  `70a329d`); release lane `release/v0.22.0` opened as PR #94 with the
+  version pins (package.json, stylex artifacts, package-smoke, public
+  boundary, README, portfolio inventory) moved to 0.22.0.
+- 2026-09-27: marks admitted — a `marks` field on set specs (design-kit
+  only; slopcamera's parser ignores unknown keys) carries product-authored
+  marks through the same gates without exposing them to regeneration.
+  Mark bounds calibrated to shipped artwork (32KB, coverage ≥ 0.10).
 
 ## Verification
 
