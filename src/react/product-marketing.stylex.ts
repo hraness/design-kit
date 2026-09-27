@@ -242,14 +242,17 @@ export const marketingStyles = stylex.create({
     "inline-size": "min(100%, var(--hraness-marketing-measure))",
     "min-block-size": "var(--hraness-marketing-header-height, 2.75rem)",
     "align-items": "center",
-    "gap": "0.5rem 1.25rem",
+    "gap": {
+      "default": "0.5rem 1.25rem",
+      "@media (max-width: 48rem)": "0 1rem"
+    },
     "margin-inline": "auto",
     "padding-inline": "var(--hraness-marketing-gutter)",
     "flex-wrap": {
       "@media (max-width: 48rem)": "wrap"
     },
     "padding-block": {
-      "@media (max-width: 48rem)": "0.6rem"
+      "@media (max-width: 48rem)": "0.25rem 0"
     }
   },
   "header__brand": {
@@ -259,6 +262,12 @@ export const marketingStyles = stylex.create({
     "color": {
       "default": "transparent",
       "@media (forced-colors: active)": "CanvasText"
+    },
+    "min-block-size": {
+      "@media (max-width: 48rem)": "2.75rem"
+    },
+    "min-inline-size": {
+      "@media (max-width: 48rem)": "0"
     },
     "font-size": "0.9375rem",
     "font-weight": "700",
@@ -286,18 +295,48 @@ export const marketingStyles = stylex.create({
   },
   "header__nav": {
     "display": "flex",
-    "flex-wrap": "wrap",
+    "flex-wrap": {
+      "default": "wrap",
+      "@media (max-width: 48rem)": "nowrap"
+    },
     "align-items": "center",
     "gap": {
       "default": "0.15rem 1.15rem",
-      "@media (max-width: 48rem)": "0.15rem 1rem"
+      "@media (max-width: 48rem)": "0 1.25rem"
     },
-    "margin-inline-start": "auto",
+    "margin-inline-start": {
+      "default": "auto",
+      "@media (max-width: 48rem)": "calc(-1 * var(--hraness-marketing-gutter))"
+    },
+    "margin-inline-end": {
+      "@media (max-width: 48rem)": "calc(-1 * var(--hraness-marketing-gutter))"
+    },
     "order": {
       "@media (max-width: 48rem)": "3"
     },
-    "inline-size": {
+    "flex-grow": {
+      "@media (max-width: 48rem)": "1"
+    },
+    "flex-shrink": {
+      "@media (max-width: 48rem)": "0"
+    },
+    "flex-basis": {
       "@media (max-width: 48rem)": "100%"
+    },
+    "padding-block": {
+      "@media (max-width: 48rem)": "0.25rem"
+    },
+    "padding-inline": {
+      "@media (max-width: 48rem)": "var(--hraness-marketing-gutter)"
+    },
+    "overflow-x": {
+      "@media (max-width: 48rem)": "auto"
+    },
+    "scrollbar-width": {
+      "@media (max-width: 48rem)": "none"
+    },
+    "contain": {
+      "@media (max-width: 48rem)": "inline-size"
     }
   },
   "header__link": {
@@ -305,12 +344,42 @@ export const marketingStyles = stylex.create({
       "default": "var(--hraness-marketing-muted)",
       ":hover": "var(--hraness-marketing-ink)"
     },
+    "display": {
+      "@media (max-width: 48rem)": "inline-flex"
+    },
+    "flex-shrink": {
+      "@media (max-width: 48rem)": "0"
+    },
+    "align-items": {
+      "@media (max-width: 48rem)": "center"
+    },
+    "min-block-size": {
+      "@media (max-width: 48rem)": "2.75rem"
+    },
+    "white-space": {
+      "@media (max-width: 48rem)": "nowrap"
+    },
     "font-size": "0.85rem",
     "font-weight": "500",
     "text-decoration": "none"
   },
   "header__linkCurrent": {
     "color": "var(--hraness-marketing-ink)",
+    "display": {
+      "@media (max-width: 48rem)": "inline-flex"
+    },
+    "flex-shrink": {
+      "@media (max-width: 48rem)": "0"
+    },
+    "align-items": {
+      "@media (max-width: 48rem)": "center"
+    },
+    "min-block-size": {
+      "@media (max-width: 48rem)": "2.75rem"
+    },
+    "white-space": {
+      "@media (max-width: 48rem)": "nowrap"
+    },
     "font-size": "0.85rem",
     "font-weight": "500",
     "text-decoration": "none"
@@ -318,7 +387,10 @@ export const marketingStyles = stylex.create({
   "header__actions": {
     "display": "flex",
     "align-items": "center",
-    "gap": "0.5rem"
+    "gap": "0.5rem",
+    "margin-inline-start": {
+      "@media (max-width: 48rem)": "auto"
+    }
   },
   "footer": {
     "color": "var(--hraness-marketing-muted)",
@@ -439,7 +511,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "Canvas"
     },
     "background-image": {
-      "default": "linear-gradient(color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--hraness-marketing-accent-ink) 7%, transparent) 1px, transparent 1px), none",
+      "default": "none",
       "@media (forced-colors: active)": "none"
     },
     "background-position": {
@@ -447,7 +519,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "0% 0%"
     },
     "background-size": {
-      "default": "3.5rem 3.5rem, 3.5rem 3.5rem, auto",
+      "default": "auto auto",
       "@media (forced-colors: active)": "auto auto"
     },
     "background-repeat": {
@@ -528,76 +600,25 @@ export const marketingStyles = stylex.create({
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.45rem",
-    "padding": "0.3rem 0.8rem",
-    "border-top": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-right": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-bottom": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-left": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-image-source": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "border-image-slice": {
-      "default": "100%",
-      "@media (forced-colors: active)": "100%"
-    },
-    "border-image-width": {
-      "default": "1",
-      "@media (forced-colors: active)": "1"
-    },
-    "border-image-outset": {
-      "default": "0",
-      "@media (forced-colors: active)": "0"
-    },
-    "border-image-repeat": {
-      "default": "stretch",
-      "@media (forced-colors: active)": "stretch"
-    },
-    "border-radius": "999px",
-    "background-color": {
-      "default": "var(--hraness-marketing-accent-soft)",
-      "@media (forced-colors: active)": "Canvas"
-    },
-    "background-image": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "background-position": {
-      "default": "0% 0%",
-      "@media (forced-colors: active)": "0% 0%"
-    },
-    "background-size": {
-      "default": "auto auto",
-      "@media (forced-colors: active)": "auto auto"
-    },
-    "background-repeat": {
-      "default": "repeat",
-      "@media (forced-colors: active)": "repeat"
-    },
-    "background-origin": {
-      "default": "padding-box",
-      "@media (forced-colors: active)": "padding-box"
-    },
-    "background-clip": {
-      "default": "border-box",
-      "@media (forced-colors: active)": "border-box"
-    },
-    "background-attachment": {
-      "default": "scroll",
-      "@media (forced-colors: active)": "scroll"
-    }
+    "padding": "0",
+    "border-top": "0",
+    "border-right": "0",
+    "border-bottom": "0",
+    "border-left": "0",
+    "border-image-source": "none",
+    "border-image-slice": "100%",
+    "border-image-width": "1",
+    "border-image-outset": "0",
+    "border-image-repeat": "stretch",
+    "border-radius": "0",
+    "background-color": "transparent",
+    "background-image": "none",
+    "background-position": "0% 0%",
+    "background-size": "auto auto",
+    "background-repeat": "repeat",
+    "background-origin": "padding-box",
+    "background-clip": "border-box",
+    "background-attachment": "scroll"
   },
   "hero__eyebrowAccent": {
     "margin": "0",
@@ -611,56 +632,25 @@ export const marketingStyles = stylex.create({
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.45rem",
-    "padding": "0.3rem 0.8rem",
-    "border-top": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-right": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-bottom": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-left": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-image-source": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "border-image-slice": {
-      "default": "100%",
-      "@media (forced-colors: active)": "100%"
-    },
-    "border-image-width": {
-      "default": "1",
-      "@media (forced-colors: active)": "1"
-    },
-    "border-image-outset": {
-      "default": "0",
-      "@media (forced-colors: active)": "0"
-    },
-    "border-image-repeat": {
-      "default": "stretch",
-      "@media (forced-colors: active)": "stretch"
-    },
-    "border-radius": "999px",
-    "background-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 14%, transparent)",
+    "padding": "0",
+    "border-top": "0",
+    "border-right": "0",
+    "border-bottom": "0",
+    "border-left": "0",
+    "border-image-source": "none",
+    "border-image-slice": "100%",
+    "border-image-width": "1",
+    "border-image-outset": "0",
+    "border-image-repeat": "stretch",
+    "border-radius": "0",
+    "background-color": "transparent",
     "background-image": "none",
     "background-position": "0% 0%",
     "background-size": "auto auto",
     "background-repeat": "repeat",
     "background-origin": "padding-box",
     "background-clip": "border-box",
-    "background-attachment": "scroll",
-    "border-top-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-right-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-bottom-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-left-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)"
+    "background-attachment": "scroll"
   },
   "hero__name": {
     "margin": "-1px",
@@ -1649,7 +1639,7 @@ export const marketingStyles = stylex.create({
     },
     "box-shadow": {
       "default": "var(--hraness-marketing-surface-shadow)",
-      ":hover": "var(--hraness-material-lift, var(--hraness-marketing-surface-shadow))",
+      ":hover": "0 0 0 1px var(--hraness-marketing-line-strong)",
       "@media (forced-colors: active)": "none"
     },
     "color": {
@@ -3213,7 +3203,10 @@ export const marketingStyles = stylex.create({
   },
   "headerAction": {
     "display": "inline-flex",
-    "min-block-size": "var(--hraness-marketing-header-action-height, 2rem)",
+    "min-block-size": {
+      "default": "var(--hraness-marketing-header-action-height, 2rem)",
+      "@media (max-width: 48rem)": "max(2.75rem, var(--hraness-marketing-header-action-height, 2rem))"
+    },
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",
@@ -3321,7 +3314,10 @@ export const marketingStyles = stylex.create({
       ":hover": "color-mix(in oklch, var(--hraness-marketing-accent) 84%, black)"
     },
     "display": "inline-flex",
-    "min-block-size": "var(--hraness-marketing-header-action-height, 2rem)",
+    "min-block-size": {
+      "default": "var(--hraness-marketing-header-action-height, 2rem)",
+      "@media (max-width: 48rem)": "max(2.75rem, var(--hraness-marketing-header-action-height, 2rem))"
+    },
     "align-items": "center",
     "justify-content": "center",
     "gap": "0.45rem",

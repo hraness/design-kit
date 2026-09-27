@@ -835,7 +835,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.22.2" },
+    { name: "@hraness/design-kit", version: "0.23.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -901,7 +901,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.22.2 must build and publish against the immutable @hraness/ui v0.5.17 release.",
+    "Design-kit v0.23.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -919,7 +919,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.22.2 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.23.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1351,7 +1351,7 @@ try {
       'import { renderToStaticMarkup } from "react-dom/server";',
       'import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";',
       'const backdropMarkup = renderToStaticMarkup(createElement(HeroBackdrop, { seed: "packed-peer" }));',
-      'if (!/<div(?=[^>]*data-hraness-hero-backdrop="")(?=[^>]*inert="")(?=[^>]*aria-hidden="true")[^>]*>/u.test(backdropMarkup) || backdropMarkup.includes("style=")) throw new Error("Packed hero backdrop lost inert SSR or extracted presentation.");',
+      'if (backdropMarkup !== "") throw new Error("Packed retired hero backdrop must render nothing.");',
       'const stylexUrl = import.meta.resolve("@hraness/design-kit/stylex.css");',
       'if (new URL(stylexUrl).protocol !== "file:") throw new Error("Packed stylex.css is not a file export.");',
       'const stylexCss = await readFile(new URL(stylexUrl), "utf8");',
@@ -1495,7 +1495,6 @@ try {
     "src/browser/artifact-share.ts",
     "src/browser/hero-light.ts",
     "src/react/hero-backdrop.tsx",
-    "src/react/hero-backdrop.stylex.ts",
     "dist/react/hero-backdrop.js",
     "src/browser/sticky-offset.ts",
     "src/react/sticky-offset.tsx",
@@ -2650,7 +2649,7 @@ try {
       'import { renderToStaticMarkup } from "react-dom/server";',
       'import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";',
       'const backdropMarkup = renderToStaticMarkup(createElement(HeroBackdrop, { seed: "packed-peer" }));',
-      'if (!/<div(?=[^>]*data-hraness-hero-backdrop="")(?=[^>]*inert="")(?=[^>]*aria-hidden="true")[^>]*>/u.test(backdropMarkup) || backdropMarkup.includes("style=")) throw new Error("Packed hero backdrop lost inert SSR or extracted presentation.");',
+      'if (backdropMarkup !== "") throw new Error("Packed retired hero backdrop must render nothing.");',
       'const html = renderToStaticMarkup(createElement(ProductionDataPreviewNotice, { surfaceOrigin: "https://preview.example.test" }));',
       'const asideClasses = /<aside[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',
       'const strongClasses = /<strong[^>]*class="([^"]+)"/u.exec(html)?.[1]?.split(" ").filter(Boolean);',

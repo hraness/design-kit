@@ -1,14 +1,30 @@
 # Shared visual direction
 
-The incumbent Paper palettes, Nebula Sans body type, editorial Instrument Serif headings and crisp product identities remain the foundation. Lantern is an independent material option, not a replacement palette.
+The incumbent Paper palettes, Nebula Sans body and heading type, and crisp product identities remain the foundation. Lantern is an independent material option for application screens, not a replacement palette.
 
-Borrow the architectural logic of Maison Hermès: a consistent module, diffused light, a cool exterior and warm occupied spaces. Use a 4rem square module only on selected expressive backgrounds. Soft perimeter light and restrained depth suggest form; readable content sits on opaque planes. Never filter text, logos or meaningful diagrams.
+## Quiet marketing direction
+
+Public product pages follow the Quiet direction, taken from the structure of algal.computer:
+
+- A thin sticky header: the foil product lockup, three to six plain links, one primary action, and the appearance menu as the right-most control. On phones the links move to their own row, which scrolls sideways without a visible scrollbar; the brand, action, and appearance menu stay on the first row. Every control keeps a 44px target and nothing overlaps or clips.
+- A sans hero: a small plain eyebrow, one large heading in Nebula Sans at weight 550 with tight tracking, a summary of two or three sentences within about 42rem, one primary button and at most one text link, and optionally one line of plain facts such as license, platforms, or price.
+- One real proof right after the hero: a terminal or code block, a static screenshot with `alt` text, or compact real output.
+- Ruled sections: each has an eyebrow, a heading, one short paragraph, and one concrete element such as steps, code, a table, or a small figure. Prefer rows and lists to walls of equal cards. Keep a bounded reading width.
+- A flat palette background with content on opaque surfaces and hairline edges. Mono only for code, commands, and small labels.
+
+Retired, and no longer produced by any shared default: hero backdrops and pointer-driven light (`ProductHero` `backdrop`, `HeroBackdrop`, `attachHeroLight`, `data-hraness-hero-item`), background textures and patterns (grain, cells, weave, contour, mesh, grid tiling, gradients behind text), serif display headings, glass or blur on cards and content, heavy shadows and glowing edges, and large interactive app mockups on marketing pages. The retired component names stay exported and do nothing, so products can remove them on their own schedule. See [Hero fields](HERO_FIELDS.md) and [Marketing preset](MARKETING_PRESET.md).
+
+Blur remains allowed only on a sticky header with real content scrolling behind it, and that header turns opaque without backdrop support, with reduced transparency, and in forced colors.
+
+## Application surfaces
+
+Borrow the architectural logic of Maison Hermès for application material: a consistent module, diffused light, a cool exterior and warm occupied spaces. Readable content sits on opaque planes. Never filter text, logos or meaningful diagrams.
 
 Everyday application screens stay quiet. Selection receives a warm paired fill and foreground; success, warning, danger and focus retain their semantic meaning. Reserve glazing for chrome with real scrolling content behind it and for key transitions. Honor light/dark preference, nested themes, reduced transparency, reduced motion and forced colors.
 
-Information architecture precedes texture: bounded reading widths, meaningful groups, rows for collections, secondary details in native disclosures, critical availability visible before action, and one primary next step per section. Avoid equal-height card walls, dense technical labels in marketing and competing footer calls to action.
+Information architecture precedes decoration: bounded reading widths, meaningful groups, rows for collections, secondary details in native disclosures, critical availability visible before action, and one primary next step per section. Avoid equal-height card walls, dense technical labels in marketing and competing footer calls to action.
 
-See [Lantern material](LANTERN_MATERIAL.md) for the implementation contract and architectural sources, and [Marketing preset](MARKETING_PRESET.md) for the existing editorial/minimal roles.
+See [Lantern material](LANTERN_MATERIAL.md) for the application material contract.
 
 Brand foil uses contrast-bearing neutral metal bands with a restrained rainbow reflection. Apply it to the exact existing logo silhouette and wordmark, retain the original artwork fallback, and keep it legible at rest without animation. Forced colors use the original mark and system text.
 

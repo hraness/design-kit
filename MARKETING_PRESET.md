@@ -1,6 +1,6 @@
-# Marketing preset contract 1
+# Marketing preset contract 1 (Quiet)
 
-The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the approved editorial marketing treatment to the existing product-marketing grammar. It shares Paper's `light-dark()` browser baseline: Chrome 123+, Firefox 120+, and Safari 17.5+. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet. Bundle the fonts and textures its CSS URLs reference along with it.
+The separately imported `@hraness/design-kit/product-marketing-preset.css` export adds the Quiet marketing treatment to the existing product-marketing grammar: a sans display heading, a flat palette background, hairline rules, and a thin header. It shares Paper's `light-dark()` browser baseline: Chrome 123+, Firefox 120+, and Safari 17.5+. It does not replace Paper contract 1, reset the document, or change default component presentation. Import it after `styles.css` for standalone components, or beside `compiler-foundation.css` in a registered compiler graph. The published manifest binds the stylesheet. Bundle the font its CSS URL references along with it; the browser downloads it only for a product that opts in to it.
 
 ```tsx
 import "@hraness/design-kit/product-marketing-preset.css";
@@ -17,29 +17,30 @@ import { MarketingPage, MarketingField, ProductHero, MarketingSection } from "@h
 </MarketingPage>
 ```
 
-Raw HTML and older components use `data-hraness-marketing-preset="editorial"` on their marketing ancestor and `.hraness-marketing-field` on the opening container. Existing semantic `hraness-marketing-*` hooks receive the same typography, spacing, and action tokens. A field may also be the hero itself. The field is a static background in document flow, with no content overlay or filter. Product imagery and logos stay clean and full color; `.hraness-marketing-brand-mark` is an optional image hook. Existing product accent variables remain authoritative.
+Raw HTML and older components use `data-hraness-marketing-preset="editorial"` on their marketing ancestor and `.hraness-marketing-field` on the opening container. Existing semantic `hraness-marketing-*` hooks receive the same typography, spacing, and action tokens. A field may also be the hero itself. The field paints the flat palette background in document flow, with no texture, gradient, overlay, or filter, whatever the retired field tokens say. Product imagery and logos stay clean and full color; `.hraness-marketing-brand-mark` is an optional image hook. Existing product accent variables remain authoritative.
 
-`minimal` uses the existing `--font-text` sans face, a compact responsive heading scale and 40px header token, with no textured field. Both presets inherit the existing body face (normally Nebula Sans); the snapshot adds only Instrument Serif 400, not a second body-font system. Nested scopes reset their own display and field tokens. Prefer independent header and main scopes when their presets differ.
+`editorial` sets the display role to the `--font-text` face (normally Nebula Sans) at weight 550 with tight tracking and a fluid heading that opens at 2.375rem on phones. `minimal` uses the same face at weight 500, a compact heading scale, and a 40px header token. Neither preset uses a serif. The snapshot still vendors Instrument Serif 400 for a product that opts in explicitly with `--hraness-marketing-display-font: "Instrument Serif", Georgia, serif`; the browser downloads it only then. Nested scopes reset their own display and field tokens. Prefer independent header and main scopes when their presets differ.
 
-For a custom or older component header, add `class="hraness-marketing-header-surface"` to the header itself. This class explicitly opts in to paint without requiring a preset ancestor. Add `data-hraness-marketing-preset="minimal"` on the same element only when you also need its compact role tokens. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Coarse pointers retain 48px action targets.
+For a custom or older component header, add `class="hraness-marketing-header-surface"` to the header itself. This class explicitly opts in to paint without requiring a preset ancestor. Add `data-hraness-marketing-preset="minimal"` on the same element only when you also need its compact role tokens. This paint-only hook adds supported backdrop blur and opaque accessibility fallbacks without setting position, dimensions, or navigation layout. No wrapper is required around a sticky header. Unsupported filtering, reduced transparency, and forced colors retain opaque surfaces. Blur is allowed only here, on a sticky header with content scrolling behind it; cards and content never use blur or glass. Coarse pointers retain 48px action targets.
 
-## Palette and pattern
+## Phone header
 
-The opening field and terminal proof inherit the active palette's foreground, muted, primary, background and surface colors. This keeps a Gruvbox page warm and a Tokyo Night page cool without a separate hardcoded field palette. Existing product accent overrides remain available for actions.
+At 48rem and narrower, `MarketingSiteHeader` and the raw `.hraness-marketing-header__*` hooks use two rows. The first row holds the brand, the primary action, and the `trailing` appearance menu. The navigation takes the whole second row, reaches the screen edges, and scrolls sideways without a visible scrollbar. The brand, links, and header actions keep 44px targets (48px for coarse pointers in the preset). The navigation row never widens the header's intrinsic size, so the page does not overflow at 360px. Keep three to six short link labels; the header wraps to its measured height, so use `StickyOffsetSync` or `syncStickyOffset` when the header is sticky.
 
-Choose the `pattern` prop on `MarketingPage` or `MarketingField`, or set `data-hraness-pattern` on a native marketing or material boundary. The same finite values work in React markup, raw HTML and immutable CSS snapshots:
+## Palette and patterns
 
-| Pattern | Treatment | Typical surface |
-| --- | --- | --- |
-| `cells` | Broad shaded glass modules | A product's opening story |
-| `weave` | Fine woven texture | Writing and knowledge tools |
-| `contour` | Spacious nested curves | Audio and creative work |
-| `mesh` | A precise dot lattice | Developer tools and infrastructure |
-| `none` | An uninterrupted background | Documentation and reference |
+The opening field and terminal proof inherit the active palette's foreground, muted, primary, background and surface colors. Existing product accent overrides remain available for actions.
 
-Omitting the attribute preserves the editorial cell field and the minimal preset's plain field. An explicit pattern may also be applied to one field. Mark a nested palette island separately so its pigments resolve locally. The decoration remains a background; body text, code and controls stay legible on their own surfaces. Reduced transparency and forced colors remove patterns. A shared hero light controller may update the bounded `--hraness-hero-light-x` and `--hraness-hero-light-y` inputs.
+Patterns are retired. `MarketingPage` and `MarketingField` still accept the `pattern` prop, and `data-hraness-pattern` still accepts the same finite values in React markup, raw HTML, and immutable CSS snapshots, so existing markup keeps working. Every value paints the flat palette background:
 
-Editorial marketing uses Instrument Serif for its display roles, with a fluid 3rem–5.5rem opening heading and a 52-character summary measure. Minimal marketing uses Nebula Sans and a smaller fluid hierarchy. Application and embedded preview headings retain their own roles. Marketing cards use the shared `--hraness-marketing-surface-shadow` and a transparent perimeter; header chrome uses `--hraness-marketing-chrome-shadow`. Forced colors restores explicit system-color edges.
+| Value | Since 0.23.0 |
+| --- | --- |
+| `cells`, `weave`, `contour`, `mesh` | Retired; renders exactly like `none` |
+| `none` and omission | The flat palette background |
+
+The grain and cell textures, the field gradient, the accent band's grid, and the terminal chrome gradient no longer paint. `--hraness-marketing-field-images` and `--hraness-marketing-field-size` remain defined for compatibility, but the field ignores them. The hero light inputs are no longer read.
+
+Editorial marketing uses the Nebula Sans display role at weight 550 with a fluid 2.375rem to 4.5rem opening heading and a 52-character summary measure. Minimal marketing uses the same face at weight 500 and a smaller fluid hierarchy. Application and embedded preview headings retain their own roles. Marketing cards, proof frames, and header chrome use hairline edges (`0 0 0 1px` of `--hraness-marketing-line`) instead of lifted shadows. Forced colors restores explicit system-color edges.
 
 ## Sticky clearance and equal-height card rows
 
@@ -71,9 +72,9 @@ Skip links should target `#main-content`. Hash targets and the main landmark use
 | Display | `--hraness-marketing-display-font`, `--hraness-marketing-display-weight` |
 | Hero heading | `--hraness-marketing-h1-size`, `--hraness-marketing-h1-leading`, `--hraness-marketing-h1-tracking` |
 | Section heading | `--hraness-marketing-h2-size`, `--hraness-marketing-h2-leading`, `--hraness-marketing-h2-tracking` |
-| Tier and proof heading | `--hraness-marketing-h3-size`, `--hraness-marketing-h3-leading`. The editorial display face stays at 1.75rem or larger; set smaller headings in the text face. |
+| Tier and proof heading | `--hraness-marketing-h3-size`, `--hraness-marketing-h3-leading` |
 | Layout | `--hraness-marketing-content-measure`, `--hraness-marketing-header-measure`, `--hraness-marketing-header-height`, `--hraness-marketing-gutter`, `--hraness-marketing-hero-space`, `--hraness-marketing-story-space` |
-| Field | `--hraness-marketing-field-ink`, `--hraness-marketing-field-muted`, `--hraness-marketing-link`, `--hraness-marketing-field-images`, `--hraness-marketing-field-size` |
+| Field | `--hraness-marketing-field-ink`, `--hraness-marketing-field-muted`, `--hraness-marketing-link`. `--hraness-marketing-field-images` and `--hraness-marketing-field-size` are retired and ignored. |
 | Terminal proof | `--hraness-marketing-terminal-background`, `--hraness-marketing-terminal-ink`, `--hraness-marketing-terminal-muted`, `--hraness-marketing-terminal-command`, `--hraness-marketing-terminal-chrome`, `--hraness-marketing-terminal-shadow` |
 
 Map only owned marketing headings to these tokens. Do not restyle every descendant h2 inside product previews or authentication forms. Remove obsolete unlayered font, size, and role-token overrides when adopting the preset; unlayered author rules otherwise outrank the legacy component layer. Custom compiled recipes must read these variables rather than pin old values. The preset uses the existing marketing grammar for layout; importing only this preset does not supply every base component recipe.
@@ -89,8 +90,8 @@ bun scripts/product-marketing-snapshot.ts --write /path/to/site/vendor/hraness-m
 node /path/to/site/vendor/hraness-marketing/check.mjs
 ```
 
-Import `vendor/hraness-marketing/product-marketing-preset.css`. Keep the entire directory: CSS URLs resolve to `fonts/instrument-serif/instrument-serif-latin-400.woff2`, `marketing-assets/grain.svg`, and `marketing-assets/cells.svg`. The finite bundle also includes their licenses/provenance, a dependency-free Node/Bun `check.mjs` validator, and `provenance.json`, which binds every file to SHA-256 and a source commit. Check that manifest in the consumer gate. Installation reads Git object bytes, never a dirty working copy, and refuses changed, unowned, or symlinked destinations. An upgrade replaces only a previously verified snapshot. Run from a released immutable commit for production delivery; local candidate commits are for pre-release verification.
+Import `vendor/hraness-marketing/product-marketing-preset.css`. Keep the entire directory. The CSS references only `fonts/instrument-serif/instrument-serif-latin-400.woff2`, which loads only when a product opts in to that face. `marketing-assets/grain.svg` and `marketing-assets/cells.svg` stay in the inventory so an earlier snapshot upgrades in place, but the Quiet preset no longer references them. Reinstall from a 0.23.0 or later commit to get the Quiet preset; the same installer replaces a previously verified snapshot. The finite bundle also includes their licenses/provenance, a dependency-free Node/Bun `check.mjs` validator, and `provenance.json`, which binds every file to SHA-256 and a source commit. Check that manifest in the consumer gate. Installation reads Git object bytes, never a dirty working copy, and refuses changed, unowned, or symlinked destinations. An upgrade replaces only a previously verified snapshot. Run from a released immutable commit for production delivery; local candidate commits are for pre-release verification.
 
-The source texture generator is `scripts/marketing-textures.ts`; its check verifies byte-identical deterministic SVGs. Instrument Serif retains its OFL license and upstream provenance. The existing Paper CSS snapshot remains separate and unchanged. Neither snapshot executes code at runtime or upgrades UI/compiler dependencies.
+The retained texture files come from `scripts/marketing-textures.ts`; its check verifies byte-identical deterministic SVGs. Instrument Serif retains its OFL license and upstream provenance. The existing Paper CSS snapshot remains separate and unchanged. Neither snapshot executes code at runtime or upgrades UI/compiler dependencies.
 
 For a build graph, import `checkMarketingSnapshot` from the vendored `check.mjs` and await it with the snapshot directory (default: the checker's directory). It returns the validated source identity and finite `files` record; each entry contains its source path and SHA-256. The included `check.d.mts` provides TypeScript declarations. Include those checked CSS, font, and SVG files in your build; validation does not copy or modify files.

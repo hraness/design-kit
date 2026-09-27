@@ -512,11 +512,46 @@ export function DesignSystemGallery({
           </MarketingMain>
         </MarketingPage>
         <MarketingPage preset="editorial" className="design-gallery__marketing-preset">
+          <MarketingSiteHeader
+            action={{ href: "#gallery-install", label: "Install" }}
+            brand="Relay"
+            brandHref="#marketing"
+            links={[
+              { href: "#gallery-editorial-title", label: "How it works" },
+              { href: "#gallery-install", label: "Install" },
+              { href: "#gallery-quiet-limits", label: "Limits" },
+              { href: "#shells", label: "Docs" },
+              { href: "#articles", label: "Changelog" },
+            ]}
+            sticky={false}
+          />
           <MarketingField>
-            <ProductHero name="Relay" heading="Run a job from your terminal, your code, or your agent" headingId="gallery-editorial-title" headingLevel={3}
-              summary="The editorial preset sets a serif display heading on a textured field."
-              actions={[{ href: "#gallery-minimal-title", label: "See the compact preset" }]} />
+            <ProductHero
+              actions={[
+                { href: "#gallery-install", label: "Install Relay" },
+                { emphasis: "secondary", href: "#gallery-minimal-title", label: "See the compact preset" },
+              ]}
+              align="start"
+              boundary="MIT license · macOS and Linux · free for local use"
+              eyebrow="Job runner"
+              frame={(
+                <MarketingProofFrame title="relay run job-01">
+                  <pre className="design-gallery__marketing-command"><SyntaxCode code={"$ relay run job-01\n{\"status\":\"complete\",\"job\":\"job-01\",\"durationMs\":412}"} styles="classes" /></pre>
+                </MarketingProofFrame>
+              )}
+              heading="Run a job from your terminal, your code, or your agent"
+              headingId="gallery-editorial-title"
+              headingLevel={3}
+              name=""
+              summary="The editorial preset sets one large sans heading on the flat palette background, a short summary, one next step, and one real proof."
+            />
           </MarketingField>
+          <MarketingSection heading="Keep every limit next to what it limits." headingId="gallery-quiet-limits" headingLevel={3} label="Limits" summary="Sections sit between hairline rules, each with one short paragraph and one concrete element.">
+            <ol className="design-gallery__quiet-steps">
+              <li>Local jobs only; sync is a separate plan.</li>
+              <li>Logs older than 30 days are pruned unless pinned.</li>
+            </ol>
+          </MarketingSection>
         </MarketingPage>
         <MarketingPage preset="minimal" className="design-gallery__marketing-preset">
           <MarketingSiteHeader brand="Relay" brandHref="#marketing" links={[]} sticky={false} />

@@ -12,39 +12,43 @@ import { checkMarketingSnapshot, createMarketingSnapshot, marketingSnapshotPaths
 const css = await readFile(new URL("./product-marketing-preset.css", import.meta.url), "utf8");
 const sources = Object.fromEntries(await Promise.all(Object.entries(marketingSnapshotPaths).map(async ([name, path]) => [name, await readFile(new URL(`../${path}`, import.meta.url))]))) as Record<keyof typeof marketingSnapshotPaths, Buffer>;
 
-test("the preset retains the approved static assets and source-relative URLs", () => {
+test("the preset keeps its vendored assets while painting no retired texture", () => {
+  // Textures stay in the snapshot inventory so existing vendored copies
+  // upgrade in place, but the Quiet preset never references them.
   for (const [name, contents] of Object.entries(marketingTextures())) expect(sources[`marketing-assets/${name}` as keyof typeof sources].toString()).toBe(contents);
   const hashes = {
     "marketing-assets/grain.svg": "b40c33a0e382c8e9d0518b4720321b5c262a929c28d40a190a902d07acd06553",
     "marketing-assets/cells.svg": "2391e9b3ee964e1178fedc55c766d12ac43bfeda92cfa44aab16c64a15f9d712",
     "fonts/instrument-serif/instrument-serif-latin-400.woff2": "60c06664b5a95c7de6cc3e00d1f9034d78bd1e40b564016b241674449a067d4d",
   } as const;
-  for (const [name, digest] of Object.entries(hashes)) {
-    expect(createHash("sha256").update(sources[name as keyof typeof sources]).digest("hex")).toBe(digest);
-    expect(css).toContain(`url("./${name}")`);
-  }
+  for (const [name, digest] of Object.entries(hashes)) expect(createHash("sha256").update(sources[name as keyof typeof sources]).digest("hex")).toBe(digest);
+  expect(css).toContain('url("./fonts/instrument-serif/instrument-serif-latin-400.woff2")');
+  expect(css).not.toMatch(/marketing-assets\/|grain\.svg|cells\.svg/u);
   expect(css).not.toMatch(/@import|!important|::before|::after|animation:|transition:/u);
-  expect(css).toContain('--hraness-marketing-field-images: none');
-  expect(css).toContain('--hraness-marketing-display-font: var(--font-text');
-  expect(css).not.toContain('--hraness-marketing-accent:');
+  expect(css).not.toMatch(/gradient\(/u);
+  expect(css).not.toMatch(/--hraness-hero-(?:light|drift)-[xy]/u);
+  expect(css).toContain("--hraness-marketing-field-images: none");
+  expect(css).not.toContain("--hraness-marketing-accent:");
+  // The field paints the flat palette background even if a caller still sets
+  // the retired image tokens.
+  expect(css).toMatch(/\.hraness-marketing-field \{\s*background-image: none;/u);
+  expect(css).not.toMatch(/background-image: var\(/u);
 });
 
-test("the soft cell field retains all seamless faces and dark-mode highlights", async () => {
-  const cells = sources["marketing-assets/cells.svg"].toString();
-  expect(cells).toContain('viewBox="0 0 768 768"');
-  expect(cells).not.toMatch(/\bstroke(?:-|=)/u);
-  expect([...cells.matchAll(/<linearGradient\b/gu)]).toHaveLength(64);
-  expect([...cells.matchAll(/<path\b/gu)]).toHaveLength(64);
-  for (let index = 0; index < 64; index++) {
-    expect(cells).toContain(`<path d="M${index % 8 * 96} ${Math.floor(index / 8) * 96}h96v96h-96z" fill="url(#p${index})"/>`);
+test("both presets use the Nebula Sans display role, never a serif default", () => {
+  const block = (selector: string) => css.slice(css.indexOf(selector), css.indexOf("\n  }", css.indexOf(selector)));
+  const editorial = block(':where([data-hraness-marketing-preset="editorial"], [data-hraness-marketing-preset="minimal"]) {');
+  const minimal = block('[data-hraness-marketing-preset="minimal"] {');
+  for (const scope of [editorial, minimal]) {
+    expect(scope).toContain('--hraness-marketing-display-font: var(--font-text, "Nebula Sans", ui-sans-serif, system-ui, sans-serif);');
+    expect(scope).not.toMatch(/--hraness-marketing-display-font:[^;]*(?:Instrument|Georgia|[^-]serif)/u);
   }
-  const highlights = [...cells.matchAll(/<stop stop-color="#fff" stop-opacity="([\d.]+)"/gu)].map(match => Number(match[1]));
-  const shades = [...cells.matchAll(/<stop offset="1" stop-color="#000" stop-opacity="([\d.]+)"/gu)].map(match => Number(match[1]));
-  expect(highlights).toHaveLength(64); expect(shades).toHaveLength(64);
-  for (const value of highlights) { expect(value).toBeGreaterThanOrEqual(.025); expect(value).toBeLessThanOrEqual(.07); }
-  for (const value of shades) { expect(value).toBeGreaterThanOrEqual(.008); expect(value).toBeLessThanOrEqual(.034); }
-  const material = await readFile(new URL("./lantern-material.css", import.meta.url), "utf8");
-  expect(material).toContain('--hraness-pattern-cells: linear-gradient(145deg, rgb(255 255 255 / 0.05), transparent 48%, rgb(0 0 0 / 0.035));');
+  expect(editorial).toContain("--hraness-marketing-display-weight: 550;");
+  expect(editorial).toMatch(/--hraness-marketing-h1-tracking: -\.0[3-4]\d?em;/u);
+  // Phone heroes open at a legible size rather than a poster size.
+  expect(editorial).toMatch(/--hraness-marketing-h1-size: clamp\(2\.(?:25|375|5)rem,/u);
+  // The vendored face stays declared for products that opt in explicitly.
+  expect(css).toContain('font-family: "Instrument Serif";');
 });
 
 test("both native header blur paths survive the installed optimizer", () => {
@@ -125,25 +129,25 @@ test("immutable snapshot installation rejects binary edits, unowned files, and s
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
-test("independent material and preset snapshots keep the same finite pattern contract", async () => {
+test("independent material and preset snapshots retire every pattern to the same flat background", async () => {
   const material = await readFile(new URL("./lantern-material.css", import.meta.url), "utf8");
-  for (const pattern of ["cells", "weave", "contour", "mesh", "none"]) {
-    const selector = `[data-hraness-pattern="${pattern}"] {`;
-    const block = (source: string) => {
-      const start = source.indexOf(selector);
-      expect(start).toBeGreaterThan(-1);
-      return source.slice(start, source.indexOf("\n  }", start));
-    };
-    expect(block(css)).toBe(block(material));
-  }
+  const selector = ':is([data-hraness-pattern="cells"], [data-hraness-pattern="weave"], [data-hraness-pattern="contour"], [data-hraness-pattern="mesh"], [data-hraness-pattern="none"]) {';
+  const block = (source: string) => {
+    const start = source.indexOf(selector);
+    expect(start).toBeGreaterThan(-1);
+    return source.slice(start, source.indexOf("\n  }", start));
+  };
+  expect(block(css)).toBe(block(material));
+  for (const declaration of ["--hraness-pattern-image: none;", "--hraness-pattern-decoration: none;", "--hraness-marketing-field-images: none;", "--hraness-material-wall-images: none;"]) expect(block(css)).toContain(declaration);
   for (const [filename, source] of [["preset.css", css], ["material.css", material]] as const) {
+    // No value keeps a pattern of its own, and no pattern paints a gradient.
+    for (const pattern of ["cells", "weave", "contour", "mesh"]) expect(source).not.toContain(`[data-hraness-pattern="${pattern}"] {`);
     const optimized = transform({ filename, code: Buffer.from(source), minify: true }).code.toString();
-    expect(optimized).toContain("repeating-conic-gradient");
-    expect(optimized).toContain("repeating-radial-gradient");
-    expect(optimized).toContain("prefers-reduced-transparency:reduce");
+    expect(optimized).not.toMatch(/repeating-(?:conic|radial)-gradient/u);
     expect(optimized).toContain("forced-colors:active");
   }
-  // A quiet document default must survive a descendant marketing scope.
-  expect(css).toContain("--hraness-marketing-field-images: var(--hraness-pattern-decoration,");
+  const wall = material.slice(material.indexOf(':is(.hraness-material-wall) {'), material.indexOf("}", material.indexOf(':is(.hraness-material-wall) {')));
+  expect(wall).toContain("background-image: none;");
+  expect(material).not.toMatch(/--hraness-hero-(?:light|drift)-[xy]/u);
   expect(css).not.toMatch(/--hraness-marketing-(?:field|terminal)-[\w-]+:\s*light-dark\(/u);
 });

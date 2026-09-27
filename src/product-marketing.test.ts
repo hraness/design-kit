@@ -80,10 +80,10 @@ test("the marketing grammar keeps compact, coarse-pointer, and forced-color cont
   expect(css).not.toContain("animation:");
 });
 
-test("the soft-accent hero eyebrow keeps readable label ink", () => {
-  expect(css).toMatch(
-    /\.hraness-marketing-hero__eyebrow\s*\{[^}]*background: var\(--hraness-marketing-accent-soft\);[^}]*color: var\(--hraness-marketing-muted\);[^}]*\}/u,
-  );
+test("the hero eyebrow is a plain muted label, not a badge", () => {
+  const eyebrow = css.match(/\.hraness-marketing-hero__eyebrow \{([^}]*)\}/u)?.[1] ?? "";
+  for (const declaration of ["padding: 0;", "border: 0;", "border-radius: 0;", "background: none;", "color: var(--hraness-marketing-muted);"]) expect(eyebrow).toContain(declaration);
+  expect(css.split('.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-hero__eyebrow {')[1]?.split("}")[0]).not.toMatch(/background|border/u);
 });
 
 test("the shared foil contract styles brand wordmarks and primary actions", () => {
@@ -171,18 +171,20 @@ test("metallic text and marks preserve a restrained spectrum and mask fallback",
 });
 
 
-test("raw hero artwork stays inert and outside grid flow with the compiled recipe's exact light fields", async () => {
-  const recipe = await Bun.file(new URL("./react/hero-backdrop.stylex.ts", import.meta.url)).text();
-  const backdrop = css.match(/\.hraness-marketing-hero-backdrop\s*\{([^}]+)\}/u)?.[1] ?? "";
-  for (const declaration of ["position: absolute", "inset: 0", "z-index: -1", "overflow: clip", "pointer-events: none", "contain: paint", "display: var(--hraness-pattern-decoration, block)"]) expect(backdrop).toContain(declaration);
-  expect(backdrop).not.toContain("overflow: hidden");
-  for (const match of recipe.matchAll(/backgroundImage: "([^"]+)"/gu)) expect(css).toContain(`background-image: ${match[1]};`);
-  for (const [variation, position, size] of [["center", "50% 50%", null], ["east", "100% 25%", "140% 120%"], ["west", "0px 75%", "125% 150%"]] as const) {
-    const rule = css.split(`.hraness-marketing-hero-backdrop__atmosphere[data-variation="${variation}"] {`)[1]?.split("}")[0];
-    expect(rule).toContain(`background-position: ${position};`);
-    if (size) expect(rule).toContain(`background-size: ${size};`);
+test("retired hero backdrops, light fields, and background textures cannot paint in raw markup", async () => {
+  // Hand-authored pages that still ship the old backdrop hooks lose them entirely.
+  expect(css).toMatch(/\.hraness-marketing-hero-backdrop \{\s*display: none;\s*\}/u);
+  expect(css).not.toContain(".hraness-marketing-hero-backdrop__");
+  expect(await Bun.file(new URL("./react/hero-backdrop.stylex.ts", import.meta.url)).exists()).toBe(false);
+  for (const source of [css, await Bun.file(new URL("./product-marketing-foundation.css", import.meta.url)).text()]) {
+    expect(source).not.toMatch(/--hraness-hero-(?:light|drift)-[xy]|--hraness-hero-proximity|data-hraness-hero-item/u);
+    // Blur belongs only to sticky header paint, never to cards or content.
+    for (const match of source.matchAll(/([^{}]*)\{[^{}]*backdrop-filter:/gu)) expect(match[1]).toMatch(/\.hraness-marketing-header\s*$/u);
   }
-  expect(css).toContain('@media (forced-colors: active), (prefers-reduced-transparency: reduce) {\n  .hraness-marketing-hero-backdrop { opacity: 0; }');
+  // The accent band is one flat color: no grid tiling behind its text.
+  const accent = css.split('.hraness-marketing-hero[data-tone="accent"] {')[1]?.split("}")[0] ?? "";
+  expect(accent).toContain("background: var(--hraness-marketing-accent);");
+  expect(accent).not.toContain("gradient(");
 });
 
 test("a ruled section directly after a framed component drops its redundant separator", () => {

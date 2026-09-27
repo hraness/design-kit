@@ -448,10 +448,8 @@ try {
             if (proof.prefixedSupported) assert.equal(chrome.prefixedBlur, "blur(20px) saturate(1.1)");
             assert((chrome.background[3] ?? 0) > 0 && (chrome.background[3] ?? 255) < 255, "Chrome must remain translucent in its supported mode");
           }
-          for (const wall of proof.walls) {
-            assert.match(wall.image, /linear-gradient/u);
-            assert.doesNotMatch(wall.image, /repeating-linear-gradient/u, "Faces must not redraw the bright line grid");
-          }
+          // Walls are flat palette planes: the retired faces, grain and light washes never paint.
+          for (const wall of proof.walls) assert.equal(wall.image, "none", "Material walls must paint no texture or gradient");
           requireSelected(proof, false);
           const comparable = { proof, states, focus };
           if (reference === undefined) reference = comparable;

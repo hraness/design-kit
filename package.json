@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.22.2",
+  "version": "0.23.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -238,7 +238,6 @@
     "scripts/check-lantern-material-snapshot.d.mts",
     "src/browser/hero-light.ts",
     "src/react/hero-backdrop.tsx",
-    "src/react/hero-backdrop.stylex.ts",
     "src/palette-system.css",
     "HERO_FIELDS.md",
     "src/provider-marks.ts",

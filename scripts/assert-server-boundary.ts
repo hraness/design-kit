@@ -25,5 +25,6 @@ export async function assertServerBoundary(packageRoot: string): Promise<void> {
     }
   }
   await visit(join(packageRoot, "dist/react/server.js"));
-  assert.equal(foundBackdrop, true, "Server hero must cross the emitted backdrop client boundary");
+  // Hero backdrops are retired: the server hero renders no client artwork.
+  assert.equal(foundBackdrop, false, "Server hero must not reach the retired backdrop client entry");
 }

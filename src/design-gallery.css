@@ -1,5 +1,6 @@
 .design-gallery {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);
   min-inline-size: 0;
   padding: clamp(var(--space-5), 4vw, var(--space-12));
@@ -126,6 +127,7 @@
 
 .design-gallery__section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   scroll-margin-block-start: var(--space-8);
 }
@@ -189,6 +191,22 @@
 
 .design-gallery__marketing > .hraness-marketing-header {
   position: static;
+}
+
+.design-gallery__marketing-preset {
+  display: block;
+  overflow: clip;
+  margin-block-start: var(--space-6, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+  background: var(--background);
+}
+
+.design-gallery__quiet-steps {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-inline-start: 1.25rem;
 }
 
 .design-gallery__marketing-command {

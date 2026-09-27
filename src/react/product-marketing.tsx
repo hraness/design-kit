@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { FoilMark } from "./foil-mark.js";
 import { SyntaxCode } from "./syntax-code.js";
-import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";
 import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
 import type { MarketingColumnCount } from "./product-marketing.stylex.js";
 
@@ -20,7 +19,13 @@ const MARKETING_HEADING_TAGS = {
 
 export type MarketingTone = "paper" | "accent";
 export type MarketingPreset = "editorial" | "minimal";
+/**
+ * Accepted `data-hraness-pattern` values. Patterns are retired: `cells`,
+ * `weave`, `contour`, and `mesh` stay valid for compatibility but render
+ * exactly like `none`.
+ */
 export const marketingPatterns = ["cells", "weave", "contour", "mesh", "none"] as const;
+/** @deprecated Patterns are retired; every value renders as `none`. */
 export type MarketingPattern = (typeof marketingPatterns)[number];
 
 function assertMarketingPattern(pattern: MarketingPattern | undefined): void {
@@ -117,7 +122,11 @@ export function MarketingPage({
   id?: string;
   /** Opt in to the separately imported product-marketing-preset.css contract. */
   preset?: MarketingPreset;
-  /** Material pattern independent of the selected color palette. */
+  /**
+   * @deprecated Patterns are retired. Every value, including the default,
+   * paints the flat palette background; the attribute is still emitted for
+   * compatibility with existing selectors.
+   */
   pattern?: MarketingPattern;
 }>) {
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal") throw new RangeError("Unknown marketing preset.");
@@ -129,8 +138,17 @@ export function MarketingPage({
   );
 }
 
-/** Static decorative field; it never creates an overlay or a fixed-position containing block. */
-export function MarketingField({ children, className, pattern }: Readonly<{ children: ReactNode; className?: string; pattern?: MarketingPattern }>) {
+/**
+ * Opening container for the hero. It paints the flat palette background: the
+ * retired grain, cell, and pattern textures no longer render. It never creates
+ * an overlay or a fixed-position containing block.
+ */
+export function MarketingField({ children, className, pattern }: Readonly<{
+  children: ReactNode;
+  className?: string;
+  /** @deprecated Patterns are retired; every value renders as `none`. */
+  pattern?: MarketingPattern;
+}>) {
   assertMarketingPattern(pattern);
   return <div className={["hraness-marketing-field", className].filter(Boolean).join(" ")} data-hraness-marketing="field" data-hraness-pattern={pattern}>{children}</div>;
 }
@@ -482,7 +500,11 @@ export function MarketingFacts({
 export interface ProductHeroProps {
   readonly actions?: readonly MarketingAction[];
   readonly align?: "center" | "start";
-  /** Decorative artwork within shared light/motion custody. False opts out. */
+  /**
+   * @deprecated Hero backdrops are retired. The hero renders no decorative
+   * artwork, light field, or blur, whatever this holds. Show real product
+   * proof in `frame` instead.
+   */
   readonly backdrop?: ReactNode | false;
   readonly boundary?: string;
   readonly className?: string;
@@ -512,7 +534,6 @@ export interface ProductHeroProps {
 export function ProductHero({
   actions = [],
   align = "center",
-  backdrop,
   boundary,
   className,
   example,
@@ -537,7 +558,6 @@ export function ProductHero({
       data-hraness-marketing="hero"
       data-tone={tone}
     >
-      {backdrop === false ? null : <HeroBackdrop seed={headingId}>{backdrop}</HeroBackdrop>}
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
         {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
         <p className={classNames("hraness-marketing-hero__name")}>{name}</p>
