@@ -147,9 +147,14 @@ icons, and a hosted icon CDN.
    repeatedly rejected their semantics (unrecognizable/organic subjects at
    chip scale); kept for a later focused pass rather than loosened gates.
    Receipts are retained under `src/icons/receipts/`.
-7. Migrate product repos: drop local `public/icons/` sources, sync resolved
-   icons from the pinned `@hraness/design-kit` release at build, keep
-   page markup/tests working. **Pending** — needs the v0.22.0 release.
+7. Migrate product repos: bump `@hraness/design-kit` to v0.22.0, vendor the
+   product's set (members + mark + only the served shared anchors) from the
+   pinned package via `sync:icons`, and byte-compare in a parity test so
+   upgrades surface drift. **In progress** — PRs: sponge #333, wordcell #160,
+   aicharts #510, soundfish #208, stripe-history #65, act60.me #106,
+   slopcamera #262. Platonik's repository is archived (read-only): the same
+   change is committed locally on `feat/shared-icon-library` and cannot be
+   pushed. Roughday is held — its three members are still `pending`.
 
 ## Execution log
 
