@@ -117,23 +117,26 @@ try {
                 return { color: style.color, fill: style.webkitTextFillColor, background: style.backgroundColor, opacity: style.opacity };
               }),
               label: document.querySelector(".hraness-marketing-hero__eyebrow") === null ? "omitted" : getComputedStyle(required(".hraness-marketing-hero__eyebrow")).display,
-              fontLoaded: document.fonts.check('400 40px "Instrument Serif"'),
+              serifRequested: [...document.fonts].some((face) => face.family.replaceAll('"', "") === "Instrument Serif" && face.status !== "unloaded"),
               overflow: document.documentElement.scrollWidth > window.innerWidth,
               overlay: getComputedStyle(field, "::before").content,
             };
           });
-          assert(proof.fontLoaded && proof.hero.font.includes("Instrument Serif"));
+          // The Quiet display role is the body sans; the vendored serif is never requested.
+          assert(proof.hero.font.includes("Nebula Sans") && !proof.hero.font.includes("Instrument Serif"), proof.hero.font);
+          assert.equal(proof.serifRequested, false);
           assert.equal(proof.fieldTrustMuted, proof.fieldHeroMuted);
-          assert.equal(proof.hero.weight, "400");
+          assert.equal(proof.hero.weight, "550");
           assert(!proof.minimal.font.includes("Instrument Serif"));
           assert.equal(proof.product.size, "19px");
           assert.equal(proof.minimalBackground, "none");
-          assert(proof.background.includes("grain.svg") && proof.background.includes("cells.svg") && proof.background.includes("gradient"));
+          assert.equal(proof.background, "none");
           assert.equal(proof.blur, "blur(14px) saturate(1.4)");
           assert.equal(proof.standaloneBlur, "blur(14px) saturate(1.4)");
           assert.notEqual(proof.standaloneBackground, "rgba(0, 0, 0, 0)");
           assert.equal(proof.headerPosition, "sticky");
-          assert.equal(proof.actionHeight, 36);
+          // Phone headers keep 44px targets; wider headers stay compact.
+          assert.equal(proof.actionHeight, width <= 768 ? 44 : 36);
           assert.equal(proof.actionBackground, "rgb(22, 90, 61)");
           assert.deepEqual(proof.primaryActions, Array.from({ length: 4 }, () => ({ color: "rgb(255, 255, 255)", fill: "rgb(255, 255, 255)", background: "rgb(22, 90, 61)", opacity: "1" })), `${mode} primary action paint at ${width}/${theme}`);
           assert.equal(proof.label, "omitted");
@@ -164,18 +167,15 @@ try {
               return { h2: probe("h2"), h3: probe("h3") };
             }));
             const [editorial, minimal] = tokenFaces;
-            assert(editorial?.h2.font.includes("Instrument Serif"), `${mode} editorial h2 token face: ${editorial?.h2.font}`);
-            assert.equal(editorial?.h2.weight, "400", `${mode} editorial h2 token weight`);
+            assert(!editorial?.h2.font.includes("Instrument Serif"), `${mode} editorial h2 token face: ${editorial?.h2.font}`);
+            assert.equal(editorial?.h2.weight, "550", `${mode} editorial h2 token weight`);
             assert(!editorial?.h3.font.includes("Instrument Serif"), `${mode} editorial h3 token must use the text face`);
             assert(!minimal?.h2.font.includes("Instrument Serif"), `${mode} minimal h2 token face: ${minimal?.h2.font}`);
           }
           const patterns = await patternPaint(page);
-          assert.equal(new Set(patterns.map(({ image }) => image)).size, 5, `${mode} must render five distinct patterns`);
-          assert(patterns[0]?.image.includes("cells.svg"));
-          assert(patterns[1]?.image.includes("repeating-conic-gradient"));
-          assert(patterns[2]?.image.includes("repeating-radial-gradient"));
-          assert(patterns[3]?.image.includes("radial-gradient"));
-          assert.equal(patterns[4]?.image, "none");
+          // Patterns are retired: every accepted value paints the flat palette background.
+          assert.equal(patterns.length, 5, `${mode} must sample all five accepted pattern values`);
+          assert(patterns.every(({ image }) => image === "none"), `${mode} retired patterns must not paint`);
           const quietRoot = await page.evaluate(() => {
             document.documentElement.setAttribute("data-hraness-pattern", "none");
             const field = document.querySelector('.hraness-marketing-page[data-hraness-marketing-preset="editorial"] > .hraness-marketing-field');

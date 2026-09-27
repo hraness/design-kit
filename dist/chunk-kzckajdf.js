@@ -185,9 +185,6 @@ function SyntaxCode({
   });
 }
 
-// src/react/product-marketing.tsx
-import { HeroBackdrop } from "@hraness/design-kit/react/hero-backdrop";
-
 // src/react/product-marketing.stylex.ts
 import * as stylex2 from "@stylexjs/stylex";
 var questionMarker = {
@@ -324,11 +321,11 @@ var marketingStyles = {
     kULEZF: "x19vpta5",
     kVQ08L: "x1jqubh4",
     kkeX5w: "x6s0dn4",
-    kOIVth: "x339ura",
+    kOIVth: "x339ura x15qaewu",
     kYk0Dm: "xvueqy4",
     kJVvJu: "xy8kwyo",
     kR2Kwr: "x174t0ru",
-    kF3gjK: "x9nclcg",
+    kF3gjK: "x1pggmif",
     $$css: true
   },
   header__brand: {
@@ -336,6 +333,8 @@ var marketingStyles = {
     kkeX5w: "x6s0dn4",
     kOIVth: "x1neeqzj",
     kMwMTN: "x19co3pv xs5hli",
+    kVQ08L: "xyiis5",
+    kdYMnH: "x1l2grcz",
     kLh5Sq: "x6u19be",
     ko3Kzr: "x1xlr1w8",
     kUEKN5: "xo2cfqc",
@@ -356,16 +355,28 @@ var marketingStyles = {
   },
   header__nav: {
     k1xSpc: "x78zum5",
-    kR2Kwr: "x1a02dak",
+    kR2Kwr: "x1a02dak x1nvbnac",
     kkeX5w: "x6s0dn4",
-    kOIVth: "xrfvb6r x7csx6o",
-    kImiAN: "xvc5jky",
+    kOIVth: "xrfvb6r x1csspt3",
+    kImiAN: "xvc5jky x1e5rwe6",
+    kapXaI: "xqlems",
     kayTVb: "x61vft0",
-    kULEZF: "x191frmh",
+    kVZ5iK: "xlo9dwz",
+    kEE5IU: "x1j56c9r",
+    kR2Kky: "x1hzc8rf",
+    kF3gjK: "xbdo7qo",
+    kJVvJu: "x9qo5wx",
+    kNmBvv: "xhasza",
+    kMome8: "x5ou8ow",
     $$css: true
   },
   header__link: {
     kMwMTN: "xs87ocq x16tyrwk",
+    k1xSpc: "x17ilr5v",
+    kEE5IU: "x1j56c9r",
+    kkeX5w: "x8ua4lr",
+    kVQ08L: "xyiis5",
+    kBYq9C: "x1m0kxdo",
     kLh5Sq: "x1qzg9v8",
     ko3Kzr: "xk50ysn",
     kyVV8l: "x1hl2dhg",
@@ -373,6 +384,11 @@ var marketingStyles = {
   },
   header__linkCurrent: {
     kMwMTN: "xtylnni",
+    k1xSpc: "x17ilr5v",
+    kEE5IU: "x1j56c9r",
+    kkeX5w: "x8ua4lr",
+    kVQ08L: "xyiis5",
+    kBYq9C: "x1m0kxdo",
     kLh5Sq: "x1qzg9v8",
     ko3Kzr: "xk50ysn",
     kyVV8l: "x1hl2dhg",
@@ -382,6 +398,7 @@ var marketingStyles = {
     k1xSpc: "x78zum5",
     kkeX5w: "x6s0dn4",
     kOIVth: "x13z6uf9",
+    kImiAN: "x1mqiwji",
     $$css: true
   },
   footer: {
@@ -489,9 +506,9 @@ var marketingStyles = {
     kOIVth: "x1kfhdh0",
     kF3gjK: "xgu4rd8",
     kL20gf: "xvor1dj x9yvj25",
-    kb5WsR: "x1tu0gag xhobzj1",
+    kb5WsR: "x18o3ruo xhobzj1",
     k2EZ2Y: "x1y4qj14 x2c5uud",
-    kevRTx: "x1c7cvlu x1ug5rqp",
+    kevRTx: "x103pssi x1ug5rqp",
     kt02CW: "x182nak8 x1pjo12s",
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
@@ -1400,7 +1417,7 @@ var marketingStyles = {
     kVHNYi: "x12koezg xzln6ae",
     kUtEtU: "x1u7o2vf x1tzqu68",
     kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "x1io0m3d x15rgdgi xwaqzdf",
+    kTJQHc: "x1io0m3d x1a28r24 xwaqzdf",
     kMwMTN: "x1heor9g xs5hli",
     kyVV8l: "x1hl2dhg",
     kI3sdo: "x13mrud1",
@@ -2394,7 +2411,7 @@ var marketingStyles = {
   },
   headerAction: {
     k1xSpc: "x3nfvp2",
-    kVQ08L: "x24yzcb",
+    kVQ08L: "x24yzcb xn27wch",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
     kOIVth: "x1rcpt3j",
@@ -2437,7 +2454,7 @@ var marketingStyles = {
     "--hraness-foil-glow": "x136ldfs x1a9zcsi",
     "--hraness-foil-surface": "x8txlsq x13ub6g4",
     k1xSpc: "x3nfvp2",
-    kVQ08L: "x24yzcb",
+    kVQ08L: "x24yzcb xn27wch",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
     kOIVth: "x1rcpt3j",
@@ -3642,7 +3659,6 @@ function MarketingFacts({
 function ProductHero({
   actions = [],
   align = "center",
-  backdrop,
   boundary,
   className,
   example,
@@ -3666,10 +3682,6 @@ function ProductHero({
     "data-hraness-marketing": "hero",
     "data-tone": tone,
     children: [
-      backdrop === false ? null : /* @__PURE__ */ jsx3(HeroBackdrop, {
-        seed: headingId,
-        children: backdrop
-      }),
       /* @__PURE__ */ jsxs2("div", {
         className: marketingClassName("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default"),
         children: [

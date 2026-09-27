@@ -8,12 +8,15 @@ import { lanternControlStyles } from "./lantern-material.stylex.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { TopBar } from "./surfaces.js";
 
+// Patterns are retired: every accepted value paints the flat palette plane.
+// The samples keep the finite vocabulary visible so existing markup can be
+// checked against it, and show that only the palette changes.
 const materialPatterns = [
-  { pattern: "cells", palette: "paper", label: "Glass cells", description: "Broad planes of light for an opening promise." },
-  { pattern: "weave", palette: "gruvbox", label: "Woven paper", description: "A warm, close texture for words and unfinished thoughts." },
-  { pattern: "contour", palette: "rose-pine", label: "Sound contours", description: "Gentle rings for creative tools and flowing ideas." },
-  { pattern: "mesh", palette: "tokyo-night", label: "Precision mesh", description: "A measured field for technical systems." },
-  { pattern: "none", palette: "paper", label: "Reading room", description: "An uninterrupted surface for reference and long reading." },
+  { pattern: "cells", palette: "paper", label: "cells", description: "Retired. Renders as a flat Paper plane." },
+  { pattern: "weave", palette: "gruvbox", label: "weave", description: "Retired. Renders as a flat Gruvbox plane." },
+  { pattern: "contour", palette: "rose-pine", label: "contour", description: "Retired. Renders as a flat Rosé Pine plane." },
+  { pattern: "mesh", palette: "tokyo-night", label: "mesh", description: "Retired. Renders as a flat Tokyo Night plane." },
+  { pattern: "none", palette: "paper", label: "none", description: "The default: an uninterrupted surface." },
 ] as const;
 
 const exampleNotes = [
@@ -118,7 +121,7 @@ export function LanternMaterialGallery() {
         <MaterialWorkspace mode="light" />
         <MaterialWorkspace mode="dark" />
       </div>
-      <h3>One material, different rhythms</h3>
+      <h3>Patterns render as flat palette planes</h3>
       <div className="design-gallery__lantern-pair">
         {materialPatterns.map(({ pattern, palette, label, description }) => (
           <div

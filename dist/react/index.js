@@ -58,7 +58,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-n3q7tf7f.js";
+} from "../chunk-kzckajdf.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -98,7 +98,7 @@ import {
 } from "../chunk-9t8xyqte.js";
 import {
   HeroBackdrop
-} from "../chunk-bkymxm68.js";
+} from "../chunk-8834fh4n.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -2785,28 +2785,28 @@ import { jsx as jsx10, jsxs as jsxs8 } from "react/jsx-runtime";
 var materialPatterns = [{
   pattern: "cells",
   palette: "paper",
-  label: "Glass cells",
-  description: "Broad planes of light for an opening promise."
+  label: "cells",
+  description: "Retired. Renders as a flat Paper plane."
 }, {
   pattern: "weave",
   palette: "gruvbox",
-  label: "Woven paper",
-  description: "A warm, close texture for words and unfinished thoughts."
+  label: "weave",
+  description: "Retired. Renders as a flat Gruvbox plane."
 }, {
   pattern: "contour",
   palette: "rose-pine",
-  label: "Sound contours",
-  description: "Gentle rings for creative tools and flowing ideas."
+  label: "contour",
+  description: "Retired. Renders as a flat Rosé Pine plane."
 }, {
   pattern: "mesh",
   palette: "tokyo-night",
-  label: "Precision mesh",
-  description: "A measured field for technical systems."
+  label: "mesh",
+  description: "Retired. Renders as a flat Tokyo Night plane."
 }, {
   pattern: "none",
   palette: "paper",
-  label: "Reading room",
-  description: "An uninterrupted surface for reference and long reading."
+  label: "none",
+  description: "The default: an uninterrupted surface."
 }];
 var exampleNotes = [{
   title: "A place for unfinished thoughts",
@@ -2985,7 +2985,7 @@ function LanternMaterialGallery() {
         ]
       }),
       /* @__PURE__ */ jsx10("h3", {
-        children: "One material, different rhythms"
+        children: "Patterns render as flat palette planes"
       }),
       /* @__PURE__ */ jsx10("div", {
         className: "design-gallery__lantern-pair",
@@ -5905,22 +5905,85 @@ function DesignSystemGallery({
               })
             ]
           }),
-          /* @__PURE__ */ jsx16(MarketingPage, {
+          /* @__PURE__ */ jsxs14(MarketingPage, {
             preset: "editorial",
             className: "design-gallery__marketing-preset",
-            children: /* @__PURE__ */ jsx16(MarketingField, {
-              children: /* @__PURE__ */ jsx16(ProductHero, {
-                name: "Relay",
-                heading: "Run a job from your terminal, your code, or your agent",
-                headingId: "gallery-editorial-title",
+            children: [
+              /* @__PURE__ */ jsx16(MarketingSiteHeader, {
+                action: {
+                  href: "#gallery-install",
+                  label: "Install"
+                },
+                brand: "Relay",
+                brandHref: "#marketing",
+                links: [{
+                  href: "#gallery-editorial-title",
+                  label: "How it works"
+                }, {
+                  href: "#gallery-install",
+                  label: "Install"
+                }, {
+                  href: "#gallery-quiet-limits",
+                  label: "Limits"
+                }, {
+                  href: "#shells",
+                  label: "Docs"
+                }, {
+                  href: "#articles",
+                  label: "Changelog"
+                }],
+                sticky: false
+              }),
+              /* @__PURE__ */ jsx16(MarketingField, {
+                children: /* @__PURE__ */ jsx16(ProductHero, {
+                  actions: [{
+                    href: "#gallery-install",
+                    label: "Install Relay"
+                  }, {
+                    emphasis: "secondary",
+                    href: "#gallery-minimal-title",
+                    label: "See the compact preset"
+                  }],
+                  align: "start",
+                  boundary: "MIT license · macOS and Linux · free for local use",
+                  eyebrow: "Job runner",
+                  frame: /* @__PURE__ */ jsx16(MarketingProofFrame, {
+                    title: "relay run job-01",
+                    children: /* @__PURE__ */ jsx16("pre", {
+                      className: "design-gallery__marketing-command",
+                      children: /* @__PURE__ */ jsx16(SyntaxCode, {
+                        code: `$ relay run job-01
+{"status":"complete","job":"job-01","durationMs":412}`,
+                        styles: "classes"
+                      })
+                    })
+                  }),
+                  heading: "Run a job from your terminal, your code, or your agent",
+                  headingId: "gallery-editorial-title",
+                  headingLevel: 3,
+                  name: "",
+                  summary: "The editorial preset sets one large sans heading on the flat palette background, a short summary, one next step, and one real proof."
+                })
+              }),
+              /* @__PURE__ */ jsx16(MarketingSection, {
+                heading: "Keep every limit next to what it limits.",
+                headingId: "gallery-quiet-limits",
                 headingLevel: 3,
-                summary: "The editorial preset sets a serif display heading on a textured field.",
-                actions: [{
-                  href: "#gallery-minimal-title",
-                  label: "See the compact preset"
-                }]
+                label: "Limits",
+                summary: "Sections sit between hairline rules, each with one short paragraph and one concrete element.",
+                children: /* @__PURE__ */ jsxs14("ol", {
+                  className: "design-gallery__quiet-steps",
+                  children: [
+                    /* @__PURE__ */ jsx16("li", {
+                      children: "Local jobs only; sync is a separate plan."
+                    }),
+                    /* @__PURE__ */ jsx16("li", {
+                      children: "Logs older than 30 days are pruned unless pinned."
+                    })
+                  ]
+                })
               })
-            })
+            ]
           }),
           /* @__PURE__ */ jsxs14(MarketingPage, {
             preset: "minimal",

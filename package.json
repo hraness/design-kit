@@ -238,7 +238,6 @@
     "scripts/check-lantern-material-snapshot.d.mts",
     "src/browser/hero-light.ts",
     "src/react/hero-backdrop.tsx",
-    "src/react/hero-backdrop.stylex.ts",
     "src/palette-system.css",
     "HERO_FIELDS.md",
     "src/provider-marks.ts",
