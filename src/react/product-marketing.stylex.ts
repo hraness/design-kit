@@ -334,6 +334,9 @@ export const marketingStyles = stylex.create({
     },
     "scrollbar-width": {
       "@media (max-width: 48rem)": "none"
+    },
+    "contain": {
+      "@media (max-width: 48rem)": "inline-size"
     }
   },
   "header__link": {
@@ -597,76 +600,25 @@ export const marketingStyles = stylex.create({
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.45rem",
-    "padding": "0.3rem 0.8rem",
-    "border-top": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-right": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-bottom": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-left": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-image-source": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "border-image-slice": {
-      "default": "100%",
-      "@media (forced-colors: active)": "100%"
-    },
-    "border-image-width": {
-      "default": "1",
-      "@media (forced-colors: active)": "1"
-    },
-    "border-image-outset": {
-      "default": "0",
-      "@media (forced-colors: active)": "0"
-    },
-    "border-image-repeat": {
-      "default": "stretch",
-      "@media (forced-colors: active)": "stretch"
-    },
-    "border-radius": "999px",
-    "background-color": {
-      "default": "var(--hraness-marketing-accent-soft)",
-      "@media (forced-colors: active)": "Canvas"
-    },
-    "background-image": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "background-position": {
-      "default": "0% 0%",
-      "@media (forced-colors: active)": "0% 0%"
-    },
-    "background-size": {
-      "default": "auto auto",
-      "@media (forced-colors: active)": "auto auto"
-    },
-    "background-repeat": {
-      "default": "repeat",
-      "@media (forced-colors: active)": "repeat"
-    },
-    "background-origin": {
-      "default": "padding-box",
-      "@media (forced-colors: active)": "padding-box"
-    },
-    "background-clip": {
-      "default": "border-box",
-      "@media (forced-colors: active)": "border-box"
-    },
-    "background-attachment": {
-      "default": "scroll",
-      "@media (forced-colors: active)": "scroll"
-    }
+    "padding": "0",
+    "border-top": "0",
+    "border-right": "0",
+    "border-bottom": "0",
+    "border-left": "0",
+    "border-image-source": "none",
+    "border-image-slice": "100%",
+    "border-image-width": "1",
+    "border-image-outset": "0",
+    "border-image-repeat": "stretch",
+    "border-radius": "0",
+    "background-color": "transparent",
+    "background-image": "none",
+    "background-position": "0% 0%",
+    "background-size": "auto auto",
+    "background-repeat": "repeat",
+    "background-origin": "padding-box",
+    "background-clip": "border-box",
+    "background-attachment": "scroll"
   },
   "hero__eyebrowAccent": {
     "margin": "0",
@@ -680,56 +632,25 @@ export const marketingStyles = stylex.create({
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.45rem",
-    "padding": "0.3rem 0.8rem",
-    "border-top": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-right": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-bottom": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-left": {
-      "default": "1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-image-source": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "border-image-slice": {
-      "default": "100%",
-      "@media (forced-colors: active)": "100%"
-    },
-    "border-image-width": {
-      "default": "1",
-      "@media (forced-colors: active)": "1"
-    },
-    "border-image-outset": {
-      "default": "0",
-      "@media (forced-colors: active)": "0"
-    },
-    "border-image-repeat": {
-      "default": "stretch",
-      "@media (forced-colors: active)": "stretch"
-    },
-    "border-radius": "999px",
-    "background-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 14%, transparent)",
+    "padding": "0",
+    "border-top": "0",
+    "border-right": "0",
+    "border-bottom": "0",
+    "border-left": "0",
+    "border-image-source": "none",
+    "border-image-slice": "100%",
+    "border-image-width": "1",
+    "border-image-outset": "0",
+    "border-image-repeat": "stretch",
+    "border-radius": "0",
+    "background-color": "transparent",
     "background-image": "none",
     "background-position": "0% 0%",
     "background-size": "auto auto",
     "background-repeat": "repeat",
     "background-origin": "padding-box",
     "background-clip": "border-box",
-    "background-attachment": "scroll",
-    "border-top-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-right-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-bottom-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)",
-    "border-left-color": "color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent)"
+    "background-attachment": "scroll"
   },
   "hero__name": {
     "margin": "-1px",

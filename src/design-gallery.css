@@ -1,5 +1,6 @@
 .design-gallery {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-12);
   min-inline-size: 0;
   padding: clamp(var(--space-5), 4vw, var(--space-12));
@@ -126,6 +127,7 @@
 
 .design-gallery__section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   scroll-margin-block-start: var(--space-8);
 }

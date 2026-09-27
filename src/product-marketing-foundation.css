@@ -35,8 +35,8 @@
   --hraness-marketing-chrome-shadow: none;
   --hraness-marketing-shadow: 0 0 0 1px var(--hraness-marketing-line);
   --hraness-marketing-section-space: clamp(4rem, 9vw, 7.5rem);
-  --hraness-marketing-heading-weight: 500;
-  --hraness-marketing-heading-tracking: -0.022em;
+  --hraness-marketing-heading-weight: 550;
+  --hraness-marketing-heading-tracking: -0.03em;
   --hraness-marketing-action-height: 2.75rem;
   --hraness-foil-1: light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340));
   --hraness-foil-2: light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285));

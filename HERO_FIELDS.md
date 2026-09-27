@@ -1,50 +1,47 @@
 # Hero fields
 
-`ProductHero` gives marketing pages a shared decorative light field. Each product
-keeps its own copy, artwork, and visual explanation. Pass decorative artwork in
-`backdrop`; pass `false` for a quiet hero. Meaningful product proof belongs in
-`frame`, where it remains available to readers and assistive technology.
+Hero backdrops are retired. Since 0.23.0, marketing heroes follow the Quiet
+direction: a flat palette background, a sans heading, a short summary, one next
+step, and one real proof of the product right after the copy. Nothing moves,
+glows, or blurs behind the text.
 
 ```tsx
 <ProductHero
-  heading="A place for your ideas"
-  headingId="ideas"
-  name="Notes"
-  summary="Keep the context behind your work."
-  backdrop={<NoteConstellation />}
+  eyebrow="Job runner"
+  heading="Run a job from your terminal, your code, or your agent"
+  headingId="title"
+  name="Relay"
+  summary="Relay runs the same job wherever you start it and writes a log you can read afterward."
+  actions={[{ href: "#install", label: "Install Relay" }]}
+  boundary="MIT license · macOS and Linux"
+  frame={<MarketingProofFrame title="relay run job-01">{terminalOutput}</MarketingProofFrame>}
 />
 ```
 
-The backdrop is inert, pointer-transparent, and behind the copy. Its own paint
-is clipped without clipping the hero's focus rings. Default artwork is
-deterministic from `headingId`, uses the selected palette's material roles,
-and works without JavaScript or inline styles in server markup. Documentation
-and application route headings should use their ordinary heading composition;
-the decorative field is a marketing surface.
+Put real proof in `frame`: a terminal or code block, a static screenshot with
+`alt` text, or compact real output. It stays available to readers and
+assistive technology. Do not put a large interactive copy of the application in
+the hero.
 
-`HeroBackdrop` can also wrap decorative artwork in a product-owned hero whose
-container sets `position: relative` and `isolation: isolate`. The component
-enhances that parent with `attachHeroLight` from the browser entry. Static HTML
-sites can call the same function and retain its returned disposal function.
-Install one controller per hero. It does not install itself on import.
+## Retired features
 
-The controller owns four bounded CSS inputs: `--hraness-hero-light-x` and `-y`
-range from 12% to 88%; `--hraness-hero-drift-x` and `-y` range from -8px to 8px
-and -6px to 6px. Artwork can opt in to pointer proximity with
-`data-hraness-hero-item`; at most 48 items receive a
-`--hraness-hero-proximity` value between zero and one. Use it for a subtle
-change in light or clarity. Keep text, controls, and document layout still.
+These names stay exported so existing code compiles. They do nothing visible,
+and their types are marked deprecated. Remove them when convenient.
 
-Light settles and stops requesting frames. Leaving the hero, switching tabs,
-moving offscreen, changing motion preferences, or disposing the controller
-restores the authored static field. Touch and reduced motion retain that static
-composition. Forced colors and reduced transparency hide the decorative field;
-the copy and controls remain available. No global pointer listeners, storage,
-provider calls, or animation libraries are needed.
+| Feature | Behavior since 0.23.0 |
+| --- | --- |
+| `ProductHero` `backdrop` prop | Ignored. `backdrop={false}`, artwork, and omission all render the same hero with no decorative layer. |
+| `HeroBackdrop` from `@hraness/design-kit/react` or `@hraness/design-kit/react/hero-backdrop` | Renders nothing, including its children. |
+| `attachHeroLight` from `@hraness/design-kit/browser` | Attaches no listeners, writes no styles, schedules no frames, and returns a disposer you can call any number of times. |
+| `--hraness-hero-light-x`, `--hraness-hero-light-y`, `--hraness-hero-drift-x`, `--hraness-hero-drift-y`, `--hraness-hero-proximity` | No longer written or read by any shared style. |
+| `data-hraness-hero-item` | No proximity effect. Product artwork marked with it no longer renders inside the hero. |
+| `.hraness-marketing-hero-backdrop` and its `__atmosphere` and `__light` children in hand-written HTML | Hidden with `display: none` by `product-marketing.css` and the compiler foundation, so old markup paints nothing and takes no space. |
+| `data-hraness-pattern="cells"`, `"weave"`, `"contour"`, `"mesh"` | Still valid; each renders exactly like `"none"`. See [Marketing preset](MARKETING_PRESET.md). |
 
-Choose the palette and material pattern independently. The material's `cells`,
-`weave`, `contour`, `mesh`, and `none` patterns share one lighting vocabulary.
-Families can share a default palette while keeping their product artwork.
-An explicit saved appearance always takes precedence over the product default.
+A product that still passes decorative artwork should delete it rather than
+recreate it in product CSS. Floating or blurred elements behind the heading make
+it harder to read, especially on phones.
 
-`ProductHero` stays available from the server entry. Its decorative backdrop crosses the isolated `@hraness/design-kit/react/hero-backdrop` client boundary; package builds preserve that edge and its directive so server compositions never import React hooks directly.
+`ProductHero` stays available from the server entry and no longer crosses a
+client boundary. The `@hraness/design-kit/react/hero-backdrop` export remains a
+client module for compatibility.

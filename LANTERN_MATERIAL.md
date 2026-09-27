@@ -4,13 +4,13 @@ Lantern adds luminous edges, palette-tinted selection states and restrained dept
 
 Opacity-only color mixes use sRGB so translucent surfaces keep the source color's hue. Blends between two colored paints use OKLCH. The native browser checks compare translucent paint with an independent RGB and alpha reference in both appearances.
 
-The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, remote URL or inline-style dependency. Its CSS-only shaded faces work independently; the marketing preset supplies original grain and individually shaded SVG cells through optional background tokens. Existing controls continue to own their semantics, dimensions, state and accessible names.
+The complete `styles.css` and `compiler-foundation.css` entries include the material. For a selective import, load `@hraness/design-kit/lantern-material.css` after the existing foundation and palette styles, then set `data-hraness-material="lantern"` on the document or an explicit theme island. The stylesheet has no JavaScript, font, remote URL or inline-style dependency. Existing controls continue to own their semantics, dimensions, state and accessible names.
 
 | Hook | Purpose |
 | --- | --- |
 | `.hraness-material-pane` | Opaque, readable content plane. Optional `data-depth="raised"` or `"inset"` describes actual depth. |
 | `.hraness-material-chrome` | Diffused header or floating enclosure. It becomes opaque without backdrop support or when reduced transparency is requested. |
-| `.hraness-material-wall` | Decorative shaded square faces and transmitted light behind an expressive area. It never filters or overlays descendants. |
+| `.hraness-material-wall` | A flat palette plane behind an area. Its shaded faces, grain, patterns, and light washes are retired and no longer paint. It never filters or overlays descendants. |
 | `.hraness-material-control` | Plain HTML action adapter. A narrow edge leaves the established foreground/background pair and focus shadow intact. |
 | `.hraness-material-input` | Plain HTML field adapter: inset edge paint and a semantic caret. |
 | `.hraness-material-choice` | Plain HTML selection with a matched fill/text pair, driven by `aria-pressed`, `aria-selected` or React Aria's `data-selected`. |
@@ -19,7 +19,7 @@ The complete `styles.css` and `compiler-foundation.css` entries include the mate
 | `.hraness-material-rows` | An unruled readable collection. The product owns grouping, separators, and responsive structure. |
 | `.hraness-material-disclosure` | Native disclosure with a touch-sized summary and visible keyboard focus. |
 
-The wall accepts `data-hraness-pattern="cells"`, `"weave"`, `"contour"`, `"mesh"` or `"none"` on its material boundary. Cells retain the familiar glazed modules; weave adds a fine textile rhythm; contour draws spacious nested curves; mesh uses a precise dot lattice; none provides an uninterrupted reading surface. Every pigment comes from the current semantic palette. The marketing preset supplies the original cell and grain assets when present; the material-only snapshot needs no assets.
+The wall and marketing fields accept `data-hraness-pattern="cells"`, `"weave"`, `"contour"`, `"mesh"` or `"none"` on their boundary for compatibility. Patterns are retired: every value paints the uninterrupted palette background, and the material-only snapshot needs no assets.
 
 Panes use a resting shadow by default. Raised panes use a broader lift, while inset panes use an inner shadow and a quieter fill. Their transparent borders preserve geometry; forced colors replaces those edges with `CanvasText`. Chrome uses a diffused shadow rather than a drawn divider. `--hraness-material-rest`, `--hraness-material-raised`, `--hraness-material-lift`, `--hraness-material-inset` and `--hraness-material-outline` are the shared depth roles. `--hraness-material-raised` is the small-control counterpart of the resting shadow. The UI adapters leave error borders and keyboard focus under the control's ownership.
 

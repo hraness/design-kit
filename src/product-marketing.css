@@ -67,8 +67,8 @@
   --hraness-marketing-chrome-shadow: none;
   --hraness-marketing-shadow: 0 0 0 1px var(--hraness-marketing-line);
   --hraness-marketing-section-space: clamp(4rem, 9vw, 7.5rem);
-  --hraness-marketing-heading-weight: 500;
-  --hraness-marketing-heading-tracking: -0.022em;
+  --hraness-marketing-heading-weight: 550;
+  --hraness-marketing-heading-tracking: -0.03em;
   --hraness-marketing-action-height: 2.75rem;
   --hraness-foil-1: light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340));
   --hraness-foil-2: light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285));
@@ -679,14 +679,15 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   text-align: start;
 }
 
+/* A plain category label, not a badge. */
 .hraness-marketing-hero__eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.3rem 0.8rem;
-  border: 1px solid color-mix(in srgb, var(--hraness-marketing-accent) 32%, transparent);
-  border-radius: 999px;
-  background: var(--hraness-marketing-accent-soft);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
   color: var(--hraness-marketing-muted);
 }
 
@@ -758,8 +759,6 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-hero[data-tone="accent"] .hraness-marketing-hero__eyebrow {
-  border-color: color-mix(in srgb, var(--hraness-marketing-accent-ink) 40%, transparent);
-  background: color-mix(in srgb, var(--hraness-marketing-accent-ink) 14%, transparent);
   color: var(--hraness-marketing-accent-ink);
 }
 
@@ -1866,6 +1865,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     padding-inline: var(--hraness-marketing-gutter);
     overflow-x: auto;
     scrollbar-width: none;
+    /* The scrolling row never widens the header's intrinsic size. */
+    contain: inline-size;
   }
 
   .hraness-marketing-header__nav a {
@@ -1956,10 +1957,13 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     color: CanvasText;
   }
 
-  .hraness-marketing-action,
-  .hraness-marketing-hero__eyebrow {
+  .hraness-marketing-action {
     border: 1px solid CanvasText;
     background: Canvas;
+    color: CanvasText;
+  }
+
+  .hraness-marketing-hero__eyebrow {
     color: CanvasText;
   }
 
