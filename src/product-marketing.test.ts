@@ -80,10 +80,10 @@ test("the marketing grammar keeps compact, coarse-pointer, and forced-color cont
   expect(css).not.toContain("animation:");
 });
 
-test("the soft-accent hero eyebrow keeps readable label ink", () => {
-  expect(css).toMatch(
-    /\.hraness-marketing-hero__eyebrow\s*\{[^}]*background: var\(--hraness-marketing-accent-soft\);[^}]*color: var\(--hraness-marketing-muted\);[^}]*\}/u,
-  );
+test("the hero eyebrow is a plain muted label, not a badge", () => {
+  const eyebrow = css.match(/\.hraness-marketing-hero__eyebrow \{([^}]*)\}/u)?.[1] ?? "";
+  for (const declaration of ["padding: 0;", "border: 0;", "border-radius: 0;", "background: none;", "color: var(--hraness-marketing-muted);"]) expect(eyebrow).toContain(declaration);
+  expect(css.split('.hraness-marketing-hero[data-tone="accent"] .hraness-marketing-hero__eyebrow {')[1]?.split("}")[0]).not.toMatch(/background|border/u);
 });
 
 test("the shared foil contract styles brand wordmarks and primary actions", () => {
