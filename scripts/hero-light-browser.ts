@@ -69,6 +69,7 @@ try {
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) {
     const path = new URL(request.url).pathname;
     if (path === "/favicon.ico") return new Response(null, { status: 204 });
+    if (path.startsWith("/fonts/")) return new Response(Bun.file(join(repository, "src", path)), { headers: { "content-type": "font/woff2" } });
     if (path === "/interaction.js") return new Response(Bun.file(join(work, "interaction.js")), { headers: { "content-type": "text/javascript" } });
     const delivery = path.slice(1).replace(/\.css$/u, "");
     if (delivery === "raw" || delivery === "standalone" || delivery === "compiler") {

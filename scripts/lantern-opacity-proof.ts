@@ -29,7 +29,8 @@ function opacityRecipes(css: string) {
     assert(color, `Unadmitted Lantern opacity source: ${expression}`);
     recipes.push({ expression, color, opacity: Number(percent[1]) / 100 });
   }
-  assert.equal(recipes.length, 7, "Every Lantern opacity-only recipe is included");
+  // Two chrome paints remain; the retired pattern and wall washes no longer mix opacity.
+  assert.equal(recipes.length, 2, "Every Lantern opacity-only recipe is included");
   return recipes;
 }
 
@@ -109,7 +110,7 @@ export async function verifyLanternOpacity(browser: Browser, material: string, o
       await withTransparencyPreference(page, "no-preference", async () => {
         const expected = [composite(palette.surface, palette.background, .9), ...recipes.map((recipe) => composite(palette[recipe.color], palette.background, recipe.opacity))];
         const actual = await paintedColors(page);
-        assert.equal(actual.length, 8, "Real chrome and all seven source recipes must paint");
+        assert.equal(actual.length, 3, "Real chrome and both source recipes must paint");
         actual.forEach((sample, index) => {
           assert(matches(sample.pixel, at(expected, index)), `${family} ${theme} ${sample.id} changed hue: ${JSON.stringify({ sample, expected: expected[index] })}`);
           const opacity = index === 0 ? .9 : at(recipes, index - 1).opacity;
