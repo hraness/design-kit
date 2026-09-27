@@ -138,14 +138,15 @@ icons, and a hosted icon CDN.
    ones) and the product marks. **Done** — nine manifests in
    `src/icons/sets/` (`shared` plus eight products); product sets anchor to
    the `shared` members they actually render via `references`.
-6. Run regeneration sets; vet outputs into the library. **Done** — 62 icons
-   admitted (53 illustrations: shared 5, sponge 7, wordcell 6, aicharts 7,
-   soundfish 6, stripe-history 5, platonik 5, act60 7, slopcamera 5; plus 9
-   product-authored marks declared via the design-kit-only `marks` field,
-   which admission gates but generation never rewrites). Roughday's three
-   30px category chips remain `pending` — the card-style sheet critique
-   repeatedly rejected their semantics (unrecognizable/organic subjects at
-   chip scale); kept for a later focused pass rather than loosened gates.
+6. Run regeneration sets; vet outputs into the library. **Done** — 65 icons
+   admitted (56 illustrations: shared 5, sponge 7, wordcell 6, aicharts 7,
+   soundfish 6, stripe-history 5, platonik 5, act60 7, slopcamera 5,
+   roughday 3; plus 9 product-authored marks declared via the design-kit-only
+   `marks` field, which admission gates but generation never rewrites).
+   Roughday's three 30px category chips converged after slopcamera's inline
+   context gained a pictogram-first generation prompt and context-aware
+   illustration and contact-sheet critique clauses — the card-style contract
+   had been judging chips against isometric semantics they never needed.
    Receipts are retained under `src/icons/receipts/`.
 7. Migrate product repos: bump `@hraness/design-kit` to v0.22.0, vendor the
    product's set (members + mark + only the served shared anchors) from the
@@ -154,7 +155,7 @@ icons, and a hosted icon CDN.
    aicharts #510, soundfish #208, stripe-history #65, act60.me #106,
    slopcamera #262. Platonik's repository is archived (read-only): the same
    change is committed locally on `feat/shared-icon-library` and cannot be
-   pushed. Roughday is held — its three members are still `pending`.
+   pushed. Roughday follows the v0.22.1 release that admits its chips.
 
 ## Execution log
 
