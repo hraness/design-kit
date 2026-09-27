@@ -1,0 +1,21 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "name": "act60",
+  "members": [
+    { "slug": "application", "subject": "an isometric clipboard holding one bold application sheet" },
+    { "slug": "chapter-compare", "subject": "two thick-spined books stacked side by side" },
+    { "slug": "decree-residence", "subject": "a house with a plain round decree seal" },
+    { "slug": "estimate", "subject": "a simple calculator with three large buttons" },
+    { "slug": "export-services", "subject": "a briefcase with an arrow leaving it" },
+    { "slug": "investor", "subject": "a rising stock chart beside a coin" },
+    { "slug": "presence", "subject": "a location pin standing over a calendar" }
+  ],
+  "references": [
+    { "slug": "agent-skill", "svg": "../shared/agent-skill.svg" },
+    { "slug": "cli", "svg": "../shared/cli.svg" },
+    { "slug": "privacy", "svg": "../shared/privacy.svg" },
+    { "slug": "research", "svg": "../shared/research.svg" },
+    { "slug": "sdk", "svg": "../shared/sdk.svg" }
+  ]
+}

@@ -1,0 +1,888 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0190779014308426,
+            "bytes": 21617,
+            "coverageRatio": 0.3037979706787636,
+            "pathCount": 1,
+            "strokePx": 49.522620904836195
+          },
+          "pass": false,
+          "problems": [
+            "Exceeds the maximum of three filled planes (contains four)",
+            "Line work is inconsistent and lacks geometric precision with wobbly edges",
+            "Perspective at the base of the books is distorted and messy"
+          ],
+          "requestId": "sha256:d4eb4b97cf7b98ae405aa07c8d77a6b12ec173937329d65b5681545e81bff411",
+          "round": 1,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "a6d0540c95bd1ff77f1787da78394fcdf49b86cda617aeffe6f0d1d2fc740b2f",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 21617,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 629,
+            "inputBytes": 8094,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05759865,
+              "colorRmse": 0.04118104,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 502,
+              "sampleWidth": 512,
+              "supportRecall": 0.9797814
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "445091f8127ad522b1c0b5606e3d232f7959af926254036475d57f6b266d6c77",
+            "svgSha256": "a6d0540c95bd1ff77f1787da78394fcdf49b86cda617aeffe6f0d1d2fc740b2f",
+            "width": 641
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.2854609929078014,
+            "bytes": 17268,
+            "coverageRatio": 0.23265835167522622,
+            "pathCount": 1,
+            "strokePx": 45.19724137931034
+          },
+          "pass": true,
+          "problems": [],
+          "requestId": "sha256:afc2b9547b1b1b2dd494fd02c90984909e73c27379579bb3615c7a94b2515811",
+          "round": 2,
+          "score": 100,
+          "status": "candidate",
+          "svgSha256": "83ce0311112bf5574fc817a3d2075853abe501bac84ef99ac5fffe0882891268",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 17268,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 725,
+            "inputBytes": 7070,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05233165,
+              "colorRmse": 0.03703759,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 398,
+              "supportRecall": 0.98034793
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "d33bede0b8b60ecce690ceec83db8b6989c1480232a810f12bd8a9d1a89f3fb9",
+            "svgSha256": "83ce0311112bf5574fc817a3d2075853abe501bac84ef99ac5fffe0882891268",
+            "width": 564
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.015358361774744,
+            "bytes": 19484,
+            "coverageRatio": 0.27468953451687844,
+            "pathCount": 3,
+            "strokePx": 43.02521008403362
+          },
+          "pass": false,
+          "problems": [
+            "The objects lack specific book characteristics like page-edge lines or distinct spine shapes, making them look like binders or folders.",
+            "The composition shows the objects standing vertically rather than 'stacked' as requested."
+          ],
+          "requestId": "sha256:34aab2bccf196232d59ac68e84fc65eb3bbe2f15bfbcedf0e5446f2df62cd021",
+          "round": 1,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "d988fce9ff9bbe531f906183aa3c681700420e4ea2d31e5e35ae9b48b3245a14",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 19484,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 586,
+            "inputBytes": 7224,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05798834,
+              "colorRmse": 0.04095204,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 504,
+              "sampleWidth": 512,
+              "supportRecall": 0.98335732
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "e4065228164e2db3d1e169a21a81045b701075bdf23e44c57ad8a09463c82236",
+            "svgSha256": "d988fce9ff9bbe531f906183aa3c681700420e4ea2d31e5e35ae9b48b3245a14",
+            "width": 595
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0364372469635628,
+            "bytes": 46045,
+            "coverageRatio": 0.42352149403958617,
+            "pathCount": 10,
+            "strokePx": 42.666666666666664
+          },
+          "pass": false,
+          "problems": [
+            "Contains thin lines (hairlines) representing pages",
+            "Contains tiny repeated details (page lines) that violate the uniform weight and simplicity rules",
+            "Stroke weight is not uniform; the page lines are significantly thinner than the outer contours"
+          ],
+          "requestId": "sha256:1290fc4d0cb93883647722bc46e6723c561b6016deda248f18f3cb7e159f75a5",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "10ebfcf0db4c1d7fb15b7e4c53211efeab724d88b469e654809956e3be33d4d4",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 46045,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 768,
+            "inputBytes": 11647,
+            "outputMode": "color",
+            "pathCount": 10,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.09149788,
+              "colorRmse": 0.06384768,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 494,
+              "supportRecall": 0.98260621
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "7d211240a25dc1e613ba028836c19aa3fc7d76ded183c5fc4f1a4735d10bcb0f",
+            "svgSha256": "10ebfcf0db4c1d7fb15b7e4c53211efeab724d88b469e654809956e3be33d4d4",
+            "width": 741
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1139028475711892,
+            "bytes": 26591,
+            "coverageRatio": 0.33554489238170804,
+            "pathCount": 3,
+            "strokePx": 49.275187969924815
+          },
+          "pass": false,
+          "problems": [
+            "Line work is shaky and lacks the geometric precision required for a professional brand-mark style",
+            "Perspective is inconsistent, particularly on the top faces of the two objects",
+            "The subject lacks defining characteristics of books, appearing more like generic rectangular blocks or boxes"
+          ],
+          "requestId": "sha256:2ab4c5be57f6f33e440064707f5d828e03eed169ca8abc444f8df56384fc07b3",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "4769ddd2911c5526126d37ea98a74ffc4bca803830eb008137529ef6a27f4c19",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 26591,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 665,
+            "inputBytes": 8486,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.09392763,
+              "colorRmse": 0.06586796,
+              "outsideAlphaRatio": 0.00031759,
+              "sampleHeight": 512,
+              "sampleWidth": 460,
+              "supportRecall": 0.97467165
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "6b74da52a3f2ba15d99fccf4eaccf01b3f0fdd3bad4045bdc83f002857aa12a9",
+            "svgSha256": "4769ddd2911c5526126d37ea98a74ffc4bca803830eb008137529ef6a27f4c19",
+            "width": 597
+          },
+          "warnings": []
+        },
+        {
+          "critiqueError": "GENERATION_FAILED",
+          "metrics": {
+            "aspectRatio": 1.3178036605657237,
+            "bytes": 16999,
+            "coverageRatio": 0.3946725995394881,
+            "pathCount": 1,
+            "strokePx": 41.37373737373738
+          },
+          "requestId": "sha256:157e48be96277220fa20584381117a70fbf6aa6cc50718daca0595e9707cb50c",
+          "round": 2,
+          "status": "candidate",
+          "svgSha256": "6af6db8802e461cdd1b712dd6add2d784e59b9aeda80566e12073107ff647298",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16999,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 792,
+            "inputBytes": 7801,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03487584,
+              "colorRmse": 0.02472496,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 389,
+              "supportRecall": 0.99356786
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "4e08b973192dc8f4dac1295965226a7c7c5480938f5e9f74792d9df8361f0ba1",
+            "svgSha256": "6af6db8802e461cdd1b712dd6add2d784e59b9aeda80566e12073107ff647298",
+            "width": 601
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.143418467583497,
+            "bytes": 22841,
+            "coverageRatio": 0.2212849128065947,
+            "pathCount": 4,
+            "strokePx": 19.353951890034363
+          },
+          "pass": false,
+          "problems": [
+            "The illustration depicts office binders or folders rather than books due to the rectangular labels on the spines.",
+            "Line weight is slightly inconsistent and wobbly at the corner intersections."
+          ],
+          "requestId": "sha256:eabb72542b858940d87d6763f94a20cb57bbb91ad9bde906ec6bf730a94c38ec",
+          "round": 1,
+          "score": 80,
+          "status": "candidate",
+          "svgSha256": "ed52c450e5f13fd7a7e53d6c95987bd69c8320550ad7b1d245552779c60f262d",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 22841,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 582,
+            "inputBytes": 6575,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.08042115,
+              "colorRmse": 0.05703582,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 448,
+              "supportRecall": 0.95668129
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "0ed4b403c8c4fea12d3b049e4eee521400636ab332e7cf429676c75e51ae35e0",
+            "svgSha256": "ed52c450e5f13fd7a7e53d6c95987bd69c8320550ad7b1d245552779c60f262d",
+            "width": 509
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1254125412541254,
+            "bytes": 26084,
+            "coverageRatio": 0.16006116740706328,
+            "pathCount": 1,
+            "strokePx": 13.513196480938417
+          },
+          "pass": false,
+          "problems": [
+            "Line work is shaky and lacks uniform weight",
+            "There are visible gaps in the line structure",
+            "The illustration lacks the clean geometric precision required for a brand mark family",
+            "No filled planes are used to define the volume of the books",
+            "The curves on the spines are irregular and look like drawing errors"
+          ],
+          "requestId": "sha256:73bfb61e2d7b9b73e9b24c7f81935b7fbd98e1b08bcdc50fccf2e2105b7dd27d",
+          "round": 2,
+          "score": 35,
+          "status": "candidate",
+          "svgSha256": "dd709e6ca2de15b5e42933d2aeaecdefa5ffab6bc9b1f9e7793a45a0b91c35a0",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 26084,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 682,
+            "inputBytes": 8548,
+            "outputMode": "color",
+            "pathCount": 1,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06315985,
+              "colorRmse": 0.0443813,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 455,
+              "supportRecall": 0.9664522
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "49435e62d186c4c35c8760677e00f2605c74fa7461c4668dacad02e75be8abb8",
+            "svgSha256": "dd709e6ca2de15b5e42933d2aeaecdefa5ffab6bc9b1f9e7793a45a0b91c35a0",
+            "width": 606
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0190779014308426,
+            "bytes": 21617,
+            "coverageRatio": 0.3037979706787636,
+            "pathCount": 1,
+            "strokePx": 49.522620904836195
+          },
+          "round": 1,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.2854609929078014,
+            "bytes": 17268,
+            "coverageRatio": 0.23265835167522622,
+            "pathCount": 1,
+            "strokePx": 45.19724137931034
+          },
+          "round": 2,
+          "pass": true,
+          "score": 100,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.015358361774744,
+            "bytes": 19484,
+            "coverageRatio": 0.27468953451687844,
+            "pathCount": 3,
+            "strokePx": 43.02521008403362
+          },
+          "round": 1,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0364372469635628,
+            "bytes": 46045,
+            "coverageRatio": 0.42352149403958617,
+            "pathCount": 10,
+            "strokePx": 42.666666666666664
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1139028475711892,
+            "bytes": 26591,
+            "coverageRatio": 0.33554489238170804,
+            "pathCount": 3,
+            "strokePx": 49.275187969924815
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.3178036605657237,
+            "bytes": 16999,
+            "coverageRatio": 0.3946725995394881,
+            "pathCount": 1,
+            "strokePx": 41.37373737373738
+          },
+          "round": 2,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.143418467583497,
+            "bytes": 22841,
+            "coverageRatio": 0.2212849128065947,
+            "pathCount": 4,
+            "strokePx": 19.353951890034363
+          },
+          "round": 1,
+          "pass": false,
+          "score": 80,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1254125412541254,
+            "bytes": 26084,
+            "coverageRatio": 0.16006116740706328,
+            "pathCount": 1,
+            "strokePx": 13.513196480938417
+          },
+          "round": 2,
+          "pass": false,
+          "score": 35,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.2854609929078014,
+        "bytes": 17268,
+        "coverageRatio": 0.23265835167522622,
+        "pathCount": 1,
+        "strokePx": 45.19724137931034
+      },
+      "outputPath": "/tmp/iconsets/act60-retry/chapter-compare.svg",
+      "purpose": "illustration",
+      "regenerated": 3,
+      "slug": "chapter-compare",
+      "subject": "two thick-spined books stacked side by side",
+      "svgSha256": "83ce0311112bf5574fc817a3d2075853abe501bac84ef99ac5fffe0882891268"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "act60-retry",
+  "outputDir": "/tmp/iconsets/act60-retry",
+  "receiptVersion": 1,
+  "setCritiques": [
+    {
+      "familyProblems": [
+        "Inconsistent stroke weights: the calculator and briefcase arrow use significantly thinner lines than the other members, breaking the uniform medium-weight requirement.",
+        "Inconsistent ink density: the bar chart contains numerous small filled planes, violating the 'at most three large filled planes' rule, while the calculator lacks fills entirely.",
+        "Projection inconsistency: the calculator is rendered in a flat frontal view rather than the required isometric projection.",
+        "Tiny repeated detail: the bar chart contains too many small elements, making it appear much denser than the simpler icons like the books or clipboard."
+      ],
+      "members": [
+        {
+          "pass": true,
+          "problems": [],
+          "promptFix": "",
+          "slug": "chapter-compare"
+        }
+      ],
+      "pass": false,
+      "resolvedModel": "google/gemini-3-flash"
+    },
+    {
+      "familyProblems": [
+        "Inconsistent stroke weights: the calculator and briefcase arrow use significantly thinner lines than the other members, breaking the uniform medium-weight requirement.",
+        "Inconsistent ink density: the bar chart contains numerous small filled planes, violating the 'at most three large filled planes' rule, while the calculator lacks fills entirely.",
+        "Projection inconsistency: the calculator is rendered in a flat frontal view rather than the required isometric projection.",
+        "Tiny repeated detail: the bar chart contains too many small elements, making it appear much denser than the simpler icons like the books or clipboard."
+      ],
+      "members": [
+        {
+          "pass": true,
+          "problems": [],
+          "promptFix": "",
+          "slug": "chapter-compare"
+        }
+      ],
+      "pass": false,
+      "resolvedModel": "google/gemini-3-flash"
+    },
+    {
+      "familyProblems": [
+        "Inconsistent stroke weights: the calculator and briefcase arrow use significantly thinner lines than the other members, breaking the uniform medium-weight requirement.",
+        "Inconsistent ink density: the bar chart contains numerous small filled planes, violating the 'at most three large filled planes' rule, while the calculator lacks fills entirely.",
+        "Projection inconsistency: the calculator is rendered in a flat frontal view rather than the required isometric projection.",
+        "Tiny repeated detail: the bar chart contains too many small elements, making it appear much denser than the simpler icons like the books or clipboard."
+      ],
+      "members": [
+        {
+          "pass": true,
+          "problems": [],
+          "promptFix": "",
+          "slug": "chapter-compare"
+        }
+      ],
+      "pass": false,
+      "resolvedModel": "google/gemini-3-flash"
+    },
+    {
+      "familyProblems": [
+        "Inconsistent stroke weights: the calculator and briefcase arrow use significantly thinner lines than the other members, breaking the uniform medium-weight requirement.",
+        "Inconsistent ink density: the bar chart contains numerous small filled planes, violating the 'at most three large filled planes' rule, while the calculator lacks fills entirely.",
+        "Projection inconsistency: the calculator is rendered in a flat frontal view rather than the required isometric projection.",
+        "Tiny repeated detail: the bar chart contains too many small elements, making it appear much denser than the simpler icons like the books or clipboard."
+      ],
+      "members": [
+        {
+          "pass": true,
+          "problems": [],
+          "promptFix": "",
+          "slug": "chapter-compare"
+        }
+      ],
+      "pass": false,
+      "resolvedModel": "google/gemini-3-flash"
+    }
+  ],
+  "setRoundsUsed": 4,
+  "target": {
+    "coverageRatio": 0.24316644319843977,
+    "strokePx": 54.857142857142854
+  }
+}

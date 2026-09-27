@@ -1,0 +1,1366 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "problems": [
+            "the subject is too narrow or elongated for the card context"
+          ],
+          "requestId": "sha256:9cd1b9e0de28c4fb352af3981efd4099a614d2522b140878808c05cda521a99b",
+          "round": 1,
+          "status": "failed",
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.5299145299145298,
+            "bytes": 23664,
+            "coverageRatio": 0.22425631475910807,
+            "pathCount": 7,
+            "strokePx": 32.03575418994413
+          },
+          "pass": false,
+          "problems": [
+            "Uses multiple shades of blue instead of exactly one ink color",
+            "Exceeds the limit of three large filled planes",
+            "Contains thin, tapering lines in the paper curl that may disappear at small scales",
+            "Subject is too close to the frame edges"
+          ],
+          "requestId": "sha256:92c349b51318a59cf9f82d8c72a55b0d4e97c8bdfdffcb5f20ea71768955243f",
+          "round": 2,
+          "score": 55,
+          "status": "candidate",
+          "svgSha256": "3e1d0b5a01c530087f581b22c82f5b957036cf9122696f69129fb6322fa61097",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 23664,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 895,
+            "inputBytes": 9683,
+            "outputMode": "color",
+            "pathCount": 7,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0538238,
+              "colorRmse": 0.03733067,
+              "outsideAlphaRatio": 5.9e-7,
+              "sampleHeight": 512,
+              "sampleWidth": 335,
+              "supportRecall": 0.99658129
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "33100c98740f960b04f2791806d8cec781a6c270293e26956460af193f51375b",
+            "svgSha256": "3e1d0b5a01c530087f581b22c82f5b957036cf9122696f69129fb6322fa61097",
+            "width": 585
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.5299145299145298,
+            "bytes": 23664,
+            "coverageRatio": 0.22425631475910807,
+            "pathCount": 7,
+            "strokePx": 32.03575418994413
+          },
+          "round": 2,
+          "pass": false,
+          "score": 55,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.5299145299145298,
+        "bytes": 23664,
+        "coverageRatio": 0.22425631475910807,
+        "pathCount": 7,
+        "strokePx": 32.03575418994413
+      },
+      "outputPath": "/tmp/iconsets/act60/application.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "application",
+      "subject": "an isometric clipboard holding one bold application sheet",
+      "svgSha256": "3e1d0b5a01c530087f581b22c82f5b957036cf9122696f69129fb6322fa61097"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.5921052631578947,
+            "bytes": 11253,
+            "coverageRatio": 0.17786416799574695,
+            "pathCount": 2,
+            "strokePx": 29.619834710743802
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is not isometric; it uses a flat 2D icon style with a thick, inconsistent offset.",
+            "The two cards are inconsistent, with one having a top-right fold and the other a bottom-right fold.",
+            "The geometry is wobbly and lacks the clean, uniform medium-weight structure required.",
+            "The extrusion creates messy, non-geometric shapes rather than clear isometric planes."
+          ],
+          "requestId": "sha256:1f8b9753e9ea5bb0cb51dc77a8f049dd7d0e09be29f231bfadc9779792a01027",
+          "round": 1,
+          "score": 45,
+          "status": "candidate",
+          "svgSha256": "f610c9e8af0bf76f0cbe1ec0559bdd4f24af434b5d287c6407284e076e0cfd77",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 11253,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 456,
+            "inputBytes": 4854,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06904617,
+              "colorRmse": 0.04812312,
+              "outsideAlphaRatio": 0.00001493,
+              "sampleHeight": 322,
+              "sampleWidth": 512,
+              "supportRecall": 0.99275371
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "42dbec991fbb6b9ad1c98fb66a2946dd47d1febe495516848d7fd5f12280c03e",
+            "svgSha256": "f610c9e8af0bf76f0cbe1ec0559bdd4f24af434b5d287c6407284e076e0cfd77",
+            "width": 726
+          },
+          "warnings": []
+        },
+        {
+          "problems": [
+            "the subject is too narrow or elongated for the card context",
+            "the illustration strokes are too thin for the card context"
+          ],
+          "requestId": "sha256:0115ebeee5b014ec3d8d7f30fd239e3e6b425e3b4c45bdbf4f00fa2d93426001",
+          "round": 2,
+          "status": "failed",
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.5921052631578947,
+            "bytes": 11253,
+            "coverageRatio": 0.17786416799574695,
+            "pathCount": 2,
+            "strokePx": 29.619834710743802
+          },
+          "round": 1,
+          "pass": false,
+          "score": 45,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.5921052631578947,
+        "bytes": 11253,
+        "coverageRatio": 0.17786416799574695,
+        "pathCount": 2,
+        "strokePx": 29.619834710743802
+      },
+      "outputPath": "/tmp/iconsets/act60/chapter-compare.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "chapter-compare",
+      "subject": "two document cards side by side",
+      "svgSha256": "f610c9e8af0bf76f0cbe1ec0559bdd4f24af434b5d287c6407284e076e0cfd77"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.030480656506448,
+            "bytes": 20253,
+            "coverageRatio": 0.24474950886051638,
+            "pathCount": 4,
+            "strokePx": 37.27872582480091
+          },
+          "pass": false,
+          "problems": [
+            "Shaky and wobbly line work",
+            "Non-uniform line weights",
+            "Jagged edges and artifacts",
+            "Poorly defined isometric perspective"
+          ],
+          "requestId": "sha256:9b0099aeb002ff2a24a95273933a00629a2c818d5fcf8d6639711e1cf1d51457",
+          "round": 1,
+          "score": 30,
+          "status": "candidate",
+          "svgSha256": "4fdf9edc235ac0d21804b5f3c2b98c72a82d5eb0a9620a4dbb05b2ac41b23483",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 20253,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 879,
+            "inputBytes": 10698,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.1579837,
+              "colorRmse": 0.1096367,
+              "outsideAlphaRatio": 0.01490811,
+              "sampleHeight": 512,
+              "sampleWidth": 497,
+              "supportRecall": 0.94232339
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "b4829c163c4094de9de114b81cf8e7c428a86f84d461a105d53e27887285be85",
+            "svgSha256": "4fdf9edc235ac0d21804b5f3c2b98c72a82d5eb0a9620a4dbb05b2ac41b23483",
+            "width": 853
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.1378151260504201,
+            "bytes": 16249,
+            "coverageRatio": 0.19428770030907488,
+            "pathCount": 2,
+            "strokePx": 48.40177252584934
+          },
+          "pass": false,
+          "problems": [
+            "Inconsistent line weights and double-line outlines on the roof create hairlines.",
+            "Perspective is slightly warped and not strictly isometric.",
+            "The seal element is ambiguous and lacks clear definition.",
+            "Subject is not perfectly centered."
+          ],
+          "requestId": "sha256:b52e83ffb200b5366b48249d4b4d57aa7fe6f5ba967f77ab23192897d83a3985",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "a24d27559047bf318c12b8d7cca1e1b8dbd627309c33da9cbba43c37dbbdd253",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16249,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 595,
+            "inputBytes": 6597,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05260482,
+              "colorRmse": 0.03753509,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 450,
+              "sampleWidth": 512,
+              "supportRecall": 0.97203566
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "61cc862a2b329cb6149b00fdc4f098f961ca3d77305ee96e1457cf1e6287f57d",
+            "svgSha256": "a24d27559047bf318c12b8d7cca1e1b8dbd627309c33da9cbba43c37dbbdd253",
+            "width": 677
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.030480656506448,
+            "bytes": 20253,
+            "coverageRatio": 0.24474950886051638,
+            "pathCount": 4,
+            "strokePx": 37.27872582480091
+          },
+          "round": 1,
+          "pass": false,
+          "score": 30,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.1378151260504201,
+            "bytes": 16249,
+            "coverageRatio": 0.19428770030907488,
+            "pathCount": 2,
+            "strokePx": 48.40177252584934
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.030480656506448,
+        "bytes": 20253,
+        "coverageRatio": 0.24474950886051638,
+        "pathCount": 4,
+        "strokePx": 37.27872582480091
+      },
+      "outputPath": "/tmp/iconsets/act60/decree-residence.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "decree-residence",
+      "subject": "a house with a plain round decree seal",
+      "svgSha256": "4fdf9edc235ac0d21804b5f3c2b98c72a82d5eb0a9620a4dbb05b2ac41b23483"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0080385852090032,
+            "bytes": 21648,
+            "coverageRatio": 0.24295501982081777,
+            "pathCount": 5,
+            "strokePx": 52.261562998405104
+          },
+          "pass": false,
+          "problems": [
+            "Inconsistent isometric perspective on the bottom and side faces",
+            "Unnecessary internal lines in the screen area creating a bevel/shading effect",
+            "Wobbly line quality instead of clean, uniform strokes",
+            "Thin internal lines in the screen may disappear or blur at 64px"
+          ],
+          "requestId": "sha256:6579a6742ed705a3cdddf776351903ef6a269451eabd77bd798deb28c8a51ac5",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "22a4c73c9d043875d3c00256a5e94985a085131b8d87d3b0e5a2858d9d1f3774",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 21648,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 627,
+            "inputBytes": 6628,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.09858919,
+              "colorRmse": 0.06891714,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 508,
+              "supportRecall": 0.95844265
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "1ab046618137b33cac2deb6892bbeb591b630353bb9ff537c21567142c8d02d2",
+            "svgSha256": "22a4c73c9d043875d3c00256a5e94985a085131b8d87d3b0e5a2858d9d1f3774",
+            "width": 622
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0037926675094817,
+            "bytes": 16657,
+            "coverageRatio": 0.2980810567244218,
+            "pathCount": 5,
+            "strokePx": 25.793450881612088
+          },
+          "pass": false,
+          "problems": [
+            "The object's proportions are too thick and cubic, making it resemble a safe or a block rather than a calculator.",
+            "The isometric perspective is slightly inconsistent between the top and side planes."
+          ],
+          "requestId": "sha256:1260724a6b5354fd523af2885b9fe0e47a6a51202fc9187041bde3fbf5dc8041",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "29a97047c845197671dc413729554069549f562c568a3b5d78dc0dbd7c9940e3",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16657,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 791,
+            "inputBytes": 9167,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04049108,
+              "colorRmse": 0.02887474,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 510,
+              "sampleWidth": 512,
+              "supportRecall": 0.99149291
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "4bc39cd2cfe03cc2060d6e203f34acd2b193c1757c700ae050f185a90be27e3b",
+            "svgSha256": "29a97047c845197671dc413729554069549f562c568a3b5d78dc0dbd7c9940e3",
+            "width": 794
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0080385852090032,
+            "bytes": 21648,
+            "coverageRatio": 0.24295501982081777,
+            "pathCount": 5,
+            "strokePx": 52.261562998405104
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0037926675094817,
+            "bytes": 16657,
+            "coverageRatio": 0.2980810567244218,
+            "pathCount": 5,
+            "strokePx": 25.793450881612088
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0080385852090032,
+        "bytes": 21648,
+        "coverageRatio": 0.24295501982081777,
+        "pathCount": 5,
+        "strokePx": 52.261562998405104
+      },
+      "outputPath": "/tmp/iconsets/act60/estimate.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "estimate",
+      "subject": "a simple calculator with three large buttons",
+      "svgSha256": "22a4c73c9d043875d3c00256a5e94985a085131b8d87d3b0e5a2858d9d1f3774"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3195548489666136,
+            "bytes": 21531,
+            "coverageRatio": 0.17572547742639877,
+            "pathCount": 2,
+            "strokePx": 16.03855421686747
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is a flat 2D graphic instead of the requested isometric perspective.",
+            "The composition lacks the depth and three-dimensional volume characteristic of isometric design."
+          ],
+          "requestId": "sha256:fc688947e29603ee32f21636f9b9a6d899bdee14e3d6ddcad30277ffc3a5568a",
+          "round": 1,
+          "score": 50,
+          "status": "candidate",
+          "svgSha256": "d7fd228eb6fd16183d1ed6346958bb1e29588fbcaaa8ccfbceeaa2203760a62e",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 21531,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 629,
+            "inputBytes": 7068,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03981269,
+              "colorRmse": 0.02789044,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 388,
+              "sampleWidth": 512,
+              "supportRecall": 0.99041614
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "e5eab3c1753b55fc880e6e053cf7043669fb5a5211b54ce779347f4b3d80f831",
+            "svgSha256": "d7fd228eb6fd16183d1ed6346958bb1e29588fbcaaa8ccfbceeaa2203760a62e",
+            "width": 830
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0738341968911918,
+            "bytes": 19445,
+            "coverageRatio": 0.16496090551697845,
+            "pathCount": 2,
+            "strokePx": 39.52714113389626
+          },
+          "pass": false,
+          "problems": [
+            "The arrow shaft is a thin line that lacks the uniform medium-weight of the briefcase outline.",
+            "There is a broken geometric detail at the bottom left corner of the briefcase that creates a hairline gap.",
+            "The arrow head resembles a computer cursor rather than a standard directional arrow."
+          ],
+          "requestId": "sha256:e31827811c2229534aa138c110026c7c0ec03beadc90f28ef2c66ef6a7190b3f",
+          "round": 2,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "69b0479868eb284403be15a40e96bfc2cb4d0626dc9c48901d46f61ba543dc3e",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 19445,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 829,
+            "inputBytes": 8792,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03778154,
+              "colorRmse": 0.02644706,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 477,
+              "supportRecall": 0.9910892
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "364d0be5b31fb8b312ceba8ef842d0095a522e9d8bcbe505e38375213bf325f4",
+            "svgSha256": "69b0479868eb284403be15a40e96bfc2cb4d0626dc9c48901d46f61ba543dc3e",
+            "width": 772
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.3195548489666136,
+            "bytes": 21531,
+            "coverageRatio": 0.17572547742639877,
+            "pathCount": 2,
+            "strokePx": 16.03855421686747
+          },
+          "round": 1,
+          "pass": false,
+          "score": 50,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0738341968911918,
+            "bytes": 19445,
+            "coverageRatio": 0.16496090551697845,
+            "pathCount": 2,
+            "strokePx": 39.52714113389626
+          },
+          "round": 2,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0738341968911918,
+        "bytes": 19445,
+        "coverageRatio": 0.16496090551697845,
+        "pathCount": 2,
+        "strokePx": 39.52714113389626
+      },
+      "outputPath": "/tmp/iconsets/act60/export-services.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "export-services",
+      "subject": "a briefcase with an arrow leaving it",
+      "svgSha256": "69b0479868eb284403be15a40e96bfc2cb4d0626dc9c48901d46f61ba543dc3e"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0412087912087913,
+            "bytes": 26556,
+            "coverageRatio": 0.22913283945605845,
+            "pathCount": 11,
+            "strokePx": 43.229551451187334
+          },
+          "pass": false,
+          "problems": [
+            "Exceeds the limit of three large filled planes (currently has many small filled faces for the bars and coin)",
+            "Fragmented structure with inconsistent gaps between the faces of the bars",
+            "Subject is not perfectly centered and has tight margins at the bottom left",
+            "The coin lacks distinct features to clearly identify it as currency at small scales"
+          ],
+          "requestId": "sha256:a288b29821be541fb8569f979d3fb3908bc7007d4c09237bd0a24f1aa7eb5033",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "1c64bf2935bfbfa23fe7b51570da3b698cd50fc6c5b5defc2a4a9a997e35fc52",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 26556,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 728,
+            "inputBytes": 8390,
+            "outputMode": "color",
+            "pathCount": 11,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.04209178,
+              "colorRmse": 0.02927534,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 492,
+              "sampleWidth": 512,
+              "supportRecall": 0.99843311
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "8c8effcf87555913f6d3a4630a347af7133870d04bf5c66d8341ab50c51f86db",
+            "svgSha256": "1c64bf2935bfbfa23fe7b51570da3b698cd50fc6c5b5defc2a4a9a997e35fc52",
+            "width": 758
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.0968992248062015,
+            "bytes": 16453,
+            "coverageRatio": 0.20520037253129536,
+            "pathCount": 5,
+            "strokePx": 57.89399293286219
+          },
+          "pass": false,
+          "problems": [
+            "Exceeds the limit of three filled planes (contains at least five distinct filled areas)",
+            "Contains thin white negative-space lines that will disappear at 64px",
+            "Non-uniform line weights in the structure",
+            "Overlapping elements create cluttered, tiny details in the negative space"
+          ],
+          "requestId": "sha256:03c2d3ef649659dbdcaf8e3791543d5e1214e447e41c3ec06122fda7e2ef8c40",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "2ec496db515d468f94da699bb0fb92fc90dd5ee0a9261ad89592c4b83620821a",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 16453,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 516,
+            "inputBytes": 5496,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05589976,
+              "colorRmse": 0.03944795,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 467,
+              "sampleWidth": 512,
+              "supportRecall": 0.98515791
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "2d499c1dd2299248ae05b7b1ab6b4c64c42cccbf98198cd6642251d31209394a",
+            "svgSha256": "2ec496db515d468f94da699bb0fb92fc90dd5ee0a9261ad89592c4b83620821a",
+            "width": 566
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.0412087912087913,
+            "bytes": 26556,
+            "coverageRatio": 0.22913283945605845,
+            "pathCount": 11,
+            "strokePx": 43.229551451187334
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.0968992248062015,
+            "bytes": 16453,
+            "coverageRatio": 0.20520037253129536,
+            "pathCount": 5,
+            "strokePx": 57.89399293286219
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.0412087912087913,
+        "bytes": 26556,
+        "coverageRatio": 0.22913283945605845,
+        "pathCount": 11,
+        "strokePx": 43.229551451187334
+      },
+      "outputPath": "/tmp/iconsets/act60/investor.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "investor",
+      "subject": "a rising stock chart beside a coin",
+      "svgSha256": "1c64bf2935bfbfa23fe7b51570da3b698cd50fc6c5b5defc2a4a9a997e35fc52"
+    },
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.3018292682926829,
+            "bytes": 15882,
+            "coverageRatio": 0.2561064859770378,
+            "pathCount": 5,
+            "strokePx": 38.37002341920375
+          },
+          "pass": false,
+          "problems": [
+            "The subject 'calendar' is not clearly depicted; the base appears as a generic cube with lines rather than a recognizable calendar."
+          ],
+          "requestId": "sha256:0b07c63b4b869e4ff8d1acf842418dc7da649ecc14a8a2e923f767b4b5e3bfa4",
+          "round": 1,
+          "score": 70,
+          "status": "candidate",
+          "svgSha256": "db8e9e7bd9ecffaeecff32a3722a9e99afbec049f61a636766cff0e6246e0633",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 15882,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 854,
+            "inputBytes": 8930,
+            "outputMode": "color",
+            "pathCount": 5,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.03924769,
+              "colorRmse": 0.0275325,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 393,
+              "supportRecall": 0.99322438
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "0b49fed1e5a90fabd38f044ee169102ae882d7c83da6be1ee729b2b10393d309",
+            "svgSha256": "db8e9e7bd9ecffaeecff32a3722a9e99afbec049f61a636766cff0e6246e0633",
+            "width": 656
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.4792043399638337,
+            "bytes": 24346,
+            "coverageRatio": 0.20415426855957944,
+            "pathCount": 3,
+            "strokePx": 31.295843520782395
+          },
+          "pass": false,
+          "problems": [
+            "The base object is depicted as a tall cube with side markings, making it look like a shipping box rather than a calendar.",
+            "The vertical stripes on the left face and the square inset on the right face are unnecessary details that confuse the subject."
+          ],
+          "requestId": "sha256:e7e7020b0cd83ee2099e73ac7519233ca185a697c743bad32a67e980d189fed2",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "f4e75ef108b3fd96db2bdc32bf7137bddb0bde57fb128615b1059e9fc95e75bf",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 24346,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 818,
+            "inputBytes": 8743,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.0616578,
+              "colorRmse": 0.04344676,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 346,
+              "supportRecall": 0.96859231
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "007be0c4ff3163713a6b4adb886d520668864a2ea5b89a6efb847f85d4c3c9bd",
+            "svgSha256": "f4e75ef108b3fd96db2bdc32bf7137bddb0bde57fb128615b1059e9fc95e75bf",
+            "width": 553
+          },
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.3018292682926829,
+            "bytes": 15882,
+            "coverageRatio": 0.2561064859770378,
+            "pathCount": 5,
+            "strokePx": 38.37002341920375
+          },
+          "round": 1,
+          "pass": false,
+          "score": 70,
+          "selected": true
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.4792043399638337,
+            "bytes": 24346,
+            "coverageRatio": 0.20415426855957944,
+            "pathCount": 3,
+            "strokePx": 31.295843520782395
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": false
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.3018292682926829,
+        "bytes": 15882,
+        "coverageRatio": 0.2561064859770378,
+        "pathCount": 5,
+        "strokePx": 38.37002341920375
+      },
+      "outputPath": "/tmp/iconsets/act60/presence.svg",
+      "purpose": "illustration",
+      "regenerated": 0,
+      "slug": "presence",
+      "subject": "a location pin standing over a calendar",
+      "svgSha256": "db8e9e7bd9ecffaeecff32a3722a9e99afbec049f61a636766cff0e6246e0633"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "act60",
+  "outputDir": "/tmp/iconsets/act60",
+  "receiptVersion": 1,
+  "setCritiques": [],
+  "setCritiqueErrors": 4,
+  "setRoundsUsed": 4,
+  "target": {
+    "coverageRatio": 0.22802911692347183,
+    "strokePx": 40.3349991383767
+  }
+}

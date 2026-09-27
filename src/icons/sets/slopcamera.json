@@ -1,0 +1,17 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "name": "slopcamera",
+  "members": [
+    { "slug": "diagram", "subject": "a small node diagram of connected boxes" },
+    { "slug": "direct-scene", "subject": "a wireframe object on a small 3D stage" },
+    { "slug": "edit-video", "subject": "a film strip with an editing splice mark" },
+    { "slug": "mcp", "subject": "a socket plug bridging two rounded blocks" },
+    { "slug": "native-world", "subject": "a small isometric world diorama on a base" }
+  ],
+  "references": [
+    { "slug": "agent-skill", "svg": "../shared/agent-skill.svg" },
+    { "slug": "cli", "svg": "../shared/cli.svg" },
+    { "slug": "sdk", "svg": "../shared/sdk.svg" }
+  ]
+}

@@ -1,0 +1,460 @@
+{
+  "context": "card",
+  "ink": "#2474d4",
+  "members": [
+    {
+      "attempts": [
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.391304347826087,
+            "bytes": 21179,
+            "coverageRatio": 0.24239979619565216,
+            "pathCount": 2,
+            "strokePx": 42.666666666666664
+          },
+          "pass": false,
+          "problems": [
+            "Contains thin hairlines in the headphone and speaker details",
+            "Exceeds the limit of three filled planes with multiple small fills on the headphones and speaker",
+            "Line weights are not uniform across the illustration",
+            "The headphones appear to be floating rather than resting on the speaker"
+          ],
+          "requestId": "sha256:d84cfa59de3dd14120a1ace3fe8f6d9e5a68bef1b4e69b2a2661e303c4782538",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "3d81c26842966570d2fb35810c00601b068a201d304447fc15f7e88521027311",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 21179,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 768,
+            "inputBytes": 8712,
+            "outputMode": "color",
+            "pathCount": 2,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05392066,
+              "colorRmse": 0.03804603,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 368,
+              "supportRecall": 0.97461902
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "e70fe5b2cf61e8542b973395c7fda10691e4284d154039947e1572aa90856def",
+            "svgSha256": "3d81c26842966570d2fb35810c00601b068a201d304447fc15f7e88521027311",
+            "width": 552
+          },
+          "warnings": []
+        },
+        {
+          "critiqueError": "GENERATION_FAILED",
+          "metrics": {
+            "aspectRatio": 1.4738219895287958,
+            "bytes": 20171,
+            "coverageRatio": 0.2883393934885105,
+            "pathCount": 3,
+            "strokePx": 58.202486678507995
+          },
+          "requestId": "sha256:ed7c4045cb7675c37b7bd4794d7166ed3a47949f5ee04079970f1abdb1d80c24",
+          "round": 2,
+          "status": "candidate",
+          "svgSha256": "6308705fa2ccf1136758acf5ca0b05b3cf3a57c284c9f601e7d343ead4416949",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 20171,
+            "candidatesEvaluated": 2,
+            "format": "png",
+            "height": 563,
+            "inputBytes": 5193,
+            "outputMode": "color",
+            "pathCount": 3,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.07387624,
+              "colorRmse": 0.05269964,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 347,
+              "supportRecall": 0.96803329
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "73eaddd4a02cb24be4fea9f29218efc57e16103db5285eaa6a094e46c86c7646",
+            "svgSha256": "6308705fa2ccf1136758acf5ca0b05b3cf3a57c284c9f601e7d343ead4416949",
+            "width": 382
+          },
+          "warnings": []
+        },
+        {
+          "problems": [
+            "the subject is too narrow or elongated for the card context"
+          ],
+          "requestId": "sha256:b165583f3d4ffa5941de9314f6cb7ff7a9392fae0c2f586fb42f57020b8dc8ee",
+          "round": 1,
+          "status": "failed",
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.225621414913958,
+            "bytes": 21319,
+            "coverageRatio": 0.20020701401669833,
+            "pathCount": 9,
+            "strokePx": 15.975039001560063
+          },
+          "pass": false,
+          "problems": [
+            "The headphones are drawn in a flat, front-facing perspective while the speaker is isometric, creating a perspective clash.",
+            "The headphones do not appear to be naturally resting on the speaker due to the conflicting viewpoints."
+          ],
+          "requestId": "sha256:b91c4e2ec30ce638faaf577c8957f1ece65192a56b50564387c9748a86b0ee0b",
+          "round": 2,
+          "score": 65,
+          "status": "candidate",
+          "svgSha256": "c090410bbf7e2b3219c89401d3b4349ae8e936dcd776b1554bea1cf3ea3b9dbc",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 21319,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 641,
+            "inputBytes": 7303,
+            "outputMode": "color",
+            "pathCount": 9,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.06379017,
+              "colorRmse": 0.04469855,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 418,
+              "supportRecall": 0.98558402
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "d0530a894d3b8251dc7925797291cbce7b94d2c7e2667c1bbc95d0c7ed3d9606",
+            "svgSha256": "c090410bbf7e2b3219c89401d3b4349ae8e936dcd776b1554bea1cf3ea3b9dbc",
+            "width": 523
+          },
+          "warnings": []
+        },
+        {
+          "critiqueModel": "google/gemini-3-flash",
+          "metrics": {
+            "aspectRatio": 1.4363636363636363,
+            "bytes": 12978,
+            "coverageRatio": 0.2079113924050633,
+            "pathCount": 4,
+            "strokePx": 24.30379746835443
+          },
+          "pass": false,
+          "problems": [
+            "The illustration is not in a true isometric perspective; the headphones are rendered flat while the speaker has a distorted 3D view.",
+            "The headphones do not appear to be naturally resting on the speaker; they are floating awkwardly over the top.",
+            "The line work is slightly inconsistent in weight and lacks the clean, uniform structure required."
+          ],
+          "requestId": "sha256:51304b2b19b1df1417c1c70e0f5463444829663725429661bc03d9062e65d4f6",
+          "round": 1,
+          "score": 60,
+          "status": "candidate",
+          "svgSha256": "58ede1c3f52b069ce09f8b5b527759db887d4191c96c8a4eaac8f10dfefae0af",
+          "vectorize": {
+            "alphaCutoff": 8,
+            "bytes": 12978,
+            "candidatesEvaluated": 1,
+            "format": "png",
+            "height": 632,
+            "inputBytes": 5911,
+            "outputMode": "color",
+            "pathCount": 4,
+            "profile": "balanced",
+            "provenance": {
+              "arch": "arm64",
+              "platform": "darwin",
+              "sharp": "0.35.3",
+              "sharpVersions": {
+                "aom": "3.14.1",
+                "archive": "3.8.8",
+                "cairo": "1.18.4",
+                "cgif": "0.5.3",
+                "exif": "0.6.26",
+                "expat": "2.8.2",
+                "ffi": "3.6.0",
+                "fontconfig": "2.18.1",
+                "freetype": "2.14.3",
+                "fribidi": "1.0.16",
+                "glib": "2.89.1",
+                "harfbuzz": "14.2.1",
+                "heif": "1.23.1",
+                "highway": "1.4.0",
+                "imagequant": "2.4.1",
+                "lcms": "2.19.1",
+                "mozjpeg": "0826579",
+                "pango": "1.58.0",
+                "pixman": "0.46.4",
+                "png": "1.6.58",
+                "proxy-libintl": "0.5",
+                "rsvg": "2.62.90",
+                "sharp": "0.35.3",
+                "tiff": "d01a94b",
+                "uhdr": "1acdbed",
+                "vips": "8.18.3",
+                "webp": "1.6.0",
+                "xml2": "2.15.3",
+                "zlib-ng": "2.3.3"
+              },
+              "vips": "8.18.3",
+              "vtracerSha256": "77e495bbe212448240387fba3b6d8bc62ba20ecfb6f3c22967e51600f1cc6e66",
+              "vtracerSource": "official-release",
+              "vtracerVersion": "0.6.4"
+            },
+            "quality": {
+              "alphaRmse": 0.05815336,
+              "colorRmse": 0.0410747,
+              "outsideAlphaRatio": 0,
+              "sampleHeight": 512,
+              "sampleWidth": 356,
+              "supportRecall": 0.98044849
+            },
+            "receiptVersion": 1,
+            "representation": "color-paths",
+            "sourceSha256": "eb6d949651d821f5b0fb2160d7bc98f9538e3178c58c6b15e15ac99ea4faeb49",
+            "svgSha256": "58ede1c3f52b069ce09f8b5b527759db887d4191c96c8a4eaac8f10dfefae0af",
+            "width": 440
+          },
+          "warnings": []
+        },
+        {
+          "problems": [
+            "the subject is too narrow or elongated for the card context"
+          ],
+          "requestId": "sha256:c453245d63653b7d856029b2d78873ad074797475eadf52c77c9ce0cc7d53f72",
+          "round": 2,
+          "status": "failed",
+          "warnings": []
+        }
+      ],
+      "candidates": [
+        {
+          "metrics": {
+            "aspectRatio": 1.391304347826087,
+            "bytes": 21179,
+            "coverageRatio": 0.24239979619565216,
+            "pathCount": 2,
+            "strokePx": 42.666666666666664
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.4738219895287958,
+            "bytes": 20171,
+            "coverageRatio": 0.2883393934885105,
+            "pathCount": 3,
+            "strokePx": 58.202486678507995
+          },
+          "round": 2,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.225621414913958,
+            "bytes": 21319,
+            "coverageRatio": 0.20020701401669833,
+            "pathCount": 9,
+            "strokePx": 15.975039001560063
+          },
+          "round": 2,
+          "pass": false,
+          "score": 65,
+          "selected": false
+        },
+        {
+          "metrics": {
+            "aspectRatio": 1.4363636363636363,
+            "bytes": 12978,
+            "coverageRatio": 0.2079113924050633,
+            "pathCount": 4,
+            "strokePx": 24.30379746835443
+          },
+          "round": 1,
+          "pass": false,
+          "score": 60,
+          "selected": true
+        }
+      ],
+      "context": "card",
+      "metrics": {
+        "aspectRatio": 1.4363636363636363,
+        "bytes": 12978,
+        "coverageRatio": 0.2079113924050633,
+        "pathCount": 4,
+        "strokePx": 24.30379746835443
+      },
+      "outputPath": "/tmp/iconsets/soundfish-retry/hear.svg",
+      "purpose": "illustration",
+      "regenerated": 2,
+      "slug": "hear",
+      "subject": "a pair of bold headphones resting on a small speaker",
+      "svgSha256": "58ede1c3f52b069ce09f8b5b527759db887d4191c96c8a4eaac8f10dfefae0af"
+    }
+  ],
+  "model": "recraft/recraft-v4.1-utility",
+  "name": "soundfish-retry",
+  "outputDir": "/tmp/iconsets/soundfish-retry",
+  "receiptVersion": 1,
+  "setCritiques": [
+    {
+      "familyProblems": [
+        "Inconsistent use of containment borders across the set, with some icons framed and others free-standing.",
+        "Presence of prohibited hatching and tiny repeated detail in the grid illustration.",
+        "Inconsistent visual density and stroke weight across the set, particularly between the sparse arrow and the dense grid."
+      ],
+      "members": [
+        {
+          "pass": true,
+          "problems": [],
+          "promptFix": "",
+          "slug": "hear"
+        }
+      ],
+      "pass": false,
+      "resolvedModel": "google/gemini-3-flash"
+    }
+  ],
+  "setCritiqueErrors": 2,
+  "setRoundsUsed": 4,
+  "target": {
+    "coverageRatio": 0.1919312396807925,
+    "strokePx": 30.857142857142854
+  }
+}

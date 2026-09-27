@@ -50,6 +50,11 @@
     "./design-gallery.css": "./src/design-gallery.css",
     "./effects.css": "./src/effects.css",
     "./fonts.css": "./src/fonts.css",
+    "./icons": {
+      "types": "./src/icons.ts",
+      "import": "./dist/icons.js"
+    },
+    "./icons/*": "./src/icons/*",
     "./fonts/geist-mono/GeistMono[wght].woff2": "./src/fonts/geist-mono/GeistMono[wght].woff2",
     "./fonts/nebula-sans/*": "./src/fonts/nebula-sans/*",
     "./fonts/nebula-sans/social": {
@@ -240,7 +245,11 @@
     "src/provider-marks.generated.ts",
     "src/react/provider-mark.tsx",
     "src/react/provider-mark.stylex.ts",
-    "vendor/provider-marks"
+    "vendor/provider-marks",
+    "src/icons.ts",
+    "src/icons.generated.ts",
+    "src/icons",
+    "ICONS.md"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -270,7 +279,9 @@
     "test:paper-theme": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src/paper-theme.test.ts ./src/palettes.test.ts ./src/browser/design-palette.test.ts ./src/react/design-palette.test.tsx && bun run ./scripts/paper-theme-browser.ts",
     "check:marketing-textures": "bun run ./scripts/marketing-textures.ts",
     "generate:provider-marks": "bun run ./scripts/generate-provider-marks.ts --write",
-    "check:provider-marks": "bun run ./scripts/generate-provider-marks.ts"
+    "check:provider-marks": "bun run ./scripts/generate-provider-marks.ts",
+    "generate:icons": "bun run ./scripts/generate-icons.ts --write",
+    "check:icons": "bun run ./scripts/generate-icons.ts"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "4.2.3",
@@ -293,9 +304,10 @@
     }
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
     "@babel/core": "7.29.7",
+    "@eslint/js": "^9.39.2",
     "@hraness/ui": "github:hraness/ui#v0.5.17",
+    "@resvg/resvg-js": "2.6.2",
     "@stylexjs/babel-plugin": "0.19.0",
     "@types/babel__core": "7.20.5",
     "@types/bun": "1.3.14",
@@ -303,8 +315,8 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.2",
     "fast-check": "^4.8.0",
-    "linkedom": "^0.18.12",
     "lightningcss": "1.33.0",
+    "linkedom": "^0.18.12",
     "playwright-core": "1.62.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
