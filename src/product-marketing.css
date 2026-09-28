@@ -76,6 +76,7 @@
   --hraness-foil-4: light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100));
   --hraness-foil-5: light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45));
   --hraness-foil-6: light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305));
+  --hraness-foil-edge: light-dark(black, white);
   color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-text-font);
 }
@@ -539,6 +540,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
  * --hraness-foil-1 through --hraness-foil-6 so a site rethemes every foil
  * surface from one marketing root; dark roots read the deeper palette where
  * the pointer sheen stands out.
+ *
+ * The metallic image belongs to wordmarks and marks. Bordered foil surfaces
+ * keep a flat fill under one theme-aware monochrome edge -- black on light
+ * and white on dark through --hraness-foil-edge -- instead of the spectrum.
  */
 
 .hraness-foil,
@@ -546,21 +551,8 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   --hraness-foil-glow: 0;
   border-width: 2px;
   border-style: solid;
-  border-color: transparent;
+  border-color: var(--hraness-foil-edge, light-dark(black, white));
   background-color: var(--hraness-foil-surface, var(--surface, var(--background, Canvas)));
-  background-image:
-    linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))),
-    radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%),
-    radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%),
-    linear-gradient(115deg,
-      var(--hraness-foil-1, light-dark(oklch(0.89 0.065 337), oklch(0.56 0.16 340))),
-      var(--hraness-foil-2, light-dark(oklch(0.875 0.05 277), oklch(0.52 0.15 285))),
-      var(--hraness-foil-3, light-dark(oklch(0.92 0.05 170), oklch(0.66 0.14 175))),
-      var(--hraness-foil-4, light-dark(oklch(0.95 0.045 96), oklch(0.72 0.13 100))),
-      var(--hraness-foil-5, light-dark(oklch(0.9 0.05 55), oklch(0.55 0.15 45))),
-      var(--hraness-foil-6, light-dark(oklch(0.875 0.06 305), oklch(0.62 0.16 305))));
-  background-origin: border-box;
-  background-clip: padding-box, border-box, border-box, border-box;
   box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent);
 }
 
@@ -648,6 +640,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   --hraness-foil-4: oklch(0.72 0.13 100);
   --hraness-foil-5: oklch(0.55 0.15 45);
   --hraness-foil-6: oklch(0.62 0.16 305);
+  --hraness-foil-edge: white;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -667,6 +660,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     --hraness-foil-4: oklch(0.72 0.13 100);
     --hraness-foil-5: oklch(0.55 0.15 45);
     --hraness-foil-6: oklch(0.62 0.16 305);
+    --hraness-foil-edge: white;
     }
 }
 

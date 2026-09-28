@@ -48,17 +48,16 @@ import {
   createProceduralBackdropRecipe,
   effectsStyles,
   foilClassName,
+  foilEdge,
   foilHalo,
   foilMarkClassName,
   foilStyles,
-  foilSurfaceBackgroundClip,
-  foilSurfaceImage,
   foilTextHalo,
   foilTextImage,
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-19vqgz6n.js";
+} from "../chunk-rs1jeher.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -6911,11 +6910,10 @@ export {
   hapticInputForFeedback,
   foilTextImage,
   foilTextHalo,
-  foilSurfaceImage,
-  foilSurfaceBackgroundClip,
   foilStyles,
   foilMarkClassName,
   foilHalo,
+  foilEdge,
   foilClassName,
   foilCardRenderModes,
   foilCardPresets,

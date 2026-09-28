@@ -23,7 +23,7 @@ test("owned CSS, StyleX and authored material opacity recipes preserve hue in ev
     opacityCount += requireHuePreservingOpacity(source, file).length;
     perceptualCount += colorMixExpressions(source).filter((mix) => mix.space === "oklch" && !isOpacityOnlyMix(mix)).length;
   }
-  expect(opacityCount).toBeGreaterThanOrEqual(140);
+  expect(opacityCount).toBeGreaterThanOrEqual(139);
   expect(perceptualCount).toBeGreaterThan(0);
 });
 
