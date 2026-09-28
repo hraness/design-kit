@@ -360,8 +360,9 @@ export function MarketingSiteHeader({
 /**
  * In-flow site footer. The brand lockup is always the product mark followed by
  * its name; optional children carry a product note and optional links a quiet
- * footer navigation. It rests at the end of document flow, above any fixed
- * shared footer a product mounts after it.
+ * footer navigation. It rests at the end of document flow; when the shared
+ * network footer follows it directly, the marketing grammar joins the pair
+ * into one band.
  */
 export function MarketingSiteFooter({
   ariaLabel = "Site",
@@ -375,7 +376,7 @@ export function MarketingSiteFooter({
   linksLabel = "Footer navigation",
   name,
 }: Readonly<{
-  /** Landmark label; keep it distinct from a fixed network footer on the same page. */
+  /** Landmark label; keep it distinct from the network footer on the same page. */
   ariaLabel?: string;
   /** The product mark, conventionally one inline SVG; rendered before `name`. */
   brand: ReactNode;
