@@ -505,6 +505,26 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-footer__nav a[aria-current="page"] {
   color: var(--hraness-marketing-ink);
 }
+
+/* Network footer composition
+ *
+ * A marketing footer directly followed by the shared network footer
+ * (`.hraness-site-footer` from `@hraness/site-footer`) reads as one band
+ * instead of two stacked bars: the product row's bottom space collapses to a
+ * compact gap, and the network footer's content inherits the marketing
+ * measure and gutter through its documented `--hraness-site-footer-measure`
+ * seam so both registers share one column at every width. The band keeps two
+ * edges: this landmark's top rule above the product row and the network
+ * footer's own hairline above the organization row.
+ */
+.hraness-marketing-footer:has(+ .hraness-site-footer) {
+  --hraness-marketing-footer-space: 2rem 1.25rem;
+}
+
+.hraness-marketing-footer + .hraness-site-footer {
+  --hraness-site-footer-measure: calc(min(100%, var(--hraness-marketing-measure, 72rem)) - 2 * var(--hraness-marketing-gutter, clamp(1.25rem, 4vw, 3rem)));
+}
+
 /* Shared foil contract
  *
  * One pointer-tracked metallic chrome recipe shared by brand wordmarks,

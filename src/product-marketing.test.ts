@@ -192,3 +192,19 @@ test("a ruled section directly after a framed component drops its redundant sepa
     /\.hraness-marketing-install,[\s\S]*?\.hraness-marketing-proof-frame[\s\S]*?\+ :is\([\s\S]*?\.hraness-marketing-questions,[\s\S]*?\.hraness-marketing-cta[\s\S]*?\) \{\s*border-block-start: 0;/u,
   );
 });
+
+test("a marketing footer directly before the network footer joins one band", () => {
+  // The composition keeps two landmarks and two edges while collapsing the
+  // double spacing and aligning the network row to the marketing column.
+  expect(css).toContain(".hraness-marketing-footer:has(+ .hraness-site-footer)");
+  expect(css).toMatch(
+    /\.hraness-marketing-footer:has\(\+ \.hraness-site-footer\)\s*\{\s*--hraness-marketing-footer-space:\s*2rem 1\.25rem;/u,
+  );
+  expect(css).toContain(".hraness-marketing-footer + .hraness-site-footer");
+  expect(css).toMatch(
+    /\.hraness-marketing-footer \+ \.hraness-site-footer\s*\{\s*--hraness-site-footer-measure:\s*calc\(min\(100%, var\(--hraness-marketing-measure, 72rem\)\) - 2 \* var\(--hraness-marketing-gutter/u,
+  );
+  // The seam is one shared column, not a second boxed band: the network
+  // footer keeps its own hairline and the product row keeps its top rule.
+  expect(css).toMatch(/\.hraness-marketing-footer\s*\{[^}]*border-block-start: var\(--hraness-marketing-rule\)/u);
+});
