@@ -992,6 +992,34 @@ export function MarketingPrimitives({
   );
 }
 
+export type MarketingNoticeTone = "info" | "success" | "error";
+
+/**
+ * One status or alert line inside the page column, such as a confirmation
+ * after a redirect. Errors are announced as alerts; other tones as status.
+ */
+export function MarketingNotice({
+  children,
+  className,
+  tone = "info",
+}: Readonly<{
+  children: ReactNode;
+  className?: string;
+  tone?: MarketingNoticeTone;
+}>) {
+  if (tone !== "info" && tone !== "success" && tone !== "error") throw new RangeError("Marketing notice tone must be info, success, or error.");
+  return (
+    <p
+      className={classNames("hraness-marketing-notice", className, tone === "info" ? "default" : tone)}
+      data-hraness-marketing="notice"
+      data-tone={tone}
+      role={tone === "error" ? "alert" : "status"}
+    >
+      {children}
+    </p>
+  );
+}
+
 export interface MarketingStat {
   readonly detail?: string;
   readonly label: string;

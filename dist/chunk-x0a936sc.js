@@ -902,6 +902,30 @@ var marketingStyles = {
     kg9kkx: "x3g07o8 xr827i4",
     $$css: true
   },
+  notice: {
+    kHjnXC: "x9f619",
+    kULEZF: "xovzq4p",
+    kdYMnH: "xesnm00",
+    kCbEA6: "xvljh0b",
+    kYk0Dm: "xvueqy4",
+    kF3gjK: "xo0yzjp",
+    kJVvJu: "xnxx81d",
+    k50O2T: "x1xhxxw4",
+    kMwMTN: "xtylnni",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "xyr29y3",
+    kN5DiO: "x1evy7pa",
+    k7QVf6: "xj0a0fe",
+    $$css: true
+  },
+  noticeSuccess: {
+    kEreRy: "x2t7zc3",
+    $$css: true
+  },
+  noticeError: {
+    kEreRy: "xn0urz2",
+    $$css: true
+  },
   stats__source: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xs87ocq",
@@ -2905,6 +2929,11 @@ var recipes = {
   "hraness-marketing-stats": {
     default: marketingStyles.stats
   },
+  "hraness-marketing-notice": {
+    default: marketingStyles.notice,
+    success: [marketingStyles.notice, marketingStyles.noticeSuccess],
+    error: [marketingStyles.notice, marketingStyles.noticeError]
+  },
   "hraness-marketing-stats__list": {
     default: marketingStyles.stats__list
   },
@@ -4193,6 +4222,21 @@ function MarketingPrimitives({
         }, item.label))
       })
     ]
+  });
+}
+function MarketingNotice({
+  children,
+  className,
+  tone = "info"
+}) {
+  if (tone !== "info" && tone !== "success" && tone !== "error")
+    throw new RangeError("Marketing notice tone must be info, success, or error.");
+  return /* @__PURE__ */ jsx3("p", {
+    className: marketingClassName("hraness-marketing-notice", className, tone === "info" ? "default" : tone),
+    "data-hraness-marketing": "notice",
+    "data-tone": tone,
+    role: tone === "error" ? "alert" : "status",
+    children
   });
 }
 function MarketingStatStrip({
@@ -6238,4 +6282,4 @@ function ParticleHalo({
   });
 }
 
-export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };
+export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };

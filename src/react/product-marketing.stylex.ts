@@ -1009,6 +1009,27 @@ export const marketingStyles = stylex.create({
       "@media (max-width: 48rem)": "repeat(2, minmax(0, 1fr))"
     }
   },
+  "notice": {
+    "box-sizing": "border-box",
+    "inline-size": "calc(min(100%, var(--hraness-marketing-measure)) - 2 * var(--hraness-marketing-gutter))",
+    "min-inline-size": "0",
+    "margin-block": "clamp(1rem, 3vw, 1.5rem)",
+    "margin-inline": "auto",
+    "padding-block": "0.75rem",
+    "padding-inline": "1rem",
+    "border-inline-start": "3px solid var(--hraness-marketing-line-strong)",
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "0.95rem",
+    "line-height": "1.5",
+    "overflow-wrap": "anywhere"
+  },
+  "noticeSuccess": {
+    "border-inline-start-color": "var(--hraness-marketing-accent)"
+  },
+  "noticeError": {
+    "border-inline-start-color": "var(--danger, var(--hraness-marketing-accent))"
+  },
   "stats__source": {
     "margin": "0",
     "color": "var(--hraness-marketing-muted)",
@@ -4221,6 +4242,7 @@ const recipes = {
   "hraness-marketing-facts__value": { "default": marketingStyles.facts__value },
   "hraness-marketing-facts__detail": { "default": marketingStyles.facts__detail },
   "hraness-marketing-stats": { "default": marketingStyles.stats },
+  "hraness-marketing-notice": { "default": marketingStyles.notice, "success": [marketingStyles.notice, marketingStyles.noticeSuccess], "error": [marketingStyles.notice, marketingStyles.noticeError] },
   "hraness-marketing-stats__list": { "default": marketingStyles.stats__list },
   "hraness-marketing-stats__source": { "default": marketingStyles.stats__source },
   "hraness-marketing-stats__value": { "default": marketingStyles.stats__value },

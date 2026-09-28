@@ -27,6 +27,8 @@ export const productMarketingCoverage = [
   ["body section label", '.hraness-marketing-section__label[data-size="body"]', 1],
   ["MarketingPrimitives", ".hraness-marketing-primitives", 1],
   ["MarketingStatStrip", ".hraness-marketing-stats", 1],
+  ["MarketingNotice", ".hraness-marketing-notice", 3],
+  ["error notice", '.hraness-marketing-notice[data-tone="error"][role="alert"]', 1],
   ["MarketingInterfaceGrid", ".hraness-marketing-interfaces", 1],
   ["MarketingTrustBoundary", ".hraness-marketing-trust", 1],
   ["MarketingQuoteGrid", ".hraness-marketing-quotes", 1],
@@ -79,7 +81,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
   const { MarketingPage, MarketingSiteHeader, MarketingMain, MarketingCardRow, ProductHero,
     MarketingFlow, MarketingFacts, MarketingPillars, MarketingInstallPanel, MarketingProofFrame,
     MarketingDataTable, MarketingCodeBlock,
-    MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid,
+    MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingNotice, MarketingInterfaceGrid,
     MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList,
     MarketingMaker, MarketingRelated, MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
   const actions = [{ href: "#install", label: "Install" }, { href: "#interfaces", label: "Explore" }] as const;
@@ -135,6 +137,9 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         { label: "Job", summary: "One exact unit.", example: <pre data-marketing-oracle="primitive-pre"><code data-marketing-oracle="primitive-code">job-01</code></pre> },
         { label: "Receipt", summary: "One observable result.", example: <p data-marketing-oracle="primitive-paragraph">Consumer example paragraph.</p> },
       ]} />
+      <MarketingNotice>Nothing changed.</MarketingNotice>
+      <MarketingNotice tone="success">Device authorized.</MarketingNotice>
+      <MarketingNotice tone="error">That link expired.</MarketingNotice>
       <MarketingStatStrip ariaLabel="Observed counts" source={<>Snapshot <strong data-marketing-oracle="stats-strong">today</strong><span data-marketing-oracle="stats-span">only</span></>} stats={facts} />
       <MarketingInterfaceGrid heading="Choose an interface." headingId="interfaces-title" id="interfaces" label="Interfaces" summary="One result." interfaces={[
         { label: "CLI", summary: "For terminal users.", example: <p data-marketing-oracle="interface-paragraph">Consumer paragraph.</p> },
