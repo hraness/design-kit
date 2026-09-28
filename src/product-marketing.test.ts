@@ -103,11 +103,27 @@ test("the shared foil contract styles brand wordmarks and primary actions", () =
   expect(css).toContain("[data-foil]");
 });
 
+test("bordered foil surfaces keep a flat fill under one theme-aware monochrome edge", () => {
+  const surface = css.match(/\.hraness-foil,\s*\.hraness-marketing-action\[data-emphasis="primary"\]\s*\{([^}]*)\}/u)?.[1] ?? "";
+  expect(surface).toContain("border-width: 2px");
+  expect(surface).toContain("border-style: solid");
+  expect(surface).toContain(`border-color: ${foilMaterial.edge}`);
+  expect(surface).toContain(`background-color: ${foilMaterial.surfaceFill}`);
+  expect(surface).toContain(`box-shadow: ${foilMaterial.halo}`);
+  // The spectrum image stays on wordmarks and marks; surfaces never paint it.
+  expect(surface).not.toMatch(/background-image|background-clip|background-origin|gradient\(/u);
+  expect(surface).not.toContain("var(--hraness-foil-1");
+  const forcedColors = css.match(/@media \(forced-colors: active\)\s*\{([\s\S]*?)\n\}/u)?.[1] ?? "";
+  expect(forcedColors).toMatch(/\.hraness-foil,[\s\S]*?border-color: ButtonText/u);
+});
+
 test("the darker dark foil palette keeps the pointer sheen visible", () => {
   expect(css).toContain('[data-theme="dark"], .dark');
   expect(css).toContain("@media (prefers-color-scheme: dark)");
   expect(css).toContain("--hraness-foil-1: oklch(0.56 0.16 340)");
   expect(css).toContain("--hraness-foil-6: oklch(0.62 0.16 305)");
+  // The emphasis edge flips light/dark with the same two override paths.
+  expect(css.match(/--hraness-foil-edge: white/gu)).toHaveLength(2);
 });
 
 test("the compiler-adopter foundation and compiled recipes carry the same foil contract", async () => {
@@ -120,31 +136,35 @@ test("the compiler-adopter foundation and compiled recipes carry the same foil c
     expect(normalize(foundation)).toContain(normalize(declaration[0]));
   }
   // The compiled routes serialize the authored material verbatim: the fixed
-  // direction, both moving-light fields, the spectrum band set, the four-stop
-  // surface clip, and the restrained halo. Private --_hraness-foil-* stops
-  // carry the public override ahead of each scheme default so product
-  // overrides and the dark palette survive compilation.
+  // direction, both moving-light fields, the spectrum band set, the flat
+  // surface fill, the theme-aware monochrome edge, and the restrained halo.
+  // Private --_hraness-foil-* stops carry the public override ahead of each
+  // scheme default so product overrides and the dark palette survive
+  // compilation.
   for (const literal of [
-    "linear-gradient(115deg, var(--_hraness-foil-1)",
     '"--_hraness-foil-1"',
     '"var(--hraness-foil-1, oklch(0.89 0.065 337))"',
     '"var(--hraness-foil-1, oklch(0.56 0.16 340))"',
     "--hraness-foil-surface",
     "--hraness-foil-glow",
-    foilMaterial.stylex.surfaceImage,
     foilMaterial.stylex.textImage,
-    foilMaterial.surfaceBackgroundClip,
+    foilMaterial.surfaceFill,
+    foilMaterial.edge,
+    foilMaterial.edgeDark,
+    foilMaterial.edgeColor,
     foilMaterial.halo,
   ]) {
     expect(compiled).toContain(literal);
     expect(foilRecipes).toContain(literal);
   }
-  for (const literal of ['"2px solid transparent"', '"2px solid ButtonText"']) {
+  for (const literal of [`"2px solid ${foilMaterial.edgeColor}"`, '"2px solid ButtonText"']) {
     expect(compiled).toContain(literal);
   }
-  for (const literal of ['"border-top-width": "2px"', '"default": "transparent"', '"ButtonText"']) {
+  expect(compiled).not.toContain('"2px solid transparent"');
+  for (const literal of ['"border-top-width": "2px"', '"default": foilEdge', '"ButtonText"']) {
     expect(foilRecipes).toContain(literal);
   }
+  expect(foilRecipes).not.toContain('"2px solid transparent"');
   expect(foilRecipes).toContain('"hraness-foil"');
   expect(foilRecipes).toContain('"hraness-foil-text"');
 });
@@ -164,7 +184,8 @@ test("metallic text and marks preserve a restrained spectrum and mask fallback",
   }
   // The handwritten sheet serializes the raw (unprefixed-stop) projection.
   expect(normalize(css)).toContain(normalize(foilMaterial.raw.textImage));
-  expect(normalize(css)).toContain(normalize(foilMaterial.raw.surfaceImage));
+  expect(normalize(css)).toContain(normalize(foilMaterial.edge));
+  expect(normalize(css)).toContain(normalize(foilMaterial.surfaceFill));
   expect(css).toContain("mask-mode: alpha");
   expect(css).toContain("--hraness-foil-mask, linear-gradient(transparent, transparent)");
   expect(css).toMatch(/@media \(forced-colors: active\)\s*\{(?:[^{}]|\{[^}]*\})*\.hraness-foil-mark__paint \{ --_hraness-foil-mark-display: none; \}/u);

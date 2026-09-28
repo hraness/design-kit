@@ -1608,8 +1608,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   manifest.package,
-  { name: "@hraness/design-kit", version: "0.24.0" },
-  "StyleX manifest must describe design-kit v0.24.0",
+  { name: "@hraness/design-kit", version: "0.25.0" },
+  "StyleX manifest must describe design-kit v0.25.0",
 );
 assert.equal(manifest.compilerSha256, compilerSha256);
 assert.equal(manifest.compiler.transform.propertyValidationMode, "throw");
@@ -1726,16 +1726,13 @@ assert.equal(
   "The disabled-field material adapter must stay in the existing fourth rank",
 );
 // The reviewed foil contract flattens every primary-action decoration under
-// forced colors and keeps only the reviewed hover fallbacks. The six
+// forced colors and keeps only the reviewed hover fallbacks. The three
 // media-plus-pseudo atoms stay in rank 4; they do not create a ninth layer.
 const marketingForcedHoverRules = manifest.rules.filter(([, , priority]) => priority === 3330);
 assert.deepEqual(marketingForcedHoverRules, [
   ["x1gof2l0", { ltr: "@media (forced-colors: active){.x1gof2l0.x1gof2l0:hover{box-shadow:none}}", rtl: null }, 3330],
-  ["x1gsbfz3", { ltr: "@media (forced-colors: active){.x1gsbfz3.x1gsbfz3:hover{background-image:none}}", rtl: null }, 3330],
   ["x1xh63g1", { ltr: "@media (forced-colors: active){.x1xh63g1.x1xh63g1:hover{background-color:var(--hraness-marketing-accent-ink)}}", rtl: null }, 3330],
   ["xmi9hcf", { ltr: "@media (forced-colors: active){.xmi9hcf.xmi9hcf:hover{background-color:CanvasText}}", rtl: null }, 3330],
-  ["xnu620s", { ltr: "@media (forced-colors: active){.xnu620s.xnu620s:hover{background-origin:padding-box}}", rtl: null }, 3330],
-  ["xt5c5zx", { ltr: "@media (forced-colors: active){.xt5c5zx.xt5c5zx:hover{background-clip:border-box}}", rtl: null }, 3330],
 ], "Raw priority 3330 must contain only the reviewed forced-color primary hover atoms");
 assert.equal(
   requireRuleSerializedRank(compiledCss, "xmi9hcf", designPriorityContract, "dist/stylex.css"),

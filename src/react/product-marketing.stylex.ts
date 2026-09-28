@@ -29,9 +29,17 @@ const foilStops = {
   },
 };
 
+// Bordered surfaces resolve the edge through a private scheme-conditioned stop
+// so a product's public --hraness-foil-edge override wins ahead of either scheme
+// default, exactly like the --_hraness-foil-* spectrum stops.
+const foilEdgeStops = {
+  "--_hraness-foil-edge": {
+    "default": "var(--hraness-foil-edge, light-dark(black, white))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-edge, white)",
+  },
+};
+
 const foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in srgb, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
-const foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(115deg, var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6))";
-const foilSurfaceClip = "padding-box, border-box, border-box, border-box";
 const foilHalo = "0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent)";
 
 export type MarketingColumnCount = 1 | 2 | 3 | 4;
@@ -3073,7 +3081,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "actionPrimary": {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3092,19 +3100,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
@@ -3137,12 +3145,9 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": foilSurfaceImage,
+      "default": "none",
       "@media (forced-colors: active)": "none",
-      ":hover": {
-        "default": foilSurfaceImage,
-        "@media (forced-colors: active)": "none"
-      }
+      ":hover": "none"
     },
     "background-position": {
       "default": "0% 0%",
@@ -3160,20 +3165,14 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "border-box",
+      "default": "padding-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": {
-        "default": "border-box",
-        "@media (forced-colors: active)": "padding-box"
-      }
+      ":hover": "padding-box"
     },
     "background-clip": {
-      "default": foilSurfaceClip,
+      "default": "border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": {
-        "default": foilSurfaceClip,
-        "@media (forced-colors: active)": "border-box"
-      }
+      ":hover": "border-box"
     },
     "background-attachment": {
       "default": "scroll",
@@ -3304,7 +3303,7 @@ export const marketingStyles = stylex.create({
     "padding-inline": "0.8rem"
   },
   "headerActionPrimary": {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3323,19 +3322,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
@@ -3368,12 +3367,9 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": foilSurfaceImage,
+      "default": "none",
       "@media (forced-colors: active)": "none",
-      ":hover": {
-        "default": foilSurfaceImage,
-        "@media (forced-colors: active)": "none"
-      }
+      ":hover": "none"
     },
     "background-position": {
       "default": "0% 0%",
@@ -3391,20 +3387,14 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "border-box",
+      "default": "padding-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": {
-        "default": "border-box",
-        "@media (forced-colors: active)": "padding-box"
-      }
+      ":hover": "padding-box"
     },
     "background-clip": {
-      "default": foilSurfaceClip,
+      "default": "border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": {
-        "default": foilSurfaceClip,
-        "@media (forced-colors: active)": "border-box"
-      }
+      ":hover": "border-box"
     },
     "background-attachment": {
       "default": "scroll",
@@ -3536,7 +3526,7 @@ export const marketingStyles = stylex.create({
     "justify-self": "start"
   },
   "planActionPrimary": {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3555,19 +3545,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
@@ -3600,12 +3590,9 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": foilSurfaceImage,
+      "default": "none",
       "@media (forced-colors: active)": "none",
-      ":hover": {
-        "default": foilSurfaceImage,
-        "@media (forced-colors: active)": "none"
-      }
+      ":hover": "none"
     },
     "background-position": {
       "default": "0% 0%",
@@ -3623,20 +3610,14 @@ export const marketingStyles = stylex.create({
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "border-box",
+      "default": "padding-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": {
-        "default": "border-box",
-        "@media (forced-colors: active)": "padding-box"
-      }
+      ":hover": "padding-box"
     },
     "background-clip": {
-      "default": foilSurfaceClip,
+      "default": "border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": {
-        "default": foilSurfaceClip,
-        "@media (forced-colors: active)": "border-box"
-      }
+      ":hover": "border-box"
     },
     "background-attachment": {
       "default": "scroll",
@@ -3666,7 +3647,7 @@ export const marketingStyles = stylex.create({
     "justify-self": "start"
   },
   "heroActionPrimary": {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3685,19 +3666,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
@@ -3730,43 +3711,38 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": foilSurfaceImage,
+      "default": "none",
       "@media (forced-colors: active)": "none",
-      ":hover": {
-        "default": foilSurfaceImage,
-        "@media (forced-colors: active)": "none"
-      }
+      ":hover": "none"
     },
     "background-position": {
       "default": "0% 0%",
+      "@media (forced-colors: active)": "0% 0%",
       ":hover": "0% 0%"
     },
     "background-size": {
       "default": "auto auto",
+      "@media (forced-colors: active)": "auto auto",
       ":hover": "auto auto"
     },
     "background-repeat": {
       "default": "repeat",
+      "@media (forced-colors: active)": "repeat",
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "border-box",
+      "default": "padding-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": {
-        "default": "border-box",
-        "@media (forced-colors: active)": "padding-box"
-      }
+      ":hover": "padding-box"
     },
     "background-clip": {
-      "default": foilSurfaceClip,
+      "default": "border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": {
-        "default": foilSurfaceClip,
-        "@media (forced-colors: active)": "border-box"
-      }
+      ":hover": "border-box"
     },
     "background-attachment": {
       "default": "scroll",
+      "@media (forced-colors: active)": "scroll",
       ":hover": "scroll"
     },
     "box-shadow": {
@@ -3899,7 +3875,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "ctaActionPrimary": {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" }
@@ -3915,19 +3891,19 @@ export const marketingStyles = stylex.create({
     "gap": "0.45rem",
     "padding": "0.6rem 1.1rem",
     "border-top": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-right": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-bottom": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-left": {
-      "default": "2px solid transparent",
+      "default": "2px solid var(--_hraness-foil-edge, light-dark(black, white))",
       "@media (forced-colors: active)": "2px solid ButtonText"
     },
     "border-image-source": {
@@ -3960,43 +3936,38 @@ export const marketingStyles = stylex.create({
       }
     },
     "background-image": {
-      "default": foilSurfaceImage,
+      "default": "none",
       "@media (forced-colors: active)": "none",
-      ":hover": {
-        "default": foilSurfaceImage,
-        "@media (forced-colors: active)": "none"
-      }
+      ":hover": "none"
     },
     "background-position": {
       "default": "0% 0%",
+      "@media (forced-colors: active)": "0% 0%",
       ":hover": "0% 0%"
     },
     "background-size": {
       "default": "auto auto",
+      "@media (forced-colors: active)": "auto auto",
       ":hover": "auto auto"
     },
     "background-repeat": {
       "default": "repeat",
+      "@media (forced-colors: active)": "repeat",
       ":hover": "repeat"
     },
     "background-origin": {
-      "default": "border-box",
+      "default": "padding-box",
       "@media (forced-colors: active)": "padding-box",
-      ":hover": {
-        "default": "border-box",
-        "@media (forced-colors: active)": "padding-box"
-      }
+      ":hover": "padding-box"
     },
     "background-clip": {
-      "default": foilSurfaceClip,
+      "default": "border-box",
       "@media (forced-colors: active)": "border-box",
-      ":hover": {
-        "default": foilSurfaceClip,
-        "@media (forced-colors: active)": "border-box"
-      }
+      ":hover": "border-box"
     },
     "background-attachment": {
       "default": "scroll",
+      "@media (forced-colors: active)": "scroll",
       ":hover": "scroll"
     },
     "box-shadow": {

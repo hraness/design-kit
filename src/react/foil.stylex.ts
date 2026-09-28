@@ -9,7 +9,8 @@ import * as stylex from "@stylexjs/stylex";
 // CSS-owned on hover-capable pointers. Each recipe resolves the public
 // --hraness-foil-* spectrum into private scheme-conditioned stops so product
 // overrides inherit while the darker dark palette keeps the pointer sheen
-// visible on standalone surfaces.
+// visible on standalone surfaces. Bordered surfaces paint a flat fill under
+// the theme-aware monochrome --hraness-foil-edge instead of the spectrum.
 const foilStops = {
   "--_hraness-foil-1": {
     "default": "var(--hraness-foil-1, oklch(0.89 0.065 337))",
@@ -37,11 +38,20 @@ const foilStops = {
   },
 };
 
-export const foilSurfaceImage = "linear-gradient(var(--hraness-foil-surface, var(--surface, var(--background, Canvas))), var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))), radial-gradient(ellipse 28% 100% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in srgb, white calc(60% + var(--hraness-foil-glow, 0) * 24%), transparent) 0%, transparent 72%), radial-gradient(ellipse 80% 180% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in srgb, white var(--hraness-foil-sheen-opacity, 28%), transparent) 0%, transparent 78%), linear-gradient(115deg, var(--_hraness-foil-1), var(--_hraness-foil-2), var(--_hraness-foil-3), var(--_hraness-foil-4), var(--_hraness-foil-5), var(--_hraness-foil-6))";
+// Bordered surfaces resolve the edge through a private scheme-conditioned stop
+// so a product's public --hraness-foil-edge override wins ahead of either scheme
+// default, exactly like the --_hraness-foil-* spectrum stops.
+const foilEdgeStops = {
+  "--_hraness-foil-edge": {
+    "default": "var(--hraness-foil-edge, light-dark(black, white))",
+    "@media (prefers-color-scheme: dark)": "var(--hraness-foil-edge, white)",
+  },
+};
+
+/** Theme-aware monochrome emphasis edge for bordered foil surfaces. */
+export const foilEdge = "var(--_hraness-foil-edge, light-dark(black, white))";
 
 export const foilTextImage = "var(--hraness-foil-image, radial-gradient(ellipse 24% 85% at var(--hraness-foil-x, 50%) var(--hraness-foil-y, 50%), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 80%, var(--background, Canvas)) 0%, transparent 68%), radial-gradient(ellipse 65% 160% at calc(100% - var(--hraness-foil-x, 50%)) calc(100% - var(--hraness-foil-y, 50%)), color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 98%, var(--background, Canvas)) 0%, transparent 72%), linear-gradient(115deg, color-mix(in srgb, var(--_hraness-foil-1) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-2) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-3) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-4) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-5) var(--hraness-foil-reflection, 14%), transparent), color-mix(in srgb, var(--_hraness-foil-6) var(--hraness-foil-reflection, 14%), transparent)), linear-gradient(115deg, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 90%, var(--background, Canvas)) 0%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 24%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 86%, var(--background, Canvas)) 39%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 56%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 84%, var(--background, Canvas)) 82%, color-mix(in oklch, var(--hraness-foil-text-base, var(--foreground, CanvasText)) 100%, var(--background, Canvas)) 100%))";
-
-export const foilSurfaceBackgroundClip = "padding-box, border-box, border-box, border-box";
 
 export const foilHalo = "0 1px 4px color-mix(in srgb, var(--foreground, CanvasText) 12%, transparent)";
 
@@ -49,7 +59,7 @@ export const foilTextHalo = "none";
 
 export const foilStyles = stylex.create({
   surface: {
-    ...foilStops,
+    ...foilEdgeStops,
     "--hraness-foil-glow": {
       "default": "0",
       "@media (hover: hover)": { ":hover:not(:disabled)": "1" },
@@ -62,20 +72,14 @@ export const foilStyles = stylex.create({
     "border-right-style": "solid",
     "border-bottom-style": "solid",
     "border-left-style": "solid",
-    "border-top-color": { "default": "transparent", "@media (forced-colors: active)": "ButtonText" },
-    "border-right-color": { "default": "transparent", "@media (forced-colors: active)": "ButtonText" },
-    "border-bottom-color": { "default": "transparent", "@media (forced-colors: active)": "ButtonText" },
-    "border-left-color": { "default": "transparent", "@media (forced-colors: active)": "ButtonText" },
+    "border-top-color": { "default": foilEdge, "@media (forced-colors: active)": "ButtonText" },
+    "border-right-color": { "default": foilEdge, "@media (forced-colors: active)": "ButtonText" },
+    "border-bottom-color": { "default": foilEdge, "@media (forced-colors: active)": "ButtonText" },
+    "border-left-color": { "default": foilEdge, "@media (forced-colors: active)": "ButtonText" },
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
       "@media (forced-colors: active)": "Canvas",
     },
-    "background-image": {
-      "default": foilSurfaceImage,
-      "@media (forced-colors: active)": "none",
-    },
-    "background-origin": "border-box",
-    "background-clip": foilSurfaceBackgroundClip,
     "box-shadow": { "default": foilHalo, "@media (forced-colors: active)": "none" },
     "color": { "default": null, "@media (forced-colors: active)": "CanvasText" },
   },

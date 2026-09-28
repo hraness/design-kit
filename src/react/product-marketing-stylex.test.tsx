@@ -209,7 +209,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("fa72c62662f244b3830675b9fd54db18bc14051c50ed1d960a615cebe8614a1e");
+    .toBe("1ce016d81f8adea6b670a4d6f231f30aee9038d6c627d5af15621e2ea5b7f4f6");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -364,11 +364,11 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     expect(backgrounds.join("")).not.toContain("forced-colors");
   }
   // Accent-tone primaries keep their accent face under forced colors while the
-  // shared foil decoration flattens to the system palette.
+  // shared foil edge flattens to the system palette.
   for (const recipe of [marketingStyles.heroActionPrimary, marketingStyles.ctaActionPrimary]) {
     const forced = recipeRules(recipe).filter((rule) => rule.includes("forced-colors")).join("");
     expect(forced).toContain("background-color:var(--hraness-marketing-accent-ink)");
-    expect(forced).toContain("background-image:none");
+    expect(forced).toContain("ButtonText");
     expect(forced).toContain("box-shadow:none");
   }
   for (const side of ["top", "right", "bottom", "left"]) {
