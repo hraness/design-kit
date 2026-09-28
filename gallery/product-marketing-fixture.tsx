@@ -16,6 +16,13 @@ export const productMarketingCoverage = [
   ["MarketingPillars", ".hraness-marketing-pillars", 1],
   ["MarketingInstallPanel", ".hraness-marketing-install", 1],
   ["MarketingProofFrame", ".hraness-marketing-proof-frame", 6],
+  ["MarketingDataTable", ".hraness-marketing-data-table", 1],
+  ["data table column head", ".hraness-marketing-data-table__heading", 3],
+  ["data table row heading", ".hraness-marketing-data-table__row-heading", 3],
+  ["numeric column", ".hraness-marketing-data-table :where(th, td)[data-numeric]", 4],
+  ["toned cell", ".hraness-marketing-data-table__cell[data-tone]", 2],
+  ["MarketingCodeBlock", "pre.hraness-marketing-code", 1],
+  ["code block syntax", "pre.hraness-marketing-code > code.syntax-code", 1],
   ["MarketingSection", ".hraness-marketing-section", 4],
   ["body section label", '.hraness-marketing-section__label[data-size="body"]', 1],
   ["MarketingPrimitives", ".hraness-marketing-primitives", 1],
@@ -60,6 +67,7 @@ export const productMarketingConsumerCoverage = [
   "section-first-split-reverse", "section-last-split-reverse", "section-link-split-reverse", "section-code-split-reverse",
   "primitive-pre", "primitive-code", "primitive-paragraph", "interface-paragraph", "interface-pre", "interface-code",
   "question-first", "question-last", "question-single", "maker-portrait", "maker-first", "maker-last", "stats-strong", "stats-span",
+  "data-table-note",
   "hero-notice", "install-note", "footer-brand-svg", "footer-note",
 ] as const;
 
@@ -70,6 +78,7 @@ const fixtureMark = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketing }>) {
   const { MarketingPage, MarketingSiteHeader, MarketingMain, MarketingCardRow, ProductHero,
     MarketingFlow, MarketingFacts, MarketingPillars, MarketingInstallPanel, MarketingProofFrame,
+    MarketingDataTable, MarketingCodeBlock,
     MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid,
     MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList,
     MarketingMaker, MarketingRelated, MarketingCallToAction, MarketingSectionLabel, MarketingSiteFooter } = api;
@@ -98,6 +107,18 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       )))}
       <MarketingProofFrame caption="Image content."><img data-marketing-oracle="proof-image" alt="A square fixture" width={120} height={60} src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%2760%27%3E%3Crect width=%27120%27 height=%2760%27 fill=%27%23555%27/%3E%3C/svg%3E" /></MarketingProofFrame>
       <MarketingProofFrame caption="Native media sizing."><video data-marketing-oracle="proof-video" aria-label="No-source sizing fixture" width={120} height={60} /></MarketingProofFrame>
+      <MarketingDataTable caption="Observed resume trial" columns={[
+        { label: "Strategy" },
+        { label: "Input tokens", numeric: true },
+        { label: "Recalled the task?" },
+      ]} meta="17 September 2026"
+        note={<span data-marketing-oracle="data-table-note">One session; not a guarantee.</span>}
+        rows={[
+          ["no compaction", "312,722", "yes"],
+          ["elide", "219,167", { content: "yes", tone: "positive" }],
+          ["autocompact", "56,300", { content: "no", tone: "negative" }],
+        ]} />
+      <MarketingCodeBlock code={'relay run --receipt job-01.json'} language="sh" />
       <MarketingPillars ariaLabel="Three pillars" pillars={facts.slice(0, 3).map(({ label, detail }) => ({ label, summary: detail }))} />
       <MarketingInstallPanel eyebrow="Install" heading="Run locally." headingId="install-title" id="install"
         note={<p data-marketing-oracle="install-note">Choose the release for your platform.</p>}>

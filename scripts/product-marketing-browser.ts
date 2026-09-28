@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "1ce016d81f8adea6b670a4d6f231f30aee9038d6c627d5af15621e2ea5b7f4f6", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "a3097b05bcc51d41423795377dd9394edced4712d2a75c83a9a29a80fda71da5", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -574,7 +574,10 @@ try {
   await writeFile(join(output, "strict-csp-two-columns.html"), strictTwoColumnHtml, { flag: "wx" });
   const staticHtml = html.replace(/class="([^"]*)"/gu, (_match, value: string) => {
     const hooks = value.split(/\s+/u).filter((token) => token.startsWith("hraness-marketing-")
-      || token.startsWith("fixture-") || token === "marketing-fixture");
+      || token.startsWith("fixture-") || token === "marketing-fixture"
+      // Syntax markup is shipped HTML, not a compiled atom; the static grammar
+      // styles it through syntax-highlighting.css like the standalone route.
+      || token.startsWith("syntax-") || token.startsWith("sh__") || token.startsWith("language-"));
     return `class="${hooks.join(" ")}"`;
   });
   assert.notEqual(staticHtml, html, "The shipped marketing components have no compiled atoms");

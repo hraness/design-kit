@@ -7,6 +7,8 @@ import {
   MarketingCard,
   MarketingCardArt,
   MarketingCardRow,
+  MarketingCodeBlock,
+  MarketingDataTable,
   MarketingFlow,
   MarketingField,
   MarketingInstallPanel,
@@ -151,6 +153,66 @@ test("the marketing compositions preserve headings, native disclosure, and produ
   expect(html).toContain("For typed application code.");
   expect(html).toContain("Source files and credentials.");
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-interface__heading">CLI</h3>'));
+});
+
+test("the data table renders a captioned figure with row headings, numeric columns, and honest scope", () => {
+  const html = renderToStaticMarkup(
+    <MarketingDataTable
+      caption="Observed resume trial"
+      columns={[
+        { label: "Strategy" },
+        { label: "Input tokens", numeric: true },
+        { label: "Recalled the task?" },
+      ]}
+      meta="17 September 2026"
+      note="One session; not a guarantee."
+      rows={[
+        ["no compaction", "312,722", "yes"],
+        ["elide", "219,167", { content: "yes", tone: "positive" }],
+        ["autocompact", "56,300", { content: "no", tone: "negative" }],
+      ]}
+    />,
+  );
+  const { document } = parseHTML(html);
+  const figure = document.querySelector("figure.hraness-marketing-data-table");
+  expect(figure?.getAttribute("data-hraness-marketing")).toBe("data-table");
+  const head = figure?.querySelector("figcaption");
+  expect(head?.querySelector(".hraness-marketing-data-table__title")?.textContent).toBe("Observed resume trial");
+  expect(head?.querySelector(".hraness-marketing-data-table__meta")?.textContent).toBe("17 September 2026");
+  const headings = document.querySelectorAll('th[scope="col"]');
+  expect(headings.length).toBe(3);
+  expect(headings[1]?.hasAttribute("data-numeric")).toBe(true);
+  const rows = [...document.querySelectorAll("tbody tr")];
+  expect(rows.length).toBe(3);
+  for (const row of rows) expect(row.querySelector('th[scope="row"]')).not.toBeNull();
+  expect(document.querySelector('td[data-tone="positive"]')?.textContent).toBe("yes");
+  expect(document.querySelector('td[data-tone="negative"]')?.textContent).toBe("no");
+  expect(figure?.querySelector(".hraness-marketing-data-table__note")?.textContent).toContain("not a guarantee");
+  expect(html).not.toMatch(/onClick|<script\b/iu);
+});
+
+test("the data table fails closed when a row disagrees with its columns", () => {
+  expect(() => renderToStaticMarkup(
+    <MarketingDataTable caption="Broken" columns={[{ label: "A" }]} rows={[["a", "b"]]} />,
+  )).toThrow(RangeError);
+  expect(() => renderToStaticMarkup(
+    <MarketingDataTable caption="Broken" columns={[]} rows={[]} />,
+  )).toThrow(RangeError);
+});
+
+test("the code block renders shared syntax markup inside a measured pre", () => {
+  const html = renderToStaticMarkup(
+    <MarketingCodeBlock className="product-code" code={'{"ok":true,"count":2}'} language="json" />,
+  );
+  const { document } = parseHTML(html);
+  const block = document.querySelector("pre.hraness-marketing-code.product-code");
+  expect(block?.getAttribute("data-hraness-marketing")).toBe("code");
+  const code = block?.querySelector("code.syntax-code");
+  expect(code?.getAttribute("data-language")).toBe("json");
+  expect(code?.className.split(" ").at(0)).toBe("syntax-code");
+  expect(code?.className).toContain("language-json");
+  expect(code?.querySelector("[class^='sh__token']")).not.toBeNull();
+  expect(html).not.toMatch(/onClick|<script\b|style=/iu);
 });
 
 test("the related-products composition shows each sibling's mark, name, and one-line role", () => {

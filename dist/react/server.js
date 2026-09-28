@@ -14,6 +14,8 @@ import {
   MarketingCard,
   MarketingCardArt,
   MarketingCardRow,
+  MarketingCodeBlock,
+  MarketingDataTable,
   MarketingFacts,
   MarketingField,
   MarketingFlow,
@@ -48,7 +50,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-rs1jeher.js";
+} from "../chunk-kb67f931.js";
 import"../chunk-zzq7bdj8.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-eh71jz57.js";
@@ -88,6 +90,8 @@ export {
   MarketingFlow,
   MarketingField,
   MarketingFacts,
+  MarketingDataTable,
+  MarketingCodeBlock,
   MarketingCardRow,
   MarketingCardArt,
   MarketingCard,
