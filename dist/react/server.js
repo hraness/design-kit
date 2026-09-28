@@ -23,6 +23,7 @@ import {
   MarketingInterfaceGrid,
   MarketingMain,
   MarketingMaker,
+  MarketingNotice,
   MarketingPage,
   MarketingPillars,
   MarketingPricing,
@@ -50,7 +51,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-kb67f931.js";
+} from "../chunk-x0a936sc.js";
 import"../chunk-zzq7bdj8.js";
 import"../chunk-kspdf9ch.js";
 import"../chunk-eh71jz57.js";
@@ -83,6 +84,7 @@ export {
   MarketingPricing,
   MarketingPillars,
   MarketingPage,
+  MarketingNotice,
   MarketingMaker,
   MarketingMain,
   MarketingInterfaceGrid,

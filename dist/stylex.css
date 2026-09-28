@@ -216,6 +216,10 @@
     border-color: var(--hraness-material-seam, var(--control-border, GrayText));
   }
 
+  .x1xhxxw4 {
+    border-inline-start: 3px solid var(--hraness-marketing-line-strong);
+  }
+
   .x9l8fd4 {
     border-inline-start: var(--hraness-marketing-rule);
   }
@@ -524,6 +528,10 @@
     margin-block: 5px;
   }
 
+  .xvljh0b {
+    margin-block: clamp(1rem, 3vw, 1.5rem);
+  }
+
   .xrxpjvj {
     margin-inline: 0;
   }
@@ -658,6 +666,10 @@
 
   .xnjsko4 {
     padding-inline: 0;
+  }
+
+  .xnxx81d {
+    padding-inline: 1rem;
   }
 
   .x10wq4n4 {
@@ -1571,6 +1583,14 @@
     border-inline-start-color: var(--background);
   }
 
+  .xn0urz2 {
+    border-inline-start-color: var(--danger, var(--hraness-marketing-accent));
+  }
+
+  .x2t7zc3 {
+    border-inline-start-color: var(--hraness-marketing-accent);
+  }
+
   .xmmcp6y {
     border-inline-start-color: var(--line);
   }
@@ -2217,6 +2237,10 @@
 
   .x1n10oyr {
     inline-size: 4px;
+  }
+
+  .xovzq4p {
+    inline-size: calc(min(100%,var(--hraness-marketing-measure)) - 2 * var(--hraness-marketing-gutter));
   }
 
   .x6n8wx1 {
