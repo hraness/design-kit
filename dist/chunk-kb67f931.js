@@ -965,8 +965,10 @@ var marketingStyles = {
   proof_frame: {
     kMwMTN: "xtylnni xs5hli",
     knIRL8: "xrtw95r",
+    kULEZF: "x19vpta5",
     kdYMnH: "xesnm00",
-    kogj98: "x1ghz6dp",
+    kCbEA6: "x10im51j",
+    kYk0Dm: "xvueqy4",
     kVQacm: "x7giv3",
     k99D8V: "x17p5ghk x18z9243",
     kNdqCV: "x16x8cr2 xv2i73l",
@@ -1047,6 +1049,88 @@ var marketingStyles = {
   },
   proof_frame__credit: {
     kLh5Sq: "xp1qmoa",
+    $$css: true
+  },
+  data_table: {
+    kMwMTN: "xtylnni",
+    knIRL8: "xrtw95r",
+    kULEZF: "x19vpta5",
+    kdYMnH: "xesnm00",
+    kCbEA6: "x10im51j",
+    kYk0Dm: "xvueqy4",
+    kLh5Sq: "xyr29y3",
+    kN5DiO: "x1evy7pa",
+    $$css: true
+  },
+  data_table__head: {
+    k1xSpc: "x78zum5",
+    kR2Kwr: "x1a02dak",
+    kkeX5w: "x1pha0wt",
+    kGmCso: "x1qughib",
+    kOIVth: "x1a0l8n0",
+    klAkkO: "x16287ni",
+    $$css: true
+  },
+  data_table__title: {
+    kMwMTN: "xtylnni",
+    ko3Kzr: "x7cedwp",
+    kUEKN5: "xjat59b",
+    $$css: true
+  },
+  data_table__meta: {
+    kMwMTN: "xs87ocq xs5hli",
+    kLh5Sq: "xym1t2f",
+    $$css: true
+  },
+  data_table__scroll: {
+    k2kXS: "xgyk9h7",
+    kNmBvv: "xw2csxc",
+    khsPd: "xlejusl x1ndh9ne",
+    ke4D0g: "xknh1wj x1j9yjdw",
+    $$css: true
+  },
+  data_table__table: {
+    kULEZF: "xiuoait",
+    kZnR7y: "x1mwwwfo",
+    kNUL7p: "xss6m8b",
+    $$css: true
+  },
+  data_table__heading: {
+    kmVPX3: "x3699eh",
+    kG2bcC: "x11njtxf",
+    kMwMTN: "xs87ocq xs5hli",
+    kLh5Sq: "xgommxb",
+    ko3Kzr: "xk50ysn",
+    kBYq9C: "xuxw1ft",
+    $$css: true
+  },
+  data_table__row_heading: {
+    kmVPX3: "x3699eh",
+    kG2bcC: "x11njtxf",
+    kMwMTN: "xtylnni",
+    ko3Kzr: "xk50ysn",
+    khsPd: "xlejusl x1ndh9ne",
+    $$css: true
+  },
+  data_table__cell: {
+    kmVPX3: "x3699eh",
+    kG2bcC: "x11njtxf",
+    khsPd: "xlejusl x1ndh9ne",
+    $$css: true
+  },
+  data_table__note: {
+    kogj98: "x1ghz6dp",
+    kAiAap: "x4pwpt2",
+    k2kXS: "xjq529q",
+    kMwMTN: "xs87ocq xs5hli",
+    kLh5Sq: "xyr29y3",
+    $$css: true
+  },
+  code: {
+    kULEZF: "x19vpta5",
+    kdYMnH: "xesnm00",
+    kCbEA6: "x10im51j",
+    kYk0Dm: "xvueqy4",
     $$css: true
   },
   install: {
@@ -2867,6 +2951,39 @@ var recipes = {
   "hraness-marketing-proof-frame__credit": {
     default: marketingStyles.proof_frame__credit
   },
+  "hraness-marketing-data-table": {
+    default: marketingStyles.data_table
+  },
+  "hraness-marketing-data-table__head": {
+    default: marketingStyles.data_table__head
+  },
+  "hraness-marketing-data-table__title": {
+    default: marketingStyles.data_table__title
+  },
+  "hraness-marketing-data-table__meta": {
+    default: marketingStyles.data_table__meta
+  },
+  "hraness-marketing-data-table__scroll": {
+    default: marketingStyles.data_table__scroll
+  },
+  "hraness-marketing-data-table__table": {
+    default: marketingStyles.data_table__table
+  },
+  "hraness-marketing-data-table__heading": {
+    default: marketingStyles.data_table__heading
+  },
+  "hraness-marketing-data-table__row-heading": {
+    default: marketingStyles.data_table__row_heading
+  },
+  "hraness-marketing-data-table__cell": {
+    default: marketingStyles.data_table__cell
+  },
+  "hraness-marketing-data-table__note": {
+    default: marketingStyles.data_table__note
+  },
+  "hraness-marketing-code": {
+    default: marketingStyles.code
+  },
   "hraness-marketing-install": {
     default: marketingStyles.install
   },
@@ -3835,6 +3952,111 @@ function MarketingProofFrame({
         ]
       })
     ]
+  });
+}
+function dataTableCell(cell) {
+  if (cell !== null && typeof cell === "object" && !Array.isArray(cell) && "content" in cell) {
+    return cell;
+  }
+  return {
+    content: cell
+  };
+}
+function MarketingDataTable({
+  caption,
+  className,
+  columns,
+  meta,
+  note,
+  rows
+}) {
+  if (columns.length === 0)
+    throw new RangeError("Marketing data table needs at least one column.");
+  for (const row of rows) {
+    if (row.length !== columns.length)
+      throw new RangeError("Marketing data table rows must match the column count.");
+  }
+  return /* @__PURE__ */ jsxs2("figure", {
+    className: marketingClassName("hraness-marketing-data-table", className),
+    "data-hraness-marketing": "data-table",
+    children: [
+      /* @__PURE__ */ jsxs2("figcaption", {
+        className: marketingClassName("hraness-marketing-data-table__head"),
+        children: [
+          /* @__PURE__ */ jsx3("span", {
+            className: marketingClassName("hraness-marketing-data-table__title"),
+            children: caption
+          }),
+          meta === undefined ? null : /* @__PURE__ */ jsx3("span", {
+            className: marketingClassName("hraness-marketing-data-table__meta"),
+            children: meta
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx3("div", {
+        className: marketingClassName("hraness-marketing-data-table__scroll"),
+        children: /* @__PURE__ */ jsxs2("table", {
+          className: marketingClassName("hraness-marketing-data-table__table"),
+          children: [
+            /* @__PURE__ */ jsx3("thead", {
+              children: /* @__PURE__ */ jsx3("tr", {
+                children: columns.map((column, index) => /* @__PURE__ */ jsx3("th", {
+                  className: marketingClassName("hraness-marketing-data-table__heading"),
+                  "data-numeric": column.numeric === true ? "" : undefined,
+                  scope: "col",
+                  children: column.label
+                }, index))
+              })
+            }),
+            /* @__PURE__ */ jsx3("tbody", {
+              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx3("tr", {
+                children: row.map((cell, cellIndex) => {
+                  const {
+                    content,
+                    tone
+                  } = dataTableCell(cell);
+                  if (cellIndex === 0) {
+                    return /* @__PURE__ */ jsx3("th", {
+                      className: marketingClassName("hraness-marketing-data-table__row-heading"),
+                      "data-numeric": columns[0]?.numeric === true ? "" : undefined,
+                      scope: "row",
+                      children: content
+                    }, cellIndex);
+                  }
+                  return /* @__PURE__ */ jsx3("td", {
+                    className: marketingClassName("hraness-marketing-data-table__cell"),
+                    "data-numeric": columns[cellIndex]?.numeric === true ? "" : undefined,
+                    "data-tone": tone,
+                    children: content
+                  }, cellIndex);
+                })
+              }, rowIndex))
+            })
+          ]
+        })
+      }),
+      note === undefined ? null : /* @__PURE__ */ jsx3("p", {
+        className: marketingClassName("hraness-marketing-data-table__note"),
+        children: note
+      })
+    ]
+  });
+}
+function MarketingCodeBlock({
+  className,
+  code,
+  language
+}) {
+  return /* @__PURE__ */ jsx3("pre", {
+    className: marketingClassName("hraness-marketing-code", className),
+    "data-hraness-marketing": "code",
+    children: /* @__PURE__ */ jsx3(SyntaxCode, {
+      code,
+      ...language === undefined ? {} : {
+        language
+      },
+      styles: "classes"
+    })
   });
 }
 function MarketingSectionLabel({
@@ -6016,4 +6238,4 @@ function ParticleHalo({
   });
 }
 
-export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };
+export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };

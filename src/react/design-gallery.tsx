@@ -45,6 +45,8 @@ import { RelativeTime } from "./relative-time.js";
 import {
   MarketingCallToAction,
   MarketingCardRow,
+  MarketingCodeBlock,
+  MarketingDataTable,
   MarketingFlow,
   MarketingField,
   MarketingInstallPanel,
@@ -324,7 +326,7 @@ export function DesignSystemGallery({
                 credit="Captured 5 September 2026"
                 title="relay run job-01"
               >
-                <pre className="design-gallery__marketing-command"><SyntaxCode code={'{"status":"complete","job":"job-01","durationMs":412}'} styles="classes" /></pre>
+                <MarketingCodeBlock className="design-gallery__marketing-command" code={'{"status":"complete","job":"job-01","durationMs":412}'} language="json" />
               </MarketingProofFrame>
             )}
             heading="Run a job from your terminal, your code, or your agent"
@@ -351,7 +353,7 @@ export function DesignSystemGallery({
             id="gallery-install"
             note={<p data-gallery-marketing-slot="note">Requires Bun 1.3.14.</p>}
           >
-            <pre className="design-gallery__marketing-command"><SyntaxCode code="bun add --global relay@1.2.3" styles="classes" /></pre>
+            <MarketingCodeBlock className="design-gallery__marketing-command" code="bun add --global relay@1.2.3" language="sh" />
             <MarketingFlow
               ariaLabel="First Relay job"
               steps={[
@@ -378,7 +380,7 @@ export function DesignSystemGallery({
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>
           <MarketingInterfaceGrid heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
-            { label: "CLI", summary: "Run a named job.", example: <pre><code>relay run job-01</code></pre> },
+            { label: "CLI", summary: "Run a named job.", example: <MarketingCodeBlock code="relay run job-01" /> },
             { label: "SDK", summary: "Use typed application code." },
           ]} />
           <MarketingCardRow ariaLabel="Release radar" cards={[
@@ -397,6 +399,22 @@ export function DesignSystemGallery({
               { label: "Example jobs", value: "12" },
               { label: "Interfaces", detail: "CLI, SDK, Agent Skill", value: "3" },
               { label: "Accounts required", value: "0" },
+            ]}
+          />
+          <MarketingDataTable
+            caption="Cold-run timing across interfaces"
+            columns={[
+              { label: "Interface" },
+              { label: "Median", numeric: true },
+              { label: "Worst observed", numeric: true },
+              { label: "Within target?" },
+            ]}
+            meta="12 example jobs · 5 September 2026"
+            note="One repository on one machine; a smoke check, not a guarantee."
+            rows={[
+              ["CLI", "41 ms", "58 ms", { content: "yes", tone: "positive" }],
+              ["SDK", "43 ms", "61 ms", { content: "yes", tone: "positive" }],
+              ["Agent Skill", "77 ms", "120 ms", { content: "no", tone: "negative" }],
             ]}
           />
           <MarketingQuoteGrid
@@ -536,7 +554,7 @@ export function DesignSystemGallery({
               eyebrow="Job runner"
               frame={(
                 <MarketingProofFrame title="relay run job-01">
-                  <pre className="design-gallery__marketing-command"><SyntaxCode code={"$ relay run job-01\n{\"status\":\"complete\",\"job\":\"job-01\",\"durationMs\":412}"} styles="classes" /></pre>
+                  <MarketingCodeBlock className="design-gallery__marketing-command" code={"$ relay run job-01\n{\"status\":\"complete\",\"job\":\"job-01\",\"durationMs\":412}"} />
                 </MarketingProofFrame>
               )}
               heading="Run a job from your terminal, your code, or your agent"

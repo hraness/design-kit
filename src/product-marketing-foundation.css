@@ -112,7 +112,7 @@
 
 .hraness-marketing-page :where(pre) {
   max-inline-size: 100%;
-  margin: 0;
+  margin-block: 0;
   padding: 1rem 1.15rem;
   overflow: auto;
   border-radius: var(--hraness-marketing-radius);
@@ -133,8 +133,51 @@
   font-size: 0.9em;
 }
 
-.hraness-marketing-page > :where( .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related, .hraness-marketing-cta ) {
+.hraness-marketing-page > :where( .hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-install, .hraness-marketing-section, .hraness-marketing-primitives, .hraness-marketing-stats, .hraness-marketing-interfaces, .hraness-marketing-trust, .hraness-marketing-quotes, .hraness-marketing-pricing, .hraness-marketing-questions, .hraness-marketing-maker, .hraness-marketing-related, .hraness-marketing-cta, .hraness-marketing-data-table ) {
   padding-inline: var(--hraness-marketing-gutter);
+}
+
+/* Direct children outside the grammar still honor the measure, gutter, and
+   block rhythm: a product-owned block cannot escape the column or touch the
+   viewport edge. */
+.hraness-marketing-page > :where( :not([data-hraness-marketing], script, style, link, meta, template) ) {
+  inline-size: min(100%, var(--hraness-marketing-measure));
+  min-inline-size: 0;
+  margin-block: clamp(2rem, 5vw, 3.5rem);
+  margin-inline: auto;
+  padding-inline: var(--hraness-marketing-gutter);
+}
+
+/* Evidence-table cells align like prose by default; the numeric and tone
+   consumer hooks adjust presentation without inventing new classes. */
+.hraness-marketing-data-table__table :where( th, td ) {
+  text-align: start;
+}
+
+.hraness-marketing-data-table__table :where( [data-numeric] ) {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.hraness-marketing-data-table__table :where( td[data-tone="positive"] ) {
+  color: var(--success, var(--hraness-marketing-accent));
+}
+
+.hraness-marketing-data-table__table :where( td[data-tone="negative"] ) {
+  color: var(--danger, var(--hraness-marketing-muted));
+}
+
+@media (forced-colors: active) {
+  .hraness-marketing-data-table__scroll,
+  .hraness-marketing-data-table__table tbody :where( th, td ) {
+    border-color: CanvasText;
+  }
+  .hraness-marketing-data-table__table thead :where( th ),
+  .hraness-marketing-data-table__table :where( [data-tone] ),
+  .hraness-marketing-data-table__meta,
+  .hraness-marketing-data-table__note {
+    color: CanvasText;
+  }
 }
 
 /* Section separators are a sibling relationship, not an owned atom: a ruled

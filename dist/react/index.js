@@ -15,6 +15,8 @@ import {
   MarketingCard,
   MarketingCardArt,
   MarketingCardRow,
+  MarketingCodeBlock,
+  MarketingDataTable,
   MarketingFacts,
   MarketingField,
   MarketingFlow,
@@ -57,7 +59,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-rs1jeher.js";
+} from "../chunk-kb67f931.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -5545,12 +5547,10 @@ function DesignSystemGallery({
                       caption: "The log written by the example job.",
                       credit: "Captured 5 September 2026",
                       title: "relay run job-01",
-                      children: /* @__PURE__ */ jsx16("pre", {
+                      children: /* @__PURE__ */ jsx16(MarketingCodeBlock, {
                         className: "design-gallery__marketing-command",
-                        children: /* @__PURE__ */ jsx16(SyntaxCode, {
-                          code: '{"status":"complete","job":"job-01","durationMs":412}',
-                          styles: "classes"
-                        })
+                        code: '{"status":"complete","job":"job-01","durationMs":412}',
+                        language: "json"
                       })
                     }),
                     heading: "Run a job from your terminal, your code, or your agent",
@@ -5588,12 +5588,10 @@ function DesignSystemGallery({
                       children: "Requires Bun 1.3.14."
                     }),
                     children: [
-                      /* @__PURE__ */ jsx16("pre", {
+                      /* @__PURE__ */ jsx16(MarketingCodeBlock, {
                         className: "design-gallery__marketing-command",
-                        children: /* @__PURE__ */ jsx16(SyntaxCode, {
-                          code: "bun add --global relay@1.2.3",
-                          styles: "classes"
-                        })
+                        code: "bun add --global relay@1.2.3",
+                        language: "sh"
                       }),
                       /* @__PURE__ */ jsx16(MarketingFlow, {
                         ariaLabel: "First Relay job",
@@ -5666,10 +5664,8 @@ function DesignSystemGallery({
                     interfaces: [{
                       label: "CLI",
                       summary: "Run a named job.",
-                      example: /* @__PURE__ */ jsx16("pre", {
-                        children: /* @__PURE__ */ jsx16("code", {
-                          children: "relay run job-01"
-                        })
+                      example: /* @__PURE__ */ jsx16(MarketingCodeBlock, {
+                        code: "relay run job-01"
                       })
                     }, {
                       label: "SDK",
@@ -5740,6 +5736,32 @@ function DesignSystemGallery({
                       label: "Accounts required",
                       value: "0"
                     }]
+                  }),
+                  /* @__PURE__ */ jsx16(MarketingDataTable, {
+                    caption: "Cold-run timing across interfaces",
+                    columns: [{
+                      label: "Interface"
+                    }, {
+                      label: "Median",
+                      numeric: true
+                    }, {
+                      label: "Worst observed",
+                      numeric: true
+                    }, {
+                      label: "Within target?"
+                    }],
+                    meta: "12 example jobs · 5 September 2026",
+                    note: "One repository on one machine; a smoke check, not a guarantee.",
+                    rows: [["CLI", "41 ms", "58 ms", {
+                      content: "yes",
+                      tone: "positive"
+                    }], ["SDK", "43 ms", "61 ms", {
+                      content: "yes",
+                      tone: "positive"
+                    }], ["Agent Skill", "77 ms", "120 ms", {
+                      content: "no",
+                      tone: "negative"
+                    }]]
                   }),
                   /* @__PURE__ */ jsx16(MarketingQuoteGrid, {
                     heading: "From the people building with it.",
@@ -5948,13 +5970,10 @@ function DesignSystemGallery({
                   eyebrow: "Job runner",
                   frame: /* @__PURE__ */ jsx16(MarketingProofFrame, {
                     title: "relay run job-01",
-                    children: /* @__PURE__ */ jsx16("pre", {
+                    children: /* @__PURE__ */ jsx16(MarketingCodeBlock, {
                       className: "design-gallery__marketing-command",
-                      children: /* @__PURE__ */ jsx16(SyntaxCode, {
-                        code: `$ relay run job-01
-{"status":"complete","job":"job-01","durationMs":412}`,
-                        styles: "classes"
-                      })
+                      code: `$ relay run job-01
+{"status":"complete","job":"job-01","durationMs":412}`
                     })
                   }),
                   heading: "Run a job from your terminal, your code, or your agent",
@@ -6980,6 +6999,8 @@ export {
   MarketingFlow,
   MarketingField,
   MarketingFacts,
+  MarketingDataTable,
+  MarketingCodeBlock,
   MarketingCardRow,
   MarketingCardArt,
   MarketingCard,

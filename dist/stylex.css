@@ -53,6 +53,10 @@
     padding: .35rem .6rem;
   }
 
+  .x3699eh {
+    padding: .55rem .9rem;
+  }
+
   .x19qf9ol {
     padding: .6rem 1.1rem;
   }
@@ -396,6 +400,10 @@
     gap: .35rem;
   }
 
+  .x1a0l8n0 {
+    gap: .3rem 1rem;
+  }
+
   .x1rcpt3j {
     gap: .45rem;
   }
@@ -723,6 +731,10 @@
 
     .x1j9yjdw.x1j9yjdw {
       border-block-end: 1px solid canvastext;
+    }
+
+    .x1ndh9ne.x1ndh9ne {
+      border-block-start: 1px solid canvastext;
     }
   }
 
@@ -1493,6 +1505,10 @@
 
   .x1csoyw0 {
     border-block-start-width: 2px;
+  }
+
+  .x1mwwwfo {
+    border-collapse: collapse;
   }
 
   .x1e53mt7 {
@@ -2407,6 +2423,10 @@
     margin-block-end: .4rem;
   }
 
+  .x16287ni {
+    margin-block-end: .75rem;
+  }
+
   .x1wf7w3r {
     margin-block-end: var(--space-1);
   }
@@ -2421,6 +2441,10 @@
 
   .xphehyp {
     margin-block-start: .5rem;
+  }
+
+  .x4pwpt2 {
+    margin-block-start: .8rem;
   }
 
   .xvc5jky {
@@ -2944,6 +2968,10 @@
   .x87ps6o {
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  .x11njtxf {
+    vertical-align: baseline;
   }
 
   .xxymvpz {
@@ -3762,6 +3790,10 @@
 
   .xhb15b9 {
     min-width: 152px;
+  }
+
+  .xw2csxc {
+    overflow-x: auto;
   }
 
   .x101abm8 {

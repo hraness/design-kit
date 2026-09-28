@@ -1076,8 +1076,10 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "CanvasText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
+    "inline-size": "min(100%, var(--hraness-marketing-measure))",
     "min-inline-size": "0",
-    "margin": "0",
+    "margin-block": "0",
+    "margin-inline": "auto",
     "overflow": "clip",
     "border-top": {
       "default": "var(--hraness-marketing-surface-rule)",
@@ -1205,6 +1207,98 @@ export const marketingStyles = stylex.create({
   },
   "proof_frame__credit": {
     "font-size": "0.78rem"
+  },
+  "data_table": {
+    "color": "var(--hraness-marketing-ink)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "inline-size": "min(100%, var(--hraness-marketing-measure))",
+    "min-inline-size": "0",
+    "margin-block": "0",
+    "margin-inline": "auto",
+    "font-size": "0.95rem",
+    "line-height": "1.5"
+  },
+  "data_table__head": {
+    "display": "flex",
+    "flex-wrap": "wrap",
+    "align-items": "baseline",
+    "justify-content": "space-between",
+    "gap": "0.3rem 1rem",
+    "margin-block-end": "0.75rem"
+  },
+  "data_table__title": {
+    "color": "var(--hraness-marketing-ink)",
+    "font-weight": "var(--hraness-marketing-heading-weight)",
+    "letter-spacing": "-0.01em"
+  },
+  "data_table__meta": {
+    "color": {
+      "default": "var(--hraness-marketing-muted)",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "font-size": "0.82rem"
+  },
+  "data_table__scroll": {
+    "max-inline-size": "100%",
+    "overflow-x": "auto",
+    "border-block-start": {
+      "default": "var(--hraness-marketing-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "border-block-end": {
+      "default": "var(--hraness-marketing-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    }
+  },
+  "data_table__table": {
+    "inline-size": "100%",
+    "border-collapse": "collapse",
+    "font-variant-numeric": "tabular-nums"
+  },
+  "data_table__heading": {
+    "padding": "0.55rem 0.9rem",
+    "vertical-align": "baseline",
+    "color": {
+      "default": "var(--hraness-marketing-muted)",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "font-size": "0.8rem",
+    "font-weight": "500",
+    "white-space": "nowrap"
+  },
+  "data_table__row_heading": {
+    "padding": "0.55rem 0.9rem",
+    "vertical-align": "baseline",
+    "color": "var(--hraness-marketing-ink)",
+    "font-weight": "500",
+    "border-block-start": {
+      "default": "var(--hraness-marketing-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    }
+  },
+  "data_table__cell": {
+    "padding": "0.55rem 0.9rem",
+    "vertical-align": "baseline",
+    "border-block-start": {
+      "default": "var(--hraness-marketing-rule)",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    }
+  },
+  "data_table__note": {
+    "margin": "0",
+    "margin-block-start": "0.8rem",
+    "max-inline-size": "var(--hraness-marketing-prose-measure)",
+    "color": {
+      "default": "var(--hraness-marketing-muted)",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "font-size": "0.95rem"
+  },
+  "code": {
+    "inline-size": "min(100%, var(--hraness-marketing-measure))",
+    "min-inline-size": "0",
+    "margin-block": "0",
+    "margin-inline": "auto"
   },
   "install": {
     "color": {
@@ -4142,6 +4236,17 @@ const recipes = {
   "hraness-marketing-proof-frame__content": { "default": marketingStyles.proof_frame__content },
   "hraness-marketing-proof-frame__caption": { "default": marketingStyles.proof_frame__caption },
   "hraness-marketing-proof-frame__credit": { "default": marketingStyles.proof_frame__credit },
+  "hraness-marketing-data-table": { "default": marketingStyles.data_table },
+  "hraness-marketing-data-table__head": { "default": marketingStyles.data_table__head },
+  "hraness-marketing-data-table__title": { "default": marketingStyles.data_table__title },
+  "hraness-marketing-data-table__meta": { "default": marketingStyles.data_table__meta },
+  "hraness-marketing-data-table__scroll": { "default": marketingStyles.data_table__scroll },
+  "hraness-marketing-data-table__table": { "default": marketingStyles.data_table__table },
+  "hraness-marketing-data-table__heading": { "default": marketingStyles.data_table__heading },
+  "hraness-marketing-data-table__row-heading": { "default": marketingStyles.data_table__row_heading },
+  "hraness-marketing-data-table__cell": { "default": marketingStyles.data_table__cell },
+  "hraness-marketing-data-table__note": { "default": marketingStyles.data_table__note },
+  "hraness-marketing-code": { "default": marketingStyles.code },
   "hraness-marketing-install": { "default": marketingStyles.install },
   "hraness-marketing-install__heading-group": { "default": marketingStyles.install__heading_group },
   "hraness-marketing-install__eyebrow": { "default": marketingStyles.install__eyebrow },

@@ -719,6 +719,140 @@ export function MarketingProofFrame({
   );
 }
 
+export interface MarketingDataTableColumn {
+  readonly label: string;
+  /** Right-aligns the column and keeps values on one line. */
+  readonly numeric?: boolean;
+}
+
+export interface MarketingDataTableCell {
+  readonly content: ReactNode;
+  /** Marks a notable outcome: `positive` accents the value, `negative` mutes it. */
+  readonly tone?: "positive" | "negative";
+}
+
+function dataTableCell(cell: ReactNode | MarketingDataTableCell): {
+  content: ReactNode;
+  tone?: "positive" | "negative";
+} {
+  if (cell !== null && typeof cell === "object" && !Array.isArray(cell) && "content" in cell) {
+    return cell as MarketingDataTableCell;
+  }
+  return { content: cell };
+}
+
+/**
+ * A dated, captioned comparison table. Renders a ruled figure whose scrollable
+ * region never escapes the measure; the first column is each row's heading and
+ * `note` keeps the measurement's scope honest underneath.
+ */
+export function MarketingDataTable({
+  caption,
+  className,
+  columns,
+  meta,
+  note,
+  rows,
+}: Readonly<{
+  /** Headline naming the measurement. */
+  caption: ReactNode;
+  className?: string;
+  columns: readonly MarketingDataTableColumn[];
+  /** Date, source, or sample size — rendered muted beside the caption. */
+  meta?: ReactNode;
+  /** Caveat rendered under the table; keep the measurement's scope honest. */
+  note?: ReactNode;
+  rows: readonly ReadonlyArray<ReactNode | MarketingDataTableCell>[];
+}>) {
+  if (columns.length === 0) throw new RangeError("Marketing data table needs at least one column.");
+  for (const row of rows) {
+    if (row.length !== columns.length) throw new RangeError("Marketing data table rows must match the column count.");
+  }
+  return (
+    <figure
+      className={classNames("hraness-marketing-data-table", className)}
+      data-hraness-marketing="data-table"
+    >
+      <figcaption className={classNames("hraness-marketing-data-table__head")}>
+        <span className={classNames("hraness-marketing-data-table__title")}>{caption}</span>
+        {meta === undefined ? null : <span className={classNames("hraness-marketing-data-table__meta")}>{meta}</span>}
+      </figcaption>
+      <div className={classNames("hraness-marketing-data-table__scroll")}>
+        <table className={classNames("hraness-marketing-data-table__table")}>
+          <thead>
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  className={classNames("hraness-marketing-data-table__heading")}
+                  data-numeric={column.numeric === true ? "" : undefined}
+                  key={index}
+                  scope="col"
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {row.map((cell, cellIndex) => {
+                  const { content, tone } = dataTableCell(cell);
+                  if (cellIndex === 0) {
+                    return (
+                      <th
+                        className={classNames("hraness-marketing-data-table__row-heading")}
+                        data-numeric={columns[0]?.numeric === true ? "" : undefined}
+                        key={cellIndex}
+                        scope="row"
+                      >
+                        {content}
+                      </th>
+                    );
+                  }
+                  return (
+                    <td
+                      className={classNames("hraness-marketing-data-table__cell")}
+                      data-numeric={columns[cellIndex]?.numeric === true ? "" : undefined}
+                      data-tone={tone}
+                      key={cellIndex}
+                    >
+                      {content}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {note === undefined ? null : <p className={classNames("hraness-marketing-data-table__note")}>{note}</p>}
+    </figure>
+  );
+}
+
+/**
+ * A mono code block with shared syntax highlighting. Wraps `SyntaxCode` in the
+ * `pre` the marketing grammar styles and scrolls inside the measure when a
+ * line overflows.
+ */
+export function MarketingCodeBlock({
+  className,
+  code,
+  language,
+}: Readonly<{
+  className?: string;
+  code: string;
+  /** A language/fence hint; omitted hints use conservative automatic selection. */
+  language?: string;
+}>) {
+  return (
+    <pre className={classNames("hraness-marketing-code", className)} data-hraness-marketing="code">
+      <SyntaxCode code={code} {...(language === undefined ? {} : { language })} styles="classes" />
+    </pre>
+  );
+}
+
 /** The section's native paragraph label, reusable by product-owned prose. */
 export function MarketingSectionLabel({
   children,
