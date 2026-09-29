@@ -61,6 +61,11 @@ import {
   proceduralBackdropVariants,
   proceduralRecipeVersion
 } from "../chunk-cwepvdey.js";
+import {
+  PlatformBadges,
+  PlatformIcon
+} from "../chunk-8e9jcr6r.js";
+import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
 import"../chunk-0sah7fsv.js";
@@ -81,6 +86,8 @@ export {
   ProviderMark,
   ProductHero,
   ProceduralBackdrop,
+  PlatformIcon,
+  PlatformBadges,
   ParticleHalo,
   PageCanvas,
   MarketingTrustBoundary,

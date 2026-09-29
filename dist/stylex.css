@@ -49,6 +49,10 @@
     margin: auto;
   }
 
+  .x78pyy4 {
+    padding: .25rem;
+  }
+
   .x1yen4p6 {
     padding: .35rem .6rem;
   }
@@ -208,6 +212,18 @@
     border-color: color-mix(in srgb,var(--hraness-design-procedural-ripple-color) 46%,transparent);
   }
 
+  .x1ls9zlr {
+    border-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 12%,transparent);
+  }
+
+  .x73macs {
+    border-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 22%,transparent);
+  }
+
+  .x9r1u3d {
+    border-color: #0000;
+  }
+
   .x1g4gko8 {
     border-color: var(--background);
   }
@@ -250,6 +266,14 @@
 
   .x18jy0o0 {
     border-radius: .4rem;
+  }
+
+  .x116uinm {
+    border-radius: .5rem;
+  }
+
+  .x1yt6v20 {
+    border-radius: .75rem;
   }
 
   .x2u8bby {
@@ -334,6 +358,10 @@
 
   .x16x8cr2 {
     border-right: var(--hraness-marketing-surface-rule);
+  }
+
+  .xbsl7fq {
+    border-style: dashed;
   }
 
   .x1y0btm7 {
@@ -580,6 +608,10 @@
     padding-block: .25rem;
   }
 
+  .x1267ecw {
+    padding-block: .35rem;
+  }
+
   .x1bilvtl {
     padding-block: .375rem;
   }
@@ -588,12 +620,20 @@
     padding-block: .3rem;
   }
 
+  .x1vj3u9m {
+    padding-block: .4rem;
+  }
+
   .x18g2hj5 {
     padding-block: .5rem;
   }
 
   .xo0yzjp {
     padding-block: .75rem;
+  }
+
+  .x15tgwd1 {
+    padding-block: .85rem;
   }
 
   .xs0puwk {
@@ -664,12 +704,20 @@
     padding-inline: .625rem;
   }
 
+  .x1f6otoe {
+    padding-inline: .65rem;
+  }
+
   .x1ryrjj2 {
     padding-inline: .75rem;
   }
 
   .xlmytos {
     padding-inline: .8rem;
+  }
+
+  .x1fi0nvg {
+    padding-inline: .95rem;
   }
 
   .xnjsko4 {
@@ -728,6 +776,10 @@
     border-radius: .25rem;
   }
 
+  .x11dsm9b:focus-visible {
+    outline: 2px solid var(--hraness-marketing-accent, var(--focus, Highlight));
+  }
+
   .x13mrud1:focus-visible {
     outline: 2px solid var(--hraness-marketing-accent);
   }
@@ -773,8 +825,16 @@
       border-bottom: 2px solid buttontext;
     }
 
+    .x1ylmb6m.x1ylmb6m {
+      border-color: buttontext;
+    }
+
     .x1w1tqly.x1w1tqly {
       border-color: canvastext;
+    }
+
+    .x1n2ykn.x1n2ykn {
+      border-color: highlight;
     }
   }
 
@@ -1016,6 +1076,10 @@
     animation-timing-function: var(--motion-easing-standard);
   }
 
+  .xjyslct {
+    appearance: none;
+  }
+
   .x116o27y {
     aspect-ratio: 1 / var(--hraness-design-procedural-ripple-aspect);
   }
@@ -1069,6 +1133,14 @@
 
   .xrj7itd {
     background-color: color-mix(in srgb,var(--foreground) 8%,transparent);
+  }
+
+  .xf7cb96 {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 4%,var(--hraness-marketing-surface, var(--surface, Canvas)));
+  }
+
+  .xy1scu2 {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 5%,var(--hraness-marketing-background, var(--background, Canvas)));
   }
 
   .xw7x07y {
@@ -1145,6 +1217,10 @@
 
   .x1vch632 {
     background-color: var(--hraness-marketing-header-background, var(--hraness-marketing-background));
+  }
+
+  .xvpcapb {
+    background-color: var(--hraness-marketing-surface, var(--surface, Canvas));
   }
 
   .x1itpb23 {
@@ -1659,6 +1735,10 @@
     box-shadow: 0 1.75rem 5rem #04060c52, 0 0 2.4rem #70b1ff1f, inset 0 1px #ffffff57;
   }
 
+  .xl0ordx {
+    box-shadow: 0 1px 2px color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 10%,transparent);
+  }
+
   .x1csdrso {
     box-shadow: 0 1px 4px color-mix(in srgb,var(--foreground, CanvasText) 12%,transparent);
   }
@@ -1779,8 +1859,16 @@
     color: var(--hraness-marketing-accent);
   }
 
+  .x1p5laik {
+    color: var(--hraness-marketing-ink, var(--foreground, CanvasText));
+  }
+
   .xtylnni {
     color: var(--hraness-marketing-ink);
+  }
+
+  .x4650i6 {
+    color: var(--hraness-marketing-muted, var(--muted, GrayText));
   }
 
   .xs87ocq {
@@ -1821,6 +1909,14 @@
 
   .x154ywzv {
     color: var(--secondary-foreground);
+  }
+
+  .xsin8gy {
+    column-gap: .75rem;
+  }
+
+  .x6ujxdy {
+    column-gap: .9rem;
   }
 
   .x16qrkmw {
@@ -1865,6 +1961,10 @@
 
   .x1g1hdg2 {
     display: var(--_hraness-foil-mark-display);
+  }
+
+  .x117rol3 {
+    fill: currentColor;
   }
 
   .xwu42zd {
@@ -1935,8 +2035,16 @@
     font-family: var(--hraness-marketing-heading-font);
   }
 
+  .xosqrqv {
+    font-family: var(--hraness-marketing-mono-font, var(--font-mono, ui-monospace,monospace));
+  }
+
   .x1pkbhk2 {
     font-family: var(--hraness-marketing-mono-font);
+  }
+
+  .x1vnz01h {
+    font-family: var(--hraness-marketing-text-font, var(--font-text, inherit));
   }
 
   .xrtw95r {
@@ -1973,6 +2081,10 @@
 
   .xp1qmoa {
     font-size: .78rem;
+  }
+
+  .x1dcheo9 {
+    font-size: .8125rem;
   }
 
   .xym1t2f {
@@ -2407,6 +2519,10 @@
     line-height: 1.25;
   }
 
+  .xwn7fz2 {
+    line-height: 1.3;
+  }
+
   .x1xfvgam {
     line-height: 1.35;
   }
@@ -2789,6 +2905,14 @@
     outline-offset: -1px;
   }
 
+  .x2ssjo2 {
+    outline-offset: -2px;
+  }
+
+  .x1y3gkto {
+    outline-offset: 1px;
+  }
+
   .x1ewu8gn {
     outline-offset: 3px;
   }
@@ -2813,12 +2937,24 @@
     overflow-wrap: anywhere;
   }
 
+  .x1h4wwuj {
+    overflow-wrap: normal;
+  }
+
   .x17lzgkz {
     padding-block-start: .2rem;
   }
 
   .xln4sw3 {
     padding-block-start: var(--hraness-sticky-offset, 2.75rem);
+  }
+
+  .x1xz7u92 {
+    padding-inline-end: .3rem;
+  }
+
+  .x8hcgix {
+    padding-inline-start: .9rem;
   }
 
   .x47corl {
@@ -2845,12 +2981,24 @@
     position: sticky;
   }
 
+  .xgxkyvb {
+    row-gap: .4rem;
+  }
+
   .x1ctcpvu {
     scroll-margin-block-start: calc(var(--hraness-sticky-offset, 2.75rem) + .75rem);
   }
 
   .xtnlt7k {
     scroll-margin-block-start: var(--hraness-sticky-offset, 2.75rem);
+  }
+
+  .x1rohswg {
+    scrollbar-width: none;
+  }
+
+  .xeq4nuv {
+    tab-size: 2;
   }
 
   .x2b8uid {
@@ -2965,6 +3113,10 @@
     transition-property: background-color, border-color, box-shadow, color, transform;
   }
 
+  .xzo0q3i {
+    transition-property: background-color, color, border-color;
+  }
+
   .x15406qy {
     transition-property: background-color;
   }
@@ -3014,6 +3166,10 @@
     user-select: none;
   }
 
+  .x1x7wgjd {
+    vertical-align: -.125em;
+  }
+
   .x11njtxf {
     vertical-align: baseline;
   }
@@ -3026,12 +3182,20 @@
     white-space: nowrap;
   }
 
+  .x1sdyfia {
+    white-space: pre;
+  }
+
   .x1dwv3re {
     will-change: auto;
   }
 
   .x1so62im {
     will-change: transform;
+  }
+
+  .x1lldw8n {
+    word-break: normal;
   }
 
   .x1ja2u2z {
@@ -3186,12 +3350,24 @@
     background-color: color-mix(in oklch,var(--hraness-marketing-ink) 6%,var(--hraness-marketing-surface));
   }
 
+  .x1lcgz2m:hover {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 6%,transparent);
+  }
+
+  .x3oli7v:hover {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 9%,var(--hraness-marketing-surface, var(--surface, Canvas)));
+  }
+
   .x1n5bzlp:hover {
     background-color: #0000;
   }
 
   .xr4j8zq:hover {
     background-color: var(--hraness-foil-surface, var(--surface, var(--background, Canvas)));
+  }
+
+  .x1gyp674:hover {
+    background-color: var(--hraness-marketing-surface, var(--surface, Canvas));
   }
 
   .xn3cpwa:hover {
@@ -3226,6 +3402,10 @@
     color: var(--hraness-marketing-accent);
   }
 
+  .xovpusv:hover {
+    color: var(--hraness-marketing-ink, var(--foreground, CanvasText));
+  }
+
   .x16tyrwk:hover {
     color: var(--hraness-marketing-ink);
   }
@@ -3255,6 +3435,10 @@
 
     .x1tzqu68.x1tzqu68 {
       background-clip: border-box;
+    }
+
+    .xnwy5bs.xnwy5bs {
+      background-color: buttonface;
     }
 
     .x9yvj25.x9yvj25 {
@@ -3385,6 +3569,10 @@
       box-shadow: none;
     }
 
+    .x1ggml12.x1ggml12 {
+      color: buttontext;
+    }
+
     .x1a46atw.x1a46atw {
       color: canvas;
     }
@@ -3402,7 +3590,19 @@
     .xptyyiz.xptyyiz {
       contain: inline-size;
     }
+  }
 
+  @media (scripting: none) {
+    .x1use1og.x1use1og {
+      display: block;
+    }
+
+    .x1pwdsk1.x1pwdsk1 {
+      display: flex;
+    }
+  }
+
+  @media (width <= 48rem) {
     .xhhrn6j.xhhrn6j {
       display: grid;
     }
@@ -3428,6 +3628,12 @@
 
   @media (width <= 48rem) {
     .x8iw86j.x8iw86j {
+      display: none;
+    }
+  }
+
+  @media (scripting: none) {
+    .x1cfwndu.x1cfwndu {
       display: none;
     }
   }
@@ -3648,6 +3854,10 @@
 }
 
 @layer components.hraness-design-kit.priority5 {
+  .x1c654ve {
+    border-bottom-color: color-mix(in srgb,var(--hraness-marketing-ink, var(--foreground, CanvasText)) 12%,transparent);
+  }
+
   .x16stqrj {
     border-bottom-color: #0000;
   }
@@ -3662,6 +3872,10 @@
 
   .x1q0q8m5 {
     border-bottom-style: solid;
+  }
+
+  .xso031l {
+    border-bottom-width: 1px;
   }
 
   .xlxy82 {
@@ -3732,12 +3946,20 @@
     bottom: 0;
   }
 
+  .x1at03k5 {
+    height: .95rem;
+  }
+
   .x5yr21d {
     height: 100%;
   }
 
   .x170jfvy {
     height: 10px;
+  }
+
+  .xjm9jq1 {
+    height: 1px;
   }
 
   .x36qwtl {
@@ -3776,6 +3998,10 @@
     height: var(--hraness-design-procedural-layer-height);
   }
 
+  .x7yl2mp {
+    height: var(--hraness-platform-icon-size, 1em);
+  }
+
   .xu96u03 {
     left: 0;
   }
@@ -3812,8 +4038,24 @@
     margin-bottom: var(--space-2);
   }
 
+  .x193iq5w {
+    max-width: 100%;
+  }
+
+  .x19wm6jj {
+    min-height: 2.25rem;
+  }
+
+  .xsejkeq {
+    min-height: 2.5rem;
+  }
+
   .xjjci79 {
     min-height: 250px;
+  }
+
+  .x1in32aq {
+    min-height: 2rem;
   }
 
   .xe8gcm {
@@ -3892,6 +4134,10 @@
     top: var(--hraness-design-procedural-ripple-y);
   }
 
+  .x2tfi8i {
+    width: .95rem;
+  }
+
   .xh8yej3 {
     width: 100%;
   }
@@ -3902,6 +4148,10 @@
 
   .xsmyaan {
     width: 12px;
+  }
+
+  .x1i1rx1s {
+    width: 1px;
   }
 
   .x1endk3i {
@@ -3938,6 +4188,10 @@
 
   .xs75vpj {
     width: var(--hraness-design-procedural-ripple-size);
+  }
+
+  .x1bwkqw {
+    width: var(--hraness-platform-icon-size, 1em);
   }
 
   .x15600lq:hover {
@@ -3987,6 +4241,12 @@
 
     .x19dwuzr.x19dwuzr {
       border-top-color: canvastext;
+    }
+  }
+
+  @media (pointer: coarse) {
+    .x1rewkhn.x1rewkhn {
+      min-height: 2.75rem;
     }
   }
 
@@ -4889,6 +5149,18 @@
 
 .xj4arhr {
   --hraness-marketing-pillar-columns: 4;
+}
+
+.xq5rtlt {
+  --hraness-platform-icon-size: 1.25rem;
+}
+
+.x12dk8g8 {
+  --hraness-platform-icon-size: 1.5rem;
+}
+
+.xqsjzox {
+  --hraness-platform-icon-size: 1rem;
 }
 
 .x1ez4kp7 {

@@ -41,6 +41,8 @@ import { ProceduralBackdrop } from "./procedural-backdrop.js";
 import { StatusPage } from "./route-state.js";
 import { ProductionDataPreviewNotice } from "./production-data-preview-notice.js";
 import { ProviderMark } from "./provider-mark.js";
+import { PlatformBadges } from "./platform-icons.js";
+import { PlatformInstall } from "./platform-install.js";
 import { RelativeTime } from "./relative-time.js";
 import {
   MarketingCallToAction,
@@ -117,6 +119,7 @@ export const designGalleryRecipeCoverage = [
   "product-marketing grammar",
   "Nebula Sans typography",
   "procedural effects",
+  "platform install commands",
   "production preview notice",
   "relative time",
   "status pages",
@@ -353,7 +356,33 @@ export function DesignSystemGallery({
             id="gallery-install"
             note={<p data-gallery-marketing-slot="note">Requires Bun 1.3.14.</p>}
           >
-            <MarketingCodeBlock className="design-gallery__marketing-command" code="bun add --global relay@1.2.3" language="sh" />
+            <PlatformInstall
+              id="design-gallery-platform-install"
+              platforms={[
+                {
+                  alternatives: [{ command: "brew install relay", label: "Homebrew" }],
+                  command: "curl -fsSL https://relay.example/install.sh | sh",
+                  id: "macos",
+                  note: "Apple silicon and Intel, macOS 13 or later.",
+                  shell: "Terminal",
+                },
+                {
+                  alternatives: [{ command: "bun add --global relay@1.2.3", label: "Bun" }],
+                  command: "curl -fsSL https://relay.example/install.sh | sh",
+                  id: "linux",
+                  note: "x86_64 and ARM64, glibc 2.34 or later.",
+                  shell: "Terminal",
+                },
+                {
+                  command: "curl -fsSL https://relay.example/install.sh | sh",
+                  id: "windows",
+                  shell: "WSL2 terminal",
+                  unavailable: true,
+                  unavailableNote: <p>No native Windows build yet. Relay runs in WSL2.</p>,
+                },
+              ]}
+            />
+            <PlatformBadges platforms={["macos", "linux", { id: "windows", note: "via WSL2" }]} />
             <MarketingFlow
               ariaLabel="First Relay job"
               steps={[

@@ -8,6 +8,7 @@ export * from "./article-html.js";
 export * from "./status-page.js";
 export * from "./status-page-html.js";
 export * from "./provider-marks.js";
+export * from "./platforms.js";
 export * from "./relative-time.js";
 
 export const colors = {

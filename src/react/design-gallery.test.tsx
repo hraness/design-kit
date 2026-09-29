@@ -39,6 +39,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("product-marketing grammar");
   expect(designGalleryRecipeCoverage).toContain("Nebula Sans typography");
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
+  expect(designGalleryRecipeCoverage).toContain("platform install commands");
   expect(designGalleryRecipeCoverage).toContain("relative time");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
 });
@@ -103,6 +104,8 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain(">Review the presentation contract</textarea>");
   expect(html).toContain("Send message");
   expect(html).toContain("hraness-design-production-data-preview-notice");
+  expect(html).toContain('data-hraness-platform-install=""');
+  expect(html).toContain('data-hraness-platform-badges=""');
   expect(html).toContain("hraness-design-dither-surface");
   expect(html).toContain('data-density="medium"');
   expect(html).toContain('data-gallery-dither=""');
@@ -144,10 +147,15 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain('data-hraness-marketing="maker"');
   const marketing = parseHTML(html).document.querySelector(".design-gallery__marketing");
   expect(marketing).not.toBeNull();
-  const installCode = marketing?.querySelector("#gallery-install .design-gallery__marketing-command > code");
-  expect(installCode?.textContent).toBe("bun add --global relay@1.2.3");
-  expect(installCode?.getAttribute("data-language")).toBe("shell");
-  expect(installCode?.querySelector(".syntax-token--command")?.textContent).toBe("bun");
+  const install = marketing?.querySelector("#gallery-install [data-hraness-platform-install]");
+  expect([...install?.querySelectorAll('[role="tab"]') ?? []].map((tab) => tab.textContent)).toEqual(["macOS", "Linux", "Windows"]);
+  expect(install?.querySelector('[role="tabpanel"]:not([hidden]) pre > code')?.textContent)
+    .toBe("curl -fsSL https://relay.example/install.sh | sh");
+  expect(install?.querySelector('[role="tabpanel"][data-platform="linux"] li pre > code')?.textContent)
+    .toBe("bun add --global relay@1.2.3");
+  expect(marketing?.querySelector("#gallery-install [data-hraness-platform-badges] ul")?.getAttribute("aria-label")).toBe("Runs on");
+  const frameCode = marketing?.querySelector(".hraness-marketing-proof-frame .design-gallery__marketing-command > code");
+  expect(frameCode?.getAttribute("data-language")).toBe("json");
   expect(marketing?.querySelector("[style]:not(.hraness-foil-mark):not(.hraness-foil-mark__paint)")).toBeNull();
   const mark = marketing?.querySelector(".hraness-foil-mark");
   expect(mark?.getAttribute("style")).toBe("--hraness-foil-size:24px");
