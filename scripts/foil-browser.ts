@@ -38,7 +38,7 @@ try {
   for (const theme of ["light", "dark"] as const) {
     for (const width of [390, 900]) {
       const page = await browser.newPage({ viewport: { width, height: 280 }, colorScheme: theme, reducedMotion: "reduce" });
-      await page.setContent(`<html><head><style>${route.startsWith("compiled") ? atoms : raw.replace(/^@import[^;]+;/u, "")}\n${route.endsWith("later-atoms") ? laterAtoms : ""}\n${base}</style></head><body data-theme="${theme}">${markup}</body></html>`);
+      await page.setContent(`<html><head><style>${route.startsWith("compiled") ? atoms : raw.replace(/^@import[^;]+;\s*/gmu, "")}\n${route.endsWith("later-atoms") ? laterAtoms : ""}\n${base}</style></head><body data-theme="${theme}">${markup}</body></html>`);
       await page.locator("img").evaluateAll((images) => Promise.all(images.map((image) => (image as HTMLImageElement).decode())));
       const evidence = await page.locator(".hraness-foil-mark").evaluateAll((marks) => marks.map((element) => {
         const paint = element.querySelector(".hraness-foil-mark__paint");

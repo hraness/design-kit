@@ -110,6 +110,7 @@ test("the package exposes compositions without a second primitive barrel", async
     expect(packageJson.exports[entry]).toEqual({ types: source, import: built });
   }
   expect(packageJson.exports["./mockups.css"]).toBe("./src/mockups.css");
+  expect(packageJson.exports["./site-shell.css"]).toBe("./src/site-shell.css");
   expect(packageJson.exports["./paper-theme.css"]).toBe("./src/paper-theme.css");
   expect(packageJson.exports["./product-marketing.css"]).toBe(
     "./src/product-marketing.css",
@@ -122,6 +123,7 @@ test("the package exposes compositions without a second primitive barrel", async
     "./dist/stylex-manifest.json",
   );
   for (const path of [
+    "src/site-shell.css",
     "src/compiler-components.css",
     "src/compiler-foundation.css",
     "src/compiler-palettes.css",

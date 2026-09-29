@@ -28,7 +28,7 @@ const repository = resolve(import.meta.dir, "..");
 
 async function legacyStylesheetHash(): Promise<string> {
   const source = await readFile(join(repository, "src/product-marketing.css"), "utf8");
-  const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
+  const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
   assert.equal(grammarSha256, "623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264", "The independent static CSS grammar changed");

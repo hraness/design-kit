@@ -41,6 +41,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
   "src/marketing-forced-colors.css",
+  "src/site-shell.css",
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",

@@ -1,3 +1,5 @@
+@import "./site-shell.css";
+
 /**
  * Plain site theme
  *
@@ -34,18 +36,6 @@
   line-height: var(--hraness-type-reading-leading, 1.7);
   margin: 0;
   overflow-x: clip;
-}
-
-body.plain-site {
-  display: flex;
-  flex-direction: column;
-  min-block-size: 100vh;
-  min-block-size: 100svh;
-  min-block-size: 100dvh;
-}
-
-body.plain-site > main {
-  flex: 1 0 auto;
 }
 
 :root[data-theme="dark"]:has(> body.plain-site) {

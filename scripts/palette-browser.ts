@@ -272,6 +272,8 @@ try {
     .replace(".plain-site[data-palette][data-palette] {", ".plain-site[data-palette] {");
   assert.notEqual(oldPlain, plainCss, "The plain-site negative control did not restore the old bridge selectors.");
   await writeFile(join(work, "plain-old.css"), oldPlain);
+  // The negative control retains the document shell import at this new URL.
+  await writeFile(join(work, "site-shell.css"), await readFile(join(repository, "src/site-shell.css"), "utf8"));
   for (const preference of ["dark", "system"] as const) {
     await writeFile(join(work, `plain-old-${preference}.html`), plainHtml([nativeBridge.entryHref, "/plain-old.css", "/palette-layout.css"], "tokyo-night", preference));
   }

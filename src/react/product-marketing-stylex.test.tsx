@@ -206,7 +206,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
     readFile(new URL("../compiler-foundation.css", import.meta.url), "utf8"),
     readFile(new URL("./product-marketing.stylex.ts", import.meta.url), "utf8"),
   ]);
-  const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
+  const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
     .toBe("623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264");

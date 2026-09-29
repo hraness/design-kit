@@ -6303,6 +6303,21 @@ function DesignSystemGallery({
         id: "shells",
         children: [
           /* @__PURE__ */ jsx16("h2", {
+            children: "Site shell"
+          }),
+          /* @__PURE__ */ jsx16("p", {
+            children: "The main content fills available height so the footer follows short and long pages."
+          }),
+          /* @__PURE__ */ jsx16("pre", {
+            children: /* @__PURE__ */ jsx16("code", {
+              children: `<body class="hraness-site-shell">
+  <header>Project</header>
+  <main>Payment complete</main>
+  <footer>By Hraness</footer>
+</body>`
+            })
+          }),
+          /* @__PURE__ */ jsx16("h2", {
             children: "Application shells"
           }),
           /* @__PURE__ */ jsx16(ViewportFrame, {
