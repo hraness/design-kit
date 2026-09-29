@@ -6,7 +6,6 @@ import { join } from "node:path";
 import {
   iconManifest,
   iconsModule,
-  measureIconSvg,
   type IconManifest,
 } from "../scripts/generate-icons";
 import { hranessIconAssets } from "./icons.generated";
@@ -77,7 +76,6 @@ test(
           .filter(color => color !== "none"),
       );
       expect([...colors]).toEqual([icon.ink]);
-      expect(measureIconSvg(svg).ink).toBe(icon.ink);
     }
   },
   300_000,

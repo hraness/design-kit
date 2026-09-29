@@ -25,6 +25,7 @@
 # Guidelines
 
 - Use Bun 1.3.14. Run `bun run check` before handing off a change.
+- Start a release bump with `bun run release:prepare <x.y.z>`. `package.json` holds the only authored version; scripts and tests read it from there, and the command updates the inventory, README pins, and `dist` manifest. Write the README release notes by hand. CI runs the `bun run check` commands as parallel jobs (`static`, `unit`, `browser-marketing`, `browser-rest`); keep `check` and `.github/workflows/ci.yml` covering the same commands.
 - Follow `WRITING.md` for internal prose and `STYLE.md` for public prose.
 - Apply unreasonably robust programming when agent work is cheap. Prefer coherent cross-file correctness and focused deterministic evidence to a knowingly weaker design.
 - Deliver changes to `main` through a current-head pull request. Keep the stable `Required` CI job green, resolve every review thread, and serialize merges. Human approval stays optional while one regular maintainer would otherwise self-review. Never force-push or bypass the gate.

@@ -98,6 +98,27 @@ function required<T>(value: T | undefined, label: string): T {
   assert(value !== undefined, `Missing ${label}`);
   return value;
 }
+/**
+ * Run `task` over `items` with at most `limit` in flight and return results in
+ * input order. After the first failure no new item starts; in-flight items
+ * finish before the first error is rethrown.
+ */
+async function pooled<T, R>(items: readonly T[], limit: number, task: (item: T) => Promise<R>): Promise<R[]> {
+  const results: R[] = new Array<R>(items.length);
+  let next = 0;
+  let failure: { error: unknown } | undefined;
+  const worker = async () => {
+    while (failure === undefined && next < items.length) {
+      const index = next;
+      next += 1;
+      try { results[index] = await task(items[index] as T); }
+      catch (error) { failure ??= { error }; }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  if (failure !== undefined) throw failure.error;
+  return results;
+}
 async function settle(page: Page): Promise<void> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   try {
@@ -723,207 +744,218 @@ try {
     { name: "shorthand-canary", width: 1100, theme: "light", canary: true },
     { name: "product-tokens", width: 1100, theme: "light", tokens: true },
   ] as const;
-  for (const configuration of configurations) {
-    const settings = configuration as { name: string; width: number; theme: string; direction?: string; axis?: string; touch?: boolean; forced?: boolean; canary?: boolean; tokens?: boolean };
-    const results = new Map<Mode, readonly Observation[]>();
-    const interactions = new Map<Mode, readonly Observation[]>();
-    for (const mode of modes) {
-      console.error(`[marketing-browser] ${settings.name}/${mode}`);
-      const page = await browser.newPage({ viewport: { width: settings.width, height: 900 }, hasTouch: settings.touch ?? false,
-        colorScheme: settings.theme === "dark" ? "dark" : "light", forcedColors: settings.forced ? "active" : "none", reducedMotion: "reduce" });
-      try {
-        page.on("console", (message) => { if (message.type() === "error") failures.push(`${settings.name}/${mode}: console: ${message.text()}`); });
-        page.on("pageerror", (error) => failures.push(`${settings.name}/${mode}: page: ${error.message}`));
-        page.on("requestfailed", (request) => failures.push(`${settings.name}/${mode}: request: ${request.url()} ${request.failure()?.errorText}`));
-        page.on("response", (response) => { if (response.status() >= 400) failures.push(`${settings.name}/${mode}: HTTP ${response.status()} ${response.url()}`); });
-        await page.route("**/*", async (route) => {
-          if (new URL(route.request().url()).origin !== origin) {
-            failures.push(`Unexpected external request: ${route.request().url()}`);
-            await route.abort();
-          } else await route.continue();
-        });
-        const query = new URLSearchParams({ theme: settings.theme, direction: settings.direction ?? "ltr", axis: settings.axis ?? "horizontal", canary: String(settings.canary ?? false), tokens: String(settings.tokens ?? false) });
-        await page.goto(`${origin}/${mode}?${query}`, { waitUntil: "networkidle" });
-        await settle(page);
-        const environment = await page.evaluate(() => ({
-          narrow: matchMedia("(max-width: 48rem)").matches,
-          coarse: matchMedia("(pointer: coarse)").matches,
-          forced: matchMedia("(forced-colors: active)").matches,
-          reduced: matchMedia("(prefers-reduced-motion: reduce)").matches,
-          dark: matchMedia("(prefers-color-scheme: dark)").matches,
-          writingMode: getComputedStyle(document.body).writingMode,
-          direction: getComputedStyle(document.body).direction,
-        }));
-        assert.deepEqual(environment, {
-          narrow: settings.width <= 768, coarse: settings.touch ?? false, forced: settings.forced ?? false,
-          reduced: true, dark: settings.theme === "dark", writingMode: settings.axis === "vertical" ? "vertical-rl" : "horizontal-tb",
-          direction: settings.direction ?? "ltr",
-        }, `${settings.name}/${mode}: requested browser environment did not activate`);
-        environments.push({ label: `${settings.name}/${mode}`, ...environment });
-        const observations = await snapshot(page);
-        for (const [name, selector, count] of productMarketingCoverage) {
-          assert.equal(await page.locator(selector).count(), count, `${settings.name}/${mode}: ${name} coverage`);
-        }
-        assert.equal(await page.locator("[data-marketing-oracle]").count(), productMarketingConsumerCoverage.length);
-        for (const name of productMarketingConsumerCoverage) {
-          assert.equal(await page.locator(`[data-marketing-oracle="${name}"]`).count(), 1, `${settings.name}/${mode}: consumer ${name} coverage`);
-        }
-        results.set(mode, observations);
-        assert.equal(await page.locator(".fixture-caller-last").evaluate((node) => getComputedStyle(node).paddingInlineStart), "37px");
-        const labels = await page.locator(".fixture-caller-last .hraness-marketing-section__label")
-          .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).fontSize));
-        assert.deepEqual(labels, ["14px", settings.tokens ? "19px" : "16px"], `${settings.name}/${mode}: finite body recipe and caller override`);
-        const measuredExamples = await page.locator(".hraness-marketing-hero").evaluateAll((elements, tokens) => elements.map((element, index) => {
-          const example = element.querySelector(".hraness-marketing-hero__example");
-          const summary = element.querySelector(".hraness-marketing-hero__summary");
-          if (example === null || summary === null) throw new Error("Missing hero measure fixture");
-          // Resolve the literal authored reading measure in each text role's
-          // font. ch intentionally changes with typography and writing mode.
-          const literalMeasure = (target: Element, value: string) => {
-            const probe = target.cloneNode(false) as HTMLElement;
-            probe.style.maxInlineSize = value;
-            target.after(probe);
-            try { return getComputedStyle(probe).maxInlineSize; }
-            finally { probe.remove(); }
-          };
-          return {
-            actual: { example: getComputedStyle(example).maxInlineSize, summary: getComputedStyle(summary).maxInlineSize },
-            expected: {
-              example: literalMeasure(example, tokens && index === 1 ? "36rem" : "54ch"),
-              summary: literalMeasure(summary, tokens && index === 1 ? "31rem" : "54ch"),
-            },
-          };
-        }), settings.tokens ?? false);
-        const examples = measuredExamples.map(({ actual }) => actual);
-        assert.equal(examples.length, 4, "All hero measure fixtures remain covered");
-        assert.deepEqual(examples, measuredExamples.map(({ expected }) => expected),
-        `${settings.name}/${mode}: example-only measure and omitted fallback`);
-        assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "fixture-maker-link");
-        compositionSeams.push({ label: `${settings.name}/${mode}`, labels, examples });
-        if (deliveryModes.includes(mode as typeof deliveryModes[number])) {
-          assert.equal(await page.locator(".hraness-marketing-header").first().evaluate((node) => getComputedStyle(node).position), "sticky");
-          // The isolated prop check removes only the fixture's legacy static override.
-          assert.equal(await page.locator(".fixture-static-header").evaluate((node) => {
-            node.classList.remove("fixture-static-header");
-            const position = getComputedStyle(node).position;
-            node.classList.add("fixture-static-header");
-            return position;
-          }), "static");
-          const clearance = await page.evaluate(() => {
-            const pageRoot = document.querySelector(".hraness-marketing-page");
-            const sibling = document.querySelector("[data-hraness-sticky]");
-            const main = document.querySelector(".hraness-marketing-main");
-            if (pageRoot === null || sibling === null || main === null) {
-              throw new Error("Missing sticky clearance fixture");
-            }
-            const probe = document.createElement("div");
-            probe.style.position = "sticky";
-            probe.style.insetBlockStart = "var(--hraness-sticky-offset)";
-            pageRoot.append(probe);
-            const usedOffset = getComputedStyle(probe).insetBlockStart;
-            probe.remove();
-            const cards = [...document.querySelectorAll('.hraness-marketing-card-row[aria-label="Release radar"] > *')].map((node) => {
-              const card = node as HTMLElement;
-              const box = card.getBoundingClientRect();
-              const art = card.querySelector(".hraness-marketing-card__art");
-              const artBox = art instanceof HTMLElement ? art.getBoundingClientRect() : null;
-              const artStyle = art instanceof HTMLElement ? getComputedStyle(art) : null;
-              return {
-                height: Math.round(box.height),
-                top: Math.round(box.top),
-                left: box.left,
-                right: box.right,
-                stretch: getComputedStyle(card).alignSelf,
-                isolation: getComputedStyle(card).isolation,
-                position: getComputedStyle(card).position,
-                art: artBox === null || artStyle === null ? null : {
-                  left: artBox.left,
-                  right: artBox.right,
-                  top: artBox.top,
-                  bottom: artBox.bottom,
-                  overflow: artStyle.overflow,
-                  contain: artStyle.contain,
-                  isolation: artStyle.isolation,
-                  clip: artStyle.backgroundClip,
-                  origin: artStyle.backgroundOrigin,
-                },
-              };
-            });
+  type VariantSettings = { name: string; width: number; theme: string; direction?: string; axis?: string; touch?: boolean; forced?: boolean; canary?: boolean; tokens?: boolean };
+  // Each variant owns its own browser context and page, so a small pool runs
+  // them concurrently. Evidence is collected per variant and then appended in
+  // the fixed configuration x mode order, so receipts stay deterministic.
+  const runVariant = async (settings: VariantSettings, mode: Mode) => {
+    console.error(`[marketing-browser] ${settings.name}/${mode}`);
+    const page = await required(browser, "browser").newPage({ viewport: { width: settings.width, height: 900 }, hasTouch: settings.touch ?? false,
+      colorScheme: settings.theme === "dark" ? "dark" : "light", forcedColors: settings.forced ? "active" : "none", reducedMotion: "reduce" });
+    const variantFailures: string[] = [];
+    try {
+      page.on("console", (message) => { if (message.type() === "error") variantFailures.push(`${settings.name}/${mode}: console: ${message.text()}`); });
+      page.on("pageerror", (error) => variantFailures.push(`${settings.name}/${mode}: page: ${error.message}`));
+      page.on("requestfailed", (request) => variantFailures.push(`${settings.name}/${mode}: request: ${request.url()} ${request.failure()?.errorText}`));
+      page.on("response", (response) => { if (response.status() >= 400) variantFailures.push(`${settings.name}/${mode}: HTTP ${response.status()} ${response.url()}`); });
+      await page.route("**/*", async (route) => {
+        if (new URL(route.request().url()).origin !== origin) {
+          variantFailures.push(`Unexpected external request: ${route.request().url()}`);
+          await route.abort();
+        } else await route.continue();
+      });
+      const query = new URLSearchParams({ theme: settings.theme, direction: settings.direction ?? "ltr", axis: settings.axis ?? "horizontal", canary: String(settings.canary ?? false), tokens: String(settings.tokens ?? false) });
+      await page.goto(`${origin}/${mode}?${query}`, { waitUntil: "networkidle" });
+      await settle(page);
+      const environment = await page.evaluate(() => ({
+        narrow: matchMedia("(max-width: 48rem)").matches,
+        coarse: matchMedia("(pointer: coarse)").matches,
+        forced: matchMedia("(forced-colors: active)").matches,
+        reduced: matchMedia("(prefers-reduced-motion: reduce)").matches,
+        dark: matchMedia("(prefers-color-scheme: dark)").matches,
+        writingMode: getComputedStyle(document.body).writingMode,
+        direction: getComputedStyle(document.body).direction,
+      }));
+      assert.deepEqual(environment, {
+        narrow: settings.width <= 768, coarse: settings.touch ?? false, forced: settings.forced ?? false,
+        reduced: true, dark: settings.theme === "dark", writingMode: settings.axis === "vertical" ? "vertical-rl" : "horizontal-tb",
+        direction: settings.direction ?? "ltr",
+      }, `${settings.name}/${mode}: requested browser environment did not activate`);
+      const observations = await snapshot(page);
+      for (const [name, selector, count] of productMarketingCoverage) {
+        assert.equal(await page.locator(selector).count(), count, `${settings.name}/${mode}: ${name} coverage`);
+      }
+      assert.equal(await page.locator("[data-marketing-oracle]").count(), productMarketingConsumerCoverage.length);
+      for (const name of productMarketingConsumerCoverage) {
+        assert.equal(await page.locator(`[data-marketing-oracle="${name}"]`).count(), 1, `${settings.name}/${mode}: consumer ${name} coverage`);
+      }
+      assert.equal(await page.locator(".fixture-caller-last").evaluate((node) => getComputedStyle(node).paddingInlineStart), "37px");
+      const labels = await page.locator(".fixture-caller-last .hraness-marketing-section__label")
+        .evaluateAll((elements) => elements.map((element) => getComputedStyle(element).fontSize));
+      assert.deepEqual(labels, ["14px", settings.tokens ? "19px" : "16px"], `${settings.name}/${mode}: finite body recipe and caller override`);
+      const measuredExamples = await page.locator(".hraness-marketing-hero").evaluateAll((elements, tokens) => elements.map((element, index) => {
+        const example = element.querySelector(".hraness-marketing-hero__example");
+        const summary = element.querySelector(".hraness-marketing-hero__summary");
+        if (example === null || summary === null) throw new Error("Missing hero measure fixture");
+        // Resolve the literal authored reading measure in each text role's
+        // font. ch intentionally changes with typography and writing mode.
+        const literalMeasure = (target: Element, value: string) => {
+          const probe = target.cloneNode(false) as HTMLElement;
+          probe.style.maxInlineSize = value;
+          target.after(probe);
+          try { return getComputedStyle(probe).maxInlineSize; }
+          finally { probe.remove(); }
+        };
+        return {
+          actual: { example: getComputedStyle(example).maxInlineSize, summary: getComputedStyle(summary).maxInlineSize },
+          expected: {
+            example: literalMeasure(example, tokens && index === 1 ? "36rem" : "54ch"),
+            summary: literalMeasure(summary, tokens && index === 1 ? "31rem" : "54ch"),
+          },
+        };
+      }), settings.tokens ?? false);
+      const examples = measuredExamples.map(({ actual }) => actual);
+      assert.equal(examples.length, 4, "All hero measure fixtures remain covered");
+      assert.deepEqual(examples, measuredExamples.map(({ expected }) => expected),
+      `${settings.name}/${mode}: example-only measure and omitted fallback`);
+      assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "fixture-maker-link");
+      if (deliveryModes.includes(mode as typeof deliveryModes[number])) {
+        assert.equal(await page.locator(".hraness-marketing-header").first().evaluate((node) => getComputedStyle(node).position), "sticky");
+        // The isolated prop check removes only the fixture's legacy static override.
+        assert.equal(await page.locator(".fixture-static-header").evaluate((node) => {
+          node.classList.remove("fixture-static-header");
+          const position = getComputedStyle(node).position;
+          node.classList.add("fixture-static-header");
+          return position;
+        }), "static");
+        const clearance = await page.evaluate(() => {
+          const pageRoot = document.querySelector(".hraness-marketing-page");
+          const sibling = document.querySelector("[data-hraness-sticky]");
+          const main = document.querySelector(".hraness-marketing-main");
+          if (pageRoot === null || sibling === null || main === null) {
+            throw new Error("Missing sticky clearance fixture");
+          }
+          const probe = document.createElement("div");
+          probe.style.position = "sticky";
+          probe.style.insetBlockStart = "var(--hraness-sticky-offset)";
+          pageRoot.append(probe);
+          const usedOffset = getComputedStyle(probe).insetBlockStart;
+          probe.remove();
+          const cards = [...document.querySelectorAll('.hraness-marketing-card-row[aria-label="Release radar"] > *')].map((node) => {
+            const card = node as HTMLElement;
+            const box = card.getBoundingClientRect();
+            const art = card.querySelector(".hraness-marketing-card__art");
+            const artBox = art instanceof HTMLElement ? art.getBoundingClientRect() : null;
+            const artStyle = art instanceof HTMLElement ? getComputedStyle(art) : null;
             return {
-              offset: getComputedStyle(pageRoot).getPropertyValue("--hraness-sticky-offset").trim(),
-              usedOffset,
-              siblingPosition: getComputedStyle(sibling).position,
-              siblingTop: getComputedStyle(sibling).insetBlockStart,
-              mainScrollMargin: getComputedStyle(main).scrollMarginBlockStart,
-              cards,
+              height: Math.round(box.height),
+              top: Math.round(box.top),
+              left: box.left,
+              right: box.right,
+              stretch: getComputedStyle(card).alignSelf,
+              isolation: getComputedStyle(card).isolation,
+              position: getComputedStyle(card).position,
+              art: artBox === null || artStyle === null ? null : {
+                left: artBox.left,
+                right: artBox.right,
+                top: artBox.top,
+                bottom: artBox.bottom,
+                overflow: artStyle.overflow,
+                contain: artStyle.contain,
+                isolation: artStyle.isolation,
+                clip: artStyle.backgroundClip,
+                origin: artStyle.backgroundOrigin,
+              },
             };
           });
-          assert.ok(clearance.offset.length > 0, `${settings.name}/${mode}: page must publish --hraness-sticky-offset`);
-          assert.match(clearance.usedOffset, /^[\d.]+px$/u);
-          assert.ok(Number.parseFloat(clearance.usedOffset) > 0);
-          assert.equal(clearance.siblingPosition, "sticky");
-          assert.equal(clearance.siblingTop, clearance.usedOffset, `${settings.name}/${mode}: first sticky sibling must clear the header`);
-          assert.equal(clearance.mainScrollMargin, clearance.usedOffset);
-          assert.equal(clearance.cards.length, 2);
-          for (const card of clearance.cards) {
-            assert.equal(card.stretch, "stretch");
-            assert.equal(card.position, "relative");
-            assert.equal(card.isolation, "isolate");
-            assert.ok(card.art, `${settings.name}/${mode}: each card must own a clipped art well`);
-            assert.equal(card.art?.overflow, "hidden");
-            assert.match(card.art?.contain ?? "", /paint/u);
-            assert.equal(card.art?.isolation, "isolate");
-            assert.equal(card.art?.clip, "border-box");
-            assert.equal(card.art?.origin, "padding-box");
-            assert.ok((card.art?.left ?? 0) + 0.5 >= card.left, `${settings.name}/${mode}: art must stay inside the card inline-start`);
-            assert.ok((card.art?.right ?? 0) - 0.5 <= card.right, `${settings.name}/${mode}: art must stay inside the card inline-end`);
-          }
-          const row = clearance.cards.filter((card) => card.top === clearance.cards[0]?.top);
-          if (row.length > 1) {
-            assert.ok(row.every((card) => card.height === row[0]?.height),
-              `${settings.name}/${mode}: card row items must share the tallest height`);
-            const ordered = [...row].sort((left, right) => left.left - right.left);
-            for (let index = 1; index < ordered.length; index += 1) {
-              const previous = ordered[index - 1];
-              const next = ordered[index];
-              assert.ok(previous && next && previous.right + 8 < next.left,
-                `${settings.name}/${mode}: stretched cards must keep a gutter`);
-              assert.ok(previous.art && next.art && previous.art.right + 8 < next.art.left,
-                `${settings.name}/${mode}: art wells must not paint through the gutter`);
-            }
+          return {
+            offset: getComputedStyle(pageRoot).getPropertyValue("--hraness-sticky-offset").trim(),
+            usedOffset,
+            siblingPosition: getComputedStyle(sibling).position,
+            siblingTop: getComputedStyle(sibling).insetBlockStart,
+            mainScrollMargin: getComputedStyle(main).scrollMarginBlockStart,
+            cards,
+          };
+        });
+        assert.ok(clearance.offset.length > 0, `${settings.name}/${mode}: page must publish --hraness-sticky-offset`);
+        assert.match(clearance.usedOffset, /^[\d.]+px$/u);
+        assert.ok(Number.parseFloat(clearance.usedOffset) > 0);
+        assert.equal(clearance.siblingPosition, "sticky");
+        assert.equal(clearance.siblingTop, clearance.usedOffset, `${settings.name}/${mode}: first sticky sibling must clear the header`);
+        assert.equal(clearance.mainScrollMargin, clearance.usedOffset);
+        assert.equal(clearance.cards.length, 2);
+        for (const card of clearance.cards) {
+          assert.equal(card.stretch, "stretch");
+          assert.equal(card.position, "relative");
+          assert.equal(card.isolation, "isolate");
+          assert.ok(card.art, `${settings.name}/${mode}: each card must own a clipped art well`);
+          assert.equal(card.art?.overflow, "hidden");
+          assert.match(card.art?.contain ?? "", /paint/u);
+          assert.equal(card.art?.isolation, "isolate");
+          assert.equal(card.art?.clip, "border-box");
+          assert.equal(card.art?.origin, "padding-box");
+          assert.ok((card.art?.left ?? 0) + 0.5 >= card.left, `${settings.name}/${mode}: art must stay inside the card inline-start`);
+          assert.ok((card.art?.right ?? 0) - 0.5 <= card.right, `${settings.name}/${mode}: art must stay inside the card inline-end`);
+        }
+        const row = clearance.cards.filter((card) => card.top === clearance.cards[0]?.top);
+        if (row.length > 1) {
+          assert.ok(row.every((card) => card.height === row[0]?.height),
+            `${settings.name}/${mode}: card row items must share the tallest height`);
+          const ordered = [...row].sort((left, right) => left.left - right.left);
+          for (let index = 1; index < ordered.length; index += 1) {
+            const previous = ordered[index - 1];
+            const next = ordered[index];
+            assert.ok(previous && next && previous.right + 8 < next.left,
+              `${settings.name}/${mode}: stretched cards must keep a gutter`);
+            assert.ok(previous.art && next.art && previous.art.right + 8 < next.art.left,
+              `${settings.name}/${mode}: art wells must not paint through the gutter`);
           }
         }
-        const summary = page.locator("details > summary").first();
+      }
+      const summary = page.locator("details > summary").first();
+      await page.keyboard.press("Shift");
+      await summary.focus();
+      assert.equal(await summary.evaluate((node) => node.matches(":focus-visible")), true, "Native summary must be keyboard-focused");
+      await page.keyboard.press("Enter");
+      await settle(page);
+      assert.equal(await page.locator("details").first().getAttribute("open"), "");
+      const matrix = await summary.evaluate((node) => getComputedStyle(node, "::after").transform);
+      assert.match(matrix, /^matrix\(0\.70710\d*, 0\.70710\d*, -0\.70710\d*, 0\.70710\d*, 0, 0\)$/u);
+      const state: Observation[] = [...await snapshot(page, ".hraness-marketing-question__summary, .hraness-marketing-question__answer, .hraness-marketing-question__answer [data-marketing-oracle]")];
+      await page.keyboard.press("Space");
+      await settle(page);
+      assert.equal(await page.locator("details").first().getAttribute("open"), null);
+      for (const [name, selector, index] of interactionCases) {
+        const action = page.locator(selector).nth(index);
+        assert.equal(await action.count(), 1, `Missing ${name} interaction`);
+        await page.mouse.move(0, 0);
         await page.keyboard.press("Shift");
-        await summary.focus();
-        assert.equal(await summary.evaluate((node) => node.matches(":focus-visible")), true, "Native summary must be keyboard-focused");
-        await page.keyboard.press("Enter");
+        await action.focus();
         await settle(page);
-        assert.equal(await page.locator("details").first().getAttribute("open"), "");
-        const matrix = await summary.evaluate((node) => getComputedStyle(node, "::after").transform);
-        assert.match(matrix, /^matrix\(0\.70710\d*, 0\.70710\d*, -0\.70710\d*, 0\.70710\d*, 0, 0\)$/u);
-        const state: Observation[] = [...await snapshot(page, ".hraness-marketing-question__summary, .hraness-marketing-question__answer, .hraness-marketing-question__answer [data-marketing-oracle]")];
-        await page.keyboard.press("Space");
+        assert.equal(await action.evaluate((node) => node.matches(":focus-visible")), true, `${name}: keyboard focus was not active`);
+        state.push(...await snapshot(page, selector, index));
+        await action.hover();
         await settle(page);
-        assert.equal(await page.locator("details").first().getAttribute("open"), null);
-        for (const [name, selector, index] of interactionCases) {
-          const action = page.locator(selector).nth(index);
-          assert.equal(await action.count(), 1, `Missing ${name} interaction`);
-          await page.mouse.move(0, 0);
-          await page.keyboard.press("Shift");
-          await action.focus();
-          await settle(page);
-          assert.equal(await action.evaluate((node) => node.matches(":focus-visible")), true, `${name}: keyboard focus was not active`);
-          state.push(...await snapshot(page, selector, index));
-          await action.hover();
-          await settle(page);
-          state.push(...await snapshot(page, selector, index));
-        }
-        interactions.set(mode, state);
-        if (settings.name === "desktop-light") await page.screenshot({ path: join(output, `${mode}.png`), fullPage: true });
-        assert.deepEqual(failures, [], "Unexpected browser errors");
-      } finally { await page.close(); }
-    }
+        state.push(...await snapshot(page, selector, index));
+      }
+      if (settings.name === "desktop-light") await page.screenshot({ path: join(output, `${mode}.png`), fullPage: true });
+      assert.deepEqual(variantFailures, [], `${settings.name}/${mode}: unexpected browser errors`);
+      return { environment, seam: { labels, examples }, observations, interactions: state };
+    } finally { await page.close(); failures.push(...variantFailures); }
+  };
+  const variants = configurations.flatMap((configuration) => modes.map((mode) => ({ settings: configuration as VariantSettings, mode })));
+  const variantResults = await pooled(variants, 4, ({ settings, mode }) => runVariant(settings, mode));
+  const variantResult = (settings: VariantSettings, mode: Mode) =>
+    required(variantResults[variants.findIndex((variant) => variant.settings.name === settings.name && variant.mode === mode)], `${settings.name}/${mode} variant`);
+  for (const [index, { settings, mode }] of variants.entries()) {
+    const result = required(variantResults[index], `${settings.name}/${mode} variant`);
+    environments.push({ label: `${settings.name}/${mode}`, ...result.environment });
+    compositionSeams.push({ label: `${settings.name}/${mode}`, ...result.seam });
+  }
+  for (const configuration of configurations) {
+    const settings = configuration as VariantSettings;
+    const results = new Map<Mode, readonly Observation[]>(modes.map((mode) => [mode, variantResult(settings, mode).observations]));
+    const interactions = new Map<Mode, readonly Observation[]>(modes.map((mode) => [mode, variantResult(settings, mode).interactions]));
     assert.match(settings.name, /^[a-z][a-z-]*$/u, "Browser configuration name is not a safe evidence filename");
     const matrixSnapshot = Buffer.from(JSON.stringify({
       configuration: settings,
