@@ -77,7 +77,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-cwepvdey.js";
+} from "../chunk-ccmt90sx.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -6550,7 +6550,7 @@ function DesignSystemGallery({
                     children: "Semantic content stays ordinary DOM"
                   }),
                   /* @__PURE__ */ jsx16("p", {
-                    children: "Decorative paint is pointer-transparent and removable in forced colors."
+                    children: "Decorative paint is pointer-transparent and removable in forced colors. Marketing actions use system button colors so their labels stay readable."
                   })
                 ]
               })

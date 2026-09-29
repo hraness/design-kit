@@ -21,6 +21,13 @@ import {
   type StylexStandaloneSerializerV1,
 } from "@hraness/ui/stylex-build";
 
+// Publish the narrow compatibility stylesheet from the canonical raw grammar.
+const marketingGrammar = await readFile(new URL("../src/product-marketing.css", import.meta.url), "utf8");
+const compatibilityMarker = "/* Marketing action forced-colors compatibility:";
+const compatibilityStart = marketingGrammar.indexOf(compatibilityMarker);
+assert(compatibilityStart >= 0, "Marketing forced-colors block is missing");
+await writeFile(new URL("../src/marketing-forced-colors.css", import.meta.url), marketingGrammar.slice(compatibilityStart));
+
 const COMPILER_FOUNDATION = "src/compiler-palettes.css";
 const COMPILER_STYLESHEET_PATHS = [
   "src/appearance-menu.css",
@@ -43,6 +50,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
+  "src/marketing-forced-colors.css",
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",

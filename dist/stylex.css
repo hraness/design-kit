@@ -765,6 +765,10 @@
   }
 
   @media (forced-colors: active) {
+    .xjdclpy.xjdclpy {
+      border-bottom: 1px solid buttontext;
+    }
+
     .xtthz4l.xtthz4l {
       border-bottom: 1px solid canvastext;
     }
@@ -785,6 +789,10 @@
   }
 
   @media (forced-colors: active) {
+    .xoap1yo.xoap1yo {
+      border-left: 1px solid buttontext;
+    }
+
     .xug5yj.xug5yj {
       border-left: 1px solid canvastext;
     }
@@ -793,12 +801,20 @@
       border-left: 2px solid buttontext;
     }
 
+    .x1mlwb19.x1mlwb19 {
+      border-right: 1px solid buttontext;
+    }
+
     .xv2i73l.xv2i73l {
       border-right: 1px solid canvastext;
     }
 
     .xg6qco4.xg6qco4 {
       border-right: 2px solid buttontext;
+    }
+
+    .x11qe1k5.x11qe1k5 {
+      border-top: 1px solid buttontext;
     }
 
     .x18z9243.x18z9243 {
@@ -3257,20 +3273,16 @@
       background-clip: border-box;
     }
 
+    .xnwy5bs.xnwy5bs {
+      background-color: buttonface;
+    }
+
     .x9yvj25.x9yvj25 {
       background-color: canvas;
     }
 
-    .xwvh9j7.xwvh9j7 {
-      background-color: canvastext;
-    }
-
     .x1jzqe4.x1jzqe4 {
       background-color: highlight;
-    }
-
-    .x1pjirtg.x1pjirtg {
-      background-color: var(--hraness-marketing-accent-ink);
     }
 
     .xhobzj1.xhobzj1 {
@@ -3385,8 +3397,8 @@
       box-shadow: none;
     }
 
-    .x1a46atw.x1a46atw {
-      color: canvas;
+    .x1ggml12.x1ggml12 {
+      color: buttontext;
     }
 
     .xs5hli.xs5hli {
@@ -3633,16 +3645,16 @@
   }
 
   @media (forced-colors: active) {
-    .xmi9hcf.xmi9hcf:hover {
-      background-color: canvastext;
-    }
-
-    .x1xh63g1.x1xh63g1:hover {
-      background-color: var(--hraness-marketing-accent-ink);
+    .x1tvaz0g.x1tvaz0g:hover {
+      background-color: buttonface;
     }
 
     .x1gof2l0.x1gof2l0:hover {
       box-shadow: none;
+    }
+
+    .xme02mz.xme02mz:hover {
+      color: buttontext;
     }
   }
 }

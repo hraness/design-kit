@@ -40,6 +40,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/plain-site.css",
   "src/product-marketing-foundation.css",
   "src/product-marketing.css",
+  "src/marketing-forced-colors.css",
   "src/product-marketing-preset.css",
   "src/reading.css",
   "src/reset.css",
@@ -1732,11 +1733,11 @@ assert.equal(
 const marketingForcedHoverRules = manifest.rules.filter(([, , priority]) => priority === 3330);
 assert.deepEqual(marketingForcedHoverRules, [
   ["x1gof2l0", { ltr: "@media (forced-colors: active){.x1gof2l0.x1gof2l0:hover{box-shadow:none}}", rtl: null }, 3330],
-  ["x1xh63g1", { ltr: "@media (forced-colors: active){.x1xh63g1.x1xh63g1:hover{background-color:var(--hraness-marketing-accent-ink)}}", rtl: null }, 3330],
-  ["xmi9hcf", { ltr: "@media (forced-colors: active){.xmi9hcf.xmi9hcf:hover{background-color:CanvasText}}", rtl: null }, 3330],
-], "Raw priority 3330 must contain only the reviewed forced-color primary hover atoms");
+  ["x1tvaz0g", { ltr: "@media (forced-colors: active){.x1tvaz0g.x1tvaz0g:hover{background-color:ButtonFace}}", rtl: null }, 3330],
+  ["xme02mz", { ltr: "@media (forced-colors: active){.xme02mz.xme02mz:hover{color:ButtonText}}", rtl: null }, 3330],
+], "Raw priority 3330 must contain only the reviewed forced-color action hover atoms");
 assert.equal(
-  requireRuleSerializedRank(compiledCss, "xmi9hcf", designPriorityContract, "dist/stylex.css"),
+  requireRuleSerializedRank(compiledCss, "xme02mz", designPriorityContract, "dist/stylex.css"),
   "priority4",
   "Forced-color primary hover must remain in the existing rank-4 layer",
 );
