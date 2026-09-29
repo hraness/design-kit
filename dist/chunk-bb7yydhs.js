@@ -1,13 +1,13 @@
 import {
-  PlatformIcon,
   platformInstallClassName
-} from "./chunk-8e9jcr6r.js";
+} from "./chunk-1nc4b044.js";
 import {
   detectPlatform,
   isKnownPlatformId,
   isPlatformId,
   matchDetectedPlatform,
-  platformLabel
+  platformLabel,
+  platformMark
 } from "./chunk-wzvdn8ey.js";
 
 // src/react/platform-install.tsx
@@ -76,6 +76,44 @@ async function writeClipboard(text, fallback) {
   } catch {
     return false;
   }
+}
+function PlatformMarkSymbols({
+  ids,
+  symbolId
+}) {
+  return /* @__PURE__ */ jsx("svg", {
+    "aria-hidden": "true",
+    className: platformInstallClassName(["markSymbols"]),
+    focusable: "false",
+    xmlns: "http://www.w3.org/2000/svg",
+    children: ids.map((id) => {
+      const mark = platformMark(id);
+      return /* @__PURE__ */ jsx("symbol", {
+        id: symbolId(id),
+        viewBox: mark.viewBox,
+        children: /* @__PURE__ */ jsx("path", {
+          d: mark.path
+        })
+      }, id);
+    })
+  });
+}
+function PlatformMarkUse({
+  platform,
+  symbolId
+}) {
+  return /* @__PURE__ */ jsx("svg", {
+    "aria-hidden": "true",
+    className: platformInstallClassName(["icon"]),
+    "data-platform": platform,
+    fill: "currentColor",
+    focusable: "false",
+    viewBox: platformMark(platform).viewBox,
+    xmlns: "http://www.w3.org/2000/svg",
+    children: /* @__PURE__ */ jsx("use", {
+      href: `#${symbolId}`
+    })
+  });
 }
 function CopyGlyph({
   copied
@@ -188,6 +226,7 @@ function PlatformInstall({
   const ids = platforms.map((target) => target.id);
   const idKey = ids.join(`
 `);
+  const symbolId = (platform) => `${baseId}-mark-${platform}`;
   const current = ids.includes(selected) ? selected : initial;
   useEffect(() => {
     if (!detect || chosen.current)
@@ -251,6 +290,10 @@ function PlatformInstall({
     "data-selection-source": source,
     id,
     children: [
+      /* @__PURE__ */ jsx(PlatformMarkSymbols, {
+        ids,
+        symbolId
+      }),
       /* @__PURE__ */ jsx("div", {
         "aria-label": label,
         className: platformInstallClassName(["tablist"]),
@@ -276,10 +319,12 @@ function PlatformInstall({
             tabIndex: isSelected ? 0 : -1,
             type: "button",
             children: [
-              /* @__PURE__ */ jsx(PlatformIcon, {
-                platform: target.id
+              /* @__PURE__ */ jsx(PlatformMarkUse, {
+                platform: target.id,
+                symbolId: symbolId(target.id)
               }),
               /* @__PURE__ */ jsx("span", {
+                className: platformInstallClassName(["tabLabel"]),
                 children: labelOf(target)
               })
             ]
@@ -303,8 +348,9 @@ function PlatformInstall({
               /* @__PURE__ */ jsxs("p", {
                 className: platformInstallClassName(["panelLabel"]),
                 children: [
-                  /* @__PURE__ */ jsx(PlatformIcon, {
-                    platform: target.id
+                  /* @__PURE__ */ jsx(PlatformMarkUse, {
+                    platform: target.id,
+                    symbolId: symbolId(target.id)
                   }),
                   /* @__PURE__ */ jsx("span", {
                     children: name

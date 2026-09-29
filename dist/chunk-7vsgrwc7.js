@@ -1,4 +1,12 @@
 import {
+  platformInstallClassName
+} from "./chunk-1nc4b044.js";
+import {
+  isPlatformId,
+  platformLabel,
+  platformMark
+} from "./chunk-wzvdn8ey.js";
+import {
   highlightCode
 } from "./chunk-he8eznb1.js";
 import {
@@ -6624,10 +6632,101 @@ function ProviderMarkChip({
   });
 }
 
+// src/react/platform-icons.tsx
+import { jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
+var sizeParts = {
+  inherit: undefined,
+  lg: "iconLg",
+  md: "iconMd",
+  sm: "iconSm"
+};
+function PlatformIcon({
+  className,
+  label,
+  platform,
+  size = "inherit"
+}) {
+  if (!isPlatformId(platform))
+    throw new RangeError(`Platform ids are lowercase slugs; received ${JSON.stringify(platform)}.`);
+  if (!(size in sizeParts))
+    throw new RangeError(`Unknown platform icon size: ${String(size)}.`);
+  if (label !== undefined && label.trim() === "")
+    throw new RangeError("A platform icon label must not be blank.");
+  const mark = platformMark(platform);
+  return /* @__PURE__ */ jsx8("svg", {
+    "aria-hidden": label === undefined ? true : undefined,
+    "aria-label": label,
+    className: platformInstallClassName(["icon", sizeParts[size]], className),
+    "data-platform": platform,
+    fill: "currentColor",
+    focusable: "false",
+    role: label === undefined ? undefined : "img",
+    viewBox: mark.viewBox,
+    xmlns: "http://www.w3.org/2000/svg",
+    children: /* @__PURE__ */ jsx8("path", {
+      d: mark.path
+    })
+  });
+}
+function toBadge(entry) {
+  return typeof entry === "string" ? {
+    id: entry
+  } : entry;
+}
+function PlatformBadges({
+  className,
+  label = "Runs on",
+  platforms
+}) {
+  const badges = platforms.map(toBadge);
+  if (badges.length === 0)
+    throw new RangeError("PlatformBadges needs at least one platform.");
+  const seen = new Set;
+  for (const badge of badges) {
+    if (!isPlatformId(badge.id))
+      throw new RangeError(`Platform ids are lowercase slugs; received ${JSON.stringify(badge.id)}.`);
+    if (seen.has(badge.id))
+      throw new RangeError(`Duplicate platform id: ${badge.id}.`);
+    seen.add(badge.id);
+  }
+  const listName = label ?? "Supported platforms";
+  return /* @__PURE__ */ jsxs7("div", {
+    className: platformInstallClassName(["badges"], className),
+    "data-hraness-platform-badges": "",
+    children: [
+      label === null ? null : /* @__PURE__ */ jsx8("span", {
+        "aria-hidden": "true",
+        className: platformInstallClassName(["badgesLabel"]),
+        children: label
+      }),
+      /* @__PURE__ */ jsx8("ul", {
+        "aria-label": listName,
+        className: platformInstallClassName(["badgesList"]),
+        children: badges.map((badge) => /* @__PURE__ */ jsxs7("li", {
+          className: platformInstallClassName(["badge"]),
+          "data-platform": badge.id,
+          children: [
+            /* @__PURE__ */ jsx8(PlatformIcon, {
+              platform: badge.id
+            }),
+            /* @__PURE__ */ jsx8("span", {
+              children: badge.label ?? platformLabel(badge.id)
+            }),
+            badge.note === undefined ? null : /* @__PURE__ */ jsx8("span", {
+              className: platformInstallClassName(["badgeNote"]),
+              children: badge.note
+            })
+          ]
+        }, badge.id))
+      })
+    ]
+  });
+}
+
 // src/react/particle-halo.tsx
 import { cn as cn3 } from "@hraness/ui";
 import * as stylex6 from "@stylexjs/stylex";
-import { jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
 var colorVariables2 = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -6663,14 +6762,14 @@ function ParticleHalo({
   const fieldPresentation = stylex6.props(effectsStyles.particleField);
   const particlePresentation = stylex6.props(effectsStyles.particle);
   const contentPresentation = stylex6.props(effectsStyles.particleContent);
-  return /* @__PURE__ */ jsxs7("div", {
+  return /* @__PURE__ */ jsxs8("div", {
     ...props7,
     className: cn3("hraness-design-particle-halo", rootPresentation.className, className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,
     style: rootStyle,
     children: [
-      /* @__PURE__ */ jsx8("span", {
+      /* @__PURE__ */ jsx9("span", {
         "aria-hidden": "true",
         className: cn3("hraness-design-particle-halo__particles", fieldPresentation.className),
         role: "presentation",
@@ -6686,13 +6785,13 @@ function ParticleHalo({
             "--hraness-design-particle-x": `${particle.x}%`,
             "--hraness-design-particle-y": `${particle.y}%`
           };
-          return /* @__PURE__ */ jsx8("i", {
+          return /* @__PURE__ */ jsx9("i", {
             className: cn3("hraness-design-particle-halo__particle", particlePresentation.className),
             style: particleStyle
           }, index);
         })
       }),
-      /* @__PURE__ */ jsx8("div", {
+      /* @__PURE__ */ jsx9("div", {
         className: cn3("hraness-design-particle-halo__content", contentPresentation.className),
         children
       })
@@ -6701,7 +6800,7 @@ function ParticleHalo({
 }
 
 // src/react/launch-beats.tsx
-import { jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs9 } from "react/jsx-runtime";
 var HEADING_TAGS2 = {
   2: "h2",
   3: "h3",
@@ -6731,7 +6830,7 @@ function LaunchBeats({
   const Heading2 = HEADING_TAGS2[headingLevel];
   if (Heading2 === undefined)
     throw new RangeError("Launch beat heading level must be 2 to 4.");
-  return /* @__PURE__ */ jsx9("div", {
+  return /* @__PURE__ */ jsx10("div", {
     className: ["plain-publication__beats", className].filter(Boolean).join(" "),
     "data-hraness-launch-beats": "",
     children: beats.map((beat) => {
@@ -6739,27 +6838,27 @@ function LaunchBeats({
       const visual = renderVisual(beat);
       if (visual === null || visual === undefined || visual === false)
         throw new RangeError(`Launch beat ${JSON.stringify(beat.id)} needs a visual.`);
-      return /* @__PURE__ */ jsxs8("section", {
+      return /* @__PURE__ */ jsxs9("section", {
         "aria-labelledby": `${anchor}-heading`,
         className: "plain-publication__beat",
         "data-part": beat.part,
         id: anchor,
         children: [
-          /* @__PURE__ */ jsx9(Heading2, {
+          /* @__PURE__ */ jsx10(Heading2, {
             id: `${anchor}-heading`,
             children: beat.headline
           }),
-          /* @__PURE__ */ jsx9("p", {
+          /* @__PURE__ */ jsx10("p", {
             children: beat.post
           }),
-          /* @__PURE__ */ jsx9(ArticleFigure, {
+          /* @__PURE__ */ jsx10(ArticleFigure, {
             caption: beat.alt,
             kind: figureKind(beat),
             children: visual
           }),
-          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx9("p", {
+          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx10("p", {
             className: "plain-publication__beat-detail",
-            children: /* @__PURE__ */ jsx9("a", {
+            children: /* @__PURE__ */ jsx10("a", {
               href: beat.detailHref,
               children: detailLabel
             })
@@ -6770,4 +6869,4 @@ function LaunchBeats({
   });
 }
 
-export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonTable, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo, launchBeatAnchor, LaunchBeats };
+export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonTable, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, PlatformIcon, PlatformBadges, ParticleHalo, launchBeatAnchor, LaunchBeats };

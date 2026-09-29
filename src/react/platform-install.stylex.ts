@@ -21,6 +21,9 @@ const monoFont = "var(--hraness-marketing-mono-font, var(--font-mono, ui-monospa
 const textFont = "var(--hraness-marketing-text-font, var(--font-text, inherit))";
 const noScript = "@media (scripting: none)";
 const forced = "@media (forced-colors: active)";
+// Phones and narrow columns: the tab row spans the column and its tabs
+// tighten so macOS, Linux, and Windows fit side by side at 320px.
+const narrow = "@media (max-width: 30rem)";
 
 export const platformInstallStyles = stylex.create({
   root: {
@@ -43,11 +46,12 @@ export const platformInstallStyles = stylex.create({
     borderWidth: "1px",
     boxSizing: "border-box",
     display: { default: "flex", [noScript]: "none" },
-    gap: "0.25rem",
-    justifySelf: "start",
+    gap: { default: "0.25rem", [narrow]: "0.125rem" },
+    justifySelf: { default: "start", [narrow]: "stretch" },
     maxInlineSize: "100%",
+    minInlineSize: 0,
     overflowX: "auto",
-    padding: "0.25rem",
+    padding: { default: "0.25rem", [narrow]: "0.1875rem" },
     scrollbarWidth: "none",
   },
   tab: {
@@ -65,21 +69,30 @@ export const platformInstallStyles = stylex.create({
     color: { default: muted, ":hover": ink, [forced]: "ButtonText" },
     cursor: "pointer",
     display: "inline-flex",
-    flexShrink: 0,
+    flexBasis: "auto",
+    flexGrow: 1,
+    flexShrink: 1,
     fontFamily: "inherit",
-    fontSize: "0.875rem",
+    fontSize: { default: "0.875rem", [narrow]: "0.8125rem" },
     fontWeight: 500,
-    gap: "0.45rem",
+    gap: { default: "0.45rem", [narrow]: "0.3rem" },
+    justifyContent: "center",
     lineHeight: 1.2,
     margin: 0,
     minBlockSize: { default: "2.25rem", "@media (pointer: coarse)": "2.75rem" },
+    minInlineSize: 0,
     outline: { default: "none", ":focus-visible": `2px solid ${focusRing}` },
     outlineOffset: "1px",
     paddingBlock: "0.4rem",
-    paddingInline: "0.8rem",
+    paddingInline: { default: "0.8rem", [narrow]: "0.45rem" },
     transitionDuration: { default: "120ms", "@media (prefers-reduced-motion: reduce)": "0s" },
     transitionProperty: "background-color, color, border-color",
     whiteSpace: "nowrap",
+  },
+  tabLabel: {
+    minInlineSize: 0,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   tabSelected: {
     backgroundColor: {
@@ -249,6 +262,12 @@ export const platformInstallStyles = stylex.create({
     position: "absolute",
     whiteSpace: "nowrap",
   },
+  markSymbols: {
+    blockSize: 0,
+    inlineSize: 0,
+    overflow: "hidden",
+    position: "absolute",
+  },
   icon: {
     blockSize: "var(--hraness-platform-icon-size, 1em)",
     display: "inline-block",
@@ -313,6 +332,7 @@ const hooks: Partial<Record<Part, string>> = {
   copy: "hraness-platform-install__copy",
   copyIcon: "hraness-platform-install__copy-icon",
   icon: "hraness-platform-icon",
+  markSymbols: "hraness-platform-install__marks",
   note: "hraness-platform-install__note",
   panel: "hraness-platform-install__panel",
   panelBody: "hraness-platform-install__panel-body",
@@ -322,6 +342,7 @@ const hooks: Partial<Record<Part, string>> = {
   shell: "hraness-platform-install__shell",
   status: "hraness-platform-install__status",
   tab: "hraness-platform-install__tab",
+  tabLabel: "hraness-platform-install__tab-label",
   tablist: "hraness-platform-install__tabs",
   unavailable: "hraness-platform-install__unavailable",
 };

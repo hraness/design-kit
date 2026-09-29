@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { parseHTML } from "linkedom";
 import { renderToStaticMarkup, renderToString } from "react-dom/server";
 
+import { platformMark } from "../platforms";
 import { PlatformBadges, PlatformIcon, PlatformInstall, type PlatformInstallTarget } from "./index";
 import * as server from "./server";
 
@@ -104,6 +105,24 @@ test("platform icons are decorative monochrome marks unless labelled", () => {
   expect(svg?.getAttribute("aria-hidden")).toBeNull();
   const custom = render(renderToStaticMarkup(<PlatformIcon platform="freebsd" />));
   expect(custom.querySelector("svg")?.getAttribute("data-platform")).toBe("freebsd");
+});
+
+test("each platform mark is defined once per component and drawn by reference", () => {
+  const markup = renderToStaticMarkup(<PlatformInstall id="relay" platforms={targets} />);
+  for (const id of ["macos", "linux", "windows"] as const) {
+    expect(markup.split(platformMark(id).path)).toHaveLength(2);
+  }
+  const document = render(markup);
+  const symbols = [...document.querySelectorAll("svg.hraness-platform-install__marks symbol")];
+  expect(symbols.map((symbol) => symbol.id)).toEqual(["relay-mark-macos", "relay-mark-linux", "relay-mark-windows"]);
+  expect(document.querySelector("svg.hraness-platform-install__marks")?.getAttribute("aria-hidden")).toBe("true");
+  const uses = [...document.querySelectorAll("svg.hraness-platform-icon use")].map((use) => use.getAttribute("href"));
+  // One reference in each tab and one in each no-script panel label.
+  expect(uses).toEqual(["#relay-mark-macos", "#relay-mark-linux", "#relay-mark-windows", "#relay-mark-macos", "#relay-mark-linux", "#relay-mark-windows"]);
+  // The three marks weigh about 6 KB together. Drawing them in every tab and
+  // panel label repeated them six times, about 30 KB more than this bound.
+  const marks = targets.reduce((total, target) => total + platformMark(target.id).path.length, 0);
+  expect(markup.length).toBeLessThan(marks + 16_000);
 });
 
 test("the Runs on row lists each platform with its icon and name", () => {
