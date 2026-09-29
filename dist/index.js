@@ -98,7 +98,7 @@ import {
   maximumSyntaxCharacters,
   resolveSyntaxLanguage,
   syntaxLanguages
-} from "./chunk-kspdf9ch.js";
+} from "./chunk-26hjh487.js";
 import {
   providerMark,
   providerMarkArtDataUri,

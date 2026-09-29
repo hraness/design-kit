@@ -38,3 +38,10 @@ test("SyntaxCode offers class-only server markup for strict-CSP consumers", () =
   expect(html).toContain('class="sh__token--keyword"');
   expect(html).not.toMatch(/\sstyle=|<script/u);
 });
+
+test("SyntaxCode exposes Rust metadata and real lexical roles for article consumers", () => {
+  const html = renderToStaticMarkup(<SyntaxCode code="keys.sort_by(|a, b| a.cmp(b));" language="rust" styles="classes" />);
+  expect(html).toContain('data-language="rust"');
+  expect(html).toContain('syntax-token--function');
+  expect(html).not.toMatch(/\sstyle=|<script/u);
+});

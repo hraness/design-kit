@@ -291,3 +291,23 @@ test("syntax colors are semantic, theme-aware, and forced-color safe", async () 
     "--syntax-string: var(--plain-syntax-string)",
   );
 });
+
+test("explicit source languages use bounded shared lexers and class-only markup", () => {
+  for (const [hint, language, code] of [
+    ["language-rs", "rust", "pub fn compare() -> bool { true }"],
+    ["toml", "toml", '[policy]\nstrategy = "auto"'],
+    ["yml", "yaml", "title: Example\nactive: true"],
+    ["lean4", "lean", "theorem idempotence : x = x := by rfl"],
+    ["tla+", "tla", "VARIABLE state\nNext == UNCHANGED state"],
+  ] as const) {
+    expect(resolveSyntaxLanguage(hint)).toBe(language);
+    const output = highlightCode(code, hint, { styles: "classes" });
+    expect(output.language).toBe(language);
+    expect(output.className).toBe(`syntax-code language-${language}`);
+    const document = parseHTML(`<code>${output.html}</code>`).document;
+    expect(document.querySelector("code")?.textContent).toBe(code);
+    expect(document.querySelectorAll("[style], script")).toHaveLength(0);
+    expect(document.querySelectorAll(".syntax-token").length).toBeGreaterThan(0);
+    expect(highlightCode("x".repeat(maximumSyntaxCharacters + 1), hint).language).toBe("text");
+  }
+});

@@ -1,13 +1,20 @@
 import { highlight } from "sugar-high";
+import { highlightCodeLexer } from "./syntax-code-lexers.js";
+import { escapeHtml, token, type SyntaxToken } from "./syntax-tokens.js";
 
 export const syntaxLanguages = [
   "css",
   "html",
   "json",
+  "lean",
   "markdown",
+  "rust",
   "shell",
   "text",
+  "tla",
+  "toml",
   "typescript",
+  "yaml",
 ] as const;
 
 export type SyntaxLanguage = (typeof syntaxLanguages)[number];
@@ -38,18 +45,6 @@ function classOnlySyntax(html: string): string {
   }
   return result;
 }
-
-type SyntaxToken =
-  | "command"
-  | "comment"
-  | "flag"
-  | "heading"
-  | "inline"
-  | "keyword"
-  | "marker"
-  | "operator"
-  | "string"
-  | "variable";
 
 const shellKeywords = new Set([
   "case",
@@ -102,6 +97,21 @@ export function resolveSyntaxLanguage(input: unknown): SyntaxLanguage {
     case "json":
     case "jsonc":
       return "json";
+    case "lean":
+    case "lean4":
+      return "lean";
+    case "rust":
+    case "rs":
+      return "rust";
+    case "tla":
+    case "tla+":
+    case "tlaplus":
+      return "tla";
+    case "toml":
+      return "toml";
+    case "yaml":
+    case "yml":
+      return "yaml";
     case "markdown":
     case "md":
     case "mdx":
@@ -160,31 +170,8 @@ export function inferSyntaxLanguage(code: string): SyntaxLanguage {
   return "text";
 }
 
-function escapeHtml(value: string): string {
-  return value.replace(/[&<>"']/gu, (character) => {
-    switch (character) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      case "'":
-        return "&#39;";
-      default:
-        return character;
-    }
-  });
-}
-
 function tokenHtml(kind: SyntaxToken, html: string): string {
   return `<span class="syntax-token syntax-token--${kind}">${html}</span>`;
-}
-
-function token(kind: SyntaxToken, value: string): string {
-  return tokenHtml(kind, escapeHtml(value));
 }
 
 function highlightMarkdownInline(value: string): string {
@@ -478,7 +465,9 @@ export function highlightCode(
       ? highlightMarkdown(code)
       : language === "shell"
         ? highlightShell(code)
-        : highlight(code);
+        : language === "rust" || language === "toml" || language === "yaml" || language === "lean" || language === "tla"
+          ? highlightCodeLexer(code, language)
+          : highlight(code);
 
   return Object.freeze({
     className: `syntax-code language-${language}`,

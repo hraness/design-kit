@@ -60,7 +60,7 @@ import {
   marketingPatterns,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-x0a936sc.js";
+} from "../chunk-zsnhznx7.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -91,7 +91,7 @@ import {
   suggestStatusRoute
 } from "../chunk-rr7vkqtt.js";
 import"../chunk-zzq7bdj8.js";
-import"../chunk-kspdf9ch.js";
+import"../chunk-26hjh487.js";
 import"../chunk-eh71jz57.js";
 import {
   BarListChart,
