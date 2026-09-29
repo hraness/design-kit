@@ -1693,12 +1693,12 @@ const designPriorityContract = requireSerializedPriorityContract(
 assert.deepEqual(
   designPriorityContract.rawPrioritiesByRank,
   [
-    [0, 0.1, 0.5, 1, 31, 131, 201, 231, 241, 331],
-    // x300 priorities are PlatformInstall's container queries on its own
-    // column; they stay in the existing rank of their property class.
-    [1000, 1200, 1300],
-    [2000, 2040, 2130, 2200, 2300],
-    [3000, 3040, 3045, 3092, 3130, 3200, 3300, 3330],
+    // 301 holds PlatformInstall's container-query custom properties, which
+    // stay in rank 1 with the other custom-property atoms.
+    [0, 0.1, 0.5, 1, 31, 131, 201, 231, 241, 301, 331],
+    [1000, 1200],
+    [2000, 2040, 2130, 2200],
+    [3000, 3040, 3045, 3092, 3130, 3200, 3330],
     [4000, 4130, 4200],
     [6000],
     [7000],

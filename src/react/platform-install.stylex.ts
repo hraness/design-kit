@@ -29,6 +29,14 @@ const forced = "@media (forced-colors: active)";
 const container = "hraness-platform-install";
 const narrow = `@container ${container} (max-width: 30rem)`;
 const stacked = `@container ${container} (max-width: 17.5rem)`;
+// Narrow and stacked values reach the tab row through private custom
+// properties, one per mode, read with the default as the var() fallback.
+// Another package that compiles the same default atom (for example
+// `justify-self: start` or `font-size: 0.875rem`) into a later cascade layer
+// would otherwise override a conditional atom here, and two container
+// conditions at one priority would resolve by source order.
+const v = (name: string) => `--_hraness-platform-install-${name}`;
+const pick = (name: string, fallback: string) => `var(${v(`stacked-${name}`)}, var(${v(`narrow-${name}`)}, ${fallback}))`;
 
 export const platformInstallStyles = stylex.create({
   root: {
@@ -53,13 +61,16 @@ export const platformInstallStyles = stylex.create({
     borderWidth: "1px",
     boxSizing: "border-box",
     display: { default: "flex", [noScript]: "none" },
-    gap: { default: "0.25rem", [narrow]: "0.125rem" },
-    justifySelf: { default: "start", [narrow]: "stretch" },
+    gap: pick("tabs-gap", "0.25rem"),
+    justifySelf: pick("tabs-justify", "start"),
     maxInlineSize: "100%",
     minInlineSize: 0,
     overflowX: "auto",
-    padding: { default: "0.25rem", [narrow]: "0.1875rem" },
+    padding: pick("tabs-padding", "0.25rem"),
     scrollbarWidth: "none",
+    [v("narrow-tabs-gap")]: { default: null, [narrow]: "0.125rem" },
+    [v("narrow-tabs-justify")]: { default: null, [narrow]: "stretch" },
+    [v("narrow-tabs-padding")]: { default: null, [narrow]: "0.1875rem" },
   },
   tab: {
     alignItems: "center",
@@ -80,10 +91,10 @@ export const platformInstallStyles = stylex.create({
     flexGrow: 1,
     flexShrink: 1,
     fontFamily: "inherit",
-    flexDirection: { default: "row", [stacked]: "column" },
-    fontSize: { default: "0.875rem", [narrow]: "0.8125rem", [stacked]: "0.75rem" },
+    flexDirection: pick("tab-direction", "row"),
+    fontSize: pick("tab-font-size", "0.875rem"),
     fontWeight: 500,
-    gap: { default: "0.45rem", [narrow]: "0.3rem", [stacked]: "0.2rem" },
+    gap: pick("tab-gap", "0.45rem"),
     justifyContent: "center",
     lineHeight: 1.2,
     margin: 0,
@@ -91,11 +102,19 @@ export const platformInstallStyles = stylex.create({
     minInlineSize: 0,
     outline: { default: "none", ":focus-visible": `2px solid ${focusRing}` },
     outlineOffset: "1px",
-    paddingBlock: { default: "0.4rem", [stacked]: "0.35rem" },
-    paddingInline: { default: "0.8rem", [narrow]: "0.45rem", [stacked]: "0.25rem" },
+    paddingBlock: pick("tab-padding-block", "0.4rem"),
+    paddingInline: pick("tab-padding-inline", "0.8rem"),
     transitionDuration: { default: "120ms", "@media (prefers-reduced-motion: reduce)": "0s" },
     transitionProperty: "background-color, color, border-color",
     whiteSpace: "nowrap",
+    [v("narrow-tab-font-size")]: { default: null, [narrow]: "0.8125rem" },
+    [v("narrow-tab-gap")]: { default: null, [narrow]: "0.3rem" },
+    [v("narrow-tab-padding-inline")]: { default: null, [narrow]: "0.45rem" },
+    [v("stacked-tab-direction")]: { default: null, [stacked]: "column" },
+    [v("stacked-tab-font-size")]: { default: null, [stacked]: "0.75rem" },
+    [v("stacked-tab-gap")]: { default: null, [stacked]: "0.2rem" },
+    [v("stacked-tab-padding-block")]: { default: null, [stacked]: "0.35rem" },
+    [v("stacked-tab-padding-inline")]: { default: null, [stacked]: "0.25rem" },
   },
   tabLabel: {
     minInlineSize: 0,

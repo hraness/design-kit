@@ -112,6 +112,7 @@ async function assertTabsFit(page: Page, where: string, screenshot: string): Pro
       page: document.documentElement.scrollWidth,
       viewport: window.innerWidth,
       row: { left: row.left, right: row.right, top: row.top, bottom: row.bottom },
+      rootWidth: (tablist.closest("[data-hraness-platform-install]") as HTMLElement).getBoundingClientRect().width,
       rowScroll: tablist.scrollWidth,
       rowClient: tablist.clientWidth,
       tabs: [...tablist.querySelectorAll('[role="tab"]')].map((tab) => {
@@ -129,6 +130,8 @@ async function assertTabsFit(page: Page, where: string, screenshot: string): Pro
   });
   assert(layout.page <= layout.viewport, `${where}: the page must not scroll sideways`);
   assert.deepEqual(layout.tabs.map((tab) => tab.platform), ["macos", "linux", "windows"], `${where}: three tabs`);
+  // Every caller is a narrow column (30rem or less), where the row spans it.
+  assert(layout.row.right - layout.row.left >= layout.rootWidth - 0.5, `${where}: the tab row spans its column (${layout.row.right - layout.row.left} < ${layout.rootWidth})`);
   assert(layout.rowScroll <= layout.rowClient, `${where}: the tab row must not scroll sideways (${layout.rowScroll} > ${layout.rowClient})`);
   for (const tab of layout.tabs) {
     assert(tab.width > 0, `${where}: the ${tab.platform} tab renders`);
@@ -236,6 +239,36 @@ try {
       assert(Math.abs(root - container) < 0.5, `${where}: the fixture column is ${container}px wide (${root})`);
       await assertTabsFit(page, where, `platform-install-container-${container}-${width}-${colorScheme}`);
     }
+  }
+
+  // Another package's later cascade layer may compile the same default atoms
+  // (`justify-self: start`, `font-size: 0.875rem`, ...). Re-declaring every
+  // unconditional atom on the tab row and tabs in a later layer must not undo
+  // the narrow or stacked layout.
+  for (const container of [200, 230] as const) {
+    const page = await open({ platform: "Windows", width: 320, container });
+    const copied = await page.evaluate(() => {
+      const targets = [document.querySelector('[role="tablist"]'), ...document.querySelectorAll('[role="tab"]')] as Element[];
+      const texts = new Set<string>();
+      const walk = (list: CSSRuleList, conditional: boolean) => {
+        for (const rule of list) {
+          if (rule instanceof CSSStyleRule) {
+            if (!conditional && /^\.x[a-z0-9]+$/u.test(rule.selectorText) && targets.some((node) => node.matches(rule.selectorText))) texts.add(rule.cssText);
+          } else if (rule instanceof CSSLayerBlockRule) {
+            walk(rule.cssRules, conditional);
+          } else if ("cssRules" in rule) {
+            walk((rule as CSSGroupingRule).cssRules, true);
+          }
+        }
+      };
+      for (const sheet of document.styleSheets) walk(sheet.cssRules, false);
+      const later = new CSSStyleSheet();
+      later.replaceSync(`@layer components.later-package { ${[...texts].join("\n")} }`);
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, later];
+      return texts.size;
+    });
+    assert(copied > 10, `later-layer fixture copies the default atoms (${copied})`);
+    await assertTabsFit(page, `${container}px container with a later layer`, `platform-install-container-${container}-later-layer`);
   }
 
   // Explicit system pairs must stay readable through selected-tab descendants.
