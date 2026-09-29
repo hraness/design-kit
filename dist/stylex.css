@@ -53,6 +53,10 @@
     padding: .35rem .6rem;
   }
 
+  .xo16nda {
+    padding: .3rem .85rem;
+  }
+
   .x3699eh {
     padding: .55rem .9rem;
   }
@@ -370,6 +374,10 @@
 
   .x3psx0u {
     flex: none;
+  }
+
+  .xxszbp0 {
+    flex: 0 32rem;
   }
 
   .x12lumcd {
@@ -816,6 +824,10 @@
     .xidp9i6.xidp9i6 {
       outline: 1px solid buttonborder;
     }
+
+    .x1sah7t.x1sah7t {
+      outline: 1px solid canvastext;
+    }
   }
 
   @media (width <= 48rem) {
@@ -1061,6 +1073,10 @@
 
   .xw7x07y {
     background-color: color-mix(in srgb,var(--hraness-marketing-ink) 18%,transparent);
+  }
+
+  .x1lvhz8c {
+    background-color: color-mix(in srgb,var(--hraness-marketing-ink) 6%,transparent);
   }
 
   .x1218lln {
@@ -1945,6 +1961,10 @@
 
   .xd4aj15 {
     font-size-adjust: inherit;
+  }
+
+  .x142gn8v {
+    font-size: .74rem;
   }
 
   .xboafo0 {

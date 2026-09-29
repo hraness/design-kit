@@ -8,13 +8,17 @@ Public product pages follow the Quiet direction, taken from the structure of alg
 
 - A thin sticky header: the foil product lockup, three to six plain links, one primary action, and the appearance menu as the right-most control. On phones the links move to their own row, which scrolls sideways without a visible scrollbar; the brand, action, and appearance menu stay on the first row. Every control keeps a 44px target and nothing overlaps or clips.
 - A sans hero: a small plain eyebrow, one large heading in Nebula Sans at weight 550 with tight tracking, a summary of two or three sentences within about 42rem, one primary button and at most one text link, and optionally one line of plain facts such as license, platforms, or price.
-- One real proof right after the hero: a terminal or code block, a static screenshot with `alt` text, or compact real output.
+- One real proof right after the hero: a terminal or code block, a static screenshot with `alt` text, or compact real output. When there is nothing real to capture, one labelled mockup from `@hraness/design-kit/mockups`, or a `ModeShowcase` that switches between a few of its states, may stand in. It says it is an illustration, uses invented names on example domains, and stays a single described image.
 - Ruled sections: each has an eyebrow, a heading, one short paragraph, and one concrete element such as steps, code, a table, or a small figure. Prefer rows and lists to walls of equal cards. Keep a bounded reading width.
 - A flat palette background with content on opaque surfaces and hairline edges. Mono only for code, commands, and small labels.
 
 Retired, and no longer produced by any shared default: hero backdrops and pointer-driven light (`ProductHero` `backdrop`, `HeroBackdrop`, `attachHeroLight`, `data-hraness-hero-item`), background textures and patterns (grain, cells, weave, contour, mesh, grid tiling, gradients behind text), serif display headings, glass or blur on cards and content, heavy shadows and glowing edges, and large interactive app mockups on marketing pages. The retired component names stay exported and do nothing, so products can remove them on their own schedule. See [Hero fields](HERO_FIELDS.md) and [Marketing preset](MARKETING_PRESET.md).
 
 Blur remains allowed only on a sticky header with real content scrolling behind it, and that header turns opaque without backdrop support, with reduced transparency, and in forced colors.
+
+## Launch posts
+
+An "Introducing" post reads as a column of beats: a short headline, one claim, and one visual each, anchored as `#beat-<id>`. Visuals are mockups, short clips, or diagrams in an `ArticleFigure`, with the kind named in the caption. Depth, comparison tables, and charts go in companion posts, drawn with `ArticleTable`, `ArticleBarChart`, and `ComparisonTable`. The social kit sits in a closed disclosure after the beats. The gallery renders every mockup frame in light and dark from `gallery/mockups-fixture.tsx`.
 
 ## Application surfaces
 

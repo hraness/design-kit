@@ -1,15 +1,29 @@
 "use client";
 import {
+  BarListChart,
+  RadarProfileChart,
+  RangePlotChart
+} from "../chunk-9t8xyqte.js";
+import {
+  HeroBackdrop
+} from "../chunk-8834fh4n.js";
+import {
+  ArticleBarChart,
   ArticleByline,
   ArticleCallout,
+  ArticleFigure,
   ArticleIndex,
   ArticleProvenance,
   ArticleRelatedProducts,
   ArticleSources,
+  ArticleTable,
+  ArticleVideo,
   BottomBar,
+  ComparisonTable,
   DitherSurface,
   DockedFooter,
   FoilMark,
+  LaunchBeats,
   MarketingArticle,
   MarketingCallToAction,
   MarketingCard,
@@ -47,6 +61,7 @@ import {
   ProviderMarkChip,
   SyntaxCode,
   TopBar,
+  articleFigureKinds,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
   effectsStyles,
@@ -57,10 +72,12 @@ import {
   foilStyles,
   foilTextHalo,
   foilTextImage,
+  launchBeatAnchor,
   marketingPatterns,
+  marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-qrd7d0d5.js";
+} from "../chunk-cwepvdey.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -89,18 +106,16 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-rr7vkqtt.js";
-import"../chunk-zzq7bdj8.js";
+} from "../chunk-gqrdw8b6.js";
 import"../chunk-he8eznb1.js";
+import"../chunk-77391vmq.js";
+import {
+  LAUNCH_LIMITS,
+  blueskyPostLength,
+  characterLength,
+  xPostLength
+} from "../chunk-0sah7fsv.js";
 import"../chunk-eh71jz57.js";
-import {
-  BarListChart,
-  RadarProfileChart,
-  RangePlotChart
-} from "../chunk-9t8xyqte.js";
-import {
-  HeroBackdrop
-} from "../chunk-8834fh4n.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -6899,6 +6914,138 @@ function StickyOffsetSync({
   }), [header]);
   return null;
 }
+// src/react/social-kit-panel.tsx
+import { useCallback as useCallback3, useId as useId4, useState as useState6 } from "react";
+import { jsx as jsx17, jsxs as jsxs15 } from "react/jsx-runtime";
+function kitEntries(kit) {
+  const thread = (channel, label, posts, measure, limit) => posts.map((text, index) => ({
+    key: `${channel}.${index}`,
+    label: `${label} ${index + 1} of ${posts.length}`,
+    text,
+    length: measure(text),
+    limit
+  }));
+  return [...thread("x", "X post", kit.x, xPostLength, LAUNCH_LIMITS.x), ...thread("bluesky", "Bluesky post", kit.bluesky, blueskyPostLength, LAUNCH_LIMITS.bluesky), ...thread("threads", "Threads post", kit.threads, characterLength, LAUNCH_LIMITS.threads), {
+    key: "linkedin",
+    label: "LinkedIn post",
+    text: kit.linkedin,
+    length: characterLength(kit.linkedin),
+    limit: LAUNCH_LIMITS.linkedin
+  }, {
+    key: "productHunt.tagline",
+    label: "Product Hunt tagline",
+    text: kit.productHunt.tagline,
+    length: characterLength(kit.productHunt.tagline),
+    limit: LAUNCH_LIMITS.productHuntTagline
+  }, {
+    key: "productHunt.description",
+    label: "Product Hunt description",
+    text: kit.productHunt.description,
+    length: characterLength(kit.productHunt.description),
+    limit: LAUNCH_LIMITS.productHuntDescription
+  }];
+}
+async function writeClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function SocialKitPanel({
+  className,
+  kit,
+  summary = "Social posts for this launch"
+}) {
+  const id = useId4();
+  const [status, setStatus] = useState6(null);
+  const copy = useCallback3(async (entry) => {
+    setStatus({
+      key: entry.key,
+      ok: await writeClipboard(entry.text)
+    });
+  }, []);
+  const entries = kitEntries(kit);
+  return /* @__PURE__ */ jsxs15("details", {
+    className: ["plain-publication__social-kit", className].filter(Boolean).join(" "),
+    "data-hraness-social-kit": "",
+    children: [
+      /* @__PURE__ */ jsx17("summary", {
+        children: summary
+      }),
+      /* @__PURE__ */ jsx17("ol", {
+        className: "plain-publication__social-kit-list",
+        children: entries.map((entry) => {
+          const over = entry.length > entry.limit;
+          const counterId = `${id}-${entry.key}-count`;
+          return /* @__PURE__ */ jsxs15("li", {
+            className: "plain-publication__social-kit-item",
+            "data-over": over ? "" : undefined,
+            children: [
+              /* @__PURE__ */ jsxs15("div", {
+                className: "plain-publication__social-kit-head",
+                children: [
+                  /* @__PURE__ */ jsx17("span", {
+                    className: "plain-publication__social-kit-label",
+                    children: entry.label
+                  }),
+                  /* @__PURE__ */ jsxs15("span", {
+                    className: "plain-publication__social-kit-count",
+                    id: counterId,
+                    children: [
+                      entry.length,
+                      " of ",
+                      entry.limit
+                    ]
+                  }),
+                  /* @__PURE__ */ jsxs15("button", {
+                    "aria-describedby": counterId,
+                    className: "plain-publication__social-kit-copy",
+                    onClick: () => void copy(entry),
+                    type: "button",
+                    children: [
+                      status?.key === entry.key ? status.ok ? "Copied" : "Copy failed" : "Copy",
+                      /* @__PURE__ */ jsxs15("span", {
+                        className: "plain-publication__visually-hidden",
+                        children: [
+                          " ",
+                          entry.label
+                        ]
+                      })
+                    ]
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsx17("p", {
+                className: "plain-publication__social-kit-text",
+                children: entry.text
+              })
+            ]
+          }, entry.key);
+        })
+      }),
+      kit.showHnFacts.length === 0 ? null : /* @__PURE__ */ jsxs15("div", {
+        className: "plain-publication__social-kit-facts",
+        children: [
+          /* @__PURE__ */ jsx17("p", {
+            children: "Facts for your own post"
+          }),
+          /* @__PURE__ */ jsx17("ul", {
+            children: kit.showHnFacts.map((fact) => /* @__PURE__ */ jsx17("li", {
+              children: fact
+            }, fact))
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx17("p", {
+        "aria-live": "polite",
+        className: "plain-publication__visually-hidden",
+        children: status === null ? "" : status.ok ? "Copied to the clipboard." : "Copying failed. Select the text and copy it."
+      })
+    ]
+  });
+}
 export {
   useKeyboardShortcuts,
   useHapticFeedback,
@@ -6920,7 +7067,9 @@ export {
   normalizeDesignTheme,
   measureStickyOffset,
   matchesKeyboardShortcut,
+  marketingProofFrameAddress,
   marketingPatterns,
+  launchBeatAnchor,
   lanternControlStyles,
   isKeyboardTextEntryTarget,
   isKeyboardInteractionTarget,
@@ -6954,6 +7103,7 @@ export {
   createFoilCardSeedPose,
   createFoilCardPointerPose,
   cancelHapticFeedback,
+  articleFigureKinds,
   TopBar,
   ThemeToggle,
   ThemeMenuButton,
@@ -6961,6 +7111,7 @@ export {
   SyntaxCode,
   StickyOffsetSync,
   StatusPage,
+  SocialKitPanel,
   RouteNotFoundPage,
   RouteLoadingPage,
   RouteErrorPage,
@@ -7008,6 +7159,7 @@ export {
   MarketingCard,
   MarketingCallToAction,
   MarketingArticle,
+  LaunchBeats,
   LanternMaterialGallery,
   HeroBackdrop,
   HAPTIC_FEEDBACK_EVENT_NAME,
@@ -7023,17 +7175,22 @@ export {
   DesignPortalThemeProvider,
   DesignPaletteProvider,
   DesignPaletteMenuButton,
+  ComparisonTable,
   ChatMessage,
   ChatComposer,
   BottomBar,
   BarListChart,
   AuroraDotsBackground,
+  ArticleVideo,
+  ArticleTable,
   ArticleSources,
   ArticleRelatedProducts,
   ArticleProvenance,
   ArticleIndex,
+  ArticleFigure,
   ArticleCallout,
   ArticleByline,
+  ArticleBarChart,
   AppShell,
   AnimatedRailStage
 };

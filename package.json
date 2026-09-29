@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -101,6 +101,23 @@
     "./react/hero-backdrop": {
       "types": "./src/react/hero-backdrop.tsx",
       "import": "./dist/react/hero-backdrop.js"
+    },
+    "./launch": {
+      "types": "./src/launch.ts",
+      "import": "./dist/launch.js"
+    },
+    "./mockups": {
+      "types": "./src/mockups/index.ts",
+      "import": "./dist/mockups/index.js"
+    },
+    "./mockups/client": {
+      "types": "./src/mockups/client.tsx",
+      "import": "./dist/mockups/client.js"
+    },
+    "./mockups.css": "./src/mockups.css",
+    "./testing": {
+      "types": "./src/testing.ts",
+      "import": "./dist/testing.js"
     }
   },
   "main": "./dist/index.js",
@@ -149,6 +166,8 @@
     "src/react/app-shell.stylex.ts",
     "src/react/app-shell.tsx",
     "src/react/article.tsx",
+    "src/react/launch-beats.tsx",
+    "src/react/social-kit-panel.tsx",
     "src/react/aurora-dots-background.tsx",
     "src/react/charts.stylex.ts",
     "src/react/charts.tsx",
@@ -250,7 +269,15 @@
     "src/icons.ts",
     "src/icons.generated.ts",
     "src/icons",
-    "ICONS.md"
+    "ICONS.md",
+    "src/launch.ts",
+    "src/mockups/client.tsx",
+    "src/mockups/core.tsx",
+    "src/mockups/frames.tsx",
+    "src/mockups/index.ts",
+    "src/mockups/surfaces.tsx",
+    "src/mockups.css",
+    "src/testing.ts"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",
@@ -261,8 +288,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
-    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts && bun run ./scripts/foil-browser.ts && bun run ./scripts/hero-light-browser.ts && bun run ./scripts/status-page-browser.ts",
-    "test:package": "bun run ./scripts/package-smoke.ts",
+    "test:browser": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/product-marketing-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts && bun run ./scripts/foil-browser.ts && bun run ./scripts/hero-light-browser.ts && bun run ./scripts/status-page-browser.ts && bun run ./scripts/mockups-browser.ts",
+    "test:package": "bun run ./scripts/package-smoke.ts && bun run ./scripts/mockups-import.ts",
     "kb:refresh": "bunx --bun --package https://github.com/hraness/wordcell/releases/download/v0.24.0/hraness-wordcell-0.24.0.tgz wordcell refresh --root kb",
     "kb:check:lane": "bunx --bun --package https://github.com/hraness/wordcell/releases/download/v0.24.0/hraness-wordcell-0.24.0.tgz wordcell check --root kb --no-catalog",
     "kb:check": "bunx --bun --package https://github.com/hraness/wordcell/releases/download/v0.24.0/hraness-wordcell-0.24.0.tgz wordcell check --root kb && bunx --bun --package https://github.com/hraness/wordcell/releases/download/v0.24.0/hraness-wordcell-0.24.0.tgz wordcell agents check --root kb --repo .",

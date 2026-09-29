@@ -1,4 +1,7 @@
 import {
+  highlightCode
+} from "./chunk-he8eznb1.js";
+import {
   ARTICLE_BYLINE_PREFIX,
   ARTICLE_SOURCES_HEADING,
   ARTICLE_TOC_LABEL,
@@ -7,11 +10,13 @@ import {
   assertArticleCalloutTone,
   assertArticleDates,
   assertArticleHref,
-  formatArticleDate
-} from "./chunk-zzq7bdj8.js";
+  assertArticleVideo,
+  formatArticleDate,
+  orderedArticleVideoSources
+} from "./chunk-77391vmq.js";
 import {
-  highlightCode
-} from "./chunk-he8eznb1.js";
+  assertLaunchBeats
+} from "./chunk-0sah7fsv.js";
 import {
   providerMark,
   providerMarkFallback,
@@ -1073,6 +1078,32 @@ var marketingStyles = {
   },
   proof_frame__credit: {
     kLh5Sq: "xp1qmoa",
+    $$css: true
+  },
+  proof_frame__title_mono: {
+    kUk6DE: "x12lumcd",
+    kVQacm: "xb3r6kr",
+    knIRL8: "x1pkbhk2",
+    kMCLAl: "x2b8uid",
+    kd00dl: "xlyipyv",
+    kBYq9C: "xuxw1ft",
+    $$css: true
+  },
+  proof_frame__address: {
+    kUk6DE: "xxszbp0",
+    kdYMnH: "xesnm00",
+    kYk0Dm: "xvueqy4",
+    kmVPX3: "xo16nda",
+    kVQacm: "xb3r6kr",
+    kvZwPi: "x1e6avla",
+    kL20gf: "x1lvhz8c x9yvj25",
+    kI3sdo: "x1a2a7pz x1sah7t",
+    kMwMTN: "xs87ocq",
+    knIRL8: "x1pkbhk2",
+    kLh5Sq: "x142gn8v",
+    kMCLAl: "x2b8uid",
+    kd00dl: "xlyipyv",
+    kBYq9C: "xuxw1ft",
     $$css: true
   },
   data_table: {
@@ -2969,7 +3000,11 @@ var recipes = {
     default: marketingStyles.proof_frame__light
   },
   "hraness-marketing-proof-frame__title": {
-    default: marketingStyles.proof_frame__title
+    default: marketingStyles.proof_frame__title,
+    terminal: marketingStyles.proof_frame__title_mono
+  },
+  "hraness-marketing-proof-frame__address": {
+    default: marketingStyles.proof_frame__address
   },
   "hraness-marketing-proof-frame__content": {
     default: marketingStyles.proof_frame__content
@@ -3929,18 +3964,43 @@ function MarketingInstallPanel({
     ]
   });
 }
+function marketingProofFrameAddress(url) {
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new RangeError(`Proof frame url must be an absolute URL; received ${JSON.stringify(url)}.`);
+  }
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:")
+    throw new RangeError("Proof frame url must use http or https.");
+  const path = parsed.pathname === "/" ? "" : parsed.pathname;
+  return `${parsed.host}${path}`;
+}
 function MarketingProofFrame({
   caption,
   children,
+  chrome,
   className,
   credit,
-  title
+  title,
+  url
 }) {
+  if (chrome !== undefined && chrome !== "window" && chrome !== "browser" && chrome !== "terminal") {
+    throw new RangeError(`Unknown proof frame chrome: ${String(chrome)}.`);
+  }
+  if (url !== undefined && chrome !== "browser")
+    throw new RangeError('Proof frame url needs chrome="browser".');
+  const bar = chrome ?? (title === undefined ? undefined : "window");
+  const label = bar === "browser" ? url === undefined ? title : marketingProofFrameAddress(url) : title;
+  if (bar !== undefined && (label === undefined || label.trim() === "")) {
+    throw new RangeError(`Proof frame chrome=${bar} needs ${bar === "browser" ? "a url or title" : "a title"}.`);
+  }
   return /* @__PURE__ */ jsxs2("figure", {
     className: marketingClassName("hraness-marketing-proof-frame", className),
+    "data-chrome": bar,
     "data-hraness-marketing": "proof-frame",
     children: [
-      title === undefined ? null : /* @__PURE__ */ jsxs2("div", {
+      bar === undefined ? null : /* @__PURE__ */ jsxs2("div", {
         "aria-hidden": "true",
         className: marketingClassName("hraness-marketing-proof-frame__chrome"),
         children: [
@@ -3958,9 +4018,12 @@ function MarketingProofFrame({
               })
             ]
           }),
-          /* @__PURE__ */ jsx3("span", {
-            className: marketingClassName("hraness-marketing-proof-frame__title"),
-            children: title
+          bar === "browser" ? /* @__PURE__ */ jsx3("span", {
+            className: marketingClassName("hraness-marketing-proof-frame__address"),
+            children: label
+          }) : /* @__PURE__ */ jsx3("span", {
+            className: marketingClassName("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default"),
+            children: label
           })
         ]
       }),
@@ -5132,6 +5195,361 @@ function ArticleIndex({
     ]
   });
 }
+var articleFigureKinds = ["illustration", "screenshot", "recording", "diagram", "chart", "table"];
+var FIGURE_LABELS = {
+  illustration: "Illustration",
+  screenshot: "Screenshot",
+  recording: "Recording",
+  diagram: "Diagram",
+  chart: "Chart",
+  table: "Table"
+};
+function FigureCaption({
+  caption,
+  credit,
+  kind
+}) {
+  return /* @__PURE__ */ jsxs3("figcaption", {
+    className: "plain-publication__figure-caption",
+    children: [
+      /* @__PURE__ */ jsxs3("span", {
+        className: "plain-publication__figure-label",
+        children: [
+          FIGURE_LABELS[kind],
+          "."
+        ]
+      }),
+      " ",
+      caption,
+      credit === undefined || credit === null || credit === "" ? null : /* @__PURE__ */ jsx4("small", {
+        className: "plain-publication__figure-credit",
+        children: credit
+      })
+    ]
+  });
+}
+function ArticleFigure({
+  caption,
+  children,
+  className,
+  credit,
+  id,
+  kind,
+  width = "text"
+}) {
+  if (!articleFigureKinds.includes(kind))
+    throw new RangeError(`Unknown article figure kind: ${String(kind)}.`);
+  if (caption === undefined || caption === null || caption === "")
+    throw new RangeError("Article figures need a caption.");
+  return /* @__PURE__ */ jsxs3("figure", {
+    className: joinClasses("plain-publication__figure", className),
+    "data-figure-kind": kind,
+    "data-width": width,
+    id,
+    children: [
+      /* @__PURE__ */ jsx4("div", {
+        className: "plain-publication__figure-body",
+        children
+      }),
+      /* @__PURE__ */ jsx4(FigureCaption, {
+        caption,
+        credit,
+        kind
+      })
+    ]
+  });
+}
+function ArticleVideo({
+  caption,
+  className,
+  credit,
+  id,
+  video,
+  width = "text"
+}) {
+  assertArticleVideo(video);
+  return /* @__PURE__ */ jsx4(ArticleFigure, {
+    caption,
+    className: joinClasses("plain-publication__video", className),
+    credit,
+    kind: "recording",
+    width,
+    ...id === undefined ? {} : {
+      id
+    },
+    children: /* @__PURE__ */ jsxs3("video", {
+      "aria-label": video.name,
+      controls: true,
+      height: video.height,
+      playsInline: true,
+      poster: video.poster,
+      preload: "metadata",
+      width: video.width,
+      children: [
+        orderedArticleVideoSources(video).map((source) => /* @__PURE__ */ jsx4("source", {
+          src: source.src,
+          type: source.type
+        }, source.type)),
+        /* @__PURE__ */ jsx4("track", {
+          default: true,
+          kind: "captions",
+          label: "Captions",
+          src: video.captions,
+          srcLang: video.captionsLanguage ?? "en"
+        })
+      ]
+    })
+  });
+}
+function ArticleTable({
+  caption,
+  className,
+  columns,
+  id,
+  note,
+  rows
+}) {
+  if (columns.length === 0)
+    throw new RangeError("Article table needs at least one column.");
+  if (caption.trim() === "")
+    throw new RangeError("Article table needs a caption.");
+  for (const row of rows)
+    if (row.length !== columns.length)
+      throw new RangeError("Article table rows must match the column count.");
+  return /* @__PURE__ */ jsxs3("figure", {
+    className: joinClasses("plain-publication__figure plain-publication__data-table", className),
+    "data-figure-kind": "table",
+    id,
+    children: [
+      /* @__PURE__ */ jsx4("div", {
+        className: "plain-publication__table-scroll",
+        role: "region",
+        "aria-label": caption,
+        tabIndex: 0,
+        children: /* @__PURE__ */ jsxs3("table", {
+          className: "plain-publication__table",
+          children: [
+            /* @__PURE__ */ jsx4("caption", {
+              children: caption
+            }),
+            /* @__PURE__ */ jsx4("thead", {
+              children: /* @__PURE__ */ jsx4("tr", {
+                children: columns.map((column, index) => /* @__PURE__ */ jsx4("th", {
+                  "data-numeric": column.numeric === true ? "" : undefined,
+                  scope: "col",
+                  children: column.label
+                }, index))
+              })
+            }),
+            /* @__PURE__ */ jsx4("tbody", {
+              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx4("tr", {
+                children: row.map((cell, cellIndex) => cellIndex === 0 ? /* @__PURE__ */ jsx4("th", {
+                  scope: "row",
+                  children: cell
+                }, cellIndex) : /* @__PURE__ */ jsx4("td", {
+                  "data-numeric": columns[cellIndex]?.numeric === true ? "" : undefined,
+                  children: cell
+                }, cellIndex))
+              }, rowIndex))
+            })
+          ]
+        })
+      }),
+      note === undefined || note === null ? null : /* @__PURE__ */ jsx4("p", {
+        className: "plain-publication__figure-note",
+        children: note
+      })
+    ]
+  });
+}
+function ArticleBarChart({
+  caption,
+  className,
+  credit,
+  data,
+  id,
+  max
+}) {
+  if (data.length === 0)
+    throw new RangeError("Article bar chart needs at least one bar.");
+  for (const datum of data) {
+    if (!Number.isFinite(datum.value) || datum.value < 0)
+      throw new RangeError(`Article bar chart value for ${JSON.stringify(datum.label)} must be a finite number of at least 0.`);
+    if (datum.display.trim() === "" || datum.label.trim() === "")
+      throw new RangeError("Article bar chart bars need a label and a display value.");
+  }
+  const ceiling = max ?? Math.max(...data.map((datum) => datum.value));
+  if (!Number.isFinite(ceiling) || ceiling <= 0)
+    throw new RangeError("Article bar chart max must be greater than 0.");
+  for (const datum of data)
+    if (datum.value > ceiling)
+      throw new RangeError(`Article bar chart value for ${JSON.stringify(datum.label)} exceeds max.`);
+  return /* @__PURE__ */ jsx4(ArticleFigure, {
+    caption,
+    className: joinClasses("plain-publication__bar-chart", className),
+    credit,
+    kind: "chart",
+    ...id === undefined ? {} : {
+      id
+    },
+    children: /* @__PURE__ */ jsx4("dl", {
+      className: "plain-publication__bars",
+      children: data.map((datum) => /* @__PURE__ */ jsxs3("div", {
+        className: "plain-publication__bar",
+        "data-highlight": datum.highlight === true ? "" : undefined,
+        children: [
+          /* @__PURE__ */ jsx4("dt", {
+            children: datum.label
+          }),
+          /* @__PURE__ */ jsxs3("dd", {
+            children: [
+              /* @__PURE__ */ jsx4("span", {
+                "aria-hidden": "true",
+                className: "plain-publication__bar-track",
+                children: /* @__PURE__ */ jsx4("span", {
+                  className: "plain-publication__bar-fill",
+                  style: {
+                    "--plain-bar": `${Math.round(datum.value / ceiling * 1e4) / 100}%`
+                  }
+                })
+              }),
+              /* @__PURE__ */ jsx4("span", {
+                className: "plain-publication__bar-value",
+                children: datum.display
+              })
+            ]
+          })
+        ]
+      }, datum.label))
+    })
+  });
+}
+var COMPARISON_TEXT = {
+  yes: "Yes",
+  no: "No",
+  partial: "Partly"
+};
+function ComparisonGlyph({
+  kind
+}) {
+  const path = kind === "yes" ? "M3.5 8.5l3 3 6-7" : kind === "no" ? "M4.5 4.5l7 7m0-7l-7 7" : "M4 8h8";
+  return /* @__PURE__ */ jsx4("svg", {
+    "aria-hidden": "true",
+    className: "plain-publication__comparison-glyph",
+    focusable: "false",
+    height: "16",
+    viewBox: "0 0 16 16",
+    width: "16",
+    children: /* @__PURE__ */ jsx4("path", {
+      d: path,
+      fill: "none",
+      stroke: "currentColor",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      strokeWidth: "1.75"
+    })
+  });
+}
+function ComparisonCell({
+  value
+}) {
+  if (typeof value === "object")
+    return /* @__PURE__ */ jsx4(Fragment2, {
+      children: value.text
+    });
+  const kind = value === true ? "yes" : value === false ? "no" : "partial";
+  return /* @__PURE__ */ jsxs3("span", {
+    className: "plain-publication__comparison-value",
+    "data-value": kind,
+    children: [
+      /* @__PURE__ */ jsx4(ComparisonGlyph, {
+        kind
+      }),
+      /* @__PURE__ */ jsx4("span", {
+        children: COMPARISON_TEXT[kind]
+      })
+    ]
+  });
+}
+function ComparisonTable({
+  caption,
+  className,
+  highlight,
+  id,
+  note,
+  options,
+  rows
+}) {
+  if (options.length === 0)
+    throw new RangeError("Comparison table needs at least one option.");
+  if (caption.trim() === "")
+    throw new RangeError("Comparison table needs a caption.");
+  if (highlight !== undefined && (!Number.isInteger(highlight) || highlight < 0 || highlight >= options.length)) {
+    throw new RangeError("Comparison table highlight must be an option index.");
+  }
+  for (const row of rows)
+    if (row.values.length !== options.length)
+      throw new RangeError(`Comparison row ${JSON.stringify(row.label)} must have one value per option.`);
+  return /* @__PURE__ */ jsxs3("figure", {
+    className: joinClasses("plain-publication__figure plain-publication__comparison", className),
+    "data-figure-kind": "table",
+    id,
+    children: [
+      /* @__PURE__ */ jsx4("div", {
+        className: "plain-publication__table-scroll",
+        role: "region",
+        "aria-label": caption,
+        tabIndex: 0,
+        children: /* @__PURE__ */ jsxs3("table", {
+          className: "plain-publication__table",
+          children: [
+            /* @__PURE__ */ jsx4("caption", {
+              children: caption
+            }),
+            /* @__PURE__ */ jsx4("thead", {
+              children: /* @__PURE__ */ jsxs3("tr", {
+                children: [
+                  /* @__PURE__ */ jsx4("td", {}),
+                  options.map((option, index) => /* @__PURE__ */ jsx4("th", {
+                    "data-highlight": index === highlight ? "" : undefined,
+                    scope: "col",
+                    children: option
+                  }, option))
+                ]
+              })
+            }),
+            /* @__PURE__ */ jsx4("tbody", {
+              children: rows.map((row) => /* @__PURE__ */ jsxs3("tr", {
+                children: [
+                  /* @__PURE__ */ jsxs3("th", {
+                    scope: "row",
+                    children: [
+                      row.label,
+                      row.note === undefined || row.note === "" ? null : /* @__PURE__ */ jsx4("small", {
+                        className: "plain-publication__comparison-note",
+                        children: row.note
+                      })
+                    ]
+                  }),
+                  row.values.map((value, index) => /* @__PURE__ */ jsx4("td", {
+                    "data-highlight": index === highlight ? "" : undefined,
+                    children: /* @__PURE__ */ jsx4(ComparisonCell, {
+                      value
+                    })
+                  }, index))
+                ]
+              }, row.label))
+            })
+          ]
+        })
+      }),
+      note === undefined || note === null ? null : /* @__PURE__ */ jsx4("p", {
+        className: "plain-publication__figure-note",
+        children: note
+      })
+    ]
+  });
+}
 
 // src/react/surfaces.tsx
 import { forwardRef } from "react";
@@ -6282,4 +6700,74 @@ function ParticleHalo({
   });
 }
 
-export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo };
+// src/react/launch-beats.tsx
+import { jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
+var HEADING_TAGS2 = {
+  2: "h2",
+  3: "h3",
+  4: "h4"
+};
+function figureKind(beat) {
+  switch (beat.visual.kind) {
+    case "mockup":
+      return "illustration";
+    case "clip":
+      return "recording";
+    case "diagram":
+      return "diagram";
+  }
+}
+function launchBeatAnchor(beat) {
+  return `beat-${beat.id}`;
+}
+function LaunchBeats({
+  beats,
+  className,
+  detailLabel = "More on this",
+  headingLevel = 2,
+  renderVisual
+}) {
+  assertLaunchBeats(beats);
+  const Heading2 = HEADING_TAGS2[headingLevel];
+  if (Heading2 === undefined)
+    throw new RangeError("Launch beat heading level must be 2 to 4.");
+  return /* @__PURE__ */ jsx9("div", {
+    className: ["plain-publication__beats", className].filter(Boolean).join(" "),
+    "data-hraness-launch-beats": "",
+    children: beats.map((beat) => {
+      const anchor = launchBeatAnchor(beat);
+      const visual = renderVisual(beat);
+      if (visual === null || visual === undefined || visual === false)
+        throw new RangeError(`Launch beat ${JSON.stringify(beat.id)} needs a visual.`);
+      return /* @__PURE__ */ jsxs8("section", {
+        "aria-labelledby": `${anchor}-heading`,
+        className: "plain-publication__beat",
+        "data-part": beat.part,
+        id: anchor,
+        children: [
+          /* @__PURE__ */ jsx9(Heading2, {
+            id: `${anchor}-heading`,
+            children: beat.headline
+          }),
+          /* @__PURE__ */ jsx9("p", {
+            children: beat.post
+          }),
+          /* @__PURE__ */ jsx9(ArticleFigure, {
+            caption: beat.alt,
+            kind: figureKind(beat),
+            children: visual
+          }),
+          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx9("p", {
+            className: "plain-publication__beat-detail",
+            children: /* @__PURE__ */ jsx9("a", {
+              href: beat.detailHref,
+              children: detailLabel
+            })
+          })
+        ]
+      }, beat.id);
+    })
+  });
+}
+
+export { foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, SyntaxCode, marketingPatterns, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonTable, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, ProviderMark, ProviderMarkChip, ParticleHalo, launchBeatAnchor, LaunchBeats };

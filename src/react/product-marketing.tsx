@@ -675,26 +675,63 @@ export function MarketingInstallPanel({
   );
 }
 
+export type MarketingProofFrameChrome = "window" | "browser" | "terminal";
+
+/** Reads a frame URL for display: host and path, no scheme, no query or fragment. */
+export function marketingProofFrameAddress(url: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new RangeError(`Proof frame url must be an absolute URL; received ${JSON.stringify(url)}.`);
+  }
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new RangeError("Proof frame url must use http or https.");
+  const path = parsed.pathname === "/" ? "" : parsed.pathname;
+  return `${parsed.host}${path}`;
+}
+
+/**
+ * A captioned frame around a screenshot, recording, or code-built mockup.
+ * `chrome` draws a window title bar, a browser address bar, or a terminal
+ * title bar above the content. A `title` without `chrome` keeps the window
+ * bar. The browser bar shows `url` as host and path.
+ */
 export function MarketingProofFrame({
   caption,
   children,
+  chrome,
   className,
   credit,
   title,
+  url,
 }: Readonly<{
   caption?: string;
   children: ReactNode;
+  /** The title bar drawn above the content. Defaults to `window` when `title` is given, otherwise none. */
+  chrome?: MarketingProofFrameChrome;
   className?: string;
   credit?: string;
-  /** Renders window chrome with this title above the content. */
+  /** Window or terminal title; for the browser bar, the address shown when `url` is omitted. */
   title?: string;
+  /** The page address shown in the browser bar. */
+  url?: string;
 }>) {
+  if (chrome !== undefined && chrome !== "window" && chrome !== "browser" && chrome !== "terminal") {
+    throw new RangeError(`Unknown proof frame chrome: ${String(chrome)}.`);
+  }
+  if (url !== undefined && chrome !== "browser") throw new RangeError("Proof frame url needs chrome=\"browser\".");
+  const bar = chrome ?? (title === undefined ? undefined : "window");
+  const label = bar === "browser" ? (url === undefined ? title : marketingProofFrameAddress(url)) : title;
+  if (bar !== undefined && (label === undefined || label.trim() === "")) {
+    throw new RangeError(`Proof frame chrome=${bar} needs ${bar === "browser" ? "a url or title" : "a title"}.`);
+  }
   return (
     <figure
       className={classNames("hraness-marketing-proof-frame", className)}
+      data-chrome={bar}
       data-hraness-marketing="proof-frame"
     >
-      {title === undefined
+      {bar === undefined
         ? null
         : (
           <div aria-hidden="true" className={classNames("hraness-marketing-proof-frame__chrome")}>
@@ -703,7 +740,9 @@ export function MarketingProofFrame({
               <span className={classNames("hraness-marketing-proof-frame__light")} />
               <span className={classNames("hraness-marketing-proof-frame__light")} />
             </span>
-            <span className={classNames("hraness-marketing-proof-frame__title")}>{title}</span>
+            {bar === "browser"
+              ? <span className={classNames("hraness-marketing-proof-frame__address")}>{label}</span>
+              : <span className={classNames("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default")}>{label}</span>}
           </div>
         )}
       <div className={classNames("hraness-marketing-proof-frame__content")}>{children}</div>
