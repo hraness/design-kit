@@ -34,8 +34,8 @@ import {
 } from "./portfolio.js";
 
 // Pinned facts. A snapshot regeneration must update these deliberately.
-const PINNED_DIGEST = "sha256:566462ae34618442d01b4be2be73347a0c491e29c1238600ec8d4ffb2b1a62e5";
-const PINNED_COMMIT = "6261d1f41238fe885f9df211efeb31ccf4097c70";
+const PINNED_DIGEST = "sha256:d43bbc1113c077b872d2e11a4a70490cd537d5734951d0c3c4bd8e061ce583a9";
+const PINNED_COMMIT = "82542df32e3b5db919c5d3778125ea2970d932f7";
 
 const jsonFile = new URL("./portfolio.generated.json", import.meta.url);
 const moduleFile = new URL("./portfolio.generated.ts", import.meta.url);

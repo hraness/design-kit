@@ -49,7 +49,7 @@ Load `styles.css` or `compiler-foundation.css`, which include `status-page.css`,
 ```ts
 import { renderStatusPageHtml } from "@hraness/design-kit";
 
-const body = renderStatusPageHtml({ siteName: "Ghostget", primaryAction: { href: "/#install", label: "Install Ghostget" } });
+const body = renderStatusPageHtml({ siteName: "GhostGet", primaryAction: { href: "/#install", label: "Install GhostGet" } });
 // Write body into 404.html between the site header and footer.
 ```
 

@@ -6,19 +6,19 @@ var portfolioSnapshot = {
   formatVersion: 1,
   provenance: {
     registry: "https://hraness.com/portfolio.json",
-    commit: "6261d1f41238fe885f9df211efeb31ccf4097c70",
-    committedOn: "2026-09-26",
+    commit: "82542df32e3b5db919c5d3778125ea2970d932f7",
+    committedOn: "2026-09-29",
     upstreamContract: "hraness.portfolio-public/v1",
-    upstreamDigest: "sha256:bfa4f57428be6004857ec6ce0caba9e2e77fbf46f866cdb9b117f3f8ec299575",
+    upstreamDigest: "sha256:1f3d10922cc4f7f78fe3a70fba90ee91e9c473253f6e2d5485dd8b8192762040",
     files: [{
       path: "portfolio.public.generated.json",
-      sha256: "20c63b42248711d4dc0f8fd8f595c7b84d883ecd70246303ac52271475efb045"
+      sha256: "30a3acc1d7f52a7c3180cfbf0fa63ebbe2c1ccc9f35e6d8cf75d559996ab2eea"
     }, {
       path: "packages/brand-catalog/brands.yaml",
-      sha256: "8513c6c94db1dc4d6aed90c0faf913f4333c59893140e801d23beda671d5e7ce"
+      sha256: "357c5bb8f2dc85ed1cc097161db3f97aaef58ee3a7f9a480bf926104ab723389"
     }, {
       path: "brand-artwork.json",
-      sha256: "6789e0e6a49cc41ce684a0c59b3a298eaf0385f5f759bc4b5e8507ba13f6e755"
+      sha256: "625c88ca6e24e78d80e8efbecaeb25bd88711287e86fa2f32f6bca110fe30b92"
     }, {
       path: "projects/hraness/public/marks/act60.svg",
       sha256: "b1e625903ac5deb8b9ac79469028122dd50d62cab36c433025a3976710723918"
@@ -38,11 +38,17 @@ var portfolioSnapshot = {
       path: "projects/hraness/public/marks/eds-research.svg",
       sha256: "b0c57527625fdd1968ced63745f646295671d3009e155bcba641f1d03ca59f03"
     }, {
+      path: "projects/hraness/public/marks/ghostget-skills.svg",
+      sha256: "e7b70290b90fa055c773e9babe55427addf1c913c8d298cf9ef297f23f3871b9"
+    }, {
       path: "projects/hraness/public/marks/gobstopper.svg",
       sha256: "d69bc56860c4af2c2ada232787a99404297e5f0b4d806731bc77eed54f6e359a"
     }, {
       path: "projects/hraness/public/marks/hraness.svg",
       sha256: "10d251a305a70cd3e30fcd187b211912f2b480807cddd22b211600aecccc9e87"
+    }, {
+      path: "projects/hraness/public/marks/iconplace.svg",
+      sha256: "e601a8a125b178ac82b75d4fa56127f6a76df4395cda5015a5547825cfac2d0b"
     }, {
       path: "projects/hraness/public/marks/kb.svg",
       sha256: "9fa8413fa1fe49bd616a0dfa3292e19ce0fdd41c24bff64d20eac3a283b49523"
@@ -55,6 +61,9 @@ var portfolioSnapshot = {
     }, {
       path: "projects/hraness/public/marks/oh-computer.svg",
       sha256: "b9c62d7ef8168eae34a8cf388efb8d1ac9ec609a6d3d31b8e81af5c7a9f5724d"
+    }, {
+      path: "projects/hraness/public/marks/pattern-language.svg",
+      sha256: "7bd9a9b3ceb8c1a13fdac656104a5582b2821f9738bc7c14c7e6c30968ecc28b"
     }, {
       path: "projects/hraness/public/marks/peopleblade.svg",
       sha256: "3a925539b408dbbfdc32598fb5548a01e5ac5fd611a67d41be6dcceb0fd8301a"
@@ -72,7 +81,7 @@ var portfolioSnapshot = {
       sha256: "b9e9f1fd911bb3e60c7b3cd176b7681aa0480b9a6724c087b66518366ad636e6"
     }, {
       path: "projects/hraness/public/marks/soulscrape.svg",
-      sha256: "1abbbfc0fb8afc5a4377ce3b115436a781a2c2a083998ae3a39ada4bdecffedb"
+      sha256: "465f2e57d5cede402c38c5cb73095a916682ff0a1826ca21738974661e71c6b0"
     }, {
       path: "projects/hraness/public/marks/soundfish.svg",
       sha256: "9b10a443bc233da65da7b91f3b91f390ac11d0aa7aa16874539219560b979471"
@@ -88,6 +97,9 @@ var portfolioSnapshot = {
     }, {
       path: "projects/hraness/public/marks/sys1.svg",
       sha256: "5e561b80286aca3c94b5de7c10140545620db92978a7b273f1cd9d10167b88e3"
+    }, {
+      path: "projects/hraness/public/marks/system-one-skills.svg",
+      sha256: "44855079c3dea26397d798926ec5689115e084ca26367b7ab73c7b0ea8b18119"
     }, {
       path: "projects/hraness/public/marks/valhalla-album.svg",
       sha256: "8de9218ce0ee4238cb3859a6f450ba746c26e92b0dc7d2e03953777207713602"
@@ -107,7 +119,7 @@ var portfolioSnapshot = {
       id: "gobstopper",
       name: "Gobstopper",
       oneLiner: "Compacts long agent sessions into smaller copies, keeping every byte",
-      brandDescription: "Gobstopper makes long Claude Code and Codex sessions smaller. Preview each cut, write a compacted copy, and keep every original byte in a local vault.",
+      brandDescription: "Gobstopper makes long Claude Code and Codex sessions smaller. A local proxy compacts live requests, and saved sessions get a smaller copy beside the original.",
       canonicalUrl: "https://gobstopper.sh",
       status: "active",
       copyStatus: "proposed",
@@ -118,20 +130,19 @@ var portfolioSnapshot = {
         product: "gobstopper",
         names: {
           name: "Gobstopper",
-          catalog: "GOBSTOPPER",
           command: "gobstopper"
         },
         category: "Session compaction tool",
         tagline: "Context compaction you can undo.",
         short: "Compacts long agent sessions into smaller copies, keeping every byte",
-        meta: "Gobstopper makes long Claude Code and Codex sessions smaller. Preview each cut, write a compacted copy, and keep every original byte in a local vault.",
-        medium: "Gobstopper is a free, open-source command-line tool that makes long Claude Code and Codex sessions smaller. Preview a compaction, write a smaller copy, and keep the original byte for byte in a local vault.",
+        meta: "Gobstopper makes long Claude Code and Codex sessions smaller. A local proxy compacts live requests, and saved sessions get a smaller copy beside the original.",
+        medium: "Gobstopper is a free, open-source command-line tool that makes long coding sessions smaller. A local proxy compacts live Claude Code and Codex requests. For saved sessions, it writes a smaller copy and keeps the original in a local vault.",
         long: "Long coding-agent sessions collect tool output that mattered once: test logs from runs that have since passed, file listings from before a refactor, stack traces for bugs already fixed. Every turn sends all of it to the model again. Gobstopper is a free, open-source command-line tool that finds your Claude Code and Codex sessions, shows what each compaction strategy would cut, and writes a smaller copy. Before it writes, it stores the original bytes in a content-addressed vault on your machine, so you can search for the exact record a compaction left out or restore the whole session.",
         hero: {
           heading: "Context compaction you can undo.",
-          summary: "Preview the cut, write a smaller session, and keep every original byte in a local vault you can search and restore from.",
+          summary: "Gobstopper keeps long coding sessions smaller. Run your agent through a local proxy, or make a smaller copy of a saved session while keeping the original for recovery.",
           primaryAction: "Install Gobstopper",
-          secondaryAction: "See the benchmarks"
+          secondaryAction: "How it works"
         },
         status: {
           default: "proposed"
@@ -141,46 +152,45 @@ var portfolioSnapshot = {
     },
     xcb: {
       id: "xcb",
-      name: "xcb",
+      name: "Excalibur (xcb)",
       oneLiner: "Routes coding tasks across the Claude, Codex, and Devin plans you have",
-      brandDescription: "xcb routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for, picking an account that is signed in and idle.",
+      brandDescription: "Excalibur (xcb) routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for, picking an account that is signed in and idle.",
       canonicalUrl: "https://xcb.sh",
       status: "active",
       copyStatus: "proposed",
-      aliases: ["Excalibur", "AgentMixer", "OOMPA", "HRA"],
+      aliases: ["AgentMixer", "OOMPA", "HRA"],
       mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 502 470' width='502' height='470'%3E%3Cpath d='M0 0 C1.6602 1.6641 1.6602 1.6641 1.6602 3.6641 C3.6402 4.6541 3.6402 4.6541 5.6602 5.6641 C20.4671 20.7199 29.5281 43.0509 30.0352 64.0391 C29.8202 73.8845 28.0713 83.5113 24.9727 92.8516 C21.094 106.4682 22.5665 122.0215 29.1211 134.4297 C36.0925 146.5324 45.1588 154.3096 58.7227 158.2461 C64.4816 159.7795 69.9144 160.0925 75.8477 160.1641 C102.8242 160.9739 126.4805 169.3968 145.4883 188.8489 C160.0214 204.4015 169.8332 225.2334 170.6602 246.6641 C170.7117 247.5484 170.7633 248.4327 170.8164 249.3438 C171.5914 273.1748 162.6767 296.1867 146.6602 313.6641 C145.8274 314.5896 144.9947 315.5152 144.1367 316.4688 C128.0276 333.5227 105.3733 343.6553 81.9961 344.8516 C57.8866 345.2509 34.2512 337.6796 16.6602 320.6641 C14.6016 318.3577 12.6292 315.9844 10.6602 313.6016 C0.518 301.3802 -11.749 294.0165 -27.7344 292.4258 C-47.6289 291.8151 -63.5441 300.2399 -78.0273 313.0391 C-83.4457 319.1896 -87.4862 325.8147 -91.2148 333.1016 C-101.6858 353.0587 -119.4275 365.9767 -140.3398 373.6641 C-164.6778 381.1192 -189.9086 378.3103 -212.6211 367.0352 C-219.8442 363.0233 -226.159 358.1264 -232.3398 352.6641 C-232.9638 352.1239 -233.5877 351.5838 -234.2305 351.0273 C-251.0594 335.4173 -260.4004 312.3732 -261.3398 289.6641 C-261.4017 288.2616 -261.4636 286.8591 -261.5273 285.4141 C-261.0798 259.861 -250.501 238.185 -232.8711 220.1367 C-218.1748 206.18 -200.01 199.4321 -180.3594 195.9609 C-164.5396 193.1578 -151.4426 188.801 -140.9023 175.9297 C-131.5241 162.3312 -129.3286 147.6603 -132.1523 131.4766 C-133.9957 124.2989 -137.6876 118.0733 -141.208 111.6104 C-153.2285 89.2775 -155.2242 64.8414 -148.1523 40.6016 C-144.4463 29.3639 -139.0366 19.6302 -131.3398 10.6641 C-130.6502 9.8416 -129.9605 9.0192 -129.25 8.1719 C-95.966 -30.3182 -38.336 -31.2921 0 0 Z M-78.3398 166.6641 C-79.0579 167.1874 -79.7759 167.7108 -80.5156 168.25 C-90.0317 175.8259 -96.2921 186.7315 -98.3398 198.6641 C-99.7747 211.4378 -98.6385 221.1698 -90.8047 231.7344 C-82.6067 241.0402 -69.2722 245.0433 -57.2969 245.9805 C-40.5266 246.4493 -25.8113 242.0178 -13.4648 230.3516 C-4.0792 220.321 1.7977 207.5194 1.6602 193.6641 C0.8971 182.088 -4.5009 173.606 -12.7773 165.707 C-31.9895 150.39 -59.3196 152.4518 -78.3398 166.6641 Z ' transform='translate%28296.33984375,57.3359375%29' fill='%232474d4'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "xcb",
         names: {
-          name: "xcb",
-          catalog: "XCB",
+          name: "Excalibur (xcb)",
           command: "xcb",
           formerly: ["AgentMixer", "OOMPA", "HRA"]
         },
         category: "Agent subscription router",
-        tagline: "Keep coding when one subscription hits its limit.",
+        tagline: "Use your Claude, Codex, and Devin plans from one agent.",
         short: "Routes coding tasks across the Claude, Codex, and Devin plans you have",
-        meta: "xcb routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for, picking an account that is signed in and idle.",
-        medium: "xcb routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for. Each task runs on an account that is signed in, idle, and not at a known usage limit, on a model that fits the work.",
-        long: "xcb is a terminal and router for developers who pay for more than one coding agent. Type the work into one conversation, and xcb sends each task to a Claude, Codex, or Devin account that is signed in, idle, and not at a known usage limit, on a model that fits the job. Tasks keep running after you close the terminal, every session appears on one screen, and each account runs one task at a time. Other agents can hand xcb work with one JSON command. xcb is free and MIT licensed, in preview for macOS and Linux.",
+        meta: "Excalibur (xcb) routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for, picking an account that is signed in and idle.",
+        medium: "Excalibur (xcb) routes coding tasks across the Claude, Codex, and Devin subscriptions you already pay for. Each task runs on an account that is signed in, idle, and not at a known usage limit, on a model that fits the work.",
+        long: "Excalibur (xcb) is a terminal and router for developers who pay for more than one coding agent. Type the work into one conversation, and xcb sends each task to a Claude, Codex, or Devin account that is signed in, idle, and not at a known usage limit, on a model that fits the job. Tasks keep running after you close the terminal, every session appears on one screen, and each account runs one task at a time. Other agents can hand xcb work with one JSON command. xcb is free and MIT licensed, with releases for macOS and Linux.",
         hero: {
-          heading: "Keep coding when one subscription hits its limit.",
-          summary: "One terminal for your Claude, Codex, and Devin accounts. Each task runs on an account that is signed in, idle, and not at a known limit.",
+          heading: "Use your Claude, Codex, and Devin plans from one agent.",
+          summary: "Excalibur (xcb) is for developers who pay for more than one coding agent. Each task runs in Claude Code, Codex, or the Devin CLI on an account that is signed in, idle, and not at a known limit. Use its terminal or your own agent or app.",
           primaryAction: "Install xcb",
-          secondaryAction: "View the source"
+          secondaryAction: "See how it works"
         },
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-28"
       }
     },
     aicharts: {
       id: "aicharts",
-      name: "AI Charts",
+      name: "aicharts",
       oneLiner: "Model benchmark scores plotted against cost and tokens per task",
-      brandDescription: "AI Charts plots published AI benchmark scores against cost and tokens per task, and a local collector measures your own agents' token use.",
+      brandDescription: "aicharts plots published AI benchmark scores against cost and tokens per task, and a local collector measures your own agents' token use.",
       canonicalUrl: "https://aicharts.io",
       status: "active",
       copyStatus: "proposed",
@@ -190,17 +200,16 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "aicharts",
         names: {
-          name: "AI Charts",
-          catalog: "AI CHARTS",
+          name: "aicharts",
           command: "aicharts",
           formerly: ["CodingChart"]
         },
         category: "AI model comparison charts",
         tagline: "See which model wins at each price.",
         short: "Model benchmark scores plotted against cost and tokens per task",
-        meta: "AI Charts plots published AI benchmark scores against cost and tokens per task, and a local collector measures your own agents' token use.",
-        medium: "AI Charts plots published AI benchmark scores against cost and tokens per task, marking the best score at every budget. A local collector measures your own agents' token use.",
-        long: "Picking a model means guessing at a tradeoff between quality and price, because benchmark scores and prices live in different places. AI Charts plots published benchmark scores against cost and tokens per task on one chart, so the strongest option at each budget is visible instead of implied. A local collector measures your own agents' token use, so the cost question covers your work, not only the models. AI Charts is free and open source.",
+        meta: "aicharts plots published AI benchmark scores against cost and tokens per task, and a local collector measures your own agents' token use.",
+        medium: "aicharts plots published AI benchmark scores against cost and tokens per task, marking the best score at every budget. A local collector measures your own agents' token use.",
+        long: "Picking a model means guessing at a tradeoff between quality and price, because benchmark scores and prices live in different places. aicharts plots published benchmark scores against cost and tokens per task on one chart, so the strongest option at each budget is visible instead of implied. A local collector measures your own agents' token use, so the cost question covers your work, not only the models. aicharts is free and open source.",
         hero: {
           heading: "See which model wins at each price.",
           summary: "Benchmark scores plotted against cost and tokens per task, plus a local collector for your own agents' token use.",
@@ -228,7 +237,6 @@ var portfolioSnapshot = {
         product: "wordcell",
         names: {
           name: "Wordcell",
-          catalog: "WORDCELL",
           command: "wordcell",
           formerly: ["KB"]
         },
@@ -242,7 +250,7 @@ var portfolioSnapshot = {
           heading: "Give coding agents the decisions behind your code.",
           summary: "Decisions, plans, and sources kept as Markdown beside your repository, one command away from the agent about to change a file.",
           primaryAction: "Install Wordcell",
-          secondaryAction: "See a note work"
+          secondaryAction: "See an example"
         },
         status: {
           default: "proposed"
@@ -258,14 +266,13 @@ var portfolioSnapshot = {
       canonicalUrl: "https://oh.computer",
       status: "active",
       copyStatus: "proposed",
-      aliases: ["oh.computer"],
+      aliases: [],
       mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 702 696' width='702' height='696'%3E%3Cpath d='M0 0 C16.1329 12.3504 30.2338 26.4304 42 43 C42.8031 44.1305 43.6062 45.261 44.4336 46.4258 C70.2156 83.872 79.1943 126.0452 79.127 171.0458 C79.1281 172.7393 79.1297 174.4327 79.1317 176.1261 C79.1359 180.7467 79.1338 185.3672 79.1307 189.9877 C79.1285 194.9828 79.132 199.9779 79.1347 204.9729 C79.1391 214.7419 79.1382 224.5109 79.1353 234.2799 C79.133 242.2148 79.1327 250.1498 79.1338 258.0847 C79.134 259.215 79.1341 260.3453 79.1343 261.5099 C79.1346 263.8061 79.1349 266.1022 79.1353 268.3984 C79.1381 289.9045 79.1348 311.4105 79.1295 332.9166 C79.125 351.3852 79.1258 369.8537 79.1304 388.3223 C79.1357 409.7712 79.1378 431.2202 79.1348 452.6692 C79.1344 454.9531 79.1341 457.2371 79.1338 459.5211 C79.1337 460.6448 79.1335 461.7686 79.1333 462.9265 C79.1325 470.8615 79.1339 478.7966 79.1363 486.7317 C79.1391 496.3869 79.1384 506.0422 79.133 515.6974 C79.1304 520.6272 79.1294 525.5569 79.1327 530.4866 C79.1356 534.9913 79.134 539.496 79.1287 544.0007 C79.1276 545.6376 79.1282 547.2745 79.1306 548.9114 C79.1336 551.1214 79.1299 553.3314 79.1258 555.5414 C79.1257 556.7734 79.1255 558.0053 79.1253 559.2747 C79 562 79 562 78 563 C75.3134 563.0729 72.625 563.0837 69.9375 563.0625 C68.4615 563.0535 66.9855 563.0445 65.4648 563.0352 C64.3214 563.0236 63.178 563.012 62 563 C61.9405 561.8315 61.9405 561.8315 61.8799 560.6394 C59.254 511.3894 43.0449 470.593 7 436 C-11.8363 419.2877 -33.242 407.0499 -57 399 C-58.3368 398.5295 -59.6735 398.059 -61.0508 397.5742 C-71.6068 394.1475 -82.342 392.4834 -93.3181 390.9622 C-104.0633 389.3652 -112.6345 386.7507 -119.5977 378.0508 C-124.0309 371.5676 -125.1222 365.1712 -125.1342 357.4965 C-125.1387 356.1731 -125.1431 354.8497 -125.1477 353.4863 C-125.1475 352.0337 -125.1474 350.5811 -125.1472 349.0844 C-125.1505 347.5247 -125.1542 345.9649 -125.1583 344.4051 C-125.1683 340.1165 -125.172 335.8278 -125.1747 331.5391 C-125.1786 326.9146 -125.1882 322.29 -125.1969 317.6654 C-125.2167 306.4964 -125.2267 295.3274 -125.2356 284.1584 C-125.24 278.8979 -125.2454 273.6374 -125.2506 268.377 C-125.2676 250.8889 -125.2821 233.4009 -125.2894 215.9129 C-125.2913 211.3755 -125.2932 206.8381 -125.2952 202.3008 C-125.2956 201.1731 -125.2961 200.0453 -125.2966 198.8834 C-125.3049 180.6135 -125.3303 162.3436 -125.3627 144.0738 C-125.3958 125.3142 -125.4138 106.5547 -125.417 87.7951 C-125.4192 77.2632 -125.4279 66.7314 -125.4535 56.1995 C-125.4752 47.2305 -125.4832 38.2616 -125.4735 29.2926 C-125.469 24.7181 -125.4709 20.1438 -125.4903 15.5693 C-125.5079 11.3769 -125.5069 7.185 -125.4914 2.9926 C-125.4879 0.7671 -125.504 -1.4584 -125.521 -3.6838 C-125.4622 -12.8547 -124.6093 -21.1968 -118.957 -28.7188 C-87.9952 -54.4356 -26.5638 -19.6909 0 0 Z ' transform='translate%28264,85%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C6.3589 5.4472 10.2368 10.3359 11.006 18.9498 C11.053 20.9816 11.053 20.9816 11.1009 23.0544 C11.1202 23.828 11.1396 24.6016 11.1596 25.3987 C11.2213 28.0505 11.2671 30.7023 11.3113 33.3545 C11.3299 34.3097 11.3484 35.2649 11.3676 36.2491 C12.0069 69.5135 11.7838 102.7949 11.7128 136.0639 C11.7031 140.7238 11.6946 145.3838 11.6859 150.0437 C11.6568 165.5638 11.6253 181.0839 11.5857 196.6039 C11.5756 200.5849 11.5655 204.5659 11.5554 208.5469 C11.5529 209.5359 11.5504 210.5249 11.5478 211.5438 C11.5074 227.6753 11.4844 243.8068 11.4684 259.9384 C11.4517 276.5906 11.42 293.2428 11.3736 309.895 C11.3479 319.21 11.3287 328.525 11.3262 337.8401 C11.324 345.7392 11.3083 353.6381 11.2748 361.5371 C11.2582 365.5608 11.248 369.5842 11.2552 373.6079 C11.2627 377.9707 11.2395 382.3329 11.2132 386.6956 C11.2203 387.9616 11.2274 389.2276 11.2347 390.532 C11.1366 400.0772 9.1407 407.6554 2.488 414.8311 C-4.5209 420.8715 -12.8444 422.3148 -21.75 423.3828 C-52.73 427.6598 -82.2314 438.3424 -107.3125 457.3828 C-108.5925 458.3477 -108.5925 458.3477 -109.8984 459.332 C-119.51 466.806 -128.5685 474.9756 -136.3125 484.3828 C-137.3199 485.5236 -137.3199 485.5236 -138.3477 486.6875 C-165.1087 517.7435 -174.4205 555.3055 -175.3125 595.3828 C-180.9225 595.3828 -186.5325 595.3828 -192.3125 595.3828 C-192.381 541.98 -192.4341 488.5771 -192.4657 435.1743 C-192.4694 428.8624 -192.4733 422.5504 -192.4773 416.2385 C-192.4781 414.982 -192.4789 413.7255 -192.4797 412.4309 C-192.4927 392.1143 -192.5164 371.7977 -192.544 351.4811 C-192.5721 330.6176 -192.5887 309.7541 -192.5948 288.8906 C-192.5989 276.0279 -192.6118 263.1654 -192.6362 250.3028 C-192.6522 241.4694 -192.6569 232.6361 -192.653 223.8027 C-192.6511 218.7146 -192.6539 213.6266 -192.6701 208.5386 C-192.7887 169.3506 -192.7887 169.3506 -189.3125 152.3828 C-188.9405 150.5359 -188.9405 150.5359 -188.5609 148.6517 C-187.9468 145.746 -187.2515 142.8808 -186.5 140.0078 C-186.2399 138.9987 -185.9799 137.9896 -185.7119 136.95 C-183.5437 128.7879 -180.8194 121.0728 -177.3125 113.3828 C-176.7948 112.2067 -176.7948 112.2067 -176.2666 111.0068 C-167.27 90.6193 -155.4649 73.1098 -140.3906 56.707 C-138.9633 55.1106 -137.5887 53.466 -136.2617 51.7852 C-133.9812 48.9745 -131.5002 46.7888 -128.75 44.4531 C-126.9803 42.95 -125.233 41.4203 -123.5 39.875 C-99.261 18.6053 -31.9972 -22.3764 0 0 Z ' transform='translate%28552.3125,52.6171875%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C5.959 -0.0994 11.9175 -0.1717 17.8772 -0.2197 C19.9014 -0.2398 21.9255 -0.267 23.9495 -0.3018 C26.8714 -0.3507 29.7926 -0.3731 32.7148 -0.3906 C33.609 -0.4113 34.5031 -0.4319 35.4243 -0.4532 C42.9477 -0.4558 48.8919 1.457 54.75 6.25 C60.6683 13.4835 63.1209 18.9263 63.1314 28.3685 C63.1353 29.6618 63.1391 30.955 63.1431 32.2875 C63.1422 33.7064 63.1413 35.1254 63.1404 36.5873 C63.143 38.1114 63.146 39.6355 63.1494 41.1596 C63.1575 45.3495 63.1593 49.5394 63.16 53.7293 C63.1619 58.2475 63.1694 62.7657 63.1762 67.2839 C63.1898 77.164 63.1958 87.0442 63.2002 96.9243 C63.203 103.0933 63.2072 109.2623 63.2117 115.4313 C63.2239 132.511 63.2342 149.5907 63.2376 166.6704 C63.2379 168.31 63.2379 168.31 63.2382 169.9827 C63.2385 171.0784 63.2387 172.1741 63.2389 173.303 C63.2393 175.5233 63.2398 177.7436 63.2402 179.9639 C63.2406 181.6159 63.2406 181.6159 63.2409 183.3013 C63.2449 201.149 63.2623 218.9966 63.2856 236.8443 C63.3093 255.1677 63.3218 273.491 63.3229 291.8144 C63.3239 302.1025 63.3296 312.3906 63.3478 322.6788 C63.3632 331.4388 63.3683 340.1988 63.36 348.9589 C63.3561 353.4278 63.357 357.8966 63.3711 362.3655 C63.3838 366.459 63.3826 370.5523 63.3705 374.6458 C63.3676 376.823 63.3795 379.0003 63.3919 381.1775 C63.343 390.8596 62.606 399.1087 55.75 406.4961 C50.5454 410.9688 44.3876 413.1125 37.5994 413.1577 C35.9306 413.1733 35.9306 413.1733 34.228 413.1893 C33.0171 413.1964 31.8062 413.2036 30.5586 413.2109 C27.9635 413.2364 25.3683 413.2627 22.7732 413.2898 C21.4116 413.303 20.05 413.3163 18.6472 413.3299 C-46.8463 414.0312 -118.4116 418.5291 -171.5938 461.3477 C-175 464 -175 464 -179 466 C-179.99 467.98 -179.99 467.98 -181 470 C-182.7266 471.9219 -182.7266 471.9219 -184.625 473.75 C-185.2566 474.3636 -185.8883 474.9772 -186.5391 475.6094 C-187.0212 476.0683 -187.5033 476.5272 -188 477 C-190.5436 469.3692 -182.7238 457.1792 -179.2512 450.2322 C-158.0188 409.0443 -122.7882 377.7297 -78.4609 363.4961 C-64.2243 359.1898 -49.8433 357.0208 -35 356.5 C-23.8166 356.0762 -15.6251 355.1894 -6.9727 347.5234 C-0.7161 339.52 -0.4217 331.9563 -0.481 322.1618 C-0.4735 320.7821 -0.466 319.4023 -0.4583 317.9807 C-0.4415 314.1699 -0.4426 310.3598 -0.4512 306.549 C-0.4562 302.4325 -0.438 298.3161 -0.4228 294.1996 C-0.3995 287.0739 -0.3907 279.9483 -0.3919 272.8226 C-0.3936 262.5201 -0.3732 252.2177 -0.3475 241.9152 C-0.3065 225.199 -0.2831 208.4827 -0.271 191.7664 C-0.2592 175.531 -0.239 159.2957 -0.2075 143.0603 C-0.2056 142.059 -0.2036 141.0578 -0.2017 140.0262 C-0.1919 135.003 -0.182 129.9797 -0.1719 124.9565 C-0.0892 83.3044 -0.0351 41.6522 0 0 Z ' transform='translate%28591,142%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.9266 0.0014 1.8531 0.0028 2.8078 0.0043 C5.7625 0.0099 8.7172 0.0224 11.6719 0.0352 C13.6771 0.0402 15.6823 0.0447 17.6875 0.0488 C22.599 0.0598 27.5104 0.0771 32.4219 0.0977 C32.4225 0.8031 32.4231 1.5085 32.4237 2.2353 C32.4596 44.0466 32.5162 85.8579 32.5998 127.6691 C32.6098 132.6897 32.6197 137.7102 32.6294 142.7307 C32.6313 143.7302 32.6333 144.7297 32.6353 145.7595 C32.6663 161.9424 32.6833 178.1252 32.6951 194.3081 C32.7075 210.9137 32.735 227.5193 32.7765 244.1248 C32.8016 254.371 32.815 264.6171 32.8133 274.8634 C32.8133 281.89 32.8279 288.9165 32.854 295.943 C32.8687 299.9968 32.8769 304.0503 32.8677 308.104 C32.8579 312.502 32.8789 316.8995 32.9029 321.2975 C32.8951 322.5747 32.8874 323.852 32.8794 325.1679 C32.9732 334.8756 35.0114 342.2794 41.7148 349.5938 C48.1438 355.2577 55.5111 356.1444 63.717 356.3875 C96.1286 357.3633 128.8905 365.796 155.4219 385.0977 C156.515 385.8891 157.6081 386.6806 158.7344 387.4961 C175.4244 399.9742 190.1855 414.4872 201.4219 432.0977 C202.1721 433.2707 202.9223 434.4438 203.6953 435.6523 C210.8564 447.2127 217.9972 459.8557 221.4219 473.0977 C221.0919 474.0877 220.7619 475.0777 220.4219 476.0977 C219.9346 475.5756 219.4473 475.0535 218.9453 474.5156 C212.329 467.6466 205.0737 461.7578 197.4219 456.0977 C196.2914 455.2611 195.1609 454.4245 193.9961 453.5625 C164.5757 432.9126 129.2466 423.9339 94.2344 418.4102 C92.3411 418.1061 92.3411 418.1061 90.4097 417.7959 C65.5083 414.0665 40.4573 413.7533 15.3279 413.7168 C11.4097 413.7073 7.4922 413.6736 3.5742 413.6367 C1.81 413.6443 1.81 413.6443 0.0102 413.652 C-9.0633 413.5439 -16.6593 412.0312 -23.5156 405.7852 C-32.6184 395.6329 -30.7265 380.8819 -30.7118 368.0861 C-30.7141 366.6162 -30.7164 365.1463 -30.7187 363.6319 C-30.7248 359.5832 -30.7247 355.5346 -30.7235 351.4859 C-30.7233 347.1075 -30.7288 342.7292 -30.7336 338.3509 C-30.7418 329.7869 -30.7446 321.223 -30.7452 312.659 C-30.7457 305.6981 -30.7477 298.7372 -30.7509 291.7762 C-30.7597 272.0266 -30.7643 252.2769 -30.7635 232.5272 C-30.7635 231.464 -30.7635 230.4008 -30.7634 229.3054 C-30.7634 227.7087 -30.7634 227.7087 -30.7633 226.0797 C-30.7629 208.8112 -30.7725 191.5427 -30.7866 174.2743 C-30.8009 156.5293 -30.8078 138.7843 -30.807 121.0392 C-30.8066 111.0821 -30.8094 101.1249 -30.8202 91.1678 C-30.8293 82.6952 -30.8314 74.2226 -30.8246 65.7501 C-30.8214 61.4289 -30.8213 57.1079 -30.83 52.7868 C-30.8393 48.1005 -30.8331 43.4145 -30.8254 38.7282 C-30.8305 37.3658 -30.8357 36.0033 -30.8409 34.5996 C-30.8023 23.9934 -30.3782 14.9472 -22.5781 7.0977 C-15.197 1.2132 -9.4069 -0.0541 0 0 Z ' transform='translate%2878.578125,141.90234375%29' fill='%232474d4'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "oh",
         names: {
           name: "Oh",
-          catalog: "OH",
           command: "oh"
         },
         category: "Agent memory framework",
@@ -278,7 +285,7 @@ var portfolioSnapshot = {
           heading: "Agent memory that shows its work.",
           summary: "Store each fact with the sources it rests on, keep every change in a replayable history, and get answers with their evidence.",
           primaryAction: "Install Oh",
-          secondaryAction: "See the memory model"
+          secondaryAction: "How it works"
         },
         status: {
           default: "proposed"
@@ -289,9 +296,9 @@ var portfolioSnapshot = {
     sponge: {
       id: "sponge",
       name: "Sponge",
-      oneLiner: "Private library for what you read, with notes your agent can cite",
-      brandDescription: "Sponge is a private library for the articles and PDFs you read, with notes and highlights your AI agent can read and cite.",
-      canonicalUrl: "https://sponge.computer",
+      oneLiner: "Local research service that keeps its sources and writes cited reports",
+      brandDescription: null,
+      canonicalUrl: "https://hraness.com/writing/the-knowledge-pack",
       status: "active",
       copyStatus: "proposed",
       aliases: [],
@@ -301,25 +308,22 @@ var portfolioSnapshot = {
         product: "sponge",
         names: {
           name: "Sponge",
-          catalog: "SPONGE",
-          command: "sponge"
+          command: "spongev2"
         },
-        category: "Private research library",
-        tagline: "A private library your AI agent can read and cite.",
-        short: "Private library for what you read, with notes your agent can cite",
-        meta: "Sponge is a private library for the articles and PDFs you read, with notes and highlights your AI agent can read and cite.",
-        medium: "Sponge is a private library for articles and PDFs. Save a page as a dated, readable copy, highlight what matters, and keep notes beside it, all readable and citable by your agent.",
-        long: "Reading for research means scattered tabs, PDFs in downloads, and highlights in three places. Sponge is a private library for the articles and papers you read: save a page as a dated, readable copy, highlight what matters, and keep notes beside it. Because everything sits in one private library, your AI agent can read it through the API and cite it when it writes. Research tools connect what you saved into cited knowledge.",
+        category: "Local deep research harness",
+        tagline: "Deep research that runs on your own machine.",
+        short: "Local research service that keeps its sources and writes cited reports",
+        meta: "Sponge runs deep research on your own machine. It keeps the text of every source, writes a cited report, and reaches models through Excalibur (xcb).",
+        medium: "Sponge runs research projects on your own machine. Give it a question and sources, and it keeps their text, writes and updates a cited report, and tests new research strategies before you adopt them.",
+        long: "Sponge is a local research harness. Each project has a question and a set of sources, and Sponge keeps the source text, writes and updates a cited report, and records its operations so work survives restarts. A background service, terminal chat, and a macOS menu-bar app drive it. Deep mode plans the research, gathers public sources, recalls project memory, and audits a draft before it updates the report. Sponge runs on ALGAL, reaches models through Excalibur (xcb) so provider sign-ins stay there, keeps documents in Wordcell, and captures signed-in pages through GhostGet. A new strategy for brief research is tested in a sealed evaluation, and nothing changes until you adopt it or restore the previous one. Publishing makes a static Wordcell edition or puts selected documents on wordcell.io. It is in development and not yet released; it runs from a private checkout. The hosted library at sponge.computer is the earlier Sponge.",
         hero: {
-          heading: "A private library your AI agent can read and cite.",
-          summary: "Save articles and PDFs as dated, readable copies with your highlights and notes, and let your agent cite them when it writes.",
-          primaryAction: "Start your library",
-          secondaryAction: "See a saved page"
+          heading: "Deep research that runs on your own machine.",
+          summary: "Give it a question and sources. Sponge keeps their text, writes a cited report, and reaches models through the coding subscriptions you already pay for."
         },
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-29"
       }
     },
     algal: {
@@ -337,7 +341,6 @@ var portfolioSnapshot = {
         product: "algal",
         names: {
           name: "ALGAL",
-          catalog: "ALGAL",
           command: "algal",
           formerly: ["Morphogen"]
         },
@@ -349,7 +352,7 @@ var portfolioSnapshot = {
         long: "Agent programs today are scripts: they run start to finish and leave a log. ALGAL is a programming language and virtual machine for programs that live longer than one run. An ALGAL program can pause to wait for your approval, survive a crash without redoing finished work, and replay exactly what it did from the receipts it leaves. The VM is previewing now, and the language toolchain ships with it. ALGAL is free and open source.",
         hero: {
           heading: "Write agent programs that wait, resume, and replay.",
-          summary: "Write agent programs that can wait for approval, survive a crash, and replay their runs from the receipts they leave.",
+          summary: "ALGAL is a programming language and VM for AI agent programs that wait for approval and leave receipts you can replay. Resume from saved progress after an interruption.",
           primaryAction: "Install ALGAL",
           secondaryAction: "See a program run"
         },
@@ -364,20 +367,19 @@ var portfolioSnapshot = {
     },
     valhalla: {
       id: "valhalla",
-      name: "vhalla",
+      name: "Valhalla",
       oneLiner: "Peer-to-peer rooms where agents and their owners share signed work",
       brandDescription: "Valhalla is open-source software for peer-to-peer rooms where AI agents and their owners share signed work, with no platform in the middle.",
       canonicalUrl: "https://vhalla.com",
       status: "active",
       copyStatus: "proposed",
-      aliases: ["Valhalla"],
+      aliases: [],
       mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M3 4h5v5h4V4h8v5h4V4h5v24H19v-9h-6v9H3Z'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "valhalla",
         names: {
           name: "Valhalla",
-          catalog: "VALHALLA",
           command: "vhalla"
         },
         category: "Peer-to-peer agent rooms",
@@ -388,9 +390,9 @@ var portfolioSnapshot = {
         long: "Agents do more of their work in shared rooms, and most rooms belong to a platform that can read, rank, and revoke them. Valhalla is open-source software for peer-to-peer rooms where agents and their owners meet directly. Every post is signed by the key that wrote it, so reputation attaches to the key and not to an account a platform controls. The people in a room run it together. Valhalla is free and MIT licensed.",
         hero: {
           heading: "A meeting place for agents, run by the people in it.",
-          summary: "Open peer-to-peer rooms where agents and their owners share signed work, with no platform in the middle.",
-          primaryAction: "Enter a room",
-          secondaryAction: "How signing works"
+          summary: "Run rooms where agents and their owners share signed work. Keep your keys on your own machine and choose the peers that store the conversation.",
+          primaryAction: "Get started",
+          secondaryAction: "What works today"
         },
         status: {
           default: "proposed"
@@ -400,20 +402,19 @@ var portfolioSnapshot = {
     },
     "valhalla-album": {
       id: "valhalla-album",
-      name: "VALHALLA (ALBUM)",
+      name: "valhalla",
       oneLiner: "Five-track ambient album released as a draft and revised in public",
       brandDescription: null,
       canonicalUrl: "https://hraness.com/valhalla",
       status: "active",
       copyStatus: "proposed",
-      aliases: ["valhalla"],
+      aliases: [],
       mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M5 24.8C5 18.8 9 15.2 13.8 15.2C18.6 15.2 22.6 18.8 22.6 24.8L22.6 27.5L5 27.5ZM4 25.7L23.8 25.7L23.8 26.7L4 26.7Z'/%3E%3Cpath fill='%232474d4' d='M7.4 18.6C4.4 15.8 2.8 11.6 3.2 6.4C3.3 5.7 3.7 5.3 4.1 5.9C6.8 9 9 12.4 10.5 16.3C9.5 17.3 8.4 18 7.4 18.6Z'/%3E%3Cpath fill='%232474d4' d='M19.8 21.8C20.7 15.8 21.3 10.2 21.6 5.3L24.6 5.3C24.5 10.6 24.2 17.4 23.9 23C23.2 22.4 22.4 21.9 19.8 21.8Z'/%3E%3Cpath fill='%232474d4' d='M21.6 5.3C25.2 5.5 28.2 7 29.8 9.7C27.2 9.9 24.4 9.4 22.3 8.3Z'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "valhalla-album",
         names: {
-          name: "valhalla",
-          catalog: "VALHALLA (ALBUM)"
+          name: "valhalla"
         },
         category: "Ambient electronic album",
         tagline: "Hear an album being revised in public.",
@@ -442,33 +443,32 @@ var portfolioSnapshot = {
         product: "peopleblade",
         names: {
           name: "PeopleBlade",
-          catalog: "PEOPLEBLADE",
           command: "peopleblade"
         },
-        category: "Local personal CRM",
-        tagline: "Keep everyone you know in one private book.",
+        category: "Contact book for agents",
+        tagline: "Own your contacts across every app.",
         short: "Local personal CRM for everyone you know, built for your agent",
-        meta: "PeopleBlade is a local personal CRM for everyone you know, built for your agent. Bring contacts from apps and exports into one private book.",
+        meta: "PeopleBlade is the contact book you own, built for your personal agent. It gathers everyone you know from your apps and shows where each contact came from.",
         medium: "PeopleBlade brings your contacts from Apple Contacts, iMessage, Google Contacts, WhatsApp, LinkedIn, and more into one private book on your computer. Keep notes beside each person, and let your agent search the book from the command line.",
         long: "PeopleBlade is a local personal CRM for everyone you know. It imports contacts from Apple Contacts, iMessage, Google Contacts, Beeper, WhatsApp, and your LinkedIn, Instagram, and X data exports into one SQLite database on your computer, and every detail keeps the source it came from. Likely duplicates wait for your review, and a shared name is never enough to join two people. Write private notes beside each person, or let your agent search and research the book with JSON commands. Your agent never receives your passwords, and imports keep no message text. The CLI is free and MIT licensed.",
         headlines: ["every import keeps its source."],
         hero: {
-          heading: "Keep everyone you know in one private book.",
-          summary: "Bring contacts from your phone, messaging apps, and data exports into one private book on your computer, searchable by your agent.",
+          heading: "Social Blade for everyone you know.",
+          summary: "PeopleBlade builds one contact book on your computer from your address book, chat apps, and exports. Your agent searches it, keeps notes, and tells you which import each contact came from.",
           primaryAction: "Install the free CLI",
           secondaryAction: "See the workspace"
         },
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-29"
       }
     },
     "message-like-me": {
       id: "message-like-me",
-      name: "Textbutler",
+      name: "TextButler",
       oneLiner: "AI butler for the iMessage, WhatsApp, and Beeper chats you choose",
-      brandDescription: "Textbutler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac and answers as a clearly marked assistant.",
+      brandDescription: "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac and answers as a clearly marked assistant.",
       canonicalUrl: "https://textbutler.app",
       status: "active",
       copyStatus: "proposed",
@@ -478,34 +478,33 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "textbutler",
         names: {
-          name: "Textbutler",
-          catalog: "TEXTBUTLER",
+          name: "TextButler",
           command: "textbutler",
           formerly: ["Message Like Me"]
         },
         category: "Messaging assistant for Mac",
-        tagline: "Your AI butler replies in the chats you choose.",
+        tagline: "An AI butler in your messaging apps.",
         short: "AI butler for the iMessage, WhatsApp, and Beeper chats you choose",
-        meta: "Textbutler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac and answers as a clearly marked assistant.",
-        medium: "Textbutler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose on your Mac. Turn it on for one person, and it replies as a clearly marked assistant that knows your history with them.",
-        long: "Textbutler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that keeps notes on each person in a folder you can open and edit. Automatic replies stay off until you connect an AI account, turn them on for a contact, and resume the butler. The AI provider you connect sees the context it needs to write a reply. Textbutler is free and MIT licensed.",
+        meta: "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac and answers as a clearly marked assistant.",
+        medium: "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose on your Mac. Turn it on for one person, and it replies as a clearly marked assistant that knows your history with them.",
+        long: "TextButler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that keeps notes on each person in files you can edit. New installs start paused and every contact starts off. Choose a local model, your Gateway key, or a connected subscription; local-model replies are in testing. Hosted AI providers receive the context needed to write a reply. TextButler is free and MIT licensed.",
         hero: {
-          heading: "Your AI butler replies in the chats you choose.",
-          summary: "Turn it on for one person on iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that knows your history with them.",
-          primaryAction: "Set up on your Mac",
-          secondaryAction: "How replies stay off"
+          heading: "An AI butler in your messaging apps.",
+          summary: "When someone you’ve turned on texts “butler”, a clearly marked AI assistant answers for you from your Mac. It writes with a local model or the AI subscription you already pay for. Claude Code, Codex, or Devin can set it up for you.",
+          primaryAction: "Have your agent set it up",
+          secondaryAction: "See how it works"
         },
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-29"
       }
     },
     wrench: {
       id: "wrench",
-      name: "Ghostget",
+      name: "GhostGet",
       oneLiner: "Named web actions for AI agents: read pages, save media, use connected accounts",
-      brandDescription: "Ghostget lets your AI agent read pages, save media, and use your connected accounts through a fixed list of reviewed actions. Free and MIT licensed.",
+      brandDescription: "GhostGet gives your AI agent named web actions: read a page, archive one media item, or use a connected account, without credentials or a browser to steer.",
       canonicalUrl: "https://ghostget.com",
       status: "active",
       copyStatus: "proposed",
@@ -515,20 +514,19 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "ghostget",
         names: {
-          name: "Ghostget",
-          catalog: "GHOSTGET",
+          name: "GhostGet",
           command: "ghostget",
           formerly: ["Wrench"]
         },
         category: "Web actions for agents",
         tagline: "Your agent calls web actions by name and holds no password.",
         short: "Named web actions for AI agents: read pages, save media, use connected accounts",
-        meta: "Ghostget gives your AI agent named web actions: read a page, archive one media item, or use a connected account, without credentials or a browser to steer.",
-        medium: "Ghostget gives the agent you already use a fixed list of reviewed web actions: read a page, save one media item, or act in a connected account. Your agent never sees your credentials and never steers a browser.",
-        long: "Agents that run commands reach the web through a browser they steer click by click, or through credentials they should never hold. Ghostget is a free, open-source CLI and TypeScript SDK that gives them a third route: a fixed list of reviewed web actions. Read a URL as Markdown, keep a searchable copy on your machine, archive one media item with SHA-256 records, or act in a connected account such as Gmail, Beeper, or X through one named operation. A measured article read costs about 3,800 tokens where the raw page carries 36,000. Consequential writes need an exact preview and your confirmation, and the agent never sees a login.",
+        meta: "GhostGet gives your AI agent named web actions: read a page, archive one media item, or use a connected account, without credentials or a browser to steer.",
+        medium: "GhostGet gives the agent you already use a fixed list of reviewed web actions: read a page, save one media item, or act in a connected account. Your agent never sees your credentials and never steers a browser.",
+        long: "Agents that run commands reach the web through a browser they steer click by click, or through credentials they should never hold. GhostGet is a free, open-source CLI and TypeScript SDK that gives them a third route: a fixed list of reviewed web actions. Read a URL as Markdown, keep a searchable copy on your machine, archive one media item with SHA-256 records, or act in a connected account such as Gmail, Beeper, or X through one named operation. A measured article read costs about 3,800 tokens where the raw page carries 36,000. Consequential writes need an exact preview and your confirmation, and the agent never sees a login.",
         hero: {
-          heading: "Your agent calls web actions by name and holds no password.",
-          summary: "Install the CLI or tell your agent to. It reads a page, archives one media item, or acts in an account you connected, and returns the result instead of a browser to steer.",
+          heading: "Your agent gets the result without clicking around.",
+          summary: "A free CLI and TypeScript SDK for Claude Code, Codex, Cursor, and other agents that run commands. Read a page as Markdown, save a media item, or use a connected account.",
           primaryAction: "Tell your agent",
           secondaryAction: "See it work"
         },
@@ -540,20 +538,19 @@ var portfolioSnapshot = {
     },
     soulscrape: {
       id: "soulscrape",
-      name: "soulscrape",
+      name: "Soulscrape",
       oneLiner: "Free agent skill that writes dated dossiers on people, sources cited",
       brandDescription: "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
       canonicalUrl: "https://soulscrape.com",
       status: "active",
       copyStatus: "proposed",
       aliases: ["Ensoul"],
-      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 511' width='640' height='511'%3E%3Cpath d='M0 0 C4.1184 3.5411 8.0979 7.2221 12 11 C13.1834 12.0209 13.1834 12.0209 14.3906 13.0625 C15.1873 14.0216 15.1873 14.0216 16 15 C15 19 15 19 13.2478 20.3335 C12.4841 20.7262 11.7204 21.1189 10.9336 21.5234 C10.0678 21.9798 9.2021 22.4363 8.3101 22.9065 C6.8881 23.6334 6.8881 23.6334 5.4375 24.375 C3.4162 25.4407 1.3968 26.5099 -0.6211 27.582 C-1.6728 28.1397 -2.7245 28.6974 -3.8081 29.272 C-8.9879 32.0762 -14.0537 35.0679 -19.125 38.0625 C-26.8268 42.5892 -34.5576 47.0505 -42.375 51.375 C-43.2195 51.8456 -44.064 52.3162 -44.9341 52.801 C-50.7582 56 -50.7582 56 -53 56 C-52.7734 56.7371 -52.5467 57.4742 -52.3132 58.2336 C-39.3739 100.9371 -37.3329 142.082 -58.25 182.625 C-70.9468 206.3441 -91.0491 223.5728 -114.25 236.5 C-115.1486 237.0049 -116.0471 237.5098 -116.9729 238.03 C-126.056 242.9286 -134.9645 245.578 -145.3125 245.4375 C-146.1294 245.4285 -146.9462 245.4195 -147.7878 245.4102 C-166.8126 244.8737 -182.0387 235.4406 -195 222 C-221.7177 192.8265 -231.1289 153.6075 -230.1318 114.9824 C-228.6674 81.8543 -215.953 49.8212 -194 25 C-193.1582 24.0371 -192.3165 23.0741 -191.4492 22.082 C-182.0429 11.5595 -172.0116 1.526 -160 -6 C-158.7689 -6.7799 -157.5379 -7.5598 -156.2695 -8.3633 C-106.9778 -38.8602 -45.0929 -37.5656 0 0 Z ' transform='translate%28274,74%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C3.613 3.613 4.7652 7.2999 6.4375 12 C17.6356 42.3125 32.3211 71.4031 47.3555 99.9648 C47.8187 100.8496 48.282 101.7344 48.7593 102.646 C49.7768 104.5765 50.8169 106.4951 51.8633 108.4102 C53.5979 112.3622 53.1791 115.9637 52 120 C48.9782 124.6622 46.1706 127.0618 41 129 C36.7912 129.408 32.6078 129.3488 28.3828 129.293 C26.5644 129.2866 26.5644 129.2866 24.7092 129.2801 C20.8476 129.2633 16.9865 129.2257 13.125 129.1875 C10.5026 129.1724 7.8802 129.1588 5.2578 129.1465 C-1.1616 129.1135 -7.5808 129.0633 -14 129 C-13.9764 131.1777 -13.9764 131.1777 -13.9524 133.3994 C-13.8977 138.8339 -13.8635 144.2684 -13.8352 149.7031 C-13.8202 152.0463 -13.7998 154.3894 -13.7737 156.7324 C-13.7369 160.1186 -13.7202 163.5043 -13.707 166.8906 C-13.6915 167.9224 -13.6761 168.9541 -13.6601 170.0172 C-13.6569 184.3966 -17.8232 197.3988 -27.7695 207.9609 C-42.0077 220.9773 -59.8808 220.1659 -77.9844 219.873 C-90.9633 219.7623 -102.3488 221.4911 -112.25 230.5625 C-119.6375 238.4445 -122.9883 247.7338 -123.2812 258.3594 C-123.3186 259.5569 -123.356 260.7545 -123.3945 261.9883 C-123.4653 264.5117 -123.5356 267.0351 -123.6055 269.5586 C-123.6429 270.751 -123.6802 271.9434 -123.7188 273.1719 C-123.749 274.266 -123.7793 275.3601 -123.8105 276.4873 C-124 279 -124 279 -125 280 C-128.2524 280.1007 -131.4835 280.1361 -134.7363 280.1294 C-136.2703 280.132 -136.2703 280.132 -137.8353 280.1347 C-141.234 280.1391 -144.6326 280.1362 -148.0312 280.1328 C-150.3816 280.1335 -152.7319 280.1345 -155.0822 280.1357 C-160.0152 280.1372 -164.9483 280.135 -169.8813 280.1304 C-176.2205 280.1247 -182.5596 280.128 -188.8988 280.1339 C-193.7542 280.1375 -198.6096 280.1364 -203.465 280.1338 C-205.8031 280.1331 -208.1412 280.134 -210.4793 280.1363 C-213.7408 280.1388 -217.0022 280.135 -220.2637 280.1294 C-221.2403 280.1314 -222.217 280.1334 -223.2233 280.1355 C-229.8857 280.1143 -229.8857 280.1143 -231 279 C-231.1098 277.0549 -231.1491 275.1058 -231.1611 273.1577 C-231.1755 271.2784 -231.1755 271.2784 -231.1902 269.3612 C-231.1945 267.9916 -231.1987 266.622 -231.2031 265.2109 C-231.2088 263.8052 -231.2145 262.3994 -231.2204 260.9511 C-231.2299 257.9599 -231.2368 254.9688 -231.2402 251.9775 C-231.2446 248.9341 -231.2584 245.891 -231.2812 242.8477 C-231.312 238.4478 -231.3223 234.0484 -231.3281 229.6484 C-231.3405 228.3072 -231.3528 226.966 -231.3655 225.5841 C-231.3186 205.289 -225.8337 188.0746 -212 173 C-210.9868 171.8495 -210.9868 171.8495 -209.9531 170.6758 C-201.3449 161.4235 -190.0892 156.0224 -179.1577 149.9924 C-142.6481 129.7863 -109.1238 103.2856 -94.7527 62.4563 C-91.1656 52.553 -86.7975 48.7258 -77.5625 43.9375 C-76.3633 43.2725 -75.164 42.6075 -73.9285 41.9224 C-71.4738 40.5645 -69.01 39.2232 -66.5371 37.8989 C-62.3545 35.6535 -58.2291 33.3174 -54.1055 30.9661 C-51.3113 29.3743 -48.508 27.7994 -45.7031 26.2266 C-38.6006 22.2268 -31.5733 18.0997 -24.5403 13.9795 C-16.4125 9.224 -8.2306 4.5752 0 0 Z ' transform='translate%28339,187%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C-0.0232 0.7992 -0.0464 1.5984 -0.0703 2.4219 C-0.3643 20.3127 3.6591 35.4881 15.8281 49.0352 C18.408 51.6767 21.0332 54.0262 23.9375 56.3125 C24.6181 56.8694 25.2988 57.4263 26 58 C26 58.66 26 59.32 26 60 C25.3526 60.3613 24.7053 60.7225 24.0383 61.0947 C-4.0969 76.6798 -4.0969 76.6798 -31.7029 93.1726 C-36.4092 96.0961 -41.2114 98.7871 -46.0859 101.4199 C-51.1489 104.1652 -56.1651 106.994 -61.1875 109.8125 C-62.8234 110.73 -62.8234 110.73 -64.4924 111.666 C-66.665 112.8847 -68.8375 114.1036 -71.0098 115.3228 C-73.6146 116.7838 -76.2209 118.2423 -78.8281 119.6992 C-85.3311 123.3388 -91.7895 127.0074 -98.082 131.0039 C-100 132 -100 132 -103 132 C-102.9843 131.1814 -102.9686 130.3627 -102.9524 129.5193 C-102.6633 112.0723 -103.0137 95.2096 -106 78 C-106.1441 77.1673 -106.2881 76.3345 -106.4365 75.4766 C-107.23 70.9714 -108.0828 66.4818 -109 62 C-98.2783 55.5827 -87.5415 49.2193 -76.5625 43.25 C-69.6332 39.4819 -62.845 35.5463 -56.1055 31.4453 C-50.9673 28.3523 -45.7286 25.4366 -40.5 22.5 C-31.57 17.4817 -22.7612 12.3082 -14 7 C-11.7331 5.6393 -9.4625 4.2847 -7.1875 2.9375 C-6.2323 2.369 -5.2771 1.8005 -4.293 1.2148 C-2 0 -2 0 0 0 Z ' transform='translate%28358,79%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C8.7894 8.158 14.3224 16.7986 15.3242 29.0781 C15.7258 41.1646 13.3603 51.8646 5.0664 60.918 C4.5418 61.5329 4.0171 62.1477 3.4766 62.7812 C-3.4985 70.4456 -12.8179 74.2581 -23.0508 75.207 C-34.9117 75.7089 -45.8738 72.7028 -54.9727 64.8555 C-63.5537 56.377 -68.2714 46.9575 -68.9648 34.8047 C-68.8197 21.3946 -64.8701 11.0055 -55.6523 1.25 C-39.3632 -12.7221 -16.5754 -13.9068 0 0 Z ' transform='translate%28441.93359375,55.08203125%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C1.1823 -0.0014 1.1823 -0.0014 2.3885 -0.0029 C4.0432 -0.0036 5.698 -0.0018 7.3528 0.0024 C9.8961 0.0078 12.4392 0.0025 14.9824 -0.0039 C16.5924 -0.0032 18.2025 -0.002 19.8125 0 C22.0097 0.0017 22.0097 0.0017 24.2512 0.0034 C27.5742 0.1328 27.5742 0.1328 28.5742 1.1328 C28.6694 3.8412 28.6998 6.524 28.6877 9.2327 C28.6879 10.0814 28.688 10.9301 28.6882 11.8045 C28.6875 14.6236 28.6797 17.4426 28.6719 20.2617 C28.67 22.2109 28.6686 24.16 28.6676 26.1091 C28.6638 31.2499 28.6539 36.3906 28.6429 41.5314 C28.6309 47.6937 28.6263 53.8561 28.6204 60.0185 C28.6107 69.3899 28.5916 78.7613 28.5742 88.1328 C8.1142 88.1328 -12.3458 88.1328 -33.4258 88.1328 C-33.5309 79.4466 -33.631 70.7627 -33.6845 62.0764 C-33.7108 58.0306 -33.7459 53.9854 -33.803 49.9399 C-33.8577 46.0366 -33.8873 42.1337 -33.9002 38.23 C-33.9138 36.031 -33.9527 33.8321 -33.9923 31.6335 C-33.9948 22.5229 -33.0295 15.2853 -26.7973 8.3102 C-18.89 0.9989 -10.3128 0.0079 0 0 Z ' transform='translate%28567.42578125,183.8671875%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C3.3915 1.6957 4.7941 2.5825 7.25 5.1875 C9.6282 7.636 12.038 9.9607 14.625 12.1875 C18.8707 15.849 22.9789 19.6533 27.0894 23.4646 C30.2835 26.4234 33.4989 29.354 36.75 32.25 C42.0947 37.0385 47.3021 41.9697 52.519 46.8962 C58.127 52.1893 63.7795 57.4306 69.4609 62.6445 C71.3437 64.3912 73.184 66.184 75 68 C75 68.66 75 69.32 75 70 C73.7876 70.5801 73.7876 70.5801 72.5508 71.1719 C70.9478 71.953 70.9478 71.953 69.3125 72.75 C68.2568 73.2605 67.201 73.7709 66.1133 74.2969 C57.5667 78.9723 52.2882 86.5237 49.125 95.6875 C47.2951 102.6141 47.2563 109.8758 47 117 C41.8954 115.5425 38.8212 112.1895 35.2305 108.4883 C34.2707 107.5186 34.2707 107.5186 33.2916 106.5293 C31.2496 104.4641 29.2181 102.3889 27.1875 100.3125 C25.166 98.2557 23.1422 96.201 21.1156 94.1492 C19.8577 92.8747 18.603 91.5971 17.3521 90.3158 C14.3567 87.2703 11.3089 84.3579 8.0728 81.5684 C3.7311 77.8201 -0.3012 73.808 -4.332 69.7305 C-5.0905 68.9683 -5.8489 68.206 -6.6303 67.4207 C-9.0268 65.0121 -11.4201 62.6002 -13.8125 60.1875 C-16.9828 56.9906 -20.1564 53.7971 -23.332 50.6055 C-24.057 49.8722 -24.782 49.1389 -25.529 48.3833 C-26.2037 47.7054 -26.8784 47.0274 -27.5735 46.3289 C-28.1645 45.7326 -28.7554 45.1364 -29.3643 44.5221 C-31.1301 42.7972 -31.1301 42.7972 -34 41 C-33 38 -33 38 -30.8477 36.7109 C-29.9286 36.2701 -29.0095 35.8292 -28.0625 35.375 C-13.4359 27.6259 -5.4879 15.3204 0 0 Z ' transform='translate%28471,103%29' fill='%232474d4'/%3E%3C/svg%3E",
+      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 860 855' width='860' height='855'%3E%3Cpath d='M0 0 C0.0006 0.9049 0.0012 1.8099 0.0018 2.7422 C0.0377 56.3864 0.0944 110.0304 0.1779 163.6745 C0.1879 170.1169 0.1978 176.5593 0.2075 183.0017 C0.2095 184.2843 0.2114 185.5668 0.2134 186.8882 C0.2444 207.6499 0.2614 228.4116 0.2732 249.1733 C0.2856 270.4798 0.3131 291.7862 0.3546 313.0927 C0.3797 326.2379 0.3931 339.3829 0.3914 352.5281 C0.3914 361.5446 0.406 370.561 0.4322 379.5775 C0.4468 384.778 0.455 389.9784 0.4458 395.1789 C0.4375 399.9458 0.4477 404.7123 0.4723 409.4792 C0.478 411.1981 0.477 412.917 0.4685 414.6359 C0.4142 426.6193 0.9169 438.2043 8.5625 448 C15.0469 454.4844 21.9318 457.2453 31.0625 457.5625 C40.961 457.1411 47.4548 453.9788 54.8945 447.5859 C61.5862 439.3672 64.3051 428.6731 67.5156 418.7578 C68.0378 417.1652 68.5609 415.5728 69.0848 413.9807 C70.1784 410.6556 71.2688 407.3294 72.3572 404.0026 C74.7064 396.8343 77.1082 389.6837 79.5079 382.5323 C80.8372 378.5685 82.1625 374.6035 83.4878 370.6384 C83.7535 369.8436 84.0192 369.0487 84.2929 368.2297 C94.2152 338.5384 104.0104 308.8153 113.4679 278.972 C116.4012 269.7197 119.3793 260.4822 122.375 251.25 C122.6179 250.5012 122.8608 249.7525 123.1111 248.981 C127.2809 236.1374 131.5222 223.3181 135.8281 210.5195 C137.1536 206.571 138.444 202.6167 139.6719 198.6367 C147.1026 174.717 162.235 155.0117 184.5 143.0625 C201.9303 134.1289 220.5247 131.5333 239.9146 131.6123 C241.5452 131.6081 243.1758 131.6027 244.8063 131.596 C249.2351 131.5817 253.6637 131.5857 258.0925 131.5932 C262.8887 131.5979 267.6848 131.5854 272.481 131.5751 C281.8551 131.558 291.2292 131.5571 300.6033 131.5624 C308.2243 131.5664 315.8454 131.5649 323.4664 131.5596 C324.5539 131.5589 325.6413 131.5581 326.7617 131.5573 C328.9712 131.5558 331.1807 131.5543 333.3902 131.5527 C354.0717 131.539 374.753 131.5444 395.4345 131.5559 C414.3392 131.5659 433.2439 131.5529 452.1486 131.529 C471.5889 131.5046 491.029 131.495 510.4693 131.5016 C521.3722 131.5051 532.275 131.5029 543.1779 131.4854 C552.4544 131.4707 561.7307 131.47 571.0071 131.4875 C575.7359 131.496 580.4644 131.4981 585.1932 131.4828 C589.5283 131.4689 593.8629 131.4738 598.198 131.493 C600.495 131.4986 602.792 131.4846 605.089 131.4697 C621.5483 131.5861 636.0053 136.7553 648.1914 148.0547 C660.0758 160.8375 664.2614 174.9782 664.4961 192.082 C663.632 205.8729 657.0813 219.8836 652.625 232.875 C651.908 234.9735 651.1911 237.0721 650.4744 239.1707 C645.7865 252.8775 641.0232 266.557 636.2146 280.222 C630.8571 295.4523 625.6545 310.7331 620.4744 326.0246 C615.2598 341.4131 609.9638 356.7702 604.5873 372.1028 C599.7606 385.8741 595.0338 399.6774 590.352 413.4987 C587.8792 420.7944 585.3958 428.0866 582.9126 435.3789 C581.708 438.9167 580.5069 442.4557 579.3101 445.9961 C577.8696 450.2534 576.4056 454.5022 574.9375 458.75 C574.3492 460.5033 574.3492 460.5033 573.749 462.292 C565.4844 485.9441 549.6238 503.7157 528 516 C526.7419 516.7219 525.4837 517.4438 524.1875 518.1875 C513.7238 523.2173 502.1037 526.1559 490.5427 526.1342 C489.6891 526.1366 488.8355 526.1389 487.956 526.1413 C485.0822 526.148 482.2084 526.1476 479.3346 526.1472 C477.2587 526.1505 475.1828 526.1542 473.1068 526.1583 C467.3912 526.1683 461.6756 526.172 455.96 526.1747 C449.7995 526.1786 443.6391 526.1882 437.4786 526.1969 C422.5943 526.2167 407.71 526.2267 392.8257 526.2356 C385.816 526.24 378.8064 526.2454 371.7967 526.2506 C348.4934 526.2676 325.1902 526.2822 301.8869 526.2894 C300.3799 526.2899 298.8728 526.2903 297.3658 526.2908 C296.6185 526.291 295.8712 526.2913 295.1012 526.2915 C291.3149 526.2927 287.5287 526.2939 283.7424 526.2952 C282.6153 526.2955 282.6153 526.2955 281.4655 526.2959 C257.1173 526.3038 232.7692 526.3272 208.421 526.3597 C182.6686 526.3941 156.9162 526.4137 131.1637 526.417 C117.13 526.4192 103.0964 526.4279 89.0628 526.4535 C77.1094 526.4752 65.1561 526.4832 53.2027 526.4735 C47.1066 526.469 41.0107 526.4708 34.9146 526.4903 C29.3262 526.5079 23.7381 526.5069 18.1497 526.4914 C16.1354 526.489 14.1211 526.4933 12.1069 526.5052 C-14.2065 526.651 -35.1997 518.9563 -54.6875 500.8125 C-71.473 483.2682 -78.4877 460.8815 -78.3877 437.1493 C-78.3919 435.5855 -78.3973 434.0217 -78.404 432.4578 C-78.4184 428.1949 -78.4142 423.9322 -78.4068 419.6692 C-78.4021 415.0583 -78.4146 410.4475 -78.4249 405.8366 C-78.442 396.8169 -78.4429 387.7973 -78.4376 378.7775 C-78.4336 371.4429 -78.435 364.1083 -78.4404 356.7737 C-78.4411 355.7279 -78.4419 354.6822 -78.4427 353.6047 C-78.4442 351.4799 -78.4457 349.3551 -78.4473 347.2303 C-78.461 327.3257 -78.4556 307.4211 -78.4441 287.5165 C-78.4342 269.3274 -78.4471 251.1384 -78.471 232.9493 C-78.4954 214.2482 -78.505 195.5472 -78.4984 176.8461 C-78.4949 166.3567 -78.4971 155.8673 -78.5146 145.3779 C-78.5294 136.4487 -78.5299 127.5197 -78.5125 118.5905 C-78.5041 114.0397 -78.5018 109.4892 -78.5172 104.9384 C-78.5311 100.7634 -78.5262 96.5889 -78.507 92.4139 C-78.5015 90.2077 -78.5154 88.0014 -78.5303 85.7952 C-78.3575 62.1675 -68.2924 41.7375 -52.25 24.8125 C-38.9968 12.0312 -19.1059 0 0 0 Z ' transform='translate%28137,269%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.9615 -0.0017 1.9231 -0.0034 2.9137 -0.0052 C6.1258 -0.0085 9.3377 0.0025 12.5498 0.0135 C14.8562 0.014 17.1627 0.0137 19.4691 0.0126 C25.7247 0.012 31.9802 0.0238 38.2358 0.0377 C44.7755 0.0502 51.3151 0.0514 57.8548 0.0538 C70.236 0.06 82.6171 0.0764 94.9983 0.0965 C109.095 0.1188 123.1916 0.1298 137.2882 0.1399 C166.2837 0.1608 195.2792 0.1959 224.2747 0.2405 C224.2761 0.9248 224.2776 1.6091 224.2791 2.3142 C224.3163 19.0444 224.3755 35.7744 224.4586 52.5045 C224.4982 60.5954 224.5307 68.6862 224.5457 76.7771 C224.5588 83.8377 224.5859 90.898 224.6293 97.9584 C224.6517 101.6893 224.6655 105.4198 224.6666 109.1507 C224.6847 140.9345 228.9842 165.9069 252.2044 189.1741 C268.0014 203.8896 287.7742 208.5331 308.7383 208.5435 C310.0259 208.5519 311.3135 208.5604 312.6402 208.5691 C316.8556 208.5947 321.0709 208.6069 325.2864 208.6194 C328.2263 208.6356 331.1663 208.6528 334.1062 208.6709 C341.0284 208.7124 347.9506 208.7449 354.8729 208.7734 C368.035 208.8277 381.197 208.8954 394.359 208.9713 C398.6872 208.9942 403.0154 209.0104 407.3437 209.026 C409.9739 209.0394 412.6042 209.0531 415.2344 209.0669 C416.4462 209.0695 417.6581 209.0722 418.9067 209.0748 C420.5487 209.0852 420.5487 209.0852 422.2239 209.0957 C423.6593 209.1015 423.6593 209.1015 425.1237 209.1074 C427.2747 209.2405 427.2747 209.2405 428.2747 210.2405 C428.3753 213.1876 428.4108 216.1113 428.4041 219.0589 C428.4067 220.4466 428.4067 220.4466 428.4094 221.8623 C428.4138 224.9363 428.4109 228.0102 428.4075 231.0843 C428.4082 233.2104 428.4091 235.3365 428.4104 237.4626 C428.4119 241.9248 428.4097 246.3871 428.405 250.8494 C428.3993 256.5832 428.4026 262.317 428.4086 268.0508 C428.4122 272.443 428.4111 276.8351 428.4085 281.2273 C428.4078 283.3421 428.4086 285.4569 428.411 287.5717 C428.4135 290.5219 428.4097 293.472 428.4041 296.4221 C428.4061 297.3053 428.4081 298.1885 428.4102 299.0984 C428.3889 305.1262 428.3889 305.1262 427.2747 306.2405 C425.765 306.3356 424.2508 306.3606 422.7381 306.358 C421.2583 306.3591 421.2583 306.3591 419.7487 306.3603 C418.1033 306.3539 418.1033 306.3539 416.4246 306.3473 C414.6916 306.3465 414.6916 306.3465 412.9236 306.3456 C409.0186 306.3426 405.1137 306.3324 401.2088 306.3223 C398.4217 306.3187 395.6347 306.3157 392.8477 306.313 C386.8263 306.3064 380.805 306.2969 374.7836 306.2851 C366.057 306.2681 357.3304 306.2586 348.6037 306.2512 C334.4193 306.2393 320.2349 306.2243 306.0506 306.2061 C304.7759 306.2045 304.7759 306.2045 303.4755 306.2028 C291.4517 306.1872 279.4278 306.1686 267.404 306.1488 C266.1375 306.1467 266.1375 306.1467 264.8455 306.1446 C263.5806 306.1425 263.5806 306.1425 262.2901 306.1403 C248.1818 306.1172 234.0735 306.102 219.9651 306.093 C211.2735 306.0872 202.582 306.0749 193.8904 306.054 C187.2057 306.0386 180.521 306.0337 173.8362 306.0326 C171.1093 306.0305 168.3824 306.0249 165.6555 306.0156 C137.8119 305.9238 112.6263 307.8691 87.2747 320.2405 C86.2795 320.7239 85.2844 321.2073 84.259 321.7054 C55.0573 336.7651 35.7928 363.5347 25.8652 394.295 C25.4706 395.5403 25.0759 396.7856 24.6692 398.0686 C24.0048 400.1346 23.3405 402.2006 22.6759 404.2665 C21.9667 406.4752 21.2606 408.6849 20.5553 410.8949 C18.2753 418.0376 15.9724 425.1729 13.6721 432.309 C12.8612 434.8253 12.0511 437.3418 11.2409 439.8582 C5.2608 458.4256 -0.8133 476.962 -6.9128 495.4905 C-7.1842 496.3149 -7.4555 497.1393 -7.7351 497.9887 C-15.4127 521.3114 -23.1646 544.608 -31.0378 567.8655 C-31.6573 569.6986 -31.6573 569.6986 -32.2894 571.5688 C-40.3784 595.479 -40.3784 595.479 -44.7253 606.2405 C-45.3853 606.2405 -46.0453 606.2405 -46.7253 606.2405 C-46.8559 561.0479 -46.9835 515.8552 -47.1075 470.6626 C-47.1225 465.1981 -47.1375 459.7336 -47.1526 454.2691 C-47.1556 453.1822 -47.1586 452.0954 -47.1616 450.9756 C-47.203 435.9748 -47.2455 420.9741 -47.289 405.9734 C-47.4256 358.912 -47.5507 311.8507 -47.6455 264.7892 C-47.6476 263.7437 -47.6497 262.6982 -47.6519 261.621 C-47.654 260.5737 -47.6561 259.5265 -47.6583 258.4474 C-47.6615 256.8737 -47.6615 256.8737 -47.6647 255.2682 C-47.669 253.1442 -47.6733 251.0201 -47.6775 248.8961 C-47.7086 233.4313 -47.7457 217.9665 -47.7862 202.5018 C-47.8417 181.2855 -47.8864 160.0692 -47.9145 138.8529 C-47.9288 128.3079 -47.9479 117.763 -47.9803 107.2181 C-48.0076 98.3654 -48.0247 89.5127 -48.0284 80.66 C-48.0305 76.1596 -48.0376 71.6593 -48.0577 67.1589 C-48.0761 63.0379 -48.0804 58.917 -48.0738 54.7959 C-48.0738 52.6091 -48.0887 50.4223 -48.1041 48.2356 C-48.0511 33.887 -44.244 23.3329 -34.6628 12.4905 C-25.3018 3.6814 -12.5266 -0.082 0 0 Z M107.0833 57.9085 C98.2119 69.3473 96.4169 81.2386 97.2747 95.2405 C99.0931 105.3402 105.5786 113.175 113.8372 119.053 C120.0552 122.6135 127.4282 124.2879 134.2747 126.2405 C132.1129 134.7525 128.3004 141.013 120.7747 145.846 C112.982 149.8968 104.8371 151.6211 96.2747 153.2405 C96.1126 164.2781 96.6172 175.2285 97.2747 186.2405 C118.6506 185.672 137.9125 180.4848 154.2747 166.2405 C155.4297 165.3536 156.5847 164.4668 157.7747 163.553 C173.4116 149.8345 182.6503 126.6671 184.2747 106.2405 C185.2079 88.9247 184.8913 74.0974 173.2747 60.2405 C172.616 59.4464 171.9573 58.6524 171.2786 57.8343 C164.1819 50.0214 154.4648 44.8131 143.8411 43.9671 C129.3766 43.6002 117.3838 47.3786 107.0833 57.9085 Z M7.2747 65.2405 C2.5421 72.7029 1.5141 79.5674 2.2747 88.2405 C4.4969 96.9001 8.7254 102.825 16.3372 107.553 C23.0711 111.5062 29.6007 112.0637 37.2747 111.2405 C44.9462 108.8208 51.3838 104.0264 55.5559 97.1194 C59.3982 89.6406 60.5622 82.8334 58.6614 74.5764 C55.8359 66.5357 50.5779 60.7346 43.0247 56.803 C29.8182 51.3003 16.7099 54.4325 7.2747 65.2405 Z ' transform='translate%28219.72532653808594,58.759490966796875%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C4.1468 3.5332 8.1688 7.0503 11.9961 10.9336 C12.8849 11.8301 13.7737 12.7267 14.6895 13.6504 C16.5176 15.5045 18.3457 17.3587 20.1738 19.2129 C24.7226 23.8011 29.3181 28.2147 34.2229 32.4187 C37.0202 34.9078 39.4898 37.6625 42 40.4375 C48.6089 47.6396 55.4679 54.5856 62.375 61.5 C63.3972 62.5267 64.4195 63.5533 65.4727 64.6111 C70.1886 69.3181 74.9379 73.8917 79.998 78.2251 C84.1943 81.9454 88.1075 85.9646 92.0625 89.9375 C92.9217 90.7928 93.7808 91.6481 94.666 92.5293 C98.4457 96.3148 102.1546 100.1094 105.6367 104.1719 C109.0837 108.1827 112.8527 111.7448 116.75 115.3125 C125.3456 123.2819 133.7777 131.2997 141.3867 140.2344 C143.5165 142.5653 145.8855 144.5059 148.3203 146.5078 C150.048 148.0426 151.4709 149.6538 152.9375 151.4375 C155.7053 154.7899 158.7974 157.5445 162.0977 160.3633 C164.5355 162.4607 166.8297 164.6262 169 167 C169 167.66 169 168.32 169 169 C151.8662 169.0703 134.7325 169.1231 117.5986 169.1554 C109.642 169.1709 101.6855 169.1919 93.729 169.2263 C86.0456 169.2596 78.3622 169.2769 70.6787 169.2846 C67.7524 169.2902 64.8261 169.301 61.8998 169.3172 C57.7902 169.3391 53.681 169.342 49.5713 169.3406 C48.3708 169.3514 47.1703 169.3621 45.9334 169.3733 C33.2093 169.3271 21.7533 166.8901 12.0352 158.2539 C4.4355 150.2552 -0.1305 140.2941 -0.1203 129.2736 C-0.1216 128.1308 -0.123 126.988 -0.1244 125.8106 C-0.1208 124.5662 -0.1172 123.3219 -0.1135 122.0398 C-0.1137 120.7223 -0.1138 119.4049 -0.114 118.0475 C-0.1133 113.6918 -0.1055 109.3362 -0.0977 104.9805 C-0.0958 101.9609 -0.0943 98.9413 -0.0934 95.9217 C-0.0903 88.7855 -0.0821 81.6494 -0.072 74.5133 C-0.0608 66.3875 -0.0553 58.2618 -0.0503 50.1361 C-0.0399 33.4241 -0.0223 16.712 0 0 Z ' transform='translate%28480,63%29' fill='%232474d4'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "soulscrape",
         names: {
           name: "Soulscrape",
-          catalog: "SOULSCRAPE",
           command: "@hraness/soulscrape",
           formerly: ["Ensoul"]
         },
@@ -575,11 +572,39 @@ var portfolioSnapshot = {
         reviewedOn: "2026-09-24"
       }
     },
+    iconplace: {
+      id: "iconplace",
+      name: "icon.place",
+      oneLiner: "Editable vector icons and illustrations, with an editor in your browser",
+      brandDescription: "icon.place is a library of editable vector icons and illustrations, with 9,518 concept pages and an in-browser editor that exports SVG, PNG, or a recipe.",
+      canonicalUrl: "https://icon.place",
+      status: "active",
+      copyStatus: "proposed",
+      aliases: [],
+      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M8.5 2H23.5Q30 2 30 8.5V23.5Q30 30 23.5 30H8.5Q2 30 2 23.5V8.5Q2 2 8.5 2Z M13.8 12.19L13.8 7.5A2.2 2.2 0 0 1 16 5.3A2.2 2.2 0 0 1 18.2 7.5L18.2 12.19L22.26 9.84A2.2 2.2 0 0 1 25.27 10.65A2.2 2.2 0 0 1 24.46 13.66L20.4 16L24.46 18.34A2.2 2.2 0 0 1 25.27 21.35A2.2 2.2 0 0 1 22.26 22.16L18.2 19.81L18.2 24.5A2.2 2.2 0 0 1 16 26.7A2.2 2.2 0 0 1 13.8 24.5L13.8 19.81L9.74 22.16A2.2 2.2 0 0 1 6.73 21.35A2.2 2.2 0 0 1 7.54 18.34L11.6 16L7.54 13.66A2.2 2.2 0 0 1 6.73 10.65A2.2 2.2 0 0 1 9.74 9.84Z M16 13.6a2.4 2.4 0 1 0 0 4.8a2.4 2.4 0 1 0 0 -4.8Z'/%3E%3C/svg%3E",
+      messaging: {
+        formatVersion: 1,
+        product: "iconplace",
+        names: {
+          name: "icon.place"
+        },
+        category: "Editable icon library",
+        tagline: "Icons and illustrations you can edit as vectors.",
+        short: "Editable vector icons and illustrations, with an editor in your browser",
+        meta: "icon.place is a library of editable vector icons and illustrations, with 9,518 concept pages and an in-browser editor that exports SVG, PNG, or a recipe.",
+        medium: "icon.place is a library of editable vector icons and illustrations, with 9,518 concept pages. Drawings open in an in-browser editor for styles, palettes, and parts, and export as SVG, PNG, or a recipe.",
+        long: "icon.place is a library of editable vector icons and illustrations. It has 9,518 concept pages and 8,965 drawn icons, adapted from Lucide, Tabler, Phosphor, Material Symbols, Font Awesome Free, Bootstrap Icons, and others, credited on each page. A shared in-browser editor changes styles, palettes, and parts, and exports SVG, PNG, or a replayable recipe. The studio composes connected scenes from 41 pieces, and you can remix your own SVG or trace an image. A separate drawing lab runs small Qwen models in the browser through WebGPU and records each drawing run as an ALGAL program; the live site does not use it yet.",
+        status: {
+          default: "proposed"
+        },
+        reviewedOn: "2026-09-29"
+      }
+    },
     slopcamera: {
       id: "slopcamera",
-      name: "Slopcamera",
+      name: "SlopCamera",
       oneLiner: "Media studio for agents: images, 3D, animation, and video to revise",
-      brandDescription: "Slopcamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
+      brandDescription: "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
       canonicalUrl: "https://slopcamera.com",
       status: "active",
       copyStatus: "proposed",
@@ -589,21 +614,20 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "slopcamera",
         names: {
-          name: "Slopcamera",
-          catalog: "SLOPCAMERA",
+          name: "SlopCamera",
           command: "slopcamera",
           formerly: ["Atet", "Graphics"]
         },
         category: "Media studio for agents",
         tagline: "Visual work your agent can keep revising.",
         short: "Media studio for agents: images, 3D, animation, and video to revise",
-        meta: "Slopcamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
-        medium: "Slopcamera is a media studio for coding agents. Codex, Claude Code, and other agents make images, diagrams, animation, 3D scenes, and edited video from source files they can keep revising.",
-        long: "Agents that write code can also make media, but generated assets usually arrive as finished files nobody can change. Slopcamera is a media studio for coding agents: images, diagrams, animation, 3D scenes, and edited video are built from source files the agent can keep revising, so a change is a new render, not a new prompt lottery. Codex, Claude Code, and other command-capable agents drive it through the CLI and skill. Slopcamera is free and open source.",
+        meta: "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
+        medium: "SlopCamera is a media studio for coding agents. Codex, Claude Code, and other agents make images, diagrams, animation, 3D scenes, and edited video from source files they can keep revising.",
+        long: "Agents that write code can also make media, but generated assets usually arrive as finished files nobody can change. SlopCamera is a media studio for coding agents: images, diagrams, animation, 3D scenes, and edited video are built from source files the agent can keep revising, so a change is a new render, not a new prompt lottery. Codex, Claude Code, and other command-capable agents drive it through the CLI and skill. SlopCamera is free and open source.",
         hero: {
           heading: "Visual work your agent can keep revising.",
-          summary: "Images, diagrams, animation, 3D scenes, and edited video, built from source files so a change is a re-render, not a re-roll.",
-          primaryAction: "Install Slopcamera",
+          summary: "Ask your agent to make images, diagrams, animation, 3D scenes, or video. Keep the source files for the next revision.",
+          primaryAction: "Install SlopCamera",
           secondaryAction: "See what agents made"
         },
         status: {
@@ -627,7 +651,6 @@ var portfolioSnapshot = {
         product: "soundfish",
         names: {
           name: "Soundfish",
-          catalog: "SOUNDFISH",
           command: "soundfish"
         },
         category: "Album pages for musicians",
@@ -651,8 +674,8 @@ var portfolioSnapshot = {
     sys1: {
       id: "sys1",
       name: "Sys1",
-      oneLiner: "Lets agents ask yes/no, choice, and score questions and get answers",
-      brandDescription: "Sys1 lets agents ask yes/no, choice, and score questions and get validated answers with probabilities from hosted Jev, a local model, or your own server.",
+      oneLiner: "Answers an agent's small yes/no, choice, and score questions with probabilities",
+      brandDescription: "Sys1 helps coding agents review changes against your repository's rules, with probability-scored answers from hosted Jev, a local model, or your own server.",
       canonicalUrl: "https://sys1.io",
       status: "active",
       copyStatus: "proposed",
@@ -663,15 +686,14 @@ var portfolioSnapshot = {
         product: "sys1",
         names: {
           name: "Sys1",
-          catalog: "SYS1",
           command: "sys1"
         },
         category: "Agent decision router",
         tagline: "Give your agent a System 1.",
-        short: "Lets agents ask yes/no, choice, and score questions and get answers",
-        meta: "Sys1 lets agents ask yes/no, choice, and score questions and get validated answers with probabilities from hosted Jev, a local model, or your own server.",
-        medium: "Sys1 lets agents ask yes/no, choice, and score questions and get validated answers with probabilities. You choose who answers: TypeSafe's hosted Jev, a local model on your machine, or a compatible server you run.",
-        long: "Sys1 lets agents ask yes/no, choice, and score questions and get validated answers with probabilities. You choose who answers: TypeSafe's hosted Jev, a local model on your machine, or a compatible server you run. Every backend takes the same request format, Sys1 checks each answer against the question asked, and each response says which backend produced it. Call Sys1 from a Node or Bun client, embed its router, or run its local HTTP daemon for any language. Sys1 is free and MIT licensed.",
+        short: "Answers an agent's small yes/no, choice, and score questions with probabilities",
+        meta: "Sys1 answers an agent's small yes/no, choice, and score questions with probabilities, from TypeSafe's hosted Jev, a local model, or your own server.",
+        medium: "Sys1 keeps agents from spending big-model tokens on small decisions. It answers yes/no, choice, and score questions with probabilities from TypeSafe's hosted Jev, an experimental local model, or your own server.",
+        long: "Sys1 keeps agents from spending big-model tokens on small decisions. Agents ask yes/no, choice, and score questions and get validated answers with probabilities. You choose who answers: TypeSafe's hosted Jev, an experimental local model, or a compatible server you run. Its review and final-message checks are experimental and advisory. Every backend takes the same request format, Sys1 checks each answer against the question asked, and each response says which backend produced it. Call Sys1 from a Node or Bun client, embed its router, or run its local HTTP daemon for any language. Sys1 is free and MIT licensed.",
         hero: {
           heading: "Give your agent a System 1.",
           summary: "Your agent asks small yes/no, choice, and score questions and gets validated answers with probabilities. You choose the model.",
@@ -681,7 +703,7 @@ var portfolioSnapshot = {
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-29"
       }
     },
     sloptrade: {
@@ -699,7 +721,6 @@ var portfolioSnapshot = {
         product: "sloptrade",
         names: {
           name: "SlopTrade",
-          catalog: "SLOPTRADE",
           command: "sloptrade",
           formerly: ["Invest"]
         },
@@ -736,8 +757,7 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "hraness",
         names: {
-          name: "Hraness",
-          catalog: "HRANESS"
+          name: "Hraness"
         },
         category: "Software studio",
         tagline: "Tools for agents and humans.",
@@ -772,15 +792,14 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "sleepyland",
         names: {
-          name: "Sleepyland",
-          catalog: "SLEEPYLAND"
+          name: "Sleepyland"
         },
         category: "Sleep sound machine",
         tagline: "Steady sound for sleep, made in your browser.",
         short: "Free sleep sounds made in your browser, with sourced sleep guides",
         meta: "Sleepyland is a free sound machine that makes brown, pink, or white noise and ocean waves in your browser, with sourced guides to sleep.",
         medium: "Sleepyland is a free sound machine that makes brown, pink, or white noise and ocean waves in your browser as you listen, with no recordings, account, or ads. Beside it are sourced guides to sleep.",
-        long: "Sleepyland is a free sound machine that runs in your browser. Press play and it makes brown, pink, or white noise and ocean surf on your device as you listen, with no recordings to download and no account to create. Start from Sleep, Relax, or Focus, then tune the noise color, warmth, volumes, and the time between waves. Beside the sound machine, Sleepyland publishes short guides to sleep, sound, and light that link every source. It is open source under the MIT License and built by Hraness.",
+        long: "Sleepyland is a free sound machine that runs in your browser. Press play and it makes brown, pink, or white noise and ocean surf on your device as you listen, with no recordings to download and no account to create. Start from Sleep, Relax, or Focus, then tune the noise color, warmth, volumes, and the time between waves. Beside the sound machine, Sleepyland publishes short guides to sleep, sound, and light that link every source. It is built by Hraness.",
         hero: {
           heading: "Steady sound for sleep, made in your browser.",
           summary: "Press play for deep brown noise and slow ocean waves, made on your device as you listen. Free, no account, and every guide links its sources.",
@@ -807,8 +826,7 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "roughday",
         names: {
-          name: "Rough Day",
-          catalog: "ROUGH DAY"
+          name: "Rough Day"
         },
         category: "Daily news digest",
         tagline: "A daily front page that says why each story ranked.",
@@ -830,7 +848,7 @@ var portfolioSnapshot = {
     },
     "stripe-history": {
       id: "stripe-history",
-      name: "STRIPE HISTORY",
+      name: "Stripe History",
       oneLiner: "Independent history of Stripe where every event is dated and sourced",
       brandDescription: null,
       canonicalUrl: "https://hraness.com/stripe",
@@ -843,7 +861,6 @@ var portfolioSnapshot = {
         product: "stripe-history",
         names: {
           name: "Stripe History",
-          catalog: "STRIPE HISTORY",
           formerly: ["Stripe Guide", "Stripedex"]
         },
         category: "Independent company history",
@@ -866,7 +883,7 @@ var portfolioSnapshot = {
     },
     "eds-research": {
       id: "eds-research",
-      name: "EDS RESEARCH INDEX",
+      name: "EDS Research Index",
       oneLiner: "Ehlers-Danlos evidence stratified by kind, every record linked to sources",
       brandDescription: null,
       canonicalUrl: "https://hraness.com/eds",
@@ -878,8 +895,7 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "eds-research",
         names: {
-          name: "EDS Research Index",
-          catalog: "EDS RESEARCH INDEX"
+          name: "EDS Research Index"
         },
         category: "Medical research index",
         tagline: "Ehlers-Danlos research, sorted by kind of evidence.",
@@ -907,14 +923,13 @@ var portfolioSnapshot = {
       canonicalUrl: "https://act60.me",
       status: "active",
       copyStatus: "proposed",
-      aliases: ["ACT60"],
+      aliases: [],
       mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 855 856' width='855' height='856'%3E%3Cpath d='M0 0 C1.753 -0.0046 3.506 -0.0099 5.2589 -0.0159 C8.9194 -0.0248 12.5796 -0.0224 16.24 -0.0125 C20.9045 -0.001 25.5683 -0.0212 30.2327 -0.0504 C33.849 -0.0688 37.465 -0.0684 41.0813 -0.0627 C42.7999 -0.0626 44.5185 -0.0685 46.2371 -0.081 C60.2263 -0.1684 70.4585 1.1427 80.75 11.1406 C88.6759 19.5538 91.577 27.6715 91.2539 39.2227 C90.3197 47.949 86.3212 54.5601 79.9102 60.4336 C71.8054 66.9039 63.0404 68.308 52.9102 69.4336 C52.9102 84.9436 52.9102 100.4536 52.9102 116.4336 C56.6742 116.3872 60.4383 116.3408 64.3164 116.293 C68.0501 116.2616 71.7838 116.2374 75.5176 116.2139 C78.0697 116.194 80.6218 116.1669 83.1738 116.1318 C114.6775 115.7101 143.7566 120.495 171.9102 135.4336 C170.042 139.1699 168.5701 141.0129 165.6633 143.8916 C164.7851 144.7664 163.907 145.6412 163.0022 146.5425 C162.0501 147.4811 161.0981 148.4197 160.1172 149.3867 C159.1378 150.3609 158.1584 151.3351 157.1493 152.3388 C154.0118 155.4585 150.8677 158.5715 147.7227 161.6836 C144.5963 164.7823 141.4714 167.8824 138.3495 170.9855 C136.4068 172.9161 134.4614 174.844 132.5129 176.7689 C127.9651 181.2834 123.5602 185.8451 119.3892 190.7106 C115.8799 194.7987 112.1023 198.6352 108.3477 202.4961 C107.5233 203.3746 106.6989 204.2531 105.8496 205.1582 C105.0433 205.9826 104.237 206.8069 103.4062 207.6562 C102.6862 208.4066 101.9662 209.1569 101.2244 209.9299 C98.9102 211.4336 98.9102 211.4336 95.9111 211.2742 C93.3247 210.5497 90.8814 209.7792 88.3984 208.7617 C87.5676 208.4293 86.7368 208.0969 85.8809 207.7544 C85.0037 207.401 84.1264 207.0477 83.2227 206.6836 C40.8023 190.0885 -4.3831 190.935 -46.4395 208.2563 C-54.0474 211.6356 -61.0896 215.956 -68.0898 220.4336 C-69.1371 221.0888 -69.1371 221.0888 -70.2056 221.7573 C-81.3463 228.7734 -90.7502 237.1929 -100.0898 246.4336 C-100.6894 247.0127 -101.289 247.5918 -101.9067 248.1885 C-131.3566 276.9228 -147.7065 320.8107 -148.5115 361.4363 C-148.694 404.5266 -134.4971 445.7311 -106.0898 478.4336 C-105.2984 479.3591 -104.5069 480.2847 -103.6914 481.2383 C-97.998 487.722 -91.9433 493.2052 -85.0898 498.4336 C-83.9452 499.3205 -82.8005 500.2073 -81.6211 501.1211 C-59.897 517.6999 -34.9566 528.4619 -8.0898 533.4336 C-6.8111 533.6772 -5.5323 533.9209 -4.2148 534.1719 C38.5657 540.8337 82.6796 529.8583 118.043 505.2539 C121.0552 503.0439 123.9921 500.7665 126.9102 498.4336 C127.9698 497.5905 129.0294 496.7475 130.1211 495.8789 C163.2377 468.7406 183.8883 429.7025 190.3477 387.5586 C193.5187 354.2277 189.0081 319.6295 173.9102 289.4336 C173.8426 285.481 175.1232 284.1841 177.7258 281.1369 C178.9874 279.8638 180.2601 278.6017 181.5413 277.3484 C182.2339 276.6552 182.9266 275.9619 183.6402 275.2477 C185.9305 272.9602 188.2346 270.6872 190.5391 268.4141 C192.1303 266.8302 193.7207 265.2455 195.3103 263.66 C199.4953 259.4902 203.6922 255.3326 207.8917 251.1774 C212.1753 246.9347 216.4475 242.6808 220.7207 238.4277 C229.1061 230.0852 237.5042 221.7554 245.9102 213.4336 C248.9102 214.4336 248.9102 214.4336 250.9609 218.2734 C251.7291 219.9663 252.482 221.6661 253.2227 223.3711 C253.8187 224.7288 253.8187 224.7288 254.4268 226.114 C259.7468 238.4481 263.721 250.8263 266.6602 263.9336 C266.9584 265.2481 266.9584 265.2481 267.2627 266.5891 C270.2886 280.8764 271.218 295.4371 271.5195 310.0039 C271.5377 310.7853 271.5559 311.5668 271.5747 312.3719 C272.1041 335.1878 272.1331 358.0125 272.1504 380.8335 C272.1559 387.0965 272.1801 393.3594 272.2084 399.6223 C272.2272 404.5455 272.2322 409.4686 272.2337 414.3918 C272.2367 416.6998 272.2445 419.0077 272.2579 421.3156 C272.5478 475.0599 256.0264 523.5906 217.9102 562.4336 C216.2487 564.1055 214.582 565.7721 212.9102 567.4336 C212.3891 567.9739 211.8681 568.5142 211.3313 569.0708 C207.0972 573.4205 202.6265 577.2147 197.7852 580.8711 C197.0402 581.4353 196.2952 581.9995 195.5276 582.5808 C163.6939 606.4024 126.3463 617.9865 86.875 618.9883 C86.0837 619.0092 85.2924 619.0302 84.4771 619.0517 C64.2375 619.5756 43.9963 619.5862 23.7512 619.564 C18.5023 619.5582 13.2534 619.5617 8.0045 619.5674 C-10.4295 619.5845 -28.8622 619.5984 -47.2891 619.0273 C-49.0061 618.9771 -49.0061 618.9771 -50.7579 618.9258 C-76.0281 617.9943 -101.4037 611.5952 -124.0898 600.4336 C-124.8195 600.0849 -125.5491 599.7362 -126.3008 599.377 C-144.2339 590.7576 -159.8644 579.3193 -174.0898 565.4336 C-174.9123 564.673 -175.7347 563.9125 -176.582 563.1289 C-206.2481 534.9793 -223.1182 495.2591 -229.0898 455.4336 C-229.2596 454.369 -229.4293 453.3045 -229.6042 452.2077 C-230.0664 448.616 -230.221 445.2015 -230.2303 441.583 C-230.2389 439.5694 -230.2389 439.5694 -230.2476 437.5152 C-230.2487 436.0585 -230.2498 434.6019 -230.251 433.1011 C-230.2556 431.5381 -230.2606 429.9751 -230.266 428.4121 C-230.2791 424.1757 -230.2856 419.9393 -230.29 415.7029 C-230.293 413.0465 -230.2971 410.3901 -230.3015 407.7337 C-230.3152 399.3952 -230.3249 391.0567 -230.3287 382.7182 C-230.3332 373.1453 -230.3507 363.5726 -230.3797 353.9998 C-230.4015 346.5692 -230.4115 339.1387 -230.4128 331.7081 C-230.4138 327.2859 -230.4195 322.8639 -230.4376 318.4417 C-230.5241 295.996 -230.2517 274.2615 -223.7773 252.5586 C-223.4703 251.504 -223.1633 250.4494 -222.8469 249.3628 C-215.0319 223.0596 -201.7976 200.279 -184.0898 179.4336 C-183.2442 178.3611 -182.3986 177.2886 -181.5273 176.1836 C-178.999 173.3311 -176.3329 170.9286 -173.4297 168.4688 C-171.7385 166.9978 -170.0895 165.4779 -168.4688 163.9297 C-161.1689 156.9666 -153.5064 151.189 -145.0674 145.7183 C-143.2369 144.5291 -141.4242 143.3126 -139.6133 142.0938 C-112.9805 124.9898 -79.6491 116.1801 -48.1758 116.3359 C-46.5323 116.3381 -46.5323 116.3381 -44.8556 116.3402 C-41.392 116.3458 -37.9284 116.3583 -34.4648 116.3711 C-32.1016 116.3761 -29.7383 116.3807 -27.375 116.3848 C-21.6132 116.3949 -15.8516 116.4145 -10.0898 116.4336 C-10.0898 100.5936 -10.0898 84.7536 -10.0898 68.4336 C-12.7298 68.4336 -15.3698 68.4336 -18.0898 68.4336 C-28.7388 66.1707 -36.6367 61.3597 -42.8398 52.4258 C-47.7459 44.6067 -48.9269 36.2969 -47.4648 27.2461 C-46.2992 22.2843 -44.0786 18.5133 -41.0898 14.4336 C-40.5123 13.5673 -39.9348 12.7011 -39.3398 11.8086 C-28.4424 0.3058 -14.8933 -0.0342 0 0 Z ' transform='translate%28289.08984375,177.56640625%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C37.8811 -0.6219 70.3217 6.2574 98.7617 32.7891 C121.7712 55.5175 133.0308 84.3908 133.25 116.5 C133.2255 125.1463 132.6039 133.4887 131 142 C130.664 143.9996 130.33 145.9994 130 148 C130.6548 147.5643 131.3097 147.1286 131.9844 146.6797 C156.4513 130.714 183.3795 125.289 212.168 131.0898 C239.7701 137.6457 262.1107 155.0954 277 179 C286.217 195.2245 291.5421 211.566 294 230 C289.7523 227.8761 287.9147 225.9114 284.8125 222.375 C266.4453 202.1036 240.3322 187.7833 213 184 C211.5975 183.7731 210.195 183.5462 208.75 183.3125 C207.1689 183.1786 205.5847 183.0801 204 183 C202.7303 182.9355 201.4605 182.8711 200.1523 182.8047 C183.0835 182.3567 165.4081 185.2959 150 193 C150.6182 193.095 151.2364 193.19 151.8733 193.2878 C182.4124 198.0636 210.647 208.8181 230.0625 234.2227 C242.9949 252.7608 249.6083 273.0332 249.4375 295.5625 C249.4261 297.6713 249.4261 297.6713 249.4146 299.8228 C249.1108 319.1247 245.0902 338.7907 236 356 C235.34 356 234.68 356 234 356 C233.853 354.7277 233.7061 353.4554 233.5547 352.1445 C229.8943 322.5837 220.3017 292.2124 197.582 271.6016 C196 270 196 270 196 268 C194.68 267.34 193.36 266.68 192 266 C190.6778 264.8466 189.3888 263.6546 188.125 262.4375 C179.183 254.4071 169.0115 248.8041 158.25 243.625 C157.3873 243.2081 156.5246 242.7913 155.6357 242.3618 C149.8878 239.67 144.1256 237.655 138 236 C138.678 236.62 139.3561 237.2401 140.0547 237.8789 C155.4077 252.4877 165.9213 271.418 171 292 C171.3364 293.3342 171.3364 293.3342 171.6797 294.6953 C176.4575 317.6679 172.4332 342.1365 160.0859 362.0938 C155.5759 368.4905 150.3993 374.3427 145 380 C144.2502 380.8 144.2502 380.8 143.4854 381.6162 C139.0069 386.2704 134.1461 390.0349 128.875 393.75 C128.09 394.3133 127.3049 394.8766 126.4961 395.457 C115.9217 403 115.9217 403 113 403 C113.5992 398.9673 114.9505 395.3545 116.4253 391.5664 C127.5238 363.0357 127.5651 332.2467 119 303 C118.6404 301.7573 118.2807 300.5147 117.9102 299.2344 C111.387 278.2374 99.7133 259.3831 84 244 C83.3013 244.7219 82.6027 245.4438 81.8828 246.1875 C80.9727 247.1156 80.0627 248.0437 79.125 249 C77.7676 250.3922 77.7676 250.3922 76.3828 251.8125 C74 254 74 254 72 254 C72 254.66 72 255.32 72 256 C71.34 256 70.68 256 70 256 C70 256.66 70 257.32 70 258 C67.5335 260.6842 64.9657 263.0276 62.125 265.3125 C58.8656 268.1156 56.2355 271.1117 53.5156 274.4258 C53.0155 274.9453 52.5153 275.4648 52 276 C51.34 276 50.68 276 50 276 C49.34 277.32 48.68 278.64 48 280 C46.2866 281.4871 44.5697 282.9712 42.8125 284.4062 C40.7077 286.1745 40.7077 286.1745 38.1875 289.375 C37.4656 290.2412 36.7437 291.1075 36 292 C35.34 292 34.68 292 34 292 C33.34 293.32 32.68 294.64 32 296 C30 298.25 30 298.25 28 300 C27.34 300 26.68 300 26 300 C25.34 301.32 24.68 302.64 24 304 C21.9189 306.2492 19.8195 308.4129 17.6367 310.5586 C17.0077 311.1848 16.3787 311.8109 15.7307 312.4561 C13.7209 314.4546 11.7044 316.4461 9.6875 318.4375 C8.3413 319.7736 6.9956 321.1102 5.6504 322.4473 C2.62 325.4578 -0.4126 328.466 -3.4567 331.4626 C-4.884 332.8844 -6.2798 334.3376 -7.6726 335.7932 C-10 338 -10 338 -14 340 C-14 340.66 -14 341.32 -14 342 C-14.66 342 -15.32 342 -16 342 C-16.66 343.32 -17.32 344.64 -18 346 C-20.0584 348.2518 -22.1384 350.4167 -24.2989 352.5663 C-25.2791 353.5534 -25.2791 353.5534 -26.2792 354.5604 C-28.4745 356.7683 -30.6769 358.9691 -32.8794 361.1699 C-34.4533 362.7498 -36.0268 364.3301 -37.5999 365.9108 C-41.8783 370.2069 -46.1633 374.4965 -50.4499 378.7844 C-54.0274 382.3638 -57.6022 385.946 -61.1771 389.528 C-69.6126 397.9797 -78.0537 406.4258 -86.498 414.8687 C-95.2083 423.5777 -103.9074 432.2979 -112.6013 441.0234 C-120.0652 448.5134 -127.5367 455.9957 -135.0143 463.472 C-139.4805 467.9377 -143.9435 472.4063 -148.3987 476.8828 C-152.5907 481.0941 -156.7922 485.2957 -161.0011 489.4901 C-162.5428 491.0298 -164.0812 492.5728 -165.6158 494.1196 C-167.7145 496.2337 -169.8252 498.335 -171.9392 500.4337 C-172.541 501.0458 -173.1428 501.6578 -173.7628 502.2885 C-179.7601 508.1899 -186.5996 512.1046 -195.1875 512.25 C-203.3238 512.1534 -209.1584 509.7088 -215 504 C-221.044 496.1092 -221.7137 488.6704 -221 479 C-218.0762 465.9405 -203.6477 455.5141 -194.4082 446.3105 C-192.9502 444.8544 -191.4924 443.3981 -190.0348 441.9415 C-186.9146 438.8245 -183.7929 435.7091 -180.67 432.5948 C-175.7347 427.6731 -170.8033 422.7476 -165.8724 417.8214 C-155.4179 407.378 -144.9592 396.9388 -134.5 386.5 C-123.1795 375.2016 -111.8598 363.9024 -100.5449 352.5984 C-95.6393 347.6977 -90.7312 342.7994 -85.8212 337.9031 C-82.7779 334.8672 -79.7366 331.8292 -76.6959 328.7907 C-75.2813 327.378 -73.866 325.9663 -72.4496 324.5554 C-70.5236 322.6365 -68.6006 320.7146 -66.6783 318.7919 C-65.8281 317.947 -65.8281 317.947 -64.9607 317.0852 C-62.1294 314.3083 -62.1294 314.3083 -60 311 C-59.34 311 -58.68 311 -58 311 C-57.34 309.68 -56.68 308.36 -56 307 C-54.5301 305.5435 -52.999 304.1475 -51.4306 302.7976 C-46.4738 298.4437 -41.7673 293.9092 -37.1096 289.239 C-36.2839 288.4151 -35.4582 287.5911 -34.6075 286.7422 C-31.9142 284.0533 -29.2246 281.3608 -26.5352 278.668 C-24.6511 276.7845 -22.7668 274.9013 -20.8824 273.0181 C-16.9515 269.0887 -13.0223 265.1574 -9.0945 261.2249 C-4.0585 256.1831 0.982 251.146 6.0239 246.1101 C9.9075 242.2301 13.7887 238.3477 17.6693 234.4645 C19.5277 232.6054 21.3869 230.7471 23.2468 228.8895 C25.8388 226.3001 28.4275 223.7075 31.0154 221.114 C31.7837 220.3477 32.552 219.5814 33.3436 218.7919 C34.0485 218.0842 34.7534 217.3765 35.4796 216.6474 C36.0907 216.0359 36.7017 215.4245 37.3313 214.7945 C39.0417 212.9552 40.5302 211.0348 42 209 C10.917 189.0337 -25.9322 182.6588 -62 190 C-72.3639 192.2849 -81.7933 196.0296 -91.4375 200.375 C-92.4323 200.821 -93.4272 201.267 -94.4521 201.7266 C-100.44 204.5151 -105.7325 207.7081 -111.0237 211.6665 C-113 213 -113 213 -115 213 C-114.4248 207.8311 -112.6651 203.519 -110.4375 198.875 C-110.0803 198.1265 -109.7232 197.3781 -109.3552 196.6069 C-97.8764 173.1055 -78.8935 153.1445 -54 144 C-25.9621 134.9289 -1.6429 136.3673 25 149 C27.3293 150.0094 29.6614 151.0123 32 152 C10.5404 120.7637 -21.8101 99.1383 -58.9795 91.3779 C-70.2061 89.4135 -81.6222 88.5139 -93 88 C-93 87.34 -93 86.68 -93 86 C-90.8251 84.3338 -88.6633 82.8097 -86.375 81.3125 C-85.3549 80.6431 -85.3549 80.6431 -84.3142 79.9602 C-60.0307 64.303 -31.6153 57.9913 -3 63.125 C24.2683 69.6523 48.7254 85.2428 64 109 C69.5146 118.297 73.7027 127.7119 77 138 C78.2602 97.1604 65.243 60.5309 38.1406 29.8984 C27.8283 19.1441 15.2595 10.6277 2.2734 3.4805 C1.5232 2.9919 0.773 2.5034 0 2 C0 1.34 0 0.68 0 0 Z ' transform='translate%28502,59%29' fill='%232474d4'/%3E%3C/svg%3E",
       messaging: {
         formatVersion: 1,
         product: "act60",
         names: {
-          name: "act60.me",
-          catalog: "ACT60"
+          name: "act60.me"
         },
         category: "Act 60 planner",
         tagline: "Model the move to Puerto Rico before you make it.",
@@ -936,7 +951,7 @@ var portfolioSnapshot = {
     },
     direct: {
       id: "direct",
-      name: "DIRECT",
+      name: "Direct",
       oneLiner: "Repeatable app states for browser agents, opened by URL",
       brandDescription: null,
       canonicalUrl: "https://hraness.com/direct",
@@ -949,7 +964,6 @@ var portfolioSnapshot = {
         product: "direct",
         names: {
           name: "Direct",
-          catalog: "DIRECT",
           command: "@hraness/direct"
         },
         category: "Frontend testing library",
@@ -985,7 +999,6 @@ var portfolioSnapshot = {
         product: "clankdar",
         names: {
           name: "Clankdar",
-          catalog: "CLANKDAR",
           command: "clankdar",
           formerly: ["botcaptcha"]
         },
@@ -997,7 +1010,7 @@ var portfolioSnapshot = {
         long: "Benchmark scores age: suites leak into training data and results stop meaning anything. Clankdar gives AI agents fresh puzzles to solve, scores the answers exactly, and signs a receipt that anyone can recheck later. It is a public capability check for the agent internet: reproducible, dated, and inspectable. Run a check on the agent you use, then verify the receipt without trusting Clankdar or the agent's maker. It is free to run.",
         hero: {
           heading: "Check what your agent can solve.",
-          summary: "Fresh puzzles, exact scoring, and a signed receipt anyone can recheck.",
+          summary: "Give your agent fresh puzzles and get a receipt: a signed record of what it solved.",
           primaryAction: "Run a check",
           secondaryAction: "Verify a receipt"
         },
@@ -1009,7 +1022,7 @@ var portfolioSnapshot = {
     },
     lifedaysleft: {
       id: "lifedaysleft",
-      name: "LIFECHARTS",
+      name: "Lifecharts",
       oneLiner: "Turn the chapters of your life into one timeline you can share",
       brandDescription: null,
       canonicalUrl: "https://lifecharts.io",
@@ -1022,7 +1035,6 @@ var portfolioSnapshot = {
         product: "lifecharts",
         names: {
           name: "Lifecharts",
-          catalog: "LIFECHARTS",
           command: "lifecharts",
           formerly: ["Life Days Left", "lifedaysleft"]
         },
@@ -1031,7 +1043,7 @@ var portfolioSnapshot = {
         short: "Turn the chapters of your life into one timeline you can share",
         meta: "Lifecharts turns the chapters of your life into one timeline you can share as a link or embed on your own site.",
         medium: "Lifecharts is a free life timeline maker. Add the chapters of your life, like a city, a school, a job, or a relationship, by hand or with your agent, and share the result.",
-        long: "A life is long and memory keeps it unordered. Lifecharts is a free timeline maker: add the chapters of your life, a city, a school, a job, a relationship, and see them laid out in order on one line. Share it as a link or embed it on your site, and let your agent help fill it in through the CLI or skill. Lifecharts is free and open source.",
+        long: "Lifecharts is a free life timeline maker. Add the chapters of your life, like a city, a school, a job, or a relationship, and see them on one line with their overlaps and lengths. Share a link or embed it on your site. You need no account, and drafts stay in your browser. An open-source CLI and agent skill let your agent build a timeline from a résumé or a few notes.",
         hero: {
           heading: "Chart your life in chapters.",
           summary: "Add the cities, schools, jobs, and relationships, and see your life laid out on one line you can share.",
@@ -1041,7 +1053,7 @@ var portfolioSnapshot = {
         status: {
           default: "proposed"
         },
-        reviewedOn: "2026-09-24"
+        reviewedOn: "2026-09-28"
       }
     },
     swft: {
@@ -1058,8 +1070,7 @@ var portfolioSnapshot = {
         formatVersion: 1,
         product: "swft",
         names: {
-          name: "SWFT",
-          catalog: "SWFT"
+          name: "SWFT"
         },
         category: "Software factory publication",
         tagline: "How companies put AI agents to work.",
@@ -1077,6 +1088,86 @@ var portfolioSnapshot = {
           default: "proposed"
         },
         reviewedOn: "2026-09-24"
+      }
+    },
+    "pattern-language": {
+      id: "pattern-language",
+      name: "Pattern Language",
+      oneLiner: "Tests whether Alexander-inspired patterns help agents write better code",
+      brandDescription: null,
+      canonicalUrl: "https://github.com/hraness/pattern-language",
+      status: "active",
+      copyStatus: "proposed",
+      aliases: [],
+      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M3 29V3l26 26H3Zm8-8h10L11 11v10Z'/%3E%3C/svg%3E",
+      messaging: {
+        formatVersion: 1,
+        product: "pattern-language",
+        names: {
+          name: "Pattern Language"
+        },
+        category: "Code design research",
+        tagline: "Alexander's notes, sketched as runnable ALGAL form.",
+        short: "Tests whether Alexander-inspired patterns help agents write better code",
+        meta: "Pattern Language sketches Alexander's Notes on the Synthesis of Form in ALGAL-form and tests whether those patterns help an agent produce better code.",
+        medium: "Pattern Language sketches Christopher Alexander's Notes on the Synthesis of Form as a runnable pattern language in ALGAL-form. It tests that question with executable artifacts; an advantage over ordinary prompting is not proven.",
+        status: {
+          default: "proposed"
+        }
+      }
+    },
+    "system-one-skills": {
+      id: "system-one-skills",
+      name: "System One Skills",
+      oneLiner: "Runs a check once, returns a short result, and keeps the full log",
+      brandDescription: null,
+      canonicalUrl: "https://sys1.io/skills",
+      status: "active",
+      copyStatus: "proposed",
+      aliases: [],
+      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M7 19a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z'/%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M25 19a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z'/%3E%3Cpath fill='%232474d4' d='M10 21 16 17 24 3l5 3-10 15Z'/%3E%3Cpath fill='%232474d4' d='M22 21 16 17 8 3 3 6l10 15Z'/%3E%3C/svg%3E",
+      messaging: {
+        formatVersion: 1,
+        product: "system-one-skills",
+        names: {
+          name: "System One Skills",
+          command: "system-one-skills"
+        },
+        category: "Validation log skill",
+        tagline: "Cut noisy validation logs without a model call.",
+        short: "Runs a check once, returns a short result, and keeps the full log",
+        meta: "System One Skills gives Devin, Claude Code, and Codex one skill that runs a noisy check once, returns a short result, and saves the full log locally.",
+        medium: "System One Skills gives Devin, Claude Code, and Codex one skill, system-one-verify, for long test and build logs. It runs the command once, returns a short result with the exit status, and saves the full log on your machine.",
+        status: {
+          default: "proposed"
+        }
+      }
+    },
+    "ghostget-skills": {
+      id: "ghostget-skills",
+      name: "GhostGet Skills",
+      oneLiner: "Packages provider reads and plan checks as programs with no model calls",
+      brandDescription: null,
+      canonicalUrl: "https://github.com/hraness/ghostget-skills",
+      status: "active",
+      copyStatus: "proposed",
+      aliases: [],
+      mark: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M8 2h16a2 2 0 0 1 2 2v24l-4-3-4 3-4-3-4 3-4-3V4a2 2 0 0 1 2-2Zm3 6h10v2H11Zm0 5h10v2H11Zm0 5h7v2h-7Z'/%3E%3C/svg%3E",
+      messaging: {
+        formatVersion: 1,
+        product: "ghostget-skills",
+        names: {
+          name: "GhostGet Skills",
+          command: "ghostget-skills"
+        },
+        category: "Provider workflow skills",
+        tagline: "GhostGet workflows as programs you can replay.",
+        short: "Packages provider reads and plan checks as programs with no model calls",
+        meta: "GhostGet Skills packages GhostGet workflows as programs for Claude Code, Codex, and Devin, with no model calls and a receipt you can replay offline.",
+        medium: "GhostGet Skills packages common GhostGet workflows as programs for Claude Code, Codex, and Devin. They make no model calls, and every run leaves a receipt you can replay offline.",
+        status: {
+          default: "proposed"
+        }
       }
     }
   },
@@ -1127,7 +1218,7 @@ var portfolioSnapshot = {
     kind: "contract",
     direction: "forward",
     label: "exports private bundles",
-    detail: "Ghostget produces bounded multi-account Beeper bundles that Textbutler verifies and ingests locally."
+    detail: "GhostGet produces bounded multi-account Beeper bundles that TextButler verifies and ingests locally."
   }, {
     id: "runtime:peopleblade:wrench:provider-transport",
     source: "peopleblade",
@@ -1135,7 +1226,7 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "provider transport",
-    detail: "PeopleBlade uses Ghostget to read contacts and search results from connected accounts such as Beeper and WhatsApp, and checks each result before saving it locally."
+    detail: "PeopleBlade uses GhostGet to read contacts and search results from connected accounts such as Beeper and WhatsApp, and checks each result before saving it locally."
   }, {
     id: "contract:message-like-me:peopleblade:shared-bundle-format",
     source: "message-like-me",
@@ -1151,7 +1242,7 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "compacts sessions for",
-    detail: "xcb uses Gobstopper's elision policy to drop stale tool output from Claude Code and Codex prompts once context passes a threshold, and keeps the original output in local history. It is on by default."
+    detail: "Excalibur (xcb) uses Gobstopper's elision policy to drop stale tool output from Claude Code and Codex prompts once context passes a threshold, and keeps the original output in local history. It is on by default."
   }, {
     id: "contract:xcb:aicharts:exports-sessions-for",
     source: "xcb",
@@ -1159,7 +1250,7 @@ var portfolioSnapshot = {
     kind: "contract",
     direction: "forward",
     label: "exports sessions for",
-    detail: "xcb measures subscription usage locally and, when you turn on exports, writes session files in the AI Charts format. Automatic upload is not available."
+    detail: "Excalibur (xcb) measures subscription usage locally and, when you turn on exports, writes session files in the aicharts format. Automatic upload is not available."
   }, {
     id: "contract:soulscrape:peopleblade:exports-dossier-packets",
     source: "soulscrape",
@@ -1199,7 +1290,7 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "drafts replies through",
-    detail: "Textbutler can classify messages and draft replies through xcb on the Claude Code or Codex subscription you already pay for, with xcb holding the sign-in; a separately billed API route also exists."
+    detail: "TextButler can classify messages and draft replies through Excalibur (xcb) on the Claude Code or Codex subscription you already pay for, with xcb holding the sign-in; a separately billed API route also exists."
   }, {
     id: "runtime:message-like-me:algal:runs-reply-habitats-on",
     source: "message-like-me",
@@ -1207,15 +1298,15 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "runs reply habitats on",
-    detail: "Textbutler's opt-in per-contact habitats run as ALGAL programs: a candidate reply plan replaces the current one only after a blind replay shows no regression, and no plan can change the recipient, provider, or permissions."
+    detail: "TextButler's opt-in per-contact habitats run as ALGAL programs: a candidate reply plan replaces the current one only after a blind replay shows no regression, and no plan can change the recipient, provider, or permissions."
   }, {
-    id: "runtime:sponge:oh-computer:keeps-agent-working-memory-in",
+    id: "runtime:sponge:oh-computer:keeps-its-hosted-library-s-agent-working-memory-in",
     source: "sponge",
     target: "oh-computer",
     kind: "runtime",
     direction: "forward",
-    label: "keeps agent working memory in",
-    detail: "Sponge keeps its research agents' working memory in a server-side Oh store, separate from the reviewed knowledge in its product database."
+    label: "keeps its hosted library's agent working memory in",
+    detail: "Sponge's hosted library at sponge.computer keeps its research agents' working memory in a server-side Oh store, separate from the reviewed knowledge in its product database."
   }, {
     id: "runtime:kb:oh-computer:answers-graph-queries-with",
     source: "kb",
@@ -1231,7 +1322,7 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "replays task history with",
-    detail: "xcb embeds the ALGAL runtime for task transitions, route and settle reflexes, and resumable controllers, and its task verifier replays a task's recorded history offline; the managed harness is experimental."
+    detail: "Excalibur (xcb) embeds the ALGAL runtime for task transitions, route and settle reflexes, and resumable controllers, and its task verifier replays a task's recorded history offline; the managed harness is experimental."
   }, {
     id: "runtime:xcb:kb:searches-project-notes-with",
     source: "xcb",
@@ -1239,7 +1330,7 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "searches project notes with",
-    detail: "xcb can bind one explicit Wordcell vault through a hash-pinned CLI, giving workers a read-only memory search with citations; saving a note back to the vault is always an explicit step."
+    detail: "Excalibur (xcb) can bind one explicit Wordcell vault through a hash-pinned CLI, giving workers a read-only memory search with citations; saving a note back to the vault is always an explicit step."
   }, {
     id: "runtime:clankdar:algal:scores-puzzles-with",
     source: "clankdar",
@@ -1255,25 +1346,121 @@ var portfolioSnapshot = {
     kind: "runtime",
     direction: "forward",
     label: "bakes character behavior with",
-    detail: "Slopcamera's scene behavior bake runs character behavior as ALGAL organisms with no executors or side effects."
+    detail: "SlopCamera's scene behavior bake runs character behavior as ALGAL organisms with no executors or side effects."
   }, {
-    id: "contract:sponge:wrench:imports-captures-from",
+    id: "runtime:sponge:wrench:captures-signed-in-pages-through",
     source: "sponge",
     target: "wrench",
-    kind: "contract",
+    kind: "runtime",
     direction: "forward",
-    label: "imports captures from",
-    detail: "Sponge recommends Ghostget for local capture and imports its text-only capture bundles offline, without launching Ghostget, a browser, or the network."
+    label: "captures signed-in pages through",
+    detail: "Sponge captures signed-in pages through GhostGet, storing only a login name, and the hosted library at sponge.computer imports GhostGet's text-only capture bundles offline."
   }, {
-    id: "contract:sponge:soulscrape:imports-research-exchanges-from",
+    id: "contract:sponge:soulscrape:imports-research-exchanges-into-its-hosted-library-from",
     source: "sponge",
     target: "soulscrape",
     kind: "contract",
     direction: "forward",
-    label: "imports research exchanges from",
-    detail: "Sponge converts a public soulscrape research exchange offline into an Oh research packet that it does not treat as established fact."
+    label: "imports research exchanges into its hosted library from",
+    detail: "Sponge's hosted library at sponge.computer converts a public Soulscrape research exchange offline into an Oh research packet that it does not treat as established fact."
+  }, {
+    id: "development:pattern-language:algal:runs-studies-with",
+    source: "pattern-language",
+    target: "algal",
+    kind: "development",
+    direction: "forward",
+    label: "runs studies with",
+    detail: "Pattern Language uses ALGAL so its design experiments stay inspectable: content-addressed manifests and records you can replay."
+  }, {
+    id: "delivery:system-one-skills:sys1:skills-guide-hosted-by",
+    source: "system-one-skills",
+    target: "sys1",
+    kind: "delivery",
+    direction: "forward",
+    label: "skills guide hosted by",
+    detail: "The System One Skills guide is published at sys1.io/skills on the Sys1 site; the skill pack does not require Sys1 at runtime."
+  }, {
+    id: "runtime:ghostget-skills:wrench:uses",
+    source: "ghostget-skills",
+    target: "wrench",
+    kind: "runtime",
+    direction: "forward",
+    label: "uses",
+    detail: "GhostGet Skills wraps the GhostGet CLI for catalog, plan check, invoke, read, doctor, and auth list, and pins @hraness/ghostget."
+  }, {
+    id: "runtime:ghostget-skills:algal:runs-programs-on",
+    source: "ghostget-skills",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "runs programs on",
+    detail: "Each GhostGet Skills workflow is an ALGAL program the ALGAL runtime executes; the package pins @hraness/algal."
+  }, {
+    id: "runtime:message-like-me:wrench:reads-and-sends-messages-through",
+    source: "message-like-me",
+    target: "wrench",
+    kind: "runtime",
+    direction: "forward",
+    label: "reads and sends messages through",
+    detail: "Messages reach TextButler through GhostGet, a separate Mac tool you install first for messaging sign-in and permissions, and TextButler's marked replies go back the same way."
+  }, {
+    id: "runtime:sponge:kb:keeps-documents-in",
+    source: "sponge",
+    target: "kb",
+    kind: "runtime",
+    direction: "forward",
+    label: "keeps documents in",
+    detail: "Sponge uses Wordcell for documents and PDF text, renders a static Wordcell edition when you publish, and can put selected documents on a wordcell.io site."
+  }, {
+    id: "runtime:sponge:algal:evolves-research-strategies-with",
+    source: "sponge",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "evolves research strategies with",
+    detail: "Sponge runs on ALGAL, and a candidate strategy for brief research must pass a sealed evaluation that ALGAL replays; nothing changes until you adopt it or restore the previous one."
+  }, {
+    id: "runtime:sponge:xcb:reaches-models-through",
+    source: "sponge",
+    target: "xcb",
+    kind: "runtime",
+    direction: "forward",
+    label: "reaches models through",
+    detail: "Sponge reaches every model through a hash-pinned Excalibur (xcb) executable, so provider sign-ins stay in xcb."
+  }, {
+    id: "runtime:algal:xcb:delegates-coding-tasks-to",
+    source: "algal",
+    target: "xcb",
+    kind: "runtime",
+    direction: "forward",
+    label: "delegates coding tasks to",
+    detail: "ALGAL's xcb executor hands coding tasks to Excalibur (xcb) through its JSON run command, and ALGAL never copies credentials or reimplements account switching."
+  }, {
+    id: "runtime:soundfish:algal:evolves-loops-with",
+    source: "soundfish",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "evolves loops with",
+    detail: "Soundfish's evolve command turns a loop into an evolving recipe that a bundled ALGAL evaluator, pinned by SHA-256, runs offline."
+  }, {
+    id: "runtime:aicharts:gobstopper:reads-compaction-telemetry-from",
+    source: "aicharts",
+    target: "gobstopper",
+    kind: "runtime",
+    direction: "forward",
+    label: "reads compaction telemetry from",
+    detail: "The aicharts collector parses Gobstopper's numeric compaction telemetry and never reads transcript content."
+  }, {
+    id: "runtime:iconplace:algal:records-drawing-runs-with",
+    source: "iconplace",
+    target: "algal",
+    kind: "runtime",
+    direction: "forward",
+    label: "records drawing runs with",
+    detail: "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
   }],
-  digest: "sha256:566462ae34618442d01b4be2be73347a0c491e29c1238600ec8d4ffb2b1a62e5"
+  digest: "sha256:d43bbc1113c077b872d2e11a4a70490cd537d5734951d0c3c4bd8e061ce583a9"
 };
 
 // src/portfolio.ts
