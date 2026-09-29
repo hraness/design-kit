@@ -8,6 +8,9 @@ import {
   HeroBackdrop
 } from "../chunk-8834fh4n.js";
 import {
+  PlatformInstall
+} from "../chunk-y3bvc96r.js";
+import {
   ArticleBarChart,
   ArticleByline,
   ArticleCallout,
@@ -79,6 +82,10 @@ import {
   proceduralRecipeVersion
 } from "../chunk-ccmt90sx.js";
 import {
+  PlatformBadges,
+  PlatformIcon
+} from "../chunk-8e9jcr6r.js";
+import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
   STATUS_PAGE_HINT_PREFIX,
@@ -106,7 +113,8 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-gqrdw8b6.js";
+} from "../chunk-7b1586eb.js";
+import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
 import {
@@ -5112,7 +5120,7 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "production preview notice", "relative time", "status pages", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "platform install commands", "production preview notice", "relative time", "status pages", "syntax highlighting"];
 var designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
 var relativeTimeExamples = [{
   id: "seconds",
@@ -5604,10 +5612,41 @@ function DesignSystemGallery({
                       children: "Requires Bun 1.3.14."
                     }),
                     children: [
-                      /* @__PURE__ */ jsx16(MarketingCodeBlock, {
-                        className: "design-gallery__marketing-command",
-                        code: "bun add --global relay@1.2.3",
-                        language: "sh"
+                      /* @__PURE__ */ jsx16(PlatformInstall, {
+                        id: "design-gallery-platform-install",
+                        platforms: [{
+                          alternatives: [{
+                            command: "brew install relay",
+                            label: "Homebrew"
+                          }],
+                          command: "curl -fsSL https://relay.example/install.sh | sh",
+                          id: "macos",
+                          note: "Apple silicon and Intel, macOS 13 or later.",
+                          shell: "Terminal"
+                        }, {
+                          alternatives: [{
+                            command: "bun add --global relay@1.2.3",
+                            label: "Bun"
+                          }],
+                          command: "curl -fsSL https://relay.example/install.sh | sh",
+                          id: "linux",
+                          note: "x86_64 and ARM64, glibc 2.34 or later.",
+                          shell: "Terminal"
+                        }, {
+                          command: "curl -fsSL https://relay.example/install.sh | sh",
+                          id: "windows",
+                          shell: "WSL2 terminal",
+                          unavailable: true,
+                          unavailableNote: /* @__PURE__ */ jsx16("p", {
+                            children: "No native Windows build yet. Relay runs in WSL2."
+                          })
+                        }]
+                      }),
+                      /* @__PURE__ */ jsx16(PlatformBadges, {
+                        platforms: ["macos", "linux", {
+                          id: "windows",
+                          note: "via WSL2"
+                        }]
                       }),
                       /* @__PURE__ */ jsx16(MarketingFlow, {
                         ariaLabel: "First Relay job",
@@ -7126,6 +7165,9 @@ export {
   ProductHero,
   ProceduralBackdrop,
   PlaybackTransport,
+  PlatformInstall,
+  PlatformIcon,
+  PlatformBadges,
   PhaserDots,
   ParticleHalo,
   PageCanvas,

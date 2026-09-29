@@ -7,4 +7,5 @@ export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./foil-mark.js";
 export * from "./provider-mark.js";
+export * from "./platform-icons.js";
 export * from "./launch-beats.js";
