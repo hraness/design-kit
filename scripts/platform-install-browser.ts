@@ -225,6 +225,8 @@ try {
       const tab = page.locator(`[role="tab"][data-platform="${platform}"]`);
       await tab.click();
       await tab.hover();
+      // Compare settled system colors after the existing 120ms tab transition.
+      await tab.evaluate((node) => Promise.all(node.getAnimations().map((animation) => animation.finished)));
       const paint = await tab.evaluate((node) => {
         const style = getComputedStyle(node);
         const probe = document.createElement("span");
