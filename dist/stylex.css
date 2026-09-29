@@ -136,17 +136,15 @@
                      "bottom bottom"
                      / minmax(0, 1fr) auto;
     }
-  }
 
-  @media (width <= 30rem) {
-    .xj5lsog.xj5lsog {
-      padding: .1875rem;
+    .x1bmall5.x1bmall5 {
+      padding: var(--layout-chrome-inset);
     }
   }
 
-  @media (width <= 48rem) {
-    .x1bmall5.x1bmall5 {
-      padding: var(--layout-chrome-inset);
+  @container hraness-platform-install (width <= 30rem) {
+    .xqqfgua.xqqfgua {
+      padding: .1875rem;
     }
   }
 }
@@ -894,16 +892,6 @@
     }
   }
 
-  @media (width <= 30rem) {
-    .xvellkl.xvellkl {
-      gap: .125rem;
-    }
-
-    .x1246pwy.x1246pwy {
-      gap: .3rem;
-    }
-  }
-
   @media (width <= 48rem) {
     .x1csspt3.x1csspt3 {
       gap: 0 1.25rem;
@@ -932,15 +920,7 @@
     .xbdo7qo.xbdo7qo {
       padding-block: .25rem;
     }
-  }
 
-  @media (width <= 30rem) {
-    .x1v9u4bw.x1v9u4bw {
-      padding-inline: .45rem;
-    }
-  }
-
-  @media (width <= 48rem) {
     .x9qo5wx.x9qo5wx {
       padding-inline: var(--hraness-marketing-gutter);
     }
@@ -953,6 +933,40 @@
   @media (prefers-reduced-motion: reduce) {
     .x82x5i2.x82x5i2 {
       transition: none !important;
+    }
+  }
+
+  @container hraness-platform-install (width <= 30rem) {
+    .x66bolr.x66bolr {
+      gap: .125rem;
+    }
+  }
+
+  @container hraness-platform-install (width <= 17.5rem) {
+    .x1qt5vi9.x1qt5vi9 {
+      gap: .2rem;
+    }
+  }
+
+  @container hraness-platform-install (width <= 30rem) {
+    .xem5j7z.xem5j7z {
+      gap: .3rem;
+    }
+  }
+
+  @container hraness-platform-install (width <= 17.5rem) {
+    .x1dgfo7z.x1dgfo7z {
+      padding-block: .35rem;
+    }
+
+    .x19ur3uv.x19ur3uv {
+      padding-inline: .25rem;
+    }
+  }
+
+  @container hraness-platform-install (width <= 30rem) {
+    .x1oro1a5.x1oro1a5 {
+      padding-inline: .45rem;
     }
   }
 }
@@ -1963,6 +1977,14 @@
 
   .x16qrkmw {
     contain: paint;
+  }
+
+  .x1bd2tma {
+    container-name: hraness-platform-install;
+  }
+
+  .x12h1iku {
+    container-type: inline-size;
   }
 
   .xt0e3qv {
@@ -3696,12 +3718,6 @@
     }
   }
 
-  @media (width <= 30rem) {
-    .x1v9t3wg.x1v9t3wg {
-      font-size: .8125rem;
-    }
-  }
-
   @media (forced-colors: active) {
     .xr5dkdi.xr5dkdi {
       forced-color-adjust: auto;
@@ -3729,12 +3745,6 @@
   @media (pointer: coarse) {
     .xqnxffv.xqnxffv {
       inline-size: 3rem;
-    }
-  }
-
-  @media (width <= 30rem) {
-    .x1ve8bxk.x1ve8bxk {
-      justify-self: stretch;
     }
   }
 
@@ -3881,6 +3891,26 @@
   @media (width <= 48rem) {
     .x1m0kxdo.x1m0kxdo {
       white-space: nowrap;
+    }
+  }
+
+  @container hraness-platform-install (width <= 17.5rem) {
+    .x8j9ljt.x8j9ljt {
+      flex-direction: column;
+    }
+
+    .x1x5dxze.x1x5dxze {
+      font-size: .75rem;
+    }
+  }
+
+  @container hraness-platform-install (width <= 30rem) {
+    .x1d0k23b.x1d0k23b {
+      font-size: .8125rem;
+    }
+
+    .x48mmhs.x48mmhs {
+      justify-self: stretch;
     }
   }
 

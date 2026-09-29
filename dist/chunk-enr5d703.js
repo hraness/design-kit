@@ -3,9 +3,14 @@ import * as stylex from "@stylexjs/stylex";
 var ink = "var(--hraness-marketing-ink, var(--foreground, CanvasText))";
 var line = `color-mix(in srgb, ${ink} 12%, transparent)`;
 var lineStrong = `color-mix(in srgb, ${ink} 22%, transparent)`;
+var container = "hraness-platform-install";
+var narrow = `@container ${container} (max-width: 30rem)`;
+var stacked = `@container ${container} (max-width: 17.5rem)`;
 var platformInstallStyles = {
   root: {
     kMwMTN: "x1p5laik",
+    kanfag: "x1bd2tma",
+    k9g6sI: "x12h1iku",
     k1xSpc: "xrvj5dj",
     kMv6JI: "x1vnz01h",
     kOIVth: "x8233eu",
@@ -22,12 +27,12 @@ var platformInstallStyles = {
     kMzoRj: "xmkeg23",
     kB7OPa: "x9f619",
     k1xSpc: "x78zum5 x1cfwndu",
-    kOIVth: "xvh977a xvellkl",
-    kFhvOy: "x1lqcxt8 x1ve8bxk",
+    kOIVth: "xvh977a x66bolr",
+    kFhvOy: "x1lqcxt8 x48mmhs",
     ks0D6T: "x193iq5w",
     k7Eaqz: "xeuugli",
     kXHlph: "xw2csxc",
-    kmVPX3: "x78pyy4 xj5lsog",
+    kmVPX3: "x78pyy4 xqqfgua",
     k5wCbM: "x1rohswg",
     $$css: true
   },
@@ -47,9 +52,10 @@ var platformInstallStyles = {
     kzQI83: "x1iyjqo2",
     kmuXW: "xs83m0k",
     kMv6JI: "xjb2p0i",
-    kGuDYH: "xkpwil5 x1v9t3wg",
+    kXwgrk: "x1q0g3np x8j9ljt",
+    kGuDYH: "xkpwil5 x1d0k23b x1x5dxze",
     k63SB2: "xk50ysn",
-    kOIVth: "x1rcpt3j x1246pwy",
+    kOIVth: "x1rcpt3j xem5j7z x1qt5vi9",
     kjj79g: "xl56j7k",
     kLWn49: "x1u7k74",
     kogj98: "x1ghz6dp",
@@ -57,8 +63,8 @@ var platformInstallStyles = {
     k7Eaqz: "xeuugli",
     kI3sdo: "x1a2a7pz x11dsm9b",
     kInvED: "x1y3gkto",
-    k8WAf4: "x1vj3u9m",
-    kg3NbH: "xlmytos x1v9u4bw",
+    k8WAf4: "x1vj3u9m x1dgfo7z",
+    kg3NbH: "xlmytos x1oro1a5 x19ur3uv",
     kIyJzY: "xgdialr x12w9bfk",
     k1ekBW: "xzo0q3i",
     khDVqt: "xuxw1ft",

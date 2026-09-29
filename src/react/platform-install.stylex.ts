@@ -21,13 +21,20 @@ const monoFont = "var(--hraness-marketing-mono-font, var(--font-mono, ui-monospa
 const textFont = "var(--hraness-marketing-text-font, var(--font-text, inherit))";
 const noScript = "@media (scripting: none)";
 const forced = "@media (forced-colors: active)";
-// Phones and narrow columns: the tab row spans the column and its tabs
-// tighten so macOS, Linux, and Windows fit side by side at 320px.
-const narrow = "@media (max-width: 30rem)";
+// The component is its own inline-size container, so the tab row adapts to
+// the column it sits in rather than to the viewport. In narrow columns the
+// tab row spans the column and its tabs tighten; in very narrow columns, such
+// as a nested panel on a 320px phone, each mark stacks above its name so all
+// three names stay whole down to a 200px tab row.
+const container = "hraness-platform-install";
+const narrow = `@container ${container} (max-width: 30rem)`;
+const stacked = `@container ${container} (max-width: 17.5rem)`;
 
 export const platformInstallStyles = stylex.create({
   root: {
     color: ink,
+    containerName: container,
+    containerType: "inline-size",
     display: "grid",
     fontFamily: textFont,
     gap: "0.75rem",
@@ -73,9 +80,10 @@ export const platformInstallStyles = stylex.create({
     flexGrow: 1,
     flexShrink: 1,
     fontFamily: "inherit",
-    fontSize: { default: "0.875rem", [narrow]: "0.8125rem" },
+    flexDirection: { default: "row", [stacked]: "column" },
+    fontSize: { default: "0.875rem", [narrow]: "0.8125rem", [stacked]: "0.75rem" },
     fontWeight: 500,
-    gap: { default: "0.45rem", [narrow]: "0.3rem" },
+    gap: { default: "0.45rem", [narrow]: "0.3rem", [stacked]: "0.2rem" },
     justifyContent: "center",
     lineHeight: 1.2,
     margin: 0,
@@ -83,8 +91,8 @@ export const platformInstallStyles = stylex.create({
     minInlineSize: 0,
     outline: { default: "none", ":focus-visible": `2px solid ${focusRing}` },
     outlineOffset: "1px",
-    paddingBlock: "0.4rem",
-    paddingInline: { default: "0.8rem", [narrow]: "0.45rem" },
+    paddingBlock: { default: "0.4rem", [stacked]: "0.35rem" },
+    paddingInline: { default: "0.8rem", [narrow]: "0.45rem", [stacked]: "0.25rem" },
     transitionDuration: { default: "120ms", "@media (prefers-reduced-motion: reduce)": "0s" },
     transitionProperty: "background-color, color, border-color",
     whiteSpace: "nowrap",
