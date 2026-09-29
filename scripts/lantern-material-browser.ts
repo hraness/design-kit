@@ -1,6 +1,7 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -407,13 +408,8 @@ try {
     if ((route !== "standalone" && route !== "compiler") || (theme !== "light" && theme !== "dark")) return new Response("Invalid fixture", { status: 400 });
     return new Response(`<!doctype html><html lang="en" class="${getDesignPaletteTheme("paper", theme).className}" data-theme="${theme}" data-palette="paper" data-hraness-theme="paper"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lantern material proof</title><link rel="stylesheet" href="/styles.css?route=${route}"><link id="react-aria-pressable-style" rel="stylesheet" href="/layout.css"></head><body><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'" } });
   } });
-  let executablePath: string | undefined;
-  for (const candidate of [process.env.CHROMIUM_EXECUTABLE_PATH, process.env.CHROME_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"]) {
-    if (candidate === undefined) continue;
-    try { await access(candidate); executablePath = candidate; break; } catch { /* Next installed Chromium. */ }
-  }
-  assert(executablePath, "A local Chromium executable is required");
-  browser = await chromium.launch({ executablePath, headless: true, args: process.platform === "linux" ? ["--no-sandbox"] : [] });
+  const executablePath = await provisionedBrowserExecutable();
+  browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(process.platform === "linux" ? ["--no-sandbox"] : []) });
   const opacityProof = await verifyLanternOpacity(browser, material, output);
   const headerOpacityProof = await verifySharedHeaderOpacity(browser, root);
   const marketingPaletteProof = await verifyMarketingPaletteActions(browser, root);

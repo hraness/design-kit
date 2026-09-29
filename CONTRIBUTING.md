@@ -2,7 +2,7 @@
 
 Use Bun 1.3.14 and keep changes inside the documented public boundary.
 
-1. Install dependencies with `bun install --frozen-lockfile`.
+1. Install dependencies with `bun install --frozen-lockfile`, then provision the pinned browser with `bun run browser:install`.
 2. Add focused regression evidence for each behavior or presentation contract change.
 3. Update `DesignSystemGallery` when a public recipe changes.
 4. Run `bun run check`.

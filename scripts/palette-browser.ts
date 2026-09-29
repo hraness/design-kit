@@ -1,5 +1,6 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
-import { access, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
@@ -86,13 +87,7 @@ function captureErrors(page: Page): void {
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
 }
 
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/Applications/Chromium.app/Contents/MacOS/Chromium", chromium.executablePath(), "/usr/bin/chromium", "/usr/bin/chromium-browser"]) {
-    if (path === undefined) continue;
-    try { await access(path); return path; } catch { /* Try the next installed browser. */ }
-  }
-  throw new Error("No Chromium executable is available.");
-}
+const executable = provisionedBrowserExecutable;
 
 function rgb(hex: string): string {
   assert.match(hex, /^#[\da-f]{6}$/iu);
@@ -321,7 +316,7 @@ try {
     },
   });
   try {
-    const browser = await chromium.launch({ executablePath: await executable(), headless: true, args: ["--no-sandbox"] });
+    const browser = await chromium.launch({ executablePath: await executable(), headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
     try {
       const origin = `http://127.0.0.1:${String(server.port)}`;
       const staticContext = await browser.newContext({ javaScriptEnabled: false });

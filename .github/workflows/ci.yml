@@ -87,6 +87,17 @@ jobs:
           bun-version: "1.3.14"
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run build
+      - uses: actions/cache/restore@v4
+        id: browser-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('node_modules/playwright-core/browsers.json') }}
+      - run: bun ./node_modules/playwright-core/cli.js install --with-deps chromium
+      - uses: actions/cache/save@v4
+        if: github.ref == 'refs/heads/main' && steps.browser-cache.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.browser-cache.outputs.cache-primary-key }}
       - run: bun run test:browser:marketing
 
   browser-rest:
@@ -102,6 +113,17 @@ jobs:
           bun-version: "1.3.14"
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun run build
+      - uses: actions/cache/restore@v4
+        id: browser-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('node_modules/playwright-core/browsers.json') }}
+      - run: bun ./node_modules/playwright-core/cli.js install --with-deps chromium
+      - uses: actions/cache/save@v4
+        if: github.ref == 'refs/heads/main' && steps.browser-cache.outputs.cache-hit != 'true'
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ steps.browser-cache.outputs.cache-primary-key }}
       - run: bun run test:browser:rest
 
   required:

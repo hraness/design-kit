@@ -1,10 +1,11 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 // Browser gate for PlatformInstall: the built client entry hydrates under a
 // strict content policy (no inline script or style), selects the visitor's
 // operating system, moves between tabs with the keyboard, copies the exact
 // command, keeps phone layouts free of page-level sideways scroll, and shows
 // every command with JavaScript disabled.
 import assert from "node:assert/strict";
-import { access, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { chromium, type BrowserContextOptions, type Page } from "playwright-core";
 import { createElement } from "react";
@@ -13,13 +14,7 @@ import { renderToString } from "react-dom/server";
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
 
 const repository = resolve(import.meta.dir, "..");
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
-    if (path === undefined) continue;
-    try { await access(path); return path; } catch { /* Next installed browser. */ }
-  }
-  throw new Error("No Chromium executable available");
-}
+const executable = provisionedBrowserExecutable;
 
 const longCommand = "curl --proto '=https' --tlsv1.2 -fsSL https://relay.example/releases/download/v1.2.3/install.sh | sh -s -- --prefix \"$HOME/.local\" --no-modify-path";
 const props = {
@@ -64,7 +59,7 @@ const policy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src
 const documentFor = (theme: string) => `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page.css"><script type="module" src="/app.js"></script></head><body><main><div id="root">${markup}</div></main></body></html>`;
 const pageCss = "body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; }";
 
-const browser = await chromium.launch({ executablePath: await executable() });
+const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable() });
 type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark" };
 async function open(options: OpenOptions = {}): Promise<Page> {
   const contextOptions: BrowserContextOptions = {

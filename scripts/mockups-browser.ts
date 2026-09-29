@@ -1,3 +1,4 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 // Browser proof for `@hraness/design-kit/mockups`. Every gallery fixture is
 // rendered on the server from dist, served with `mockups.css` alone, and
 // checked at phone and desktop widths under a light and a dark page: no
@@ -8,7 +9,7 @@
 //
 // Set MOCKUPS_SCREENSHOTS=<dir> to keep a full-page screenshot per case.
 import assert from "node:assert/strict";
-import { access, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { chromium } from "playwright-core";
@@ -22,13 +23,7 @@ const repository = resolve(import.meta.dir, "..");
 const work = await mkdtemp(join(tmpdir(), "hraness-mockups-"));
 const screenshots = process.env.MOCKUPS_SCREENSHOTS;
 
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
-    if (path === undefined) continue;
-    try { await access(path); return path; } catch { /* Next installed browser. */ }
-  }
-  throw new Error("No Chromium executable available");
-}
+const executable = provisionedBrowserExecutable;
 
 try {
   const api = (await import(join(repository, "dist/mockups/index.js"))) as typeof MockupsModule;
@@ -52,7 +47,7 @@ try {
     return new Response("Not found", { status: 404 });
   } });
   try {
-    const browser = await chromium.launch({ executablePath: await executable(), headless: true });
+    const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable(), headless: true });
     try {
       if (screenshots !== undefined) await mkdir(screenshots, { recursive: true });
       let cases = 0;

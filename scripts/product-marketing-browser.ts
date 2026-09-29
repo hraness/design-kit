@@ -1,7 +1,7 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { constants } from "node:fs";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { chromium, type Browser, type Page } from "playwright-core";
@@ -446,15 +446,7 @@ function compareDeliveryToProjected(actual: readonly Observation[], expected: re
   return assertions;
 }
 
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH,
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(),
-    "/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"]) {
-    if (path === undefined) continue;
-    try { await access(path, constants.X_OK); return path; } catch { /* Try the next explicit installed binary. */ }
-  }
-  throw new Error("Set CHROMIUM_EXECUTABLE_PATH to an installed browser; this gate never downloads one.");
-}
+const executable = provisionedBrowserExecutable;
 
 async function colorProbe(page: Page) {
   const rootToken = "oklch(0.55 0.21 262)";
@@ -535,7 +527,7 @@ async function colorProbe(page: Page) {
 
 if (process.argv.includes("--color-probe-only")) {
   const browserPath = await executable();
-  const probeBrowser = await chromium.launch({ executablePath: browserPath, headless: true, args: ["--no-sandbox"] });
+  const probeBrowser = await chromium.launch({ executablePath: browserPath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
   try {
     const page = await probeBrowser.newPage();
     try { console.log(JSON.stringify({ browserPath, browserVersion: probeBrowser.version(), colorProbe: await colorProbe(page) }, null, 2)); }
@@ -728,7 +720,7 @@ try {
   } });
   const origin = `http://127.0.0.1:${server.port}`;
   const browserPath = await executable();
-  browser = await chromium.launch({ executablePath: browserPath, headless: true, args: ["--no-sandbox"] });
+  browser = await chromium.launch({ executablePath: browserPath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
   const strictCsp = await verifyStrictMarketingCsp(browser, origin, {
     standalone: createHash("sha256").update(standalone).digest("hex"),
     compiler: createHash("sha256").update(compiler).digest("hex"),

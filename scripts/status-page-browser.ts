@@ -1,17 +1,11 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
-import { access } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { chromium, type Page } from "playwright-core";
 import { bundleBrowserStylesheet } from "./browser-stylesheet.js";
 
 const repository = resolve(import.meta.dir, "..");
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
-    if (path === undefined) continue;
-    try { await access(path); return path; } catch { /* Next installed browser. */ }
-  }
-  throw new Error("No Chromium executable available");
-}
+const executable = provisionedBrowserExecutable;
 
 const { renderStatusPageHtml } = await import(join(repository, "dist/index.js"));
 const bundle = await Bun.build({ entrypoints: [join(repository, "dist/browser/index.js")], format: "esm" });
@@ -43,7 +37,7 @@ window.__statusDispose = attachStatusPage(document.querySelector(".hraness-statu
 const frameCounter = `(() => { const raf = window.requestAnimationFrame.bind(window); window.__frames = 0;
   window.requestAnimationFrame = (callback) => { window.__frames++; return raf(callback); }; })();`;
 
-const browser = await chromium.launch({ executablePath: await executable(), args: ["--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"] });
+const browser = await chromium.launch({ executablePath: await executable(), args: verificationBrowserArguments(["--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"]) });
 async function open(css: string, options: { width?: number; palette?: string; theme?: string; reducedMotion?: "reduce" | "no-preference"; forcedColors?: "active" | "none" } = {}): Promise<Page> {
   const page = await browser.newPage({ viewport: { width: options.width ?? 1280, height: 900 } });
   const errors: string[] = [];

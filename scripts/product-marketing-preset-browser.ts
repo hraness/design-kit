@@ -1,6 +1,7 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { access, mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { chromium, type Page } from "playwright-core";
@@ -72,13 +73,8 @@ const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) 
   const ink = url.searchParams.get("ink") === "palette" ? "palette" : "explicit";
   return new Response(`<!doctype html><html lang="en" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Marketing presets</title><link rel="stylesheet" href="/styles.css?mode=${mode}"><link rel="stylesheet" href="/fixture.css?ink=${ink}"></head><body>${mode === "raw" ? rawHtml : html}</body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self'; base-uri 'none'" } });
 } });
-let executablePath: string | undefined;
-for (const candidate of [process.env.CHROME_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"]) {
-  if (candidate === undefined) continue;
-  try { await access(candidate); executablePath = candidate; break; } catch { /* next installed browser */ }
-}
-assert(executablePath, "A local Chromium executable is required");
-const browser = await chromium.launch({ executablePath, headless: true, args: process.platform === "linux" ? ["--no-sandbox"] : [] });
+const executablePath = await provisionedBrowserExecutable();
+const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(process.platform === "linux" ? ["--no-sandbox"] : []) });
 const receipts: unknown[] = [];
 const missingInkControls: unknown[] = [];
 try {
