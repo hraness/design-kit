@@ -74,12 +74,27 @@ function followingCharacter(source: string, start: number): string {
   return source[cursor] ?? "";
 }
 
+/**
+ * Keep Unicode words whole without property escapes, which the consumers'
+ * Next.js Babel pipeline cannot compile. This is lexical presentation, not
+ * identifier validation; whitespace and proof operators still end a word.
+ */
+function identifierAt(source: string, start: number): string {
+  let cursor = start;
+  while (cursor < source.length) {
+    const code = source.codePointAt(cursor) ?? 0;
+    const ascii = code === 95 || (code >= 65 && code <= 90) || (code >= 97 && code <= 122)
+      || (cursor > start && code >= 48 && code <= 57);
+    if (!ascii && (code < 128 || /[\s«»∀∃→←↔∧∨¬≤≥≠∈]/u.test(String.fromCodePoint(code)))) break;
+    cursor += code > 0xffff ? 2 : 1;
+  }
+  return source.slice(start, cursor);
+}
+
 function highlightProgram(source: string, language: "rust" | "lean" | "tla"): string {
   const html: string[] = [];
-  const identifiers = /[_\p{ID_Start}][_\p{ID_Continue}]*/uy;
-  const numbers = /(?:0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|[0-9][0-9_]*(?:\.(?![.\p{ID_Start}_])[0-9_]*)?(?:[eE][+-]?[0-9_]+)?)(?:[iu](?:8|16|32|64|128|size)|f(?:32|64))?/uy;
+  const numbers = /(?:0[xX][0-9a-fA-F_]+|0[bB][01_]+|0[oO][0-7_]+|[0-9][0-9_]*(?:\.(?![.A-Za-z_\u0080-\u{10ffff}])[0-9_]*)?(?:[eE][+-]?[0-9_]+)?)(?:[iu](?:8|16|32|64|128|size)|f(?:32|64))?/uy;
   const rustCharacters = /b?'(?:\\(?:[nrt0\\'"]|x[0-9a-fA-F]{2}|u\{[0-9a-fA-F_]{1,6}\})|[^'\\\r\n])'/uy;
-  const lifetimes = /'[_\p{ID_Start}][_\p{ID_Continue}]*/uy;
   const tlaWords = /\\[A-Za-z]+/y;
   const keywords = language === "rust" ? rustKeywords : language === "lean" ? leanKeywords : tlaKeywords;
   const lineComment = language === "rust" ? "//" : language === "lean" ? "--" : "\\*";
@@ -99,11 +114,11 @@ function highlightProgram(source: string, language: "rust" | "lean" | "tla"): st
       if (rawEnd !== null) { emit("string", rawEnd); continue; }
       const character = matchAt(rustCharacters, source, cursor);
       if (character !== "") { emit("string", cursor + character.length); continue; }
-      const lifetime = matchAt(lifetimes, source, cursor);
-      if (lifetime !== "") { emit("variable", cursor + lifetime.length); continue; }
+      const lifetime = source[cursor] === "'" ? identifierAt(source, cursor + 1) : "";
+      if (lifetime !== "") { emit("variable", cursor + 1 + lifetime.length); continue; }
       if (source.startsWith('b"', cursor) || source.startsWith('c"', cursor)) { emit("string", quotedEnd(source, cursor + 1, '"', true)); continue; }
       if (source.startsWith("r#", cursor)) {
-        const identifier = matchAt(identifiers, source, cursor + 2);
+        const identifier = identifierAt(source, cursor + 2);
         if (identifier !== "") { emit("variable", cursor + 2 + identifier.length); continue; }
       }
     }
@@ -118,7 +133,7 @@ function highlightProgram(source: string, language: "rust" | "lean" | "tla"): st
     }
     const number = matchAt(numbers, source, cursor);
     if (number !== "") { emit("number", cursor + number.length); continue; }
-    const identifier = matchAt(identifiers, source, cursor);
+    const identifier = identifierAt(source, cursor);
     if (identifier !== "") {
       const end = cursor + identifier.length;
       const next = followingCharacter(source, end);

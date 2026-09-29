@@ -48,6 +48,21 @@ test("Rust separates lifetimes, character literals, raw strings, and nested comm
   expect(html).toContain('syntax-token--keyword">let</span> done');
 });
 
+test("Unicode names stay whole beside numbers, lifetimes, and proof operators", () => {
+  const rust = "fn café() {} fn borrow<'寿命>(matché: &'寿命 str) { 1.Δ(); r#类型(); 𝒇(); }";
+  const html = assertRoundTrip(rust, "rust");
+  expect(html).toContain('syntax-token--function">café</span>');
+  expect(html).toContain('syntax-token--variable">&#39;寿命</span>');
+  expect(html).not.toContain('syntax-token--keyword">match</span>');
+  expect(html).toContain('syntax-token--number">1</span><span class="syntax-token syntax-token--operator">.</span>');
+  expect(html).toContain('syntax-token--function">Δ</span>');
+  expect(html).toContain('syntax-token--variable">r#类型</span>');
+  expect(html).toContain('syntax-token--function">𝒇</span>');
+  const lean = assertRoundTrip("theorem égalité : ∀ n : ℕ, n≤n := by simp", "lean");
+  expect(lean).toContain('syntax-token--operator">∀</span>');
+  expect(lean).toContain('syntax-token--operator">≤</span>');
+});
+
 test("TOML handles quoted and dotted keys, tables, dates, arrays, and multiline values", () => {
   const source = '[sessions."01a08d7c-…"] # per-session override\r\n'
     + 'strategy = "structured"\ntrigger_tokens = 120_000\nadaptive = true\n'

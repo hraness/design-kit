@@ -4,7 +4,7 @@ import {
   maximumSyntaxCharacters,
   resolveSyntaxLanguage,
   syntaxLanguages
-} from "./chunk-26hjh487.js";
+} from "./chunk-he8eznb1.js";
 import"./chunk-5gtx3pza.js";
 export {
   syntaxLanguages,
