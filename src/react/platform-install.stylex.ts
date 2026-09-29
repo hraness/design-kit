@@ -95,6 +95,8 @@ export const platformInstallStyles = stylex.create({
     textOverflow: "ellipsis",
   },
   tabSelected: {
+    // Preserve paired system colors without automatic text backplates on labels.
+    forcedColorAdjust: { default: null, [forced]: "none" },
     backgroundColor: {
       default: surface,
       ":hover": surface,

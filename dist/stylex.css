@@ -3706,6 +3706,10 @@
     .xr5dkdi.xr5dkdi {
       forced-color-adjust: auto;
     }
+
+    .x1g12otp.x1g12otp {
+      forced-color-adjust: none;
+    }
   }
 
   @media (width <= 48rem) {
