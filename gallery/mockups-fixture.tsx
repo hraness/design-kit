@@ -27,7 +27,10 @@ export function mockupFixtures(api: typeof Mockups): readonly MockupFixture[] {
       name: "Browser frame", kind: "browser",
       render: (theme) => (
         <BrowserFrame describe="Illustration of a settings page in a browser window." optOut={optOut} theme={theme} url="https://relay.example/settings">
-          <p>Settings</p>
+          <div style={{ display: "grid", gap: 10, padding: "18px 20px 22px" }}>
+            <p style={{ fontSize: 17, fontWeight: 600 }}>Settings</p>
+            <p style={{ color: "var(--hkm-muted)" }}>Two jobs run each night. Results go to the shared folder.</p>
+          </div>
         </BrowserFrame>
       ),
     },
@@ -74,7 +77,10 @@ export function mockupFixtures(api: typeof Mockups): readonly MockupFixture[] {
       name: "Phone frame", kind: "phone",
       render: (theme) => (
         <PhoneFrame describe="Illustration of a phone showing a list." screenHeight={420} theme={theme} width={220}>
-          <p>Today</p>
+          <div style={{ display: "grid", gap: 8 }}>
+            <p style={{ fontSize: 17, fontWeight: 600 }}>Today</p>
+            <p style={{ color: "var(--hkm-muted)" }}>Two jobs queued.</p>
+          </div>
         </PhoneFrame>
       ),
     },
@@ -152,7 +158,7 @@ export function mockupFixtures(api: typeof Mockups): readonly MockupFixture[] {
       name: "Article page", kind: "article",
       render: (theme) => (
         <ArticlePage
-          byline="By Mira Okafor"
+          byline="Mira Okafor"
           comments={[{ name: "Jonas Berg", time: "1h", text: "The six o'clock start helps." }]}
           describe="Illustration of a news article with one comment."
           dek="Stalls open at six from next week."

@@ -374,7 +374,10 @@ function PhoneFrame({
       ...statusTime === undefined ? {} : {
         statusTime
       },
-      children
+      children: /* @__PURE__ */ jsx("div", {
+        className: "hkm-phone-body",
+        children
+      })
     })
   });
 }
@@ -645,6 +648,9 @@ function sample(optOut) {
   return optOut === undefined ? {} : {
     optOut
   };
+}
+function counted(value, noun) {
+  return `${compact(value)} ${value === 1 ? noun : `${noun}s`}`;
 }
 function assertUniqueKeys(keys, component) {
   const seen = new Set;
@@ -1330,18 +1336,14 @@ function WorkPost({
         "aria-hidden": "true",
         className: "hkm-work-counts hkm-muted",
         children: [
-          /* @__PURE__ */ jsxs2("span", {
-            children: [
-              compact(reactions[0]),
-              " reactions"
-            ]
+          /* @__PURE__ */ jsx2("span", {
+            children: counted(reactions[0], "reaction")
           }),
           /* @__PURE__ */ jsxs2("span", {
             children: [
-              compact(reactions[1]),
-              " comments · ",
-              compact(reactions[2]),
-              " reposts"
+              counted(reactions[1], "comment"),
+              " · ",
+              counted(reactions[2], "repost")
             ]
           })
         ]
@@ -1662,6 +1664,8 @@ function ArticlePage({
   url = "news.example/story",
   ...root
 }) {
+  if (/^by\s/iu.test(byline.trim()))
+    throw new RangeError(`ArticlePage byline is the author's name; the page adds "By".`);
   const opt = sample(root.optOut);
   return /* @__PURE__ */ jsx2(MockupRoot, {
     ...root,
@@ -1758,12 +1762,9 @@ function ArticlePage({
               comments === undefined || comments.length === 0 ? null : /* @__PURE__ */ jsxs2("div", {
                 className: "hkm-article-comments",
                 children: [
-                  /* @__PURE__ */ jsxs2("div", {
+                  /* @__PURE__ */ jsx2("div", {
                     className: "hkm-article-comments-title",
-                    children: [
-                      comments.length,
-                      " comments"
-                    ]
+                    children: counted(comments.length, "comment")
                   }),
                   comments.map((comment, index) => /* @__PURE__ */ jsxs2("div", {
                     ...comment.attributes,

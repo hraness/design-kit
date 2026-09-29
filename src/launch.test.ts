@@ -165,6 +165,17 @@ describe("social kit", () => {
     );
   });
 
+  test("catches piped shell installs and stays linear on hostile input", () => {
+    const piped = { ...kit, x: [`${kit.x[0]} curl -fsSL https://relay.example/i | sh`, ...kit.x.slice(1)] };
+    expect(problemsOf(() => assertLaunchKit(resolved, piped, options)).join("\n")).toContain("no public install");
+    const hostile = { ...kit, x: [`${"curl ".repeat(20_000)}`, ...kit.x.slice(1)] };
+    const started = performance.now();
+    problemsOf(() => assertLaunchKit(resolved, hostile, options));
+    expect(problemsOf(() => buildSocialKit(resolved, messaging, release, `a://!${"!!".repeat(20_000)} `)).join("\n")).toContain("not a URL");
+    expect(performance.now() - started).toBeLessThan(1_000);
+    expect(() => buildSocialKit(resolved, messaging, release, `${URL}`)).not.toThrow();
+  });
+
   test("checks the tagline source, forbidden names, and channel limits", () => {
     const wrongTagline = { ...kit, productHunt: { ...kit.productHunt, tagline: "Something else" } };
     expect(problemsOf(() => assertLaunchKit(resolved, wrongTagline, options)).join("\n")).toContain("messaging tagline");

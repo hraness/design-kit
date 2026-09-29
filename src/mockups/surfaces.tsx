@@ -18,6 +18,11 @@ function sample(optOut: MockupOptOut | undefined): { optOut?: MockupOptOut } {
   return optOut === undefined ? {} : { optOut };
 }
 
+/** A compact count with its noun, singular only for exactly one. */
+function counted(value: number, noun: string): string {
+  return `${compact(value)} ${value === 1 ? noun : `${noun}s`}`;
+}
+
 function assertUniqueKeys(keys: readonly string[], component: string): void {
   const seen = new Set<string>();
   for (const key of keys) {
@@ -414,8 +419,8 @@ export function WorkPost({
       {photo === undefined ? null : <PlaceholderPhoto className="hkm-work-photo" ratio="1.91 / 1" seed={photo} />}
       {reactions === undefined ? null : (
         <div aria-hidden="true" className="hkm-work-counts hkm-muted">
-          <span>{compact(reactions[0])} reactions</span>
-          <span>{compact(reactions[1])} comments · {compact(reactions[2])} reposts</span>
+          <span>{counted(reactions[0], "reaction")}</span>
+          <span>{counted(reactions[1], "comment")} · {counted(reactions[2], "repost")}</span>
         </div>
       )}
       <div aria-hidden="true" className="hkm-work-actions hkm-muted">
@@ -608,6 +613,7 @@ export function ArticlePage({
 }: MockupRootProps &
   Readonly<{
     title: string;
+    /** The author's name. The page adds "By", so pass "Mira Okafor", not "By Mira Okafor". */
     byline: string;
     paragraphs: readonly string[];
     dek?: string;
@@ -620,6 +626,7 @@ export function ArticlePage({
     url?: string;
     height?: number;
   }>) {
+  if (/^by\s/iu.test(byline.trim())) throw new RangeError('ArticlePage byline is the author\'s name; the page adds "By".');
   const opt = sample(root.optOut);
   return (
     <MockupRoot {...root} kind="article">
@@ -652,7 +659,7 @@ export function ArticlePage({
             </div>
             {comments === undefined || comments.length === 0 ? null : (
               <div className="hkm-article-comments">
-                <div className="hkm-article-comments-title">{comments.length} comments</div>
+                <div className="hkm-article-comments-title">{counted(comments.length, "comment")}</div>
                 {comments.map((comment, index) => (
                   <div key={index} {...comment.attributes} className="hkm-unit hkm-article-comment">
                     {comment.overlay}

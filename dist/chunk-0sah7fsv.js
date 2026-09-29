@@ -19,7 +19,15 @@ var LAUNCH_BANNED_WORDS = Object.freeze(["actually", "amid", "blazing", "cutting
 var LAUNCH_INTERNAL_WORDS = Object.freeze(["admission", "admitted", "attest", "bounded", "boundary", "custody", "gate", "lane", "lease", "manifest", "projection", "qualification", "quarantined", "receipt", "settlement", "surface"]);
 var HOOK_PATTERNS = [/\bhere'?s why\b/iu, /\bhere'?s how\b/iu, /\ba thread\b/iu, /\bthread below\b/iu, /\bwait (for|until)\b/iu, /\byou won'?t believe\b/iu];
 var THREAD_MARKER = /(^|\s)\d+\s*\/\s*\d*(\s|$)|\u{1F9F5}/u;
-var INSTALL_PATTERN = /\b(install|installs|installing|npm i|npx|bunx|pip|brew|download|get it (now|here)|try it (now|today)|sign up)\b|curl\s[^|]*\|\s*(ba|z)?sh/iu;
+var INSTALL_PATTERN = /\b(install|installs|installing|npm i|npx|bunx|pip|brew|download|get it (now|here)|try it (now|today)|sign up)\b/iu;
+var CURL_WORD = /\bcurl\s/iu;
+var PIPE_TO_SHELL = /\|\s*(?:ba|z)?sh\b/iu;
+function asksToInstall(text) {
+  if (INSTALL_PATTERN.test(text))
+    return true;
+  const curl = CURL_WORD.exec(text);
+  return curl !== null && PIPE_TO_SHELL.test(text.slice(curl.index));
+}
 var TRACKING_PARAM = /[?&](utm_[a-z]+|ref|ref_src|fbclid|gclid|mc_[a-z]+|s)=/iu;
 var EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{2300}-\u{23FF}]/u;
 var HASHTAG = /(^|\s)#[A-Za-z0-9_À-ɏͰ-ϿЀ-ӿ]+/u;
@@ -252,7 +260,7 @@ function resolveLaunchBeats(beats, facts, options = {}) {
   return Object.freeze(resolved);
 }
 function assertCanonicalUrl(url) {
-  const parsed = /^([a-z][a-z0-9+.-]*):\/\/([^/?#\s]+)([^?#\s]*)(\?[^#\s]*)?(#\S*)?$/iu.exec(url);
+  const parsed = /^([a-z][a-z0-9+.-]*):\/\/([^/?#\s]+)(\/[^?#\s]*)?(\?[^#\s]*)?(#\S*)?$/iu.exec(url);
   if (parsed === null)
     throw new LaunchKitError([`The canonical URL "${url}" is not a URL.`]);
   const [, scheme = "", , , search = "", hash = ""] = parsed;
@@ -338,7 +346,7 @@ function assertLaunchKit(beats, kit, options) {
       if (hit !== null)
         problems.push(`${label} names "${hit[0]}"; comparisons belong on comparison pages.`);
     }
-    if (!options.publicInstall && INSTALL_PATTERN.test(text)) {
+    if (!options.publicInstall && asksToInstall(text)) {
       problems.push(`${label} asks readers to install, but the release has no public install.`);
     }
     for (const match of text.matchAll(SCHEME_URL)) {

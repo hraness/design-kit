@@ -167,7 +167,17 @@ const HOOK_PATTERNS: readonly RegExp[] = [
 ];
 const THREAD_MARKER = /(^|\s)\d+\s*\/\s*\d*(\s|$)|\u{1F9F5}/u;
 const INSTALL_PATTERN =
-  /\b(install|installs|installing|npm i|npx|bunx|pip|brew|download|get it (now|here)|try it (now|today)|sign up)\b|curl\s[^|]*\|\s*(ba|z)?sh/iu;
+  /\b(install|installs|installing|npm i|npx|bunx|pip|brew|download|get it (now|here)|try it (now|today)|sign up)\b/iu;
+// Two linear scans instead of one `curl\s[^|]*\|` pattern, which backtracks
+// polynomially on repeated "curl " input.
+const CURL_WORD = /\bcurl\s/iu;
+const PIPE_TO_SHELL = /\|\s*(?:ba|z)?sh\b/iu;
+
+function asksToInstall(text: string): boolean {
+  if (INSTALL_PATTERN.test(text)) return true;
+  const curl = CURL_WORD.exec(text);
+  return curl !== null && PIPE_TO_SHELL.test(text.slice(curl.index));
+}
 const TRACKING_PARAM = /[?&](utm_[a-z]+|ref|ref_src|fbclid|gclid|mc_[a-z]+|s)=/iu;
 // Explicit ranges, not `\p{…}` escapes, because Next.js compiles dependencies
 // with a Babel build that cannot rewrite Unicode property escapes.
@@ -414,7 +424,7 @@ export function resolveLaunchBeats(
 
 function assertCanonicalUrl(url: string): void {
   // Parsed as a string so this module needs no DOM or Node URL global.
-  const parsed = /^([a-z][a-z0-9+.-]*):\/\/([^/?#\s]+)([^?#\s]*)(\?[^#\s]*)?(#\S*)?$/iu.exec(url);
+  const parsed = /^([a-z][a-z0-9+.-]*):\/\/([^/?#\s]+)(\/[^?#\s]*)?(\?[^#\s]*)?(#\S*)?$/iu.exec(url);
   if (parsed === null) throw new LaunchKitError([`The canonical URL "${url}" is not a URL.`]);
   const [, scheme = "", , , search = "", hash = ""] = parsed;
   const problems: string[] = [];
@@ -507,7 +517,7 @@ export function assertLaunchKit(beats: readonly LaunchBeat[], kit: SocialKit, op
       const hit = forbiddenPattern.exec(text);
       if (hit !== null) problems.push(`${label} names "${hit[0]}"; comparisons belong on comparison pages.`);
     }
-    if (!options.publicInstall && INSTALL_PATTERN.test(text)) {
+    if (!options.publicInstall && asksToInstall(text)) {
       problems.push(`${label} asks readers to install, but the release has no public install.`);
     }
     for (const match of text.matchAll(SCHEME_URL)) {

@@ -227,7 +227,8 @@ export function MenuBarPopover({
 /**
  * A generic modern phone: metal edge, bezel, side buttons, a camera island,
  * status bar, and home indicator. No logos, carrier names, or real numbers.
- * The screen is 390 by 844 points and scales with the root's width.
+ * The screen is 390 by 844 points and scales with the root's width. Children
+ * sit in a scrollable body that clears the status bar and home indicator.
  */
 export function PhoneFrame({
   children,
@@ -238,7 +239,9 @@ export function PhoneFrame({
 }: MockupRootProps & Readonly<{ statusTime?: string; width?: number; screenHeight?: number; children: ReactNode }>) {
   return (
     <MockupRoot {...root} kind="phone" style={phoneStyle(width, screenHeight)}>
-      <PhoneShell {...(statusTime === undefined ? {} : { statusTime })}>{children}</PhoneShell>
+      <PhoneShell {...(statusTime === undefined ? {} : { statusTime })}>
+        <div className="hkm-phone-body">{children}</div>
+      </PhoneShell>
     </MockupRoot>
   );
 }

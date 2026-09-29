@@ -139,3 +139,38 @@ describe("mockups.css parity", () => {
     expect(bare).toEqual([]);
   });
 });
+
+describe("mockup copy details", () => {
+  test("counts read as singular only for exactly one", () => {
+    const article = (count: number) => renderToStaticMarkup(
+      <api.ArticlePage
+        byline="Mira Okafor"
+        comments={Array.from({ length: count }, (_, index) => ({ name: `Reader ${String(index)}`, time: "1h", text: "Sounds good." }))}
+        describe="Illustration of an article."
+        paragraphs={["One paragraph."]}
+        title="A title"
+      />,
+    );
+    expect(article(1)).toContain(">1 comment<");
+    expect(article(2)).toContain(">2 comments<");
+    const work = renderToStaticMarkup(
+      <api.WorkPost headline="Operations lead" name="Jonas Berg" reactions={[1, 1, 3]} text="One post." time="1d" />,
+    );
+    expect(htmlTextOf(work)).toContain("1 reaction");
+    expect(htmlTextOf(work)).toContain("1 comment · 3 reposts");
+  });
+
+  test("an article byline is a name, not a sentence", () => {
+    expect(() => renderToStaticMarkup(<api.ArticlePage byline="By Mira Okafor" describe="Illustration of an article." paragraphs={["One."]} title="A title" />)).toThrow(/author's name/u);
+    expect(renderToStaticMarkup(<api.ArticlePage byline="Mira Okafor" describe="Illustration of an article." paragraphs={["One."]} title="A title" />)).not.toContain("By By");
+  });
+
+  test("the generic phone keeps children clear of the status bar", () => {
+    const markup = renderToStaticMarkup(<api.PhoneFrame describe="Illustration of a phone."><p>Today</p></api.PhoneFrame>);
+    expect(markup).toContain('<div class="hkm-phone-body"><p>Today</p></div>');
+  });
+});
+
+function htmlTextOf(markup: string): string {
+  return markup.replace(/<[^>]+>/gu, "").replace(/&#x27;/gu, "'");
+}

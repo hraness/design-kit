@@ -692,6 +692,13 @@
     overflow: hidden;
   }
 
+  /* The generic phone body clears the status bar and home indicator. */
+  .hkm-root .hkm-phone-body {
+    block-size: 100%;
+    overflow: hidden;
+    padding: calc(58 * var(--pt)) calc(20 * var(--pt)) calc(34 * var(--pt));
+  }
+
   .hkm-root .hkm-status-bar {
     position: absolute;
     z-index: 4;
