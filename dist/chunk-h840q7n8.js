@@ -1,6 +1,6 @@
 import {
   platformInstallClassName
-} from "./chunk-8sd0vqst.js";
+} from "./chunk-enr5d703.js";
 import {
   detectPlatform,
   isKnownPlatformId,
