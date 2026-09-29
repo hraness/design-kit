@@ -9,7 +9,7 @@ import {
 } from "../chunk-8834fh4n.js";
 import {
   PlatformInstall
-} from "../chunk-y3bvc96r.js";
+} from "../chunk-bb7yydhs.js";
 import {
   ArticleBarChart,
   ArticleByline,
@@ -58,6 +58,8 @@ import {
   MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
+  PlatformBadges,
+  PlatformIcon,
   ProceduralBackdrop,
   ProductHero,
   ProviderMark,
@@ -80,11 +82,8 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ccmt90sx.js";
-import {
-  PlatformBadges,
-  PlatformIcon
-} from "../chunk-8e9jcr6r.js";
+} from "../chunk-7vsgrwc7.js";
+import"../chunk-1nc4b044.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,

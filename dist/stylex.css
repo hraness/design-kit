@@ -136,7 +136,15 @@
                      "bottom bottom"
                      / minmax(0, 1fr) auto;
     }
+  }
 
+  @media (width <= 30rem) {
+    .xj5lsog.xj5lsog {
+      padding: .1875rem;
+    }
+  }
+
+  @media (width <= 48rem) {
     .x1bmall5.x1bmall5 {
       padding: var(--layout-chrome-inset);
     }
@@ -886,6 +894,16 @@
     }
   }
 
+  @media (width <= 30rem) {
+    .xvellkl.xvellkl {
+      gap: .125rem;
+    }
+
+    .x1246pwy.x1246pwy {
+      gap: .3rem;
+    }
+  }
+
   @media (width <= 48rem) {
     .x1csspt3.x1csspt3 {
       gap: 0 1.25rem;
@@ -914,7 +932,15 @@
     .xbdo7qo.xbdo7qo {
       padding-block: .25rem;
     }
+  }
 
+  @media (width <= 30rem) {
+    .x1v9u4bw.x1v9u4bw {
+      padding-inline: .45rem;
+    }
+  }
+
+  @media (width <= 48rem) {
     .x9qo5wx.x9qo5wx {
       padding-inline: var(--hraness-marketing-gutter);
     }
@@ -3670,6 +3696,12 @@
     }
   }
 
+  @media (width <= 30rem) {
+    .x1v9t3wg.x1v9t3wg {
+      font-size: .8125rem;
+    }
+  }
+
   @media (forced-colors: active) {
     .xr5dkdi.xr5dkdi {
       forced-color-adjust: auto;
@@ -3693,6 +3725,12 @@
   @media (pointer: coarse) {
     .xqnxffv.xqnxffv {
       inline-size: 3rem;
+    }
+  }
+
+  @media (width <= 30rem) {
+    .x1ve8bxk.x1ve8bxk {
+      justify-self: stretch;
     }
   }
 
@@ -3954,6 +3992,10 @@
     height: .95rem;
   }
 
+  .xqtp20y {
+    height: 0;
+  }
+
   .x5yr21d {
     height: 100%;
   }
@@ -4140,6 +4182,10 @@
 
   .x2tfi8i {
     width: .95rem;
+  }
+
+  .xnalus7 {
+    width: 0;
   }
 
   .xh8yej3 {

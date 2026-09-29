@@ -46,6 +46,8 @@ import {
   MarketingTrustBoundary,
   PageCanvas,
   ParticleHalo,
+  PlatformBadges,
+  PlatformIcon,
   ProceduralBackdrop,
   ProductHero,
   ProviderMark,
@@ -60,11 +62,8 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ccmt90sx.js";
-import {
-  PlatformBadges,
-  PlatformIcon
-} from "../chunk-8e9jcr6r.js";
+} from "../chunk-7vsgrwc7.js";
+import"../chunk-1nc4b044.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";

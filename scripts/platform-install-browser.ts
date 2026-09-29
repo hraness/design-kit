@@ -3,7 +3,9 @@ import { provisionedBrowserExecutable, verificationBrowserArguments } from "./br
 // strict content policy (no inline script or style), selects the visitor's
 // operating system, moves between tabs with the keyboard, copies the exact
 // command, keeps phone layouts free of page-level sideways scroll, and shows
-// every command with JavaScript disabled.
+// every command with JavaScript disabled. At 320 and 360px, including inside
+// a padded card, all three tabs fit inside the tab row without sideways
+// scrolling or truncated names.
 import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -57,10 +59,10 @@ document.documentElement.dataset.hydrated = "";
 const stylesheet = await bundleBrowserStylesheet(join(repository, "src/styles.css"), repository);
 const policy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'";
 const documentFor = (theme: string) => `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page.css"><script type="module" src="/app.js"></script></head><body><main><div id="root">${markup}</div></main></body></html>`;
-const pageCss = "body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; }";
+const pageCss = "body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; } html[data-card] #root { padding: 16px; border: 1px solid; border-radius: 12px; }";
 
 const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable() });
-type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark" };
+type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean };
 async function open(options: OpenOptions = {}): Promise<Page> {
   const contextOptions: BrowserContextOptions = {
     colorScheme: options.colorScheme ?? "light",
@@ -82,7 +84,7 @@ async function open(options: OpenOptions = {}): Promise<Page> {
     if (message.type() === "error" && !message.text().startsWith("Failed to load resource")) problems.push(message.text());
   });
   (page as unknown as { problems: string[] }).problems = problems;
-  const html = documentFor(options.theme ?? "light");
+  const html = documentFor(options.theme ?? "light").replace("<html ", options.card === true ? "<html data-card ": "<html ");
   await page.route("**/*", (route) => {
     const path = new URL(route.request().url()).pathname;
     if (path === "/") return route.fulfill({ contentType: "text/html", headers: { "content-security-policy": policy }, body: html });
@@ -162,6 +164,57 @@ try {
       await page.screenshot({ path: join(process.env.PLATFORM_INSTALL_SCREENSHOTS, `platform-install-360-${colorScheme}.png`), fullPage: true });
     }
     await page.context().close();
+  }
+
+  // Narrow columns: every tab sits fully inside the tab row, the row does not
+  // scroll sideways, and no platform name is truncated, in light and dark,
+  // directly in the page gutter and inside a padded card.
+  for (const width of [320, 360] as const) {
+    for (const colorScheme of ["light", "dark"] as const) {
+      for (const card of [false, true]) {
+        const page = await open({ platform: "Windows", width, colorScheme, theme: colorScheme, card });
+        const layout = await page.evaluate(() => {
+          const tablist = document.querySelector('[role="tablist"]') as HTMLElement;
+          const row = tablist.getBoundingClientRect();
+          return {
+            page: document.documentElement.scrollWidth,
+            viewport: window.innerWidth,
+            row: { left: row.left, right: row.right, top: row.top, bottom: row.bottom },
+            rowScroll: tablist.scrollWidth,
+            rowClient: tablist.clientWidth,
+            tabs: [...tablist.querySelectorAll('[role="tab"]')].map((tab) => {
+              const box = tab.getBoundingClientRect();
+              const label = tab.querySelector(".hraness-platform-install__tab-label") as HTMLElement;
+              return {
+                platform: tab.getAttribute("data-platform"),
+                left: box.left, right: box.right, top: box.top, bottom: box.bottom, width: box.width,
+                labelScroll: label.scrollWidth, labelClient: label.clientWidth,
+                // The mark is drawn from the component's shared symbol.
+                mark: (tab.querySelector("svg use") as SVGGraphicsElement | null)?.getBBox().width ?? 0,
+              };
+            }),
+          };
+        });
+        const where = `${width}px ${colorScheme}${card ? " card" : ""}`;
+        assert(layout.page <= layout.viewport, `${where}: the page must not scroll sideways`);
+        assert.deepEqual(layout.tabs.map((tab) => tab.platform), ["macos", "linux", "windows"], `${where}: three tabs`);
+        assert(layout.rowScroll <= layout.rowClient, `${where}: the tab row must not scroll sideways (${layout.rowScroll} > ${layout.rowClient})`);
+        for (const tab of layout.tabs) {
+          assert(tab.width > 0, `${where}: the ${tab.platform} tab renders`);
+          assert(tab.mark > 0, `${where}: the ${tab.platform} mark draws from its symbol`);
+          assert(tab.left >= layout.row.left - 0.5 && tab.right <= layout.row.right + 0.5 && tab.top >= layout.row.top - 0.5 && tab.bottom <= layout.row.bottom + 0.5,
+            `${where}: the ${tab.platform} tab sits inside the tab row (${JSON.stringify(tab)} in ${JSON.stringify(layout.row)})`);
+          assert(tab.labelScroll <= tab.labelClient, `${where}: the ${tab.platform} name is not truncated (${tab.labelScroll} > ${tab.labelClient})`);
+        }
+        assert.equal(await selected(page), "windows", `${where}: the detected Windows tab is selected`);
+        if (process.env.PLATFORM_INSTALL_SCREENSHOTS !== undefined) {
+          await page.waitForTimeout(300);
+          await page.screenshot({ path: join(process.env.PLATFORM_INSTALL_SCREENSHOTS, `platform-install-${width}-${colorScheme}${card ? "-card" : ""}.png`) });
+        }
+        assert.deepEqual(problemsOf(page), [], `${where}: no errors`);
+        await page.context().close();
+      }
+    }
   }
 
   // Without JavaScript: tabs and copy buttons hide; every panel shows under its label.

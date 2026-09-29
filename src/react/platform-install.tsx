@@ -8,9 +8,9 @@ import {
   isPlatformId,
   matchDetectedPlatform,
   platformLabel,
+  platformMark,
   type PlatformId,
 } from "../platforms.js";
-import { PlatformIcon } from "./platform-icons.js";
 import { platformInstallClassName as cx } from "./platform-install.stylex.js";
 
 /** Another way to install on the same platform, such as npm or Homebrew. */
@@ -140,6 +140,32 @@ async function writeClipboard(text: string, fallback: HTMLElement | null): Promi
   }
 }
 
+/**
+ * Each listed platform's mark is defined once per component as a `<symbol>`
+ * and drawn by reference, so the tab and the no-script panel label do not
+ * repeat the full path (the Tux mark alone is several kilobytes).
+ */
+function PlatformMarkSymbols({ ids, symbolId }: Readonly<{ ids: readonly PlatformId[]; symbolId: (id: PlatformId) => string }>) {
+  return (
+    <svg aria-hidden="true" className={cx(["markSymbols"])} focusable="false" xmlns="http://www.w3.org/2000/svg">
+      {ids.map((id) => {
+        const mark = platformMark(id);
+        return <symbol id={symbolId(id)} key={id} viewBox={mark.viewBox}><path d={mark.path} /></symbol>;
+      })}
+    </svg>
+  );
+}
+
+/** The decorative PlatformIcon, drawn from the component's shared symbol. */
+function PlatformMarkUse({ platform, symbolId }: Readonly<{ platform: PlatformId; symbolId: string }>) {
+  return (
+    <svg aria-hidden="true" className={cx(["icon"])} data-platform={platform} fill="currentColor" focusable="false"
+      viewBox={platformMark(platform).viewBox} xmlns="http://www.w3.org/2000/svg">
+      <use href={`#${symbolId}`} />
+    </svg>
+  );
+}
+
 function CopyGlyph({ copied }: Readonly<{ copied: boolean }>) {
   return (
     <svg aria-hidden="true" className={cx(["copyIcon"])} fill="none" focusable="false" stroke="currentColor"
@@ -220,6 +246,7 @@ export function PlatformInstall({
   const tabs = useRef(new Map<string, HTMLButtonElement>());
   const ids = platforms.map((target) => target.id);
   const idKey = ids.join("\n");
+  const symbolId = (platform: PlatformId) => `${baseId}-mark-${platform}`;
 
   // A removed platform falls back to the first listed one.
   const current = ids.includes(selected) ? selected : initial;
@@ -273,6 +300,7 @@ export function PlatformInstall({
       data-selection-source={source}
       id={id}
     >
+      <PlatformMarkSymbols ids={ids} symbolId={symbolId} />
       <div aria-label={label} className={cx(["tablist"])} onKeyDown={onKeyDown} role="tablist">
         {platforms.map((target) => {
           const isSelected = target.id === current;
@@ -294,8 +322,8 @@ export function PlatformInstall({
               tabIndex={isSelected ? 0 : -1}
               type="button"
             >
-              <PlatformIcon platform={target.id} />
-              <span>{labelOf(target)}</span>
+              <PlatformMarkUse platform={target.id} symbolId={symbolId(target.id)} />
+              <span className={cx(["tabLabel"])}>{labelOf(target)}</span>
             </button>
           );
         })}
@@ -316,7 +344,7 @@ export function PlatformInstall({
           >
             <div className={cx(["panelBody"])}>
               <p className={cx(["panelLabel"])}>
-                <PlatformIcon platform={target.id} />
+                <PlatformMarkUse platform={target.id} symbolId={symbolId(target.id)} />
                 <span>{name}</span>
               </p>
               {target.unavailable === true
