@@ -727,6 +727,10 @@ export function DesignSystemGallery({
       </section>
 
       <section className="design-gallery__section" id="shells">
+        <h2>Site shell</h2>
+        <p>The main content fills available height so the footer follows short and long pages.</p>
+        <pre><code>{'<body class="hraness-site-shell">\n  <header>Project</header>\n  <main>Payment complete</main>\n  <footer>By Hraness</footer>\n</body>'}</code></pre>
+
         <h2>Application shells</h2>
         <ViewportFrame className="design-gallery__shell-preview">
           <AppShell
