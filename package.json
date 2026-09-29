@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.29.0",
+  "version": "0.29.1",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -66,6 +66,7 @@
     "./status-page.css": "./src/status-page.css",
     "./reading.css": "./src/reading.css",
     "./plain-site.css": "./src/plain-site.css",
+    "./marketing-forced-colors.css": "./src/marketing-forced-colors.css",
     "./product-marketing.css": "./src/product-marketing.css",
     "./reset.css": "./src/reset.css",
     "./styles.css": "./src/styles.css",
@@ -167,6 +168,7 @@
     "src/status-page.ts",
     "src/product-marketing-foundation.css",
     "src/product-marketing.css",
+    "src/marketing-forced-colors.css",
     "src/react/animated-rail-stage.stylex.ts",
     "src/react/animated-rail-stage.tsx",
     "src/react/app-shell.stylex.ts",

@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "d271d26878f0f1ba6f35bdae2f58eb047a0e7bb346643fc42cfb5ca356c95894", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -647,6 +647,7 @@ try {
     [uiManifest.standaloneSerializer, designManifest.standaloneSerializer],
   );
   const fixtureCss = `
+    .forced-action-probe { color: ButtonText; background-color: ButtonFace; }
     body { margin: 0; }
     body[data-axis="vertical"] { writing-mode: vertical-rl; }
     .fixture-static-header { position: static; }
@@ -721,7 +722,7 @@ try {
     const stylesheetHref = mode === "static" ? nativeOracle.entryHref
       : mode === "projected-static" ? projectedOracle.entryHref : `/styles.css?mode=${mode}`;
     const oracleMarkup = mode === "static" || mode === "projected-static";
-    return new Response(`<!doctype html><html lang="en" dir="${direction}" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Marketing delivery fixture</title><link rel="stylesheet" href="${stylesheetHref}"><link rel="stylesheet" href="/fixture.css"></head><body data-axis="${axis}" data-canary="${canary}" data-tokens="${tokens}">${oracleMarkup ? staticHtml : html}</body></html>`, {
+    return new Response(`<!doctype html><html lang="en" dir="${direction}" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Marketing delivery fixture</title><link rel="stylesheet" href="${stylesheetHref}"><link rel="stylesheet" href="/fixture.css"></head><body data-axis="${axis}" data-canary="${canary}" data-tokens="${tokens}">${oracleMarkup ? staticHtml : html}<span class="forced-action-probe" hidden></span></body></html>`, {
       headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' data:; base-uri 'none'" },
     });
   } });
@@ -741,6 +742,7 @@ try {
     { name: "vertical-rtl", width: 1100, theme: "light", direction: "rtl", axis: "vertical" },
     { name: "coarse", width: 390, theme: "light", touch: true },
     { name: "forced", width: 1100, theme: "light", forced: true },
+    { name: "forced-dark", width: 390, theme: "dark", forced: true },
     { name: "shorthand-canary", width: 1100, theme: "light", canary: true },
     { name: "product-tokens", width: 1100, theme: "light", tokens: true },
   ] as const;
@@ -767,6 +769,25 @@ try {
       const query = new URLSearchParams({ theme: settings.theme, direction: settings.direction ?? "ltr", axis: settings.axis ?? "horizontal", canary: String(settings.canary ?? false), tokens: String(settings.tokens ?? false) });
       await page.goto(`${origin}/${mode}?${query}`, { waitUntil: "networkidle" });
       await settle(page);
+      if (settings.forced) {
+        const system = await page.locator(".forced-action-probe").evaluate((node) => {
+          const style = getComputedStyle(node);
+          return { color: style.color, background: style.backgroundColor };
+        });
+        const actions = page.locator(".hraness-marketing-action");
+        assert(await actions.count() >= 8, "Forced-colors regression covers action variants");
+        for (const action of await actions.all()) {
+          for (const hovered of [false, true]) {
+            if (hovered) await action.hover();
+            const actual = await action.evaluate((node) => {
+              const style = getComputedStyle(node);
+              return { color: style.color, background: style.backgroundColor };
+            });
+            assert.deepEqual(actual, system, `${settings.name}/${mode}: system button colors (${hovered ? "hover" : "rest"})`);
+          }
+        }
+        await page.screenshot({ path: join(output, `${settings.name}-${mode}-actions.png`), fullPage: true });
+      }
       const environment = await page.evaluate(() => ({
         narrow: matchMedia("(max-width: 48rem)").matches,
         coarse: matchMedia("(pointer: coarse)").matches,

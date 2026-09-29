@@ -60,7 +60,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-cwepvdey.js";
+} from "../chunk-ccmt90sx.js";
 import {
   PlatformBadges,
   PlatformIcon

@@ -3137,19 +3137,19 @@ export const marketingStyles = stylex.create({
     "padding": "0.6rem 1.1rem",
     "border-top": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-right": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-bottom": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-left": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3174,8 +3174,8 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-marketing-surface)",
-      "@media (forced-colors: active)": "Canvas",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))"
+      "@media (forced-colors: active)": "ButtonFace",
+      ":hover": { "default": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))", "@media (forced-colors: active)": "ButtonFace" }
     },
     "background-image": {
       "default": "none",
@@ -3214,7 +3214,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-ink)",
-      "@media (forced-colors: active)": "CanvasText"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -3283,10 +3283,10 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-      "@media (forced-colors: active)": "CanvasText",
+      "@media (forced-colors: active)": "ButtonFace",
       ":hover": {
         "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-        "@media (forced-colors: active)": "CanvasText"
+        "@media (forced-colors: active)": "ButtonFace"
       }
     },
     "background-image": {
@@ -3334,7 +3334,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
-      "@media (forced-colors: active)": "Canvas"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -3357,19 +3357,19 @@ export const marketingStyles = stylex.create({
     "padding": "0.6rem 1.1rem",
     "border-top": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-right": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-bottom": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-left": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3394,8 +3394,8 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-marketing-surface)",
-      "@media (forced-colors: active)": "Canvas",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))"
+      "@media (forced-colors: active)": "ButtonFace",
+      ":hover": { "default": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))", "@media (forced-colors: active)": "ButtonFace" }
     },
     "background-image": {
       "default": "none",
@@ -3434,7 +3434,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-ink)",
-      "@media (forced-colors: active)": "CanvasText"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.85rem",
@@ -3505,10 +3505,10 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-      "@media (forced-colors: active)": "CanvasText",
+      "@media (forced-colors: active)": "ButtonFace",
       ":hover": {
         "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-        "@media (forced-colors: active)": "CanvasText"
+        "@media (forced-colors: active)": "ButtonFace"
       }
     },
     "background-image": {
@@ -3556,7 +3556,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
-      "@media (forced-colors: active)": "Canvas"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.85rem",
@@ -3581,19 +3581,19 @@ export const marketingStyles = stylex.create({
     "padding": "0.6rem 1.1rem",
     "border-top": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-right": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-bottom": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-left": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3618,8 +3618,8 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-marketing-surface)",
-      "@media (forced-colors: active)": "Canvas",
-      ":hover": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))"
+      "@media (forced-colors: active)": "ButtonFace",
+      ":hover": { "default": "color-mix(in oklch, var(--hraness-marketing-ink) 6%, var(--hraness-marketing-surface))", "@media (forced-colors: active)": "ButtonFace" }
     },
     "background-image": {
       "default": "none",
@@ -3658,7 +3658,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-ink)",
-      "@media (forced-colors: active)": "CanvasText"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -3728,10 +3728,10 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-      "@media (forced-colors: active)": "CanvasText",
+      "@media (forced-colors: active)": "ButtonFace",
       ":hover": {
         "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-        "@media (forced-colors: active)": "CanvasText"
+        "@media (forced-colors: active)": "ButtonFace"
       }
     },
     "background-image": {
@@ -3779,7 +3779,7 @@ export const marketingStyles = stylex.create({
     },
     "color": {
       "default": "var(--hraness-marketing-accent-ink)",
-      "@media (forced-colors: active)": "Canvas"
+      "@media (forced-colors: active)": "ButtonText"
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -3849,10 +3849,10 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-      "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)",
+      "@media (forced-colors: active)": "ButtonFace",
       ":hover": {
         "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-        "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)"
+        "@media (forced-colors: active)": "ButtonFace"
       }
     },
     "background-image": {
@@ -3899,8 +3899,9 @@ export const marketingStyles = stylex.create({
       }
     },
     "color": {
+      "@media (forced-colors: active)": "ButtonText",
       "default": "var(--hraness-marketing-accent)",
-      ":hover": "var(--hraness-marketing-accent)"
+      ":hover": { "default": "var(--hraness-marketing-accent)", "@media (forced-colors: active)": "ButtonText" }
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -3923,19 +3924,19 @@ export const marketingStyles = stylex.create({
     "padding": "0.6rem 1.1rem",
     "border-top": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-right": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-bottom": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-left": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -3959,8 +3960,9 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
+      "@media (forced-colors: active)": "ButtonFace",
       "default": "transparent",
-      ":hover": "transparent"
+      ":hover": { "default": "transparent", "@media (forced-colors: active)": "ButtonFace" }
     },
     "background-image": {
       "default": "none",
@@ -3991,8 +3993,9 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "color": {
+      "@media (forced-colors: active)": "ButtonText",
       "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
+      ":hover": { "default": "var(--hraness-marketing-accent-ink)", "@media (forced-colors: active)": "ButtonText" }
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -4074,10 +4077,10 @@ export const marketingStyles = stylex.create({
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
       "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-      "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)",
+      "@media (forced-colors: active)": "ButtonFace",
       ":hover": {
         "default": "var(--hraness-foil-surface, var(--surface, var(--background, Canvas)))",
-        "@media (forced-colors: active)": "var(--hraness-marketing-accent-ink)"
+        "@media (forced-colors: active)": "ButtonFace"
       }
     },
     "background-image": {
@@ -4124,8 +4127,9 @@ export const marketingStyles = stylex.create({
       }
     },
     "color": {
+      "@media (forced-colors: active)": "ButtonText",
       "default": "var(--hraness-marketing-accent)",
-      ":hover": "var(--hraness-marketing-accent)"
+      ":hover": { "default": "var(--hraness-marketing-accent)", "@media (forced-colors: active)": "ButtonText" }
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",
@@ -4148,19 +4152,19 @@ export const marketingStyles = stylex.create({
     "padding": "0.6rem 1.1rem",
     "border-top": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-right": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-bottom": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-left": {
       "default": "1px solid var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
+      "@media (forced-colors: active)": "1px solid ButtonText"
     },
     "border-image-source": {
       "default": "none",
@@ -4184,8 +4188,9 @@ export const marketingStyles = stylex.create({
     },
     "border-radius": "var(--hraness-marketing-radius)",
     "background-color": {
+      "@media (forced-colors: active)": "ButtonFace",
       "default": "transparent",
-      ":hover": "transparent"
+      ":hover": { "default": "transparent", "@media (forced-colors: active)": "ButtonFace" }
     },
     "background-image": {
       "default": "none",
@@ -4216,8 +4221,9 @@ export const marketingStyles = stylex.create({
       ":hover": "scroll"
     },
     "color": {
+      "@media (forced-colors: active)": "ButtonText",
       "default": "var(--hraness-marketing-accent-ink)",
-      ":hover": "var(--hraness-marketing-accent-ink)"
+      ":hover": { "default": "var(--hraness-marketing-accent-ink)", "@media (forced-colors: active)": "ButtonText" }
     },
     "font-family": "var(--hraness-marketing-text-font)",
     "font-size": "0.95rem",

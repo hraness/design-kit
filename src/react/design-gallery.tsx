@@ -920,7 +920,7 @@ export function DesignSystemGallery({
           <ProceduralBackdrop seed="public-gallery" variant="composite" />
           <div className="design-gallery__effect-copy">
             <h3>Semantic content stays ordinary DOM</h3>
-            <p>Decorative paint is pointer-transparent and removable in forced colors.</p>
+            <p>Decorative paint is pointer-transparent and removable in forced colors. Marketing actions use system button colors so their labels stay readable.</p>
           </div>
         </div>
       </section>

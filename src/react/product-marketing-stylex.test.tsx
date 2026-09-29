@@ -209,7 +209,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("d271d26878f0f1ba6f35bdae2f58eb047a0e7bb346643fc42cfb5ca356c95894");
+    .toBe("623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -355,21 +355,20 @@ test("the public collector compiles native logical edges, backgrounds, media, an
     const forcedHoverBackground = recipeRules(recipe).filter((rule) => rule.includes(":hover")
       && rule.includes("forced-colors") && rule.includes("background-color:"));
     expect(forcedHoverBackground).toHaveLength(1);
-    expect(forcedHoverBackground[0]).toMatch(/background-color:\s*CanvasText/iu);
+    expect(forcedHoverBackground[0]).toMatch(/background-color:\s*ButtonFace/iu);
   }
-  for (const recipe of [marketingStyles.heroActionSecondary,
-    marketingStyles.ctaActionSecondary, marketingStyles.hero__eyebrowAccent]) {
+  for (const recipe of [marketingStyles.hero__eyebrowAccent]) {
     const backgrounds = recipeRules(recipe).filter((rule) => rule.includes("background-"));
     expect(backgrounds.length).toBeGreaterThan(0);
     expect(backgrounds.join("")).not.toContain("forced-colors");
   }
-  // Accent-tone primaries keep their accent face under forced colors while the
-  // shared foil edge flattens to the system palette.
-  for (const recipe of [marketingStyles.heroActionPrimary, marketingStyles.ctaActionPrimary]) {
+  // Every accent action uses the system button palette under forced colors.
+  for (const recipe of [marketingStyles.heroActionPrimary, marketingStyles.ctaActionPrimary,
+    marketingStyles.heroActionSecondary, marketingStyles.ctaActionSecondary]) {
     const forced = recipeRules(recipe).filter((rule) => rule.includes("forced-colors")).join("");
-    expect(forced).toContain("background-color:var(--hraness-marketing-accent-ink)");
+    expect(forced).toContain("background-color:ButtonFace");
     expect(forced).toContain("ButtonText");
-    expect(forced).toContain("box-shadow:none");
+    expect(forced).toContain("color:ButtonText");
   }
   for (const side of ["top", "right", "bottom", "left"]) {
     expect(recipeRules(marketingStyles.planPrimary).join("")).toContain(`border-${side}-color:`);
