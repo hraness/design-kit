@@ -356,6 +356,8 @@ assertLaunchKit(beats, kit, { status: "Preview", publicInstall: false, canonical
 
 Draw the visuals with `@hraness/design-kit/mockups` and load `@hraness/design-kit/mockups.css`. Build the social kit only once the post is `indexable`. Product tests can run the checks from `@hraness/design-kit/testing`, such as `blogConformance` for the blog and `assertRoleImgWithLabel` for each mockup. See [ARTICLE_COPY.md](ARTICLE_COPY.md) for the beat rules.
 
+Hraness product sites run the whole launch with the `product-launch` agent skill: mockups, the post, the social kit, the launch film, and comparison pages. It also lists the checks to run before you publish.
+
 ### Share product facts
 
 `@hraness/design-kit/portfolio` holds the public facts about Hraness products: each product's name, one-liner, canonical URL, status, and other names, plus the registered relations between products. It is a snapshot generated from one commit of the portfolio registry, recorded in `portfolioProvenance`, and it renders nothing.
