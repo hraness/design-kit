@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import { mockupFixtureHandles, mockupFixtures, MockupsFixture } from "../../gallery/mockups-fixture.js";
-import { assertFakeHandles, assertNoHeadings, assertRoleImgWithLabel, renderMatrix, stripMockupSamples } from "../testing.js";
+import { assertFakeHandles, assertNoHeadings, assertRoleImgWithLabel, htmlText, renderMatrix, stripMockupSamples } from "../testing.js";
 import * as clientApi from "./client.js";
 import * as api from "./index.js";
 
@@ -156,8 +156,8 @@ describe("mockup copy details", () => {
     const work = renderToStaticMarkup(
       <api.WorkPost headline="Operations lead" name="Jonas Berg" reactions={[1, 1, 3]} text="One post." time="1d" />,
     );
-    expect(htmlTextOf(work)).toContain("1 reaction");
-    expect(htmlTextOf(work)).toContain("1 comment · 3 reposts");
+    expect(htmlText(work)).toContain("1 reaction");
+    expect(htmlText(work)).toContain("1 comment · 3 reposts");
   });
 
   test("an article byline is a name, not a sentence", () => {
@@ -170,7 +170,3 @@ describe("mockup copy details", () => {
     expect(markup).toContain('<div class="hkm-phone-body"><p>Today</p></div>');
   });
 });
-
-function htmlTextOf(markup: string): string {
-  return markup.replace(/<[^>]+>/gu, "").replace(/&#x27;/gu, "'");
-}

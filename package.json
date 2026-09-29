@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -214,6 +214,8 @@
     "src/styles.css",
     "src/syntax-highlighting.css",
     "src/syntax-highlighting.ts",
+    "src/syntax-code-lexers.ts",
+    "src/syntax-tokens.ts",
     "src/tokens.css",
     "src/typography.css",
     "vendor/evilcharts/LICENSE",

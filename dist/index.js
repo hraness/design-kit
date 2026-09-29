@@ -69,7 +69,7 @@ import {
   maximumSyntaxCharacters,
   resolveSyntaxLanguage,
   syntaxLanguages
-} from "./chunk-kspdf9ch.js";
+} from "./chunk-he8eznb1.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,

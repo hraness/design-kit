@@ -836,7 +836,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.27.0" },
+    { name: "@hraness/design-kit", version: "0.28.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -902,7 +902,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.27.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
+    "Design-kit v0.28.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -920,7 +920,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.27.0 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.28.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1204,7 +1204,7 @@ try {
     "node",
     "--input-type=module",
     "-e",
-    "const [, , , syntax] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')]); const output = syntax.highlightCode('const answer = 42;', 'typescript', { styles: 'classes' }); if (output.html.includes('style=') || !output.html.includes('sh__token--keyword')) throw new Error('Packed class-only syntax is unavailable');",
+    "const [, , , syntax] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/browser'), import('@hraness/design-kit/fonts/nebula-sans/social'), import('@hraness/design-kit/syntax-highlighting')]); const output = syntax.highlightCode('const answer = 42;', 'typescript', { styles: 'classes' }); if (output.html.includes('style=') || !output.html.includes('sh__token--keyword')) throw new Error('Packed class-only syntax is unavailable'); for (const language of ['rust', 'toml', 'yaml', 'lean', 'tla']) { const source = language === 'toml' ? 'enabled = true' : language === 'yaml' ? 'enabled: true' : language === 'tla' ? 'TRUE' : 'true'; const result = syntax.highlightCode(source, language, { styles: 'classes' }); if (result.language !== language || !result.html.includes('syntax-token--')) throw new Error('Packed language lexer unavailable: ' + language); }",
   ], neutralConsumer);
   await run([
     "node",
