@@ -34,3 +34,5 @@ export * from "./foil-mark.js";
 export * from "./provider-mark.js";
 export * from "./launch-beats.js";
 export * from "./social-kit-panel.js";
+export * from "./platform-icons.js";
+export * from "./platform-install.js";

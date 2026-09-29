@@ -62,7 +62,16 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-gqrdw8b6.js";
+} from "./chunk-7b1586eb.js";
+import {
+  detectPlatform,
+  isKnownPlatformId,
+  isPlatformId,
+  knownPlatformIds,
+  matchDetectedPlatform,
+  platformLabel,
+  platformMark
+} from "./chunk-wzvdn8ey.js";
 import {
   highlightCode,
   inferSyntaxLanguage,
@@ -144,6 +153,8 @@ export {
   providerMarkFallback,
   providerMarkArtDataUri,
   providerMark,
+  platformMark,
+  platformLabel,
   parseStatusPageRoutes,
   parseRelativeTimeInput,
   parseDesignPalettePreference,
@@ -155,7 +166,11 @@ export {
   normalizeDesignPalettePreference,
   motion,
   maximumSyntaxCharacters,
+  matchDetectedPlatform,
   layout,
+  knownPlatformIds,
+  isPlatformId,
+  isKnownPlatformId,
   isDesignTheme,
   isDesignPalette,
   isArticleIsoDate,
@@ -172,6 +187,7 @@ export {
   fontFallbacks,
   escapeArticleHtml,
   elevation,
+  detectPlatform,
   designThemes,
   designThemeStorageKey,
   designThemeLabel,

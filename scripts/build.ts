@@ -178,6 +178,7 @@ export async function buildPackage(
         join(sourceRoot, "react/charts.tsx"),
         join(sourceRoot, "react/index.ts"),
         join(sourceRoot, "react/hero-backdrop.tsx"),
+        join(sourceRoot, "react/platform-install.tsx"),
         join(sourceRoot, "react/server.ts"),
         join(sourceRoot, "syntax-highlighting.ts"),
         join(sourceRoot, "testing.ts"),
@@ -230,6 +231,7 @@ export async function buildPackage(
       join(outdir, "mockups/client.js"),
       join(outdir, "react/index.js"),
       join(outdir, "react/hero-backdrop.js"),
+      join(outdir, "react/platform-install.js"),
     ]);
     const directive = '"use client";\n';
     const directiveLine = /^"use client";\r?\n?/gmu;
