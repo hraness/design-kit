@@ -62,7 +62,14 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-rr7vkqtt.js";
+} from "./chunk-gqrdw8b6.js";
+import {
+  highlightCode,
+  inferSyntaxLanguage,
+  maximumSyntaxCharacters,
+  resolveSyntaxLanguage,
+  syntaxLanguages
+} from "./chunk-kspdf9ch.js";
 import {
   ARTICLE_ADMISSION_MINIMUM,
   ARTICLE_BYLINE_PREFIX,
@@ -82,23 +89,19 @@ import {
   articleReviewerNameDisclosesAi,
   articleReviewerTypes,
   articleScoreKeys,
+  articleVideoJsonLd,
   assertArticleAdmissions,
   assertArticleAuthor,
   assertArticleCalloutTone,
   assertArticleDates,
   assertArticleHref,
+  assertArticleVideo,
   formatArticleDate,
   isArticleIndexable,
   isArticleIsoDate,
+  orderedArticleVideoSources,
   parseArticleAdmissions
-} from "./chunk-zzq7bdj8.js";
-import {
-  highlightCode,
-  inferSyntaxLanguage,
-  maximumSyntaxCharacters,
-  resolveSyntaxLanguage,
-  syntaxLanguages
-} from "./chunk-kspdf9ch.js";
+} from "./chunk-77391vmq.js";
 import {
   providerMark,
   providerMarkArtDataUri,
@@ -146,6 +149,7 @@ export {
   parseDesignPalettePreference,
   parseArticleAdmissions,
   paletteColors,
+  orderedArticleVideoSources,
   normalizeStatusPath,
   normalizeDesignTheme,
   normalizeDesignPalettePreference,
@@ -183,11 +187,13 @@ export {
   chromeColors,
   breakpoints,
   auroraColors,
+  assertArticleVideo,
   assertArticleHref,
   assertArticleDates,
   assertArticleCalloutTone,
   assertArticleAuthor,
   assertArticleAdmissions,
+  articleVideoJsonLd,
   articleScoreKeys,
   articleReviewerTypes,
   articleReviewerNameDisclosesAi,

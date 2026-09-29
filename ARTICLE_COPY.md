@@ -25,15 +25,76 @@ Limits are maximums. Count characters in the rendered text.
 
 ### Introducing a product
 
-Title: "Introducing <product>". It lives on the product's own host, and each active product gets one.
+Title: "Introducing <product>". It lives on the product's own host, and each active product gets one. The reader's job is to decide whether to try it, so the admission record says `readerJob: "decide whether to try it"`.
+
+The post keeps five parts, written as beats:
 
 1. **What it is.** One plain sentence, then the problem it solves in the reader's terms, with one concrete case.
-2. **Who it is for.** The reader who has that problem, and who should use something else.
-3. **What it does today.** Only shipped behavior, shown with one real session, command, or screen. Say how to start.
+2. **What it does today.** Only shipped behavior. One beat per surface or mode, and only when that beat has its own visual.
+3. **How it works and who it is for.** How it works in the reader's terms, then the reader who has the problem and who should use something else.
 4. **The vision.** Where the product is going and why, stated as intent, not as a shipped feature or a date.
-5. **Honest limits and status.** What it does not do yet, and the status sentence.
+5. **Limits and status.** What it does not do yet, then the status sentence and how to get it.
 
 It explains the reason for the product. It does not repeat the feature grid on the home page. A paused product says so in the status sentence; a retired or legacy product gets no introduction.
+
+#### Beats
+
+A beat is one short section that makes one claim and shows one visual. Write 7 to 10 beats, about 40 to 60 words each, in this order:
+
+| Part | Beats | Write |
+| --- | --- | --- |
+| `what` | 1 | What the product does, stated plainly. No question, teaser, or "here's why". |
+| `does` | 1 or more | One surface or mode each, tied to one mockup state or clip. |
+| `how` | 1 | How it works, in the reader's terms. |
+| `who` | 1 | Who it is for, and who should use something else. |
+| `vision` | 1 | Where it is going, as intent. |
+| `limits` | 1 | What it does not do yet, once, at its true scope. |
+| `status` | 1 | The status label and how to get it. |
+
+- The hero holds the title, the registry `meta` as the dek, the status line from release data, and the film when there is one.
+- Each beat has a headline of 70 characters or fewer, in sentence case with no period, and a post of 250 characters or fewer that works on its own as one social post.
+- Each beat has exactly one visual, and no two beats share one. Alt text is 125 characters or fewer. A mockup is labelled as an illustration in its alt text and caption.
+- Render beats with `LaunchBeats` from `@hraness/design-kit/react`. Each beat gets a `#beat-<id>` anchor.
+- After the beats: "Go deeper" links named for the reader's next task, then the social kit, then sources and the drafting and review note.
+- Technical depth, comparisons with other products, and tables go in companion posts or `/compare` pages. Link them from the beat with `detailHref`.
+
+#### Launch data
+
+`@hraness/design-kit/launch` holds the shapes and checks. It has no React.
+
+```ts
+type LaunchBeat = {
+  id: string;              // lowercase slug, rendered as #beat-<id>
+  part: "what" | "does" | "how" | "who" | "vision" | "limits" | "status";
+  headline: string;        // may hold {fact} placeholders
+  post: string;            // may hold {fact} placeholders
+  visual:
+    | { kind: "mockup"; id: string; state: Record<string, string> }
+    | { kind: "clip"; scene: string }
+    | { kind: "diagram"; src: string };
+  alt: string;
+  facts?: string[];        // every placeholder key the beat uses
+  detailHref?: string;     // a companion post
+};
+
+type LaunchFacts = Record<string, { value: string; source: string }>;
+
+type SocialKit = {
+  x: string[];
+  bluesky: string[];
+  threads: string[];
+  linkedin: string;
+  productHunt: { tagline: string; description: string; tags: string[] };
+  showHnFacts: string[];   // facts for a person to write from
+  sources: Record<string, string>;
+};
+```
+
+- **Facts.** Type every number once, in the product's `LaunchFacts` module, with its source: versions, sizes, rates, counts, and prices. The post, the social kit, film captions, and store listings all import it. `resolveLaunchBeats(beats, facts)` fills `{key}` placeholders and rejects a beat that types a digit by hand.
+- **Checks.** `assertLaunchBeats(beats)` checks the order, the counts, the limits, and the wording rules. `buildSocialKit(beats, messaging, release, canonicalUrl)` builds each channel's posts from the beats, the Product Hunt fields from portfolio messaging, and the status from the release record. `assertLaunchKit(beats, kit, options)` checks each channel's length. It also checks that only the last post links, that the last post carries the status and the canonical URL without tracking parameters, that nothing asks the reader to install before a public install exists, and that no other product is named.
+- **Social kit.** Build it only from an `indexable` post. A quarantined post has no social kit. Render it with `SocialKitPanel`, a closed `<details>` with a copy button and a character count per post. A person writes the Show HN post and the first Product Hunt comment; the kit gives them the facts.
+- **Words.** Social posts follow the rules below, plus: no hashtags, no emoji, and no thread markers such as "1/n".
+- **Admission.** A launch post passes the same admission gate as every other article. The launch helpers do not change it.
 
 ### How one product uses another
 
@@ -74,6 +135,7 @@ A technique post teaches one method, such as property tests, model checking, or 
 - Do not use these words: delve, tapestry, testament, landscape (for a market), realm, seamless, seamlessly, robust (without the specific property), leverage (as a verb), unlock, empower, elevate, supercharge, game-changer, cutting-edge, revolutionize, harness (as a verb), journey (for a process), and "in today's world".
 - Keep internal vocabulary out of articles: admission, admitted, qualification, qualified, custody, settlement, receipt, attest, bounded, boundary, gate, lane, surface, projection, manifest, lease, and the other words `STYLE.md` lists under "Write for the reader, not the build". A technique post may define one of these once when it is the subject.
 - Do not invent numbers, benchmarks, quotes, customers, or dates. Every number has a source or a date in the text. Every quote has a named person who agreed to it.
+- Type each number once. Versions, sizes, rates, counts, and prices in a launch post come from the product's launch facts, not from the article text.
 - State product status once with one of the `STYLE.md` labels: In development, Preview, Beta, Latest release: vX.Y.Z, Paused, or Retired.
 
 ## Dual-use products

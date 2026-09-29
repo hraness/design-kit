@@ -599,3 +599,88 @@ export function parseArticleAdmissions(value: unknown): readonly ArticleAdmissio
   assertArticleAdmissions(value);
   return value;
 }
+
+/** One encoding of an article video. List WebM before MP4 so browsers that play both take the smaller file. */
+export type ArticleVideoSource = Readonly<{ src: string; type: "video/webm" | "video/mp4" }>;
+
+export type ArticleVideoRecord = Readonly<{
+  /** Plain name of the recording, used as the VideoObject name. */
+  name: string;
+  /** One or two sentences on what the recording shows. */
+  description: string;
+  sources: readonly ArticleVideoSource[];
+  poster: string;
+  /** A WebVTT captions file. Every article video has one. */
+  captions: string;
+  captionsLanguage?: string;
+  width: number;
+  height: number;
+  /** ISO 8601 duration, such as `PT48S`. */
+  duration: `PT${string}`;
+  uploadDate: ArticleIsoDate;
+}>;
+
+const VIDEO_TYPE_ORDER = { "video/webm": 0, "video/mp4": 1 } as const;
+
+/** Throws unless the video has sources, a poster, captions, a size, and a duration. */
+export function assertArticleVideo(video: ArticleVideoRecord): void {
+  if (video.name.trim() === "") throw new RangeError("Article video needs a name.");
+  if (video.description.trim() === "") throw new RangeError("Article video needs a description.");
+  if (video.sources.length === 0) throw new RangeError("Article video needs at least one source.");
+  const types = new Set<string>();
+  for (const source of video.sources) {
+    assertArticleHref(source.src);
+    if (!Object.hasOwn(VIDEO_TYPE_ORDER, source.type)) throw new RangeError(`Unsupported article video type: ${String(source.type)}.`);
+    if (types.has(source.type)) throw new RangeError(`Article video lists ${source.type} twice.`);
+    types.add(source.type);
+  }
+  assertArticleHref(video.poster);
+  assertArticleHref(video.captions);
+  if (!/\.vtt(?:[?#]|$)/u.test(video.captions)) throw new RangeError("Article video captions must be a WebVTT file.");
+  for (const [key, value] of [["width", video.width], ["height", video.height]] as const) {
+    if (!Number.isInteger(value) || value <= 0) throw new RangeError(`Article video ${key} must be a positive integer.`);
+  }
+  if (!/^PT(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d+)?S)?$/u.test(video.duration) || video.duration === "PT") {
+    throw new RangeError(`Article video duration must be an ISO 8601 time duration such as PT48S; received ${video.duration}.`);
+  }
+  if (!isArticleIsoDate(video.uploadDate)) throw new RangeError("Article video uploadDate must be an ISO date.");
+}
+
+/** Sources in playback preference order: WebM, then MP4. */
+export function orderedArticleVideoSources(video: Pick<ArticleVideoRecord, "sources">): readonly ArticleVideoSource[] {
+  return video.sources.toSorted((a, b) => VIDEO_TYPE_ORDER[a.type] - VIDEO_TYPE_ORDER[b.type]);
+}
+
+const HTTP_ORIGIN = /^https?:\/\/[^/?#\s]+$/iu;
+const ABSOLUTE_HTTP = /^https?:\/\/[^/?#\s]+/iu;
+
+// String joins keep this module free of the DOM and Node URL globals.
+function absoluteArticleUrl(href: string, origin: string): string {
+  if (ABSOLUTE_HTTP.test(href)) return href;
+  if (href.startsWith("//")) throw new RangeError(`Article video paths must not be protocol-relative: ${href}`);
+  return href.startsWith("/") ? `${origin}${href}` : `${origin}/${href}`;
+}
+
+/**
+ * A schema.org VideoObject for an article video. Nest it as the `video`
+ * property of the article's JSON-LD. `origin` makes relative media paths absolute.
+ */
+export function articleVideoJsonLd(video: ArticleVideoRecord, origin: string): Readonly<Record<string, unknown>> {
+  assertArticleVideo(video);
+  if (!HTTP_ORIGIN.test(origin.replace(/\/$/u, ""))) throw new RangeError("articleVideoJsonLd needs an http or https origin.");
+  origin = origin.replace(/\/$/u, "");
+  const sources = orderedArticleVideoSources(video);
+  return Object.freeze({
+    "@type": "VideoObject",
+    name: video.name,
+    description: video.description,
+    thumbnailUrl: absoluteArticleUrl(video.poster, origin),
+    contentUrl: absoluteArticleUrl(sources.at(-1)?.src ?? "", origin),
+    encodingFormat: sources.at(-1)?.type,
+    uploadDate: video.uploadDate,
+    duration: video.duration,
+    width: video.width,
+    height: video.height,
+    caption: absoluteArticleUrl(video.captions, origin),
+  });
+}

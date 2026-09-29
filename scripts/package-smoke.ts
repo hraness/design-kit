@@ -804,6 +804,7 @@ const compilerStylesheetPaths = [
   "src/effects.css",
   "src/fonts.css",
   "src/lantern-material.css",
+  "src/mockups.css",
   "src/palette-bridge.css",
   "src/palette-system.css",
   "src/palettes.css",
@@ -835,7 +836,7 @@ function requireDesignKitManifest(
   assert.equal(manifest.kind, "hraness-stylex-package-manifest");
   assert.deepEqual(
     manifest.package,
-    { name: "@hraness/design-kit", version: "0.26.0" },
+    { name: "@hraness/design-kit", version: "0.27.0" },
     `${label} package identity changed`,
   );
   assert.equal(manifest.schemaVersion, STYLEX_PACKAGE_MANIFEST_SCHEMA_VERSION);
@@ -901,7 +902,7 @@ if (!immutableUiRelease.test(uiDevelopmentSpecifier)
 }
 if (uiDevelopmentSpecifier !== "github:hraness/ui#v0.5.17") {
   throw new Error(
-    "Design-kit v0.26.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
+    "Design-kit v0.27.0 must build and publish against the immutable @hraness/ui v0.5.17 release.",
   );
 }
 if (process.argv.includes("--publication")) {
@@ -919,7 +920,7 @@ const uiPeerRange = stringField(
   "package.json peerDependencies",
 );
 if (uiPeerRange !== ">=0.5.16 <0.6.0") {
-  throw new Error("Design-kit v0.26.0 must declare the exact @hraness/ui v0.5 peer range.");
+  throw new Error("Design-kit v0.27.0 must declare the exact @hraness/ui v0.5 peer range.");
 }
 if (stringField(rootDependencies, "@stylexjs/stylex", "package.json dependencies") !== "0.19.0") {
   throw new Error("The StyleX authoring/runtime dependency must be pinned to 0.19.0.");
@@ -1314,6 +1315,21 @@ try {
     "--ignore-scripts",
   ], consumer);
   await run([process.execPath, "add", archive, "--ignore-scripts"], consumer);
+  await run([
+    "node",
+    "--input-type=module",
+    "-e",
+    [
+      "import { createElement } from 'react';",
+      "import { renderToStaticMarkup } from 'react-dom/server';",
+      "const [mockups, launch, testing] = await Promise.all([import('@hraness/design-kit/mockups'), import('@hraness/design-kit/launch'), import('@hraness/design-kit/testing')]);",
+      "const html = renderToStaticMarkup(createElement(mockups.TerminalFrame, { describe: 'Illustration of a terminal running one command.', lines: [{ kind: 'input', text: 'relay run' }] }));",
+      "testing.assertRoleImgWithLabel(html, 'Packed TerminalFrame'); testing.assertNoHeadings(html, 'Packed TerminalFrame');",
+      "if (!html.includes('hkm-')) throw new Error('Packed mockups lost their hkm class contract.');",
+      "if (typeof launch.buildSocialKit !== 'function' || typeof launch.assertLaunchKit !== 'function' || typeof testing.blogConformance !== 'function') throw new Error('Packed launch or testing exports are unavailable.');",
+      "const client = await import('@hraness/design-kit/mockups/client'); if (typeof client.ModeShowcase !== 'function' || typeof client.FitToWidth !== 'function' || typeof client.StepThrough !== 'function') throw new Error('Packed mockup client exports are unavailable.');",
+    ].join(" "),
+  ], consumer);
   await run([
     "node",
     "--input-type=module",

@@ -1229,6 +1229,36 @@ export const marketingStyles = stylex.create({
   "proof_frame__credit": {
     "font-size": "0.78rem"
   },
+  "proof_frame__title_mono": {
+    "flex": "1 1 auto",
+    "overflow": "hidden",
+    "font-family": "var(--hraness-marketing-mono-font)",
+    "text-align": "center",
+    "text-overflow": "ellipsis",
+    "white-space": "nowrap"
+  },
+  "proof_frame__address": {
+    "flex": "0 1 32rem",
+    "min-inline-size": "0",
+    "margin-inline": "auto",
+    "padding": "0.3rem 0.85rem",
+    "overflow": "hidden",
+    "border-radius": "999px",
+    "background-color": {
+      "default": "color-mix(in srgb, var(--hraness-marketing-ink) 6%, transparent)",
+      "@media (forced-colors: active)": "Canvas"
+    },
+    "outline": {
+      "default": "none",
+      "@media (forced-colors: active)": "1px solid CanvasText"
+    },
+    "color": "var(--hraness-marketing-muted)",
+    "font-family": "var(--hraness-marketing-mono-font)",
+    "font-size": "0.74rem",
+    "text-align": "center",
+    "text-overflow": "ellipsis",
+    "white-space": "nowrap"
+  },
   "data_table": {
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",
@@ -4254,7 +4284,8 @@ const recipes = {
   "hraness-marketing-proof-frame__chrome": { "default": marketingStyles.proof_frame__chrome },
   "hraness-marketing-proof-frame__lights": { "default": marketingStyles.proof_frame__lights },
   "hraness-marketing-proof-frame__light": { "default": marketingStyles.proof_frame__light },
-  "hraness-marketing-proof-frame__title": { "default": marketingStyles.proof_frame__title },
+  "hraness-marketing-proof-frame__title": { "default": marketingStyles.proof_frame__title, "terminal": marketingStyles.proof_frame__title_mono },
+  "hraness-marketing-proof-frame__address": { "default": marketingStyles.proof_frame__address },
   "hraness-marketing-proof-frame__content": { "default": marketingStyles.proof_frame__content },
   "hraness-marketing-proof-frame__caption": { "default": marketingStyles.proof_frame__caption },
   "hraness-marketing-proof-frame__credit": { "default": marketingStyles.proof_frame__credit },

@@ -34,6 +34,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/effects.css",
   "src/fonts.css",
   "src/lantern-material.css",
+  "src/mockups.css",
   "src/palette-bridge.css",
   "src/palette-system.css",
   "src/palettes.css",
@@ -164,6 +165,11 @@ export async function buildPackage(
         join(sourceRoot, "index.ts"),
         join(sourceRoot, "fonts/nebula-sans/social-fonts.generated.ts"),
         join(sourceRoot, "icons.ts"),
+        join(sourceRoot, "launch.ts"),
+        // Mockups stay plain React with no StyleX, so film builds and plain
+        // Bun scripts can import them without a bundler or a client boundary.
+        join(sourceRoot, "mockups/index.ts"),
+        join(sourceRoot, "mockups/client.tsx"),
         join(sourceRoot, "portfolio.ts"),
         join(sourceRoot, "provider-marks.ts"),
         // Keep the optional chart runtime behind its own split boundary. This
@@ -174,6 +180,7 @@ export async function buildPackage(
         join(sourceRoot, "react/hero-backdrop.tsx"),
         join(sourceRoot, "react/server.ts"),
         join(sourceRoot, "syntax-highlighting.ts"),
+        join(sourceRoot, "testing.ts"),
       ],
       define: {
         "process.env.NODE_ENV": JSON.stringify("production"),
@@ -215,10 +222,15 @@ export async function buildPackage(
       throw: false,
     });
     requireBuildSuccess(browserResult, "Browser package build");
+
     const rules = collector.seal();
     assert.ok(rules.length > 0, "Package build collected no StyleX rules");
 
-    const clientEntries = new Set([join(outdir, "react/index.js"), join(outdir, "react/hero-backdrop.js")]);
+    const clientEntries = new Set([
+      join(outdir, "mockups/client.js"),
+      join(outdir, "react/index.js"),
+      join(outdir, "react/hero-backdrop.js"),
+    ]);
     const directive = '"use client";\n';
     const directiveLine = /^"use client";\r?\n?/gmu;
     for (const relativePath of (await filesBelow(outdir)).filter((path) => path.endsWith(".js"))) {

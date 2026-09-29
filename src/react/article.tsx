@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
   ARTICLE_BYLINE_PREFIX,
   ARTICLE_SOURCES_HEADING,
@@ -8,7 +8,9 @@ import {
   assertArticleCalloutTone,
   assertArticleDates,
   assertArticleHref,
+  assertArticleVideo,
   formatArticleDate,
+  orderedArticleVideoSources,
   type ArticleAuthor,
   type ArticleCalloutTone,
   type ArticleIndexItem,
@@ -16,6 +18,7 @@ import {
   type ArticleProvenanceRecord,
   type ArticleSourceItem,
   type ArticleTocItem,
+  type ArticleVideoRecord,
 } from "../article.js";
 import {
   MarketingRelated,
@@ -295,5 +298,305 @@ export function ArticleIndex({
         ))}
       </div>
     </section>
+  );
+}
+
+/** What an article visual is. The label opens the caption so readers can tell a mockup from a screenshot. */
+export const articleFigureKinds = ["illustration", "screenshot", "recording", "diagram", "chart", "table"] as const;
+export type ArticleFigureKind = (typeof articleFigureKinds)[number];
+
+const FIGURE_LABELS: Readonly<Record<ArticleFigureKind, string>> = {
+  illustration: "Illustration",
+  screenshot: "Screenshot",
+  recording: "Recording",
+  diagram: "Diagram",
+  chart: "Chart",
+  table: "Table",
+};
+
+function FigureCaption({ caption, credit, kind }: Readonly<{ caption: ReactNode; credit?: ReactNode; kind: ArticleFigureKind }>) {
+  return (
+    <figcaption className="plain-publication__figure-caption">
+      <span className="plain-publication__figure-label">{FIGURE_LABELS[kind]}.</span>{" "}
+      {caption}
+      {credit === undefined || credit === null || credit === "" ? null : <small className="plain-publication__figure-credit">{credit}</small>}
+    </figcaption>
+  );
+}
+
+/**
+ * A labelled figure in the article body. The caption opens with the kind,
+ * such as "Illustration." for a code-built mockup, so an invented screen is
+ * never mistaken for a screenshot. `width="wide"` lets the figure extend past
+ * the text measure on wide screens.
+ */
+export function ArticleFigure({
+  caption,
+  children,
+  className,
+  credit,
+  id,
+  kind,
+  width = "text",
+}: Readonly<{
+  caption: ReactNode;
+  children: ReactNode;
+  className?: string;
+  credit?: ReactNode;
+  id?: string;
+  kind: ArticleFigureKind;
+  width?: "text" | "wide";
+}>) {
+  if (!articleFigureKinds.includes(kind)) throw new RangeError(`Unknown article figure kind: ${String(kind)}.`);
+  if (caption === undefined || caption === null || caption === "") throw new RangeError("Article figures need a caption.");
+  return (
+    <figure className={joinClasses("plain-publication__figure", className)} data-figure-kind={kind} data-width={width} id={id}>
+      <div className="plain-publication__figure-body">{children}</div>
+      <FigureCaption caption={caption} credit={credit} kind={kind} />
+    </figure>
+  );
+}
+
+/**
+ * A captioned article recording with WebM and MP4 sources, a poster, and a
+ * captions track. It never autoplays. Pair it with `articleVideoJsonLd()` in
+ * the page's JSON-LD.
+ */
+export function ArticleVideo({
+  caption,
+  className,
+  credit,
+  id,
+  video,
+  width = "text",
+}: Readonly<{
+  caption: ReactNode;
+  className?: string;
+  credit?: ReactNode;
+  id?: string;
+  video: ArticleVideoRecord;
+  width?: "text" | "wide";
+}>) {
+  assertArticleVideo(video);
+  return (
+    <ArticleFigure caption={caption} className={joinClasses("plain-publication__video", className)} credit={credit} kind="recording" width={width} {...(id === undefined ? {} : { id })}>
+      <video
+        aria-label={video.name}
+        controls
+        height={video.height}
+        playsInline
+        poster={video.poster}
+        preload="metadata"
+        width={video.width}
+      >
+        {orderedArticleVideoSources(video).map((source) => <source key={source.type} src={source.src} type={source.type} />)}
+        <track default kind="captions" label="Captions" src={video.captions} srcLang={video.captionsLanguage ?? "en"} />
+      </video>
+    </ArticleFigure>
+  );
+}
+
+export interface ArticleTableColumn {
+  readonly label: string;
+  /** Right-aligns the column with tabular figures. */
+  readonly numeric?: boolean;
+}
+
+/**
+ * A captioned data table. The first column heads each row, and the table
+ * scrolls inside the measure on narrow screens instead of widening the page.
+ */
+export function ArticleTable({
+  caption,
+  className,
+  columns,
+  id,
+  note,
+  rows,
+}: Readonly<{
+  caption: string;
+  className?: string;
+  columns: readonly ArticleTableColumn[];
+  id?: string;
+  /** Scope or source of the numbers, under the table. */
+  note?: ReactNode;
+  rows: readonly (readonly ReactNode[])[];
+}>) {
+  if (columns.length === 0) throw new RangeError("Article table needs at least one column.");
+  if (caption.trim() === "") throw new RangeError("Article table needs a caption.");
+  for (const row of rows) if (row.length !== columns.length) throw new RangeError("Article table rows must match the column count.");
+  return (
+    <figure className={joinClasses("plain-publication__figure plain-publication__data-table", className)} data-figure-kind="table" id={id}>
+      <div className="plain-publication__table-scroll" role="region" aria-label={caption} tabIndex={0}>
+        <table className="plain-publication__table">
+          <caption>{caption}</caption>
+          <thead>
+            <tr>
+              {columns.map((column, index) => <th data-numeric={column.numeric === true ? "" : undefined} key={index} scope="col">{column.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {row.map((cell, cellIndex) => cellIndex === 0
+                  ? <th key={cellIndex} scope="row">{cell}</th>
+                  : <td data-numeric={columns[cellIndex]?.numeric === true ? "" : undefined} key={cellIndex}>{cell}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {note === undefined || note === null ? null : <p className="plain-publication__figure-note">{note}</p>}
+    </figure>
+  );
+}
+
+export type ArticleBarDatum = Readonly<{
+  label: string;
+  value: number;
+  /** The value as readers see it, such as "1.2 s" or "38%". Take it from the facts module. */
+  display: string;
+  /** Draws this bar in the accent color. */
+  highlight?: boolean;
+}>;
+
+/**
+ * A horizontal bar chart drawn with CSS: no script, no canvas, and every value
+ * written out, so it reads the same to screen readers and in forced colors.
+ * Bars scale to `max` or the largest value.
+ */
+export function ArticleBarChart({
+  caption,
+  className,
+  credit,
+  data,
+  id,
+  max,
+}: Readonly<{
+  caption: ReactNode;
+  className?: string;
+  credit?: ReactNode;
+  data: readonly ArticleBarDatum[];
+  id?: string;
+  max?: number;
+}>) {
+  if (data.length === 0) throw new RangeError("Article bar chart needs at least one bar.");
+  for (const datum of data) {
+    if (!Number.isFinite(datum.value) || datum.value < 0) throw new RangeError(`Article bar chart value for ${JSON.stringify(datum.label)} must be a finite number of at least 0.`);
+    if (datum.display.trim() === "" || datum.label.trim() === "") throw new RangeError("Article bar chart bars need a label and a display value.");
+  }
+  const ceiling = max ?? Math.max(...data.map((datum) => datum.value));
+  if (!Number.isFinite(ceiling) || ceiling <= 0) throw new RangeError("Article bar chart max must be greater than 0.");
+  for (const datum of data) if (datum.value > ceiling) throw new RangeError(`Article bar chart value for ${JSON.stringify(datum.label)} exceeds max.`);
+  return (
+    <ArticleFigure caption={caption} className={joinClasses("plain-publication__bar-chart", className)} credit={credit} kind="chart" {...(id === undefined ? {} : { id })}>
+      <dl className="plain-publication__bars">
+        {data.map((datum) => (
+          <div className="plain-publication__bar" data-highlight={datum.highlight === true ? "" : undefined} key={datum.label}>
+            <dt>{datum.label}</dt>
+            <dd>
+              <span aria-hidden="true" className="plain-publication__bar-track">
+                <span className="plain-publication__bar-fill" style={{ "--plain-bar": `${Math.round((datum.value / ceiling) * 10000) / 100}%` } as CSSProperties} />
+              </span>
+              <span className="plain-publication__bar-value">{datum.display}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </ArticleFigure>
+  );
+}
+
+/** A comparison cell: yes, no, partly, or a short note. */
+export type ComparisonValue = boolean | "partial" | Readonly<{ text: string }>;
+
+export type ComparisonRow = Readonly<{
+  label: string;
+  /** One value per option, in column order. */
+  values: readonly ComparisonValue[];
+  /** A footnote shown under the label. */
+  note?: string;
+}>;
+
+const COMPARISON_TEXT = { yes: "Yes", no: "No", partial: "Partly" } as const;
+
+function ComparisonGlyph({ kind }: Readonly<{ kind: "yes" | "no" | "partial" }>) {
+  const path = kind === "yes" ? "M3.5 8.5l3 3 6-7" : kind === "no" ? "M4.5 4.5l7 7m0-7l-7 7" : "M4 8h8";
+  return (
+    <svg aria-hidden="true" className="plain-publication__comparison-glyph" focusable="false" height="16" viewBox="0 0 16 16" width="16">
+      <path d={path} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" />
+    </svg>
+  );
+}
+
+function ComparisonCell({ value }: Readonly<{ value: ComparisonValue }>) {
+  if (typeof value === "object") return <>{value.text}</>;
+  const kind = value === true ? "yes" : value === false ? "no" : "partial";
+  return (
+    <span className="plain-publication__comparison-value" data-value={kind}>
+      <ComparisonGlyph kind={kind} />
+      <span>{COMPARISON_TEXT[kind]}</span>
+    </span>
+  );
+}
+
+/**
+ * A feature comparison with check, cross, and partial icons. Each icon keeps
+ * its word beside it, so meaning never rests on the glyph or its color.
+ * Name options plainly; comparisons with named competitors belong on
+ * comparison pages, not launch posts.
+ */
+export function ComparisonTable({
+  caption,
+  className,
+  highlight,
+  id,
+  note,
+  options,
+  rows,
+}: Readonly<{
+  caption: string;
+  className?: string;
+  /** Index of the option column to emphasize. */
+  highlight?: number;
+  id?: string;
+  note?: ReactNode;
+  options: readonly string[];
+  rows: readonly ComparisonRow[];
+}>) {
+  if (options.length === 0) throw new RangeError("Comparison table needs at least one option.");
+  if (caption.trim() === "") throw new RangeError("Comparison table needs a caption.");
+  if (highlight !== undefined && (!Number.isInteger(highlight) || highlight < 0 || highlight >= options.length)) {
+    throw new RangeError("Comparison table highlight must be an option index.");
+  }
+  for (const row of rows) if (row.values.length !== options.length) throw new RangeError(`Comparison row ${JSON.stringify(row.label)} must have one value per option.`);
+  return (
+    <figure className={joinClasses("plain-publication__figure plain-publication__comparison", className)} data-figure-kind="table" id={id}>
+      <div className="plain-publication__table-scroll" role="region" aria-label={caption} tabIndex={0}>
+        <table className="plain-publication__table">
+          <caption>{caption}</caption>
+          <thead>
+            <tr>
+              <td />
+              {options.map((option, index) => <th data-highlight={index === highlight ? "" : undefined} key={option} scope="col">{option}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.label}>
+                <th scope="row">
+                  {row.label}
+                  {row.note === undefined || row.note === "" ? null : <small className="plain-publication__comparison-note">{row.note}</small>}
+                </th>
+                {row.values.map((value, index) => (
+                  <td data-highlight={index === highlight ? "" : undefined} key={index}><ComparisonCell value={value} /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {note === undefined || note === null ? null : <p className="plain-publication__figure-note">{note}</p>}
+    </figure>
   );
 }

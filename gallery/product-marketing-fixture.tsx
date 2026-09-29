@@ -15,7 +15,11 @@ export const productMarketingCoverage = [
   ["MarketingFacts", ".hraness-marketing-facts", 5],
   ["MarketingPillars", ".hraness-marketing-pillars", 1],
   ["MarketingInstallPanel", ".hraness-marketing-install", 1],
-  ["MarketingProofFrame", ".hraness-marketing-proof-frame", 6],
+  ["MarketingProofFrame", ".hraness-marketing-proof-frame", 8],
+  ["window chrome", '.hraness-marketing-proof-frame[data-chrome="window"]', 4],
+  ["browser chrome", '.hraness-marketing-proof-frame[data-chrome="browser"]', 1],
+  ["browser address", ".hraness-marketing-proof-frame__address", 1],
+  ["terminal chrome", '.hraness-marketing-proof-frame[data-chrome="terminal"]', 1],
   ["MarketingDataTable", ".hraness-marketing-data-table", 1],
   ["data table column head", ".hraness-marketing-data-table__heading", 3],
   ["data table row heading", ".hraness-marketing-data-table__row-heading", 3],
@@ -63,7 +67,7 @@ export const productMarketingCoverage = [
 
 export const productMarketingConsumerCoverage = [
   "brand-svg", "proof-pre-paper-center", "proof-pre-paper-start", "proof-pre-accent-center", "proof-pre-accent-start",
-  "proof-image", "proof-video", "install-pre", "install-code",
+  "proof-image", "proof-video", "proof-browser", "proof-terminal", "install-pre", "install-code",
   "section-first-stack", "section-last-stack", "section-link-stack", "section-code-stack",
   "section-first-split", "section-last-split", "section-link-split", "section-code-split",
   "section-first-split-reverse", "section-last-split-reverse", "section-link-split-reverse", "section-code-split-reverse",
@@ -108,6 +112,8 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
           summary="One owned job across interfaces." tone={tone} />
       )))}
       <MarketingProofFrame caption="Image content."><img data-marketing-oracle="proof-image" alt="A square fixture" width={120} height={60} src="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%2760%27%3E%3Crect width=%27120%27 height=%2760%27 fill=%27%23555%27/%3E%3C/svg%3E" /></MarketingProofFrame>
+      <MarketingProofFrame caption="Browser chrome." chrome="browser" url="https://relay.example/runs/job-01"><p data-marketing-oracle="proof-browser">Run complete.</p></MarketingProofFrame>
+      <MarketingProofFrame caption="Terminal chrome." chrome="terminal" title="relay run job-01"><pre data-marketing-oracle="proof-terminal"><code>$ relay run job-01</code></pre></MarketingProofFrame>
       <MarketingProofFrame caption="Native media sizing."><video data-marketing-oracle="proof-video" aria-label="No-source sizing fixture" width={120} height={60} /></MarketingProofFrame>
       <MarketingDataTable caption="Observed resume trial" columns={[
         { label: "Strategy" },

@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "d22424f3ac21b50948ae7532702da8ca54c874dcaaf2632c88f0846198e0b8e3", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "d271d26878f0f1ba6f35bdae2f58eb047a0e7bb346643fc42cfb5ca356c95894", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 

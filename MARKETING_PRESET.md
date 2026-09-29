@@ -81,6 +81,17 @@ Map only owned marketing headings to these tokens. Do not restyle every descenda
 
 `MarketingSection.label` and collection labels are optional in current components. For older versions that require strings, pass an empty string only when the slot is redundant. The preset removes spacing for empty label/name/eyebrow elements; nonempty facts remain visible. Preserve factual positioning in an appropriate product-owned body or example slot.
 
+## Mockups
+
+`@hraness/design-kit/mockups` draws illustrations of chat, feeds, inboxes,
+articles, terminals, browsers, desktop windows, and phones in plain React with
+no StyleX. Its stylesheet, `@hraness/design-kit/mockups.css`, uses `hkm-`
+classes, reads the marketing tokens with fallbacks, sizes itself with container
+queries, and switches between light and dark on `[data-hkm-theme]`. Transitions
+start only after the reader first changes a state, and stop under reduced
+motion. `MarketingProofFrame` takes `chrome="window"`, `"browser"` with a `url`,
+or `"terminal"` for real captures.
+
 ## Immutable snapshots for existing sites
 
 Keep the current component/UI versions when upgrading them would create unrelated migration work. Use the installer from a reviewed design-kit checkout at an exact full commit containing the preset:

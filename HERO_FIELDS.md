@@ -23,6 +23,14 @@ Put real proof in `frame`: a terminal or code block, a static screenshot with
 assistive technology. Do not put a large interactive copy of the application in
 the hero.
 
+When the product has no single screen to capture, `frame` may hold one static
+mockup from `@hraness/design-kit/mockups`, or a `ModeShowcase` from
+`@hraness/design-kit/mockups/client` that lets the reader switch between a few
+states of the same illustration. Both need a caption that says the picture is
+an illustration; `ModeShowcase` throws without one. Mockups render as a single
+image with a text description, carry no headings, and are skipped by search
+snippets. Load `@hraness/design-kit/mockups.css` with them.
+
 ## Retired features
 
 These names stay exported so existing code compiles. They do nothing visible,

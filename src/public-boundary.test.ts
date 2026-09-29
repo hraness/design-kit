@@ -65,7 +65,7 @@ test("the package exposes compositions without a second primitive barrel", async
   ];
 
   expect(packageJson.dependencies["@hraness/ui"]).toBeUndefined();
-  expect(packageJson.version).toBe("0.26.0");
+  expect(packageJson.version).toBe("0.27.0");
   expect(packageJson.peerDependencies["@hraness/ui"]).toBe(">=0.5.16 <0.6.0");
   expect(packageJson.peerDependenciesMeta["@hraness/ui"]).toEqual({ optional: true });
   expect(packageJson.devDependencies["@hraness/ui"]).toBe("github:hraness/ui#v0.5.17");
@@ -99,6 +99,15 @@ test("the package exposes compositions without a second primitive barrel", async
   expect(packageJson.exports["./product-marketing-preset.css"]).toBe("./src/product-marketing-preset.css");
   expect(packageJson.exports["./fonts/instrument-serif/*"]).toBe("./src/fonts/instrument-serif/*");
   expect(packageJson.exports["./marketing-assets/*"]).toBe("./src/marketing-assets/*");
+  for (const [entry, source, built] of [
+    ["./launch", "./src/launch.ts", "./dist/launch.js"],
+    ["./mockups", "./src/mockups/index.ts", "./dist/mockups/index.js"],
+    ["./mockups/client", "./src/mockups/client.tsx", "./dist/mockups/client.js"],
+    ["./testing", "./src/testing.ts", "./dist/testing.js"],
+  ] as const) {
+    expect(packageJson.exports[entry]).toEqual({ types: source, import: built });
+  }
+  expect(packageJson.exports["./mockups.css"]).toBe("./src/mockups.css");
   expect(packageJson.exports["./paper-theme.css"]).toBe("./src/paper-theme.css");
   expect(packageJson.exports["./product-marketing.css"]).toBe(
     "./src/product-marketing.css",

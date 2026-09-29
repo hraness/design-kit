@@ -1,14 +1,20 @@
 import {
+  ArticleBarChart,
   ArticleByline,
   ArticleCallout,
+  ArticleFigure,
   ArticleIndex,
   ArticleProvenance,
   ArticleRelatedProducts,
   ArticleSources,
+  ArticleTable,
+  ArticleVideo,
   BottomBar,
+  ComparisonTable,
   DitherSurface,
   DockedFooter,
   FoilMark,
+  LaunchBeats,
   MarketingArticle,
   MarketingCallToAction,
   MarketingCard,
@@ -46,22 +52,29 @@ import {
   ProviderMarkChip,
   SyntaxCode,
   TopBar,
+  articleFigureKinds,
   createParticleHaloRecipe,
   createProceduralBackdropRecipe,
+  launchBeatAnchor,
   marketingPatterns,
+  marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-x0a936sc.js";
-import"../chunk-zzq7bdj8.js";
+} from "../chunk-rcjtp9y5.js";
 import"../chunk-kspdf9ch.js";
+import"../chunk-77391vmq.js";
+import"../chunk-yk1742qj.js";
 import"../chunk-eh71jz57.js";
 import"../chunk-5gtx3pza.js";
 export {
   proceduralRecipeVersion,
   proceduralBackdropVariants,
+  marketingProofFrameAddress,
   marketingPatterns,
+  launchBeatAnchor,
   createProceduralBackdropRecipe,
   createParticleHaloRecipe,
+  articleFigureKinds,
   TopBar,
   SyntaxCode,
   ProviderMarkChip,
@@ -99,14 +112,20 @@ export {
   MarketingCard,
   MarketingCallToAction,
   MarketingArticle,
+  LaunchBeats,
   FoilMark,
   DockedFooter,
   DitherSurface,
+  ComparisonTable,
   BottomBar,
+  ArticleVideo,
+  ArticleTable,
   ArticleSources,
   ArticleRelatedProducts,
   ArticleProvenance,
   ArticleIndex,
+  ArticleFigure,
   ArticleCallout,
-  ArticleByline
+  ArticleByline,
+  ArticleBarChart
 };

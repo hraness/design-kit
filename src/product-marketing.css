@@ -1072,6 +1072,26 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   white-space: nowrap;
 }
 
+.hraness-marketing-proof-frame[data-chrome="terminal"] .hraness-marketing-proof-frame__title {
+  font-family: var(--hraness-marketing-mono-font);
+}
+
+.hraness-marketing-proof-frame__address {
+  flex: 0 1 32rem;
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding: 0.3rem 0.85rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hraness-marketing-ink) 6%, transparent);
+  color: var(--hraness-marketing-muted);
+  font-family: var(--hraness-marketing-mono-font);
+  font-size: 0.74rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .hraness-marketing-proof-frame__content {
   min-inline-size: 0;
   overflow: auto;
@@ -2082,6 +2102,10 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   .hraness-marketing-proof-frame__chrome {
     border-block-end: 1px solid CanvasText;
     box-shadow: none;
+  }
+  .hraness-marketing-proof-frame__address {
+    outline: 1px solid CanvasText;
+    background: Canvas;
   }
   .hraness-marketing-header,
   .hraness-marketing-hero[data-tone="accent"],

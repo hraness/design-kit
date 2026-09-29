@@ -15,7 +15,8 @@ Limits are maximums. Count characters in the rendered text.
 | `eyebrow` | The product's category from the portfolio registry, or nothing. | Four words | A tagline or a second headline. |
 | `boundary` | Price or license, requirements, and release state, once and plainly: "Free and open source · Needs Rust 1.85 or newer · Latest release: v0.2.1". | 110 characters | Governance terms such as "verified release", "admitted", "qualified", or "source pilot". |
 | `notice` | Status only when it changes what the reader can do today. | One sentence | A second copy of the boundary, or caveats a reader cannot act on. |
-| `MarketingProofFrame` | Output a reader can reproduce with the current release. Put the capture date in `credit` and label a historical record as historical. | | Commands or flags the current release rejects; "Live qualification" as a label. |
+| `MarketingProofFrame` | Output a reader can reproduce with the current release. Put the capture date in `credit` and label a historical record as historical. Set `chrome` to `window`, `browser` (with the page's `url`), or `terminal` to match what was captured. | | Commands or flags the current release rejects; "Live qualification" as a label; a browser address the product does not serve. |
+| Mockups from `@hraness/design-kit/mockups` | An illustration of one state of the product, with a `describe` sentence that starts "Illustration of" and a caption that says it is an illustration. Invented names, handles, and addresses on reserved example domains. | `describe`: one sentence | Real people's names or handles, headings inside the picture, and a mockup presented as a screenshot. |
 | `MarketingDataTable` `caption` | The measurement's name: what was run, on what. | 70 characters | A verdict disguised as a caption. |
 | `MarketingDataTable` `meta`, `note` | The date, source, or sample size in `meta`; the caveat that bounds the claim in `note`. | `note`: 160 characters | Data that outlives its caveat, or a table presented as a guarantee. |
 | `MarketingDataTable` columns | Short unit-bearing labels. Numbers go in `numeric` columns; the first column names each row. | | Wide dumps that belong in documentation. |
@@ -42,5 +43,7 @@ These come from live Hraness pages.
 - "Automatic replies remain a separate choice, requiring a qualified agent, an enabled contact and global resume." Better: "Automatic replies stay off until you connect an AI account, turn them on for this contact, and resume the butler."
 
 ## Check before publishing
+
+A launch post and its social posts are articles, not page slots. Write them as beats with `ARTICLE_COPY.md`.
 
 Read the hero and the first two sections aloud. Every command must run on the current release. Render the page at 1280px and 375px wide; monospace proof frames need to fit about 32 characters per line on a phone.
