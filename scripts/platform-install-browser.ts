@@ -238,7 +238,7 @@ try {
           color: style.color,
           background: style.backgroundColor,
           adjustment: style.forcedColorAdjust,
-          children: [...node.querySelectorAll("span, svg")].map((child) => ({ color: getComputedStyle(child).color, adjustment: getComputedStyle(child).forcedColorAdjust })),
+          children: [...node.querySelectorAll("span, svg")].map((child) => ({ tag: child.localName, color: getComputedStyle(child).color, adjustment: getComputedStyle(child).forcedColorAdjust })),
         };
       });
       assert.equal(paint.adjustment, "none", `${colorScheme}/${platform}: selected tab owns its system colors`);
@@ -247,7 +247,12 @@ try {
       assert.equal(paint.background, paint.system.background, `${colorScheme}/${platform}: selected fill uses Highlight`);
       assert(paint.children.length > 0, "the selected tab has mark and label descendants");
       for (const child of paint.children) {
-        assert.equal(child.adjustment, "none", `${colorScheme}/${platform}: descendants do not acquire text backplates`);
+        if (child.tag === "svg") {
+          // SVG user-agent rules may preserve the parent color explicitly.
+          assert(["none", "preserve-parent-color"].includes(child.adjustment), `${colorScheme}/${platform}: marks preserve the selected system ink`);
+        } else {
+          assert.equal(child.adjustment, "none", `${colorScheme}/${platform}: labels do not acquire text backplates`);
+        }
         assert.equal(child.color, paint.color, `${colorScheme}/${platform}: descendants inherit selected text ink`);
       }
     }
