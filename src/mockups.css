@@ -1541,6 +1541,7 @@
 
   .hkm-root .hkm-work-main {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     min-inline-size: 0;
   }
@@ -1565,6 +1566,7 @@
 
   .hkm-root .hkm-work-post {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 10px;
     padding-block: 14px 4px;
   }
@@ -1694,6 +1696,26 @@
 
     .hkm-root .hkm-work-nav {
       gap: 18px;
+    }
+  }
+
+  @container hkm (max-width: 440px) {
+    .hkm-root .hkm-work-post > :not(.hkm-work-photo) {
+      margin-inline: 12px;
+    }
+
+    .hkm-root .hkm-work-actions {
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .hkm-root .hkm-work-actions span {
+      gap: 4px;
+      padding-inline: 2px;
+    }
+
+    .hkm-root .hkm-work-nav {
+      gap: 14px;
     }
   }
 

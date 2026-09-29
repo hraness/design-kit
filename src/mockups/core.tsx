@@ -10,7 +10,7 @@ import type { CSSProperties, ReactNode } from "react";
 /** A mockup's own color scheme. Omit it to follow the page's `color-scheme`. */
 export type MockupTheme = "light" | "dark";
 
-/** Data attributes that tell a product's own runtime to skip the sample text, such as `{ "data-botfilter-ui": "" }`. */
+/** Data attributes that tell a product's own runtime to skip the sample text, such as `{ "data-sample-skip": "" }`. */
 export type MockupOptOut = Readonly<Record<`data-${string}`, "">>;
 
 /** Props every mockup root takes. */

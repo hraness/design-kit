@@ -89,6 +89,15 @@ try {
                   const child = figure.firstElementChild?.getBoundingClientRect();
                   return child === undefined || child.right > box.right + 0.5 || child.left < box.left - 0.5 || child.width < 40 || child.height < 40;
                 }).map((figure) => `${figure.getAttribute("data-hkm-fixture") ?? "?"}/${figure.closest("section")?.getAttribute("data-hkm-fixture-theme") ?? "?"}`),
+                // Windows clip their content, so check the parts inside each root too.
+                // Phone side buttons sit just outside the body by design.
+                clipped: roots.flatMap((root) => {
+                  const box = root.getBoundingClientRect();
+                  return [...root.querySelectorAll("*:not(.hkm-device-button)")].filter((node) => {
+                    const rect = node.getBoundingClientRect();
+                    return rect.width > 0 && rect.height > 0 && getComputedStyle(node).visibility !== "hidden" && (rect.right > box.right + 0.5 || rect.left < box.left - 0.5);
+                  }).slice(0, 1).map((node) => `${root.getAttribute("aria-label") ?? "?"}: .${[...node.classList].join(".") || node.tagName.toLowerCase()} "${(node.textContent ?? "").trim().slice(0, 24)}"`);
+                }),
                 transitions: [...document.querySelectorAll(".hkm-showcase *")].filter((node) => {
                   const style = getComputedStyle(node);
                   return style.animationName !== "none" && style.animationPlayState === "running";
@@ -97,6 +106,7 @@ try {
             });
             assert(observed.documentWidth <= observed.viewport, `${label}: horizontal overflow (${String(observed.documentWidth)} > ${String(observed.viewport)})`);
             assert.deepEqual(observed.overflowing, [], `${label}: frames must fit their column`);
+            assert.deepEqual(observed.clipped, [], `${label}: content must fit inside each frame`);
             assert.equal(observed.roots.length, 22, `${label}: every fixture in both themes`);
             for (const root of observed.roots) {
               assert.equal(root.role, "img", `${label}: root role`);
@@ -149,7 +159,7 @@ try {
         }
       }
       assert.equal(cases, 4, "Both page schemes at both widths must run");
-      console.log("Mockups browser checks passed: 11 frames in light and dark fit phone and desktop widths with mockups.css alone, render as labelled images without headings or focus stops, keep their pinned theme on light and dark pages, and the client shells follow the tabs keyboard model.");
+      console.log("Mockups browser checks passed: 11 frames in light and dark fit phone and desktop widths without clipped content, with mockups.css alone, render as labelled images without headings or focus stops, keep their pinned theme on light and dark pages, and the client shells follow the tabs keyboard model.");
     } finally { await browser.close(); }
   } finally { await server.stop(true); }
 } finally { await rm(work, { recursive: true, force: true }); }
