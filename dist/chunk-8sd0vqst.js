@@ -71,6 +71,7 @@ var platformInstallStyles = {
     $$css: true
   },
   tabSelected: {
+    kAXs8y: "x1g12otp",
     kWkggS: "xvpcapb x1gyp674 x1jzqe4",
     kVAM5u: "x73macs x1n2ykn",
     kGVxlE: "xl0ordx xwaqzdf",

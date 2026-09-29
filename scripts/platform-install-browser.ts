@@ -59,13 +59,14 @@ document.documentElement.dataset.hydrated = "";
 const stylesheet = await bundleBrowserStylesheet(join(repository, "src/styles.css"), repository);
 const policy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'";
 const documentFor = (theme: string) => `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page.css"><script type="module" src="/app.js"></script></head><body><main><div id="root">${markup}</div></main></body></html>`;
-const pageCss = "body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; } html[data-card] #root { padding: 16px; border: 1px solid; border-radius: 12px; }";
+const pageCss = ".forced-selection-probe { position: absolute; visibility: hidden; color: HighlightText; background-color: Highlight; forced-color-adjust: none; } body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; } html[data-card] #root { padding: 16px; border: 1px solid; border-radius: 12px; }";
 
 const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable() });
-type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean };
+type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean; forcedColors?: "none" | "active" };
 async function open(options: OpenOptions = {}): Promise<Page> {
   const contextOptions: BrowserContextOptions = {
     colorScheme: options.colorScheme ?? "light",
+    forcedColors: options.forcedColors ?? "none",
     javaScriptEnabled: options.javaScriptEnabled ?? true,
     viewport: { width: options.width ?? 1024, height: 800 },
   };
@@ -215,6 +216,53 @@ try {
         await page.context().close();
       }
     }
+  }
+
+  // Explicit system pairs must stay readable through selected-tab descendants.
+  for (const colorScheme of ["light", "dark"] as const) {
+    const page = await open({ platform: "macOS", width: 320, colorScheme, theme: colorScheme, forcedColors: "active" });
+    for (const platform of ["macos", "linux", "windows"] as const) {
+      const tab = page.locator(`[role="tab"][data-platform="${platform}"]`);
+      await tab.click();
+      await tab.hover();
+      // Compare settled system colors after the existing 120ms tab transition.
+      await tab.evaluate((node) => Promise.all(node.getAnimations().map((animation) => animation.finished)));
+      const paint = await tab.evaluate((node) => {
+        const style = getComputedStyle(node);
+        const probe = document.createElement("span");
+        probe.className = "forced-selection-probe";
+        document.body.append(probe);
+        const probeStyle = getComputedStyle(probe);
+        const system = { color: probeStyle.color, background: probeStyle.backgroundColor };
+        probe.remove();
+        return {
+          system,
+          color: style.color,
+          background: style.backgroundColor,
+          adjustment: style.forcedColorAdjust,
+          children: [...node.querySelectorAll("span, svg")].map((child) => ({ tag: child.localName, color: getComputedStyle(child).color, adjustment: getComputedStyle(child).forcedColorAdjust })),
+        };
+      });
+      assert.equal(paint.adjustment, "none", `${colorScheme}/${platform}: selected tab owns its system colors`);
+      assert.notEqual(paint.color, paint.background, `${colorScheme}/${platform}: selected text contrasts with its fill`);
+      assert.equal(paint.color, paint.system.color, `${colorScheme}/${platform}: selected text uses HighlightText`);
+      assert.equal(paint.background, paint.system.background, `${colorScheme}/${platform}: selected fill uses Highlight`);
+      assert(paint.children.length > 0, "the selected tab has mark and label descendants");
+      for (const child of paint.children) {
+        if (child.tag === "svg") {
+          // SVG user-agent rules may preserve the parent color explicitly.
+          assert(["none", "preserve-parent-color"].includes(child.adjustment), `${colorScheme}/${platform}: marks preserve the selected system ink`);
+        } else {
+          assert.equal(child.adjustment, "none", `${colorScheme}/${platform}: labels do not acquire text backplates`);
+        }
+        assert.equal(child.color, paint.color, `${colorScheme}/${platform}: descendants inherit selected text ink`);
+      }
+    }
+    if (process.env.PLATFORM_INSTALL_SCREENSHOTS !== undefined) {
+      await page.screenshot({ path: join(process.env.PLATFORM_INSTALL_SCREENSHOTS, `platform-install-320-${colorScheme}-forced.png`) });
+    }
+    assert.deepEqual(problemsOf(page), []);
+    await page.context().close();
   }
 
   // Without JavaScript: tabs and copy buttons hide; every panel shows under its label.
