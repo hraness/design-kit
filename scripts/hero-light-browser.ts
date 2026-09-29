@@ -1,9 +1,10 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 // Retirement proof for hero backdrops, the hero light controller, and material
 // patterns. Every delivery route must paint a flat hero with no decorative
 // layer, no pointer-driven light, and no texture, whatever legacy markup or
 // deprecated props a consumer still passes.
 import assert from "node:assert/strict";
-import { access, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { chromium } from "playwright-core";
@@ -14,13 +15,7 @@ import { browserStylesheetHasComponentPriorityRules, bundleBrowserStylesheet } f
 
 const repository = resolve(import.meta.dir, "..");
 const work = await mkdtemp(join(tmpdir(), "hraness-hero-retired-"));
-async function executable(): Promise<string> {
-  for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
-    if (path === undefined) continue;
-    try { await access(path); return path; } catch { /* Next installed browser. */ }
-  }
-  throw new Error("No Chromium executable available");
-}
+const executable = provisionedBrowserExecutable;
 try {
   const api = await import(join(repository, "dist/react/server.js"));
   const { HeroBackdrop } = await import(join(repository, "dist/react/hero-backdrop.js"));
@@ -80,7 +75,7 @@ try {
     return new Response("Not found", { status: 404 });
   } });
   try {
-    const browser = await chromium.launch({ executablePath: await executable(), headless: true });
+    const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable(), headless: true });
     try {
       let cases = 0;
       for (const delivery of ["raw", "standalone", "compiler"] as const) {

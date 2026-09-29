@@ -299,6 +299,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "bun test --preload ./scripts/register-stylex-test-transform.ts ./src",
+    "browser:install": "bun ./node_modules/playwright-core/cli.js install chromium",
     "test:browser": "bun run test:browser:marketing && bun run test:browser:rest",
     "test:browser:marketing": "bun run ./scripts/product-marketing-browser.ts",
     "test:browser:rest": "bun run ./scripts/palette-browser.ts && bun run ./scripts/gallery-browser.ts && bun run ./scripts/global-error-browser.ts && bun run ./scripts/security-delivery-browser.ts && bun run ./scripts/paper-theme-browser.ts && bun run ./scripts/product-marketing-preset-browser.ts && bun run ./scripts/lantern-material-browser.ts && bun run ./scripts/foil-browser.ts && bun run ./scripts/hero-light-browser.ts && bun run ./scripts/status-page-browser.ts && bun run ./scripts/platform-install-browser.ts && bun run ./scripts/mockups-browser.ts",

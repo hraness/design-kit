@@ -1,5 +1,6 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
-import { access, mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright-core";
 import { transform } from "lightningcss";
@@ -10,12 +11,7 @@ const root = resolve(import.meta.dir, "..");
 const screenshotArgument = process.argv.indexOf("--screenshots");
 const screenshotDirectory = screenshotArgument < 0 ? process.env.PAPER_THEME_SCREENSHOTS : process.argv[screenshotArgument + 1];
 const rgb = (hex: string) => `rgb(${[1, 3, 5].map((offset) => Number.parseInt(hex.slice(offset, offset + 2), 16)).join(", ")})`;
-let executablePath: string | undefined;
-for (const path of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "/Applications/Chromium.app/Contents/MacOS/Chromium", chromium.executablePath(), "/usr/bin/chromium", "/usr/bin/chromium-browser"]) {
-  if (path === undefined) continue;
-  try { await access(path); executablePath = path; break; } catch { /* Try another installed browser. */ }
-}
-assert(executablePath, "No Chromium executable is available.");
+const executablePath = await provisionedBrowserExecutable();
 const html = await readFile(resolve(root, "gallery/paper-theme.html"), "utf8");
 const paper = await readFile(resolve(root, "src/paper-theme.css"), "utf8");
 const optimizedPaper = transform({ filename: "paper-theme.css", code: Buffer.from(paper), minify: true }).code.toString();
@@ -50,7 +46,7 @@ const server = Bun.serve({ port: 0, hostname: "127.0.0.1", fetch(request) {
   if (/^\/fonts\/(?:nebula-sans|geist-mono)\/[\w[\]-]+\.woff2$/u.test(path)) return new Response(Bun.file(resolve(root, `src${path}`)));
   return new Response("Not found", { status: 404 });
 } });
-const browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
+const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
 try {
   for (const width of [1280, 390]) {
     const page = await browser.newPage({ viewport: { width, height: 1000 }, colorScheme: "light", reducedMotion: "reduce" });

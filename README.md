@@ -673,10 +673,13 @@ The EvilCharts license and adaptation provenance remain under `vendor/evilcharts
 
 ## Development
 
+Provision the pinned test browser with `bun run browser:install` after installing dependencies. Browser checks use that Playwright revision by default. `CHROMIUM_EXECUTABLE_PATH` (or `CHROME_PATH`) may select an explicitly provisioned Chrome for Testing executable. Invalid overrides fail; checks never fall back to an installed personal browser. Each check reports the selected executable and version.
+
 Use Bun 1.3.14:
 
 ```sh
 bun install --frozen-lockfile
+bun run browser:install
 bun run check
 ```
 

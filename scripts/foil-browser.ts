@@ -1,5 +1,6 @@
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
 import assert from "node:assert/strict";
-import { access, mkdir, readFile } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createElement } from "react";
@@ -28,13 +29,8 @@ const hiddenAtom = siblingAtoms.match(/\.[A-Za-z0-9_-]+\s*\{\s*display:\s*none;?
 assert(hiddenAtom, "The sibling fixture must contain its emitted display:none atom");
 const laterAtoms = `@layer components.foil-regression-sibling.priority3{${hiddenAtom}}`;
 const base = `body{margin:0;padding:32px;background:var(--background);color:var(--foreground);font:16px system-ui}body[data-theme=light]{color-scheme:light;--foreground:#211d1b;--background:#fbf6f2}body[data-theme=dark]{color-scheme:dark;--foreground:#f2eee9;--background:#171412}.samples{display:flex;align-items:center;gap:24px}.hraness-marketing-header__inner{padding:0}.hraness-marketing-header__brand{font-size:24px}`;
-let executablePath: string | undefined;
-for (const candidate of [process.env.CHROMIUM_EXECUTABLE_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", chromium.executablePath(), "/usr/bin/chromium"]) {
-  if (candidate === undefined) continue;
-  try { await access(candidate); executablePath = candidate; break; } catch { /* Try the next installed browser. */ }
-}
-assert(executablePath, "No installed Chromium executable.");
-const browser = await chromium.launch({ executablePath, headless: true, args: ["--no-sandbox"] });
+const executablePath = await provisionedBrowserExecutable();
+const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
 const output = process.env.FOIL_SCREENSHOT_DIR ?? join(tmpdir(), "hraness-foil-browser");
 await mkdir(output, { recursive: true });
 try {

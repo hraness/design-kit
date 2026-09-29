@@ -1,4 +1,5 @@
-import { access, mkdtemp, readdir, rm } from "node:fs/promises";
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
@@ -41,19 +42,6 @@ function invariant(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
 }
 
-async function firstExecutable(paths: readonly string[]): Promise<string> {
-  for (const path of paths) {
-    try {
-      await access(path);
-      return path;
-    } catch {
-      // Continue through known Chromium and Chrome installations.
-    }
-  }
-  throw new Error(
-    "No Chromium executable found. Set CHROMIUM_EXECUTABLE_PATH to run the global-error browser test.",
-  );
-}
 
 function renderGlobalError(theme: DesignTheme = "system"): string {
   return renderToStaticMarkup(
@@ -175,7 +163,7 @@ async function evidence(page: Page): Promise<ThemeColorEvidence> {
 }
 
 async function openBrowser(executablePath: string): Promise<Browser> {
-  return chromium.launch({ args: ["--no-sandbox"], executablePath, headless: true });
+  return chromium.launch({ args: verificationBrowserArguments(["--no-sandbox"]), executablePath, headless: true });
 }
 
 const work = await mkdtemp(join(tmpdir(), "hraness-global-error-browser-"));
@@ -215,17 +203,7 @@ try {
       "System SSR metadata no longer precedes the appearance bootstrap.",
     );
 
-    const executablePath = await firstExecutable([
-      ...(process.env.CHROMIUM_EXECUTABLE_PATH === undefined
-        ? []
-        : [process.env.CHROMIUM_EXECUTABLE_PATH]),
-      chromium.executablePath(),
-      "/Applications/Chromium.app/Contents/MacOS/Chromium",
-      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-      "/usr/bin/google-chrome",
-      "/usr/bin/chromium",
-      "/usr/bin/chromium-browser",
-    ]);
+    const executablePath = await provisionedBrowserExecutable();
     const browser = await openBrowser(executablePath);
 
     try {

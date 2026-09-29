@@ -25,6 +25,7 @@
 
 # Guidelines
 
+- Browser verification scripts must select their executable through `scripts/browser-executable.ts`: use the pinned Playwright browser or an explicitly provisioned Chrome for Testing, fail on invalid overrides, merge the required `--mute-audio` and `--disable-features=PaintHolding,MacAppCodeSignClone` launch flags with caller flags, and close owned browsers in teardown. Never discover or launch a user-installed browser. Run `bun run browser:install` when the pinned browser is absent; CI and release provision it before browser gates.
 - Use Bun 1.3.14. Run `bun run check` before handing off a change.
 - Start a release bump with `bun run release:prepare <x.y.z>`. `package.json` holds the only authored version; scripts and tests read it from there, and the command updates the inventory, README pins, and `dist` manifest. Write the README release notes by hand. CI runs the `bun run check` commands as parallel jobs (`static`, `unit`, `browser-marketing`, `browser-rest`); keep `check` and `.github/workflows/ci.yml` covering the same commands.
 - Follow `WRITING.md` for internal prose and `STYLE.md` for public prose.

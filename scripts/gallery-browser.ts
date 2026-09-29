@@ -1,4 +1,5 @@
-import { access, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 
@@ -1238,20 +1239,6 @@ function requireCompiledAtomicDeclaration(
   );
 }
 
-async function firstExecutable(paths: readonly string[]): Promise<string> {
-  for (const path of paths) {
-    try {
-      await access(path);
-      return path;
-    } catch {
-      // Continue through known Chromium and Chrome installations.
-    }
-  }
-  throw new Error(
-    "No Chromium executable found. Set CHROMIUM_EXECUTABLE_PATH to run the gallery browser test.",
-  );
-}
-
 async function requireShellBackgrounds(page: Page, label: string): Promise<void> {
   const backgrounds = await page.evaluate(() => {
     return [
@@ -2192,19 +2179,9 @@ try {
   const server = startGalleryServer(work);
 
   try {
-    const executablePath = await firstExecutable([
-      ...(process.env.CHROMIUM_EXECUTABLE_PATH === undefined
-        ? []
-        : [process.env.CHROMIUM_EXECUTABLE_PATH]),
-      chromium.executablePath(),
-      "/Applications/Chromium.app/Contents/MacOS/Chromium",
-      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-      "/usr/bin/google-chrome",
-      "/usr/bin/chromium",
-      "/usr/bin/chromium-browser",
-    ]);
+    const executablePath = await provisionedBrowserExecutable();
     const browser = await chromium.launch({
-      args: ["--no-sandbox"],
+      args: verificationBrowserArguments(["--no-sandbox"]),
       executablePath,
       headless: true,
     });

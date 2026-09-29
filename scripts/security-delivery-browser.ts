@@ -1,4 +1,5 @@
-import { access, mkdtemp, readdir, rm } from "node:fs/promises";
+import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
@@ -482,20 +483,6 @@ const layoutSurfaceIsolatedPhysicalSubstitutions: readonly (readonly [RegExp, st
   [/max-width:\s*none/u, "physical full-size max-width substitution"],
 ];
 
-async function firstExecutable(paths: readonly string[]): Promise<string> {
-  for (const path of paths) {
-    try {
-      await access(path);
-      return path;
-    } catch {
-      // Continue through known Chromium and Chrome installations.
-    }
-  }
-  throw new Error(
-    "No Chromium executable found. Set CHROMIUM_EXECUTABLE_PATH to run the security delivery browser test.",
-  );
-}
-
 async function availablePort(): Promise<number> {
   const probe = createServer();
   await new Promise<void>((resolve, reject) => {
@@ -595,7 +582,7 @@ function verticalWritingDocument(): string {
 
 async function openBrowser(executablePath: string): Promise<Browser> {
   return chromium.launch({
-    args: ["--no-sandbox"],
+    args: verificationBrowserArguments(["--no-sandbox"]),
     executablePath,
     headless: true,
   });
@@ -1132,17 +1119,7 @@ try {
     "The server changed the combined stylesheet bytes.",
   );
 
-  const executablePath = await firstExecutable([
-    ...(process.env.CHROMIUM_EXECUTABLE_PATH === undefined
-      ? []
-      : [process.env.CHROMIUM_EXECUTABLE_PATH]),
-    chromium.executablePath(),
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/Applications/Chromium.app/Contents/MacOS/Chromium",
-    "/usr/bin/google-chrome",
-    "/usr/bin/chromium",
-    "/usr/bin/chromium-browser",
-  ]);
+  const executablePath = await provisionedBrowserExecutable();
   browser = await openBrowser(executablePath);
   const page = await browser.newPage({ colorScheme: "dark" });
   page.setDefaultNavigationTimeout(10_000);
