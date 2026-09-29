@@ -3006,8 +3006,14 @@ try {
 
   await page.getByRole("button", { name: "Close security delivery dialog" }).click();
   await overlay.waitFor({ state: "detached" });
+  // React Aria restores focus to the trigger after the overlay unmounts, on a
+  // later task; wait for it instead of sampling the same frame.
   invariant(
-    await page.evaluate(() => document.activeElement?.id) === "security-canary-dialog-trigger",
+    await page.waitForFunction(
+      () => document.activeElement?.id === "security-canary-dialog-trigger",
+      undefined,
+      { timeout: 2_000 },
+    ).then(() => true, () => false),
     "Closing the portalled dialog did not restore trigger focus.",
   );
   invariant(await page.locator("style").count() === 0, "A stable style element remained after dialog interaction.");
