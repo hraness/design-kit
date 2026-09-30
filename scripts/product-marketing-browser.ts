@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "7b497293373e29c943731f26ee8640c37a2c3f4880f13162803a74185a5a0cdd", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -138,7 +138,7 @@ async function settle(page: Page): Promise<void> {
 async function strictGridSnapshot(page: Page) {
   return page.locator(productMarketingCspGrids.map(({ selector }) => selector).join(", ")).evaluateAll((elements) =>
     elements.map((element) => {
-      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats");
+      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats, .hraness-marketing-card-row, .hraness-marketing-primitives");
       if (container === null) throw new Error("The strict grid lost its public layout container.");
       // Read layout before dependent computed grid tracks, including after the
       // delivery sheet's application flag changes. Do not sample stale tracks.
@@ -148,7 +148,9 @@ async function strictGridSnapshot(page: Page) {
       const style = getComputedStyle(element);
       return { display: style.display, columns: style.gridTemplateColumns, items: element.children.length,
         columnValue: style.getPropertyValue(element.matches(".hraness-marketing-pillars")
-          ? "--hraness-marketing-pillar-columns" : "--hraness-marketing-fact-columns").trim(),
+          ? "--hraness-marketing-pillar-columns"
+          : element.matches(".hraness-marketing-card-row, .hraness-marketing-primitives__list")
+            ? "--hraness-marketing-grid-columns" : "--hraness-marketing-fact-columns").trim(),
         geometry: { containerWidth: containerRect.width, gridWidth: gridRect.width,
           boxSizing: containerStyle.boxSizing, inlineSize: containerStyle.inlineSize,
           paddingStart: containerStyle.paddingInlineStart, paddingEnd: containerStyle.paddingInlineEnd } };
@@ -227,6 +229,17 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
         assert.ok(tracks.every((track) => Number.parseFloat(track) > 0), `${label}: nonempty tracks`);
       }
       const sheet = page.locator('link[rel="stylesheet"]');
+      for (const selector of [".strict-natural-cards", ".strict-natural-primitives > ol"]) {
+        const natural = await page.locator(selector).evaluate(element => ({
+          cap: getComputedStyle(element).getPropertyValue("--hraness-marketing-grid-columns").trim(),
+          tracks: getComputedStyle(element).gridTemplateColumns.split(" ").length,
+          overflow: element.scrollWidth > element.clientWidth + 1,
+        }));
+        assert.equal(natural.cap, "", `${label}: nested uncapped grid must not inherit its parent's limit`);
+        assert.equal(natural.overflow, false, `${label}: nested natural grid overflow`);
+        if (configuration.width <= 768) assert.equal(natural.tracks, 1, `${label}: natural phone layout`);
+        else assert.ok(natural.tracks > 1, `${label}: natural desktop layout`);
+      }
       assert.equal(await sheet.count(), 1, `${label}: one delivery stylesheet`);
       const href = await sheet.getAttribute("href");
       assert.ok(href !== null, `${label}: missing stylesheet URL`);

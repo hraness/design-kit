@@ -429,6 +429,22 @@ var marketingStyles = {
     "--hraness-marketing-pillar-columns": "xj4arhr",
     $$css: true
   },
+  gridColumns1: {
+    "--hraness-marketing-grid-columns": "x166dvhg",
+    $$css: true
+  },
+  gridColumns2: {
+    "--hraness-marketing-grid-columns": "x10q4e6v",
+    $$css: true
+  },
+  gridColumns3: {
+    "--hraness-marketing-grid-columns": "xyqi4l0",
+    $$css: true
+  },
+  gridColumns4: {
+    "--hraness-marketing-grid-columns": "x1g57y38",
+    $$css: true
+  },
   actionFocus: {
     kI3sdo: "x13mrud1",
     kVtf5F: "x7s97pk",
@@ -2040,13 +2056,15 @@ var marketingStyles = {
     $$css: true
   },
   primitives__list: {
+    "--hraness-marketing-grid-columns": "xogmzgw",
+    "--_hraness-marketing-grid-track": "xwl1ywu",
     k1xSpc: "xrvj5dj",
     kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1717udv",
     kohv2D: "xe8uvvx",
     kOIVth: "x8fetqu",
-    kg9kkx: "xeonaw6",
+    kg9kkx: "x1ui45ma",
     $$css: true
   },
   primitive: {
@@ -2202,11 +2220,13 @@ var marketingStyles = {
     $$css: true
   },
   card_row: {
+    "--hraness-marketing-grid-columns": "xogmzgw",
+    "--_hraness-marketing-grid-track": "x9wro72",
     k1xSpc: "xrvj5dj",
     kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kOIVth: "x8fetqu",
-    kg9kkx: "x1p797x9",
+    kg9kkx: "x1v4bfo1",
     $$css: true
   },
   card: {
@@ -3624,11 +3644,17 @@ var pillarColumns = {
   3: marketingStyles.pillarColumns3,
   4: marketingStyles.pillarColumns4
 };
+var gridColumns = {
+  1: marketingStyles.gridColumns1,
+  2: marketingStyles.gridColumns2,
+  3: marketingStyles.gridColumns3,
+  4: marketingStyles.gridColumns4
+};
 function marketingColumnClassName(hook, caller, columns) {
   if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
     throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
   }
-  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : factColumns)[columns];
+  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" ? gridColumns : factColumns)[columns];
   return [hook, stylex3.props(recipes[hook].default, columnRecipe).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
 }
 function marketingClassName(hook, caller, variant = "default") {
@@ -3767,11 +3793,12 @@ function MarketingCardRow({
   ariaLabel,
   cards,
   children,
-  className
+  className,
+  columns
 }) {
   return /* @__PURE__ */ jsxs3("div", {
     "aria-label": ariaLabel,
-    className: marketingClassName("hraness-marketing-card-row", className),
+    className: marketingColumnClassName("hraness-marketing-card-row", className, columns),
     "data-hraness-marketing": "card-row",
     children: [
       cards?.map((card) => /* @__PURE__ */ jsx4(MarketingCard, {
@@ -4479,6 +4506,7 @@ function MarketingCollectionHeader({
 }
 function MarketingPrimitives({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -4504,7 +4532,7 @@ function MarketingPrimitives({
         prefix: "primitives"
       }),
       /* @__PURE__ */ jsx4("ol", {
-        className: marketingClassName("hraness-marketing-primitives__list"),
+        className: marketingColumnClassName("hraness-marketing-primitives__list", undefined, columns),
         children: items.map((item, index) => /* @__PURE__ */ jsxs3("li", {
           className: marketingClassName("hraness-marketing-primitive"),
           children: [

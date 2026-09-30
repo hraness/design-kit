@@ -63,6 +63,10 @@ export const marketingStyles = stylex.create({
   pillarColumns2: { "--hraness-marketing-pillar-columns": "2" },
   pillarColumns3: { "--hraness-marketing-pillar-columns": "3" },
   pillarColumns4: { "--hraness-marketing-pillar-columns": "4" },
+  gridColumns1: { "--hraness-marketing-grid-columns": "1" },
+  gridColumns2: { "--hraness-marketing-grid-columns": "2" },
+  gridColumns3: { "--hraness-marketing-grid-columns": "3" },
+  gridColumns4: { "--hraness-marketing-grid-columns": "4" },
   actionFocus: {
     outline: { default: null, ":focus-visible": "2px solid var(--hraness-marketing-accent)" },
     "outline-offset": { default: null, ":focus-visible": "2px" },
@@ -2057,13 +2061,15 @@ export const marketingStyles = stylex.create({
     "font-size": "var(--hraness-paper-section-heading-size, clamp(1.75rem, 3vw, 2.5rem))"
   },
   "primitives__list": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(18rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)))",
     "display": "grid",
     "align-items": "stretch",
     "margin": "0",
     "padding": "0",
     "list-style": "none",
     "gap": "1rem",
-    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, 18rem), 1fr))"
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 18rem)), 1fr))"
   },
   "primitive": {
     "display": "grid",
@@ -2374,11 +2380,13 @@ export const marketingStyles = stylex.create({
     "line-height": "1.5"
   },
   "card_row": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)))",
     "display": "grid",
     "align-items": "stretch",
     "margin": "0",
     "gap": "1rem",
-    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))"
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr))"
   },
   "card": {
     "display": "flex",
@@ -4441,9 +4449,16 @@ const pillarColumns = {
   4: marketingStyles.pillarColumns4,
 } as const;
 
+const gridColumns = {
+  1: marketingStyles.gridColumns1,
+  2: marketingStyles.gridColumns2,
+  3: marketingStyles.gridColumns3,
+  4: marketingStyles.gridColumns4,
+} as const;
+
 /** Explicit finite columns compose static atoms, including the existing media rules. */
 export function marketingColumnClassName(
-  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list",
+  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list" | "hraness-marketing-card-row" | "hraness-marketing-primitives__list",
   caller: string | undefined,
   columns: MarketingColumnCount | undefined,
 ): string {
@@ -4451,7 +4466,9 @@ export function marketingColumnClassName(
     throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
   }
   const columnRecipe = columns === undefined ? undefined
-    : (hook === "hraness-marketing-pillars" ? pillarColumns : factColumns)[columns];
+    : (hook === "hraness-marketing-pillars" ? pillarColumns
+      : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" ? gridColumns
+        : factColumns)[columns];
   return [hook, stylex.props(recipes[hook].default, columnRecipe).className, caller]
     .filter((value) => value !== undefined && value.length > 0).join(" ");
 }

@@ -1454,13 +1454,16 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-primitives__list {
+  --hraness-marketing-grid-columns: initial;
+  /* Without an explicit column cap, the track falls back to its natural minimum. */
+  --_hraness-marketing-grid-track: max(18rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)));
   display: grid;
   align-items: stretch;
   margin: 0;
   padding: 0;
   list-style: none;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 18rem)), 1fr));
 }
 
 .hraness-marketing-primitives__list > * {
@@ -1566,11 +1569,13 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
  * block. The art well clips overflow and contains backgrounds so a logo
  * surface cannot paint through the gutter as one bar. */
 .hraness-marketing-card-row {
+  --hraness-marketing-grid-columns: initial;
+  --_hraness-marketing-grid-track: max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)));
   display: grid;
   align-items: stretch;
   margin: 0;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr));
 }
 
 .hraness-marketing-card-row > * {

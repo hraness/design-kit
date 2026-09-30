@@ -2443,6 +2443,14 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
   }
 
+  .x1v4bfo1 {
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,var(--_hraness-marketing-grid-track, 16rem)),1fr));
+  }
+
+  .x1ui45ma {
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,var(--_hraness-marketing-grid-track, 18rem)),1fr));
+  }
+
   .x3g07o8 {
     grid-template-columns: repeat(var(--hraness-marketing-fact-columns, 4),minmax(0,1fr));
   }
@@ -5261,6 +5269,14 @@
   --_hraness-foil-mark-display: none;
 }
 
+.x9wro72 {
+  --_hraness-marketing-grid-track: max(16rem,calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)));
+}
+
+.xwl1ywu {
+  --_hraness-marketing-grid-track: max(18rem,calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)));
+}
+
 .xojny72 {
   --hraness-appearance-accent-foreground: var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText));
 }
@@ -5351,6 +5367,26 @@
 
 .x1mdspvo {
   --hraness-marketing-fact-columns: 4;
+}
+
+.x166dvhg {
+  --hraness-marketing-grid-columns: 1;
+}
+
+.x10q4e6v {
+  --hraness-marketing-grid-columns: 2;
+}
+
+.xyqi4l0 {
+  --hraness-marketing-grid-columns: 3;
+}
+
+.x1g57y38 {
+  --hraness-marketing-grid-columns: 4;
+}
+
+.xogmzgw {
+  --hraness-marketing-grid-columns: initial;
 }
 
 .xphms39 {

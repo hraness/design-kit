@@ -409,6 +409,7 @@ export function DesignSystemGallery({
             ]} label="Relay agent commands" />
           </MarketingSection>
           <MarketingPrimitives
+            columns={3}
             heading="Three objects cover most work."
             headingId="design-gallery-primitives-title"
             headingLevel={3}
@@ -439,7 +440,7 @@ export function DesignSystemGallery({
             { label: "CLI", summary: "Run a named job.", example: <MarketingCodeBlock code="relay run job-01" /> },
             { label: "SDK", summary: "Use typed application code." },
           ]} />
-          <MarketingCardRow ariaLabel="Release radar" cards={[
+          <MarketingCardRow ariaLabel="Release radar" columns={2} cards={[
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#gallery-install", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter." },
           ]} />
