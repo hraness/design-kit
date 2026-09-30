@@ -6,13 +6,13 @@ var portfolioSnapshot = {
   formatVersion: 1,
   provenance: {
     registry: "https://hraness.com/portfolio.json",
-    commit: "b190297ddf0a5b1447ad0494a6be32abfaacdd5c",
+    commit: "d75ebaa21ae0576c1d6c71e1bea23c93b866601c",
     committedOn: "2026-09-30",
     upstreamContract: "hraness.portfolio-public/v1",
-    upstreamDigest: "sha256:28638557fb2323fce51b23d8e94b9f141f2adac771ea22e1d3f50efafdfa47e1",
+    upstreamDigest: "sha256:ba365e481a8b15c4a19503b1628e1b7ae9399e47055dde02bae124183a3e1447",
     files: [{
       path: "portfolio.public.generated.json",
-      sha256: "56683a6c3e18c9caa0862f451e3893a6398acb062531edf40cac5b1fd5d0c472"
+      sha256: "4c9e41dd1cb711d21a2da086de6b7d4adac2990ccda3909fa1cacf3b0ff44369"
     }, {
       path: "packages/brand-catalog/brands.yaml",
       sha256: "10f20e9d7b8ad0f108b56344c5d1b60cf3c54e6cec5e7024004b7b4f608f282c"
@@ -137,7 +137,7 @@ var portfolioSnapshot = {
         long: "Long coding-agent sessions collect tool output that mattered once: test logs from runs that have since passed, file listings from before a refactor, stack traces for bugs already fixed. Every turn sends all of it to the model again. Gobstopper is a free, open-source command-line tool that finds your Claude Code and Codex sessions, shows what each compaction strategy would cut, and writes a smaller copy. Before it writes, it stores the original bytes in a content-addressed vault on your machine, so you can search for the exact record a compaction left out or restore the whole session.",
         hero: {
           heading: "Context compaction you can undo.",
-          summary: "Gobstopper keeps long coding sessions smaller. Run your agent through a local proxy, or make a smaller copy of a saved session while keeping the original for recovery.",
+          summary: "Keep long coding sessions smaller, with the original available to restore.",
           primaryAction: "Install Gobstopper",
           secondaryAction: "How it works"
         },
@@ -148,7 +148,7 @@ var portfolioSnapshot = {
           "home-film": "Watch it in 75 seconds.",
           "home-install": "Start with one session.",
           "home-questions": "Before you install.",
-          "home-related": "Works with Gobstopper.",
+          "home-related": "Other tools from our studio",
           "home-search-title": "Gobstopper: context compaction proxy for Claude Code and Codex",
           "home-primitive-preview": "Preview the cut",
           "home-primitive-original": "Keep the original",
@@ -231,7 +231,7 @@ var portfolioSnapshot = {
         long: "Picking a model means guessing at a tradeoff between quality and price, because benchmark scores and prices live in different places. aicharts plots published benchmark scores against cost and tokens per task on one chart, so the strongest option at each budget is visible instead of implied. A local collector measures your own agents' token use, so the cost question covers your work, not only the models. aicharts is free and open source.",
         hero: {
           heading: "See which model wins at each price.",
-          summary: "Benchmark scores plotted against cost and tokens per task, plus a local collector for your own agents' token use.",
+          summary: "Compare model benchmark scores, prices, and the tokens each task takes.",
           primaryAction: "Browse the charts",
           secondaryAction: "Measure your agent"
         },
@@ -239,7 +239,7 @@ var portfolioSnapshot = {
           "home-calculator": "Subscription vs API vs GPUs",
           "home-platform-group": "The agent platform",
           "home-personal-group": "The personal apps",
-          "home-related": "From the same workshop.",
+          "home-related": "Other tools from our studio",
           "home-about": "About aicharts",
           "home-search-title": "aicharts: AI model benchmark scores vs cost per task"
         },
@@ -275,7 +275,7 @@ var portfolioSnapshot = {
         long: "A new coding-agent session can read your code, but not the decisions that stayed in the last session's chat. Wordcell keeps those decisions as Markdown files beside the repository, with the plans that depend on them and the web pages and PDFs that informed them. Tie a note to the paths it explains, and an agent about to change that code runs one command to get the notes and plans for that path. Exact search, backlinks, and Git history run on your machine with no account or model, and every index rebuilds from files you can read in any editor. Wordcell is free and open source.",
         hero: {
           heading: "Give coding agents the decisions behind your code.",
-          summary: "Decisions, plans, and sources kept as Markdown beside your repository, one command away from the agent about to change a file.",
+          summary: "Keep decisions, plans, and sources as Markdown beside your code.",
           primaryAction: "Install Wordcell",
           secondaryAction: "See an example"
         },
@@ -291,7 +291,7 @@ var portfolioSnapshot = {
           "home-publish": "Publish your notes as a website",
           "home-trust": "The record stays yours",
           "home-questions": "Before you install",
-          "home-related": "Related Hraness tools",
+          "home-related": "Other tools from our studio",
           "home-closing": "Give the next session what this one learned.",
           "home-search-title": "Wordcell: Markdown memory for coding agents",
           "home-primitive-files": "Files you own",
@@ -539,7 +539,7 @@ var portfolioSnapshot = {
         headlines: ["every import keeps its source."],
         hero: {
           heading: "Social Blade for everyone you know.",
-          summary: "PeopleBlade builds one contact book on your computer from your address book, chat apps, and exports. Your agent searches it, keeps notes, and tells you which import each contact came from.",
+          summary: "One private contact book. Bring your contacts together and let your agent help you stay in touch.",
           primaryAction: "Install the free CLI",
           secondaryAction: "See how it works"
         },
@@ -550,7 +550,7 @@ var portfolioSnapshot = {
           "home-agent": "Let your agent work with your contacts.",
           "home-comparison": "Choose the contact book that fits.",
           "home-boundary": "Know what your agent can access.",
-          "home-related": "other Hraness tools.",
+          "home-related": "Other tools from our studio",
           "home-cloud": "Sync only when you choose.",
           "home-personal-group": "The personal apps",
           "home-platform-group": "The agent platform",
@@ -593,7 +593,7 @@ var portfolioSnapshot = {
         long: "TextButler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that keeps notes on each person in files you can edit. New installs start paused and every contact starts off. Choose a local model, your Gateway key, or a connected subscription; local-model replies are in testing. Hosted AI providers receive the context needed to write a reply. TextButler is free and MIT licensed.",
         hero: {
           heading: "An AI butler in your messaging apps.",
-          summary: "When someone you’ve turned on texts “butler”, a clearly marked AI assistant answers for you from your Mac. It writes with a local model or the AI subscription you already pay for. Claude Code, Codex, or Devin can set it up for you.",
+          summary: "A clearly marked AI assistant answers the people you choose, from your Mac.",
           primaryAction: "Have your agent set it up",
           secondaryAction: "See how it works"
         },
@@ -605,7 +605,7 @@ var portfolioSnapshot = {
           "control-title": "You stay in charge",
           "self-title": "Ask it yourself",
           "questions-title": "Questions",
-          "related-title": "From the same workshop",
+          "related-title": "Other tools from our studio",
           "closing-title": "Start with one person",
           "where-it-stands": "Where it stands",
           "messaging-apps": "Messaging apps",
@@ -665,7 +665,7 @@ var portfolioSnapshot = {
         long: "Agents that run commands reach the web through a browser they steer click by click, or through credentials they should never hold. GhostGet is a free, open-source CLI and TypeScript SDK that gives them a third route: a fixed list of reviewed web actions. Read a URL as Markdown, keep a searchable copy on your machine, archive one media item with SHA-256 records, or act in a connected account such as Gmail, Beeper, or X through one named operation. A measured article read costs about 3,800 tokens where the raw page carries 36,000. Consequential writes need an exact preview and your confirmation, and the agent never sees a login.",
         hero: {
           heading: "Your agent gets the result without clicking around.",
-          summary: "A free CLI and TypeScript SDK for Claude Code, Codex, Cursor, and other agents that run commands. Read a page as Markdown, save a media item, or use a connected account.",
+          summary: "Read pages, save media, and use connected accounts through your agent.",
           primaryAction: "Tell your agent",
           secondaryAction: "See it work"
         },
@@ -692,7 +692,7 @@ var portfolioSnapshot = {
           "arguments-title": "Arguments and comparisons",
           "how-agents-reach-the-web": "How agents reach the web",
           "maker-title": "Hraness",
-          "related-title": "From the same studio.",
+          "related-title": "Other tools from our studio",
           "related-tools": "The agent platform",
           "related-apps": "The personal apps",
           "final-title": "Read your first page in two commands.",
@@ -736,7 +736,7 @@ var portfolioSnapshot = {
         long: "Soulscrape is a free, MIT-licensed agent skill that turns sources you're allowed to use into a dated dossier on one person: how they decide, write, argue, and change their mind. It runs inside Claude Code, Codex, or another agent that loads skills, with your own model and tools, and needs no Soulscrape account. Facts, stated beliefs, patterns, and speculation stay apart, and the dossier lists what the record cannot settle. Keep it private, or publish it with a free Hraness account as a web page, a JSON packet, and a Markdown copy anyone can cite.",
         hero: {
           heading: "See how someone thinks, and where every claim comes from.",
-          summary: "Give your agent the sources you're allowed to use, and it writes a dated dossier with every claim tied to its evidence.",
+          summary: "Turn sources into a dated dossier, with evidence behind every claim.",
           primaryAction: "Install the skill",
           secondaryAction: "Browse the dossiers"
         },
@@ -749,7 +749,7 @@ var portfolioSnapshot = {
           "indexes-title": "Publish when you are ready",
           "boundaries-title": "Keep the research within its limits",
           "questions-title": "Questions",
-          "related-title": "Other Hraness tools",
+          "related-title": "Other tools from our studio",
           "cta-title": "Start with one person",
           "home-flow-sources": "Choose the sources",
           "home-flow-read": "Read the dossier",
@@ -1922,7 +1922,7 @@ var portfolioSnapshot = {
     label: "records drawing runs with",
     detail: "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
   }],
-  digest: "sha256:72c3c0f85732551dc8d87e7b72ee3f6dfd90086623255a4e4b18b423136b0db5"
+  digest: "sha256:1af50f624f0d06ec13e1531564a8066795ae3fed732210b6f642179730100103"
 };
 
 // src/portfolio.ts
