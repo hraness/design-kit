@@ -1148,6 +1148,7 @@ export interface MarketingInterface {
 
 export function MarketingInterfaceGrid({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1157,6 +1158,8 @@ export function MarketingInterfaceGrid({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns; cards wrap within the available container width. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1173,7 +1176,7 @@ export function MarketingInterfaceGrid({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="interfaces" />
-      <div className={classNames("hraness-marketing-interface-grid")}>
+      <div className={marketingColumnClassName("hraness-marketing-interface-grid", undefined, columns)}>
         {interfaces.map((entry) => (
           <article className={classNames("hraness-marketing-interface")} key={entry.label}>
             <Heading
@@ -1198,6 +1201,7 @@ export interface MarketingTrustItem {
 
 export function MarketingTrustBoundary({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1207,6 +1211,8 @@ export function MarketingTrustBoundary({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns; cards wrap within the available container width. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1223,7 +1229,7 @@ export function MarketingTrustBoundary({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="trust" />
-      <dl className={classNames("hraness-marketing-trust-grid")}>
+      <dl className={marketingColumnClassName("hraness-marketing-trust-grid", undefined, columns)}>
         {items.map((item) => (
           <div className={classNames("hraness-marketing-trust-item")} key={item.label}>
             <dt className={classNames("hraness-marketing-trust-item__label")}>{item.label}</dt>
@@ -1497,6 +1503,8 @@ export interface MarketingRelatedProduct {
 }
 
 export interface MarketingRelatedGroup {
+  /** Maximum columns for this group, overriding the section default. */
+  readonly columns?: MarketingColumnCount;
   /** Heading naming this tier of siblings, rendered one level below the section heading. */
   readonly heading: string;
   readonly headingId: string;
@@ -1539,6 +1547,7 @@ type MarketingRelatedBody =
 /** Linked cards for sibling products: each shows the product's mark, name, and one-line description. */
 export function MarketingRelated({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1549,6 +1558,8 @@ export function MarketingRelated({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns for each card row; a group can override it. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1557,6 +1568,7 @@ export function MarketingRelated({
   summary?: string;
 }> &
   MarketingRelatedBody) {
+  const defaultColumnProps = columns === undefined ? {} : { columns };
   return (
     <section
       aria-labelledby={headingId}
@@ -1574,7 +1586,7 @@ export function MarketingRelated({
       />
       {groups === undefined
         ? (
-          <MarketingCardRow>
+          <MarketingCardRow {...defaultColumnProps}>
             <MarketingRelatedCards items={items} level={childHeadingLevel(headingLevel)} />
           </MarketingCardRow>
         )
@@ -1592,7 +1604,7 @@ export function MarketingRelated({
                 ? null
                 : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
             </div>
-            <MarketingCardRow ariaLabel={group.heading}>
+            <MarketingCardRow ariaLabel={group.heading} {...(group.columns === undefined ? defaultColumnProps : { columns: group.columns })}>
               <MarketingRelatedCards items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
             </MarketingCardRow>
           </div>

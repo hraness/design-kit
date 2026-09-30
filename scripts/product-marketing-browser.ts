@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "7b497293373e29c943731f26ee8640c37a2c3f4880f13162803a74185a5a0cdd", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "fd2619fc30eeb19b5713f9f66c6b7553f4c9486021fe6bbcc02f9b5edf066f25", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -138,7 +138,7 @@ async function settle(page: Page): Promise<void> {
 async function strictGridSnapshot(page: Page) {
   return page.locator(productMarketingCspGrids.map(({ selector }) => selector).join(", ")).evaluateAll((elements) =>
     elements.map((element) => {
-      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats, .hraness-marketing-card-row, .hraness-marketing-primitives");
+      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats, .hraness-marketing-card-row, .hraness-marketing-primitives, .hraness-marketing-trust, .hraness-marketing-interfaces");
       if (container === null) throw new Error("The strict grid lost its public layout container.");
       // Read layout before dependent computed grid tracks, including after the
       // delivery sheet's application flag changes. Do not sample stale tracks.
@@ -149,7 +149,7 @@ async function strictGridSnapshot(page: Page) {
       return { display: style.display, columns: style.gridTemplateColumns, items: element.children.length,
         columnValue: style.getPropertyValue(element.matches(".hraness-marketing-pillars")
           ? "--hraness-marketing-pillar-columns"
-          : element.matches(".hraness-marketing-card-row, .hraness-marketing-primitives__list")
+          : element.matches(".hraness-marketing-card-row, .hraness-marketing-primitives__list, .hraness-marketing-trust-grid, .hraness-marketing-interface-grid")
             ? "--hraness-marketing-grid-columns" : "--hraness-marketing-fact-columns").trim(),
         geometry: { containerWidth: containerRect.width, gridWidth: gridRect.width,
           boxSizing: containerStyle.boxSizing, inlineSize: containerStyle.inlineSize,
@@ -229,7 +229,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
         assert.ok(tracks.every((track) => Number.parseFloat(track) > 0), `${label}: nonempty tracks`);
       }
       const sheet = page.locator('link[rel="stylesheet"]');
-      for (const selector of [".strict-natural-cards", ".strict-natural-primitives > ol"]) {
+      for (const selector of [".strict-natural-cards", ".strict-natural-primitives > ol", ".strict-natural-trust > dl", ".strict-natural-interfaces > div", ".strict-natural-related > .hraness-marketing-card-row"]) {
         const natural = await page.locator(selector).evaluate(element => ({
           cap: getComputedStyle(element).getPropertyValue("--hraness-marketing-grid-columns").trim(),
           tracks: getComputedStyle(element).gridTemplateColumns.split(" ").length,

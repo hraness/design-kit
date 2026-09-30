@@ -1513,11 +1513,13 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 
 .hraness-marketing-interface-grid,
 .hraness-marketing-trust-grid {
+  --hraness-marketing-grid-columns: initial;
+  --_hraness-marketing-grid-track: max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)));
   display: grid;
   align-items: stretch;
   margin: 0;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr));
 }
 
 .hraness-marketing-interface-grid > *,
