@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
@@ -582,7 +582,7 @@ function verticalWritingDocument(): string {
 
 async function openBrowser(executablePath: string): Promise<Browser> {
   return chromium.launch({
-    args: verificationBrowserArguments(["--no-sandbox"]),
+    ...verificationBrowserLaunchOptions(["--no-sandbox"]),
     executablePath,
     headless: true,
   });

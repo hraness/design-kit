@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 // Retirement proof for hero backdrops, the hero light controller, and material
 // patterns. Every delivery route must paint a flat hero with no decorative
 // layer, no pointer-driven light, and no texture, whatever legacy markup or
@@ -75,7 +75,7 @@ try {
     return new Response("Not found", { status: 404 });
   } });
   try {
-    const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable(), headless: true });
+    const browser = await chromium.launch({ ...verificationBrowserLaunchOptions(), executablePath: await executable(), headless: true });
     try {
       let cases = 0;
       for (const delivery of ["raw", "standalone", "compiler"] as const) {

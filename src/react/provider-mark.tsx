@@ -8,7 +8,7 @@ import {
 } from "../provider-marks.js";
 import { providerMarkClassName } from "./provider-mark.stylex.js";
 
-export type ProviderMarkTone = "tile" | "solid" | "plain";
+export type ProviderMarkTone = "tile" | "solid" | "plain" | "inherit";
 
 export interface ProviderMarkProps {
   readonly mark: ProviderMarkDescriptor | string;
@@ -34,7 +34,7 @@ function Artwork({
   mark,
   tone,
 }: Readonly<{ mark: ProviderMarkDescriptor; tone: ProviderMarkTone }>) {
-  // Only the tinted tile carries vendor-colored art; solid and plain tones
+  // Only the tinted tile carries vendor-colored art; the other tones
   // use the retintable glyph so contrast stays in the surface's control.
   const art = tone === "tile" ? mark.art : null;
   return (
@@ -61,7 +61,8 @@ function Artwork({
 /**
  * One provider or agent identity: a soft accent-tinted tile by default, a
  * saturated accent tile with `tone="solid"`, or the bare glyph with
- * `tone="plain"`. Unknown identities render a monogram tile so surfaces
+ * `tone="plain"`, or a bare glyph that inherits its container ink with
+ * `tone="inherit"`. Unknown identities render a monogram tile so surfaces
  * never imply an official mark that does not exist.
  */
 export function ProviderMark({ mark, className, label, size = 32, tone = "tile" }: ProviderMarkProps) {
@@ -77,25 +78,14 @@ export function ProviderMark({ mark, className, label, size = 32, tone = "tile" 
     <span
       aria-hidden={label === undefined ? true : undefined}
       aria-label={label}
-      className={[
-        providerMarkClassName("tile"),
-        tone === "tile" ? "" : providerMarkClassName(tone),
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={providerMarkClassName(tone === "tile" ? ["tile"] : ["tile", tone], className)}
       role={label === undefined ? undefined : "img"}
       style={style}
     >
       {hasArtwork ? <Artwork mark={resolved} tone={tone} /> : null}
       <span
         aria-hidden="true"
-        className={[
-          providerMarkClassName("monogram"),
-          hasArtwork ? "" : providerMarkClassName("monogramOnly"),
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={providerMarkClassName(hasArtwork ? "monogram" : ["monogram", "monogramOnly"])}
       >
         {resolved.monogram}
       </span>

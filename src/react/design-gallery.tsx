@@ -20,6 +20,7 @@ import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-fr
 import { useState } from "react";
 
 import { AnimatedRailStage } from "./animated-rail-stage.js";
+import { AgentCommandTabs, AgentSetupPrompt } from "./agent-setup-prompt.js";
 import { AppShell } from "./app-shell.js";
 import {
   ArticleCallout,
@@ -45,6 +46,7 @@ import { PlatformBadges } from "./platform-icons.js";
 import { PlatformInstall } from "./platform-install.js";
 import { RelativeTime } from "./relative-time.js";
 import {
+  MarketingActionLink,
   MarketingCallToAction,
   MarketingCardRow,
   MarketingCodeBlock,
@@ -392,6 +394,20 @@ export function DesignSystemGallery({
               ]}
             />
           </MarketingInstallPanel>
+          <MarketingSection heading="Ask your agent to set it up." headingId="gallery-agent-setup" headingLevel={3} label="Agent setup">
+            <AgentSetupPrompt
+              label="Relay agent setup"
+              prompt={"Install Relay from https://relay.example/install.sh.\nRead the project instructions before making changes.\nRun relay init in this workspace and create a job named sample.\nRun the job, then show me its log."}
+              targets={[
+                { href: "https://claude.ai/new", id: "claude", label: "Claude", mark: "claudecode", mode: "copy-and-open" },
+                { href: "https://chatgpt.com/", id: "chatgpt", label: "ChatGPT", mark: "codex", mode: "copy-and-open" },
+              ]}
+            />
+            <AgentCommandTabs commands={[
+              { command: "claude mcp add relay -- relay serve", id: "claude", label: "Claude Code", mark: "claudecode" },
+              { command: "codex mcp add relay -- relay serve", id: "codex", label: "Codex", mark: "codex" },
+            ]} label="Relay agent commands" />
+          </MarketingSection>
           <MarketingPrimitives
             heading="Three objects cover most work."
             headingId="design-gallery-primitives-title"
@@ -404,7 +420,18 @@ export function DesignSystemGallery({
             label="Primitives"
             summary="People and agents use the same three objects, so a job you start by hand is one an agent can rerun."
           />
-          <MarketingSection heading="A job keeps its name everywhere." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Start it from the CLI and check on it from code; both see the same job.">
+          <MarketingSection
+            heading="A job keeps its name everywhere."
+            headingContent={<>
+              <MarketingCodeBlock code="relay run job-01" />
+              <MarketingActionLink href="#gallery-install" label="Run your first job" />
+            </>}
+            headingId="gallery-marketing-section"
+            headingLevel={3}
+            label="Workflow"
+            layout="split-reverse"
+            summary="Start it from the CLI and check on it from code; both see the same job."
+          >
             <MarketingSectionLabel size="body">Reference</MarketingSectionLabel>
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>

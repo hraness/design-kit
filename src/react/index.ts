@@ -1,4 +1,5 @@
 export * from "./animated-rail-stage.js";
+export * from "./agent-setup-prompt.js";
 export * from "./app-shell.js";
 export * from "./article.js";
 export * from "./aurora-dots-background.js";

@@ -301,23 +301,15 @@ export function ArticleIndex({
   );
 }
 
-/** What an article visual is. The label opens the caption so readers can tell a mockup from a screenshot. */
+/** What an article visual is, retained as machine-readable figure metadata. */
 export const articleFigureKinds = ["illustration", "screenshot", "recording", "diagram", "chart", "table"] as const;
 export type ArticleFigureKind = (typeof articleFigureKinds)[number];
 
-const FIGURE_LABELS: Readonly<Record<ArticleFigureKind, string>> = {
-  illustration: "Illustration",
-  screenshot: "Screenshot",
-  recording: "Recording",
-  diagram: "Diagram",
-  chart: "Chart",
-  table: "Table",
-};
-
-function FigureCaption({ caption, credit, kind }: Readonly<{ caption: ReactNode; credit?: ReactNode; kind: ArticleFigureKind }>) {
+function FigureCaption({ caption, credit }: Readonly<{ caption?: ReactNode; credit?: ReactNode }>) {
+  if ((caption === undefined || caption === null || caption === false || caption === "")
+    && (credit === undefined || credit === null || credit === false || credit === "")) return null;
   return (
     <figcaption className="plain-publication__figure-caption">
-      <span className="plain-publication__figure-label">{FIGURE_LABELS[kind]}.</span>{" "}
       {caption}
       {credit === undefined || credit === null || credit === "" ? null : <small className="plain-publication__figure-credit">{credit}</small>}
     </figcaption>
@@ -325,10 +317,9 @@ function FigureCaption({ caption, credit, kind }: Readonly<{ caption: ReactNode;
 }
 
 /**
- * A labelled figure in the article body. The caption opens with the kind,
- * such as "Illustration." for a code-built mockup, so an invented screen is
- * never mistaken for a screenshot. `width="wide"` lets the figure extend past
- * the text measure on wide screens.
+ * A figure with optional useful context and credit. Its children own their
+ * accessible descriptions; use `label` for a composite visual without one.
+ * `width="wide"` extends past the text measure on wide screens.
  */
 export function ArticleFigure({
   caption,
@@ -337,22 +328,23 @@ export function ArticleFigure({
   credit,
   id,
   kind,
+  label,
   width = "text",
 }: Readonly<{
-  caption: ReactNode;
+  caption?: ReactNode;
   children: ReactNode;
   className?: string;
   credit?: ReactNode;
   id?: string;
   kind: ArticleFigureKind;
+  label?: string;
   width?: "text" | "wide";
 }>) {
   if (!articleFigureKinds.includes(kind)) throw new RangeError(`Unknown article figure kind: ${String(kind)}.`);
-  if (caption === undefined || caption === null || caption === "") throw new RangeError("Article figures need a caption.");
   return (
-    <figure className={joinClasses("plain-publication__figure", className)} data-figure-kind={kind} data-width={width} id={id}>
+    <figure aria-label={label} className={joinClasses("plain-publication__figure", className)} data-figure-kind={kind} data-width={width} id={id}>
       <div className="plain-publication__figure-body">{children}</div>
-      <FigureCaption caption={caption} credit={credit} kind={kind} />
+      <FigureCaption caption={caption} credit={credit} />
     </figure>
   );
 }

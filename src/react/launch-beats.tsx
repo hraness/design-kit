@@ -29,9 +29,9 @@ export function launchBeatAnchor(beat: Pick<LaunchBeat, "id">): string {
 /**
  * The beats of an "Introducing a product" post, in order. Each beat renders
  * as a section with a `#beat-<id>` anchor, its headline, its post as the
- * paragraph, and exactly one visual from `renderVisual`, captioned with the
- * beat's alt text and labelled by kind. Pass beats already resolved against
- * the launch facts.
+ * paragraph, and exactly one visual from `renderVisual`. Alt text names the
+ * visual accessibly; an optional caption adds context. Pass beats already
+ * resolved against the launch facts.
  */
 export function LaunchBeats({
   beats,
@@ -39,6 +39,7 @@ export function LaunchBeats({
   detailLabel = "More on this",
   headingLevel = 2,
   renderVisual,
+  caption,
 }: Readonly<{
   beats: readonly LaunchBeat[];
   className?: string;
@@ -47,6 +48,8 @@ export function LaunchBeats({
   headingLevel?: 2 | 3 | 4;
   /** Returns the one visual for a beat: a mockup, a video, or a diagram image. */
   renderVisual: (beat: LaunchBeat) => ReactNode;
+  /** Optional visible context. Alt text is never repeated as a caption. */
+  caption?: (beat: LaunchBeat) => ReactNode;
 }>) {
   assertLaunchBeats(beats);
   const Heading = HEADING_TAGS[headingLevel];
@@ -61,7 +64,7 @@ export function LaunchBeats({
           <section aria-labelledby={`${anchor}-heading`} className="plain-publication__beat" data-part={beat.part} id={anchor} key={beat.id}>
             <Heading id={`${anchor}-heading`}>{beat.headline}</Heading>
             <p>{beat.post}</p>
-            <ArticleFigure caption={beat.alt} kind={figureKind(beat)}>{visual}</ArticleFigure>
+            <ArticleFigure caption={caption?.(beat)} kind={figureKind(beat)} label={beat.alt}>{visual}</ArticleFigure>
             {beat.detailHref === undefined ? null : (
               <p className="plain-publication__beat-detail"><a href={beat.detailHref}>{detailLabel}</a></p>
             )}

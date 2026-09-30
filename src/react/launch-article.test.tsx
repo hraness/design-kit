@@ -44,16 +44,24 @@ function classesIn(html: string): Set<string> {
 }
 
 describe("article figures", () => {
-  test("ArticleFigure labels its kind and honours width", () => {
+  test("ArticleFigure preserves kind metadata and useful captions without automatic labels", () => {
     const html = renderToStaticMarkup(
       <ArticleFigure caption="The settings page." credit="Relay" id="fig-settings" kind="screenshot" width="wide"><img alt="" src="/a.png" /></ArticleFigure>,
     );
     expect(html).toContain('<figure class="plain-publication__figure" data-figure-kind="screenshot"');
     expect(html).toContain('id="fig-settings"');
     expect(html).toContain('data-width="wide"');
-    expect(html).toContain("Screenshot");
+    expect(html).not.toContain("Screenshot.");
     expect(html).toContain("The settings page.");
     expect(html).toContain("Relay");
+  });
+
+  test("a figure can use its accessible label without repeating it as visible copy", () => {
+    const html = renderToStaticMarkup(<ArticleFigure kind="illustration" label="Search returns the source note."><img alt="Search result" src="/a.png" /></ArticleFigure>);
+    expect(html).toContain('aria-label="Search returns the source note."');
+    expect(html).not.toContain("<figcaption");
+    const creditOnly = renderToStaticMarkup(<ArticleFigure kind="screenshot" credit="September 2026"><img alt="Settings" src="/a.png" /></ArticleFigure>);
+    expect(creditOnly).toContain("September 2026");
   });
 
   test("ArticleVideo lists WebM first and always carries captions", () => {

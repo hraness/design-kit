@@ -1,4 +1,5 @@
 import { providerMarkAssets, type ProviderMarkArtwork } from "./provider-marks.generated.js";
+import { paletteContrast } from "./palette-color.js";
 
 /**
  * Canonical provider and agent identity for product surfaces. Each mark pairs
@@ -39,15 +40,19 @@ const MARK_SPECS = {
   devin: { accent: "#3969ca", aliases: ["devin", "cognition"], kind: "agent", name: "Devin" },
   gemini: { accent: "#3186ff", aliases: ["gemini", "google", "google deepmind", "google ai"], kind: "vendor", name: "Gemini" },
   geminicli: { accent: "#3186ff", aliases: ["gemini cli", "gemini-cli"], kind: "agent", name: "Gemini CLI" },
+  githubcopilot: { accent: "#1f2328", aliases: ["github copilot", "github-copilot", "copilot"], kind: "agent", name: "GitHub Copilot" },
   goose: { accent: "#0e7c86", aliases: ["goose", "block goose"], kind: "agent", name: "Goose" },
+  mem0: { accent: "#cbb2ff", aliases: ["mem0", "memzero"], kind: "vendor", name: "Mem0" },
   meta: { accent: "#0082fb", aliases: ["meta", "meta ai", "llama"], kind: "vendor", name: "Meta" },
   mistral: { accent: "#fa500f", aliases: ["mistral", "mistral ai"], kind: "vendor", name: "Mistral" },
   moonshot: { accent: "#5b5bd6", aliases: ["moonshot", "moonshot ai", "kimi"], kind: "vendor", name: "Moonshot AI" },
   nvidia: { accent: "#74b71b", aliases: ["nvidia"], kind: "vendor", name: "NVIDIA" },
+  obsidian: { accent: "#7c3aed", aliases: ["obsidian", "obsidian md"], kind: "vendor", name: "Obsidian" },
   openai: { accent: "#0f1014", aliases: ["openai", "chatgpt", "gpt"], kind: "vendor", name: "OpenAI" },
   perplexity: { accent: "#22b8cd", aliases: ["perplexity", "perplexity ai"], kind: "vendor", name: "Perplexity" },
   opencode: { accent: "#d97706", aliases: ["opencode", "open code"], kind: "agent", name: "opencode" },
   qwen: { accent: "#615ced", aliases: ["qwen", "tongyi"], kind: "vendor", name: "Qwen" },
+  supermemory: { accent: "#2563eb", aliases: ["supermemory", "supermemory ai"], kind: "vendor", name: "Supermemory" },
   xai: { accent: "#1a1a1a", aliases: ["xai", "x.ai", "grok", "spacexai"], kind: "vendor", name: "xAI" },
   zai: { accent: "#2d4d9e", aliases: ["zai", "z.ai", "z ai", "zhipu"], kind: "vendor", name: "Z.AI" },
 } as const satisfies Record<keyof typeof providerMarkAssets, ProviderMarkSpec>;
@@ -58,22 +63,16 @@ function foldedIdentity(identity: string): string {
   return identity.toLowerCase().replaceAll(/[^a-z0-9]/gu, "");
 }
 
-/** Perceived brightness (0-255) from the YIQ transform of one hex color. */
-function perceivedBrightness(hexColor: string): number | null {
-  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/u.exec(hexColor.toLowerCase());
-  if (match === null) return null;
-  return (
-    (Number.parseInt(match[1] ?? "0", 16) * 299 +
-      Number.parseInt(match[2] ?? "0", 16) * 587 +
-      Number.parseInt(match[3] ?? "0", 16) * 114) /
-    1000
-  );
-}
-
-/** A readable glyph color on top of the mark's accent. */
+/** An opaque glyph color at 4.5:1 or better on a six-digit brand accent. */
 export function providerMarkOnAccent(mark: Pick<ProviderMarkDescriptor, "accent">): string {
-  const brightness = perceivedBrightness(mark.accent);
-  return brightness !== null && brightness > 168 ? "#1c1917" : "#f7f6f2";
+  if (!/^#[0-9a-f]{6}$/iu.test(mark.accent)) throw new RangeError("Solid provider mark accents must be opaque six-digit hex colors.");
+  const moreReadable = (light: string, dark: string): string =>
+    paletteContrast(light, mark.accent) >= paletteContrast(dark, mark.accent) ? light : dark;
+  const preferred = moreReadable("#f7f6f2", "#1c1917");
+  // Retain warm ink where it passes; middle luminances may need pure ink.
+  return paletteContrast(preferred, mark.accent) >= 4.5
+    ? preferred
+    : moreReadable("#ffffff", "#000000");
 }
 
 /** Two-letter uppercase monogram from a display name, for uncovered marks. */

@@ -10,6 +10,7 @@ export * from "./status-page-html.js";
 export * from "./provider-marks.js";
 export * from "./platforms.js";
 export * from "./relative-time.js";
+export * from "./agent-setup.js";
 
 export const colors = {
   light: {

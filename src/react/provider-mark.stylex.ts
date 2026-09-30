@@ -46,11 +46,8 @@ export const providerMarkStyles = stylex.create({
       default: "var(--_mark-accent)",
       "@media (forced-colors: active)": "Canvas",
     },
-    backgroundImage: {
-      default:
-        "linear-gradient(180deg, color-mix(in srgb, white 22%, transparent), transparent 52%), linear-gradient(160deg, transparent, color-mix(in srgb, var(--_mark-accent) 78%, black))",
-      "@media (forced-colors: active)": "none",
-    },
+    backgroundImage: "none",
+    boxShadow: "none",
     color: "var(--_mark-on-accent, #f7f6f2)",
     outline: {
       default: "1px solid color-mix(in srgb, var(--_mark-accent) 70%, black)",
@@ -64,9 +61,18 @@ export const providerMarkStyles = stylex.create({
     color: "light-dark(color-mix(in srgb, var(--_mark-accent) 82%, black), color-mix(in srgb, var(--_mark-accent) 58%, white))",
     outline: "none",
   },
+  inherit: {
+    backgroundColor: "transparent",
+    backgroundImage: "none",
+    boxShadow: "none",
+    color: "inherit",
+    outline: "none",
+  },
   glyph: {
     blockSize: "64%",
+    color: "inherit",
     display: "inline-flex",
+    fill: "currentColor",
     inlineSize: "64%",
   },
   art: {
@@ -119,14 +125,15 @@ export const providerMarkStyles = stylex.create({
 });
 
 export function providerMarkClassName(
-  part: keyof typeof providerMarkStyles,
+  part: keyof typeof providerMarkStyles | readonly (keyof typeof providerMarkStyles)[],
   caller?: string,
 ): string {
-  const hook =
-    part === "tile"
+  const parts = typeof part === "string" ? [part] : part;
+  const hooks = parts.map((entry) =>
+    entry === "tile"
       ? "hraness-provider-mark"
-      : `hraness-provider-mark__${part.replaceAll(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`)}`;
-  return [hook, stylex.props(providerMarkStyles[part]).className, caller]
+      : `hraness-provider-mark__${entry.replaceAll(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`)}`);
+  return [...hooks, stylex.props(...parts.map((entry) => providerMarkStyles[entry])).className, caller]
     .filter(Boolean)
     .join(" ");
 }

@@ -141,6 +141,33 @@ describe("mockups.css parity", () => {
 });
 
 describe("mockup copy details", () => {
+  test("showcases need no caption or hint to keep their controls and visual accessible", () => {
+    const html = renderToStaticMarkup(<clientApi.ModeShowcase
+      modes={[{ id: "exact", label: "Exact words" }, { id: "meaning", label: "Meaning" }]}
+      surfaces={[{ id: "terminal", label: "Terminal", render: () => <api.TerminalFrame describe="Search returns the rule and its file." lines={[{ kind: "output", text: "parser timeout" }]} /> }]}
+    />);
+    expect(html).toContain('aria-pressed="true"');
+    expect(html).toContain('aria-label="Illustration of terminal"');
+    expect(html).toContain('aria-label="Search returns the rule and its file."');
+    expect(html).not.toContain("hkm-showcase-hint");
+    expect(html).not.toContain("<figcaption");
+  });
+
+  test("optional context and live status render independently", () => {
+    const surfaces = [{ id: "terminal", label: "Terminal", render: () => <span>Result</span> }];
+    const modes = [{ id: "exact", label: "Exact words" }];
+    const captioned = renderToStaticMarkup(<clientApi.ModeShowcase modes={modes} surfaces={surfaces} caption="Matches include the source file." />);
+    expect(captioned).toContain("Matches include the source file.");
+    const live = renderToStaticMarkup(<clientApi.ModeShowcase modes={modes} surfaces={surfaces} status={() => "One match"} />);
+    expect(live).toContain('aria-live="polite"');
+    expect(live).toContain("One match");
+    expect(live).not.toContain("undefined");
+    const steps = renderToStaticMarkup(<clientApi.StepThrough steps={[{ id: "review", label: "Review", render: () => <span>Ready</span> }]} />);
+    expect(steps).toContain('role="tablist"');
+    expect(steps).toContain("Step 1 of 1");
+    expect(steps).not.toContain("<figcaption");
+  });
+
   test("counts read as singular only for exactly one", () => {
     const article = (count: number) => renderToStaticMarkup(
       <api.ArticlePage

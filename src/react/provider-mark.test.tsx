@@ -47,8 +47,21 @@ test("an explicit label names the tile; otherwise it stays decorative", () => {
 test("solid tiles pin a readable on-accent glyph color", () => {
   const { document } = parseHTML(renderToStaticMarkup(<ProviderMark mark="nvidia" tone="solid" />));
   expect(document.querySelector(".hraness-provider-mark")?.getAttribute("style")).toContain(
-    "--_mark-on-accent:#f7f6f2",
+    "--_mark-on-accent:#1c1917",
   );
+});
+
+test("inherited marks keep retintable artwork in their container's ink", () => {
+  for (const mark of ["claudecode", "codex", "openai", "githubcopilot", "unknown-agent"]) {
+    const { document } = parseHTML(renderToStaticMarkup(<ProviderMark className="caller" mark={mark} tone="inherit" />));
+    const tile = document.querySelector(".hraness-provider-mark");
+    expect(tile?.classList.contains("hraness-provider-mark__inherit")).toBe(true);
+    expect(tile?.getAttribute("class")).toEndWith("caller");
+    expect(tile?.querySelector(".hraness-provider-mark__art")).toBeNull();
+    const glyph = tile?.querySelector("svg");
+    if (glyph !== null && glyph !== undefined) expect(glyph.getAttribute("fill")).toBe("currentColor");
+    else expect(tile?.querySelector(".hraness-provider-mark__monogram-only")).not.toBeNull();
+  }
 });
 
 test("chips carry the display name next to the mark", () => {

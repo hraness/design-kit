@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
@@ -527,7 +527,7 @@ async function colorProbe(page: Page) {
 
 if (process.argv.includes("--color-probe-only")) {
   const browserPath = await executable();
-  const probeBrowser = await chromium.launch({ executablePath: browserPath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
+  const probeBrowser = await chromium.launch({ executablePath: browserPath, headless: true, ...verificationBrowserLaunchOptions(["--no-sandbox"]) });
   try {
     const page = await probeBrowser.newPage();
     try { console.log(JSON.stringify({ browserPath, browserVersion: probeBrowser.version(), colorProbe: await colorProbe(page) }, null, 2)); }
@@ -720,7 +720,7 @@ try {
   } });
   const origin = `http://127.0.0.1:${server.port}`;
   const browserPath = await executable();
-  browser = await chromium.launch({ executablePath: browserPath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
+  browser = await chromium.launch({ executablePath: browserPath, headless: true, ...verificationBrowserLaunchOptions(["--no-sandbox"]) });
   const strictCsp = await verifyStrictMarketingCsp(browser, origin, {
     standalone: createHash("sha256").update(standalone).digest("hex"),
     compiler: createHash("sha256").update(compiler).digest("hex"),

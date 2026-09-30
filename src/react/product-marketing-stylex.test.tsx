@@ -138,12 +138,12 @@ test("invalid explicit columns fail closed before rendering even empty collectio
   fc.assert(fc.property(fc.anything().filter((value) => value !== undefined && value !== 1 && value !== 2 && value !== 3 && value !== 4), reject), { numRuns: 50, seed: 41203 });
 });
 
-test("all 28 marketing compositions render real owned atoms with native server-only semantics", () => {
+test("all 29 marketing compositions render real owned atoms with native server-only semantics", () => {
   const html = renderToStaticMarkup(<ProductMarketingFixture api={api} />);
   const { document } = parseHTML(html);
   // MarketingField is a flow/background boundary, not a new owned atom recipe.
   expect(typeof api.MarketingField).toBe("function");
-  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(28);
+  expect(Object.keys(api).filter((name) => (name.startsWith("Marketing") || name === "ProductHero") && name !== "MarketingField")).toHaveLength(29);
   const owned = [...document.querySelectorAll('[class*="hraness-marketing-"]')];
   expect(owned.length).toBeGreaterThan(250);
   for (const node of owned) {

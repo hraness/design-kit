@@ -16,7 +16,7 @@ Limits are maximums. Count characters in the rendered text.
 | `boundary` | Price or license, requirements, and release state, once and plainly: "Free and open source · Needs Rust 1.85 or newer · Latest release: v0.2.1". | 110 characters | Governance terms such as "verified release", "admitted", "qualified", or "source pilot". |
 | `notice` | Status only when it changes what the reader can do today. | One sentence | A second copy of the boundary, or caveats a reader cannot act on. |
 | `MarketingProofFrame` | Output a reader can reproduce with the current release. Put the capture date in `credit` and label a historical record as historical. Set `chrome` to `window`, `browser` (with the page's `url`), or `terminal` to match what was captured. | | Commands or flags the current release rejects; "Live qualification" as a label; a browser address the product does not serve. |
-| Mockups from `@hraness/design-kit/mockups` | An illustration of one state of the product, with a `describe` sentence that starts "Illustration of" and a caption that says it is an illustration. Invented names, handles, and addresses on reserved example domains. | `describe`: one sentence | Real people's names or handles, headings inside the picture, and a mockup presented as a screenshot. |
+| Mockups from `@hraness/design-kit/mockups` | One useful product state, with an accurate accessible `describe` sentence. Add a caption only when it contributes information the surrounding copy and picture do not already give. Use invented names, handles, and addresses on reserved example domains. | `describe`: one sentence | Generic "Illustration" or "Names are made up" captions, repeated descriptions, real people's names or handles, and claims that a mockup is a captured screenshot. |
 | `MarketingDataTable` `caption` | The measurement's name: what was run, on what. | 70 characters | A verdict disguised as a caption. |
 | `MarketingDataTable` `meta`, `note` | The date, source, or sample size in `meta`; the caveat that bounds the claim in `note`. | `note`: 160 characters | Data that outlives its caveat, or a table presented as a guarantee. |
 | `MarketingDataTable` columns | Short unit-bearing labels. Numbers go in `numeric` columns; the first column names each row. | | Wide dumps that belong in documentation. |
@@ -28,6 +28,18 @@ Limits are maximums. Count characters in the rendered text.
 | `MarketingRelated` `mark` | The sibling product's portfolio mark, such as a `relatedFor()` item's `mark`. | | Artwork the sibling does not use. |
 | `MarketingQuestionList` | Questions readers actually ask. The first sentence of each answer answers it. Generate any FAQ JSON-LD from the same array. | Eight questions | Questions written to deliver a talking point. |
 | `MarketingCallToAction` | The next concrete step. | Section heading limit | Decorative closers ("Give every job the same room to run in."). |
+
+## Useful context
+
+Every visible line should help someone understand the product, make a decision, or take the next step. Omit explanatory subtitles when the control label and result already explain the interaction. Captions and hints are optional; an empty slot needs no replacement sentence. Accessible descriptions stay accurate without becoming visible disclaimers.
+
+Show the result of a feature before its implementation. A publishing section shows the published page beside a short command. A setup section offers one copyable prompt, compact provider actions, and one command selector rather than repeated terminal cards and explanations. Keep detailed configuration in the linked guide. Actions use short labels such as "Publish your notes"; comparisons use recognizable marks and concise destinations.
+
+## Benchmarks
+
+Keep a benchmark only when its result makes sense without knowing the test harness. Name the task, metric and unit, baseline, product version, and meaningful sample. Explain what improves in the reader's words. A tiny fixture or synthetic correctness check is engineering evidence, not a product advantage; remove its numbers from marketing rather than dressing them up as a benchmark.
+
+Put measurement dates, sources, sample details and necessary methodological limits in a compact note beside the result. Keep the result visually primary. A qualification that changes the meaning of the claim stays close to it and remains readable; fine print is a quieter typographic role, never low-contrast or hidden text. Detailed methodology and reproduction commands belong on the evidence page.
 
 ## Plain-string props
 

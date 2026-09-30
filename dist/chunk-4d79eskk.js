@@ -9,38 +9,11 @@ import {
   assertArticleHref,
   formatArticleDate
 } from "./chunk-77391vmq.js";
-
-// src/palette-color.ts
-function channels(hex) {
-  if (!/^#[0-9a-f]{6}$/iu.test(hex))
-    throw new Error("Palette colors must be six-digit hex values.");
-  return [Number.parseInt(hex.slice(1, 3), 16), Number.parseInt(hex.slice(3, 5), 16), Number.parseInt(hex.slice(5, 7), 16)];
-}
-function mixPaletteColor(color, toward, amount) {
-  const target = channels(toward);
-  return `#${channels(color).map((value, index) => Math.round(value * (1 - amount) + (target[index] ?? 0) * amount).toString(16).padStart(2, "0")).join("")}`;
-}
-function luminance(hex) {
-  const linearize = (channel) => {
-    const value = channel / 255;
-    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-  };
-  const [red, green, blue] = channels(hex);
-  return linearize(red) * 0.2126 + linearize(green) * 0.7152 + linearize(blue) * 0.0722;
-}
-function paletteContrast(a, b) {
-  const first = luminance(a);
-  const second = luminance(b);
-  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
-}
-function readablePaletteColor(color, toward, backgrounds, minimum) {
-  for (let step = 0;step <= 100; step += 1) {
-    const candidate = mixPaletteColor(color, toward, step / 100);
-    if (backgrounds.every((background) => paletteContrast(candidate, background) >= minimum))
-      return candidate;
-  }
-  throw new Error("The authored palette cannot meet its contrast contract.");
-}
+import {
+  mixPaletteColor,
+  paletteContrast,
+  readablePaletteColor
+} from "./chunk-vst6p4wd.js";
 
 // src/palettes.ts
 var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night", "paper"];
@@ -992,6 +965,62 @@ function formatRelativeTime(target, options = {}) {
   } = resolveRelativeTime(instant.getTime() - reference.getTime());
   return formatterFor(locale, numeric).format(value, unit);
 }
+// src/agent-setup.ts
+var MAX_AGENT_SETUP_URL = 1e4;
+function agentSetupTargets(prompt, options = {}) {
+  if (typeof prompt !== "string" || prompt.trim() === "")
+    throw new RangeError("Agent setup prompt must contain text.");
+  const encoded = options.prefill === false ? "" : encodeURIComponent(prompt);
+  const prefill = (href, entry) => options.prefill !== false && href.length <= MAX_AGENT_SETUP_URL ? {
+    href,
+    mode: "prefill"
+  } : {
+    href: entry,
+    mode: "copy-and-open"
+  };
+  const codex = prefill(`codex://new?prompt=${encoded}`, "https://chatgpt.com/codex");
+  return [{
+    id: "dot",
+    label: "OpenAI Dot",
+    mark: "openai",
+    href: "https://chatgpt.com/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "grok-bot",
+    label: "Grok Bot",
+    mark: "xai",
+    href: "https://cursor.com/dashboard/bot",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "muse",
+    label: "Muse",
+    mark: "meta",
+    href: "https://applink.muse.ai/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "cursor",
+    label: "Cursor",
+    mark: "cursor",
+    host: "local",
+    ...prefill(`https://cursor.com/link/prompt?text=${encoded}`, "https://cursor.com/")
+  }, {
+    id: "codex-app",
+    label: "Codex",
+    mark: "codex",
+    host: codex.mode === "prefill" ? "local" : "cloud",
+    ...codex
+  }, {
+    id: "devin",
+    label: "Devin",
+    mark: "devin",
+    href: "https://app.devin.ai/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }];
+}
 
 // src/index.ts
 var colors = {
@@ -1206,4 +1235,4 @@ function themeFor(mode) {
   return colors[mode];
 }
 
-export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, STATUS_PAGE_MAX_NEXT, STATUS_PAGE_MAX_ROUTES, STATUS_PAGE_BACK_LABEL, STATUS_PAGE_HINT_PREFIX, STATUS_PAGE_NEXT_HEADING_ID, STATUS_PAGE_AGENT_PREFIX, resolveStatusPage, statusPageRoutesAttribute, parseStatusPageRoutes, normalizeStatusPath, suggestStatusRoute, renderStatusPageHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };
+export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, STATUS_PAGE_MAX_NEXT, STATUS_PAGE_MAX_ROUTES, STATUS_PAGE_BACK_LABEL, STATUS_PAGE_HINT_PREFIX, STATUS_PAGE_NEXT_HEADING_ID, STATUS_PAGE_AGENT_PREFIX, resolveStatusPage, statusPageRoutesAttribute, parseStatusPageRoutes, normalizeStatusPath, suggestStatusRoute, renderStatusPageHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, MAX_AGENT_SETUP_URL, agentSetupTargets, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };

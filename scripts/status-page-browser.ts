@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { join, resolve } from "node:path";
 import { chromium, type Page } from "playwright-core";
@@ -37,7 +37,7 @@ window.__statusDispose = attachStatusPage(document.querySelector(".hraness-statu
 const frameCounter = `(() => { const raf = window.requestAnimationFrame.bind(window); window.__frames = 0;
   window.requestAnimationFrame = (callback) => { window.__frames++; return raf(callback); }; })();`;
 
-const browser = await chromium.launch({ executablePath: await executable(), args: verificationBrowserArguments(["--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"]) });
+const browser = await chromium.launch({ executablePath: await executable(), ...verificationBrowserLaunchOptions(["--ignore-gpu-blocklist", "--enable-unsafe-swiftshader"]) });
 async function open(css: string, options: { width?: number; palette?: string; theme?: string; reducedMotion?: "reduce" | "no-preference"; forcedColors?: "active" | "none" } = {}): Promise<Page> {
   const page = await browser.newPage({ viewport: { width: options.width ?? 1280, height: 900 } });
   const errors: string[] = [];

@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -318,7 +318,7 @@ try {
     },
   });
   try {
-    const browser = await chromium.launch({ executablePath: await executable(), headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
+    const browser = await chromium.launch({ executablePath: await executable(), headless: true, ...verificationBrowserLaunchOptions(["--no-sandbox"]) });
     try {
       const origin = `http://127.0.0.1:${String(server.port)}`;
       const staticContext = await browser.newContext({ javaScriptEnabled: false });

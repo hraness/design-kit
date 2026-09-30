@@ -1549,6 +1549,13 @@ export const marketingStyles = stylex.create({
     "font-size": "1.125rem",
     "line-height": "1.5"
   },
+  "section__heading_content": {
+    display: "grid",
+    gap: "1.25rem",
+    "min-inline-size": 0,
+    "margin-block-start": "1.5rem",
+    "justify-items": "start",
+  },
   "section__body": {
     "min-inline-size": "0",
     "display": "grid",
@@ -4316,6 +4323,7 @@ const recipes = {
   "hraness-marketing-section__label": { "default": marketingStyles.section__label, "body": [marketingStyles.section__label, marketingStyles.sectionLabelBody] },
   "hraness-marketing-section__heading": { "default": marketingStyles.section__heading },
   "hraness-marketing-section__summary": { "default": marketingStyles.section__summary },
+  "hraness-marketing-section__heading-content": { "default": marketingStyles.section__heading_content },
   "hraness-marketing-section__body": { "default": marketingStyles.section__body },
   "hraness-marketing-primitives": { "default": marketingStyles.primitives },
   "hraness-marketing-primitives__header": { "default": marketingStyles.primitives__header },

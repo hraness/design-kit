@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { mkdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -46,7 +46,7 @@ const server = Bun.serve({ port: 0, hostname: "127.0.0.1", fetch(request) {
   if (/^\/fonts\/(?:nebula-sans|geist-mono)\/[\w[\]-]+\.woff2$/u.test(path)) return new Response(Bun.file(resolve(root, `src${path}`)));
   return new Response("Not found", { status: 404 });
 } });
-const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
+const browser = await chromium.launch({ executablePath, headless: true, ...verificationBrowserLaunchOptions(["--no-sandbox"]) });
 try {
   for (const width of [1280, 390]) {
     const page = await browser.newPage({ viewport: { width, height: 1000 }, colorScheme: "light", reducedMotion: "reduce" });

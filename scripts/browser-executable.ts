@@ -1,11 +1,13 @@
 import { execFile } from "node:child_process";
-import { constants } from "node:fs";
+import { constants, readFileSync } from "node:fs";
 import { access, realpath } from "node:fs/promises";
-import { isAbsolute } from "node:path";
+import { createRequire } from "node:module";
+import { dirname, isAbsolute, join } from "node:path";
 import { promisify } from "node:util";
-import { chromium } from "playwright-core";
+import { chromium, type LaunchOptions } from "playwright-core";
 
 const execute = promisify(execFile);
+const require = createRequire(import.meta.url);
 const installation = "Run bun run browser:install to provision the Chromium revision pinned by playwright-core.";
 
 export interface BrowserSelectionOptions {
@@ -57,6 +59,7 @@ export async function provisionedBrowserExecutable(options: BrowserSelectionOpti
 
 /** Merge required quiet, clone-free automation flags without discarding caller features. */
 export function verificationBrowserArguments(arguments_: readonly string[] = []): string[] {
+  if (arguments_.includes("--disable-features")) throw new Error("Use --disable-features=value for Chromium features.");
   const disabled = new Set(["PaintHolding", "MacAppCodeSignClone"]);
   const preserved: string[] = [];
   for (const argument of arguments_) {
@@ -67,4 +70,50 @@ export function verificationBrowserArguments(arguments_: readonly string[] = [])
     } else if (argument !== "--mute-audio") preserved.push(argument);
   }
   return [...preserved, "--mute-audio", `--disable-features=${[...disabled].join(",")}`];
+}
+
+function record(value: unknown): Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) throw new Error("Cannot reconcile the pinned Playwright definition.");
+  return value as Record<string, unknown>;
+}
+
+/** Read the exact installed package's defaults instead of replacing them. */
+function pinnedChromiumDefaults(): readonly string[] {
+  const coreRoot = dirname(require.resolve("playwright-core/package.json"));
+  const installed = record(JSON.parse(readFileSync(join(coreRoot, "package.json"), "utf8")));
+  const authored = record(JSON.parse(readFileSync(join(import.meta.dir, "../package.json"), "utf8")));
+  if (installed.version !== record(authored.devDependencies)["playwright-core"]) {
+    throw new Error("Install the repository's pinned playwright-core before browser verification.");
+  }
+  // The private formatter is admitted only through the exact authored pin.
+  const core = record(require(join(coreRoot, "lib/coreBundle.js")));
+  const factory = record(core.server).createPlaywright;
+  if (typeof factory !== "function") throw new Error("Cannot reconcile the pinned Playwright formatter.");
+  const runtime: unknown = factory({ sdkLanguage: "javascript" });
+  const browser = record(record(runtime).chromium);
+  const formatter = browser._innerDefaultArgs;
+  if (typeof formatter !== "function") throw new Error("Cannot reconcile the pinned Chromium formatter.");
+  const arguments_: unknown = formatter.call(browser, { headless: true });
+  if (!Array.isArray(arguments_) || !arguments_.every((argument): argument is string => typeof argument === "string")) {
+    throw new Error("Cannot reconcile the pinned Chromium switches.");
+  }
+  return arguments_;
+}
+
+/** Keep Playwright's defaults and produce one physical disabled-features switch. */
+export function verificationBrowserLaunchOptions(
+  arguments_: readonly string[] = [],
+  defaults: readonly string[] = pinnedChromiumDefaults(),
+): Pick<LaunchOptions, "args" | "ignoreDefaultArgs"> {
+  const disabled = defaults.filter((argument) => argument.startsWith("--disable-features="));
+  if (disabled.length !== 1) throw new Error("Pinned Chromium must supply exactly one disabled-features switch.");
+  const merged = verificationBrowserArguments([...disabled, ...arguments_])
+    .filter((argument) => argument !== "--mute-audio" || !defaults.includes("--mute-audio"));
+  const useDefault = merged.find((argument) => argument.startsWith("--disable-features=")) === disabled[0];
+  return {
+    // Playwright filters supplied arguments too; an identical replacement
+    // would disappear along with the ignored default.
+    ignoreDefaultArgs: useDefault ? [] : disabled,
+    args: useDefault ? merged.filter((argument) => !argument.startsWith("--disable-features=")) : merged,
+  };
 }

@@ -29,10 +29,12 @@ function itemAt(items, index, what) {
     throw new RangeError(`${what} has no entry at ${String(index)}.`);
   return item;
 }
-function assertCaption(caption, component) {
-  if (typeof caption !== "string" || caption.trim() === "") {
-    throw new TypeError(`${component} needs a caption that says the picture is an illustration.`);
-  }
+function optionalText(value, component) {
+  if (value === undefined)
+    return;
+  if (typeof value !== "string")
+    throw new TypeError(`${component} text must be a string.`);
+  return value.trim() || undefined;
 }
 function nextTabIndex(key, index, count) {
   if (key === "ArrowRight" || key === "ArrowDown")
@@ -118,7 +120,7 @@ function ModeShowcase({
   assertUniqueIds(modes, "ModeShowcase mode");
   if (options !== undefined)
     assertUniqueIds(options, "ModeShowcase option");
-  assertCaption(caption, "ModeShowcase");
+  const captionText = optionalText(caption, "ModeShowcase");
   if (!(height > 0))
     throw new RangeError("ModeShowcase height must be positive.");
   const id = useId();
@@ -163,6 +165,8 @@ function ModeShowcase({
     option,
     surface: surface.id
   });
+  const hint = [modeChoice.hint, optionInactive ? undefined : optionChoice?.hint].map((text) => optionalText(text, "ModeShowcase hint")).filter((text) => text !== undefined).join(" ");
+  const hasStatus = statusNode !== undefined && statusNode !== null && statusNode !== false && statusNode !== "";
   return /* @__PURE__ */ jsxs("figure", {
     "aria-label": label?.(surface) ?? `Illustration of ${surface.label.toLowerCase()}`,
     className: joinMockupClasses("hkm-showcase", className),
@@ -243,12 +247,9 @@ function ModeShowcase({
               })
             ]
           }),
-          /* @__PURE__ */ jsxs("p", {
+          hint === "" ? null : /* @__PURE__ */ jsx("p", {
             className: "hkm-showcase-hint",
-            children: [
-              modeChoice.hint,
-              optionChoice === undefined || optionInactive ? null : ` ${optionChoice.hint}`
-            ]
+            children: hint
           })
         ]
       }),
@@ -273,16 +274,16 @@ function ModeShowcase({
           })
         })
       }),
-      /* @__PURE__ */ jsxs("figcaption", {
+      !hasStatus && captionText === undefined ? null : /* @__PURE__ */ jsxs("figcaption", {
         className: "hkm-showcase-caption",
         children: [
-          statusNode === undefined ? null : /* @__PURE__ */ jsx("span", {
+          hasStatus ? /* @__PURE__ */ jsx("span", {
             "aria-live": "polite",
             className: "hkm-showcase-status",
             children: statusNode
-          }),
-          /* @__PURE__ */ jsx("span", {
-            children: caption
+          }) : null,
+          captionText === undefined ? null : /* @__PURE__ */ jsx("span", {
+            children: captionText
           })
         ]
       })
@@ -299,7 +300,7 @@ function StepThrough({
   theme
 }) {
   assertUniqueIds(steps, "StepThrough step");
-  assertCaption(caption, "StepThrough");
+  const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step2) => step2.id === initial)));
   const [animated, setAnimated] = useState(false);
@@ -406,10 +407,10 @@ function StepThrough({
           })
         ]
       }),
-      /* @__PURE__ */ jsx("figcaption", {
+      captionText === undefined ? null : /* @__PURE__ */ jsx("figcaption", {
         className: "hkm-showcase-caption",
         children: /* @__PURE__ */ jsx("span", {
-          children: caption
+          children: captionText
         })
       })
     ]

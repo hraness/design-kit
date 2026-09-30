@@ -54,7 +54,7 @@ A beat is one short section that makes one claim and shows one visual. Write 7 t
 - The hero holds the title, the registry `meta` as the dek, the status line from release data, and the film when there is one.
 - Each beat has a headline of 70 characters or fewer, in sentence case with no period, and a post of 250 characters or fewer that works on its own as one social post.
 - Social posts carry claims only. The `limits` beat, and any caveat, known gap, negative finding, audit or review line, or legally required disclaimer, stay in the launch post, the docs, and the site, and never reach a social post, the Show HN facts, or the Product Hunt fields. Every social post must still be true on its own: when a caveat is what keeps a beat's claim accurate, give the beat a `socialPost` that states a narrower claim accurately without it, or mark the beat `social: false`.
-- Each beat has exactly one visual, and no two beats share one. Alt text is 125 characters or fewer. A mockup is labelled as an illustration in its alt text and caption.
+- Each beat has exactly one visual, and no two beats share one. Alt text is 125 characters or fewer and describes the visual accurately. Visible captions are optional and add context; never repeat alt text or require a generic illustration disclaimer.
 - Render beats with `LaunchBeats` from `@hraness/design-kit/react`. Each beat gets a `#beat-<id>` anchor.
 - After the beats: "Go deeper" links named for the reader's next task, then the social kit, then sources and the drafting and review note.
 - Technical depth, comparisons with other products, and tables go in companion posts or `/compare` pages. Link them from the beat with `detailHref`.
