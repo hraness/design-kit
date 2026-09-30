@@ -83,7 +83,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-95mpmzc9.js";
+} from "../chunk-nwpcjm48.js";
 import"../chunk-h4k7yv6x.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
@@ -6675,6 +6675,7 @@ Run the job, then show me its log.`,
                     ]
                   }),
                   /* @__PURE__ */ jsx17(MarketingInterfaceGrid, {
+                    columns: 2,
                     heading: "Choose your interface.",
                     headingId: "gallery-marketing-interfaces",
                     headingLevel: 3,
@@ -6728,6 +6729,7 @@ Run the job, then show me its log.`,
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingTrustBoundary, {
+                    columns: 2,
                     heading: "What leaves your machine.",
                     headingId: "gallery-marketing-trust",
                     headingLevel: 3,
@@ -6840,6 +6842,7 @@ Run the job, then show me its log.`,
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingRelated, {
+                    columns: 2,
                     groups: [{
                       heading: "Sibling tools",
                       headingId: "design-gallery-related-tools",
@@ -6853,6 +6856,7 @@ Run the job, then show me its log.`,
                         role: "A local search index"
                       }]
                     }, {
+                      columns: 1,
                       heading: "Shared infrastructure",
                       headingId: "design-gallery-related-infra",
                       items: [{

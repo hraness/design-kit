@@ -68,6 +68,48 @@ test("card and capability column caps remain server-safe and reject invalid coun
   }
 });
 
+test("composed card grids retain content and semantics while forwarding finite column limits", () => {
+  const items = Array.from({ length: 4 }, (_, index) => ({ label: `Item ${index}`, detail: `Detail ${index}` }));
+  const related = items.map(({ label, detail }) => ({ name: label, role: detail, href: "#products" }));
+  for (const columns of [1, 2, 3, 4] as const) {
+    const html = renderToStaticMarkup(<>
+      <MarketingTrustBoundary columns={columns} heading="Boundaries" headingId="bounds" items={items} />
+      <MarketingInterfaceGrid columns={columns} heading="Interfaces" headingId="interfaces" interfaces={items.map(({ label, detail }) => ({ label, summary: detail }))} />
+      <MarketingRelated columns={columns} heading="Products" headingId="products" groups={[
+        { heading: "Default", headingId: "default", items: related },
+        { heading: "Override", headingId: "override", columns: 2, items: related },
+      ]} />
+    </>);
+    const { document } = parseHTML(html);
+    expect(document.querySelector("[style], style, script")).toBeNull();
+    const trust = document.querySelector(".hraness-marketing-trust-grid");
+    const interfaces = document.querySelector(".hraness-marketing-interface-grid");
+    if (trust === null || interfaces === null) throw new Error("Composed grids must render their native list containers.");
+    expect(trust.tagName).toBe("DL");
+    expect(trust.querySelectorAll("dt")).toHaveLength(4);
+    expect(trust.querySelectorAll("dd")).toHaveLength(4);
+    expect(interfaces.children).toHaveLength(4);
+    const rows = [...document.querySelectorAll(".hraness-marketing-card-row")];
+    const expected = parseHTML(renderToStaticMarkup(<><MarketingCardRow columns={columns} /><MarketingCardRow columns={2} /></>)).document;
+    expect(rows.map(row => row.className)).toEqual([...expected.querySelectorAll(".hraness-marketing-card-row")].map(row => row.className));
+    expect(rows.map(row => row.getAttribute("aria-label"))).toEqual(["Default", "Override"]);
+    expect(rows.every(row => row.querySelectorAll("a").length === 4)).toBe(true);
+  }
+});
+
+test("composed grid column limits reject invalid values at the rendered public boundary", () => {
+  for (const value of [0, 5, NaN, Infinity, 1.5, null, "2"]) {
+    // Deliberately emulate an untyped consumer.
+    const columns = value as unknown as 2;
+    for (const element of [
+      <MarketingTrustBoundary columns={columns} heading="Boundaries" headingId="bounds" items={[]} />,
+      <MarketingInterfaceGrid columns={columns} heading="Interfaces" headingId="interfaces" interfaces={[]} />,
+      <MarketingRelated columns={columns} heading="Products" headingId="products" items={[]} />,
+      <MarketingRelated heading="Products" headingId="products" groups={[{ heading: "Group", headingId: "group", columns, items: [] }]} />,
+    ]) expect(() => renderToStaticMarkup(element)).toThrow(RangeError);
+  }
+});
+
 test("the product hero renders a complete semantic narrative without client behavior", () => {
   const html = renderToStaticMarkup(
     <ProductHero

@@ -2431,10 +2431,6 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
   }
 
-  .x1p797x9 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  }
-
   .x1vfedg7 {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   }

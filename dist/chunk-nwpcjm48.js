@@ -2118,19 +2118,23 @@ var marketingStyles = {
     $$css: true
   },
   interface_grid: {
+    "--hraness-marketing-grid-columns": "xogmzgw",
+    "--_hraness-marketing-grid-track": "x9wro72",
     k1xSpc: "xrvj5dj",
     kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kOIVth: "x8fetqu",
-    kg9kkx: "x1p797x9",
+    kg9kkx: "x1v4bfo1",
     $$css: true
   },
   trust_grid: {
+    "--hraness-marketing-grid-columns": "xogmzgw",
+    "--_hraness-marketing-grid-track": "x9wro72",
     k1xSpc: "xrvj5dj",
     kkeX5w: "x1qjc9v5",
     kogj98: "x1ghz6dp",
     kOIVth: "x8fetqu",
-    kg9kkx: "x1p797x9",
+    kg9kkx: "x1v4bfo1",
     $$css: true
   },
   interface: {
@@ -3654,7 +3658,7 @@ function marketingColumnClassName(hook, caller, columns) {
   if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
     throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
   }
-  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" ? gridColumns : factColumns)[columns];
+  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" ? gridColumns : factColumns)[columns];
   return [hook, stylex3.props(recipes[hook].default, columnRecipe).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
 }
 function marketingClassName(hook, caller, variant = "default") {
@@ -4624,6 +4628,7 @@ function MarketingStatStrip({
 }
 function MarketingInterfaceGrid({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -4649,7 +4654,7 @@ function MarketingInterfaceGrid({
         prefix: "interfaces"
       }),
       /* @__PURE__ */ jsx4("div", {
-        className: marketingClassName("hraness-marketing-interface-grid"),
+        className: marketingColumnClassName("hraness-marketing-interface-grid", undefined, columns),
         children: interfaces.map((entry) => /* @__PURE__ */ jsxs3("article", {
           className: marketingClassName("hraness-marketing-interface"),
           children: [
@@ -4671,6 +4676,7 @@ function MarketingInterfaceGrid({
 }
 function MarketingTrustBoundary({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -4696,7 +4702,7 @@ function MarketingTrustBoundary({
         prefix: "trust"
       }),
       /* @__PURE__ */ jsx4("dl", {
-        className: marketingClassName("hraness-marketing-trust-grid"),
+        className: marketingColumnClassName("hraness-marketing-trust-grid", undefined, columns),
         children: items.map((item) => /* @__PURE__ */ jsxs3("div", {
           className: marketingClassName("hraness-marketing-trust-item"),
           children: [
@@ -4996,6 +5002,7 @@ function MarketingRelatedCards({
 }
 function MarketingRelated({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -5005,6 +5012,9 @@ function MarketingRelated({
   label,
   summary
 }) {
+  const defaultColumnProps = columns === undefined ? {} : {
+    columns
+  };
   return /* @__PURE__ */ jsxs3("section", {
     "aria-labelledby": headingId,
     className: marketingClassName("hraness-marketing-related", className),
@@ -5020,6 +5030,7 @@ function MarketingRelated({
         summary
       }),
       groups === undefined ? /* @__PURE__ */ jsx4(MarketingCardRow, {
+        ...defaultColumnProps,
         children: /* @__PURE__ */ jsx4(MarketingRelatedCards, {
           items,
           level: childHeadingLevel(headingLevel)
@@ -5044,6 +5055,9 @@ function MarketingRelated({
           }),
           /* @__PURE__ */ jsx4(MarketingCardRow, {
             ariaLabel: group.heading,
+            ...group.columns === undefined ? defaultColumnProps : {
+              columns: group.columns
+            },
             children: /* @__PURE__ */ jsx4(MarketingRelatedCards, {
               items: group.items,
               level: childHeadingLevel(childHeadingLevel(headingLevel))
