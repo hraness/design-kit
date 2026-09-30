@@ -440,7 +440,7 @@ export function DesignSystemGallery({
             <MarketingSectionLabel size="body">Reference</MarketingSectionLabel>
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>
-          <MarketingInterfaceGrid heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
+          <MarketingInterfaceGrid columns={2} heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
             { label: "CLI", summary: "Run a named job.", example: <MarketingCodeBlock code="relay run job-01" /> },
             { label: "SDK", summary: "Use typed application code." },
           ]} />
@@ -448,7 +448,7 @@ export function DesignSystemGallery({
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#gallery-install", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter." },
           ]} />
-          <MarketingTrustBoundary heading="What leaves your machine." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
+          <MarketingTrustBoundary columns={2} heading="What leaves your machine." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
             { label: "Stays local", detail: "Source files and credentials." },
             { label: "Shared", detail: "Only the logs you choose to sync." },
           ]} />
@@ -524,6 +524,7 @@ export function DesignSystemGallery({
             ]}
           />
           <MarketingRelated
+            columns={2}
             groups={[
               {
                 heading: "Relationships",
@@ -545,6 +546,7 @@ export function DesignSystemGallery({
                 ],
               },
               {
+                columns: 1,
                 heading: "Knowledge",
                 tone: "indigo",
                 headingId: "design-gallery-related-infra",

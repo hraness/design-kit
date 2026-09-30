@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "177ba8b744bd6b110cf145dca2370d2c2fe40140999270c6e3c0b5e6ac4c0af1", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "e3ae0ef901a26051fbf2d4aa1970469a68764f6a9e47f35666ab8d1f8cd488f6", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -138,7 +138,7 @@ async function settle(page: Page): Promise<void> {
 async function strictGridSnapshot(page: Page) {
   return page.locator(productMarketingCspGrids.map(({ selector }) => selector).join(", ")).evaluateAll((elements) =>
     elements.map((element) => {
-      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats, .hraness-marketing-card-row, .hraness-marketing-primitives");
+      const container = element.closest(".hraness-marketing-hero, .hraness-marketing-pillars, .hraness-marketing-stats, .hraness-marketing-card-row, .hraness-marketing-primitives, .hraness-marketing-trust, .hraness-marketing-interfaces, .hraness-marketing-related");
       if (container === null) throw new Error("The strict grid lost its public layout container.");
       // Read layout before dependent computed grid tracks, including after the
       // delivery sheet's application flag changes. Do not sample stale tracks.
@@ -149,7 +149,7 @@ async function strictGridSnapshot(page: Page) {
       return { display: style.display, columns: style.gridTemplateColumns, items: element.children.length,
         columnValue: style.getPropertyValue(element.matches(".hraness-marketing-pillars")
           ? "--hraness-marketing-pillar-columns"
-          : element.matches(".hraness-marketing-card-row, .hraness-marketing-primitives__list")
+          : element.matches(".hraness-marketing-card-row, .hraness-marketing-primitives__list, .hraness-marketing-trust-grid, .hraness-marketing-interface-grid, .hraness-marketing-related__list")
             ? "--hraness-marketing-grid-columns" : "--hraness-marketing-fact-columns").trim(),
         geometry: { containerWidth: containerRect.width, gridWidth: gridRect.width,
           boxSizing: containerStyle.boxSizing, inlineSize: containerStyle.inlineSize,
@@ -229,7 +229,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
         assert.ok(tracks.every((track) => Number.parseFloat(track) > 0), `${label}: nonempty tracks`);
       }
       const sheet = page.locator('link[rel="stylesheet"]');
-      for (const selector of [".strict-natural-cards", ".strict-natural-primitives > ol"]) {
+      for (const selector of [".strict-natural-cards", ".strict-natural-primitives > ol", ".strict-natural-trust > dl", ".strict-natural-interfaces > div", ".strict-natural-related > .hraness-marketing-related__list"]) {
         const natural = await page.locator(selector).evaluate(element => ({
           cap: getComputedStyle(element).getPropertyValue("--hraness-marketing-grid-columns").trim(),
           tracks: getComputedStyle(element).gridTemplateColumns.split(" ").length,
@@ -237,7 +237,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
         }));
         assert.equal(natural.cap, "", `${label}: nested uncapped grid must not inherit its parent's limit`);
         assert.equal(natural.overflow, false, `${label}: nested natural grid overflow`);
-        if (configuration.width <= 768) assert.equal(natural.tracks, 1, `${label}: natural phone layout`);
+        if (configuration.width <= 768 || selector.includes("strict-natural-related")) assert.equal(natural.tracks, 1, `${label}: natural single-column layout`);
         else assert.ok(natural.tracks > 1, `${label}: natural desktop layout`);
       }
       assert.equal(await sheet.count(), 1, `${label}: one delivery stylesheet`);

@@ -1738,6 +1738,9 @@ export const marketingStyles = stylex.create({
     "line-height": "1.5"
   },
   "related__list": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 0.5rem) / var(--hraness-marketing-grid-columns)))",
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 100%)), 1fr))",
     "display": "grid",
     "gap": "0.5rem",
     "list-style": "none",
@@ -2187,18 +2190,22 @@ export const marketingStyles = stylex.create({
     "line-height": "1.5"
   },
   "interface_grid": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)))",
     "display": "grid",
     "align-items": "stretch",
     "margin": "0",
     "gap": "1rem",
-    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))"
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr))"
   },
   "trust_grid": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 1rem) / var(--hraness-marketing-grid-columns)))",
     "display": "grid",
     "align-items": "stretch",
     "margin": "0",
     "gap": "1rem",
-    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))"
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr))"
   },
   "interface": {
     "display": "grid",
@@ -4483,7 +4490,7 @@ const gridColumns = {
 
 /** Explicit finite columns compose static atoms, including the existing media rules. */
 export function marketingColumnClassName(
-  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list" | "hraness-marketing-card-row" | "hraness-marketing-primitives__list",
+  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list" | "hraness-marketing-card-row" | "hraness-marketing-primitives__list" | "hraness-marketing-interface-grid" | "hraness-marketing-trust-grid" | "hraness-marketing-related__list",
   caller: string | undefined,
   columns: MarketingColumnCount | undefined,
   presentation: "default" | "benefits" = "default",
@@ -4493,7 +4500,7 @@ export function marketingColumnClassName(
   }
   const columnRecipe = columns === undefined ? undefined
     : (hook === "hraness-marketing-pillars" ? pillarColumns
-      : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" ? gridColumns
+      : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" || hook === "hraness-marketing-related__list" ? gridColumns
         : factColumns)[columns];
   return [hook, stylex.props(recipes[hook].default, columnRecipe, hook === "hraness-marketing-pillars" && presentation === "benefits" && marketingStyles.pillarsBenefits).className, caller]
     .filter((value) => value !== undefined && value.length > 0).join(" ");

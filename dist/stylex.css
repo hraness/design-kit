@@ -2567,10 +2567,6 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
   }
 
-  .x1p797x9 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-  }
-
   .x1vfedg7 {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
   }
@@ -2581,6 +2577,10 @@
 
   .xdkhdln {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  }
+
+  .x1h695s4 {
+    grid-template-columns: repeat(auto-fit,minmax(min(100%,var(--_hraness-marketing-grid-track, 100%)),1fr));
   }
 
   .x1v4bfo1 {
@@ -5551,6 +5551,10 @@
 
 .x543tnb {
   --_hraness-foil-mark-display: none;
+}
+
+.x1275dpl {
+  --_hraness-marketing-grid-track: max(16rem,calc((100% - (var(--hraness-marketing-grid-columns) - 1) * .5rem) / var(--hraness-marketing-grid-columns)));
 }
 
 .x9wro72 {

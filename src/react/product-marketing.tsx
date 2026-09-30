@@ -1156,6 +1156,7 @@ export interface MarketingInterface {
 
 export function MarketingInterfaceGrid({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1165,6 +1166,8 @@ export function MarketingInterfaceGrid({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns; cards wrap within the available container width. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1181,7 +1184,7 @@ export function MarketingInterfaceGrid({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="interfaces" />
-      <div className={classNames("hraness-marketing-interface-grid")}>
+      <div className={marketingColumnClassName("hraness-marketing-interface-grid", undefined, columns)}>
         {interfaces.map((entry) => (
           <article className={classNames("hraness-marketing-interface")} key={entry.label}>
             <Heading
@@ -1206,6 +1209,7 @@ export interface MarketingTrustItem {
 
 export function MarketingTrustBoundary({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1215,6 +1219,8 @@ export function MarketingTrustBoundary({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns; cards wrap within the available container width. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1231,7 +1237,7 @@ export function MarketingTrustBoundary({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="trust" />
-      <dl className={classNames("hraness-marketing-trust-grid")}>
+      <dl className={marketingColumnClassName("hraness-marketing-trust-grid", undefined, columns)}>
         {items.map((item) => (
           <div className={classNames("hraness-marketing-trust-item")} key={item.label}>
             <dt className={classNames("hraness-marketing-trust-item__label")}>{item.label}</dt>
@@ -1509,6 +1515,8 @@ export interface MarketingRelatedProduct {
 export type MarketingRelatedTone = "rose" | "indigo" | "amber" | "emerald" | "neutral";
 
 export interface MarketingRelatedGroup {
+  /** Maximum columns for this group, overriding the section default. */
+  readonly columns?: MarketingColumnCount;
   /** Heading naming this tier of siblings, rendered one level below the section heading. */
   readonly heading: string;
   readonly headingId: string;
@@ -1519,14 +1527,18 @@ export interface MarketingRelatedGroup {
 }
 
 function MarketingRelatedCards({
+  ariaLabel,
+  columns,
   items,
   level,
 }: Readonly<{
+  ariaLabel?: string;
+  columns?: MarketingColumnCount;
   items: readonly MarketingRelatedProduct[];
   level: MarketingHeadingLevel;
 }>) {
   return (
-    <ul className={classNames("hraness-marketing-related__list")}>
+    <ul aria-label={ariaLabel} className={marketingColumnClassName("hraness-marketing-related__list", undefined, columns)}>
       {items.map((item) => (
         <li className={classNames("hraness-marketing-related__item")} key={item.name}>
           <a className={classNames("hraness-marketing-related__card")} data-foil="" data-hraness-marketing="card" href={item.href}>
@@ -1558,6 +1570,7 @@ type MarketingRelatedBody =
 /** Compact studio product rows, grouped by portfolio category when supplied. */
 export function MarketingRelated({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1568,6 +1581,8 @@ export function MarketingRelated({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns for each card row; a group can override it. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1576,6 +1591,7 @@ export function MarketingRelated({
   summary?: string;
 }> &
   MarketingRelatedBody) {
+  const defaultColumnProps = columns === undefined ? {} : { columns };
   return (
     <section
       aria-labelledby={headingId}
@@ -1592,7 +1608,7 @@ export function MarketingRelated({
         summary={summary}
       />
       {groups === undefined
-        ? <MarketingRelatedCards items={items} level={childHeadingLevel(headingLevel)} />
+        ? <MarketingRelatedCards {...defaultColumnProps} items={items} level={childHeadingLevel(headingLevel)} />
         : (
           <div className={classNames("hraness-marketing-related__groups")}>
             {groups.map((group) => (
@@ -1614,7 +1630,7 @@ export function MarketingRelated({
                     ? null
                     : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
                 </div>
-                <MarketingRelatedCards items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
+                <MarketingRelatedCards ariaLabel={group.heading} {...(group.columns === undefined ? defaultColumnProps : { columns: group.columns })} items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
               </div>
             ))}
           </div>

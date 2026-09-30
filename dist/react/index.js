@@ -88,7 +88,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-tt4qkwf6.js";
+} from "../chunk-935s12mc.js";
 import {
   SyntaxCode
 } from "../chunk-fjf81bww.js";
@@ -6684,6 +6684,7 @@ Run the job, then show me its log.`,
                     ]
                   }),
                   /* @__PURE__ */ jsx17(MarketingInterfaceGrid, {
+                    columns: 2,
                     heading: "Choose your interface.",
                     headingId: "gallery-marketing-interfaces",
                     headingLevel: 3,
@@ -6737,6 +6738,7 @@ Run the job, then show me its log.`,
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingTrustBoundary, {
+                    columns: 2,
                     heading: "What leaves your machine.",
                     headingId: "gallery-marketing-trust",
                     headingLevel: 3,
@@ -6849,6 +6851,7 @@ Run the job, then show me its log.`,
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingRelated, {
+                    columns: 2,
                     groups: [{
                       heading: "Relationships",
                       tone: "rose",
@@ -6865,6 +6868,7 @@ Run the job, then show me its log.`,
                         role: "A local search index"
                       }]
                     }, {
+                      columns: 1,
                       heading: "Knowledge",
                       tone: "indigo",
                       headingId: "design-gallery-related-infra",
