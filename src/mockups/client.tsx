@@ -40,10 +40,10 @@ function itemAt<T>(items: readonly T[], index: number, what: string): T {
   return item;
 }
 
-function assertCaption(caption: string, component: string): void {
-  if (typeof caption !== "string" || caption.trim() === "") {
-    throw new TypeError(`${component} needs a caption that says the picture is an illustration.`);
-  }
+function optionalText(value: string | undefined, component: string): string | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "string") throw new TypeError(`${component} text must be a string.`);
+  return value.trim() || undefined;
 }
 
 /** Arrow, Home, and End move between tabs, as in the WAI-ARIA tabs pattern. */
@@ -109,8 +109,8 @@ export function FitToWidth({ children, className, minWidth = 400 }: Readonly<{ c
 /* ModeShowcase                                                        */
 /* ------------------------------------------------------------------ */
 
-/** One choice on a showcase axis. `hint` says in one sentence what the choice does. */
-export type ShowcaseChoice<I extends string> = Readonly<{ id: I; label: string; hint: string }>;
+/** One choice on a showcase axis. Add a hint only when its label needs context. */
+export type ShowcaseChoice<I extends string> = Readonly<{ id: I; label: string; hint?: string }>;
 
 /** What a surface's render function receives. */
 export type ShowcaseState<M extends string, O extends string = string> = Readonly<{
@@ -143,8 +143,8 @@ export type ModeShowcaseProps<S extends string, M extends string, O extends stri
   initial?: Readonly<{ surface?: S; mode?: M; option?: O }>;
   /** A live line under the stage that says what the current state shows. */
   status?: (state: Readonly<{ surface: S; mode: M; option: O | undefined }>) => ReactNode;
-  /** Required. Say it is an illustration, such as "Illustration. Names and text are made up." */
-  caption: string;
+  /** Optional context that adds to the visual. Omit repeated descriptions or generic disclaimers. */
+  caption?: string;
   /** Page-window height in CSS pixels at full scale. */
   height?: number;
   /** Narrowest layout width before the stage scales down. */
@@ -180,7 +180,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   assertUniqueIds(surfaces, "ModeShowcase surface");
   assertUniqueIds(modes, "ModeShowcase mode");
   if (options !== undefined) assertUniqueIds(options, "ModeShowcase option");
-  assertCaption(caption, "ModeShowcase");
+  const captionText = optionalText(caption, "ModeShowcase");
   if (!(height > 0)) throw new RangeError("ModeShowcase height must be positive.");
 
   const id = useId();
@@ -221,6 +221,11 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   };
 
   const statusNode = status?.({ mode, option, surface: surface.id });
+  const hint = [modeChoice.hint, optionInactive ? undefined : optionChoice?.hint]
+    .map((text) => optionalText(text, "ModeShowcase hint"))
+    .filter((text) => text !== undefined)
+    .join(" ");
+  const hasStatus = statusNode !== undefined && statusNode !== null && statusNode !== false && statusNode !== "";
   return (
     <figure
       aria-label={label?.(surface) ?? `Illustration of ${surface.label.toLowerCase()}`}
@@ -277,10 +282,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
             </div>
           )}
         </div>
-        <p className="hkm-showcase-hint">
-          {modeChoice.hint}
-          {optionChoice === undefined || optionInactive ? null : ` ${optionChoice.hint}`}
-        </p>
+        {hint === "" ? null : <p className="hkm-showcase-hint">{hint}</p>}
       </div>
       <div
         aria-labelledby={surfaces.length > 1 ? `${id}-tab-${surface.id}` : undefined}
@@ -295,10 +297,12 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
           {surface.render({ animated, mode, option, previousMode, theme })}
         </FitToWidth>
       </div>
-      <figcaption className="hkm-showcase-caption">
-        {statusNode === undefined ? null : <span aria-live="polite" className="hkm-showcase-status">{statusNode}</span>}
-        <span>{caption}</span>
-      </figcaption>
+      {!hasStatus && captionText === undefined ? null : (
+        <figcaption className="hkm-showcase-caption">
+          {hasStatus ? <span aria-live="polite" className="hkm-showcase-status">{statusNode}</span> : null}
+          {captionText === undefined ? null : <span>{captionText}</span>}
+        </figcaption>
+      )}
     </figure>
   );
 }
@@ -330,7 +334,7 @@ export function StepThrough({
   theme,
 }: Readonly<{
   steps: readonly ThroughStep[];
-  caption: string;
+  caption?: string;
   initial?: string;
   label?: string;
   minWidth?: number;
@@ -338,7 +342,7 @@ export function StepThrough({
   className?: string;
 }>) {
   assertUniqueIds(steps, "StepThrough step");
-  assertCaption(caption, "StepThrough");
+  const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));
   const [animated, setAnimated] = useState(false);
@@ -407,9 +411,9 @@ export function StepThrough({
           Next
         </button>
       </div>
-      <figcaption className="hkm-showcase-caption">
-        <span>{caption}</span>
-      </figcaption>
+      {captionText === undefined ? null : (
+        <figcaption className="hkm-showcase-caption"><span>{captionText}</span></figcaption>
+      )}
     </figure>
   );
 }

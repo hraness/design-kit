@@ -64,6 +64,13 @@ export const providerMarkStyles = stylex.create({
     color: "light-dark(color-mix(in srgb, var(--_mark-accent) 82%, black), color-mix(in srgb, var(--_mark-accent) 58%, white))",
     outline: "none",
   },
+  inherit: {
+    backgroundColor: "transparent",
+    backgroundImage: "none",
+    boxShadow: "none",
+    color: "inherit",
+    outline: "none",
+  },
   glyph: {
     blockSize: "64%",
     display: "inline-flex",
@@ -119,14 +126,15 @@ export const providerMarkStyles = stylex.create({
 });
 
 export function providerMarkClassName(
-  part: keyof typeof providerMarkStyles,
+  part: keyof typeof providerMarkStyles | readonly (keyof typeof providerMarkStyles)[],
   caller?: string,
 ): string {
-  const hook =
-    part === "tile"
+  const parts = typeof part === "string" ? [part] : part;
+  const hooks = parts.map((entry) =>
+    entry === "tile"
       ? "hraness-provider-mark"
-      : `hraness-provider-mark__${part.replaceAll(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`)}`;
-  return [hook, stylex.props(providerMarkStyles[part]).className, caller]
+      : `hraness-provider-mark__${entry.replaceAll(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`)}`);
+  return [...hooks, stylex.props(...parts.map((entry) => providerMarkStyles[entry])).className, caller]
     .filter(Boolean)
     .join(" ");
 }

@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { parseHTML } from "linkedom";
 
 import {
+  MarketingActionLink,
   MarketingCallToAction,
   MarketingCard,
   MarketingCardArt,
@@ -343,6 +344,28 @@ test("an embedded hero advances its proof heading without adding another h1", ()
   expect(html).not.toContain("<h1");
   expect(html).toMatch(marketingMarkupPattern('<h2 class="hraness-marketing-hero__heading" id="embedded-title">'));
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-proof__heading" id="embedded-title-proof">'));
+});
+
+test("split sections keep a concrete next step with the heading and the result beside it", () => {
+  const html = renderToStaticMarkup(
+    <MarketingSection
+      heading="Publish your work"
+      headingContent={<><code>relay publish</code><MarketingActionLink href="/docs/publish" label="Publish a page" /></>}
+      headingId="publish-title"
+      label="Publish"
+      layout="split"
+      summary="Share a readable page."
+    >
+      <article aria-label="Published page">The published result.</article>
+    </MarketingSection>,
+  );
+  const { document } = parseHTML(html);
+  const lead = document.querySelector(".hraness-marketing-section__heading-content");
+  expect(lead?.querySelector("code")?.textContent).toBe("relay publish");
+  expect(lead?.querySelector("a")?.getAttribute("href")).toBe("/docs/publish");
+  expect(lead?.querySelector("a")?.getAttribute("data-emphasis")).toBe("primary");
+  expect(lead?.querySelector("article")).toBeNull();
+  expect(document.querySelector("article")?.textContent).toBe("The published result.");
 });
 
 test("every public heading level renders its matching native element", () => {

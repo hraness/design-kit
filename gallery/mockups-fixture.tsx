@@ -188,6 +188,46 @@ export function MockupsFixture({ api }: Readonly<{ api: typeof Mockups }>) {
           ))}
         </section>
       ))}
+      {(["light", "dark"] as const).map((theme) => (
+        <MockupControlsFixture key={`controls-${theme}`} theme={theme} />
+      ))}
     </main>
+  );
+}
+
+/** Raw selector examples for the standalone control and state color contract. */
+export function MockupControlsFixture({ theme }: Readonly<{ theme: Mockups.MockupTheme }>) {
+  return (
+    <figure className="hkm-showcase" data-hkm-controls-fixture={theme} data-hkm-theme={theme}>
+      <div className="hkm-showcase-controls">
+        <div aria-label={`Sources, ${theme}`} className="hkm-tabs" role="tablist">
+          <button aria-controls={`controls-${theme}-panel`} aria-selected="true" className="hkm-tab" id={`controls-${theme}-terminal`} role="tab" type="button">Terminal</button>
+          <button aria-controls={`controls-${theme}-panel`} aria-selected="false" className="hkm-tab" data-hkm-done="" role="tab" tabIndex={-1} type="button"><span aria-hidden="true" className="hkm-step-number">1</span>Notes</button>
+        </div>
+        <div className="hkm-showcase-settings">
+          <div className="hkm-showcase-row">
+            <span className="hkm-showcase-label" id={`controls-${theme}-method`}>Find by</span>
+            <div aria-labelledby={`controls-${theme}-method`} className="hkm-segmented" role="group">
+              <button aria-pressed="true" type="button">Exact words</button>
+              <button aria-pressed="false" type="button">Meaning</button>
+            </div>
+          </div>
+          <div className="hkm-showcase-row">
+            <span className="hkm-showcase-label" id={`controls-${theme}-disabled`}>Unavailable</span>
+            <div aria-labelledby={`controls-${theme}-disabled`} className="hkm-segmented" role="group">
+              <button aria-pressed="true" disabled type="button">Selected</button>
+              <button aria-pressed="false" disabled type="button">Other</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div aria-labelledby={`controls-${theme}-terminal`} id={`controls-${theme}-panel`} role="tabpanel">
+        <div className="hkm-step-nav">
+          <button className="hkm-step-button" data-hkm-primary="" type="button">Next</button>
+          <button className="hkm-step-button" data-hkm-primary="" disabled type="button">Complete</button>
+        </div>
+      </div>
+      <figcaption className="hkm-showcase-caption">Control states, {theme}</figcaption>
+    </figure>
   );
 }

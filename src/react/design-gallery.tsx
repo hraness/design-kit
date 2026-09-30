@@ -20,6 +20,7 @@ import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-fr
 import { useState } from "react";
 
 import { AnimatedRailStage } from "./animated-rail-stage.js";
+import { AgentCommandTabs, AgentSetupPrompt } from "./agent-setup-prompt.js";
 import { AppShell } from "./app-shell.js";
 import {
   ArticleCallout,
@@ -392,6 +393,20 @@ export function DesignSystemGallery({
               ]}
             />
           </MarketingInstallPanel>
+          <MarketingSection heading="Ask your agent to set it up." headingId="gallery-agent-setup" headingLevel={3} label="Agent setup">
+            <AgentSetupPrompt
+              label="Relay agent setup"
+              prompt={"Install Relay from https://relay.example/install.sh.\nRead the project instructions before making changes.\nRun relay init in this workspace and create a job named sample.\nRun the job, then show me its log."}
+              targets={[
+                { href: "https://claude.ai/new", id: "claude", label: "Claude", mark: "claudecode", mode: "copy-and-open" },
+                { href: "https://chatgpt.com/", id: "chatgpt", label: "ChatGPT", mark: "codex", mode: "copy-and-open" },
+              ]}
+            />
+            <AgentCommandTabs commands={[
+              { command: "claude mcp add relay -- relay serve", id: "claude", label: "Claude Code", mark: "claudecode" },
+              { command: "codex mcp add relay -- relay serve", id: "codex", label: "Codex", mark: "codex" },
+            ]} label="Relay agent commands" />
+          </MarketingSection>
           <MarketingPrimitives
             heading="Three objects cover most work."
             headingId="design-gallery-primitives-title"

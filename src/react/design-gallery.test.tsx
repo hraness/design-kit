@@ -156,7 +156,7 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(marketing?.querySelector("#gallery-install [data-hraness-platform-badges] ul")?.getAttribute("aria-label")).toBe("Runs on");
   const frameCode = marketing?.querySelector(".hraness-marketing-proof-frame .design-gallery__marketing-command > code");
   expect(frameCode?.getAttribute("data-language")).toBe("json");
-  expect(marketing?.querySelector("[style]:not(.hraness-foil-mark):not(.hraness-foil-mark__paint)")).toBeNull();
+  expect(marketing?.querySelector("[style]:not(.hraness-foil-mark):not(.hraness-foil-mark__paint):not(.hraness-provider-mark)")).toBeNull();
   const mark = marketing?.querySelector(".hraness-foil-mark");
   expect(mark?.getAttribute("style")).toBe("--hraness-foil-size:24px");
   expect(mark?.querySelector(".hraness-foil-mark__paint")?.getAttribute("style"))
@@ -168,6 +168,10 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(marketing?.querySelector('.hraness-marketing-install__heading-group > [data-gallery-marketing-slot="note"]')?.textContent).toBe("Requires Bun 1.3.14.");
   expect(marketing?.querySelector('.hraness-marketing-section__label[data-size="body"]')?.textContent).toBe("Reference");
   expect(marketing?.querySelector('.hraness-marketing-maker__links > li > a')?.classList.contains("design-gallery__maker-link")).toBe(true);
+  const prompt = marketing?.querySelector("[data-hraness-agent-setup-prompt]");
+  expect(prompt?.querySelector("summary")?.textContent).toBe("Show full prompt");
+  expect(prompt?.querySelectorAll("aside a")).toHaveLength(2);
+  expect(marketing?.querySelector("[data-hraness-agent-command-tabs] [aria-selected='true']")?.getAttribute("data-agent")).toBe("claude");
 });
 
 test("a nested gallery identifies itself and defers appearance to the product header", () => {

@@ -8,7 +8,7 @@ Public product pages follow the Quiet direction, taken from the structure of alg
 
 - A thin sticky header: the foil product lockup, three to six plain links, one primary action, and the appearance menu as the right-most control. On phones the links move to their own row, which scrolls sideways without a visible scrollbar; the brand, action, and appearance menu stay on the first row. Every control keeps a 44px target and nothing overlaps or clips.
 - A sans hero: a small plain eyebrow, one large heading in Nebula Sans at weight 550 with tight tracking, a summary of two or three sentences within about 42rem, one primary button and at most one text link, and optionally one line of plain facts such as license, platforms, or price.
-- One real proof right after the hero: a terminal or code block, a static screenshot with `alt` text, or compact real output. When there is nothing real to capture, one labelled mockup from `@hraness/design-kit/mockups`, or a `ModeShowcase` that switches between a few of its states, may stand in. It says it is an illustration, uses invented names on example domains, and stays a single described image.
+- Explain the product's central benefit immediately after the hero, with a terminal or code block, a static screenshot with `alt` text, or compact real output. A mockup from `@hraness/design-kit/mockups`, or a `ModeShowcase` with a few of its states, can demonstrate the result. It uses invented names on example domains and an accurate accessible description. Add visible captions only when they contribute useful context.
 - Ruled sections: each has an eyebrow, a heading, one short paragraph, and one concrete element such as steps, code, a table, or a small figure. Prefer rows and lists to walls of equal cards. Keep a bounded reading width.
 - A flat palette background with content on opaque surfaces and hairline edges. Mono only for code, commands, and small labels.
 
@@ -18,9 +18,11 @@ Blur remains allowed only on a sticky header with real content scrolling behind 
 
 ## Launch posts
 
-An "Introducing" post reads as a column of beats: a short headline, one claim, and one visual each, anchored as `#beat-<id>`. Visuals are mockups, short clips, or diagrams in an `ArticleFigure`, with the kind named in the caption. Depth, comparison tables, and charts go in companion posts, drawn with `ArticleTable`, `ArticleBarChart`, and `ComparisonTable`. The social kit sits in a closed disclosure after the beats. The gallery renders every mockup frame in light and dark from `gallery/mockups-fixture.tsx`.
+An "Introducing" post reads as a column of beats: a short headline, one claim, and one visual each, anchored as `#beat-<id>`. Visuals are mockups, short clips, or diagrams in an `ArticleFigure`, with accurate accessible descriptions and optional useful captions. Depth, comparison tables, and charts go in companion posts, drawn with `ArticleTable`, `ArticleBarChart`, and `ComparisonTable`. The social kit sits in a closed disclosure after the beats. The gallery renders every mockup frame in light and dark from `gallery/mockups-fixture.tsx`.
 
 ## Application surfaces
+
+Every filled control pairs a semantic background and foreground. Text on selected, hover and active states must meet 4.5:1 contrast in every supported palette and mode; large text and meaningful non-text marks meet their applicable 3:1 requirement. Never combine an accent fill with hardcoded white text. Customizing a fill requires reviewing its paired foreground, including nested themes and forced colors.
 
 Borrow the architectural logic of Maison Hermès for application material: a consistent module, diffused light, a cool exterior and warm occupied spaces. Readable content sits on opaque planes. Never filter text, logos or meaningful diagrams.
 

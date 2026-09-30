@@ -8,6 +8,10 @@ const licenseHash = "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c8
 const FILE_HASHES: Readonly<Record<string, string>> = {
   "aider.svg": "a65ba8794103b4dd1a103a996d651f43a0dc72def1e117a15c873aab7734c68a",
   "crush-heartbit.svg": "895c00a12ff691e14d021ca5c7a54049ba008f2b1386c82915596487136e3c60",
+  "mem0-art.svg": "1644c756a22b30b98bd6311b1c188e42ef9492dd248205670c712d6f4380c8f9",
+  "mem0-glyph.svg": "0f19e0a998074cf50f3f88e8e7ef00fc33d5e52f3de0421b36db24c40077a3f2",
+  "mem0.svg": "ff408961ad175d801b802a1f24c9d8223b1fdaa4e1db95f074286b1be881d2a7",
+  "supermemory.svg": "d66d760cb5872c2fc8557ca21009db38e571c506c7000206c64437b3e6dce641",
   "lobehub/alibabacloud-color.svg": "73ea97baf919edb3d888a77cd45b21574e190a80124a59e199ea6953a28a959c",
   "lobehub/alibabacloud.svg": "7a62c43622e764c416b9069a8ce505d2560f4b4bcf71ed46bbc32d7259416c56",
   "lobehub/amp-color.svg": "6df4cced9e35703d6263d65968985e8afdff68b61358daf9cc09fa16dd9b2aad",
@@ -28,6 +32,7 @@ const FILE_HASHES: Readonly<Record<string, string>> = {
   "lobehub/gemini.svg": "87d5b3c4be75a66f54c1936482a263df68185545b741129badd1b7c2449c18d3",
   "lobehub/geminicli-color.svg": "c2f54ebaa4c3b9191c6a07f7b0c66bc78e4abe486003dc564469cf650672663e",
   "lobehub/geminicli.svg": "bc9b0199cb4c5deee25d6cf49d6e7d60a891171ccbc5520f657d3047b84e5d2e",
+  "lobehub/githubcopilot.svg": "bbc7fddc13448236e5edea8c399d2072dc40aa5da5bca07f7a2f412405c500a3",
   "lobehub/goose.svg": "8779d9a61c5b0be78a3d36cab6843ba5af86218ba2ff1b18eb918c7a8d25bb99",
   "lobehub/meta-color.svg": "adf9f2c1a646ccd3a37ca8c2e7e5985d64630cd633f4b95fba393d1d44e0578c",
   "lobehub/meta.svg": "805ef9a35305393eb5a89be46b0708c9b119b3308ca44aaedd1457ff04857060",
@@ -36,6 +41,8 @@ const FILE_HASHES: Readonly<Record<string, string>> = {
   "lobehub/moonshot.svg": "435f41b74e6a87639b6bf860e9628f20cbe7d6229bece412d548f4cea3081852",
   "lobehub/nvidia-color.svg": "8c941e4eb8b782eccaaea1240c059d20be33ab8eda28d7c9ed9b53ac802fe683",
   "lobehub/nvidia.svg": "5a419b99e0ffdbfbe8caa7ec25581054eae03024da59cb860c54ea55ac8e7e73",
+  "lobehub/obsidian-color.svg": "cb8d13afbcc2817956725f7ec4d3c2e9173c79988d178e0b7138b7595c13d261",
+  "lobehub/obsidian.svg": "b7336eacc3563d3a5fa4bb9db0d8716c1abd0a293fabbb9f3a8caa1f7c866549",
   "lobehub/openai.svg": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186",
   "lobehub/opencode.svg": "7cfa6e9d6726f7c9fa26c7d9aef0dfec52d20a137380454340f30f12ccbfd302",
   "lobehub/perplexity-color.svg": "8353f3ab20822f1a933224b0ea32cc39f0c32d5740f4af8c254b0f418e0a3a70",
@@ -64,6 +71,18 @@ test("the Crush license and source commit stay pinned", async () => {
   const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
   expect(provenance).toContain("0eee0616609b2c890ccc69f6a4ab3aba0b8a8630");
   expect(provenance).toContain("CRUSH-LICENSE.md");
+});
+
+test("memory-product marks retain their upstream licenses and immutable sources", async () => {
+  for (const [file, digest] of [
+    ["SUPERMEMORY-LICENSE", "9ce388a89cce6a2dc109579d044f7f16e1397d8ee6fdb1f3bd3b980d365a07ae"],
+    ["MEM0-LICENSE", "0bbcbe931c353293a2fafce08326181dfeea0e568c566afd4ce8337a70f5e219"],
+  ] as const) {
+    expect(createHash("sha256").update(new Uint8Array(await Bun.file(new URL(file, vendorRoot)).arrayBuffer())).digest("hex")).toBe(digest);
+  }
+  const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
+  expect(provenance).toContain("ce4facf662b278713578450f704ab2d7d11b1865");
+  expect(provenance).toContain("94c3fe9f238f3dbf29c9ce98643bd71eb13077cd");
 });
 
 test("every vendored mark file is byte-exact and accounted for", async () => {

@@ -992,6 +992,61 @@ function formatRelativeTime(target, options = {}) {
   } = resolveRelativeTime(instant.getTime() - reference.getTime());
   return formatterFor(locale, numeric).format(value, unit);
 }
+// src/agent-setup.ts
+var MAX_AGENT_SETUP_URL = 1e4;
+function agentSetupTargets(prompt) {
+  if (typeof prompt !== "string" || prompt.trim() === "")
+    throw new RangeError("Agent setup prompt must contain text.");
+  const encoded = encodeURIComponent(prompt);
+  const prefill = (href, entry) => href.length <= MAX_AGENT_SETUP_URL ? {
+    href,
+    mode: "prefill"
+  } : {
+    href: entry,
+    mode: "copy-and-open"
+  };
+  return [{
+    id: "dot",
+    label: "OpenAI Dot",
+    mark: "openai",
+    href: "https://chatgpt.com/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "grok-bot",
+    label: "Grok Bot",
+    mark: "xai",
+    href: "https://cursor.com/dashboard/bot",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "muse",
+    label: "Muse",
+    mark: "meta",
+    href: "https://applink.muse.ai/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }, {
+    id: "cursor",
+    label: "Cursor",
+    mark: "cursor",
+    host: "local",
+    ...prefill(`https://cursor.com/link/prompt?text=${encoded}`, "https://cursor.com/")
+  }, {
+    id: "codex-app",
+    label: "Codex",
+    mark: "codex",
+    host: "local",
+    ...prefill(`codex://new?prompt=${encoded}`, "https://chatgpt.com/codex")
+  }, {
+    id: "devin",
+    label: "Devin",
+    mark: "devin",
+    href: "https://app.devin.ai/",
+    mode: "copy-and-open",
+    host: "cloud"
+  }];
+}
 
 // src/index.ts
 var colors = {
@@ -1206,4 +1261,4 @@ function themeFor(mode) {
   return colors[mode];
 }
 
-export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, STATUS_PAGE_MAX_NEXT, STATUS_PAGE_MAX_ROUTES, STATUS_PAGE_BACK_LABEL, STATUS_PAGE_HINT_PREFIX, STATUS_PAGE_NEXT_HEADING_ID, STATUS_PAGE_AGENT_PREFIX, resolveStatusPage, statusPageRoutesAttribute, parseStatusPageRoutes, normalizeStatusPath, suggestStatusRoute, renderStatusPageHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };
+export { designPalettes, designPaletteLabels, isDesignPalette, designPaletteSources, paletteColors, designThemes, defaultDesignTheme, designThemeStorageKey, isDesignTheme, normalizeDesignTheme, designThemeLabel, resolveDesignTheme, defaultDesignPalettePreference, designPaletteStorageKey, parseDesignPalettePreference, normalizeDesignPalettePreference, resolveDesignPalettePreference, getDesignPaletteTheme, escapeArticleHtml, renderArticleBylineHtml, renderArticleProvenanceHtml, renderArticleHtml, renderArticleSourcesHtml, renderArticleCalloutHtml, renderArticleRelatedHtml, renderArticleIndexHtml, STATUS_PAGE_MAX_NEXT, STATUS_PAGE_MAX_ROUTES, STATUS_PAGE_BACK_LABEL, STATUS_PAGE_HINT_PREFIX, STATUS_PAGE_NEXT_HEADING_ID, STATUS_PAGE_AGENT_PREFIX, resolveStatusPage, statusPageRoutesAttribute, parseStatusPageRoutes, normalizeStatusPath, suggestStatusRoute, renderStatusPageHtml, relativeTimeUnits, parseRelativeTimeInput, resolveRelativeTime, formatRelativeTime, MAX_AGENT_SETUP_URL, agentSetupTargets, colors, auroraColors, chromeColors, chromeGradientStops, spacing, radius, controlRadius, layout, siteThemes, interaction, motion, elevation, stacking, breakpoints, iconography, typeScale, fontWeights, fontFamilies, fontFallbacks, typography, themeFor };

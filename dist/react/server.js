@@ -15,6 +15,7 @@ import {
   DockedFooter,
   FoilMark,
   LaunchBeats,
+  MarketingActionLink,
   MarketingArticle,
   MarketingCallToAction,
   MarketingCard,
@@ -62,13 +63,13 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-44djxk16.js";
+} from "../chunk-ehrg6k53.js";
 import"../chunk-h4k7yv6x.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
 import"../chunk-cejpzyfh.js";
-import"../chunk-eh71jz57.js";
+import"../chunk-52t97yak.js";
 import"../chunk-5gtx3pza.js";
 export {
   proceduralRecipeVersion,
@@ -118,6 +119,7 @@ export {
   MarketingCard,
   MarketingCallToAction,
   MarketingArticle,
+  MarketingActionLink,
   LaunchBeats,
   FoilMark,
   DockedFooter,

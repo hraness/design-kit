@@ -124,7 +124,8 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: ${{ steps.browser-cache.outputs.cache-primary-key }}
-      - run: bun run test:browser:rest
+      - name: Check shared controls, mockups, and agent setup
+        run: bun run test:browser:rest
 
   required:
     name: Required

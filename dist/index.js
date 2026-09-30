@@ -1,10 +1,12 @@
 import {
+  MAX_AGENT_SETUP_URL,
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
   STATUS_PAGE_HINT_PREFIX,
   STATUS_PAGE_MAX_NEXT,
   STATUS_PAGE_MAX_ROUTES,
   STATUS_PAGE_NEXT_HEADING_ID,
+  agentSetupTargets,
   auroraColors,
   breakpoints,
   chromeColors,
@@ -62,7 +64,7 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-7b1586eb.js";
+} from "./chunk-833cbzk0.js";
 import {
   detectPlatform,
   isKnownPlatformId,
@@ -119,7 +121,7 @@ import {
   providerMarkMonogram,
   providerMarkOnAccent,
   providerMarks
-} from "./chunk-eh71jz57.js";
+} from "./chunk-52t97yak.js";
 import"./chunk-5gtx3pza.js";
 export {
   typography,
@@ -222,12 +224,14 @@ export {
   articleAdmissionsDue,
   articleAdmissionScore,
   articleAdmissionPasses,
+  agentSetupTargets,
   STATUS_PAGE_NEXT_HEADING_ID,
   STATUS_PAGE_MAX_ROUTES,
   STATUS_PAGE_MAX_NEXT,
   STATUS_PAGE_HINT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
   STATUS_PAGE_AGENT_PREFIX,
+  MAX_AGENT_SETUP_URL,
   ArticleAdmissionError,
   ARTICLE_TOC_LABEL,
   ARTICLE_SOURCES_HEADING,

@@ -1317,6 +1317,14 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   gap: 1rem;
 }
 
+.hraness-marketing-section__heading-content {
+  display: grid;
+  gap: 1.25rem;
+  min-inline-size: 0;
+  margin-block-start: 1.5rem;
+  justify-items: start;
+}
+
 .hraness-marketing-section__body > :where(p) {
   max-inline-size: var(--hraness-marketing-prose-measure);
   margin: 0;

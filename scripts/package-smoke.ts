@@ -1344,6 +1344,11 @@ try {
       "if (!html.includes('hkm-')) throw new Error('Packed mockups lost their hkm class contract.');",
       "if (typeof launch.buildSocialKit !== 'function' || typeof launch.assertLaunchKit !== 'function' || typeof testing.blogConformance !== 'function') throw new Error('Packed launch or testing exports are unavailable.');",
       "const client = await import('@hraness/design-kit/mockups/client'); if (typeof client.ModeShowcase !== 'function' || typeof client.FitToWidth !== 'function' || typeof client.StepThrough !== 'function') throw new Error('Packed mockup client exports are unavailable.');",
+      "const [root, react, server] = await Promise.all([import('@hraness/design-kit'), import('@hraness/design-kit/react'), import('@hraness/design-kit/react/server')]);",
+      "const targets = root.agentSetupTargets('relay init'); if (targets.length !== 6 || targets.filter(target => target.mode === 'prefill').length !== 2) throw new Error('Packed computer-agent destinations are unavailable.');",
+      "if (typeof react.AgentSetupPrompt !== 'function' || typeof react.AgentCommandTabs !== 'function' || typeof server.MarketingActionLink !== 'function') throw new Error('Packed agent setup compositions are unavailable.');",
+      "if ('AgentSetupPrompt' in server || 'AgentCommandTabs' in server) throw new Error('Client agent setup leaked into the server-only entry.');",
+      "const setupHtml = renderToStaticMarkup(createElement(react.AgentSetupPrompt, { prompt: 'relay init', targets })); if (!setupHtml.includes('data-hraness-agent-setup-prompt') || !setupHtml.includes('Show full prompt')) throw new Error('Packed setup source or disclosure is missing.');",
     ].join(" "),
   ], consumer);
   await run([

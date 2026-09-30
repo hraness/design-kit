@@ -76,6 +76,33 @@ function childHeadingLevel(level: MarketingHeadingLevel): MarketingHeadingLevel 
   return Math.min(level + 1, 6) as MarketingHeadingLevel;
 }
 
+/** A concrete next step using the same presentation as hero and closing actions. */
+export function MarketingActionLink({
+  className,
+  context = "cta",
+  emphasis = "primary",
+  href,
+  label,
+  tone = "paper",
+}: MarketingAction & Readonly<{
+  className?: string;
+  context?: "hero" | "cta";
+  tone?: MarketingTone;
+}>) {
+  return (
+    <a
+      className={classNames("hraness-marketing-action", className, tone === "accent"
+        ? `${context}-${emphasis}`
+        : emphasis === "primary" ? "primary" : "default")}
+      data-emphasis={emphasis}
+      data-foil={emphasis === "primary" ? "" : undefined}
+      href={href}
+    >
+      {label}
+    </a>
+  );
+}
+
 function MarketingActions({
   actions,
   className,
@@ -88,17 +115,13 @@ function MarketingActions({
       {actions.map((action, index) => {
         const emphasis = action.emphasis ?? (index === 0 ? "primary" : "secondary");
         return (
-          <a
-            className={classNames("hraness-marketing-action", undefined, tone === "accent"
-              ? `${context}-${emphasis}`
-              : emphasis === "primary" ? "primary" : "default")}
-            data-emphasis={emphasis}
-            data-foil={emphasis === "primary" ? "" : undefined}
-            href={action.href}
+          <MarketingActionLink
+            {...action}
+            context={context}
+            emphasis={emphasis}
             key={`${action.href}-${action.label}`}
-          >
-            {action.label}
-          </a>
+            tone={tone}
+          />
         );
       })}
     </div>
@@ -913,6 +936,7 @@ export function MarketingSection({
   heading,
   headingId,
   headingLevel = 2,
+  headingContent,
   id,
   label,
   layout = "stack",
@@ -923,6 +947,8 @@ export function MarketingSection({
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
+  /** Commands or actions below the lead copy, beside the visual in split layouts. */
+  headingContent?: ReactNode;
   id?: string;
   label?: string;
   layout?: "split" | "split-reverse" | "stack";
@@ -944,6 +970,7 @@ export function MarketingSection({
         {summary === undefined
           ? null
           : <p className={classNames("hraness-marketing-section__summary")}>{summary}</p>}
+        {isPresentNode(headingContent) ? <div className={classNames("hraness-marketing-section__heading-content")}>{headingContent}</div> : null}
       </div>
       <div className={classNames("hraness-marketing-section__body")}>{children}</div>
     </section>
