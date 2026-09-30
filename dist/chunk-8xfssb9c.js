@@ -1,6 +1,7 @@
 import {
+  SyntaxCode,
   platformInstallClassName
-} from "./chunk-h4k7yv6x.js";
+} from "./chunk-fjf81bww.js";
 import {
   detectPlatform,
   isKnownPlatformId,
@@ -195,9 +196,11 @@ function CommandBlock({
         className: platformInstallClassName(["pre"]),
         ref: preRef,
         tabIndex: 0,
-        children: /* @__PURE__ */ jsx("code", {
+        children: /* @__PURE__ */ jsx(SyntaxCode, {
           className: platformInstallClassName(["code"]),
-          children: command
+          code: command,
+          language: "shell",
+          styles: "classes"
         })
       })
     ]

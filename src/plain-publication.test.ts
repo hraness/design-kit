@@ -102,7 +102,7 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
     /:where\(\.plain-site\.plain-publication a:not\(\.hraness-design-skip-link\)\)\s*\{[^}]*text-decoration:\s*none;/su,
   );
   expect(publicationCss).toMatch(
-    /a:not\(\.hraness-design-skip-link\):is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration:\s*underline;/u,
+    /a:not\(\.hraness-design-skip-link\):is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration-line:\s*underline;[^}]*text-decoration-style:\s*dotted;/u,
   );
   expect(publicationCss).not.toMatch(
     /\.plain-publication__(?:primary-link|entry h3 a|related-grid > a)\s*\{[^}]*text-decoration:\s*underline;/su,
@@ -196,7 +196,7 @@ test("the embedded article layer keeps a 68ch measure, host roles, and forced co
     ".plain-publication__entry-title",
     ".plain-publication__entry-dek",
     "figcaption",
-    "table:not(.plain-publication__table)",
+    "table:not(.plain-publication__table, .hraness-marketing-comparison__table)",
     "blockquote",
   ]) {
     expect(articleCss).toContain(hook);

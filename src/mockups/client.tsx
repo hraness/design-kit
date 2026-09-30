@@ -315,14 +315,15 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
 export type ThroughStep = Readonly<{
   id: string;
   label: string;
-  /** One sentence under the stage that says what this step shows. */
+  /** Optional accessible context; the visual keeps its own explanation. */
   hint?: string;
   render: (state: Readonly<{ animated: boolean; theme: MockupTheme | undefined }>) => ReactNode;
 }>;
 
 /**
- * Walks a flow one step at a time: numbered step tabs, Back and Next buttons,
- * and a live hint. The keyboard model matches `ModeShowcase`.
+ * Folder tabs and chevron controls walk a flow. All render functions stay mounted
+ * to reserve the tallest panel; inactive panels are inert and visually hidden.
+ * The keyboard model matches `ModeShowcase`.
  */
 export function StepThrough({
   caption,
@@ -369,7 +370,7 @@ export function StepThrough({
         <div aria-label={label} className="hkm-tabs hkm-step-tabs" role="tablist">
           {steps.map((entry, position) => (
             <button
-              aria-controls={`${id}-panel`}
+              aria-controls={`${id}-panel-${entry.id}`}
               aria-selected={position === current}
               className="hkm-tab"
               data-hkm-done={position < current ? "" : undefined}
@@ -391,24 +392,31 @@ export function StepThrough({
           ))}
         </div>
       </div>
-      <div
-        aria-labelledby={`${id}-tab-${step.id}`}
-        className="hkm-showcase-stage"
-        data-hkm-animated={animated ? "" : undefined}
-        id={`${id}-panel`}
-        role="tabpanel"
-      >
-        <FitToWidth minWidth={minWidth}>{step.render({ animated, theme })}</FitToWidth>
+      <div className="hkm-showcase-stage hkm-step-stage">
+        {steps.map((entry, position) => (
+          <div
+            aria-hidden={position !== current}
+            aria-labelledby={`${id}-tab-${entry.id}`}
+            className="hkm-step-panel"
+            data-hkm-animated={position === current && animated ? "" : undefined}
+            id={`${id}-panel-${entry.id}`}
+            inert={position !== current}
+            key={entry.id}
+            role="tabpanel"
+          >
+            <FitToWidth minWidth={minWidth}>{entry.render({ animated: position === current && animated, theme })}</FitToWidth>
+          </div>
+        ))}
       </div>
       <div className="hkm-step-nav">
-        <button className="hkm-step-button" disabled={current === 0} onClick={() => go(current - 1)} type="button">
-          Back
+        <button aria-label="Back" className="hkm-step-button" disabled={current === 0} onClick={() => go(current - 1)} type="button">
+          <svg aria-hidden="true" focusable="false" height="28" viewBox="0 0 24 24" width="28"><path d="m14.5 5-7 7 7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
         </button>
-        <span aria-live="polite" className="hkm-showcase-status">
+        <span aria-live="polite" className="hkm-showcase-status hkm-step-announcement">
           Step {current + 1} of {steps.length}{step.hint === undefined ? "" : `. ${step.hint}`}
         </span>
-        <button className="hkm-step-button" data-hkm-primary="" disabled={current === steps.length - 1} onClick={() => go(current + 1)} type="button">
-          Next
+        <button aria-label="Next" className="hkm-step-button" data-hkm-primary="" disabled={current === steps.length - 1} onClick={() => go(current + 1)} type="button">
+          <svg aria-hidden="true" focusable="false" height="28" viewBox="0 0 24 24" width="28"><path d="m9.5 5 7 7-7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
         </button>
       </div>
       {captionText === undefined ? null : (

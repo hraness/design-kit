@@ -460,6 +460,8 @@ function requireAggregateContract(source: string): void {
     '@import "./charts.css";',
     '@import "./plain-site.css";',
     '@import "./plain-publication.css";',
+    '@import "./marketing-comparison.css";',
+    '@import "./marketing-diagram.css";',
     '@import "./reading.css";',
     '@import "./status-page.css";',
     '@import "./product-marketing.css";',

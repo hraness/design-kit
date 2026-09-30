@@ -94,6 +94,7 @@ interface LayoutEvidence {
   readonly playbackSemantic: boolean;
   readonly playbackStatus: string;
   readonly plainLinkDecoration: string;
+  readonly plainLinkDecorationStyle: string;
   readonly plainHeaderChildrenContained: boolean;
   readonly plainHeaderHeight: number;
   readonly plainHeaderOverflows: boolean;
@@ -1915,6 +1916,7 @@ async function evidence(page: Page): Promise<LayoutEvidence> {
         && playbackButton.classList.contains("hraness-design-playback-transport__button"),
       playbackStatus: playback.dataset.playbackStatus ?? "",
       plainLinkDecoration: getComputedStyle(plainLink).textDecorationLine,
+      plainLinkDecorationStyle: getComputedStyle(plainLink).textDecorationStyle,
       plainHeaderChildrenContained:
         plainWordmarkBox.left >= plainHeaderBox.left - 1
         && plainWordmarkBox.right <= plainHeaderBox.right + 1
@@ -2417,8 +2419,8 @@ try {
           })}`,
         );
         invariant(
-          state.plainLinkDecoration === "none",
-          `${layout.id}: plain links are not quiet at rest`,
+          state.plainLinkDecoration === "underline" && state.plainLinkDecorationStyle === "dotted",
+          `${layout.id}: plain links lost their dotted resting underline`,
         );
         invariant(
           !state.plainHeaderOverflows && state.plainHeaderChildrenContained,

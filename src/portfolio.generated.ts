@@ -4,22 +4,22 @@ export const portfolioSnapshot = {
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "82542df32e3b5db919c5d3778125ea2970d932f7",
-    "committedOn": "2026-09-29",
+    "commit": "d75ebaa21ae0576c1d6c71e1bea23c93b866601c",
+    "committedOn": "2026-09-30",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:1f3d10922cc4f7f78fe3a70fba90ee91e9c473253f6e2d5485dd8b8192762040",
+    "upstreamDigest": "sha256:ba365e481a8b15c4a19503b1628e1b7ae9399e47055dde02bae124183a3e1447",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "30a3acc1d7f52a7c3180cfbf0fa63ebbe2c1ccc9f35e6d8cf75d559996ab2eea"
+        "sha256": "4c9e41dd1cb711d21a2da086de6b7d4adac2990ccda3909fa1cacf3b0ff44369"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
-        "sha256": "357c5bb8f2dc85ed1cc097161db3f97aaef58ee3a7f9a480bf926104ab723389"
+        "sha256": "10f20e9d7b8ad0f108b56344c5d1b60cf3c54e6cec5e7024004b7b4f608f282c"
       },
       {
         "path": "brand-artwork.json",
-        "sha256": "625c88ca6e24e78d80e8efbecaeb25bd88711287e86fa2f32f6bca110fe30b92"
+        "sha256": "7b1ba29f24352b33e666af059b8efbb273dd68269600b04d4d15ef4c94743876"
       },
       {
         "path": "projects/hraness/public/marks/act60.svg",
@@ -130,10 +130,6 @@ export const portfolioSnapshot = {
         "sha256": "44855079c3dea26397d798926ec5689115e084ca26367b7ab73c7b0ea8b18119"
       },
       {
-        "path": "projects/hraness/public/marks/valhalla-album.svg",
-        "sha256": "8de9218ce0ee4238cb3859a6f450ba746c26e92b0dc7d2e03953777207713602"
-      },
-      {
         "path": "projects/hraness/public/marks/valhalla.svg",
         "sha256": "ae060052dc1550a4d377e3c4ebba9f2a5e5e58be1dafe8256a2a885063e84c24"
       },
@@ -173,9 +169,22 @@ export const portfolioSnapshot = {
         "long": "Long coding-agent sessions collect tool output that mattered once: test logs from runs that have since passed, file listings from before a refactor, stack traces for bugs already fixed. Every turn sends all of it to the model again. Gobstopper is a free, open-source command-line tool that finds your Claude Code and Codex sessions, shows what each compaction strategy would cut, and writes a smaller copy. Before it writes, it stores the original bytes in a content-addressed vault on your machine, so you can search for the exact record a compaction left out or restore the whole session.",
         "hero": {
           "heading": "Context compaction you can undo.",
-          "summary": "Gobstopper keeps long coding sessions smaller. Run your agent through a local proxy, or make a smaller copy of a saved session while keeping the original for recovery.",
+          "summary": "Keep long coding sessions smaller, with the original available to restore.",
           "primaryAction": "Install Gobstopper",
           "secondaryAction": "How it works"
+        },
+        "headings": {
+          "home-live": "Keep the recent work in view.",
+          "home-file-copy": "Try a smaller copy. Keep a way back.",
+          "home-results": "38% smaller on requests it compacted.",
+          "home-film": "Watch it in 75 seconds.",
+          "home-install": "Start with one session.",
+          "home-questions": "Before you install.",
+          "home-related": "Other tools from our studio",
+          "home-search-title": "Gobstopper: context compaction proxy for Claude Code and Codex",
+          "home-primitive-preview": "Preview the cut",
+          "home-primitive-original": "Keep the original",
+          "home-primitive-resume": "Check before resuming"
         },
         "status": {
           "default": "proposed"
@@ -221,6 +230,15 @@ export const portfolioSnapshot = {
           "primaryAction": "Install xcb",
           "secondaryAction": "See how it works"
         },
+        "headings": {
+          "home-router": "Use your quota before it resets",
+          "home-interfaces": "Two ways to use xcb",
+          "home-import-sessions": "Continue your Claude and Codex conversations",
+          "home-install": "Install xcb",
+          "home-questions": "Questions",
+          "home-interface-agent": "As your coding agent",
+          "home-interface-integration": "Inside your agent or app"
+        },
         "status": {
           "default": "proposed"
         },
@@ -257,9 +275,17 @@ export const portfolioSnapshot = {
         "long": "Picking a model means guessing at a tradeoff between quality and price, because benchmark scores and prices live in different places. aicharts plots published benchmark scores against cost and tokens per task on one chart, so the strongest option at each budget is visible instead of implied. A local collector measures your own agents' token use, so the cost question covers your work, not only the models. aicharts is free and open source.",
         "hero": {
           "heading": "See which model wins at each price.",
-          "summary": "Benchmark scores plotted against cost and tokens per task, plus a local collector for your own agents' token use.",
+          "summary": "Compare model benchmark scores, prices, and the tokens each task takes.",
           "primaryAction": "Browse the charts",
           "secondaryAction": "Measure your agent"
+        },
+        "headings": {
+          "home-calculator": "Subscription vs API vs GPUs",
+          "home-platform-group": "The agent platform",
+          "home-personal-group": "The personal apps",
+          "home-related": "Other tools from our studio",
+          "home-about": "About aicharts",
+          "home-search-title": "aicharts: AI model benchmark scores vs cost per task"
         },
         "status": {
           "default": "proposed"
@@ -297,9 +323,29 @@ export const portfolioSnapshot = {
         "long": "A new coding-agent session can read your code, but not the decisions that stayed in the last session's chat. Wordcell keeps those decisions as Markdown files beside the repository, with the plans that depend on them and the web pages and PDFs that informed them. Tie a note to the paths it explains, and an agent about to change that code runs one command to get the notes and plans for that path. Exact search, backlinks, and Git history run on your machine with no account or model, and every index rebuilds from files you can read in any editor. Wordcell is free and open source.",
         "hero": {
           "heading": "Give coding agents the decisions behind your code.",
-          "summary": "Decisions, plans, and sources kept as Markdown beside your repository, one command away from the agent about to change a file.",
+          "summary": "Keep decisions, plans, and sources as Markdown beside your code.",
           "primaryAction": "Install Wordcell",
           "secondaryAction": "See an example"
+        },
+        "headings": {
+          "home-related-group": "Works with Wordcell",
+          "home-preview": "Your agent finds the rule and names the file",
+          "home-install": "Save and find your first decision",
+          "home-agent-search": "Let your agent search and add notes",
+          "home-primitives": "What a vault gives you",
+          "home-passages": "Find the passage with the answer",
+          "home-scopes": "Your coding agent starts with what you already decided",
+          "home-fit": "How Wordcell compares",
+          "home-publish": "Publish your notes as a website",
+          "home-trust": "The record stays yours",
+          "home-questions": "Before you install",
+          "home-related": "Other tools from our studio",
+          "home-closing": "Give the next session what this one learned.",
+          "home-search-title": "Wordcell: Markdown memory for coding agents",
+          "home-primitive-files": "Files you own",
+          "home-primitive-decisions": "Find a past decision",
+          "home-primitive-context": "Context for the file at hand",
+          "home-primitive-sources": "Sources you can reopen"
         },
         "status": {
           "default": "proposed"
@@ -336,6 +382,25 @@ export const portfolioSnapshot = {
           "primaryAction": "Install Oh",
           "secondaryAction": "How it works"
         },
+        "headings": {
+          "model-title": "Keep the source with the claim.",
+          "trace-title": "Open the evidence behind an answer.",
+          "interfaces-title": "Work with the same records from a terminal, TypeScript, or an agent.",
+          "install-title": "Install and start with a local database.",
+          "kernel-title": "Keep your memory on your machine.",
+          "questions-title": "What to know before you install.",
+          "home-object-question": "Question",
+          "home-object-source": "Source",
+          "home-object-capture": "Capture",
+          "home-object-claim": "Claim",
+          "home-object-citation": "Citation",
+          "home-object-artifact": "Artifact",
+          "home-trust-local": "Local by default",
+          "home-trust-remote": "Remote services are opt-in",
+          "home-interface-cli": "CLI",
+          "home-interface-sdk": "TypeScript SDK",
+          "home-interface-skill": "Agent Skill"
+        },
         "status": {
           "default": "proposed"
         },
@@ -346,8 +411,8 @@ export const portfolioSnapshot = {
       "id": "sponge",
       "name": "Sponge",
       "oneLiner": "Local research service that keeps its sources and writes cited reports",
-      "brandDescription": null,
-      "canonicalUrl": "https://hraness.com/writing/the-knowledge-pack",
+      "brandDescription": "Sponge runs deep research on your own machine. It keeps the text of every source, writes a cited report, and reaches models through Excalibur (xcb).",
+      "canonicalUrl": "https://sponge.computer",
       "status": "active",
       "copyStatus": "proposed",
       "aliases": [],
@@ -364,10 +429,29 @@ export const portfolioSnapshot = {
         "short": "Local research service that keeps its sources and writes cited reports",
         "meta": "Sponge runs deep research on your own machine. It keeps the text of every source, writes a cited report, and reaches models through Excalibur (xcb).",
         "medium": "Sponge runs research projects on your own machine. Give it a question and sources, and it keeps their text, writes and updates a cited report, and tests new research strategies before you adopt them.",
-        "long": "Sponge is a local research harness. Each project has a question and a set of sources, and Sponge keeps the source text, writes and updates a cited report, and records its operations so work survives restarts. A background service, terminal chat, and a macOS menu-bar app drive it. Deep mode plans the research, gathers public sources, recalls project memory, and audits a draft before it updates the report. Sponge runs on ALGAL, reaches models through Excalibur (xcb) so provider sign-ins stay there, keeps documents in Wordcell, and captures signed-in pages through GhostGet. A new strategy for brief research is tested in a sealed evaluation, and nothing changes until you adopt it or restore the previous one. Publishing makes a static Wordcell edition or puts selected documents on wordcell.io. It is in development and not yet released; it runs from a private checkout. The hosted library at sponge.computer is the earlier Sponge.",
+        "long": "Sponge is a local research harness. Each project has a question and a set of sources, and Sponge keeps the source text, writes and updates a cited report, and records its operations so work survives restarts. A background service that can start at login drives it, with terminal chat and status views. Deep mode plans the research, gathers public sources, recalls project memory, and audits a draft before it updates the report. Sponge runs on ALGAL, reaches models through Excalibur (xcb) so provider sign-ins stay there, keeps documents in Wordcell, and captures signed-in pages through GhostGet. A new strategy for brief research is tested in a sealed evaluation, and nothing changes until you adopt it or restore the previous one. Publishing makes a static Wordcell edition or puts selected documents on wordcell.io. It is in development, with releases in a private GitHub repository. The hosted library at sponge.computer is the earlier Sponge.",
         "hero": {
           "heading": "Deep research that runs on your own machine.",
-          "summary": "Give it a question and sources. Sponge keeps their text, writes a cited report, and reaches models through the coding subscriptions you already pay for."
+          "summary": "Sponge runs as a background service with a terminal chat and a terminal status view. Ask a question, and it gathers sources, keeps their text, and writes a report that cites them.",
+          "primaryAction": "Read the Knowledge pack post",
+          "secondaryAction": "See the commands"
+        },
+        "headings": {
+          "archive": "notes and working documents",
+          "context": "context",
+          "home-comparison": "Four Hraness tools do the work",
+          "home-method": "From a question to a cited report",
+          "home-interfaces": "Where to find Sponge today",
+          "home-custody": "You decide what changes",
+          "home-search-title": "Sponge: A deep-research harness that runs on your machine",
+          "home-proof": "Start a research project from the terminal",
+          "home-questions": "Before you begin.",
+          "home-step-create": "Create a project",
+          "home-step-research": "Ask, or go deep",
+          "home-step-refresh": "Keep it current",
+          "home-interface-papers": "Daily papers",
+          "home-interface-library": "Sponge Library",
+          "home-interface-harness": "The research harness"
         },
         "status": {
           "default": "proposed"
@@ -409,6 +493,19 @@ export const portfolioSnapshot = {
           "primaryAction": "Install ALGAL",
           "secondaryAction": "See a program run"
         },
+        "headings": {
+          "home-draft": "Turn an email into a drafted reply.",
+          "home-process": "Keep a task running across interruptions.",
+          "home-host": "Your host sets the tools, models, and limits.",
+          "home-replay": "Every run can be replayed offline.",
+          "home-evolution": "Programs write programs. Your host picks which to keep.",
+          "home-install": "Install one binary. Run your first program.",
+          "home-research": "Can tested procedures improve later work?",
+          "home-limits": "Start locally. Know what you operate.",
+          "home-replay-verify": "Verify",
+          "home-replay-diff": "Diff",
+          "home-replay-diagnose": "Diagnose"
+        },
         "channels": {
           "homebrew": "Language and VM for agent programs that wait and resume"
         },
@@ -447,34 +544,21 @@ export const portfolioSnapshot = {
           "primaryAction": "Get started",
           "secondaryAction": "What works today"
         },
-        "status": {
-          "default": "proposed"
+        "headings": {
+          "model-title": "The people in a room run it.",
+          "start-title": "Start with the local tour.",
+          "install-and-take-the-tour": "Install and take the tour",
+          "choose-a-network": "Choose a network",
+          "sign-and-send": "Sign and send",
+          "work-title": "Share work across agent tools.",
+          "agents-title": "Let your agent join the room.",
+          "scope-title": "Choose who can read the conversation.",
+          "public-rooms": "Public rooms",
+          "private-rooms": "Private rooms",
+          "compare-title": "Choose where the work lives.",
+          "questions-title": "Before you install.",
+          "build-title": "Try the local tour."
         },
-        "reviewedOn": "2026-09-24"
-      }
-    },
-    "valhalla-album": {
-      "id": "valhalla-album",
-      "name": "valhalla",
-      "oneLiner": "Five-track ambient album released as a draft and revised in public",
-      "brandDescription": null,
-      "canonicalUrl": "https://hraness.com/valhalla",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M5 24.8C5 18.8 9 15.2 13.8 15.2C18.6 15.2 22.6 18.8 22.6 24.8L22.6 27.5L5 27.5ZM4 25.7L23.8 25.7L23.8 26.7L4 26.7Z'/%3E%3Cpath fill='%232474d4' d='M7.4 18.6C4.4 15.8 2.8 11.6 3.2 6.4C3.3 5.7 3.7 5.3 4.1 5.9C6.8 9 9 12.4 10.5 16.3C9.5 17.3 8.4 18 7.4 18.6Z'/%3E%3Cpath fill='%232474d4' d='M19.8 21.8C20.7 15.8 21.3 10.2 21.6 5.3L24.6 5.3C24.5 10.6 24.2 17.4 23.9 23C23.2 22.4 22.4 21.9 19.8 21.8Z'/%3E%3Cpath fill='%232474d4' d='M21.6 5.3C25.2 5.5 28.2 7 29.8 9.7C27.2 9.9 24.4 9.4 22.3 8.3Z'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "valhalla-album",
-        "names": {
-          "name": "valhalla"
-        },
-        "category": "Ambient electronic album",
-        "tagline": "Hear an album being revised in public.",
-        "short": "Five-track ambient album released as a draft and revised in public",
-        "meta": "valhalla is a five-track ambient electronic album by Hraness, released as a draft and revised in public on Soundfish.",
-        "medium": "valhalla is a five-track ambient electronic album by Hraness, about 11 minutes long, released as a draft and revised in public. Listen free on Soundfish.",
-        "long": "valhalla is a five-track ambient electronic album by Hraness, about 11 minutes long. It was released as a draft and is being revised in public: each track keeps its takes in order on Soundfish, so you can hear the album change as it is finished. Listening needs no account. The draft is the point of the release: an album is usually finished in private and published once, while valhalla stays open, so each revision leaves a dated earlier take behind it.",
         "status": {
           "default": "proposed"
         },
@@ -484,8 +568,8 @@ export const portfolioSnapshot = {
     "peopleblade": {
       "id": "peopleblade",
       "name": "PeopleBlade",
-      "oneLiner": "Local personal CRM for everyone you know, built for your agent",
-      "brandDescription": "PeopleBlade is a local personal CRM for everyone you know, built for your agent. Bring contacts from apps and exports into one private book.",
+      "oneLiner": "The contact book you own, built for your agent",
+      "brandDescription": "The contact book you own, built for your agent. PeopleBlade is a local personal CRM that gathers contacts from your apps and exports into one private book.",
       "canonicalUrl": "https://peopleblade.com",
       "status": "active",
       "copyStatus": "proposed",
@@ -498,10 +582,10 @@ export const portfolioSnapshot = {
           "name": "PeopleBlade",
           "command": "peopleblade"
         },
-        "category": "Contact book for agents",
-        "tagline": "Own your contacts across every app.",
-        "short": "Local personal CRM for everyone you know, built for your agent",
-        "meta": "PeopleBlade is the contact book you own, built for your personal agent. It gathers everyone you know from your apps and shows where each contact came from.",
+        "category": "Local personal CRM",
+        "tagline": "A local personal CRM for everyone you know.",
+        "short": "The contact book you own, built for your agent",
+        "meta": "The contact book you own, built for your agent. PeopleBlade is a local personal CRM that gathers contacts from your apps and exports into one private book.",
         "medium": "PeopleBlade brings your contacts from Apple Contacts, iMessage, Google Contacts, WhatsApp, LinkedIn, and more into one private book on your computer. Keep notes beside each person, and let your agent search the book from the command line.",
         "long": "PeopleBlade is a local personal CRM for everyone you know. It imports contacts from Apple Contacts, iMessage, Google Contacts, Beeper, WhatsApp, and your LinkedIn, Instagram, and X data exports into one SQLite database on your computer, and every detail keeps the source it came from. Likely duplicates wait for your review, and a shared name is never enough to join two people. Write private notes beside each person, or let your agent search and research the book with JSON commands. Your agent never receives your passwords, and imports keep no message text. The CLI is free and MIT licensed.",
         "headlines": [
@@ -509,9 +593,27 @@ export const portfolioSnapshot = {
         ],
         "hero": {
           "heading": "Social Blade for everyone you know.",
-          "summary": "PeopleBlade builds one contact book on your computer from your address book, chat apps, and exports. Your agent searches it, keeps notes, and tells you which import each contact came from.",
+          "summary": "One private contact book. Bring your contacts together and let your agent help you stay in touch.",
           "primaryAction": "Install the free CLI",
-          "secondaryAction": "See the workspace"
+          "secondaryAction": "See how it works"
+        },
+        "headings": {
+          "home-video": "See it work, start to finish.",
+          "home-unification": "Bring your contacts together.",
+          "home-book": "Find people and keep the context.",
+          "home-agent": "Let your agent work with your contacts.",
+          "home-comparison": "Choose the contact book that fits.",
+          "home-boundary": "Know what your agent can access.",
+          "home-related": "Other tools from our studio",
+          "home-cloud": "Sync only when you choose.",
+          "home-personal-group": "The personal apps",
+          "home-platform-group": "The agent platform",
+          "home-install": "Try it in a minute",
+          "home-questions": "Questions",
+          "home-account": "Your account",
+          "home-step-import": "Import what you already have",
+          "home-step-matches": "Accept the matches",
+          "home-step-agent": "Ask your agent"
         },
         "status": {
           "default": "proposed"
@@ -549,9 +651,45 @@ export const portfolioSnapshot = {
         "long": "TextButler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that keeps notes on each person in files you can edit. New installs start paused and every contact starts off. Choose a local model, your Gateway key, or a connected subscription; local-model replies are in testing. Hosted AI providers receive the context needed to write a reply. TextButler is free and MIT licensed.",
         "hero": {
           "heading": "An AI butler in your messaging apps.",
-          "summary": "When someone you’ve turned on texts “butler”, a clearly marked AI assistant answers for you from your Mac. It writes with a local model or the AI subscription you already pay for. Claude Code, Codex, or Devin can set it up for you.",
+          "summary": "A clearly marked AI assistant answers the people you choose, from your Mac.",
           "primaryAction": "Have your agent set it up",
           "secondaryAction": "See how it works"
+        },
+        "headings": {
+          "how-title": "From “butler” to a marked reply.",
+          "supports-title": "What it works with",
+          "models-title": "Pick what writes replies",
+          "setup-title": "Your agent sets it up. You stay in charge.",
+          "control-title": "You stay in charge",
+          "self-title": "Ask it yourself",
+          "questions-title": "Questions",
+          "related-title": "Other tools from our studio",
+          "closing-title": "Start with one person",
+          "where-it-stands": "Where it stands",
+          "messaging-apps": "Messaging apps",
+          "your-mac": "Your Mac",
+          "install-it-yourself": "Install it yourself",
+          "prefer-to-do-it-yourself": "Prefer to do it yourself?",
+          "your-agent-speaks-its-language": "Your agent speaks its language",
+          "it-s-there-when-you-aren-t": "It’s there when you aren’t.",
+          "it-never-pretends-to-be-you": "It never pretends to be you.",
+          "it-runs-on-your-mac": "It runs on your Mac.",
+          "site-title": "TextButler: an AI butler for iMessage and WhatsApp on Mac",
+          "home-writer-local": "A local model on your Mac",
+          "home-writer-key": "Qwen 3.5 Flash with your own Vercel AI Gateway key",
+          "home-writer-subscription": "Your Claude Code, Codex, or Devin subscription",
+          "home-flow-text": "Someone texts you.",
+          "home-flow-checks": "It checks before it speaks.",
+          "home-flow-indicator": "👀, right away.",
+          "home-flow-context": "It reads the room.",
+          "home-flow-model": "Your chosen model writes the reply.",
+          "home-flow-send": "Marked, then sent.",
+          "home-flow-step-in": "You can step in anytime.",
+          "home-setup-agent": "Ask your agent.",
+          "home-setup-mac": "Say yes to your Mac.",
+          "home-setup-person": "Turn on one person.",
+          "home-related-apps": "The personal apps",
+          "home-related-tools": "The agent platform"
         },
         "status": {
           "default": "proposed"
@@ -589,9 +727,44 @@ export const portfolioSnapshot = {
         "long": "Agents that run commands reach the web through a browser they steer click by click, or through credentials they should never hold. GhostGet is a free, open-source CLI and TypeScript SDK that gives them a third route: a fixed list of reviewed web actions. Read a URL as Markdown, keep a searchable copy on your machine, archive one media item with SHA-256 records, or act in a connected account such as Gmail, Beeper, or X through one named operation. A measured article read costs about 3,800 tokens where the raw page carries 36,000. Consequential writes need an exact preview and your confirmation, and the agent never sees a login.",
         "hero": {
           "heading": "Your agent gets the result without clicking around.",
-          "summary": "A free CLI and TypeScript SDK for Claude Code, Codex, Cursor, and other agents that run commands. Read a page as Markdown, save a media item, or use a connected account.",
+          "summary": "Read pages, save media, and use connected accounts through your agent.",
           "primaryAction": "Tell your agent",
           "secondaryAction": "See it work"
+        },
+        "headings": {
+          "uses-heading": "Read a page, archive one item, or act in an account.",
+          "how-it-works-heading": "Give your agent a web task.",
+          "measured-heading": "Read the page without its HTML.",
+          "start-heading": "Tell your agent, or run two commands.",
+          "interfaces-title": "Use an Agent Skill, CLI, or TypeScript SDK",
+          "agent-skill": "Agent Skill",
+          "cli": "CLI",
+          "typescript-sdk": "TypeScript SDK",
+          "control-heading": "Review accounts and approvals.",
+          "local-by-design-title": "Choose what your agent can do.",
+          "comparison-title": "How GhostGet compares with other ways agents reach the web.",
+          "faq-title": "Before you install.",
+          "guides-title": "Start with the outcome you need.",
+          "read-your-first-page": "Read your first page",
+          "capture-urls-and-archive-media": "Capture URLs and archive media",
+          "check-provider-support": "Check provider support",
+          "understand-the-security-model": "Understand the security model",
+          "author-a-provider-plugin": "Author a provider plugin",
+          "browse-the-documentation": "Browse the documentation",
+          "arguments-title": "Arguments and comparisons",
+          "how-agents-reach-the-web": "How agents reach the web",
+          "maker-title": "Hraness",
+          "related-title": "Other tools from our studio",
+          "related-tools": "The agent platform",
+          "related-apps": "The personal apps",
+          "final-title": "Read your first page in two commands.",
+          "home-providers": "Use {{PROVIDER_SURFACE_COUNT}} services from your agent.",
+          "home-webmcp-sites": "Plus {{WEBMCP_REGISTRY_SITE_COUNT}} sites publishing WebMCP tools"
+        },
+        "channels": {
+          "social": {
+            "imageDescription": "Named web actions for AI agents: read pages, save media, use accounts."
+          }
         },
         "status": {
           "default": "proposed"
@@ -629,9 +802,36 @@ export const portfolioSnapshot = {
         "long": "Soulscrape is a free, MIT-licensed agent skill that turns sources you're allowed to use into a dated dossier on one person: how they decide, write, argue, and change their mind. It runs inside Claude Code, Codex, or another agent that loads skills, with your own model and tools, and needs no Soulscrape account. Facts, stated beliefs, patterns, and speculation stay apart, and the dossier lists what the record cannot settle. Keep it private, or publish it with a free Hraness account as a web page, a JSON packet, and a Markdown copy anyone can cite.",
         "hero": {
           "heading": "See how someone thinks, and where every claim comes from.",
-          "summary": "Give your agent the sources you're allowed to use, and it writes a dated dossier with every claim tied to its evidence.",
+          "summary": "Turn sources into a dated dossier, with evidence behind every claim.",
           "primaryAction": "Install the skill",
           "secondaryAction": "Browse the dossiers"
+        },
+        "headings": {
+          "how-title": "From sources to a dossier",
+          "examples-title": "Explore a finished dossier",
+          "method-title": "Read the claims alongside their evidence",
+          "use-cases-title": "Use the research in your own work",
+          "install-title": "Install and write your first dossier",
+          "indexes-title": "Publish when you are ready",
+          "boundaries-title": "Keep the research within its limits",
+          "questions-title": "Questions",
+          "related-title": "Other tools from our studio",
+          "cta-title": "Start with one person",
+          "home-flow-sources": "Choose the sources",
+          "home-flow-read": "Read the dossier",
+          "home-flow-publish": "Keep it private or publish",
+          "home-use-agent": "Give an agent context",
+          "home-use-research": "Research a person",
+          "home-use-writing": "Write about someone",
+          "home-use-personas": "Prepare an authorized assistant",
+          "home-use-collaboration": "Work with someone",
+          "home-use-self": "Understand your own patterns",
+          "home-trust-sources": "Authorized sources",
+          "home-trust-purpose": "A clear purpose",
+          "home-trust-instructions": "Research under your instructions",
+          "home-trust-claims": "Claims you can check",
+          "home-related-apps": "The personal apps",
+          "home-related-tools": "The agent platform"
         },
         "status": {
           "default": "proposed"
@@ -658,19 +858,34 @@ export const portfolioSnapshot = {
         "category": "Editable icon library",
         "tagline": "Icons and illustrations you can edit as vectors.",
         "short": "Editable vector icons and illustrations, with an editor in your browser",
-        "meta": "icon.place is a library of editable vector icons and illustrations, with 9,518 concept pages and an in-browser editor that exports SVG, PNG, or a recipe.",
-        "medium": "icon.place is a library of editable vector icons and illustrations, with 9,518 concept pages. Drawings open in an in-browser editor for styles, palettes, and parts, and export as SVG, PNG, or a recipe.",
-        "long": "icon.place is a library of editable vector icons and illustrations. It has 9,518 concept pages and 8,965 drawn icons, adapted from Lucide, Tabler, Phosphor, Material Symbols, Font Awesome Free, Bootstrap Icons, and others, credited on each page. A shared in-browser editor changes styles, palettes, and parts, and exports SVG, PNG, or a replayable recipe. The studio composes connected scenes from 41 pieces, and you can remix your own SVG or trace an image. A separate drawing lab runs small Qwen models in the browser through WebGPU and records each drawing run as an ALGAL program; the live site does not use it yet.",
+        "meta": "icon.place is a library of editable vector icons and illustrations, with an in-browser editor that exports SVG, PNG, or a recipe.",
+        "medium": "icon.place is a library of editable vector icons and illustrations. Drawings open in an in-browser editor for styles, palettes, and parts, and export as SVG, PNG, or a recipe.",
+        "long": "icon.place is a library of editable vector icons and illustrations. Its concept pages include drawn icons adapted from Lucide, Tabler, Phosphor, Material Symbols, Font Awesome Free, Bootstrap Icons, and others, credited on each page. A shared in-browser editor changes styles, palettes, and parts, and exports SVG, PNG, or a replayable recipe. The studio composes connected scenes from reusable pieces, and you can remix your own SVG or trace an image. A separate drawing lab runs small Qwen models in the browser through WebGPU and records each drawing run as an ALGAL program; the live site does not use it yet.",
+        "hero": {
+          "heading": "Icons and illustrations you can edit as vectors.",
+          "summary": "icon.place is a library of editable vector icons and illustrations. Drawings open in an in-browser editor for styles, palettes, and parts, and export as SVG, PNG, or a recipe.",
+          "primaryAction": "Open an icon",
+          "secondaryAction": "Browse every icon"
+        },
+        "headings": {
+          "home-strip": "Twelve icons from the library",
+          "home-techniques": "One {subject}, {count} ways.",
+          "home-wall": "All {count} drawn icons, on one page.",
+          "home-why": "Your agent can draw an SVG. Can it draw the next 500 in the same hand?",
+          "home-styles": "A style is code, not a prompt",
+          "home-primitives": "Built from composable primitives",
+          "home-rendering": "Generation costs almost nothing"
+        },
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-29"
+        "reviewedOn": "2026-09-30"
       }
     },
     "slopcamera": {
       "id": "slopcamera",
       "name": "SlopCamera",
-      "oneLiner": "Media studio for agents: images, 3D, animation, and video to revise",
+      "oneLiner": "A multimedia studio for your coding agent",
       "brandDescription": "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
       "canonicalUrl": "https://slopcamera.com",
       "status": "active",
@@ -692,21 +907,43 @@ export const portfolioSnapshot = {
           ]
         },
         "category": "Media studio for agents",
-        "tagline": "Visual work your agent can keep revising.",
-        "short": "Media studio for agents: images, 3D, animation, and video to revise",
+        "tagline": "A multimedia studio for your coding agent.",
+        "short": "A multimedia studio for your coding agent",
         "meta": "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
         "medium": "SlopCamera is a media studio for coding agents. Codex, Claude Code, and other agents make images, diagrams, animation, 3D scenes, and edited video from source files they can keep revising.",
         "long": "Agents that write code can also make media, but generated assets usually arrive as finished files nobody can change. SlopCamera is a media studio for coding agents: images, diagrams, animation, 3D scenes, and edited video are built from source files the agent can keep revising, so a change is a new render, not a new prompt lottery. Codex, Claude Code, and other command-capable agents drive it through the CLI and skill. SlopCamera is free and open source.",
         "hero": {
-          "heading": "Visual work your agent can keep revising.",
-          "summary": "Ask your agent to make images, diagrams, animation, 3D scenes, or video. Keep the source files for the next revision.",
-          "primaryAction": "Install SlopCamera",
-          "secondaryAction": "See what agents made"
+          "heading": "Give your agent a multimedia studio.",
+          "summary": "Make images, animation, 3D scenes, and video with your coding agent. Direct the details. Keep the source.",
+          "primaryAction": "Install Slopcamera",
+          "secondaryAction": "Watch the films"
+        },
+        "headings": {
+          "home-examples": "Take an idea somewhere strange.",
+          "home-revision": "The next version starts with a sentence.",
+          "home-revision-original": "Original",
+          "home-revision-revised": "Revised",
+          "home-start": "What will you make first?",
+          "home-start-animation": "Make an animated film",
+          "home-start-world": "Build a little world",
+          "home-start-footage": "Give footage a new life",
+          "home-install": "Install Slopcamera for your agent.",
+          "home-design": "Your tools. Your files.",
+          "home-questions": "Common questions",
+          "home-cta": "Make something worth replaying.",
+          "home-search-title": "SlopCamera: video, diagrams and 3D your coding agent can revise",
+          "agent-home-examples": "See what you can make",
+          "agent-home-revision": "Direct it again",
+          "agent-home-workflow": "From an idea to a finished piece",
+          "agent-home-install": "Install Slopcamera",
+          "agent-home-tools": "Choose your tools",
+          "agent-home-privacy": "Cost and privacy",
+          "agent-home-explore": "Explore"
         },
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-24"
+        "reviewedOn": "2026-09-30"
       }
     },
     "soundfish": {
@@ -738,6 +975,20 @@ export const portfolioSnapshot = {
           "primaryAction": "Upload an album",
           "secondaryAction": "Hear an album page"
         },
+        "headings": {
+          "home-features": "Every album page has a player, comments, and play counts.",
+          "home-midi": "Sketch the next idea in the MIDI editor.",
+          "home-comparison": "How Soundfish compares",
+          "home-releases": "Recent releases",
+          "home-interfaces": "For listeners, makers, and agents",
+          "home-questions": "Common questions",
+          "home-search-title": "Soundfish: album pages with timestamped comments",
+          "home-eyebrow": "Music for agents",
+          "home-closing": "Share it today. Improve it at the same link.",
+          "home-interface-listeners": "For listeners",
+          "home-interface-makers": "For makers",
+          "home-interface-agents": "For agents"
+        },
         "status": {
           "default": "proposed"
         },
@@ -747,7 +998,7 @@ export const portfolioSnapshot = {
     "sys1": {
       "id": "sys1",
       "name": "Sys1",
-      "oneLiner": "Answers an agent's small yes/no, choice, and score questions with probabilities",
+      "oneLiner": "Saves repository check results and adds scoped code review",
       "brandDescription": "Sys1 helps coding agents review changes against your repository's rules, with probability-scored answers from hosted Jev, a local model, or your own server.",
       "canonicalUrl": "https://sys1.io",
       "status": "active",
@@ -761,22 +1012,59 @@ export const portfolioSnapshot = {
           "name": "Sys1",
           "command": "sys1"
         },
-        "category": "Agent decision router",
-        "tagline": "Give your agent a System 1.",
-        "short": "Answers an agent's small yes/no, choice, and score questions with probabilities",
-        "meta": "Sys1 answers an agent's small yes/no, choice, and score questions with probabilities, from TypeSafe's hosted Jev, a local model, or your own server.",
-        "medium": "Sys1 keeps agents from spending big-model tokens on small decisions. It answers yes/no, choice, and score questions with probabilities from TypeSafe's hosted Jev, an experimental local model, or your own server.",
-        "long": "Sys1 keeps agents from spending big-model tokens on small decisions. Agents ask yes/no, choice, and score questions and get validated answers with probabilities. You choose who answers: TypeSafe's hosted Jev, an experimental local model, or a compatible server you run. Its review and final-message checks are experimental and advisory. Every backend takes the same request format, Sys1 checks each answer against the question asked, and each response says which backend produced it. Call Sys1 from a Node or Bun client, embed its router, or run its local HTTP daemon for any language. Sys1 is free and MIT licensed.",
+        "category": "Coding agent tools",
+        "tagline": "Saved checks and code review",
+        "short": "Saves repository check results and adds scoped code review",
+        "meta": "Sys1 gives coding agents tools to review code, check completion claims, and get structured answers from Jev or a local model.",
+        "medium": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes. Review and completion checks are advisory.",
+        "long": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes. Its code review and completion checks are experimental and advisory. Agents and applications can also ask yes/no, choice, and score questions and receive validated answers with probabilities. Choose TypeSafe’s hosted Jev, an experimental local model, or a compatible server. Use the Node or Bun client, embed the router, or call its local HTTP gateway. The Sys1 site also offers System One Skills, an independent package that compacts noisy test and build output without Sys1 or a model. Sys1 is MIT licensed.",
         "hero": {
-          "heading": "Give your agent a System 1.",
-          "summary": "Your agent asks small yes/no, choice, and score questions and gets validated answers with probabilities. You choose the model.",
+          "heading": "Keep checks and code review together.",
+          "summary": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes.",
           "primaryAction": "Install Sys1",
-          "secondaryAction": "Read the evaluations"
+          "secondaryAction": "Explore the workflows"
+        },
+        "headings": {
+          "review-heading": "Useful checks, inside your agent’s workflow.",
+          "benchmarks-heading": "For compact output alone.",
+          "launch-heading": "Meet Sys1.",
+          "system-heading": "Three parts, one system.",
+          "how-heading": "Use small decisions in your own code.",
+          "trial-heading": "Test the decision on your task.",
+          "integration-heading": "Three ways to call Sys1.",
+          "ecosystem-heading": "What Sys1 connects to.",
+          "install-heading": "Install Sys1.",
+          "questions-heading": "Before you begin.",
+          "docs-title": "Set up your first useful check",
+          "getting-started-title": "Install Sys1",
+          "workflows-title": "Save a check and continue its review",
+          "connect-jev-title": "Connect hosted Jev for model calls",
+          "audit-title": "Review changes with your agent",
+          "verify-title": "Check a completion message",
+          "compact-checks-title": "Compact test output",
+          "system-one-title": "Ask for a structured decision",
+          "integration-title": "Integration modes",
+          "backends-title": "Other backends",
+          "profiles-title": "Reuse application questions",
+          "research-title": "Evaluate a model for your task",
+          "workflow-review-heading": "Review a change against your rules",
+          "workflow-completion-heading": "Check what “done” means",
+          "docs-install-cli": "Install the CLI",
+          "docs-first-jev-request": "Make your first Jev request",
+          "docs-model-errors": "Choose the model and handle failures",
+          "docs-portable-client": "Portable client",
+          "docs-embedded-router": "Embedded Bun router",
+          "docs-loopback-http": "Loopback HTTP"
+        },
+        "channels": {
+          "social": {
+            "imageDescription": "Keep checks and code review together."
+          }
         },
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-29"
+        "reviewedOn": "2026-09-30"
       }
     },
     "sloptrade": {
@@ -811,7 +1099,18 @@ export const portfolioSnapshot = {
           "heading": "AI writes the research. Your rules make the trade.",
           "summary": "A researched build prompt your coding agent turns into a personal trading system where your rules approve every order.",
           "primaryAction": "Get the prompt",
-          "secondaryAction": "Read the architecture"
+          "secondaryAction": "See how it works"
+        },
+        "headings": {
+          "home-desk": "See the desk you'll own",
+          "home-system": "What your agent builds",
+          "home-sequence": "Start with order placement off",
+          "home-access": "Who can do what",
+          "home-comparison": "How it compares",
+          "home-running": "What you need to run it",
+          "home-buy": "Buy the prompt",
+          "home-notes": "Read the design notes",
+          "home-questions": "Questions"
         },
         "status": {
           "default": "proposed",
@@ -885,6 +1184,9 @@ export const portfolioSnapshot = {
           "primaryAction": "Play sound",
           "secondaryAction": "Read the guides"
         },
+        "headings": {
+          "home-search-title": "Free Brown, Pink & White Noise and Ocean Waves | Sleepyland"
+        },
         "status": {
           "default": "proposed"
         },
@@ -917,7 +1219,25 @@ export const portfolioSnapshot = {
           "heading": "A daily front page that says why each story ranked.",
           "summary": "Tech & AI, World, and Finance, one dated edition a day. Every story links the original source.",
           "primaryAction": "Read today's edition",
-          "secondaryAction": "See the archive"
+          "secondaryAction": "See how stories are chosen"
+        },
+        "headings": {
+          "home-search-title": "Rough Day: daily Tech & AI, World, and Finance news",
+          "roughday-walkthrough-title": "See a day on Rough Day",
+          "roughday-working-model-title": "How stories are chosen",
+          "roughday-interfaces-title": "Other ways to read the archive",
+          "roughday-evidence-title": "What each story shows",
+          "roughday-compare-title": "How Rough Day compares",
+          "roughday-trust-title": "Sources and privacy",
+          "roughday-questions-title": "Common questions",
+          "roughday-action-title": "Open the current archive.",
+          "info-search-title": "How Rough Day works",
+          "info-story-proof": "How to read a story",
+          "info-interface-archive": "Daily archive",
+          "info-interface-category": "Category link",
+          "info-interface-markdown": "Markdown",
+          "info-interface-feed": "Atom feed",
+          "info-interface-guide": "Site guide and sitemap"
         },
         "status": {
           "default": "proposed"
@@ -960,6 +1280,9 @@ export const portfolioSnapshot = {
           "primaryAction": "Browse the timeline",
           "secondaryAction": "Download the data"
         },
+        "headings": {
+          "record-keeping": "How this record is kept"
+        },
         "status": {
           "default": "proposed"
         },
@@ -994,6 +1317,13 @@ export const portfolioSnapshot = {
           "primaryAction": "Browse the index",
           "secondaryAction": "Read the method"
         },
+        "headings": {
+          "agreement": "Where kinds of evidence agree",
+          "record-guide": "How to read a record",
+          "evidence-kinds": "Five kinds of evidence",
+          "browse": "Browse the index",
+          "categories": "Categories"
+        },
         "status": {
           "default": "proposed"
         },
@@ -1014,7 +1344,8 @@ export const portfolioSnapshot = {
         "formatVersion": 1,
         "product": "act60",
         "names": {
-          "name": "act60.me"
+          "name": "act60.me",
+          "shortName": "ACT60"
         },
         "category": "Act 60 planner",
         "tagline": "Model the move to Puerto Rico before you make it.",
@@ -1023,10 +1354,48 @@ export const portfolioSnapshot = {
         "medium": "act60.me estimates Puerto Rico Act 60 savings after fees and yearly costs, with every assumption and source date beside the result. Sourced guides cover applying, federal residency, and moving; a private tracker counts your presence days.",
         "long": "Act 60 promises large Puerto Rico tax savings, but fees, yearly costs, and the federal residency rules decide the real number. act60.me models the move before you make it: a calculator that itemizes one-time and annual costs beside its assumptions, guides that cite the official sources and the date each was checked, and a private day tracker for the presence tests a calendar can measure. Investor applications filed in 2026 face a December 31 deadline; the guides say which rules changed and which still apply.",
         "hero": {
-          "heading": "Model the move to Puerto Rico",
-          "summary": "Estimate your Act 60 savings after fees and yearly costs, with every assumption and source date beside the result.",
+          "heading": "Puerto Rico Act 60 calculator",
+          "summary": "Estimate Act 60 savings from the export-services benefit (formerly Act 20) and the investor benefit (formerly Act 22) after fees, the investor donation, and yearly costs. Rates and source dates sit beside the result. No account needed.",
           "primaryAction": "Estimate your savings",
           "secondaryAction": "Choose your guide"
+        },
+        "headings": {
+          "home-search-title": "Act 60 calculator: Puerto Rico tax savings after costs | act60.me",
+          "tracker-preview-title": "See the day tracker before you sign in.",
+          "how-to-read-title": "Choose the guide for your question.",
+          "compare-title": "How act60.me compares",
+          "benefits-title": "The business and investor benefits follow different rules.",
+          "costs-title": "The estimate itemizes one-time and annual costs.",
+          "requirements-title": "Plan the application, then the years after it.",
+          "residence-title": "Three residence checks apply every year.",
+          "steps-title": "Plan the work from filing through each later year.",
+          "questions-title": "Common questions about the benefits and the move.",
+          "sources-title": "Check the rules against the official sources.",
+          "calculator-title": "Estimate your savings after costs",
+          "home-presence-tax-home-or-closer-connection": "Presence, tax home, or closer connection",
+          "home-export-services-business-treatment": "Export-services business treatment",
+          "home-individual-investor-treatment": "Individual investor treatment",
+          "home-applying-moving-and-daily-life": "Applying, moving, and daily life",
+          "home-business-chapter-or-investor-chapter": "Business chapter or investor chapter",
+          "home-grant-receipt-or-federal-residence": "Grant, receipt, or federal residence",
+          "home-service-business-profit": "Service business profit",
+          "home-investment-income-after-the-move": "Investment income after the move",
+          "home-pass-one-day-count-option": "Pass one day-count option",
+          "home-base-your-work-in-puerto-rico": "Base your work in Puerto Rico",
+          "home-make-puerto-rico-the-center-of-your-life": "Make Puerto Rico the center of your life",
+          "home-prepare-and-file-the-applications": "Prepare and file the applications",
+          "home-build-a-real-puerto-rico-life": "Build a real Puerto Rico life",
+          "home-complete-the-investor-home-commitment": "Complete the investor home commitment",
+          "home-file-and-keep-proof-every-year": "File and keep proof every year",
+          "pillar-calculator": "Calculator",
+          "pillar-requirements": "Requirements",
+          "pillar-days": "Day tracker",
+          "social-image-title": "Act 60 calculator"
+        },
+        "channels": {
+          "social": {
+            "imageDescription": "Estimate Puerto Rico Act 60 savings after fees and yearly costs"
+          }
         },
         "status": {
           "default": "proposed"
@@ -1060,8 +1429,15 @@ export const portfolioSnapshot = {
         "hero": {
           "heading": "Give each app state you test its own URL.",
           "summary": "Repeatable states for browser agents: your real interface on fixture data, at a URL you can open, test, and share.",
-          "primaryAction": "Add Direct to a project",
-          "secondaryAction": "See a named state"
+          "primaryAction": "install from npm",
+          "secondaryAction": "read the source"
+        },
+        "headings": {
+          "resources": "Direct resources",
+          "install": "Install the Agent Skill",
+          "states": "open any state by url",
+          "readiness": "know when the app is ready",
+          "features": "test your real feature code"
         },
         "status": {
           "default": "proposed"
@@ -1102,6 +1478,16 @@ export const portfolioSnapshot = {
           "summary": "Give your agent fresh puzzles and get a receipt: a signed record of what it solved.",
           "primaryAction": "Run a check",
           "secondaryAction": "Verify a receipt"
+        },
+        "headings": {
+          "how-title": "Anyone can check the score.",
+          "issue-fresh-puzzles": "Issue fresh puzzles.",
+          "connect-your-agent": "Connect your agent.",
+          "score-each-answer": "Score each answer.",
+          "keep-the-signed-result": "Keep the signed result.",
+          "local-title": "Try a check on your machine.",
+          "integrations-title": "Where to add a check.",
+          "results-title": "Check the receipt yourself."
         },
         "status": {
           "default": "proposed"
@@ -1145,6 +1531,17 @@ export const portfolioSnapshot = {
           "primaryAction": "Start your timeline",
           "secondaryAction": "See an example"
         },
+        "headings": {
+          "home-search-title": "Life timeline maker: chart your life in chapters | Lifecharts",
+          "timeline-guide": "How a life timeline works",
+          "home-two-ways-to-see-the-same-life": "Two ways to see the same life",
+          "home-what-the-percentages-mean": "What the percentages mean",
+          "home-add-a-longer-horizon": "Add a longer horizon",
+          "home-save-share-and-embed": "Save, share, and embed",
+          "timeline-places": "Send it to a friend or put it on your site",
+          "timeline-agent": "Make it with your agent",
+          "timeline-compare": "How Lifecharts compares"
+        },
         "status": {
           "default": "proposed"
         },
@@ -1179,6 +1576,14 @@ export const portfolioSnapshot = {
           "primaryAction": "Read the latest",
           "secondaryAction": "Compare the cases"
         },
+        "headings": {
+          "how-the-work-gets-done": "How the work gets done",
+          "compare-cases-scale-and-industries": "Compare cases, scale, and industries",
+          "agent-scale": "Agent scale",
+          "across-industries": "Across industries",
+          "the-software-factory-field-guide": "The software factory field guide",
+          "home-company-cases": "{count} company cases"
+        },
         "status": {
           "default": "proposed"
         },
@@ -1206,6 +1611,11 @@ export const portfolioSnapshot = {
         "short": "Tests whether Alexander-inspired patterns help agents write better code",
         "meta": "Pattern Language sketches Alexander's Notes on the Synthesis of Form in ALGAL-form and tests whether those patterns help an agent produce better code.",
         "medium": "Pattern Language sketches Christopher Alexander's Notes on the Synthesis of Form as a runnable pattern language in ALGAL-form. It tests that question with executable artifacts; an advantage over ordinary prompting is not proven.",
+        "hero": {
+          "heading": "Alexander's notes, sketched as runnable ALGAL form.",
+          "summary": "Pattern Language sketches Christopher Alexander's Notes on the Synthesis of Form as a runnable pattern language in ALGAL-form. It tests that question with executable artifacts; an advantage over ordinary prompting is not proven.",
+          "primaryAction": "read the studies"
+        },
         "status": {
           "default": "proposed"
         }
@@ -1233,6 +1643,31 @@ export const portfolioSnapshot = {
         "short": "Runs a check once, returns a short result, and keeps the full log",
         "meta": "System One Skills gives Devin, Claude Code, and Codex one skill that runs a noisy check once, returns a short result, and saves the full log locally.",
         "medium": "System One Skills gives Devin, Claude Code, and Codex one skill, system-one-verify, for long test and build logs. It runs the command once, returns a short result with the exit status, and saves the full log on your machine.",
+        "hero": {
+          "heading": "Give your agent shorter check results.",
+          "summary": "System One Skills runs your noisy tests and builds once, returns a short result, and saves the full log. Install the system-one-verify skill for Codex, Claude Code, or Devin.",
+          "primaryAction": "install the skill"
+        },
+        "headings": {
+          "review-heading": "Add a second pass on code changes.",
+          "verify-heading": "Check a completion message.",
+          "workflows-heading": "Try decision workflows from source",
+          "shipped-heading": "Keep noisy check output short",
+          "use-it-for-a-status-decision": "Use it for a status decision.",
+          "use-native-tools-for-diagnosis": "Use native tools for diagnosis.",
+          "evidence-heading": "What has been measured.",
+          "system-one-skills-research-candidates": "System One Skills research candidates",
+          "catalog-heading": "Further compact-output research",
+          "install-heading": "Install in your project.",
+          "social-image-title": "Shorter test logs for your agent",
+          "skills-first-check-heading": "Run your first check",
+          "skills-further-reading-heading": "Further reading"
+        },
+        "channels": {
+          "social": {
+            "imageDescription": "No model or API key required."
+          }
+        },
         "status": {
           "default": "proposed"
         }
@@ -1260,12 +1695,69 @@ export const portfolioSnapshot = {
         "short": "Packages provider reads and plan checks as programs with no model calls",
         "meta": "GhostGet Skills packages GhostGet workflows as programs for Claude Code, Codex, and Devin, with no model calls and a receipt you can replay offline.",
         "medium": "GhostGet Skills packages common GhostGet workflows as programs for Claude Code, Codex, and Devin. They make no model calls, and every run leaves a receipt you can replay offline.",
+        "hero": {
+          "heading": "GhostGet workflows as programs you can replay.",
+          "summary": "GhostGet Skills packages common GhostGet workflows as programs for Claude Code, Codex, and Devin. They make no model calls, and every run leaves a receipt you can replay offline.",
+          "primaryAction": "install the skills"
+        },
         "status": {
           "default": "proposed"
         }
       }
     }
   },
+  "packs": [
+    {
+      "slug": "relationships",
+      "title": "Relationships",
+      "tone": "rose",
+      "members": [
+        "peopleblade",
+        "message-like-me",
+        "wrench",
+        "soulscrape",
+        "lifedaysleft"
+      ]
+    },
+    {
+      "slug": "knowledge",
+      "title": "Knowledge",
+      "tone": "indigo",
+      "members": [
+        "kb",
+        "oh-computer",
+        "sponge",
+        "sloptrade",
+        "roughday"
+      ]
+    },
+    {
+      "slug": "media",
+      "title": "Media",
+      "tone": "amber",
+      "members": [
+        "iconplace",
+        "slopcamera",
+        "soundfish"
+      ]
+    },
+    {
+      "slug": "token-maximalists",
+      "title": "Tools for Token Maximalists",
+      "tone": "emerald",
+      "members": [
+        "xcb",
+        "algal",
+        "gobstopper",
+        "sys1",
+        "aicharts",
+        "direct",
+        "clankdar",
+        "valhalla",
+        "swft"
+      ]
+    }
+  ],
   "relations": [
     {
       "id": "runtime:lifedaysleft:slopcamera:uses",
@@ -1592,5 +2084,5 @@ export const portfolioSnapshot = {
       "detail": "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
     }
   ],
-  "digest": "sha256:d43bbc1113c077b872d2e11a4a70490cd537d5734951d0c3c4bd8e061ce583a9"
+  "digest": "sha256:1af50f624f0d06ec13e1531564a8066795ae3fed732210b6f642179730100103"
 } as const;

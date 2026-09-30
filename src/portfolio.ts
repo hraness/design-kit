@@ -108,11 +108,39 @@ export type PortfolioProvenance = Readonly<{
   files: readonly Readonly<{ path: string; sha256: string }>[];
 }>;
 
+export type PortfolioPackTone = "rose" | "indigo" | "amber" | "emerald";
+
+/** The homepage categories, in the same order as hraness.com. */
+export type PortfolioPack = Readonly<{
+  slug: string;
+  title: string;
+  tone: PortfolioPackTone;
+  members: readonly PortfolioProductId[];
+}>;
+
+export type PortfolioStudioItem = Readonly<{
+  productId: PortfolioProductId;
+  href: string;
+  name: string;
+  role: string;
+  mark: string;
+  domain: string;
+}>;
+
+/** Product-neutral data shaped for the shared MarketingRelated composition. */
+export type PortfolioStudioGroup = Readonly<{
+  heading: string;
+  headingId: string;
+  tone: PortfolioPackTone | "neutral";
+  items: readonly PortfolioStudioItem[];
+}>;
+
 export type PortfolioSnapshot = Readonly<{
   contract: "hraness.design-kit-portfolio/v1";
   formatVersion: 1;
   provenance: PortfolioProvenance;
   products: Readonly<Record<PortfolioProductId, PortfolioProduct>>;
+  packs: readonly PortfolioPack[];
   relations: readonly PortfolioRelation[];
   /** SHA-256 of the snapshot's compact JSON without this key. Pin it in a consumer test. */
   digest: string;
@@ -154,6 +182,7 @@ function deepFreeze<T>(value: T): T {
 /** The whole snapshot, frozen so one consumer cannot change another's facts at runtime. */
 export const portfolioFacts: PortfolioSnapshot = deepFreeze(portfolioSnapshot);
 export const portfolioProducts: PortfolioSnapshot["products"] = portfolioFacts.products;
+export const portfolioPacks: readonly PortfolioPack[] = portfolioFacts.packs;
 export const portfolioRelations: PortfolioSnapshot["relations"] = portfolioFacts.relations;
 export const portfolioProvenance: PortfolioProvenance = portfolioFacts.provenance;
 export const portfolioDigest: string = portfolioFacts.digest;
@@ -223,4 +252,48 @@ export function usesPairs(): readonly PortfolioUsesPair[] {
     source: product(relation.source),
     target: product(relation.target),
   }));
+}
+
+/**
+ * Present only the caller's selected products, once each, in the homepage's
+ * category and member order. Categories with no selected products disappear.
+ * Products outside a pack follow in a neutral group. This does not infer an
+ * integration or expand a site's curated related-product selection.
+ */
+export function portfolioRelatedGroups(
+  ids: readonly PortfolioProductId[],
+  headingPrefix = "related",
+): readonly PortfolioStudioGroup[] {
+  if (!/^[a-z][a-z0-9-]*$/u.test(headingPrefix)) {
+    throw new PortfolioFactsError("The related heading prefix must be a lowercase HTML identifier.");
+  }
+  const selected = new Set(ids.map((id) => product(id).id));
+  const item = (id: PortfolioProductId): PortfolioStudioItem => {
+    const entry = product(id);
+    return {
+      productId: id,
+      href: entry.canonicalUrl,
+      name: entry.messaging.names.name,
+      role: entry.oneLiner,
+      mark: entry.mark,
+      domain: entry.canonicalUrl.replace(/^https?:\/\/(?:www\.)?([^/:?#]+).*$/u, "$1"),
+    };
+  };
+  const groups: PortfolioStudioGroup[] = [];
+  for (const pack of portfolioPacks) {
+    const members = pack.members.filter((id) => selected.delete(id));
+    if (members.length > 0) groups.push({
+      heading: pack.title,
+      headingId: `${headingPrefix}-${pack.slug}`,
+      tone: pack.tone,
+      items: members.map(item),
+    });
+  }
+  if (selected.size > 0) groups.push({
+    heading: "More from Hraness",
+    headingId: `${headingPrefix}-more`,
+    tone: "neutral",
+    items: portfolioProductIds.filter((id) => selected.has(id)).map(item),
+  });
+  return groups;
 }

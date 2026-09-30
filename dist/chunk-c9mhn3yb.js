@@ -1,14 +1,15 @@
 import {
+  SyntaxCode,
   platformInstallClassName
-} from "./chunk-h4k7yv6x.js";
+} from "./chunk-fjf81bww.js";
+import {
+  diagramMetrics
+} from "./chunk-gmea6p0d.js";
 import {
   isPlatformId,
   platformLabel,
   platformMark
 } from "./chunk-wzvdn8ey.js";
-import {
-  highlightCode
-} from "./chunk-he8eznb1.js";
 import {
   ARTICLE_BYLINE_PREFIX,
   ARTICLE_SOURCES_HEADING,
@@ -232,27 +233,6 @@ function ProviderMarkChip({
   });
 }
 
-// src/react/syntax-code.tsx
-import { jsx as jsx2 } from "react/jsx-runtime";
-function SyntaxCode({
-  className,
-  code,
-  language,
-  styles
-}) {
-  const highlighted = highlightCode(code, language, styles === undefined ? {} : {
-    styles
-  });
-  const classes = className === undefined ? highlighted.className : `${highlighted.className} ${className}`;
-  return /* @__PURE__ */ jsx2("code", {
-    className: classes,
-    "data-language": highlighted.language,
-    dangerouslySetInnerHTML: {
-      __html: highlighted.html
-    }
-  });
-}
-
 // src/react/foil.stylex.ts
 import * as stylex2 from "@stylexjs/stylex";
 var foilEdge = "var(--_hraness-foil-edge, light-dark(black, white))";
@@ -351,7 +331,7 @@ function foilMarkClassName(part, caller) {
 }
 
 // src/react/foil-mark.tsx
-import { jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 function FoilMark({
   src,
   className,
@@ -371,7 +351,7 @@ function FoilMark({
       "--hraness-foil-size": `${size}px`
     },
     children: [
-      fallback ?? /* @__PURE__ */ jsx3("img", {
+      fallback ?? /* @__PURE__ */ jsx2("img", {
         alt: "",
         className: foilMarkClassName("image"),
         decoding: "async",
@@ -379,7 +359,7 @@ function FoilMark({
         src,
         width: size
       }),
-      /* @__PURE__ */ jsx3("span", {
+      /* @__PURE__ */ jsx2("span", {
         "aria-hidden": "true",
         className: foilMarkClassName("paint"),
         style: {
@@ -879,6 +859,13 @@ var marketingStyles = {
     k2kXS: "x1l2wkh2",
     $$css: true
   },
+  hero__install: {
+    kULEZF: "xsjjiva",
+    kdYMnH: "xesnm00",
+    kAiAap: "x1n5adje",
+    kMCLAl: "x1yc453h",
+    $$css: true
+  },
   hero__example: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xtylnni",
@@ -1183,6 +1170,29 @@ var marketingStyles = {
     kF3gjK: "xt970qd",
     kPTwvd: "xqjagye",
     kg9kkx: "x1hqbthl xj7gdfw",
+    $$css: true
+  },
+  pillarsBenefits: {
+    kPTwvd: "x4st1jw",
+    kOIVth: "xia337e",
+    $$css: true
+  },
+  pillars__benefit: {
+    k1xSpc: "xrvj5dj",
+    kdYMnH: "xesnm00",
+    kNk6WL: "x10ukxgv",
+    kOIVth: "x8233eu",
+    kmVPX3: "x1717udv",
+    kPTwvd: "x4st1jw",
+    kSHCDd: "x5jh6js",
+    $$css: true
+  },
+  pillars__icon: {
+    k1xSpc: "x1lliihq",
+    kULEZF: "xsta65m",
+    kLWsYc: "xkl2xug",
+    klAkkO: "xe92vt",
+    kMwMTN: "xzwifym",
     $$css: true
   },
   pillars__item: {
@@ -1717,10 +1727,20 @@ var marketingStyles = {
     kN5DiO: "x1evy7pa",
     $$css: true
   },
-  related__group: {
+  related__groups: {
     k1xSpc: "xrvj5dj",
-    kOIVth: "xru8eyw",
+    kg9kkx: "xdkhdln",
+    kOIVth: "x1h7ehgl",
+    kkeX5w: "x7a106z",
+    $$css: true
+  },
+  related__group: {
+    "--hraness-marketing-related-tone": "x1fe84dw x3te53c",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x8fetqu",
     kdYMnH: "xesnm00",
+    khsPd: "x19fofvp",
+    kS5dFF: "x10sryfm",
     $$css: true
   },
   related__group_header: {
@@ -1732,93 +1752,138 @@ var marketingStyles = {
   related__group_heading: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xtylnni",
-    knIRL8: "xb0810w",
-    ko3Kzr: "x7cedwp",
-    kUEKN5: "x154du55",
-    kN5DiO: "x16b8c5l",
+    knIRL8: "xrtw95r",
+    ko3Kzr: "x1s688f",
+    kUEKN5: "xjat59b",
+    kN5DiO: "x1xfvgam",
     kYjUv9: "x1w2vvpw",
-    kLh5Sq: "xksl5lr",
+    kLh5Sq: "x1c3i2sq",
     $$css: true
   },
   related__group_summary: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
-    kLh5Sq: "x1c3i2sq",
+    kLh5Sq: "x1jchvi3",
     kN5DiO: "x1evy7pa",
+    $$css: true
+  },
+  related__list: {
+    "--hraness-marketing-grid-columns": "xogmzgw",
+    "--_hraness-marketing-grid-track": "x1275dpl",
+    kg9kkx: "x1h695s4",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "x13z6uf9",
+    kohv2D: "xe8uvvx",
+    kogj98: "x1ghz6dp",
+    kmVPX3: "x1717udv",
+    kdYMnH: "xesnm00",
+    $$css: true
+  },
+  related__item: {
+    kogj98: "x1ghz6dp",
+    kdYMnH: "xesnm00",
     $$css: true
   },
   related__card: {
     k1xSpc: "x78zum5",
     kvQiKF: "x1q0g3np",
-    kkeX5w: "x6s0dn4",
+    kkeX5w: "x1cy8zhl",
     kVAEAm: "x1n2onr6",
-    kHBbk8: "xc8icb0",
     kdYMnH: "xesnm00",
-    kVQ08L: "x1ljpu7r",
-    k29mPU: "xkh2ocl",
-    kOIVth: "x8fetqu",
-    kmVPX3: "x14nneff",
-    k99D8V: "x17p5ghk x18z9243",
-    kNdqCV: "x16x8cr2 xv2i73l",
-    kLjGic: "x1w0e1mo xtthz4l",
-    kpfRUI: "x72sy0d xug5yj",
-    kbZlsR: "x18sabzy x1cfjbvc",
-    kAFNHU: "x1jleocg x1a4igh8",
-    kyY1tn: "x1pjjote xsdpl10",
-    kCh6Gp: "x1e53mt7 x1sz4vi2",
-    kzSjEv: "xgkqhyc x4aylkk",
-    kvZwPi: "x1eubfot",
-    kL20gf: "x1itpb23 x9yvj25",
-    kb5WsR: "x18o3ruo xhobzj1",
-    k2EZ2Y: "x1y4qj14 x2c5uud",
-    kevRTx: "x103pssi x1ug5rqp",
-    kt02CW: "x182nak8 x1pjo12s",
-    kVHNYi: "x12koezg xzln6ae",
-    kUtEtU: "x1u7o2vf x1tzqu68",
-    kdutIq: "x1fdtg7e xcrev8p",
-    kTJQHc: "x1io0m3d x1a28r24 xwaqzdf",
-    kMwMTN: "x1heor9g xs5hli",
+    kVQ08L: "x4q3qzj",
+    kOIVth: "x94aazo",
+    kmVPX3: "x1v5tq4r",
+    kYk0Dm: "xrxpjvj",
+    k99D8V: "x6umtig",
+    kNdqCV: "x1tj6v8e",
+    kLjGic: "xaqea5y",
+    kpfRUI: "xwqakj",
+    kvZwPi: "x6i6fhv",
+    kL20gf: "xjbqb8w xjoriyk",
+    kMwMTN: "xtylnni",
     kyVV8l: "x1hl2dhg",
-    kI3sdo: "x13mrud1",
-    kVtf5F: "x7s97pk",
+    kTJQHc: "x1gnnqk1",
+    kI3sdo: "xg81e2w",
+    kVtf5F: "x1bqaal",
     $$css: true
   },
   related__card_mark: {
+    "--hraness-foil-text-base": "x74bjxz",
+    kMwMTN: "xq5ojvh",
     kVZ5iK: "x1c4vz4f",
     kEE5IU: "x2lah0s",
     kR2Kky: "xdl72j9",
     k1xSpc: "x3nfvp2",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
-    kULEZF: "x166urtk",
-    kLWsYc: "x1cd9x91",
+    kULEZF: "x1mgeycz",
+    kLWsYc: "x18i7o63",
+    kAiAap: "x1lepkon",
     $$css: true
   },
   related__card_text: {
     k1xSpc: "xrvj5dj",
-    kOIVth: "xvh977a",
+    kOIVth: "xl8vk3q",
     kdYMnH: "xesnm00",
+    $$css: true
+  },
+  related__card_heading: {
+    k1xSpc: "x78zum5",
+    kR2Kwr: "x1a02dak",
+    kkeX5w: "x1pha0wt",
+    kpnIzl: "x19hr0qk",
     $$css: true
   },
   related__card_name: {
     kogj98: "x1ghz6dp",
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",
-    kLh5Sq: "x1603h9y",
-    ko3Kzr: "x1xlr1w8",
+    kLh5Sq: "x1lkfr7t",
+    ko3Kzr: "x1s688f",
     kUEKN5: "xjat59b",
-    kN5DiO: "x132q4wb",
+    kN5DiO: "x1xfvgam",
+    k7QVf6: "xj0a0fe",
+    kXaGww: "xujl8zx",
+    kCBxTS: "xi2nhp4",
+    kRHfhz: "x4k6xgu",
+    kKoZWP: "xyi4chj",
+    k1PBYE: "x1ohr1zr",
+    $$css: true
+  },
+  related__card_domain: {
+    kMwMTN: "xs87ocq",
+    knIRL8: "xrtw95r",
+    kLh5Sq: "x1dcheo9",
+    ko3Kzr: "xo1l8bm",
+    kN5DiO: "x1evy7pa",
     k7QVf6: "xj0a0fe",
     $$css: true
   },
   related__card_role: {
     kogj98: "x1ghz6dp",
-    kMwMTN: "xtylnni",
+    kMwMTN: "xs87ocq",
     knIRL8: "xrtw95r",
-    kLh5Sq: "x1lkfr7t",
+    kLh5Sq: "x6u19be",
     kN5DiO: "xfrs9s4",
+    k7QVf6: "xj0a0fe",
     kYjUv9: "x1fzhlzt",
+    $$css: true
+  },
+  relatedToneRose: {
+    "--hraness-marketing-related-tone": "xguwbwv x3te53c",
+    $$css: true
+  },
+  relatedToneIndigo: {
+    "--hraness-marketing-related-tone": "xw4kusz x3te53c",
+    $$css: true
+  },
+  relatedToneAmber: {
+    "--hraness-marketing-related-tone": "xk35eb0 x3te53c",
+    $$css: true
+  },
+  relatedToneEmerald: {
+    "--hraness-marketing-related-tone": "x1kw80uk x3te53c",
     $$css: true
   },
   trust: {
@@ -2392,7 +2457,11 @@ var marketingStyles = {
   },
   quote__link: {
     kMwMTN: "x1heor9g",
-    kyVV8l: "x1hl2dhg xt0b8zv",
+    kXaGww: "xujl8zx",
+    kCBxTS: "xi2nhp4",
+    kRHfhz: "x4k6xgu x9ojkr9 x1e7jyuc",
+    kKoZWP: "xyi4chj",
+    k1PBYE: "x1ohr1zr",
     $$css: true
   },
   plan_grid: {
@@ -3132,6 +3201,9 @@ var recipes = {
   "hraness-marketing-hero__summary": {
     default: marketingStyles.hero__summary
   },
+  "hraness-marketing-hero__install": {
+    default: marketingStyles.hero__install
+  },
   "hraness-marketing-hero__example": {
     default: marketingStyles.hero__example
   },
@@ -3220,7 +3292,11 @@ var recipes = {
   },
   "hraness-marketing-pillars__item": {
     default: marketingStyles.pillars__item,
-    later: marketingStyles.pillars__itemLater
+    later: marketingStyles.pillars__itemLater,
+    benefit: marketingStyles.pillars__benefit
+  },
+  "hraness-marketing-pillars__icon": {
+    default: marketingStyles.pillars__icon
   },
   "hraness-marketing-pillars__label": {
     default: marketingStyles.pillars__label
@@ -3374,8 +3450,28 @@ var recipes = {
   "hraness-marketing-related__summary": {
     default: marketingStyles.related__summary
   },
+  "hraness-marketing-related__groups": {
+    default: marketingStyles.related__groups
+  },
+  "hraness-marketing-related__list": {
+    default: marketingStyles.related__list
+  },
+  "hraness-marketing-related__item": {
+    default: marketingStyles.related__item
+  },
+  "hraness-marketing-related__card-heading": {
+    default: marketingStyles.related__card_heading
+  },
+  "hraness-marketing-related__card-domain": {
+    default: marketingStyles.related__card_domain
+  },
   "hraness-marketing-related__group": {
-    default: marketingStyles.related__group
+    default: marketingStyles.related__group,
+    neutral: marketingStyles.related__group,
+    rose: [marketingStyles.related__group, marketingStyles.relatedToneRose],
+    indigo: [marketingStyles.related__group, marketingStyles.relatedToneIndigo],
+    amber: [marketingStyles.related__group, marketingStyles.relatedToneAmber],
+    emerald: [marketingStyles.related__group, marketingStyles.relatedToneEmerald]
   },
   "hraness-marketing-related__group-header": {
     default: marketingStyles.related__group_header
@@ -3654,12 +3750,12 @@ var gridColumns = {
   3: marketingStyles.gridColumns3,
   4: marketingStyles.gridColumns4
 };
-function marketingColumnClassName(hook, caller, columns) {
+function marketingColumnClassName(hook, caller, columns, presentation = "default") {
   if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
     throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
   }
-  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" ? gridColumns : factColumns)[columns];
-  return [hook, stylex3.props(recipes[hook].default, columnRecipe).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
+  const columnRecipe = columns === undefined ? undefined : (hook === "hraness-marketing-pillars" ? pillarColumns : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" || hook === "hraness-marketing-related__list" ? gridColumns : factColumns)[columns];
+  return [hook, stylex3.props(recipes[hook].default, columnRecipe, hook === "hraness-marketing-pillars" && presentation === "benefits" && marketingStyles.pillarsBenefits).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
 }
 function marketingClassName(hook, caller, variant = "default") {
   const variants = recipes[hook];
@@ -3673,7 +3769,7 @@ function marketingFactCellVariant(index) {
 }
 
 // src/react/product-marketing.tsx
-import { jsx as jsx4, jsxs as jsxs3, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx3, jsxs as jsxs3, Fragment as Fragment2 } from "react/jsx-runtime";
 import { createElement } from "react";
 var MARKETING_HEADING_TAGS = {
   1: "h1",
@@ -3700,7 +3796,7 @@ function Heading({
     id
   };
   const HeadingTag = MARKETING_HEADING_TAGS[level];
-  return /* @__PURE__ */ jsx4(HeadingTag, {
+  return /* @__PURE__ */ jsx3(HeadingTag, {
     ...properties
   });
 }
@@ -3715,7 +3811,7 @@ function MarketingActionLink({
   label,
   tone = "paper"
 }) {
-  return /* @__PURE__ */ jsx4("a", {
+  return /* @__PURE__ */ jsx3("a", {
     className: marketingClassName("hraness-marketing-action", className, tone === "accent" ? `${context}-${emphasis}` : emphasis === "primary" ? "primary" : "default"),
     "data-emphasis": emphasis,
     "data-foil": emphasis === "primary" ? "" : undefined,
@@ -3731,7 +3827,7 @@ function MarketingActions({
 }) {
   if (actions.length === 0)
     return null;
-  return /* @__PURE__ */ jsx4("div", {
+  return /* @__PURE__ */ jsx3("div", {
     className,
     children: actions.map((action, index) => {
       const emphasis = action.emphasis ?? (index === 0 ? "primary" : "secondary");
@@ -3755,7 +3851,7 @@ function MarketingPage({
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal")
     throw new RangeError("Unknown marketing preset.");
   assertMarketingPattern(pattern);
-  return /* @__PURE__ */ jsx4("div", {
+  return /* @__PURE__ */ jsx3("div", {
     className: marketingClassName("hraness-marketing-page", className),
     "data-hraness-marketing": "page",
     "data-hraness-marketing-preset": preset,
@@ -3770,7 +3866,7 @@ function MarketingField({
   pattern
 }) {
   assertMarketingPattern(pattern);
-  return /* @__PURE__ */ jsx4("div", {
+  return /* @__PURE__ */ jsx3("div", {
     className: ["hraness-marketing-field", className].filter(Boolean).join(" "),
     "data-hraness-marketing": "field",
     "data-hraness-pattern": pattern,
@@ -3785,7 +3881,7 @@ function MarketingMain({
 }) {
   if (clearance !== "scroll" && clearance !== "pad")
     throw new RangeError("Marketing main clearance must be scroll or pad.");
-  return /* @__PURE__ */ jsx4("main", {
+  return /* @__PURE__ */ jsx3("main", {
     className: marketingClassName("hraness-marketing-main", className, clearance === "pad" ? "pad" : "default"),
     "data-hraness-clearance": clearance === "pad" ? "pad" : undefined,
     "data-hraness-marketing": "main",
@@ -3805,7 +3901,7 @@ function MarketingCardRow({
     className: marketingColumnClassName("hraness-marketing-card-row", className, columns),
     "data-hraness-marketing": "card-row",
     children: [
-      cards?.map((card) => /* @__PURE__ */ jsx4(MarketingCard, {
+      cards?.map((card) => /* @__PURE__ */ jsx3(MarketingCard, {
         title: card.title,
         ...card.art === undefined ? {} : {
           art: card.art
@@ -3825,7 +3921,7 @@ function MarketingCardArt({
   children,
   className
 }) {
-  return /* @__PURE__ */ jsx4("div", {
+  return /* @__PURE__ */ jsx3("div", {
     className: marketingClassName("hraness-marketing-card__art", className),
     "data-hraness-marketing": "card-art",
     children
@@ -3844,31 +3940,31 @@ function MarketingCard({
 }) {
   const body = /* @__PURE__ */ jsxs3(Fragment2, {
     children: [
-      isPresentNode(art) ? /* @__PURE__ */ jsx4(MarketingCardArt, {
+      isPresentNode(art) ? /* @__PURE__ */ jsx3(MarketingCardArt, {
         children: art
       }) : null,
-      /* @__PURE__ */ jsx4("h3", {
+      /* @__PURE__ */ jsx3("h3", {
         className: marketingClassName("hraness-marketing-card__title"),
         children: title
       }),
-      meta === undefined || meta === "" ? null : /* @__PURE__ */ jsx4("p", {
+      meta === undefined || meta === "" ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-card__meta"),
         children: meta
       }),
-      isPresentNode(children) ? /* @__PURE__ */ jsx4("div", {
+      isPresentNode(children) ? /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-card__body"),
         children
       }) : null
     ]
   });
   if (href === undefined) {
-    return /* @__PURE__ */ jsx4("article", {
+    return /* @__PURE__ */ jsx3("article", {
       className: marketingClassName("hraness-marketing-card", className),
       "data-hraness-marketing": "card",
       children: body
     });
   }
-  return /* @__PURE__ */ jsx4("a", {
+  return /* @__PURE__ */ jsx3("a", {
     className: marketingClassName("hraness-marketing-card", className),
     "data-hraness-marketing": "card",
     href,
@@ -3890,7 +3986,7 @@ function MarketingSiteHeader({
   const brandProperties = brandLabel === undefined ? {} : {
     "aria-label": brandLabel
   };
-  return /* @__PURE__ */ jsx4("header", {
+  return /* @__PURE__ */ jsx3("header", {
     className: marketingClassName("hraness-marketing-header", className, sticky ? "default" : "static"),
     "data-hraness-marketing": "header",
     "data-position": sticky ? "sticky" : "static",
@@ -3903,16 +3999,16 @@ function MarketingSiteHeader({
           href: brandHref,
           ...brandProperties,
           children: [
-            brandMark === undefined ? null : /* @__PURE__ */ jsx4(FoilMark, {
+            brandMark === undefined ? null : /* @__PURE__ */ jsx3(FoilMark, {
               src: brandMark
             }),
             brand
           ]
         }),
-        /* @__PURE__ */ jsx4("nav", {
+        /* @__PURE__ */ jsx3("nav", {
           "aria-label": ariaLabel,
           className: marketingClassName("hraness-marketing-header__nav"),
-          children: links.map((link) => /* @__PURE__ */ jsx4("a", {
+          children: links.map((link) => /* @__PURE__ */ jsx3("a", {
             "aria-current": link.current === true ? "page" : undefined,
             className: marketingClassName("hraness-marketing-header__link", undefined, link.current === true ? "current" : "default"),
             href: link.href,
@@ -3922,7 +4018,7 @@ function MarketingSiteHeader({
         action === undefined && trailing === undefined ? null : /* @__PURE__ */ jsxs3("div", {
           className: marketingClassName("hraness-marketing-header__actions"),
           children: [
-            action === undefined ? null : /* @__PURE__ */ jsx4("a", {
+            action === undefined ? null : /* @__PURE__ */ jsx3("a", {
               className: marketingClassName("hraness-marketing-action", undefined, `header-${action.emphasis ?? "primary"}`),
               "data-emphasis": action.emphasis ?? "primary",
               "data-foil": (action.emphasis ?? "primary") === "primary" ? "" : undefined,
@@ -3952,7 +4048,7 @@ function MarketingSiteFooter({
     "aria-label": brandLabel
   };
   const foilBrand = brandMark !== undefined;
-  return /* @__PURE__ */ jsx4("footer", {
+  return /* @__PURE__ */ jsx3("footer", {
     "aria-label": ariaLabel,
     className: marketingClassName("hraness-marketing-footer", className),
     "data-hraness-marketing": "footer",
@@ -3965,22 +4061,22 @@ function MarketingSiteFooter({
           href: brandHref,
           ...brandProperties,
           children: [
-            foilBrand ? /* @__PURE__ */ jsx4(FoilMark, {
+            foilBrand ? /* @__PURE__ */ jsx3(FoilMark, {
               fallback: brand,
               size: 18,
               src: brandMark
             }) : brand,
-            /* @__PURE__ */ jsx4("span", {
+            /* @__PURE__ */ jsx3("span", {
               className: marketingClassName("hraness-marketing-footer__name"),
               children: name
             })
           ]
         }),
         children,
-        links.length === 0 ? null : /* @__PURE__ */ jsx4("nav", {
+        links.length === 0 ? null : /* @__PURE__ */ jsx3("nav", {
           "aria-label": linksLabel,
           className: marketingClassName("hraness-marketing-footer__nav"),
-          children: links.map((link) => /* @__PURE__ */ jsx4("a", {
+          children: links.map((link) => /* @__PURE__ */ jsx3("a", {
             "aria-current": link.current === true ? "page" : undefined,
             className: marketingClassName("hraness-marketing-footer__link", undefined, link.current === true ? "current" : "default"),
             href: link.href,
@@ -3996,14 +4092,14 @@ function MarketingFlow({
   className,
   steps
 }) {
-  return /* @__PURE__ */ jsx4("ol", {
+  return /* @__PURE__ */ jsx3("ol", {
     "aria-label": ariaLabel,
     className: marketingClassName("hraness-marketing-flow", className),
     "data-hraness-marketing": "flow",
     children: steps.map((step, index) => /* @__PURE__ */ jsxs3("li", {
       className: marketingClassName("hraness-marketing-flow__step", undefined, index === 0 ? "first" : "default"),
       children: [
-        /* @__PURE__ */ jsx4("span", {
+        /* @__PURE__ */ jsx3("span", {
           "aria-hidden": "true",
           className: marketingClassName("hraness-marketing-flow__number"),
           children: String(index + 1).padStart(2, "0")
@@ -4011,16 +4107,16 @@ function MarketingFlow({
         /* @__PURE__ */ jsxs3("div", {
           className: marketingClassName("hraness-marketing-flow__body"),
           children: [
-            /* @__PURE__ */ jsx4("strong", {
+            /* @__PURE__ */ jsx3("strong", {
               className: marketingClassName("hraness-marketing-flow__label"),
               children: step.label
             }),
-            step.code === undefined ? null : /* @__PURE__ */ jsx4(SyntaxCode, {
+            step.code === undefined ? null : /* @__PURE__ */ jsx3(SyntaxCode, {
               className: marketingClassName("hraness-marketing-flow__code"),
               code: step.code,
               styles: "classes"
             }),
-            step.detail === undefined ? null : /* @__PURE__ */ jsx4("p", {
+            step.detail === undefined ? null : /* @__PURE__ */ jsx3("p", {
               className: marketingClassName("hraness-marketing-flow__detail"),
               children: step.detail
             })
@@ -4038,7 +4134,7 @@ function MarketingFacts({
   const rootClassName = marketingColumnClassName("hraness-marketing-facts", className, columns);
   if (facts.length === 0)
     return null;
-  return /* @__PURE__ */ jsx4("dl", {
+  return /* @__PURE__ */ jsx3("dl", {
     className: rootClassName,
     "data-hraness-marketing": "facts",
     style: columns === undefined ? {
@@ -4047,18 +4143,18 @@ function MarketingFacts({
     children: facts.map((fact, index) => /* @__PURE__ */ jsxs3("div", {
       className: marketingClassName("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index)),
       children: [
-        /* @__PURE__ */ jsx4("dt", {
+        /* @__PURE__ */ jsx3("dt", {
           className: marketingClassName("hraness-marketing-facts__label"),
           children: fact.label
         }),
         /* @__PURE__ */ jsxs3("dd", {
           className: marketingClassName("hraness-marketing-facts__body"),
           children: [
-            /* @__PURE__ */ jsx4("strong", {
+            /* @__PURE__ */ jsx3("strong", {
               className: marketingClassName("hraness-marketing-facts__value"),
               children: fact.value
             }),
-            fact.detail === undefined ? null : /* @__PURE__ */ jsx4("span", {
+            fact.detail === undefined ? null : /* @__PURE__ */ jsx3("span", {
               className: marketingClassName("hraness-marketing-facts__detail"),
               children: fact.detail
             })
@@ -4081,6 +4177,7 @@ function ProductHero({
   heading,
   headingId,
   headingLevel = 1,
+  install,
   name,
   notice,
   proof,
@@ -4097,42 +4194,46 @@ function ProductHero({
       /* @__PURE__ */ jsxs3("div", {
         className: marketingClassName("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default"),
         children: [
-          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx4("p", {
+          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default"),
             children: eyebrow
           }),
-          /* @__PURE__ */ jsx4("p", {
+          name === "" ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-hero__name"),
             children: name
           }),
-          /* @__PURE__ */ jsx4(Heading, {
+          /* @__PURE__ */ jsx3(Heading, {
             className: marketingClassName("hraness-marketing-hero__heading"),
             id: headingId,
             level: headingLevel,
             children: heading
           }),
-          /* @__PURE__ */ jsx4("p", {
+          /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-hero__summary"),
             children: summary
           }),
-          example === undefined ? null : /* @__PURE__ */ jsx4("p", {
+          install === undefined ? null : /* @__PURE__ */ jsx3("div", {
+            className: marketingClassName("hraness-marketing-hero__install"),
+            children: install
+          }),
+          example === undefined ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-hero__example"),
             children: example
           }),
-          /* @__PURE__ */ jsx4(MarketingActions, {
+          /* @__PURE__ */ jsx3(MarketingActions, {
             actions,
             className: marketingClassName("hraness-marketing-hero__actions", undefined, align === "start" ? "start" : "default"),
             context: "hero",
             tone
           }),
-          boundary === undefined ? null : /* @__PURE__ */ jsx4("p", {
+          boundary === undefined ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-hero__boundary"),
             children: boundary
           }),
           notice
         ]
       }),
-      frame === undefined ? null : /* @__PURE__ */ jsx4("div", {
+      frame === undefined ? null : /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-hero__frame"),
         children: frame
       }),
@@ -4140,11 +4241,11 @@ function ProductHero({
         className: marketingClassName("hraness-marketing-proof"),
         "aria-labelledby": `${headingId}-proof`,
         children: [
-          proof.kicker === undefined ? null : /* @__PURE__ */ jsx4("p", {
+          proof.kicker === undefined ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-proof__kicker"),
             children: proof.kicker
           }),
-          /* @__PURE__ */ jsx4(Heading, {
+          /* @__PURE__ */ jsx3(Heading, {
             className: marketingClassName("hraness-marketing-proof__heading"),
             id: `${headingId}-proof`,
             level: childHeadingLevel(headingLevel),
@@ -4153,7 +4254,7 @@ function ProductHero({
           proof.content
         ]
       }),
-      /* @__PURE__ */ jsx4(MarketingFacts, {
+      /* @__PURE__ */ jsx3(MarketingFacts, {
         facts,
         ...factsColumns === undefined ? {} : {
           columns: factsColumns
@@ -4166,26 +4267,35 @@ function MarketingPillars({
   ariaLabel,
   className,
   columns,
-  pillars
+  pillars,
+  presentation = "columns"
 }) {
-  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns);
+  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns, presentation === "benefits" ? "benefits" : "default");
   if (pillars.length === 0)
     return null;
-  return /* @__PURE__ */ jsx4("dl", {
+  return /* @__PURE__ */ jsx3("dl", {
     "aria-label": ariaLabel,
     className: rootClassName,
     "data-hraness-marketing": "pillars",
+    "data-presentation": presentation,
     style: columns === undefined ? {
       "--hraness-marketing-pillar-columns": String(pillars.length)
     } : undefined,
     children: pillars.map((pillar, index) => /* @__PURE__ */ jsxs3("div", {
-      className: marketingClassName("hraness-marketing-pillars__item", undefined, index === 0 ? "default" : "later"),
+      className: marketingClassName("hraness-marketing-pillars__item", undefined, presentation === "benefits" ? "benefit" : index === 0 ? "default" : "later"),
       children: [
-        /* @__PURE__ */ jsx4("dt", {
+        /* @__PURE__ */ jsxs3("dt", {
           className: marketingClassName("hraness-marketing-pillars__label"),
-          children: pillar.label
+          children: [
+            pillar.icon === undefined ? null : /* @__PURE__ */ jsx3("span", {
+              "aria-hidden": "true",
+              className: marketingClassName("hraness-marketing-pillars__icon"),
+              children: pillar.icon
+            }),
+            pillar.label
+          ]
         }),
-        /* @__PURE__ */ jsx4("dd", {
+        /* @__PURE__ */ jsx3("dd", {
           className: marketingClassName("hraness-marketing-pillars__summary"),
           children: pillar.summary
         })
@@ -4212,11 +4322,11 @@ function MarketingInstallPanel({
       /* @__PURE__ */ jsxs3("div", {
         className: marketingClassName("hraness-marketing-install__heading-group"),
         children: [
-          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx4("p", {
+          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-install__eyebrow"),
             children: eyebrow
           }),
-          /* @__PURE__ */ jsx4(Heading, {
+          /* @__PURE__ */ jsx3(Heading, {
             className: marketingClassName("hraness-marketing-install__heading"),
             id: headingId,
             level: headingLevel,
@@ -4225,7 +4335,7 @@ function MarketingInstallPanel({
           note
         ]
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-install__commands"),
         children
       })
@@ -4275,37 +4385,37 @@ function MarketingProofFrame({
           /* @__PURE__ */ jsxs3("span", {
             className: marketingClassName("hraness-marketing-proof-frame__lights"),
             children: [
-              /* @__PURE__ */ jsx4("span", {
+              /* @__PURE__ */ jsx3("span", {
                 className: marketingClassName("hraness-marketing-proof-frame__light")
               }),
-              /* @__PURE__ */ jsx4("span", {
+              /* @__PURE__ */ jsx3("span", {
                 className: marketingClassName("hraness-marketing-proof-frame__light")
               }),
-              /* @__PURE__ */ jsx4("span", {
+              /* @__PURE__ */ jsx3("span", {
                 className: marketingClassName("hraness-marketing-proof-frame__light")
               })
             ]
           }),
-          bar === "browser" ? /* @__PURE__ */ jsx4("span", {
+          bar === "browser" ? /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-proof-frame__address"),
             children: label
-          }) : /* @__PURE__ */ jsx4("span", {
+          }) : /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default"),
             children: label
           })
         ]
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-proof-frame__content"),
         children
       }),
       caption === undefined && credit === undefined ? null : /* @__PURE__ */ jsxs3("figcaption", {
         className: marketingClassName("hraness-marketing-proof-frame__caption"),
         children: [
-          caption === undefined ? null : /* @__PURE__ */ jsx4("span", {
+          caption === undefined ? null : /* @__PURE__ */ jsx3("span", {
             children: caption
           }),
-          credit === undefined ? null : /* @__PURE__ */ jsx4("small", {
+          credit === undefined ? null : /* @__PURE__ */ jsx3("small", {
             className: marketingClassName("hraness-marketing-proof-frame__credit"),
             children: credit
           })
@@ -4343,24 +4453,24 @@ function MarketingDataTable({
       /* @__PURE__ */ jsxs3("figcaption", {
         className: marketingClassName("hraness-marketing-data-table__head"),
         children: [
-          /* @__PURE__ */ jsx4("span", {
+          /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-data-table__title"),
             children: caption
           }),
-          meta === undefined ? null : /* @__PURE__ */ jsx4("span", {
+          meta === undefined ? null : /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-data-table__meta"),
             children: meta
           })
         ]
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-data-table__scroll"),
         children: /* @__PURE__ */ jsxs3("table", {
           className: marketingClassName("hraness-marketing-data-table__table"),
           children: [
-            /* @__PURE__ */ jsx4("thead", {
-              children: /* @__PURE__ */ jsx4("tr", {
-                children: columns.map((column, index) => /* @__PURE__ */ jsx4("th", {
+            /* @__PURE__ */ jsx3("thead", {
+              children: /* @__PURE__ */ jsx3("tr", {
+                children: columns.map((column, index) => /* @__PURE__ */ jsx3("th", {
                   className: marketingClassName("hraness-marketing-data-table__heading"),
                   "data-numeric": column.numeric === true ? "" : undefined,
                   scope: "col",
@@ -4368,22 +4478,22 @@ function MarketingDataTable({
                 }, index))
               })
             }),
-            /* @__PURE__ */ jsx4("tbody", {
-              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx4("tr", {
+            /* @__PURE__ */ jsx3("tbody", {
+              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx3("tr", {
                 children: row.map((cell, cellIndex) => {
                   const {
                     content,
                     tone
                   } = dataTableCell(cell);
                   if (cellIndex === 0) {
-                    return /* @__PURE__ */ jsx4("th", {
+                    return /* @__PURE__ */ jsx3("th", {
                       className: marketingClassName("hraness-marketing-data-table__row-heading"),
                       "data-numeric": columns[0]?.numeric === true ? "" : undefined,
                       scope: "row",
                       children: content
                     }, cellIndex);
                   }
-                  return /* @__PURE__ */ jsx4("td", {
+                  return /* @__PURE__ */ jsx3("td", {
                     className: marketingClassName("hraness-marketing-data-table__cell"),
                     "data-numeric": columns[cellIndex]?.numeric === true ? "" : undefined,
                     "data-tone": tone,
@@ -4395,7 +4505,7 @@ function MarketingDataTable({
           ]
         })
       }),
-      note === undefined ? null : /* @__PURE__ */ jsx4("p", {
+      note === undefined ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-data-table__note"),
         children: note
       })
@@ -4407,10 +4517,10 @@ function MarketingCodeBlock({
   code,
   language
 }) {
-  return /* @__PURE__ */ jsx4("pre", {
+  return /* @__PURE__ */ jsx3("pre", {
     className: marketingClassName("hraness-marketing-code", className),
     "data-hraness-marketing": "code",
-    children: /* @__PURE__ */ jsx4(SyntaxCode, {
+    children: /* @__PURE__ */ jsx3(SyntaxCode, {
       code,
       ...language === undefined ? {} : {
         language
@@ -4426,7 +4536,7 @@ function MarketingSectionLabel({
 }) {
   if (size !== "default" && size !== "body")
     throw new RangeError("Marketing label size must be default or body.");
-  return /* @__PURE__ */ jsx4("p", {
+  return /* @__PURE__ */ jsx3("p", {
     className: marketingClassName("hraness-marketing-section__label", className, size),
     "data-size": size === "body" ? "body" : undefined,
     children
@@ -4454,26 +4564,26 @@ function MarketingSection({
       /* @__PURE__ */ jsxs3("div", {
         className: marketingClassName("hraness-marketing-section__heading-group", undefined, layout === "stack" ? "default" : layout === "split" ? "split" : "reverse"),
         children: [
-          label === undefined || label === "" ? null : /* @__PURE__ */ jsx4(MarketingSectionLabel, {
+          label === undefined || label === "" ? null : /* @__PURE__ */ jsx3(MarketingSectionLabel, {
             children: label
           }),
-          /* @__PURE__ */ jsx4(Heading, {
+          /* @__PURE__ */ jsx3(Heading, {
             className: marketingClassName("hraness-marketing-section__heading"),
             id: headingId,
             level: headingLevel,
             children: heading
           }),
-          summary === undefined ? null : /* @__PURE__ */ jsx4("p", {
+          summary === undefined ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-section__summary"),
             children: summary
           }),
-          isPresentNode(headingContent) ? /* @__PURE__ */ jsx4("div", {
+          isPresentNode(headingContent) ? /* @__PURE__ */ jsx3("div", {
             className: marketingClassName("hraness-marketing-section__heading-content"),
             children: headingContent
           }) : null
         ]
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-section__body"),
         children
       })
@@ -4491,17 +4601,17 @@ function MarketingCollectionHeader({
   return /* @__PURE__ */ jsxs3("header", {
     className: marketingClassName(`hraness-marketing-${prefix}__header`),
     children: [
-      label === undefined || label === "" ? null : /* @__PURE__ */ jsx4("p", {
+      label === undefined || label === "" ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName(`hraness-marketing-${prefix}__label`),
         children: label
       }),
-      /* @__PURE__ */ jsx4(Heading, {
+      /* @__PURE__ */ jsx3(Heading, {
         className: marketingClassName(`hraness-marketing-${prefix}__heading`),
         id: headingId,
         level: headingLevel,
         children: heading
       }),
-      summary === undefined ? null : /* @__PURE__ */ jsx4("p", {
+      summary === undefined ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName(`hraness-marketing-${prefix}__summary`),
         children: summary
       })
@@ -4525,7 +4635,7 @@ function MarketingPrimitives({
     "data-hraness-marketing": "primitives",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4535,22 +4645,22 @@ function MarketingPrimitives({
         },
         prefix: "primitives"
       }),
-      /* @__PURE__ */ jsx4("ol", {
+      /* @__PURE__ */ jsx3("ol", {
         className: marketingColumnClassName("hraness-marketing-primitives__list", undefined, columns),
         children: items.map((item, index) => /* @__PURE__ */ jsxs3("li", {
           className: marketingClassName("hraness-marketing-primitive"),
           children: [
-            /* @__PURE__ */ jsx4("span", {
+            /* @__PURE__ */ jsx3("span", {
               "aria-hidden": "true",
               className: marketingClassName("hraness-marketing-primitive__number"),
               children: String(index + 1).padStart(2, "0")
             }),
-            /* @__PURE__ */ jsx4(Heading, {
+            /* @__PURE__ */ jsx3(Heading, {
               className: marketingClassName("hraness-marketing-primitive__heading"),
               level: childHeadingLevel(headingLevel),
               children: item.label
             }),
-            /* @__PURE__ */ jsx4("p", {
+            /* @__PURE__ */ jsx3("p", {
               className: marketingClassName("hraness-marketing-primitive__summary"),
               children: item.summary
             }),
@@ -4568,7 +4678,7 @@ function MarketingNotice({
 }) {
   if (tone !== "info" && tone !== "success" && tone !== "error")
     throw new RangeError("Marketing notice tone must be info, success, or error.");
-  return /* @__PURE__ */ jsx4("p", {
+  return /* @__PURE__ */ jsx3("p", {
     className: marketingClassName("hraness-marketing-notice", className, tone === "info" ? "default" : tone),
     "data-hraness-marketing": "notice",
     "data-tone": tone,
@@ -4591,7 +4701,7 @@ function MarketingStatStrip({
     className: marketingClassName("hraness-marketing-stats", className),
     "data-hraness-marketing": "stats",
     children: [
-      /* @__PURE__ */ jsx4("dl", {
+      /* @__PURE__ */ jsx3("dl", {
         className: listClassName,
         style: columns === undefined ? {
           "--hraness-marketing-fact-columns": String(stats.length)
@@ -4599,18 +4709,18 @@ function MarketingStatStrip({
         children: stats.map((stat, index) => /* @__PURE__ */ jsxs3("div", {
           className: marketingClassName("hraness-marketing-facts__item", undefined, marketingFactCellVariant(index)),
           children: [
-            /* @__PURE__ */ jsx4("dt", {
+            /* @__PURE__ */ jsx3("dt", {
               className: marketingClassName("hraness-marketing-facts__label"),
               children: stat.label
             }),
             /* @__PURE__ */ jsxs3("dd", {
               className: marketingClassName("hraness-marketing-facts__body"),
               children: [
-                /* @__PURE__ */ jsx4("strong", {
+                /* @__PURE__ */ jsx3("strong", {
                   className: marketingClassName("hraness-marketing-stats__value"),
                   children: stat.value
                 }),
-                stat.detail === undefined ? null : /* @__PURE__ */ jsx4("span", {
+                stat.detail === undefined ? null : /* @__PURE__ */ jsx3("span", {
                   className: marketingClassName("hraness-marketing-facts__detail"),
                   children: stat.detail
                 })
@@ -4619,7 +4729,7 @@ function MarketingStatStrip({
           ]
         }, `${stat.label}-${stat.value}`))
       }),
-      source === undefined ? null : /* @__PURE__ */ jsx4("p", {
+      source === undefined ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-stats__source"),
         children: source
       })
@@ -4643,7 +4753,7 @@ function MarketingInterfaceGrid({
     "data-hraness-marketing": "interfaces",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4653,17 +4763,17 @@ function MarketingInterfaceGrid({
         },
         prefix: "interfaces"
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingColumnClassName("hraness-marketing-interface-grid", undefined, columns),
         children: interfaces.map((entry) => /* @__PURE__ */ jsxs3("article", {
           className: marketingClassName("hraness-marketing-interface"),
           children: [
-            /* @__PURE__ */ jsx4(Heading, {
+            /* @__PURE__ */ jsx3(Heading, {
               className: marketingClassName("hraness-marketing-interface__heading"),
               level: childHeadingLevel(headingLevel),
               children: entry.label
             }),
-            /* @__PURE__ */ jsx4("p", {
+            /* @__PURE__ */ jsx3("p", {
               className: marketingClassName("hraness-marketing-interface__summary"),
               children: entry.summary
             }),
@@ -4691,7 +4801,7 @@ function MarketingTrustBoundary({
     "data-hraness-marketing": "trust",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4701,16 +4811,16 @@ function MarketingTrustBoundary({
         },
         prefix: "trust"
       }),
-      /* @__PURE__ */ jsx4("dl", {
+      /* @__PURE__ */ jsx3("dl", {
         className: marketingColumnClassName("hraness-marketing-trust-grid", undefined, columns),
         children: items.map((item) => /* @__PURE__ */ jsxs3("div", {
           className: marketingClassName("hraness-marketing-trust-item"),
           children: [
-            /* @__PURE__ */ jsx4("dt", {
+            /* @__PURE__ */ jsx3("dt", {
               className: marketingClassName("hraness-marketing-trust-item__label"),
               children: item.label
             }),
-            /* @__PURE__ */ jsx4("dd", {
+            /* @__PURE__ */ jsx3("dd", {
               className: marketingClassName("hraness-marketing-trust-item__detail"),
               children: item.detail
             })
@@ -4738,7 +4848,7 @@ function MarketingQuoteGrid({
     "data-hraness-marketing": "quotes",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4748,15 +4858,15 @@ function MarketingQuoteGrid({
         },
         prefix: "quotes"
       }),
-      /* @__PURE__ */ jsx4("ul", {
+      /* @__PURE__ */ jsx3("ul", {
         className: marketingClassName("hraness-marketing-quote-grid"),
-        children: quotes.map((entry) => /* @__PURE__ */ jsx4("li", {
+        children: quotes.map((entry) => /* @__PURE__ */ jsx3("li", {
           children: /* @__PURE__ */ jsxs3("figure", {
             className: marketingClassName("hraness-marketing-quote"),
             children: [
-              /* @__PURE__ */ jsx4("blockquote", {
+              /* @__PURE__ */ jsx3("blockquote", {
                 className: marketingClassName("hraness-marketing-quote__body"),
-                children: /* @__PURE__ */ jsx4("p", {
+                children: /* @__PURE__ */ jsx3("p", {
                   className: marketingClassName("hraness-marketing-quote__text"),
                   children: entry.quote
                 })
@@ -4764,13 +4874,13 @@ function MarketingQuoteGrid({
               /* @__PURE__ */ jsxs3("figcaption", {
                 className: marketingClassName("hraness-marketing-quote__attribution"),
                 children: [
-                  /* @__PURE__ */ jsx4("strong", {
+                  /* @__PURE__ */ jsx3("strong", {
                     className: marketingClassName("hraness-marketing-quote__name"),
                     children: entry.name
                   }),
-                  entry.role === undefined ? null : entry.href === undefined ? /* @__PURE__ */ jsx4("span", {
+                  entry.role === undefined ? null : entry.href === undefined ? /* @__PURE__ */ jsx3("span", {
                     children: entry.role
-                  }) : /* @__PURE__ */ jsx4("a", {
+                  }) : /* @__PURE__ */ jsx3("a", {
                     className: marketingClassName("hraness-marketing-quote__link"),
                     href: entry.href,
                     children: entry.role
@@ -4800,7 +4910,7 @@ function MarketingPricing({
     "data-hraness-marketing": "pricing",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4810,13 +4920,13 @@ function MarketingPricing({
         },
         prefix: "pricing"
       }),
-      /* @__PURE__ */ jsx4("ul", {
+      /* @__PURE__ */ jsx3("ul", {
         className: marketingClassName("hraness-marketing-plan-grid"),
         children: plans.map((plan) => /* @__PURE__ */ jsxs3("li", {
           className: marketingClassName("hraness-marketing-plan", undefined, plan.emphasis === "primary" ? "primary" : "default"),
           "data-emphasis": plan.emphasis ?? "secondary",
           children: [
-            /* @__PURE__ */ jsx4(Heading, {
+            /* @__PURE__ */ jsx3(Heading, {
               className: marketingClassName("hraness-marketing-plan__name"),
               level: childHeadingLevel(headingLevel),
               children: plan.name
@@ -4824,35 +4934,35 @@ function MarketingPricing({
             /* @__PURE__ */ jsxs3("p", {
               className: marketingClassName("hraness-marketing-plan__price"),
               children: [
-                /* @__PURE__ */ jsx4("strong", {
+                /* @__PURE__ */ jsx3("strong", {
                   className: marketingClassName("hraness-marketing-plan__value"),
                   children: plan.price
                 }),
-                plan.period === undefined ? null : /* @__PURE__ */ jsx4("span", {
+                plan.period === undefined ? null : /* @__PURE__ */ jsx3("span", {
                   className: marketingClassName("hraness-marketing-plan__period"),
                   children: plan.period
                 })
               ]
             }),
-            plan.summary === undefined ? null : /* @__PURE__ */ jsx4("p", {
+            plan.summary === undefined ? null : /* @__PURE__ */ jsx3("p", {
               className: marketingClassName("hraness-marketing-plan__summary"),
               children: plan.summary
             }),
-            plan.features.length === 0 ? null : /* @__PURE__ */ jsx4("ul", {
+            plan.features.length === 0 ? null : /* @__PURE__ */ jsx3("ul", {
               className: marketingClassName("hraness-marketing-plan__features"),
-              children: plan.features.map((feature) => /* @__PURE__ */ jsx4("li", {
+              children: plan.features.map((feature) => /* @__PURE__ */ jsx3("li", {
                 className: marketingClassName("hraness-marketing-plan__feature"),
                 children: feature
               }, feature))
             }),
-            plan.action === undefined ? null : /* @__PURE__ */ jsx4("a", {
+            plan.action === undefined ? null : /* @__PURE__ */ jsx3("a", {
               className: marketingClassName("hraness-marketing-action", undefined, `plan-${plan.action.emphasis ?? plan.emphasis ?? "secondary"}`),
               "data-emphasis": plan.action.emphasis ?? plan.emphasis ?? "secondary",
               "data-foil": (plan.action.emphasis ?? plan.emphasis ?? "secondary") === "primary" ? "" : undefined,
               href: plan.action.href,
               children: plan.action.label
             }),
-            plan.note === undefined ? null : /* @__PURE__ */ jsx4("p", {
+            plan.note === undefined ? null : /* @__PURE__ */ jsx3("p", {
               className: marketingClassName("hraness-marketing-plan__note"),
               children: plan.note
             })
@@ -4878,7 +4988,7 @@ function MarketingQuestionList({
     "data-hraness-marketing": "questions",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         ...{
           heading,
           headingId,
@@ -4888,16 +4998,16 @@ function MarketingQuestionList({
         },
         prefix: "questions"
       }),
-      /* @__PURE__ */ jsx4("div", {
+      /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-question-list"),
         children: questions.map((question, index) => /* @__PURE__ */ jsxs3("details", {
           className: marketingClassName("hraness-marketing-question", undefined, index === questions.length - 1 ? "last" : "default"),
           children: [
-            /* @__PURE__ */ jsx4("summary", {
+            /* @__PURE__ */ jsx3("summary", {
               className: marketingClassName("hraness-marketing-question__summary"),
               children: question.question
             }),
-            /* @__PURE__ */ jsx4("div", {
+            /* @__PURE__ */ jsx3("div", {
               className: marketingClassName("hraness-marketing-question__answer"),
               children: question.answer
             })
@@ -4928,15 +5038,15 @@ function MarketingMaker({
       /* @__PURE__ */ jsxs3("header", {
         className: marketingClassName("hraness-marketing-maker__header"),
         children: [
-          portrait === undefined ? null : /* @__PURE__ */ jsx4("div", {
+          portrait === undefined ? null : /* @__PURE__ */ jsx3("div", {
             className: marketingClassName("hraness-marketing-maker__portrait"),
             children: portrait
           }),
-          label === undefined || label === "" ? null : /* @__PURE__ */ jsx4("p", {
+          label === undefined || label === "" ? null : /* @__PURE__ */ jsx3("p", {
             className: marketingClassName("hraness-marketing-maker__label"),
             children: label
           }),
-          /* @__PURE__ */ jsx4(Heading, {
+          /* @__PURE__ */ jsx3(Heading, {
             className: marketingClassName("hraness-marketing-maker__heading"),
             id: headingId,
             level: headingLevel,
@@ -4948,10 +5058,10 @@ function MarketingMaker({
         className: marketingClassName("hraness-marketing-maker__body"),
         children: [
           children,
-          links.length === 0 ? null : /* @__PURE__ */ jsx4("ul", {
+          links.length === 0 ? null : /* @__PURE__ */ jsx3("ul", {
             className: marketingClassName("hraness-marketing-maker__links"),
-            children: links.map((link) => /* @__PURE__ */ jsx4("li", {
-              children: /* @__PURE__ */ jsx4("a", {
+            children: links.map((link) => /* @__PURE__ */ jsx3("li", {
+              children: /* @__PURE__ */ jsx3("a", {
                 className: linkClassName,
                 href: link.href,
                 children: link.label
@@ -4964,39 +5074,55 @@ function MarketingMaker({
   });
 }
 function MarketingRelatedCards({
+  ariaLabel,
+  columns,
   items,
   level
 }) {
-  return /* @__PURE__ */ jsx4(Fragment2, {
-    children: items.map((item) => /* @__PURE__ */ jsxs3("a", {
-      className: marketingClassName("hraness-marketing-related__card"),
-      "data-foil": "",
-      "data-hraness-marketing": "card",
-      href: item.href,
-      children: [
-        isPresentNode(item.art) || item.mark !== undefined && item.mark !== "" ? /* @__PURE__ */ jsx4("span", {
-          "aria-hidden": "true",
-          className: marketingClassName("hraness-marketing-related__card-mark"),
-          children: isPresentNode(item.art) ? item.art : /* @__PURE__ */ jsx4(FoilMark, {
-            size: 44,
-            src: item.mark ?? ""
-          })
-        }) : null,
-        /* @__PURE__ */ jsxs3("span", {
-          className: marketingClassName("hraness-marketing-related__card-text"),
-          children: [
-            /* @__PURE__ */ jsx4(Heading, {
-              className: marketingClassName("hraness-marketing-related__card-name"),
-              level,
-              children: item.name
-            }),
-            /* @__PURE__ */ jsx4("span", {
-              className: marketingClassName("hraness-marketing-related__card-role"),
-              children: item.role
+  return /* @__PURE__ */ jsx3("ul", {
+    "aria-label": ariaLabel,
+    className: marketingColumnClassName("hraness-marketing-related__list", undefined, columns),
+    children: items.map((item) => /* @__PURE__ */ jsx3("li", {
+      className: marketingClassName("hraness-marketing-related__item"),
+      children: /* @__PURE__ */ jsxs3("a", {
+        className: marketingClassName("hraness-marketing-related__card"),
+        "data-foil": "",
+        "data-hraness-marketing": "card",
+        href: item.href,
+        children: [
+          isPresentNode(item.art) || item.mark !== undefined && item.mark !== "" ? /* @__PURE__ */ jsx3("span", {
+            "aria-hidden": "true",
+            className: marketingClassName("hraness-marketing-related__card-mark"),
+            children: isPresentNode(item.art) ? item.art : /* @__PURE__ */ jsx3(FoilMark, {
+              size: 28,
+              src: item.mark ?? ""
             })
-          ]
-        })
-      ]
+          }) : null,
+          /* @__PURE__ */ jsxs3("div", {
+            className: marketingClassName("hraness-marketing-related__card-text"),
+            children: [
+              /* @__PURE__ */ jsxs3("div", {
+                className: marketingClassName("hraness-marketing-related__card-heading"),
+                children: [
+                  /* @__PURE__ */ jsx3(Heading, {
+                    className: marketingClassName("hraness-marketing-related__card-name"),
+                    level,
+                    children: item.name
+                  }),
+                  item.domain === undefined ? null : /* @__PURE__ */ jsx3("span", {
+                    className: marketingClassName("hraness-marketing-related__card-domain"),
+                    children: item.domain
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsx3("span", {
+                className: marketingClassName("hraness-marketing-related__card-role"),
+                children: item.role
+              })
+            ]
+          })
+        ]
+      })
     }, item.name))
   });
 }
@@ -5021,7 +5147,7 @@ function MarketingRelated({
     "data-hraness-marketing": "related",
     id,
     children: [
-      /* @__PURE__ */ jsx4(MarketingCollectionHeader, {
+      /* @__PURE__ */ jsx3(MarketingCollectionHeader, {
         heading,
         headingId,
         headingLevel,
@@ -5029,42 +5155,43 @@ function MarketingRelated({
         prefix: "related",
         summary
       }),
-      groups === undefined ? /* @__PURE__ */ jsx4(MarketingCardRow, {
+      groups === undefined ? /* @__PURE__ */ jsx3(MarketingRelatedCards, {
         ...defaultColumnProps,
-        children: /* @__PURE__ */ jsx4(MarketingRelatedCards, {
-          items,
-          level: childHeadingLevel(headingLevel)
-        })
-      }) : groups.map((group) => /* @__PURE__ */ jsxs3("div", {
-        className: marketingClassName("hraness-marketing-related__group"),
-        children: [
-          /* @__PURE__ */ jsxs3("div", {
-            className: marketingClassName("hraness-marketing-related__group-header"),
-            children: [
-              /* @__PURE__ */ jsx4(Heading, {
-                className: marketingClassName("hraness-marketing-related__group-heading"),
-                id: group.headingId,
-                level: childHeadingLevel(headingLevel),
-                children: group.heading
-              }),
-              group.summary === undefined ? null : /* @__PURE__ */ jsx4("p", {
-                className: marketingClassName("hraness-marketing-related__group-summary"),
-                children: group.summary
-              })
-            ]
-          }),
-          /* @__PURE__ */ jsx4(MarketingCardRow, {
-            ariaLabel: group.heading,
-            ...group.columns === undefined ? defaultColumnProps : {
-              columns: group.columns
-            },
-            children: /* @__PURE__ */ jsx4(MarketingRelatedCards, {
+        items,
+        level: childHeadingLevel(headingLevel)
+      }) : /* @__PURE__ */ jsx3("div", {
+        className: marketingClassName("hraness-marketing-related__groups"),
+        children: groups.map((group) => /* @__PURE__ */ jsxs3("div", {
+          "aria-labelledby": group.headingId,
+          className: marketingClassName("hraness-marketing-related__group", undefined, group.tone ?? "neutral"),
+          "data-tone": group.tone ?? "neutral",
+          children: [
+            /* @__PURE__ */ jsxs3("div", {
+              className: marketingClassName("hraness-marketing-related__group-header"),
+              children: [
+                /* @__PURE__ */ jsx3(Heading, {
+                  className: marketingClassName("hraness-marketing-related__group-heading"),
+                  id: group.headingId,
+                  level: childHeadingLevel(headingLevel),
+                  children: group.heading
+                }),
+                group.summary === undefined ? null : /* @__PURE__ */ jsx3("p", {
+                  className: marketingClassName("hraness-marketing-related__group-summary"),
+                  children: group.summary
+                })
+              ]
+            }),
+            /* @__PURE__ */ jsx3(MarketingRelatedCards, {
+              ariaLabel: group.heading,
+              ...group.columns === undefined ? defaultColumnProps : {
+                columns: group.columns
+              },
               items: group.items,
               level: childHeadingLevel(childHeadingLevel(headingLevel))
             })
-          })
-        ]
-      }, group.headingId))
+          ]
+        }, group.headingId))
+      })
     ]
   });
 }
@@ -5087,27 +5214,27 @@ function MarketingCallToAction({
     "data-tone": tone,
     id,
     children: [
-      eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx4("p", {
+      eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-cta__eyebrow"),
         children: eyebrow
       }),
-      /* @__PURE__ */ jsx4(Heading, {
+      /* @__PURE__ */ jsx3(Heading, {
         className: marketingClassName("hraness-marketing-cta__heading"),
         id: headingId,
         level: headingLevel,
         children: heading
       }),
-      summary === undefined ? null : /* @__PURE__ */ jsx4("p", {
+      summary === undefined ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-cta__summary"),
         children: summary
       }),
-      /* @__PURE__ */ jsx4(MarketingActions, {
+      /* @__PURE__ */ jsx3(MarketingActions, {
         actions,
         className: marketingClassName("hraness-marketing-cta__actions"),
         context: "cta",
         tone
       }),
-      footnote === undefined ? null : /* @__PURE__ */ jsx4("p", {
+      footnote === undefined ? null : /* @__PURE__ */ jsx3("p", {
         className: marketingClassName("hraness-marketing-cta__footnote"),
         children: footnote
       })
@@ -5116,7 +5243,7 @@ function MarketingCallToAction({
 }
 
 // src/react/article.tsx
-import { jsx as jsx5, jsxs as jsxs4, Fragment as Fragment3 } from "react/jsx-runtime";
+import { jsx as jsx4, jsxs as jsxs4, Fragment as Fragment3 } from "react/jsx-runtime";
 var ROOT_CLASS = "plain-site plain-publication plain-publication--embedded";
 var HEADING_TAGS = {
   1: "h1",
@@ -5137,7 +5264,7 @@ function ArticleDate({
     children: [
       label,
       " ",
-      /* @__PURE__ */ jsx5("time", {
+      /* @__PURE__ */ jsx4("time", {
         dateTime: value,
         children: formatArticleDate(value)
       })
@@ -5145,7 +5272,7 @@ function ArticleDate({
   });
 }
 function Separator() {
-  return /* @__PURE__ */ jsx5("span", {
+  return /* @__PURE__ */ jsx4("span", {
     "aria-hidden": "true",
     children: " · "
   });
@@ -5160,7 +5287,7 @@ function ArticleByline({
     children: [
       ARTICLE_BYLINE_PREFIX,
       " ",
-      author.href === undefined ? author.name : /* @__PURE__ */ jsx5("a", {
+      author.href === undefined ? author.name : /* @__PURE__ */ jsx4("a", {
         href: author.href,
         rel: "author",
         children: author.name
@@ -5172,7 +5299,7 @@ function ArticleProvenance({
   provenance
 }) {
   const sentence = articleProvenanceSentence(provenance);
-  return /* @__PURE__ */ jsx5("p", {
+  return /* @__PURE__ */ jsx4("p", {
     className: "plain-publication__provenance",
     "data-drafting": provenance.drafting,
     "data-reviewer-type": provenance.review?.reviewerType ?? "none",
@@ -5217,15 +5344,15 @@ function MarketingArticle({
       /* @__PURE__ */ jsxs4("header", {
         className: "plain-publication__article-header",
         children: [
-          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx5("p", {
+          eyebrow === undefined || eyebrow === "" ? null : /* @__PURE__ */ jsx4("p", {
             className: "plain-publication__eyebrow",
             children: eyebrow
           }),
-          /* @__PURE__ */ jsx5("h1", {
+          /* @__PURE__ */ jsx4("h1", {
             id: headingId,
             children: heading
           }),
-          dek === undefined || dek === "" ? null : /* @__PURE__ */ jsx5("p", {
+          dek === undefined || dek === "" ? null : /* @__PURE__ */ jsx4("p", {
             className: "plain-publication__article-dek",
             children: dek
           }),
@@ -5234,20 +5361,20 @@ function MarketingArticle({
             children: [
               author === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                 children: [
-                  /* @__PURE__ */ jsx5(ArticleByline, {
+                  /* @__PURE__ */ jsx4(ArticleByline, {
                     author
                   }),
-                  /* @__PURE__ */ jsx5(Separator, {})
+                  /* @__PURE__ */ jsx4(Separator, {})
                 ]
               }),
-              /* @__PURE__ */ jsx5(ArticleDate, {
+              /* @__PURE__ */ jsx4(ArticleDate, {
                 label: "Published",
                 value: published
               }),
               updated === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                 children: [
-                  /* @__PURE__ */ jsx5(Separator, {}),
-                  /* @__PURE__ */ jsx5(ArticleDate, {
+                  /* @__PURE__ */ jsx4(Separator, {}),
+                  /* @__PURE__ */ jsx4(ArticleDate, {
                     label: "Updated",
                     value: updated
                   })
@@ -5255,7 +5382,7 @@ function MarketingArticle({
               })
             ]
           }),
-          provenance === null ? null : /* @__PURE__ */ jsx5(ArticleProvenance, {
+          provenance === null ? null : /* @__PURE__ */ jsx4(ArticleProvenance, {
             provenance
           })
         ]
@@ -5267,13 +5394,13 @@ function MarketingArticle({
             "aria-labelledby": tocId,
             className: "plain-publication__toc",
             children: [
-              /* @__PURE__ */ jsx5("p", {
+              /* @__PURE__ */ jsx4("p", {
                 id: tocId,
                 children: tocLabel
               }),
-              /* @__PURE__ */ jsx5("ol", {
-                children: tocItems.map((item) => /* @__PURE__ */ jsx5("li", {
-                  children: /* @__PURE__ */ jsx5("a", {
+              /* @__PURE__ */ jsx4("ol", {
+                children: tocItems.map((item) => /* @__PURE__ */ jsx4("li", {
+                  children: /* @__PURE__ */ jsx4("a", {
                     href: item.href,
                     children: item.label
                   })
@@ -5281,13 +5408,13 @@ function MarketingArticle({
               })
             ]
           }),
-          /* @__PURE__ */ jsx5("div", {
+          /* @__PURE__ */ jsx4("div", {
             className: "plain-publication__article-body",
             children
           })
         ]
       }),
-      after === undefined || after === null ? null : /* @__PURE__ */ jsx5("footer", {
+      after === undefined || after === null ? null : /* @__PURE__ */ jsx4("footer", {
         className: "plain-publication__article-footer",
         children: after
       })
@@ -5307,14 +5434,14 @@ function ArticleSources({
     "aria-labelledby": headingId,
     className: "plain-publication__sources",
     children: [
-      /* @__PURE__ */ jsx5("h2", {
+      /* @__PURE__ */ jsx4("h2", {
         id: headingId,
         children: heading
       }),
-      /* @__PURE__ */ jsx5("ol", {
+      /* @__PURE__ */ jsx4("ol", {
         children: sources.map((source) => /* @__PURE__ */ jsxs4("li", {
           children: [
-            /* @__PURE__ */ jsx5("a", {
+            /* @__PURE__ */ jsx4("a", {
               href: source.href,
               children: source.title
             }),
@@ -5323,10 +5450,10 @@ function ArticleSources({
                 source.publisher === undefined || source.publisher === "" ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                   children: [
                     source.publisher,
-                    /* @__PURE__ */ jsx5(Separator, {})
+                    /* @__PURE__ */ jsx4(Separator, {})
                   ]
                 }),
-                /* @__PURE__ */ jsx5(ArticleDate, {
+                /* @__PURE__ */ jsx4(ArticleDate, {
                   label: "Checked",
                   value: source.checkedOn
                 })
@@ -5349,10 +5476,10 @@ function ArticleCallout({
     "data-tone": tone,
     role: "note",
     children: [
-      label === undefined || label === "" ? null : /* @__PURE__ */ jsx5("strong", {
+      label === undefined || label === "" ? null : /* @__PURE__ */ jsx4("strong", {
         children: label
       }),
-      typeof children === "string" ? /* @__PURE__ */ jsx5("p", {
+      typeof children === "string" ? /* @__PURE__ */ jsx4("p", {
         children
       }) : children
     ]
@@ -5374,15 +5501,15 @@ function ArticleRelatedProducts({
       summary
     }
   };
-  return /* @__PURE__ */ jsx5("div", {
+  return /* @__PURE__ */ jsx4("div", {
     className: "plain-publication__related-products",
-    children: body.groups === undefined ? /* @__PURE__ */ jsx5(MarketingRelated, {
+    children: body.groups === undefined ? /* @__PURE__ */ jsx4(MarketingRelated, {
       heading,
       headingId,
       headingLevel,
       items: body.items,
       ...optional
-    }) : /* @__PURE__ */ jsx5(MarketingRelated, {
+    }) : /* @__PURE__ */ jsx4(MarketingRelated, {
       groups: body.groups,
       heading,
       headingId,
@@ -5426,46 +5553,46 @@ function ArticleIndex({
       /* @__PURE__ */ jsxs4("div", {
         className: "plain-publication__section-heading",
         children: [
-          /* @__PURE__ */ jsx5(HeadingTag, {
+          /* @__PURE__ */ jsx4(HeadingTag, {
             id: headingId,
             children: heading
           }),
-          summary === undefined || summary === "" ? null : /* @__PURE__ */ jsx5("p", {
+          summary === undefined || summary === "" ? null : /* @__PURE__ */ jsx4("p", {
             children: summary
           })
         ]
       }),
-      /* @__PURE__ */ jsx5("div", {
+      /* @__PURE__ */ jsx4("div", {
         className: "plain-publication__article-list",
         children: items.map((item) => /* @__PURE__ */ jsxs4("article", {
           className: "plain-publication__entry",
           children: [
-            item.eyebrow === undefined || item.eyebrow === "" ? null : /* @__PURE__ */ jsx5("p", {
+            item.eyebrow === undefined || item.eyebrow === "" ? null : /* @__PURE__ */ jsx4("p", {
               className: "plain-publication__entry-label",
               children: item.eyebrow
             }),
-            /* @__PURE__ */ jsx5(EntryTag, {
+            /* @__PURE__ */ jsx4(EntryTag, {
               className: "plain-publication__entry-title",
-              children: /* @__PURE__ */ jsx5("a", {
+              children: /* @__PURE__ */ jsx4("a", {
                 href: item.href,
                 children: item.title
               })
             }),
-            /* @__PURE__ */ jsx5("p", {
+            /* @__PURE__ */ jsx4("p", {
               className: "plain-publication__entry-dek",
               children: item.dek
             }),
             /* @__PURE__ */ jsxs4("p", {
               className: "plain-publication__entry-meta",
               children: [
-                /* @__PURE__ */ jsx5(ArticleDate, {
+                /* @__PURE__ */ jsx4(ArticleDate, {
                   label: "Published",
                   value: item.published
                 }),
                 item.updated === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                   children: [
-                    /* @__PURE__ */ jsx5(Separator, {}),
-                    /* @__PURE__ */ jsx5(ArticleDate, {
+                    /* @__PURE__ */ jsx4(Separator, {}),
+                    /* @__PURE__ */ jsx4(ArticleDate, {
                       label: "Updated",
                       value: item.updated
                     })
@@ -5490,7 +5617,7 @@ function FigureCaption({
     className: "plain-publication__figure-caption",
     children: [
       caption,
-      credit === undefined || credit === null || credit === "" ? null : /* @__PURE__ */ jsx5("small", {
+      credit === undefined || credit === null || credit === "" ? null : /* @__PURE__ */ jsx4("small", {
         className: "plain-publication__figure-credit",
         children: credit
       })
@@ -5516,11 +5643,11 @@ function ArticleFigure({
     "data-width": width,
     id,
     children: [
-      /* @__PURE__ */ jsx5("div", {
+      /* @__PURE__ */ jsx4("div", {
         className: "plain-publication__figure-body",
         children
       }),
-      /* @__PURE__ */ jsx5(FigureCaption, {
+      /* @__PURE__ */ jsx4(FigureCaption, {
         caption,
         credit
       })
@@ -5536,7 +5663,7 @@ function ArticleVideo({
   width = "text"
 }) {
   assertArticleVideo(video);
-  return /* @__PURE__ */ jsx5(ArticleFigure, {
+  return /* @__PURE__ */ jsx4(ArticleFigure, {
     caption,
     className: joinClasses("plain-publication__video", className),
     credit,
@@ -5554,11 +5681,11 @@ function ArticleVideo({
       preload: "metadata",
       width: video.width,
       children: [
-        orderedArticleVideoSources(video).map((source) => /* @__PURE__ */ jsx5("source", {
+        orderedArticleVideoSources(video).map((source) => /* @__PURE__ */ jsx4("source", {
           src: source.src,
           type: source.type
         }, source.type)),
-        /* @__PURE__ */ jsx5("track", {
+        /* @__PURE__ */ jsx4("track", {
           default: true,
           kind: "captions",
           label: "Captions",
@@ -5589,7 +5716,7 @@ function ArticleTable({
     "data-figure-kind": "table",
     id,
     children: [
-      /* @__PURE__ */ jsx5("div", {
+      /* @__PURE__ */ jsx4("div", {
         className: "plain-publication__table-scroll",
         role: "region",
         "aria-label": caption,
@@ -5597,24 +5724,24 @@ function ArticleTable({
         children: /* @__PURE__ */ jsxs4("table", {
           className: "plain-publication__table",
           children: [
-            /* @__PURE__ */ jsx5("caption", {
+            /* @__PURE__ */ jsx4("caption", {
               children: caption
             }),
-            /* @__PURE__ */ jsx5("thead", {
-              children: /* @__PURE__ */ jsx5("tr", {
-                children: columns.map((column, index) => /* @__PURE__ */ jsx5("th", {
+            /* @__PURE__ */ jsx4("thead", {
+              children: /* @__PURE__ */ jsx4("tr", {
+                children: columns.map((column, index) => /* @__PURE__ */ jsx4("th", {
                   "data-numeric": column.numeric === true ? "" : undefined,
                   scope: "col",
                   children: column.label
                 }, index))
               })
             }),
-            /* @__PURE__ */ jsx5("tbody", {
-              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx5("tr", {
-                children: row.map((cell, cellIndex) => cellIndex === 0 ? /* @__PURE__ */ jsx5("th", {
+            /* @__PURE__ */ jsx4("tbody", {
+              children: rows.map((row, rowIndex) => /* @__PURE__ */ jsx4("tr", {
+                children: row.map((cell, cellIndex) => cellIndex === 0 ? /* @__PURE__ */ jsx4("th", {
                   scope: "row",
                   children: cell
-                }, cellIndex) : /* @__PURE__ */ jsx5("td", {
+                }, cellIndex) : /* @__PURE__ */ jsx4("td", {
                   "data-numeric": columns[cellIndex]?.numeric === true ? "" : undefined,
                   children: cell
                 }, cellIndex))
@@ -5623,7 +5750,7 @@ function ArticleTable({
           ]
         })
       }),
-      note === undefined || note === null ? null : /* @__PURE__ */ jsx5("p", {
+      note === undefined || note === null ? null : /* @__PURE__ */ jsx4("p", {
         className: "plain-publication__figure-note",
         children: note
       })
@@ -5652,7 +5779,7 @@ function ArticleBarChart({
   for (const datum of data)
     if (datum.value > ceiling)
       throw new RangeError(`Article bar chart value for ${JSON.stringify(datum.label)} exceeds max.`);
-  return /* @__PURE__ */ jsx5(ArticleFigure, {
+  return /* @__PURE__ */ jsx4(ArticleFigure, {
     caption,
     className: joinClasses("plain-publication__bar-chart", className),
     credit,
@@ -5660,28 +5787,28 @@ function ArticleBarChart({
     ...id === undefined ? {} : {
       id
     },
-    children: /* @__PURE__ */ jsx5("dl", {
+    children: /* @__PURE__ */ jsx4("dl", {
       className: "plain-publication__bars",
       children: data.map((datum) => /* @__PURE__ */ jsxs4("div", {
         className: "plain-publication__bar",
         "data-highlight": datum.highlight === true ? "" : undefined,
         children: [
-          /* @__PURE__ */ jsx5("dt", {
+          /* @__PURE__ */ jsx4("dt", {
             children: datum.label
           }),
           /* @__PURE__ */ jsxs4("dd", {
             children: [
-              /* @__PURE__ */ jsx5("span", {
+              /* @__PURE__ */ jsx4("span", {
                 "aria-hidden": "true",
                 className: "plain-publication__bar-track",
-                children: /* @__PURE__ */ jsx5("span", {
+                children: /* @__PURE__ */ jsx4("span", {
                   className: "plain-publication__bar-fill",
                   style: {
                     "--plain-bar": `${Math.round(datum.value / ceiling * 1e4) / 100}%`
                   }
                 })
               }),
-              /* @__PURE__ */ jsx5("span", {
+              /* @__PURE__ */ jsx4("span", {
                 className: "plain-publication__bar-value",
                 children: datum.display
               })
@@ -5698,17 +5825,18 @@ var COMPARISON_TEXT = {
   partial: "Partly"
 };
 function ComparisonGlyph({
-  kind
+  kind,
+  className
 }) {
   const path = kind === "yes" ? "M3.5 8.5l3 3 6-7" : kind === "no" ? "M4.5 4.5l7 7m0-7l-7 7" : "M4 8h8";
-  return /* @__PURE__ */ jsx5("svg", {
+  return /* @__PURE__ */ jsx4("svg", {
     "aria-hidden": "true",
-    className: "plain-publication__comparison-glyph",
+    className: joinClasses("plain-publication__comparison-glyph", className),
     focusable: "false",
     height: "16",
     viewBox: "0 0 16 16",
     width: "16",
-    children: /* @__PURE__ */ jsx5("path", {
+    children: /* @__PURE__ */ jsx4("path", {
       d: path,
       fill: "none",
       stroke: "currentColor",
@@ -5722,7 +5850,7 @@ function ComparisonCell({
   value
 }) {
   if (typeof value === "object")
-    return /* @__PURE__ */ jsx5(Fragment3, {
+    return /* @__PURE__ */ jsx4(Fragment3, {
       children: value.text
     });
   const kind = value === true ? "yes" : value === false ? "no" : "partial";
@@ -5730,10 +5858,10 @@ function ComparisonCell({
     className: "plain-publication__comparison-value",
     "data-value": kind,
     children: [
-      /* @__PURE__ */ jsx5(ComparisonGlyph, {
+      /* @__PURE__ */ jsx4(ComparisonGlyph, {
         kind
       }),
-      /* @__PURE__ */ jsx5("span", {
+      /* @__PURE__ */ jsx4("span", {
         children: COMPARISON_TEXT[kind]
       })
     ]
@@ -5763,7 +5891,7 @@ function ComparisonTable({
     "data-figure-kind": "table",
     id,
     children: [
-      /* @__PURE__ */ jsx5("div", {
+      /* @__PURE__ */ jsx4("div", {
         className: "plain-publication__table-scroll",
         role: "region",
         "aria-label": caption,
@@ -5771,14 +5899,14 @@ function ComparisonTable({
         children: /* @__PURE__ */ jsxs4("table", {
           className: "plain-publication__table",
           children: [
-            /* @__PURE__ */ jsx5("caption", {
+            /* @__PURE__ */ jsx4("caption", {
               children: caption
             }),
-            /* @__PURE__ */ jsx5("thead", {
+            /* @__PURE__ */ jsx4("thead", {
               children: /* @__PURE__ */ jsxs4("tr", {
                 children: [
-                  /* @__PURE__ */ jsx5("td", {}),
-                  options.map((option, index) => /* @__PURE__ */ jsx5("th", {
+                  /* @__PURE__ */ jsx4("td", {}),
+                  options.map((option, index) => /* @__PURE__ */ jsx4("th", {
                     "data-highlight": index === highlight ? "" : undefined,
                     scope: "col",
                     children: option
@@ -5786,22 +5914,22 @@ function ComparisonTable({
                 ]
               })
             }),
-            /* @__PURE__ */ jsx5("tbody", {
+            /* @__PURE__ */ jsx4("tbody", {
               children: rows.map((row) => /* @__PURE__ */ jsxs4("tr", {
                 children: [
                   /* @__PURE__ */ jsxs4("th", {
                     scope: "row",
                     children: [
                       row.label,
-                      row.note === undefined || row.note === "" ? null : /* @__PURE__ */ jsx5("small", {
+                      row.note === undefined || row.note === "" ? null : /* @__PURE__ */ jsx4("small", {
                         className: "plain-publication__comparison-note",
                         children: row.note
                       })
                     ]
                   }),
-                  row.values.map((value, index) => /* @__PURE__ */ jsx5("td", {
+                  row.values.map((value, index) => /* @__PURE__ */ jsx4("td", {
                     "data-highlight": index === highlight ? "" : undefined,
-                    children: /* @__PURE__ */ jsx5(ComparisonCell, {
+                    children: /* @__PURE__ */ jsx4(ComparisonCell, {
                       value
                     })
                   }, index))
@@ -5811,7 +5939,7 @@ function ComparisonTable({
           ]
         })
       }),
-      note === undefined || note === null ? null : /* @__PURE__ */ jsx5("p", {
+      note === undefined || note === null ? null : /* @__PURE__ */ jsx4("p", {
         className: "plain-publication__figure-note",
         children: note
       })
@@ -5819,9 +5947,555 @@ function ComparisonTable({
   });
 }
 
+// src/react/marketing-account.tsx
+import * as stylex4 from "@stylexjs/stylex";
+
+// src/react/marketing-account.stylex.ts
+var marketingAccountStyles = {
+  section: {
+    kGNEyG: "x6s0dn4",
+    k99D8V: "xbzzath",
+    kMwMTN: "x11jfisy",
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xm2penl",
+    kumcoG: "x1mkdm3x x2k1869",
+    k8WAf4: "xgqmzqw",
+    k4rD7h: "x1f21ie9",
+    $$css: true
+  },
+  copy: {
+    k7Eaqz: "xeuugli",
+    $$css: true
+  },
+  heading: {
+    kMv6JI: "x1d3so1v",
+    kGuDYH: "xnwvzbp",
+    k63SB2: "xh88oxj",
+    kb6lSQ: "x72az59",
+    kLWn49: "x1uo3zyz",
+    kogj98: "x1ghz6dp",
+    kN2L0X: "x1w2vvpw",
+    $$css: true
+  },
+  summary: {
+    kMwMTN: "x17j02y5",
+    kGuDYH: "x1jchvi3",
+    kLWn49: "x1dbl2gt",
+    keoZOQ: "xj1urod",
+    ks0D6T: "x1dq269h",
+    kN2L0X: "x1fzhlzt",
+    $$css: true
+  },
+  content: {
+    k7Eaqz: "xeuugli",
+    $$css: true
+  },
+  actions: {
+    kGNEyG: "x6s0dn4",
+    k1xSpc: "x78zum5",
+    kwnvtZ: "x1a02dak",
+    kOIVth: "xilar1o",
+    $$css: true
+  },
+  primary: {
+    kGNEyG: "x6s0dn4",
+    kWkggS: "x8qxh4v x1eb7ohu xnwy5bs",
+    kMzoRj: "xmkeg23",
+    ksu8eU: "x1y0btm7",
+    kVAM5u: "x9r1u3d x1ylmb6m",
+    kaIpWk: "xmx9ex2",
+    kMwMTN: "xgbnldg x1ggml12",
+    k1xSpc: "x3nfvp2",
+    kMv6JI: "x1d3so1v",
+    kGuDYH: "x1lkfr7t",
+    k63SB2: "xh88oxj",
+    kjj79g: "xl56j7k",
+    kLWn49: "xwn7fz2",
+    ks0D6T: "x193iq5w",
+    kAzted: "x13gjtz1",
+    kI3sdo: "x10s4vih",
+    kInvED: "xj3ae5l",
+    k8WAf4: "x142x9wm",
+    kg3NbH: "xzsmjar",
+    k9WMMc: "x2b8uid",
+    kybGjl: "x1hl2dhg",
+    $$css: true
+  },
+  signIn: {
+    kGNEyG: "x6s0dn4",
+    kMwMTN: "x11jfisy",
+    k1xSpc: "x3nfvp2",
+    kMv6JI: "x1d3so1v",
+    kGuDYH: "x1lkfr7t",
+    k63SB2: "x10p5zqr",
+    kLWn49: "xwn7fz2",
+    kAzted: "x13gjtz1",
+    kI3sdo: "x10s4vih",
+    kInvED: "xj3ae5l",
+    kMnn75: "xujl8zx",
+    kmVMDM: "xi2nhp4",
+    k1TLXF: "x6k6sr1 x9ojkr9 xnnf6oi",
+    kNySMw: "xyi4chj",
+    kcSHmL: "xdsgf93",
+    $$css: true
+  }
+};
+
+// src/react/marketing-account.tsx
+import { jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
+function MarketingAccount({
+  children,
+  className,
+  heading = "Your account",
+  id = "account",
+  summary
+}) {
+  const presentation = stylex4.props(marketingAccountStyles.section);
+  return /* @__PURE__ */ jsxs5("section", {
+    ...presentation,
+    "aria-labelledby": `${id}-heading`,
+    className: ["hraness-marketing-account", presentation.className, className].filter(Boolean).join(" "),
+    id,
+    children: [
+      /* @__PURE__ */ jsxs5("div", {
+        ...stylex4.props(marketingAccountStyles.copy),
+        children: [
+          /* @__PURE__ */ jsx5("h2", {
+            ...stylex4.props(marketingAccountStyles.heading),
+            id: `${id}-heading`,
+            children: heading
+          }),
+          /* @__PURE__ */ jsx5("div", {
+            ...stylex4.props(marketingAccountStyles.summary),
+            children: summary
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx5("div", {
+        ...stylex4.props(marketingAccountStyles.content),
+        children
+      })
+    ]
+  });
+}
+function MarketingAccountActions({
+  primary,
+  signIn
+}) {
+  return /* @__PURE__ */ jsxs5("div", {
+    ...stylex4.props(marketingAccountStyles.actions),
+    className: `hraness-marketing-account__actions ${stylex4.props(marketingAccountStyles.actions).className}`,
+    children: [
+      /* @__PURE__ */ jsx5("a", {
+        ...stylex4.props(marketingAccountStyles.primary),
+        className: `hraness-marketing-account__primary ${stylex4.props(marketingAccountStyles.primary).className}`,
+        "data-analytics-event": primary.analyticsEvent,
+        "data-analytics-id": primary.analyticsId,
+        "data-emphasis": "primary",
+        href: primary.href,
+        children: primary.label
+      }),
+      signIn === undefined ? null : /* @__PURE__ */ jsx5("a", {
+        ...stylex4.props(marketingAccountStyles.signIn),
+        className: `hraness-marketing-account__sign-in ${stylex4.props(marketingAccountStyles.signIn).className}`,
+        "data-analytics-event": signIn.analyticsEvent,
+        "data-analytics-id": signIn.analyticsId,
+        href: signIn.href,
+        children: "Sign in"
+      })
+    ]
+  });
+}
+
+// src/react/marketing-comparison.tsx
+import * as stylex5 from "@stylexjs/stylex";
+
+// src/react/marketing-comparison.stylex.ts
+var comparisonStyles = {
+  figure: {
+    kogj98: "x1ghz6dp",
+    kdYMnH: "xesnm00",
+    kMwMTN: "x1sl809t",
+    knIRL8: "x1d3so1v",
+    $$css: true
+  },
+  scroll: {
+    kNmBvv: "xw2csxc",
+    k2kXS: "xgyk9h7",
+    kI3sdo: "x10s4vih",
+    kVtf5F: "xj3ae5l",
+    $$css: true
+  },
+  table: {
+    kULEZF: "xiuoait",
+    kZnR7y: "x1mwwwfo",
+    kMCLAl: "x1yc453h",
+    kLh5Sq: "x6u19be",
+    kN5DiO: "x37zpob",
+    $$css: true
+  },
+  caption: {
+    kgDt7k: "x1x9z3lm",
+    kMCLAl: "x1yc453h",
+    kLh5Sq: "x1c3i2sq",
+    ko3Kzr: "xh88oxj",
+    kMwMTN: "x11jfisy",
+    $$css: true
+  },
+  corner: {
+    kdYMnH: "x927zys",
+    ke4D0g: "xvnnzik",
+    $$css: true
+  },
+  option: {
+    kmVPX3: "x1uz70x1",
+    kdYMnH: "x31wxcc",
+    ke4D0g: "xvnnzik",
+    kG2bcC: "x3ajldb",
+    ko3Kzr: "x1s688f",
+    $$css: true
+  },
+  optionLabel: {
+    k1xSpc: "x78zum5",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "x1uma3xh",
+    $$css: true
+  },
+  mark: {
+    kKBYww: "x19kjcj4",
+    kEE5IU: "x2lah0s",
+    kULEZF: "xsta65m",
+    kLWsYc: "xkl2xug",
+    $$css: true
+  },
+  rowLabel: {
+    kmVPX3: "x3hm25i",
+    kdYMnH: "x927zys",
+    k2kXS: "x1vophnm",
+    ke4D0g: "xvnnzik",
+    kG2bcC: "x16dsc37",
+    ko3Kzr: "xk50ysn",
+    $$css: true
+  },
+  cell: {
+    kmVPX3: "x1uz70x1",
+    ke4D0g: "xvnnzik",
+    kG2bcC: "x16dsc37",
+    $$css: true
+  },
+  highlight: {
+    kL20gf: "x1sstqva x9yvj25",
+    kMwMTN: "x11jfisy",
+    $$css: true
+  },
+  value: {
+    k1xSpc: "xrvj5dj",
+    kOIVth: "xvh977a",
+    $$css: true
+  },
+  label: {
+    k1xSpc: "x78zum5",
+    kkeX5w: "x1cy8zhl",
+    kOIVth: "x1rcpt3j",
+    $$css: true
+  },
+  glyph: {
+    kEE5IU: "x2lah0s",
+    kAiAap: "x1lepkon",
+    kULEZF: "x1ri1nt6",
+    kLWsYc: "xf7zn63",
+    $$css: true
+  },
+  positive: {
+    kMwMTN: "x1tvez03 xs5hli",
+    $$css: true
+  },
+  negative: {
+    kMwMTN: "x17j02y5 xs5hli",
+    $$css: true
+  },
+  conditional: {
+    kMwMTN: "x1tjwi9f xs5hli",
+    $$css: true
+  },
+  text: {
+    kNUL7p: "xss6m8b",
+    $$css: true
+  },
+  detail: {
+    k1xSpc: "x1lliihq",
+    kMwMTN: "x17j02y5",
+    kLh5Sq: "x1dcheo9",
+    ko3Kzr: "xo1l8bm",
+    kN5DiO: "xfrs9s4",
+    kAiAap: "xo4pzau",
+    k2kXS: "x1wuf55a",
+    $$css: true
+  },
+  note: {
+    kMwMTN: "x17j02y5",
+    kLh5Sq: "xkpwil5",
+    kN5DiO: "x1evy7pa",
+    kAiAap: "xm3oedo",
+    k2kXS: "xlf9zpa",
+    $$css: true
+  }
+};
+
+// src/react/marketing-comparison.tsx
+import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
+import { createElement as createElement2 } from "react";
+var labels = {
+  yes: "Yes",
+  no: "No",
+  partial: "Partly",
+  optional: "Optional",
+  depends: "Depends"
+};
+function presentation(slot, props6) {
+  const hook = slot.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`);
+  return {
+    ...props6,
+    className: `hraness-marketing-comparison__${hook} ${props6.className}`
+  };
+}
+function Value({
+  value
+}) {
+  if (typeof value === "string" && value !== "partial")
+    return /* @__PURE__ */ jsx6("span", {
+      ...presentation("text", stylex5.props(comparisonStyles.text)),
+      children: value
+    });
+  const status = typeof value === "object" ? value.status : value === true ? "yes" : value === false ? "no" : "partial";
+  const label = typeof value === "object" ? value.label ?? labels[status] : labels[status];
+  const detail = typeof value === "object" ? value.detail : undefined;
+  return /* @__PURE__ */ jsxs6("div", {
+    ...presentation("value", stylex5.props(comparisonStyles.value)),
+    "data-comparison-status": status,
+    children: [
+      /* @__PURE__ */ jsxs6("span", {
+        ...presentation("label", stylex5.props(comparisonStyles.label)),
+        children: [
+          /* @__PURE__ */ jsx6(ComparisonGlyph, {
+            className: `hraness-marketing-comparison__glyph ${stylex5.props(comparisonStyles.glyph, status === "yes" ? comparisonStyles.positive : status === "no" ? comparisonStyles.negative : comparisonStyles.conditional).className}`,
+            kind: status === "yes" || status === "no" ? status : "partial"
+          }),
+          /* @__PURE__ */ jsx6("span", {
+            children: label
+          })
+        ]
+      }),
+      detail === undefined ? null : /* @__PURE__ */ jsx6("small", {
+        ...presentation("detail", stylex5.props(comparisonStyles.detail)),
+        children: detail
+      })
+    ]
+  });
+}
+function MarketingComparison({
+  caption,
+  className,
+  highlight,
+  id,
+  note,
+  options,
+  rows
+}) {
+  if (caption.trim() === "")
+    throw new RangeError("Marketing comparison needs a caption.");
+  if (options.length === 0)
+    throw new RangeError("Marketing comparison needs at least one option.");
+  if (highlight !== undefined && (!Number.isInteger(highlight) || highlight < 0 || highlight >= options.length))
+    throw new RangeError("Marketing comparison highlight must be an option index.");
+  for (const row of rows)
+    if (row.values.length !== options.length)
+      throw new RangeError(`Marketing comparison row ${JSON.stringify(row.label)} must have one value per option.`);
+  return /* @__PURE__ */ jsxs6("figure", {
+    ...presentation("figure", stylex5.props(comparisonStyles.figure)),
+    className: ["hraness-marketing-comparison", stylex5.props(comparisonStyles.figure).className, className].filter(Boolean).join(" "),
+    id,
+    children: [
+      /* @__PURE__ */ jsx6("div", {
+        ...presentation("scroll", stylex5.props(comparisonStyles.scroll)),
+        "aria-label": caption,
+        role: "region",
+        tabIndex: 0,
+        children: /* @__PURE__ */ jsxs6("table", {
+          ...presentation("table", stylex5.props(comparisonStyles.table)),
+          children: [
+            /* @__PURE__ */ jsx6("caption", {
+              ...presentation("caption", stylex5.props(comparisonStyles.caption)),
+              children: caption
+            }),
+            /* @__PURE__ */ jsx6("thead", {
+              children: /* @__PURE__ */ jsxs6("tr", {
+                children: [
+                  /* @__PURE__ */ jsx6("td", {
+                    ...presentation("corner", stylex5.props(comparisonStyles.corner))
+                  }),
+                  options.map((option, index) => /* @__PURE__ */ createElement2("th", {
+                    ...presentation("option", stylex5.props(comparisonStyles.option, index === highlight && comparisonStyles.highlight)),
+                    "data-highlight": index === highlight ? "" : undefined,
+                    key: option.name,
+                    scope: "col"
+                  }, /* @__PURE__ */ jsxs6("span", {
+                    ...presentation("optionLabel", stylex5.props(comparisonStyles.optionLabel)),
+                    children: [
+                      option.mark === undefined ? null : /* @__PURE__ */ jsx6("img", {
+                        alt: "",
+                        ...presentation("mark", stylex5.props(comparisonStyles.mark)),
+                        height: 24,
+                        src: option.mark,
+                        width: 24
+                      }),
+                      /* @__PURE__ */ jsx6("span", {
+                        children: option.name
+                      })
+                    ]
+                  })))
+                ]
+              })
+            }),
+            /* @__PURE__ */ jsx6("tbody", {
+              children: rows.map((row) => /* @__PURE__ */ jsxs6("tr", {
+                children: [
+                  /* @__PURE__ */ jsxs6("th", {
+                    ...presentation("rowLabel", stylex5.props(comparisonStyles.rowLabel)),
+                    scope: "row",
+                    children: [
+                      row.label,
+                      row.note === undefined ? null : /* @__PURE__ */ jsx6("small", {
+                        ...presentation("detail", stylex5.props(comparisonStyles.detail)),
+                        children: row.note
+                      })
+                    ]
+                  }),
+                  row.values.map((value, index) => /* @__PURE__ */ createElement2("td", {
+                    ...presentation("cell", stylex5.props(comparisonStyles.cell, index === highlight && comparisonStyles.highlight)),
+                    "data-highlight": index === highlight ? "" : undefined,
+                    key: index
+                  }, /* @__PURE__ */ jsx6(Value, {
+                    value
+                  })))
+                ]
+              }, row.label))
+            })
+          ]
+        })
+      }),
+      note === undefined || note === null ? null : /* @__PURE__ */ jsx6("figcaption", {
+        ...presentation("note", stylex5.props(comparisonStyles.note)),
+        children: note
+      })
+    ]
+  });
+}
+
+// src/react/marketing-diagram.tsx
+import * as stylex6 from "@stylexjs/stylex";
+
+// src/react/marketing-diagram.stylex.ts
+var diagramStyles = {
+  figure: {
+    kogj98: "x1ghz6dp",
+    kdYMnH: "xesnm00",
+    kMwMTN: "x11jfisy",
+    knIRL8: "x1d3so1v",
+    $$css: true
+  },
+  scroll: {
+    kNmBvv: "xw2csxc",
+    k2kXS: "xgyk9h7",
+    kI3sdo: "x10s4vih",
+    kVtf5F: "xj3ae5l",
+    $$css: true
+  },
+  canvas: {
+    k1xSpc: "x1lliihq",
+    kULEZF: "xiuoait",
+    kdYMnH: "xze7o54",
+    kLWsYc: "xzlj3eo",
+    knIRL8: "x1d3so1v",
+    kLh5Sq: "xwsyq91",
+    kMwMTN: "xzwifym",
+    $$css: true
+  },
+  caption: {
+    kAiAap: "xm3oedo",
+    k2kXS: "xlf9zpa",
+    kMwMTN: "x17j02y5",
+    kLh5Sq: "xkpwil5",
+    kN5DiO: "x1evy7pa",
+    $$css: true
+  }
+};
+
+// src/react/marketing-diagram.tsx
+import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+function DiagramArrowhead({
+  id
+}) {
+  if (id.trim() === "" || /\s/u.test(id))
+    throw new RangeError("Diagram arrowhead needs one nonempty SVG ID.");
+  return /* @__PURE__ */ jsx7("marker", {
+    id,
+    markerHeight: diagramMetrics.arrowheadSize,
+    markerUnits: "userSpaceOnUse",
+    markerWidth: diagramMetrics.arrowheadSize,
+    orient: "auto-start-reverse",
+    refX: "5.5",
+    refY: "3",
+    viewBox: "0 0 6 6",
+    children: /* @__PURE__ */ jsx7("path", {
+      d: "M0 0 L6 3 L0 6 Z",
+      fill: "context-stroke"
+    })
+  });
+}
+function MarketingDiagram({
+  caption,
+  children,
+  className,
+  height,
+  label,
+  width
+}) {
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0)
+    throw new RangeError("Marketing diagram dimensions must be positive.");
+  if (label.trim() === "")
+    throw new RangeError("Marketing diagram needs a useful accessible label.");
+  return /* @__PURE__ */ jsxs7("figure", {
+    className: ["hraness-diagram", stylex6.props(diagramStyles.figure).className, className].filter(Boolean).join(" "),
+    children: [
+      /* @__PURE__ */ jsx7("div", {
+        ...stylex6.props(diagramStyles.scroll),
+        className: `hraness-diagram__scroll ${stylex6.props(diagramStyles.scroll).className}`,
+        "aria-label": label,
+        role: "region",
+        tabIndex: 0,
+        children: /* @__PURE__ */ jsx7("svg", {
+          ...stylex6.props(diagramStyles.canvas),
+          className: `hraness-diagram__canvas ${stylex6.props(diagramStyles.canvas).className}`,
+          "aria-label": label,
+          height,
+          role: "img",
+          viewBox: `0 0 ${width} ${height}`,
+          width,
+          children
+        })
+      }),
+      caption === undefined || caption === null ? null : /* @__PURE__ */ jsx7("figcaption", {
+        ...stylex6.props(diagramStyles.caption),
+        children: caption
+      })
+    ]
+  });
+}
+
 // src/react/surfaces.tsx
 import { forwardRef } from "react";
-import * as stylex4 from "@stylexjs/stylex";
+import * as stylex7 from "@stylexjs/stylex";
 import { ThemedSurface, cn } from "@hraness/ui";
 
 // src/react/surfaces.stylex.ts
@@ -5991,7 +6665,7 @@ var layoutSurfaceStyles = {
 };
 
 // src/react/surfaces.tsx
-import { jsx as jsx6, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
 var ditherSurfaceDensityStyles = {
   coarse: ditherSurfaceStyles.coarse,
   fine: ditherSurfaceStyles.fine,
@@ -6001,10 +6675,10 @@ function DitherSurface({
   className,
   density = "medium",
   xstyle,
-  ...props5
+  ...props8
 }) {
-  return /* @__PURE__ */ jsx6(ThemedSurface, {
-    ...props5,
+  return /* @__PURE__ */ jsx8(ThemedSurface, {
+    ...props8,
     className: cn("hraness-design-dither-surface", className),
     "data-density": density,
     xstyle: [
@@ -6022,38 +6696,38 @@ function TopBar({
   position = "static",
   surface = "solid",
   title,
-  ...props5
+  ...props8
 }) {
-  const rootPresentation = stylex4.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.topBar, position === "sticky" ? layoutSurfaceStyles.topBarSticky : layoutSurfaceStyles.topBarStatic, surface === "glass" && layoutSurfaceStyles.topBarGlass);
-  const leadingPresentation = stylex4.props(layoutSurfaceStyles.barPart);
-  const titlePresentation = stylex4.props(layoutSurfaceStyles.topBarTitle);
-  const contentPresentation = stylex4.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
-  const actionsPresentation = stylex4.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.topBarActions);
-  return /* @__PURE__ */ jsxs5("header", {
+  const rootPresentation = stylex7.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.topBar, position === "sticky" ? layoutSurfaceStyles.topBarSticky : layoutSurfaceStyles.topBarStatic, surface === "glass" && layoutSurfaceStyles.topBarGlass);
+  const leadingPresentation = stylex7.props(layoutSurfaceStyles.barPart);
+  const titlePresentation = stylex7.props(layoutSurfaceStyles.topBarTitle);
+  const contentPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
+  const actionsPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.topBarActions);
+  return /* @__PURE__ */ jsxs8("header", {
     ...rootPresentation,
-    ...props5,
+    ...props8,
     className: cn("hraness-design-top-bar", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     children: [
-      /* @__PURE__ */ jsxs5("div", {
+      /* @__PURE__ */ jsxs8("div", {
         ...leadingPresentation,
         className: cn("hraness-design-top-bar__leading", leadingPresentation.className),
         children: [
           leading,
-          title === undefined ? null : /* @__PURE__ */ jsx6("div", {
+          title === undefined ? null : /* @__PURE__ */ jsx8("div", {
             ...titlePresentation,
             className: cn("hraness-design-top-bar__title", titlePresentation.className),
             children: title
           })
         ]
       }),
-      children === undefined ? null : /* @__PURE__ */ jsx6("div", {
+      children === undefined ? null : /* @__PURE__ */ jsx8("div", {
         ...contentPresentation,
         className: cn("hraness-design-top-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx6("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx8("div", {
         ...actionsPresentation,
         className: cn("hraness-design-top-bar__actions", actionsPresentation.className),
         children: actions
@@ -6066,28 +6740,28 @@ function BottomBar({
   children,
   className,
   leading,
-  ...props5
+  ...props8
 }) {
-  const rootPresentation = stylex4.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.bottomBar);
-  const leadingPresentation = stylex4.props(layoutSurfaceStyles.barPart);
-  const contentPresentation = stylex4.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
-  const actionsPresentation = stylex4.props(layoutSurfaceStyles.barPart);
-  return /* @__PURE__ */ jsxs5("footer", {
+  const rootPresentation = stylex7.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.bar, layoutSurfaceStyles.bottomBar);
+  const leadingPresentation = stylex7.props(layoutSurfaceStyles.barPart);
+  const contentPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
+  const actionsPresentation = stylex7.props(layoutSurfaceStyles.barPart);
+  return /* @__PURE__ */ jsxs8("footer", {
     ...rootPresentation,
-    ...props5,
+    ...props8,
     className: cn("hraness-design-bottom-bar", rootPresentation.className, className),
     children: [
-      leading === undefined ? null : /* @__PURE__ */ jsx6("div", {
+      leading === undefined ? null : /* @__PURE__ */ jsx8("div", {
         ...leadingPresentation,
         className: cn("hraness-design-bottom-bar__leading", leadingPresentation.className),
         children: leading
       }),
-      /* @__PURE__ */ jsx6("div", {
+      /* @__PURE__ */ jsx8("div", {
         ...contentPresentation,
         className: cn("hraness-design-bottom-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx6("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx8("div", {
         ...actionsPresentation,
         className: cn("hraness-design-bottom-bar__actions", actionsPresentation.className),
         children: actions
@@ -6100,14 +6774,14 @@ function PageCanvas({
   className,
   inset = "content",
   size = "default",
-  ...props5
+  ...props8
 }) {
   const Element = as;
-  const presentation = stylex4.props(layoutSurfaceStyles.pageCanvas, inset === "content" ? layoutSurfaceStyles.pageContentInset : layoutSurfaceStyles.pageNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx6(Element, {
-    ...presentation,
-    ...props5,
-    className: cn("hraness-design-page-canvas", presentation.className, className),
+  const presentation2 = stylex7.props(layoutSurfaceStyles.pageCanvas, inset === "content" ? layoutSurfaceStyles.pageContentInset : layoutSurfaceStyles.pageNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
+  return /* @__PURE__ */ jsx8(Element, {
+    ...presentation2,
+    ...props8,
+    className: cn("hraness-design-page-canvas", presentation2.className, className),
     "data-inset": inset,
     "data-size": size
   });
@@ -6121,18 +6795,18 @@ var DockedFooter = forwardRef(function DockedFooter2({
   position = "fixed",
   size = "default",
   surface = "solid",
-  ...props5
+  ...props8
 }, ref) {
-  const rootPresentation = stylex4.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.dockedFooter, position === "absolute" ? layoutSurfaceStyles.dockedAbsolute : position === "sticky" ? layoutSurfaceStyles.dockedSticky : layoutSurfaceStyles.dockedFixed);
-  const contentPresentation = stylex4.props(layoutSurfaceStyles.dockedContent, density === "compact" ? inset === "content" ? layoutSurfaceStyles.dockedContentCompactInset : layoutSurfaceStyles.dockedContentCompactNoInset : inset === "content" ? layoutSurfaceStyles.dockedContentDefaultInset : layoutSurfaceStyles.dockedContentDefaultNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx6("footer", {
+  const rootPresentation = stylex7.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.dockedFooter, position === "absolute" ? layoutSurfaceStyles.dockedAbsolute : position === "sticky" ? layoutSurfaceStyles.dockedSticky : layoutSurfaceStyles.dockedFixed);
+  const contentPresentation = stylex7.props(layoutSurfaceStyles.dockedContent, density === "compact" ? inset === "content" ? layoutSurfaceStyles.dockedContentCompactInset : layoutSurfaceStyles.dockedContentCompactNoInset : inset === "content" ? layoutSurfaceStyles.dockedContentDefaultInset : layoutSurfaceStyles.dockedContentDefaultNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
+  return /* @__PURE__ */ jsx8("footer", {
     ...rootPresentation,
-    ...props5,
+    ...props8,
     className: cn("hraness-design-docked-footer", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     ref,
-    children: /* @__PURE__ */ jsx6("div", {
+    children: /* @__PURE__ */ jsx8("div", {
       ...contentPresentation,
       className: cn("hraness-design-docked-footer__content", contentPresentation.className, contentClassName),
       "data-density": density,
@@ -6325,7 +6999,7 @@ function createParticleHaloRecipe(input) {
 
 // src/react/procedural-backdrop.tsx
 import { cn as cn2 } from "@hraness/ui";
-import * as stylex5 from "@stylexjs/stylex";
+import * as stylex8 from "@stylexjs/stylex";
 
 // src/react/effects.stylex.ts
 var effectsStyles = {
@@ -6583,7 +7257,7 @@ var effectsStyles = {
 };
 
 // src/react/procedural-backdrop.tsx
-import { jsx as jsx7, jsxs as jsxs6 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
 var colorVariables = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -6600,7 +7274,7 @@ function ProceduralBackdrop({
   style,
   variation,
   variant,
-  ...props6
+  ...props9
 }) {
   const recipe = createProceduralBackdropRecipe({
     seed,
@@ -6638,14 +7312,14 @@ function ProceduralBackdrop({
     "--hraness-design-procedural-ripple-x": `${recipe.ripple.x}%`,
     "--hraness-design-procedural-ripple-y": `${recipe.ripple.y}%`
   };
-  const rootPresentation = stylex5.props(effectsStyles.proceduralRoot);
-  const atmospherePresentation = stylex5.props(effectsStyles.proceduralSlot, effectsStyles.proceduralAtmosphere);
-  const cloudPresentation = stylex5.props(effectsStyles.proceduralCloud);
-  const gridPresentation = stylex5.props(effectsStyles.proceduralSlot, effectsStyles.proceduralGrid);
-  const ripplesPresentation = stylex5.props(effectsStyles.proceduralSlot, effectsStyles.proceduralRipples);
-  const ripplePresentation = stylex5.props(effectsStyles.proceduralRipple);
-  return /* @__PURE__ */ jsxs6("div", {
-    ...props6,
+  const rootPresentation = stylex8.props(effectsStyles.proceduralRoot);
+  const atmospherePresentation = stylex8.props(effectsStyles.proceduralSlot, effectsStyles.proceduralAtmosphere);
+  const cloudPresentation = stylex8.props(effectsStyles.proceduralCloud);
+  const gridPresentation = stylex8.props(effectsStyles.proceduralSlot, effectsStyles.proceduralGrid);
+  const ripplesPresentation = stylex8.props(effectsStyles.proceduralSlot, effectsStyles.proceduralRipples);
+  const ripplePresentation = stylex8.props(effectsStyles.proceduralRipple);
+  return /* @__PURE__ */ jsxs9("div", {
+    ...props9,
     ...INERT_PROPS,
     "aria-hidden": "true",
     className: cn2("hraness-design-procedural-backdrop", rootPresentation.className, className),
@@ -6655,7 +7329,7 @@ function ProceduralBackdrop({
     role: "presentation",
     style: rootStyle,
     children: [
-      showAtmosphere ? /* @__PURE__ */ jsx7("span", {
+      showAtmosphere ? /* @__PURE__ */ jsx9("span", {
         className: cn2("hraness-design-procedural-backdrop__atmosphere", atmospherePresentation.className),
         children: recipe.atmosphere.map((layer, index) => {
           const layerStyle = {
@@ -6673,17 +7347,17 @@ function ProceduralBackdrop({
             "--hraness-design-procedural-layer-x": `${layer.x}%`,
             "--hraness-design-procedural-layer-y": `${layer.y}%`
           };
-          return /* @__PURE__ */ jsx7("i", {
+          return /* @__PURE__ */ jsx9("i", {
             className: cn2("hraness-design-procedural-backdrop__cloud", cloudPresentation.className),
             style: layerStyle
           }, index);
         })
       }) : null,
-      showGrid ? /* @__PURE__ */ jsx7("span", {
+      showGrid ? /* @__PURE__ */ jsx9("span", {
         className: cn2("hraness-design-procedural-backdrop__grid", gridPresentation.className),
         style: gridStyle
       }) : null,
-      showRipple ? /* @__PURE__ */ jsx7("span", {
+      showRipple ? /* @__PURE__ */ jsx9("span", {
         className: cn2("hraness-design-procedural-backdrop__ripples", ripplesPresentation.className),
         style: rippleStyle,
         children: recipe.ripple.contours.map((contour, index) => {
@@ -6693,7 +7367,7 @@ function ProceduralBackdrop({
             "--hraness-design-procedural-ripple-opacity": contour.opacity,
             "--hraness-design-procedural-ripple-size": `${contour.size}%`
           };
-          return /* @__PURE__ */ jsx7("i", {
+          return /* @__PURE__ */ jsx9("i", {
             className: cn2("hraness-design-procedural-backdrop__ripple", ripplePresentation.className),
             style: contourStyle
           }, index);
@@ -6704,7 +7378,7 @@ function ProceduralBackdrop({
 }
 
 // src/react/platform-icons.tsx
-import { jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 var sizeParts = {
   inherit: undefined,
   lg: "iconLg",
@@ -6724,7 +7398,7 @@ function PlatformIcon({
   if (label !== undefined && label.trim() === "")
     throw new RangeError("A platform icon label must not be blank.");
   const mark = platformMark(platform);
-  return /* @__PURE__ */ jsx8("svg", {
+  return /* @__PURE__ */ jsx10("svg", {
     "aria-hidden": label === undefined ? true : undefined,
     "aria-label": label,
     className: platformInstallClassName(["icon", sizeParts[size]], className),
@@ -6734,7 +7408,7 @@ function PlatformIcon({
     role: label === undefined ? undefined : "img",
     viewBox: mark.viewBox,
     xmlns: "http://www.w3.org/2000/svg",
-    children: /* @__PURE__ */ jsx8("path", {
+    children: /* @__PURE__ */ jsx10("path", {
       d: mark.path
     })
   });
@@ -6761,29 +7435,29 @@ function PlatformBadges({
     seen.add(badge.id);
   }
   const listName = label ?? "Supported platforms";
-  return /* @__PURE__ */ jsxs7("div", {
+  return /* @__PURE__ */ jsxs10("div", {
     className: platformInstallClassName(["badges"], className),
     "data-hraness-platform-badges": "",
     children: [
-      label === null ? null : /* @__PURE__ */ jsx8("span", {
+      label === null ? null : /* @__PURE__ */ jsx10("span", {
         "aria-hidden": "true",
         className: platformInstallClassName(["badgesLabel"]),
         children: label
       }),
-      /* @__PURE__ */ jsx8("ul", {
+      /* @__PURE__ */ jsx10("ul", {
         "aria-label": listName,
         className: platformInstallClassName(["badgesList"]),
-        children: badges.map((badge) => /* @__PURE__ */ jsxs7("li", {
+        children: badges.map((badge) => /* @__PURE__ */ jsxs10("li", {
           className: platformInstallClassName(["badge"]),
           "data-platform": badge.id,
           children: [
-            /* @__PURE__ */ jsx8(PlatformIcon, {
+            /* @__PURE__ */ jsx10(PlatformIcon, {
               platform: badge.id
             }),
-            /* @__PURE__ */ jsx8("span", {
+            /* @__PURE__ */ jsx10("span", {
               children: badge.label ?? platformLabel(badge.id)
             }),
-            badge.note === undefined ? null : /* @__PURE__ */ jsx8("span", {
+            badge.note === undefined ? null : /* @__PURE__ */ jsx10("span", {
               className: platformInstallClassName(["badgeNote"]),
               children: badge.note
             })
@@ -6796,8 +7470,8 @@ function PlatformBadges({
 
 // src/react/particle-halo.tsx
 import { cn as cn3 } from "@hraness/ui";
-import * as stylex6 from "@stylexjs/stylex";
-import { jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
+import * as stylex9 from "@stylexjs/stylex";
+import { jsx as jsx11, jsxs as jsxs11 } from "react/jsx-runtime";
 var colorVariables2 = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -6811,7 +7485,7 @@ function ParticleHalo({
   seed,
   style,
   variation,
-  ...props7
+  ...props10
 }) {
   const recipe = createParticleHaloRecipe({
     seed,
@@ -6829,18 +7503,18 @@ function ParticleHalo({
     "--hraness-design-procedural-support": recipe.palette.support,
     ...style
   };
-  const rootPresentation = stylex6.props(effectsStyles.particleRoot);
-  const fieldPresentation = stylex6.props(effectsStyles.particleField);
-  const particlePresentation = stylex6.props(effectsStyles.particle);
-  const contentPresentation = stylex6.props(effectsStyles.particleContent);
-  return /* @__PURE__ */ jsxs8("div", {
-    ...props7,
+  const rootPresentation = stylex9.props(effectsStyles.particleRoot);
+  const fieldPresentation = stylex9.props(effectsStyles.particleField);
+  const particlePresentation = stylex9.props(effectsStyles.particle);
+  const contentPresentation = stylex9.props(effectsStyles.particleContent);
+  return /* @__PURE__ */ jsxs11("div", {
+    ...props10,
     className: cn3("hraness-design-particle-halo", rootPresentation.className, className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,
     style: rootStyle,
     children: [
-      /* @__PURE__ */ jsx9("span", {
+      /* @__PURE__ */ jsx11("span", {
         "aria-hidden": "true",
         className: cn3("hraness-design-particle-halo__particles", fieldPresentation.className),
         role: "presentation",
@@ -6856,13 +7530,13 @@ function ParticleHalo({
             "--hraness-design-particle-x": `${particle.x}%`,
             "--hraness-design-particle-y": `${particle.y}%`
           };
-          return /* @__PURE__ */ jsx9("i", {
+          return /* @__PURE__ */ jsx11("i", {
             className: cn3("hraness-design-particle-halo__particle", particlePresentation.className),
             style: particleStyle
           }, index);
         })
       }),
-      /* @__PURE__ */ jsx9("div", {
+      /* @__PURE__ */ jsx11("div", {
         className: cn3("hraness-design-particle-halo__content", contentPresentation.className),
         children
       })
@@ -6871,7 +7545,7 @@ function ParticleHalo({
 }
 
 // src/react/launch-beats.tsx
-import { jsx as jsx10, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx12, jsxs as jsxs12 } from "react/jsx-runtime";
 var HEADING_TAGS2 = {
   2: "h2",
   3: "h3",
@@ -6902,7 +7576,7 @@ function LaunchBeats({
   const Heading2 = HEADING_TAGS2[headingLevel];
   if (Heading2 === undefined)
     throw new RangeError("Launch beat heading level must be 2 to 4.");
-  return /* @__PURE__ */ jsx10("div", {
+  return /* @__PURE__ */ jsx12("div", {
     className: ["plain-publication__beats", className].filter(Boolean).join(" "),
     "data-hraness-launch-beats": "",
     children: beats.map((beat) => {
@@ -6910,28 +7584,28 @@ function LaunchBeats({
       const visual = renderVisual(beat);
       if (visual === null || visual === undefined || visual === false)
         throw new RangeError(`Launch beat ${JSON.stringify(beat.id)} needs a visual.`);
-      return /* @__PURE__ */ jsxs9("section", {
+      return /* @__PURE__ */ jsxs12("section", {
         "aria-labelledby": `${anchor}-heading`,
         className: "plain-publication__beat",
         "data-part": beat.part,
         id: anchor,
         children: [
-          /* @__PURE__ */ jsx10(Heading2, {
+          /* @__PURE__ */ jsx12(Heading2, {
             id: `${anchor}-heading`,
             children: beat.headline
           }),
-          /* @__PURE__ */ jsx10("p", {
+          /* @__PURE__ */ jsx12("p", {
             children: beat.post
           }),
-          /* @__PURE__ */ jsx10(ArticleFigure, {
+          /* @__PURE__ */ jsx12(ArticleFigure, {
             caption: caption?.(beat),
             kind: figureKind(beat),
             label: beat.alt,
             children: visual
           }),
-          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx10("p", {
+          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx12("p", {
             className: "plain-publication__beat-detail",
-            children: /* @__PURE__ */ jsx10("a", {
+            children: /* @__PURE__ */ jsx12("a", {
               href: beat.detailHref,
               children: detailLabel
             })
@@ -6942,4 +7616,4 @@ function LaunchBeats({
   });
 }
 
-export { ProviderMark, ProviderMarkChip, SyntaxCode, foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, marketingPatterns, MarketingActionLink, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonTable, effectsStyles, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, PlatformIcon, PlatformBadges, ParticleHalo, launchBeatAnchor, LaunchBeats };
+export { ProviderMark, ProviderMarkChip, foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, marketingPatterns, MarketingActionLink, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonGlyph, ComparisonTable, effectsStyles, MarketingAccount, MarketingAccountActions, MarketingComparison, DiagramArrowhead, MarketingDiagram, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, PlatformIcon, PlatformBadges, ParticleHalo, launchBeatAnchor, LaunchBeats };

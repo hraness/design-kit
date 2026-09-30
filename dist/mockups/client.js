@@ -335,7 +335,7 @@ function StepThrough({
           className: "hkm-tabs hkm-step-tabs",
           role: "tablist",
           children: steps.map((entry, position) => /* @__PURE__ */ jsxs("button", {
-            "aria-controls": `${id}-panel`,
+            "aria-controls": `${id}-panel-${entry.id}`,
             "aria-selected": position === current,
             className: "hkm-tab",
             "data-hkm-done": position < current ? "" : undefined,
@@ -363,32 +363,52 @@ function StepThrough({
         })
       }),
       /* @__PURE__ */ jsx("div", {
-        "aria-labelledby": `${id}-tab-${step.id}`,
-        className: "hkm-showcase-stage",
-        "data-hkm-animated": animated ? "" : undefined,
-        id: `${id}-panel`,
-        role: "tabpanel",
-        children: /* @__PURE__ */ jsx(FitToWidth, {
-          minWidth,
-          children: step.render({
-            animated,
-            theme
+        className: "hkm-showcase-stage hkm-step-stage",
+        children: steps.map((entry, position) => /* @__PURE__ */ jsx("div", {
+          "aria-hidden": position !== current,
+          "aria-labelledby": `${id}-tab-${entry.id}`,
+          className: "hkm-step-panel",
+          "data-hkm-animated": position === current && animated ? "" : undefined,
+          id: `${id}-panel-${entry.id}`,
+          inert: position !== current,
+          role: "tabpanel",
+          children: /* @__PURE__ */ jsx(FitToWidth, {
+            minWidth,
+            children: entry.render({
+              animated: position === current && animated,
+              theme
+            })
           })
-        })
+        }, entry.id))
       }),
       /* @__PURE__ */ jsxs("div", {
         className: "hkm-step-nav",
         children: [
           /* @__PURE__ */ jsx("button", {
+            "aria-label": "Back",
             className: "hkm-step-button",
             disabled: current === 0,
             onClick: () => go(current - 1),
             type: "button",
-            children: "Back"
+            children: /* @__PURE__ */ jsx("svg", {
+              "aria-hidden": "true",
+              focusable: "false",
+              height: "28",
+              viewBox: "0 0 24 24",
+              width: "28",
+              children: /* @__PURE__ */ jsx("path", {
+                d: "m14.5 5-7 7 7 7",
+                fill: "none",
+                stroke: "currentColor",
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: "1.75"
+              })
+            })
           }),
           /* @__PURE__ */ jsxs("span", {
             "aria-live": "polite",
-            className: "hkm-showcase-status",
+            className: "hkm-showcase-status hkm-step-announcement",
             children: [
               "Step ",
               current + 1,
@@ -398,12 +418,27 @@ function StepThrough({
             ]
           }),
           /* @__PURE__ */ jsx("button", {
+            "aria-label": "Next",
             className: "hkm-step-button",
             "data-hkm-primary": "",
             disabled: current === steps.length - 1,
             onClick: () => go(current + 1),
             type: "button",
-            children: "Next"
+            children: /* @__PURE__ */ jsx("svg", {
+              "aria-hidden": "true",
+              focusable: "false",
+              height: "28",
+              viewBox: "0 0 24 24",
+              width: "28",
+              children: /* @__PURE__ */ jsx("path", {
+                d: "m9.5 5 7 7-7 7",
+                fill: "none",
+                stroke: "currentColor",
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                strokeWidth: "1.75"
+              })
+            })
           })
         ]
       }),

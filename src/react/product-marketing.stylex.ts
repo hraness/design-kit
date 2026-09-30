@@ -713,6 +713,7 @@ export const marketingStyles = stylex.create({
     "line-height": "var(--hraness-marketing-summary-leading, 1.6)",
     "max-inline-size": "var(--hraness-marketing-copy-measure)"
   },
+  "hero__install": { "inline-size": "min(100%, 44rem)", "min-inline-size": "0", "margin-block-start": "0.75rem", "text-align": "start" },
   "hero__example": {
     "margin": "0",
     "color": "var(--hraness-marketing-ink)",
@@ -1063,6 +1064,9 @@ export const marketingStyles = stylex.create({
       "@media (max-width: 48rem)": "minmax(0, 1fr)"
     }
   },
+  "pillarsBenefits": { "border-block": "0", "gap": "2.75rem 3rem" },
+  "pillars__benefit": { "display": "grid", "min-inline-size": "0", "align-content": "start", "gap": "0.75rem", "padding": "0", "border-block": "0", "border-inline": "0" },
+  "pillars__icon": { "display": "block", "inline-size": "1.5rem", "block-size": "1.5rem", "margin-block-end": "1.1rem", "color": "var(--primary)" },
   "pillars__item": {
     "display": "grid",
     "min-inline-size": "0",
@@ -1694,10 +1698,22 @@ export const marketingStyles = stylex.create({
     "font-size": "1.125rem",
     "line-height": "1.5"
   },
-  "related__group": {
+  "related__groups": {
     "display": "grid",
-    "gap": "1.5rem",
-    "min-inline-size": "0"
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, 24rem), 1fr))",
+    "gap": "2.5rem 3.5rem",
+    "align-items": "start"
+  },
+  "related__group": {
+    "--hraness-marketing-related-tone": {
+      "default": "var(--hraness-marketing-ink)",
+      "@media (forced-colors: active)": "CanvasText"
+    },
+    "display": "grid",
+    "gap": "1rem",
+    "min-inline-size": "0",
+    "border-block-start": "2px solid var(--hraness-marketing-related-tone)",
+    "padding-block-start": "1rem"
   },
   "related__group_header": {
     "display": "grid",
@@ -1707,145 +1723,145 @@ export const marketingStyles = stylex.create({
   "related__group_heading": {
     "margin": "0",
     "color": "var(--hraness-marketing-ink)",
-    "font-family": "var(--hraness-marketing-heading-font)",
-    "font-weight": "var(--hraness-marketing-heading-weight)",
-    "letter-spacing": "var(--hraness-marketing-h2-tracking, -0.012em)",
-    "line-height": "var(--hraness-marketing-h3-leading, 1.15)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-weight": "600",
+    "letter-spacing": "-0.01em",
+    "line-height": "1.35",
     "text-wrap": "balance",
-    "font-size": "var(--hraness-marketing-h3-size, clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem))"
+    "font-size": "1.125rem"
   },
   "related__group_summary": {
     "margin": "0",
     "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "1.125rem",
+    "font-size": "1rem",
     "line-height": "1.5"
+  },
+  "related__list": {
+    "--hraness-marketing-grid-columns": "initial",
+    "--_hraness-marketing-grid-track": "max(16rem, calc((100% - (var(--hraness-marketing-grid-columns) - 1) * 0.5rem) / var(--hraness-marketing-grid-columns)))",
+    "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 100%)), 1fr))",
+    "display": "grid",
+    "gap": "0.5rem",
+    "list-style": "none",
+    "margin": "0",
+    "padding": "0",
+    "min-inline-size": "0"
+  },
+  "related__item": {
+    "margin": "0",
+    "min-inline-size": "0"
   },
   "related__card": {
     "display": "flex",
     "flex-direction": "row",
-    "align-items": "center",
+    "align-items": "flex-start",
     "position": "relative",
-    "isolation": "isolate",
     "min-inline-size": "0",
-    "min-block-size": "100%",
-    "align-self": "stretch",
-    "gap": "1rem",
-    "padding": "clamp(1rem, 2vw, 1.25rem) clamp(1.125rem, 2.5vw, 1.5rem)",
-    "border-top": {
-      "default": "var(--hraness-marketing-surface-rule)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-right": {
-      "default": "var(--hraness-marketing-surface-rule)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-bottom": {
-      "default": "var(--hraness-marketing-surface-rule)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-left": {
-      "default": "var(--hraness-marketing-surface-rule)",
-      "@media (forced-colors: active)": "1px solid CanvasText"
-    },
-    "border-image-source": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "border-image-slice": {
-      "default": "100%",
-      "@media (forced-colors: active)": "100%"
-    },
-    "border-image-width": {
-      "default": "1",
-      "@media (forced-colors: active)": "1"
-    },
-    "border-image-outset": {
-      "default": "0",
-      "@media (forced-colors: active)": "0"
-    },
-    "border-image-repeat": {
-      "default": "stretch",
-      "@media (forced-colors: active)": "stretch"
-    },
-    "border-radius": "var(--hraness-marketing-frame-radius)",
+    "min-block-size": "2.75rem",
+    "gap": "0.85rem",
+    "padding": "0.55rem 0.5rem",
+    "margin-inline": "0",
+    "border-top": "0",
+    "border-right": "0",
+    "border-bottom": "0",
+    "border-left": "0",
+    "border-radius": "0.375rem",
     "background-color": {
-      "default": "var(--hraness-marketing-surface)",
-      "@media (forced-colors: active)": "Canvas"
+      "default": "transparent",
+      ":hover": "color-mix(in srgb, var(--hraness-marketing-related-tone, var(--hraness-marketing-ink)) 6%, transparent)"
     },
-    "background-image": {
-      "default": "none",
-      "@media (forced-colors: active)": "none"
-    },
-    "background-position": {
-      "default": "0% 0%",
-      "@media (forced-colors: active)": "0% 0%"
-    },
-    "background-size": {
-      "default": "auto auto",
-      "@media (forced-colors: active)": "auto auto"
-    },
-    "background-repeat": {
-      "default": "repeat",
-      "@media (forced-colors: active)": "repeat"
-    },
-    "background-origin": {
-      "default": "padding-box",
-      "@media (forced-colors: active)": "padding-box"
-    },
-    "background-clip": {
-      "default": "border-box",
-      "@media (forced-colors: active)": "border-box"
-    },
-    "background-attachment": {
-      "default": "scroll",
-      "@media (forced-colors: active)": "scroll"
-    },
-    "box-shadow": {
-      "default": "var(--hraness-marketing-surface-shadow)",
-      ":hover": "0 0 0 1px var(--hraness-marketing-line-strong)",
-      "@media (forced-colors: active)": "none"
-    },
-    "color": {
-      "default": "inherit",
-      "@media (forced-colors: active)": "CanvasText"
-    },
+    "color": "var(--hraness-marketing-ink)",
     "text-decoration": "none",
-    outline: { default: null, ":focus-visible": "2px solid var(--hraness-marketing-accent)" },
-    "outline-offset": { default: null, ":focus-visible": "2px" }
+    "box-shadow": "none",
+    "outline": {
+      "default": null,
+      ":focus-visible": "2px solid var(--hraness-marketing-ink)"
+    },
+    "outline-offset": {
+      "default": null,
+      ":focus-visible": "-2px"
+    }
   },
   "related__card_mark": {
+    "--hraness-foil-text-base": "var(--hraness-marketing-related-tone, var(--hraness-marketing-ink))",
+    "color": "var(--hraness-marketing-related-tone, var(--hraness-marketing-ink))",
     "flex-grow": "0",
     "flex-shrink": "0",
     "flex-basis": "auto",
     "display": "inline-flex",
     "align-items": "center",
     "justify-content": "center",
-    "inline-size": "2.75rem",
-    "block-size": "2.75rem"
+    "inline-size": "1.75rem",
+    "block-size": "1.75rem",
+    "margin-block-start": "0.1rem"
   },
   "related__card_text": {
     "display": "grid",
-    "gap": "0.25rem",
+    "gap": "0.05rem",
     "min-inline-size": "0"
+  },
+  "related__card_heading": {
+    "display": "flex",
+    "flex-wrap": "wrap",
+    "align-items": "baseline",
+    "column-gap": "0.6rem"
   },
   "related__card_name": {
     "margin": "0",
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "1.25rem",
-    "font-weight": "700",
+    "font-size": "1.0625rem",
+    "font-weight": "600",
     "letter-spacing": "-0.01em",
-    "line-height": "1.25",
+    "line-height": "1.35",
+    "overflow-wrap": "anywhere",
+    "text-decoration-line": "underline",
+    "text-decoration-style": "dotted",
+    "text-decoration-color": "color-mix(in srgb, currentColor 40%, transparent)",
+    "text-decoration-thickness": "1px",
+    "text-underline-offset": "0.2em"
+  },
+  "related__card_domain": {
+    "color": "var(--hraness-marketing-muted)",
+    "font-family": "var(--hraness-marketing-text-font)",
+    "font-size": "0.8125rem",
+    "font-weight": "400",
+    "line-height": "1.5",
     "overflow-wrap": "anywhere"
   },
   "related__card_role": {
     "margin": "0",
-    "color": "var(--hraness-marketing-ink)",
+    "color": "var(--hraness-marketing-muted)",
     "font-family": "var(--hraness-marketing-text-font)",
-    "font-size": "1.0625rem",
+    "font-size": "0.9375rem",
     "line-height": "1.45",
+    "overflow-wrap": "anywhere",
     "text-wrap": "pretty"
+  },
+  "relatedToneRose": {
+    "--hraness-marketing-related-tone": {
+      "default": "var(--hraness-studio-rose)",
+      "@media (forced-colors: active)": "CanvasText"
+    }
+  },
+  "relatedToneIndigo": {
+    "--hraness-marketing-related-tone": {
+      "default": "var(--hraness-studio-indigo)",
+      "@media (forced-colors: active)": "CanvasText"
+    }
+  },
+  "relatedToneAmber": {
+    "--hraness-marketing-related-tone": {
+      "default": "var(--hraness-studio-amber)",
+      "@media (forced-colors: active)": "CanvasText"
+    }
+  },
+  "relatedToneEmerald": {
+    "--hraness-marketing-related-tone": {
+      "default": "var(--hraness-studio-emerald)",
+      "@media (forced-colors: active)": "CanvasText"
+    }
   },
   "trust": {
     "color": "var(--hraness-marketing-ink)",
@@ -2689,10 +2705,15 @@ export const marketingStyles = stylex.create({
   },
   "quote__link": {
     "color": "inherit",
-    "text-decoration": {
-      "default": "none",
-      ":hover": "underline"
-    }
+    "text-decoration-line": "underline",
+    "text-decoration-style": "dotted",
+    "text-decoration-color": {
+      "default": "color-mix(in srgb, currentColor 40%, transparent)",
+      ":hover": "currentColor",
+      ":focus-visible": "currentColor"
+    },
+    "text-decoration-thickness": "1px",
+    "text-underline-offset": "0.2em"
   },
   "plan_grid": {
     "display": "grid",
@@ -4276,6 +4297,7 @@ const recipes = {
   "hraness-marketing-hero__name": { "default": marketingStyles.hero__name },
   "hraness-marketing-hero__heading": { "default": marketingStyles.hero__heading },
   "hraness-marketing-hero__summary": { "default": marketingStyles.hero__summary },
+  "hraness-marketing-hero__install": { "default": marketingStyles.hero__install },
   "hraness-marketing-hero__example": { "default": marketingStyles.hero__example },
   "hraness-marketing-hero__actions": { "default": marketingStyles.hero__actions, "start": marketingStyles.hero__actionsStart },
   "hraness-marketing-hero__boundary": { "default": marketingStyles.hero__boundary },
@@ -4302,7 +4324,8 @@ const recipes = {
   "hraness-marketing-stats__source": { "default": marketingStyles.stats__source },
   "hraness-marketing-stats__value": { "default": marketingStyles.stats__value },
   "hraness-marketing-pillars": { "default": marketingStyles.pillars },
-  "hraness-marketing-pillars__item": { "default": marketingStyles.pillars__item, "later": marketingStyles.pillars__itemLater },
+  "hraness-marketing-pillars__item": { "default": marketingStyles.pillars__item, "later": marketingStyles.pillars__itemLater, "benefit": marketingStyles.pillars__benefit },
+  "hraness-marketing-pillars__icon": { "default": marketingStyles.pillars__icon },
   "hraness-marketing-pillars__label": { "default": marketingStyles.pillars__label },
   "hraness-marketing-pillars__summary": { "default": marketingStyles.pillars__summary },
   "hraness-marketing-proof-frame": { "default": marketingStyles.proof_frame },
@@ -4352,7 +4375,12 @@ const recipes = {
   "hraness-marketing-related__label": { "default": marketingStyles.related__label },
   "hraness-marketing-related__heading": { "default": marketingStyles.related__heading },
   "hraness-marketing-related__summary": { "default": marketingStyles.related__summary },
-  "hraness-marketing-related__group": { "default": marketingStyles.related__group },
+  "hraness-marketing-related__groups": { "default": marketingStyles.related__groups },
+  "hraness-marketing-related__list": { "default": marketingStyles.related__list },
+  "hraness-marketing-related__item": { "default": marketingStyles.related__item },
+  "hraness-marketing-related__card-heading": { "default": marketingStyles.related__card_heading },
+  "hraness-marketing-related__card-domain": { "default": marketingStyles.related__card_domain },
+  "hraness-marketing-related__group": { "default": marketingStyles.related__group, "neutral": marketingStyles.related__group, "rose": [marketingStyles.related__group, marketingStyles.relatedToneRose], "indigo": [marketingStyles.related__group, marketingStyles.relatedToneIndigo], "amber": [marketingStyles.related__group, marketingStyles.relatedToneAmber], "emerald": [marketingStyles.related__group, marketingStyles.relatedToneEmerald] },
   "hraness-marketing-related__group-header": { "default": marketingStyles.related__group_header },
   "hraness-marketing-related__group-heading": { "default": marketingStyles.related__group_heading },
   "hraness-marketing-related__group-summary": { "default": marketingStyles.related__group_summary },
@@ -4462,18 +4490,19 @@ const gridColumns = {
 
 /** Explicit finite columns compose static atoms, including the existing media rules. */
 export function marketingColumnClassName(
-  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list" | "hraness-marketing-card-row" | "hraness-marketing-primitives__list" | "hraness-marketing-interface-grid" | "hraness-marketing-trust-grid",
+  hook: "hraness-marketing-facts" | "hraness-marketing-pillars" | "hraness-marketing-stats__list" | "hraness-marketing-card-row" | "hraness-marketing-primitives__list" | "hraness-marketing-interface-grid" | "hraness-marketing-trust-grid" | "hraness-marketing-related__list",
   caller: string | undefined,
   columns: MarketingColumnCount | undefined,
+  presentation: "default" | "benefits" = "default",
 ): string {
   if (columns !== undefined && columns !== 1 && columns !== 2 && columns !== 3 && columns !== 4) {
     throw new RangeError("Marketing columns must be 1, 2, 3, or 4 when specified.");
   }
   const columnRecipe = columns === undefined ? undefined
     : (hook === "hraness-marketing-pillars" ? pillarColumns
-      : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" ? gridColumns
+      : hook === "hraness-marketing-card-row" || hook === "hraness-marketing-primitives__list" || hook === "hraness-marketing-interface-grid" || hook === "hraness-marketing-trust-grid" || hook === "hraness-marketing-related__list" ? gridColumns
         : factColumns)[columns];
-  return [hook, stylex.props(recipes[hook].default, columnRecipe).className, caller]
+  return [hook, stylex.props(recipes[hook].default, columnRecipe, hook === "hraness-marketing-pillars" && presentation === "benefits" && marketingStyles.pillarsBenefits).className, caller]
     .filter((value) => value !== undefined && value.length > 0).join(" ");
 }
 

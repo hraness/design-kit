@@ -6,7 +6,7 @@ export const productMarketingCoverage = [
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
   ["MarketingMain", ".hraness-marketing-main", 1],
   ["sticky sibling", "[data-hraness-sticky]", 1],
-  ["MarketingCardRow", ".hraness-marketing-card-row", 3],
+  ["MarketingCardRow", ".hraness-marketing-card-row", 1],
   ["MarketingCard", ".hraness-marketing-card", 2],
   ["MarketingCardArt", ".hraness-marketing-card__art", 2],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
@@ -41,6 +41,9 @@ export const productMarketingCoverage = [
   ["MarketingMaker", ".hraness-marketing-maker", 1],
   ["MarketingRelated", ".hraness-marketing-related", 1],
   ["related group", ".hraness-marketing-related__group", 2],
+  ["related groups", ".hraness-marketing-related__groups", 1],
+  ["related lists", ".hraness-marketing-related__list", 2],
+  ["related domain", ".hraness-marketing-related__card-domain", 1],
   ["related group heading", ".hraness-marketing-related__group-heading", 2],
   ["related group summary", ".hraness-marketing-related__group-summary", 1],
   ["related card", ".hraness-marketing-related__card", 3],
@@ -174,12 +177,12 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
         portrait={<svg data-marketing-oracle="maker-portrait" viewBox="0 0 24 24" aria-label="Illustrated portrait"><circle cx="12" cy="12" r="10" /></svg>}>
         <p data-marketing-oracle="maker-first">First biography paragraph.</p><p data-marketing-oracle="maker-last">Last biography paragraph.</p>
       </MarketingMaker>
-      <MarketingRelated heading="The rest of the stack." headingId="related" label="Related" summary="Sibling releases, one line each." groups={[
-        { heading: "Sibling tools", headingId: "related-tools", items: [
+      <MarketingRelated heading="Other tools from our studio" headingId="related" groups={[
+        { heading: "Relationships", headingId: "related-tools", tone: "rose", items: [
           { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><path d="M4 4h16v16H4z" /></svg>, href: "#fixture", name: "Ledger", relationship: "Ledger keeps the receipt Relay writes.", role: "A local receipt store" },
-          { href: "#interfaces", mark: fixtureMark, name: "Index", role: "A local search index" },
+          { href: "#interfaces", mark: fixtureMark, name: "Index", domain: "index.example", role: "A local search index" },
         ] },
-        { heading: "Shared infrastructure", headingId: "related-infra", summary: "One capability layer under every product.", items: [
+        { heading: "Knowledge", headingId: "related-infra", tone: "indigo", summary: "One capability layer under every product.", items: [
           { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="9" /></svg>, href: "#fixture", name: "Conduit", relationship: "Conduit carries the receipts every sibling produces.", role: "A typed job transport" },
         ] },
       ]} />

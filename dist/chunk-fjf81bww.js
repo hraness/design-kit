@@ -1,3 +1,28 @@
+import {
+  highlightCode
+} from "./chunk-he8eznb1.js";
+
+// src/react/syntax-code.tsx
+import { jsx } from "react/jsx-runtime";
+function SyntaxCode({
+  className,
+  code,
+  language,
+  styles
+}) {
+  const highlighted = highlightCode(code, language, styles === undefined ? {} : {
+    styles
+  });
+  const classes = className === undefined ? highlighted.className : `${highlighted.className} ${className}`;
+  return /* @__PURE__ */ jsx("code", {
+    className: classes,
+    "data-language": highlighted.language,
+    dangerouslySetInnerHTML: {
+      __html: highlighted.html
+    }
+  });
+}
+
 // src/react/platform-install.stylex.ts
 import * as stylex from "@stylexjs/stylex";
 var ink = "var(--hraness-marketing-ink, var(--foreground, CanvasText))";
@@ -118,11 +143,12 @@ var platformInstallStyles = {
   },
   command: {
     kWkggS: "xvpcapb x9yvj25",
-    kVAM5u: "x1ls9zlr x1w1tqly",
+    kVAM5u: "xtxfw9o x1w1tqly",
     kaIpWk: "x1yt6v20",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
     kB7OPa: "x9f619",
+    kGVxlE: "x1s13key xwaqzdf",
     k1xSpc: "xrvj5dj",
     k7Eaqz: "xeuugli",
     kVQacm: "xb3r6kr",
@@ -365,4 +391,4 @@ function platformInstallClassName(parts, caller) {
   return [...hookNames, atoms, caller].filter(Boolean).join(" ");
 }
 
-export { platformInstallClassName };
+export { SyntaxCode, platformInstallClassName };

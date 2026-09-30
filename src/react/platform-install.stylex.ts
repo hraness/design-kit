@@ -156,11 +156,12 @@ export const platformInstallStyles = stylex.create({
   },
   command: {
     backgroundColor: { default: surface, [forced]: "Canvas" },
-    borderColor: { default: line, [forced]: "CanvasText" },
+    borderColor: { default: `color-mix(in srgb, ${focusRing} 34%, ${line})`, [forced]: "CanvasText" },
     borderRadius: "0.75rem",
     borderStyle: "solid",
     borderWidth: "1px",
     boxSizing: "border-box",
+    boxShadow: { default: `0 3px 16px color-mix(in srgb, ${focusRing} 7%, transparent)`, [forced]: "none" },
     display: "grid",
     minInlineSize: 0,
     overflow: "hidden",

@@ -247,8 +247,21 @@ try {
             assert.equal(await tab.locator("#showcase [role=tabpanel]").getAttribute("data-hkm-animated"), "", `${label}: transitions turn on after the first mode change`);
             assert.equal(await tab.locator("#showcase [role=tabpanel]").getAttribute("data-hkm-from"), "plain", `${label}: the stage knows the previous mode`);
             assert.match(await tab.locator("#showcase .hkm-showcase-status").innerText(), /Showing marked/u, `${label}: the live status follows the mode`);
+            const initialStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
             await tab.locator("#steps").getByRole("button", { name: "Next" }).click();
-            assert.match(await tab.locator("#steps .hkm-showcase-status").innerText(), /Step 2 of 3/u, `${label}: Next advances the step`);
+            assert.match(await tab.locator("#steps .hkm-step-announcement").textContent() ?? "", /Step 2 of 3/u, `${label}: Next advances the accessible step announcement`);
+            assert.equal(await tab.locator('#steps [role="tabpanel"]:not([aria-hidden="true"])').count(), 1, `${label}: one active panel`);
+            assert.equal(await tab.locator('#steps [role="tabpanel"][inert]').count(), 2, `${label}: inactive panels stay inert`);
+            const nextStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
+            assert(Math.abs(initialStepHeight - nextStepHeight) < 1, `${label}: switching steps preserves the tallest-panel stage height`);
+            await tab.locator("#steps").getByRole("button", { name: "Next" }).click();
+            assert.match(await tab.locator("#steps .hkm-step-announcement").textContent() ?? "", /Step 3 of 3/u, `${label}: Next reaches the last step`);
+            const lastStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
+            assert(Math.abs(initialStepHeight - lastStepHeight) < 1, `${label}: the last step preserves the same stage height`);
+            const folder = await tab.locator('#steps [role="tab"][aria-selected="true"]').evaluate((node) => ({ top: getComputedStyle(node).borderTopLeftRadius, bottom: getComputedStyle(node).borderBottomLeftRadius, shadow: getComputedStyle(node).boxShadow }));
+            assert.equal(folder.top, "12px", `${label}: folder tab top corner`);
+            assert.equal(folder.bottom, "0px", `${label}: folder tab joins the stage`);
+            assert.equal(folder.shadow, "none", `${label}: folder tab has no inset underline`);
 
             if (screenshots !== undefined) await tab.screenshot({ path: join(screenshots, `mockups-${scheme}-${String(width)}.png`), fullPage: true });
             cases += 1;

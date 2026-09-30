@@ -512,10 +512,10 @@ export type ComparisonRow = Readonly<{
 
 const COMPARISON_TEXT = { yes: "Yes", no: "No", partial: "Partly" } as const;
 
-function ComparisonGlyph({ kind }: Readonly<{ kind: "yes" | "no" | "partial" }>) {
+export function ComparisonGlyph({ kind, className }: Readonly<{ kind: "yes" | "no" | "partial"; className?: string }>) {
   const path = kind === "yes" ? "M3.5 8.5l3 3 6-7" : kind === "no" ? "M4.5 4.5l7 7m0-7l-7 7" : "M4 8h8";
   return (
-    <svg aria-hidden="true" className="plain-publication__comparison-glyph" focusable="false" height="16" viewBox="0 0 16 16" width="16">
+    <svg aria-hidden="true" className={joinClasses("plain-publication__comparison-glyph", className)} focusable="false" height="16" viewBox="0 0 16 16" width="16">
       <path d={path} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" />
     </svg>
   );

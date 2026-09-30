@@ -63,6 +63,6 @@ export const productMarketingCspGrids = [
   { selector: ".strict-capped-primitives > ol", items: 4, desktopColumns: 2, narrowColumns: 1 },
   { selector: ".strict-capped-trust > dl", items: 4, desktopColumns: 2, narrowColumns: 1 },
   { selector: ".strict-capped-interfaces > div", items: 4, desktopColumns: 2, narrowColumns: 1 },
-  { selector: ".strict-capped-related > .hraness-marketing-card-row", items: 4, desktopColumns: 2, narrowColumns: 1 },
-  { selector: ".strict-capped-groups .hraness-marketing-card-row", items: 4, desktopColumns: 2, narrowColumns: 1 },
+  { selector: ".strict-capped-related > .hraness-marketing-related__list", items: 4, desktopColumns: 2, narrowColumns: 1 },
+  { selector: ".strict-capped-groups .hraness-marketing-related__list", items: 4, desktopColumns: 2, narrowColumns: 1 },
 ] as const;

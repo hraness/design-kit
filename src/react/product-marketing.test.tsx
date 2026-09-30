@@ -89,9 +89,10 @@ test("composed card grids retain content and semantics while forwarding finite c
     expect(trust.querySelectorAll("dt")).toHaveLength(4);
     expect(trust.querySelectorAll("dd")).toHaveLength(4);
     expect(interfaces.children).toHaveLength(4);
-    const rows = [...document.querySelectorAll(".hraness-marketing-card-row")];
-    const expected = parseHTML(renderToStaticMarkup(<><MarketingCardRow columns={columns} /><MarketingCardRow columns={2} /></>)).document;
-    expect(rows.map(row => row.className)).toEqual([...expected.querySelectorAll(".hraness-marketing-card-row")].map(row => row.className));
+    const rows = [...document.querySelectorAll(".hraness-marketing-related__list")];
+    const expected = parseHTML(renderToStaticMarkup(<><MarketingRelated columns={columns} heading="Products" headingId="products-one" items={related} /><MarketingRelated columns={2} heading="Products" headingId="products-two" items={related} /></>)).document;
+    expect(rows.map(row => row.className)).toEqual([...expected.querySelectorAll(".hraness-marketing-related__list")].map(row => row.className));
+    expect(rows.every(row => row.tagName === "UL" && [...row.children].every(item => item.tagName === "LI"))).toBe(true);
     expect(rows.map(row => row.getAttribute("aria-label"))).toEqual(["Default", "Override"]);
     expect(rows.every(row => row.querySelectorAll("a").length === 4)).toBe(true);
   }
@@ -374,13 +375,16 @@ test("the related-products composition groups sibling tiers under their own head
 
   expect(html).toContain('<section aria-labelledby="related-title"');
   expect(html).toContain('data-hraness-marketing="related"');
-  const groups = [...html.matchAll(/<div class="[^"]*hraness-marketing-related__group(?!-)[^"]*">/gu)];
+  const { document } = parseHTML(html);
+  const groups = [...document.querySelectorAll(".hraness-marketing-related__group")];
   expect(groups).toHaveLength(2);
+  expect(groups.map((group) => group.getAttribute("aria-labelledby"))).toEqual(["related-tools", "related-infra"]);
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-related__group-heading" id="related-tools">Sibling tools</h3>'));
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-related__group-heading" id="related-infra">Shared infrastructure</h3>'));
   expect(html).toContain("One capability layer under every product.");
-  const rows = [...html.matchAll(/<div aria-label="([^"]+)" class="[^"]*hraness-marketing-card-row[^"]*"/gu)];
-  expect(rows.map((match) => match[1])).toEqual(["Sibling tools", "Shared infrastructure"]);
+  const lists = [...document.querySelectorAll(".hraness-marketing-related__list")];
+  expect(lists).toHaveLength(2);
+  expect(lists.every((list) => list.tagName === "UL")).toBe(true);
   const cards = [...html.matchAll(/<a class="[^"]*hraness-marketing-related__card[^"]*" data-foil="" data-hraness-marketing="card" href="([^"]+)"/gu)];
   expect(cards.map((match) => match[1])).toEqual(["https://relay.example", "https://conduit.example"]);
   // Card names nest under their tier heading.
@@ -696,4 +700,37 @@ test("the in-flow site footer omits empty navigation and keeps the landmark dist
   expect(html).not.toContain("<nav");
   expect(html).toContain('href="/"');
   expect(html).toMatch(marketingMarkupPattern('<span class="hraness-marketing-footer__name">Wordcell</span>'));
+});
+
+
+test("studio products carry the category tone, domain and compact decorative mark", () => {
+  const { document } = parseHTML(renderToStaticMarkup(
+    <MarketingRelated heading="Other tools from our studio" headingId="studio" groups={[
+      { heading: "Relationships", headingId: "relationships", tone: "rose", items: [
+        { href: "https://peopleblade.com", name: "PeopleBlade", domain: "peopleblade.com", mark: "/peopleblade.svg", role: "A private contact book" },
+      ] },
+    ]} />,
+  ));
+  expect(document.querySelector(".hraness-marketing-related__group")?.getAttribute("data-tone")).toBe("rose");
+  expect(document.querySelector(".hraness-marketing-related__card-domain")?.textContent).toBe("peopleblade.com");
+  expect(document.querySelector(".hraness-marketing-related__card-mark img")?.getAttribute("width")).toBe("28");
+  expect(document.querySelectorAll(".hraness-marketing-related__item > a")).toHaveLength(1);
+  expect(document.querySelector(".hraness-marketing-related__label, .hraness-marketing-related__summary")).toBeNull();
+});
+
+test("benefit pillars use concise terms with optional decorative icons", () => {
+  const html = renderToStaticMarkup(<MarketingPillars ariaLabel="Benefits" columns={3} presentation="benefits" pillars={[{ label: "Your data", summary: "Keep a portable local copy.", icon: <svg /> }]} />);
+  const { document } = parseHTML(html);
+  expect(document.querySelector("dl")?.getAttribute("data-presentation")).toBe("benefits");
+  expect(document.querySelector("dt")?.textContent).toBe("Your data");
+  expect(document.querySelector("dd")?.textContent).toBe("Keep a portable local copy.");
+  expect(document.querySelector("dt span")?.getAttribute("aria-hidden")).toBe("true");
+  expect(document.querySelectorAll("[style]")).toHaveLength(0);
+});
+
+test("install-forward heroes place the command before actions and omit empty names", () => {
+  const { document } = parseHTML(renderToStaticMarkup(<ProductHero heading="Start locally" headingId="install-hero" name="" summary="One command to begin." install={<code>relay install</code>} actions={[{ href: "/docs", label: "Docs" }]} />));
+  expect(document.querySelector(".hraness-marketing-hero__name")).toBeNull();
+  expect(document.querySelector(".hraness-marketing-hero__install")?.textContent).toBe("relay install");
+  expect(document.querySelector(".hraness-marketing-hero__summary")?.nextElementSibling?.classList.contains("hraness-marketing-hero__install")).toBe(true);
 });

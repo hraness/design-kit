@@ -11,6 +11,7 @@ import {
   platformMark,
   type PlatformId,
 } from "../platforms.js";
+import { SyntaxCode } from "./syntax-code.js";
 import { platformInstallClassName as cx } from "./platform-install.stylex.js";
 
 /** Another way to install on the same platform, such as npm or Homebrew. */
@@ -211,7 +212,7 @@ function CommandBlock({
       </div>
       {/* Focusable so keyboard users can scroll a long command sideways. */}
       <pre aria-label={subject} className={cx(["pre"])} ref={preRef} tabIndex={0}>
-        <code className={cx(["code"])}>{command}</code>
+        <SyntaxCode className={cx(["code"])} code={command} language="shell" styles="classes" />
       </pre>
     </div>
   );
