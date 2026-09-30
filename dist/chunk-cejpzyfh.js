@@ -1,5 +1,6 @@
 // src/launch.ts
 var launchBeatParts = ["what", "does", "how", "who", "vision", "limits", "status"];
+var launchPostOnlyParts = Object.freeze(["limits"]);
 var LAUNCH_LIMITS = Object.freeze({
   beatsMin: 7,
   beatsMax: 10,
@@ -132,6 +133,15 @@ function visualKey(visual) {
       return `diagram:${visual.src}`;
   }
 }
+function isSocialBeat(beat) {
+  return beat.social !== false && !launchPostOnlyParts.includes(beat.part);
+}
+function socialBeats(beats) {
+  return beats.filter(isSocialBeat);
+}
+function socialPostText(beat) {
+  return (beat.socialPost ?? beat.post).trim();
+}
 function beatShapeProblems(beats) {
   const problems = [];
   if (beats.length < LAUNCH_LIMITS.beatsMin || beats.length > LAUNCH_LIMITS.beatsMax) {
@@ -159,6 +169,12 @@ function beatShapeProblems(beats) {
     if (visuals.has(key))
       problems.push(`${label} reuses another beat's visual; every beat needs its own.`);
     visuals.add(key);
+    if (beat.social === false && (beat.part === "what" || beat.part === "status")) {
+      problems.push(`${label} is the ${beat.part === "what" ? "first" : "last"} social post; it cannot be marked social: false.`);
+    }
+    if (beat.socialPost !== undefined && !isSocialBeat(beat)) {
+      problems.push(`${label} never reaches a social post, so it cannot carry a socialPost.`);
+    }
     if (beat.detailHref !== undefined && !/^(\/(?!\/)|https:\/\/)/u.test(beat.detailHref)) {
       problems.push(`${label} detailHref must be a site path or an https URL.`);
     }
@@ -199,14 +215,25 @@ function beatTextProblems(beat) {
   if (beat.visual.kind === "mockup" && !/\billustration\b/iu.test(beat.alt)) {
     problems.push(`${label} shows a mockup, so its alt text says "Illustration".`);
   }
+  if (beat.socialPost !== undefined) {
+    if (beat.socialPost.trim().length === 0)
+      problems.push(`${label} socialPost is empty; leave it out to use the post.`);
+    if (characterLength(beat.socialPost) > LAUNCH_LIMITS.post)
+      problems.push(`${label} socialPost is longer than ${LAUNCH_LIMITS.post} characters.`);
+    if (/\b(above|below|next post|previous post|as mentioned|see thread)\b/iu.test(beat.socialPost)) {
+      problems.push(`${label} socialPost refers to another post; each post stands alone.`);
+    }
+    problems.push(...launchCopyProblems(beat.socialPost, `${label} socialPost`));
+  }
   for (const [field, text] of [["headline", beat.headline], ["post", beat.post], ["alt", beat.alt]]) {
     problems.push(...launchCopyProblems(text, `${label} ${field}`));
   }
-  if (beat.part === "what" && beat.post.includes("?"))
-    problems.push(`${label} is the first post; it states what the product does and asks nothing.`);
   if (beat.part === "what") {
+    const first = socialPostText(beat);
+    if (first.includes("?"))
+      problems.push(`${label} is the first post; it states what the product does and asks nothing.`);
     for (const pattern of HOOK_PATTERNS)
-      if (pattern.test(beat.post))
+      if (pattern.test(first))
         problems.push(`${label} opens with a teaser; state what the product does.`);
   }
   return problems;
@@ -252,7 +279,10 @@ function resolveLaunchBeats(beats, facts, options = {}) {
       ...beat,
       headline: fill(beat.headline, "headline"),
       post: fill(beat.post, "post"),
-      alt: fill(beat.alt, "alt")
+      alt: fill(beat.alt, "alt"),
+      ...beat.socialPost === undefined ? {} : {
+        socialPost: fill(beat.socialPost, "socialPost")
+      }
     });
   });
   if (problems.length > 0)
@@ -277,13 +307,14 @@ function assertCanonicalUrl(url) {
 function buildSocialKit(beats, messaging, release, canonicalUrl) {
   assertLaunchBeats(beats);
   assertCanonicalUrl(canonicalUrl);
-  const unresolved = beats.filter((beat) => launchPlaceholders(`${beat.headline} ${beat.post} ${beat.alt}`).length > 0);
+  const unresolved = beats.filter((beat) => launchPlaceholders(`${beat.headline} ${beat.post} ${beat.alt} ${beat.socialPost ?? ""}`).length > 0);
   if (unresolved.length > 0) {
     throw new LaunchKitError(unresolved.map((beat) => `Beat "${beat.id}" still has placeholders; run resolveLaunchBeats first.`));
   }
-  const posts = beats.map((beat, index) => index === beats.length - 1 ? `${beat.post.trim()}
+  const cut = socialBeats(beats);
+  const posts = cut.map((beat, index) => index === cut.length - 1 ? `${socialPostText(beat)}
 
-${canonicalUrl}` : beat.post.trim());
+${canonicalUrl}` : socialPostText(beat));
   const sources = {
     "productHunt.tagline": "messaging.tagline",
     "productHunt.description": "messaging.meta",
@@ -291,16 +322,15 @@ ${canonicalUrl}` : beat.post.trim());
     status: "release.status",
     url: "canonicalUrl"
   };
-  beats.forEach((beat, index) => {
+  cut.forEach((beat, index) => {
     for (const channel of ["x", "bluesky", "threads"])
       sources[`${channel}.${index}`] = `beat:${beat.id}`;
   });
-  const [first, ...rest] = beats;
-  const linkedin = [first?.post.trim() ?? "", ...rest.slice(0, -1).map((beat) => beat.post.trim()), posts.at(-1) ?? ""].join(`
+  const linkedin = posts.join(`
 
 `);
-  sources.linkedin = beats.map((beat) => `beat:${beat.id}`).join(",");
-  const showHnFacts = [messaging.tagline, ...beats.filter((beat) => beat.part !== "vision").map((beat) => beat.post.trim()), `${release.status}. ${canonicalUrl}`];
+  sources.linkedin = cut.map((beat) => `beat:${beat.id}`).join(",");
+  const showHnFacts = [messaging.tagline, ...cut.filter((beat) => beat.part !== "vision").map(socialPostText), `${release.status}. ${canonicalUrl}`];
   return Object.freeze({
     x: Object.freeze([...posts]),
     bluesky: Object.freeze([...posts]),
@@ -337,6 +367,8 @@ function assertLaunchKit(beats, kit, options) {
         throw error;
     }
   }
+  const cut = socialBeats(beats);
+  const postOnly = beats.filter((beat) => !isSocialBeat(beat)).map((beat) => [beat.id, beat.post.trim()]).filter(([, text]) => text.length > 0);
   const forbidden = (options.forbiddenNames ?? []).filter((name) => name.trim().length > 0);
   const forbiddenPattern = forbidden.length === 0 ? null : wordPattern(forbidden);
   const checkText = (text, label) => {
@@ -353,13 +385,17 @@ function assertLaunchKit(beats, kit, options) {
       if (TRACKING_PARAM.test(match[0]))
         problems.push(`${label} links with tracking parameters.`);
     }
+    for (const [id, post] of postOnly) {
+      if (text.includes(post))
+        problems.push(`${label} carries beat "${id}", which stays in the launch post; social posts carry no caveats or limits.`);
+    }
   };
   const threads = [["x", kit.x, xPostLength, LAUNCH_LIMITS.x], ["bluesky", kit.bluesky, blueskyPostLength, LAUNCH_LIMITS.bluesky], ["threads", kit.threads, characterLength, LAUNCH_LIMITS.threads]];
   for (const [channel, posts, measure, limit] of threads) {
     if (posts.length === 0)
       problems.push(`The ${channel} thread is empty.`);
-    if (posts.length > beats.length)
-      problems.push(`The ${channel} thread has more posts than beats.`);
+    if (posts.length > cut.length)
+      problems.push(`The ${channel} thread has more posts than social beats.`);
     posts.forEach((post, index) => {
       const label = `${channel} post ${index + 1}`;
       const length = measure(post);
@@ -407,4 +443,4 @@ function assertLaunchKit(beats, kit, options) {
     throw new LaunchKitError([...new Set(problems)]);
 }
 
-export { launchBeatParts, LAUNCH_LIMITS, LAUNCH_BANNED_WORDS, LAUNCH_INTERNAL_WORDS, LaunchKitError, launchCopyProblems, xPostLength, blueskyPostLength, characterLength, assertLaunchBeats, launchPlaceholders, resolveLaunchBeats, buildSocialKit, assertLaunchKit };
+export { launchBeatParts, launchPostOnlyParts, LAUNCH_LIMITS, LAUNCH_BANNED_WORDS, LAUNCH_INTERNAL_WORDS, LaunchKitError, launchCopyProblems, xPostLength, blueskyPostLength, characterLength, isSocialBeat, socialBeats, socialPostText, assertLaunchBeats, launchPlaceholders, resolveLaunchBeats, buildSocialKit, assertLaunchKit };

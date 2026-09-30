@@ -11,6 +11,13 @@
 export const launchBeatParts = ["what", "does", "how", "who", "vision", "limits", "status"] as const;
 export type LaunchBeatPart = (typeof launchBeatParts)[number];
 
+/**
+ * Parts that stay in the launch post and never reach a social post or the fact
+ * sheet. Caveats, limits, negative findings, and required disclaimers belong in
+ * the launch post, docs, and site; social posts carry claims only.
+ */
+export const launchPostOnlyParts: readonly LaunchBeatPart[] = Object.freeze(["limits"]);
+
 export type LaunchVisual =
   | Readonly<{ kind: "mockup"; id: string; state: Readonly<Record<string, string>> }>
   | Readonly<{ kind: "clip"; scene: string }>
@@ -31,6 +38,17 @@ export type LaunchBeat = Readonly<{
   facts?: readonly string[];
   /** A companion post that goes deeper. */
   detailHref?: string;
+  /**
+   * The social wording of this beat, when `post` keeps a caveat that makes it
+   * accurate in the launch post. It must be accurate on its own. May hold
+   * `{fact}` placeholders.
+   */
+  socialPost?: string;
+  /**
+   * `false` keeps this beat in the launch post only, for a beat that is a
+   * caveat, limit, or disclaimer. `limits` beats never reach social posts.
+   */
+  social?: boolean;
 }>;
 
 /** One number, size, rate, or label, with where it came from. */
@@ -300,6 +318,21 @@ function visualKey(visual: LaunchVisual): string {
   }
 }
 
+/** True when a beat reaches the social kit: not a `limits` beat and not marked `social: false`. */
+export function isSocialBeat(beat: LaunchBeat): boolean {
+  return beat.social !== false && !launchPostOnlyParts.includes(beat.part);
+}
+
+/** The beats a social kit is cut from, in order. */
+export function socialBeats(beats: readonly LaunchBeat[]): readonly LaunchBeat[] {
+  return beats.filter(isSocialBeat);
+}
+
+/** The text a beat contributes to social posts. */
+export function socialPostText(beat: LaunchBeat): string {
+  return (beat.socialPost ?? beat.post).trim();
+}
+
 function beatShapeProblems(beats: readonly LaunchBeat[]): string[] {
   const problems: string[] = [];
   if (beats.length < LAUNCH_LIMITS.beatsMin || beats.length > LAUNCH_LIMITS.beatsMax) {
@@ -322,6 +355,12 @@ function beatShapeProblems(beats: readonly LaunchBeat[]): string[] {
     const key = visualKey(beat.visual);
     if (visuals.has(key)) problems.push(`${label} reuses another beat's visual; every beat needs its own.`);
     visuals.add(key);
+    if (beat.social === false && (beat.part === "what" || beat.part === "status")) {
+      problems.push(`${label} is the ${beat.part === "what" ? "first" : "last"} social post; it cannot be marked social: false.`);
+    }
+    if (beat.socialPost !== undefined && !isSocialBeat(beat)) {
+      problems.push(`${label} never reaches a social post, so it cannot carry a socialPost.`);
+    }
     if (beat.detailHref !== undefined && !/^(\/(?!\/)|https:\/\/)/u.test(beat.detailHref)) {
       problems.push(`${label} detailHref must be a site path or an https URL.`);
     }
@@ -354,12 +393,21 @@ function beatTextProblems(beat: LaunchBeat): string[] {
   if (beat.visual.kind === "mockup" && !/\billustration\b/iu.test(beat.alt)) {
     problems.push(`${label} shows a mockup, so its alt text says "Illustration".`);
   }
+  if (beat.socialPost !== undefined) {
+    if (beat.socialPost.trim().length === 0) problems.push(`${label} socialPost is empty; leave it out to use the post.`);
+    if (characterLength(beat.socialPost) > LAUNCH_LIMITS.post) problems.push(`${label} socialPost is longer than ${LAUNCH_LIMITS.post} characters.`);
+    if (/\b(above|below|next post|previous post|as mentioned|see thread)\b/iu.test(beat.socialPost)) {
+      problems.push(`${label} socialPost refers to another post; each post stands alone.`);
+    }
+    problems.push(...launchCopyProblems(beat.socialPost, `${label} socialPost`));
+  }
   for (const [field, text] of [["headline", beat.headline], ["post", beat.post], ["alt", beat.alt]] as const) {
     problems.push(...launchCopyProblems(text, `${label} ${field}`));
   }
-  if (beat.part === "what" && beat.post.includes("?")) problems.push(`${label} is the first post; it states what the product does and asks nothing.`);
   if (beat.part === "what") {
-    for (const pattern of HOOK_PATTERNS) if (pattern.test(beat.post)) problems.push(`${label} opens with a teaser; state what the product does.`);
+    const first = socialPostText(beat);
+    if (first.includes("?")) problems.push(`${label} is the first post; it states what the product does and asks nothing.`);
+    for (const pattern of HOOK_PATTERNS) if (pattern.test(first)) problems.push(`${label} opens with a teaser; state what the product does.`);
   }
   return problems;
 }
@@ -416,6 +464,7 @@ export function resolveLaunchBeats(
       headline: fill(beat.headline, "headline"),
       post: fill(beat.post, "post"),
       alt: fill(beat.alt, "alt"),
+      ...(beat.socialPost === undefined ? {} : { socialPost: fill(beat.socialPost, "socialPost") }),
     });
   });
   if (problems.length > 0) throw new LaunchKitError(problems);
@@ -435,10 +484,12 @@ function assertCanonicalUrl(url: string): void {
 }
 
 /**
- * Build the social kit from resolved beats: one post per beat on X, Bluesky,
- * and Threads, one LinkedIn post, Product Hunt fields from the messaging
- * record, and a fact sheet. The last post of each thread ends with the
- * canonical URL. Run `resolveLaunchBeats` first so every number comes from facts.
+ * Build the social kit from resolved beats: one post per social beat on X,
+ * Bluesky, and Threads, one LinkedIn post, Product Hunt fields from the
+ * messaging record, and a fact sheet. `limits` beats and beats marked
+ * `social: false` stay in the launch post; a beat's `socialPost` replaces its
+ * `post`. The last post of each thread ends with the canonical URL. Run
+ * `resolveLaunchBeats` first so every number comes from facts.
  */
 export function buildSocialKit(
   beats: readonly LaunchBeat[],
@@ -448,11 +499,12 @@ export function buildSocialKit(
 ): SocialKit {
   assertLaunchBeats(beats);
   assertCanonicalUrl(canonicalUrl);
-  const unresolved = beats.filter((beat) => launchPlaceholders(`${beat.headline} ${beat.post} ${beat.alt}`).length > 0);
+  const unresolved = beats.filter((beat) => launchPlaceholders(`${beat.headline} ${beat.post} ${beat.alt} ${beat.socialPost ?? ""}`).length > 0);
   if (unresolved.length > 0) {
     throw new LaunchKitError(unresolved.map((beat) => `Beat "${beat.id}" still has placeholders; run resolveLaunchBeats first.`));
   }
-  const posts = beats.map((beat, index) => (index === beats.length - 1 ? `${beat.post.trim()}\n\n${canonicalUrl}` : beat.post.trim()));
+  const cut = socialBeats(beats);
+  const posts = cut.map((beat, index) => (index === cut.length - 1 ? `${socialPostText(beat)}\n\n${canonicalUrl}` : socialPostText(beat)));
   const sources: Record<string, string> = {
     "productHunt.tagline": "messaging.tagline",
     "productHunt.description": "messaging.meta",
@@ -460,15 +512,14 @@ export function buildSocialKit(
     status: "release.status",
     url: "canonicalUrl",
   };
-  beats.forEach((beat, index) => {
+  cut.forEach((beat, index) => {
     for (const channel of ["x", "bluesky", "threads"] as const) sources[`${channel}.${index}`] = `beat:${beat.id}`;
   });
-  const [first, ...rest] = beats;
-  const linkedin = [first?.post.trim() ?? "", ...rest.slice(0, -1).map((beat) => beat.post.trim()), posts.at(-1) ?? ""].join("\n\n");
-  sources.linkedin = beats.map((beat) => `beat:${beat.id}`).join(",");
+  const linkedin = posts.join("\n\n");
+  sources.linkedin = cut.map((beat) => `beat:${beat.id}`).join(",");
   const showHnFacts = [
     messaging.tagline,
-    ...beats.filter((beat) => beat.part !== "vision").map((beat) => beat.post.trim()),
+    ...cut.filter((beat) => beat.part !== "vision").map(socialPostText),
     `${release.status}. ${canonicalUrl}`,
   ];
   return Object.freeze({
@@ -489,7 +540,8 @@ export function buildSocialKit(
 /**
  * Check a launch kit before it ships: channel limits, style rules, no install
  * call to action unless the release has a public install, the status label in
- * the last post, and the tagline and URL from their records.
+ * the last post, the tagline and URL from their records, and no text from a
+ * `limits` beat or a beat marked `social: false`.
  * Throws a `LaunchKitError` that lists every problem.
  */
 export function assertLaunchKit(beats: readonly LaunchBeat[], kit: SocialKit, options: LaunchKitOptions): void {
@@ -509,6 +561,8 @@ export function assertLaunchKit(beats: readonly LaunchBeat[], kit: SocialKit, op
       else throw error;
     }
   }
+  const cut = socialBeats(beats);
+  const postOnly = beats.filter((beat) => !isSocialBeat(beat)).map((beat) => [beat.id, beat.post.trim()] as const).filter(([, text]) => text.length > 0);
   const forbidden = (options.forbiddenNames ?? []).filter((name) => name.trim().length > 0);
   const forbiddenPattern = forbidden.length === 0 ? null : wordPattern(forbidden);
   const checkText = (text: string, label: string): void => {
@@ -523,6 +577,9 @@ export function assertLaunchKit(beats: readonly LaunchBeat[], kit: SocialKit, op
     for (const match of text.matchAll(SCHEME_URL)) {
       if (TRACKING_PARAM.test(match[0])) problems.push(`${label} links with tracking parameters.`);
     }
+    for (const [id, post] of postOnly) {
+      if (text.includes(post)) problems.push(`${label} carries beat "${id}", which stays in the launch post; social posts carry no caveats or limits.`);
+    }
   };
   const threads = [
     ["x", kit.x, xPostLength, LAUNCH_LIMITS.x],
@@ -531,7 +588,7 @@ export function assertLaunchKit(beats: readonly LaunchBeat[], kit: SocialKit, op
   ] as const;
   for (const [channel, posts, measure, limit] of threads) {
     if (posts.length === 0) problems.push(`The ${channel} thread is empty.`);
-    if (posts.length > beats.length) problems.push(`The ${channel} thread has more posts than beats.`);
+    if (posts.length > cut.length) problems.push(`The ${channel} thread has more posts than social beats.`);
     posts.forEach((post, index) => {
       const label = `${channel} post ${index + 1}`;
       const length = measure(post);
