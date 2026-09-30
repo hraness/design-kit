@@ -6,7 +6,7 @@ import { renderToString } from "react-dom/server";
 
 import { AgentCommandTabs, AgentSetupPrompt, type AgentCommand } from "./agent-setup-prompt.js";
 
-const names = ["document", "Document", "Element", "HTMLElement", "Node", "navigator", "window", "getSelection"] as const;
+const names = ["document", "Document", "Element", "HTMLElement", "Node", "navigator", "window", "getSelection", "matchMedia"] as const;
 const globalRecord = globalThis as unknown as Record<string, unknown>;
 const originalDescriptors = new Map(names.map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
 let root: Root | null = null;
@@ -15,6 +15,11 @@ type Clipboard = { writeText(text: string): Promise<void> };
 function hydrate(component: ReactElement, clipboard?: Clipboard): HTMLElement {
   const { document, window } = parseHTML(`<!doctype html><html><body><div id="root">${renderToString(component)}</div></body></html>`);
   Object.defineProperty(window, "getSelection", { configurable: true, value: () => null });
+  // Linkedom's window can proxy globals left by another DOM fixture.
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: (query: string) => ({ matches: false, media: query, addEventListener: () => undefined, removeEventListener: () => undefined }),
+  });
   const windowRecord = window as unknown as Record<string, unknown>;
   for (const name of names) {
     const value = name === "window" ? window : name === "document" ? document : name === "navigator" ? (clipboard === undefined ? {} : { clipboard }) : windowRecord[name];
@@ -79,6 +84,20 @@ test("copying a faded preview writes the entire original prompt and announces pe
   expect(container.querySelector('[role="status"]')?.textContent).toBe("Copied setup prompt.");
   expect(container.querySelector("details")?.hasAttribute("open")).toBe(false);
   expect(copied).toBe(1);
+});
+
+test("an ordinary prompt isolates a forced-color media stub left by another fixture", async () => {
+  Object.defineProperty(globalThis, "matchMedia", {
+    configurable: true,
+    value: () => ({ matches: true, addEventListener: () => undefined, removeEventListener: () => undefined }),
+  });
+  const container = hydrate(<AgentSetupPrompt prompt={prompt} />, { writeText: async () => undefined });
+  expect(window.matchMedia("(forced-colors: active)").matches).toBe(false);
+  expect(container.querySelector("details")?.hasAttribute("open")).toBe(false);
+  dispatch(container.querySelector("button"), "click");
+  await settle();
+  expect(container.querySelector("button")?.getAttribute("data-copy-state")).toBe("copied");
+  expect(container.querySelector("details")?.hasAttribute("open")).toBe(false);
 });
 
 test("a denied clipboard expands and selects the complete source for legacy and manual copying", async () => {

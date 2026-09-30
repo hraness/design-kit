@@ -63,7 +63,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ehrg6k53.js";
+} from "../chunk-2f8fgmpv.js";
 import"../chunk-h4k7yv6x.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";

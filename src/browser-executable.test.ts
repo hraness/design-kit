@@ -70,6 +70,6 @@ describe("provisioned verification browser", () => {
       expect(source).not.toContain("process.env.CHROME_PATH");
       expect(source).not.toContain("process.env.CHROMIUM_EXECUTABLE_PATH");
     }
-    expect(launches).toBe(14);
+    expect(launches).toBe(15);
   });
 });

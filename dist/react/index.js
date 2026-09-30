@@ -83,7 +83,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-ehrg6k53.js";
+} from "../chunk-2f8fgmpv.js";
 import"../chunk-h4k7yv6x.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
@@ -5854,7 +5854,7 @@ function RelativeTime({
 }
 
 // src/react/design-gallery.tsx
-import { jsx as jsx17, jsxs as jsxs15 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs15, Fragment as Fragment5 } from "react/jsx-runtime";
 var designGallerySections = [{
   id: "foundation",
   label: "Foundation"
@@ -6494,6 +6494,17 @@ Run the job, then show me its log.`,
                   }),
                   /* @__PURE__ */ jsxs15(MarketingSection, {
                     heading: "A job keeps its name everywhere.",
+                    headingContent: /* @__PURE__ */ jsxs15(Fragment5, {
+                      children: [
+                        /* @__PURE__ */ jsx17(MarketingCodeBlock, {
+                          code: "relay run job-01"
+                        }),
+                        /* @__PURE__ */ jsx17(MarketingActionLink, {
+                          href: "#gallery-install",
+                          label: "Run your first job"
+                        })
+                      ]
+                    }),
                     headingId: "gallery-marketing-section",
                     headingLevel: 3,
                     label: "Workflow",

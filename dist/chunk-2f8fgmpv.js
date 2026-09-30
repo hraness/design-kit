@@ -78,7 +78,9 @@ var providerMarkStyles = {
   },
   glyph: {
     kZKoxP: "x1f6yev3",
+    kMwMTN: "x1heor9g",
     k1xSpc: "x3nfvp2",
+    kDwRjp: "x117rol3",
     kzqmXN: "x1endk3i",
     $$css: true
   },

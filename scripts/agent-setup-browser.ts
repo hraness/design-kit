@@ -84,6 +84,8 @@ async function assertSelectedMark(page: Page, root: string, label: string): Prom
       color: getComputedStyle(tab).color,
       fill: getComputedStyle(tab).backgroundColor,
       markColor: getComputedStyle(mark).color,
+      glyphColor: glyph === null ? null : getComputedStyle(glyph).color,
+      glyphFill: glyph === null ? null : getComputedStyle(glyph).fill,
       glyphPaints,
       monogramVisible: monogram !== null && getComputedStyle(monogram).display !== "none",
       monogramColor: monogram === null ? null : getComputedStyle(monogram).color,
@@ -91,7 +93,7 @@ async function assertSelectedMark(page: Page, root: string, label: string): Prom
   });
   assert.equal(paint.markColor, paint.color, `${label}: selected mark inherits the selected label ink`);
   assert(paint.glyphPaints.length > 0 || paint.monogramVisible, `${label}: selected mark has visible glyph or monogram artwork`);
-  for (const color of paint.glyphPaints) assert.equal(color, paint.color, `${label}: actual selected SVG artwork uses the paired foreground`);
+  for (const color of paint.glyphPaints) assert.equal(color, paint.color, `${label}: actual selected SVG artwork uses the paired foreground; ${JSON.stringify(paint)}`);
   if (paint.monogramVisible) assert.equal(paint.monogramColor, paint.color, `${label}: selected monogram inherits the paired foreground`);
   if (await page.evaluate(() => !matchMedia("(forced-colors: active)").matches)) {
     assert(paletteContrast(rgbHex(paint.markColor), rgbHex(paint.fill)) >= 4.5, `${label}: selected mark remains readable against the actual tab fill`);

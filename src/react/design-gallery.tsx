@@ -46,6 +46,7 @@ import { PlatformBadges } from "./platform-icons.js";
 import { PlatformInstall } from "./platform-install.js";
 import { RelativeTime } from "./relative-time.js";
 import {
+  MarketingActionLink,
   MarketingCallToAction,
   MarketingCardRow,
   MarketingCodeBlock,
@@ -419,7 +420,18 @@ export function DesignSystemGallery({
             label="Primitives"
             summary="People and agents use the same three objects, so a job you start by hand is one an agent can rerun."
           />
-          <MarketingSection heading="A job keeps its name everywhere." headingId="gallery-marketing-section" headingLevel={3} label="Workflow" layout="split-reverse" summary="Start it from the CLI and check on it from code; both see the same job.">
+          <MarketingSection
+            heading="A job keeps its name everywhere."
+            headingContent={<>
+              <MarketingCodeBlock code="relay run job-01" />
+              <MarketingActionLink href="#gallery-install" label="Run your first job" />
+            </>}
+            headingId="gallery-marketing-section"
+            headingLevel={3}
+            label="Workflow"
+            layout="split-reverse"
+            summary="Start it from the CLI and check on it from code; both see the same job."
+          >
             <MarketingSectionLabel size="body">Reference</MarketingSectionLabel>
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>

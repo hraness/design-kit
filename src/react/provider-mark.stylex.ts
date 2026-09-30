@@ -73,7 +73,9 @@ export const providerMarkStyles = stylex.create({
   },
   glyph: {
     blockSize: "64%",
+    color: "inherit",
     display: "inline-flex",
+    fill: "currentColor",
     inlineSize: "64%",
   },
   art: {
