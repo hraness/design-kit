@@ -57,6 +57,15 @@ test("the LobeHub MIT license stays pinned", async () => {
   expect(provenance).toContain("charmbracelet/crush");
 });
 
+test("the Crush license and source commit stay pinned", async () => {
+  const license = await Bun.file(new URL("CRUSH-LICENSE.md", vendorRoot)).arrayBuffer();
+  expect(createHash("sha256").update(new Uint8Array(license)).digest("hex"))
+    .toBe("66d255bbfd24fdd7c1f3558a6de2c2aad049d0badd2817e111cfda8198e769e5");
+  const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
+  expect(provenance).toContain("0eee0616609b2c890ccc69f6a4ab3aba0b8a8630");
+  expect(provenance).toContain("CRUSH-LICENSE.md");
+});
+
 test("every vendored mark file is byte-exact and accounted for", async () => {
   const onDisk = (await readdir(new URL(".", vendorRoot), { recursive: true }))
     .map((entry) => entry.toString())

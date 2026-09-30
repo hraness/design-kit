@@ -963,6 +963,18 @@ try {
   ], repository);
   await run(["tar", "-xzf", archive, "-C", unpacked], repository);
   const packedRoot = join(unpacked, "package");
+  for (const path of [
+    "LICENSE",
+    "vendor/provider-marks/LICENSE",
+    "vendor/provider-marks/CRUSH-LICENSE.md",
+    "vendor/provider-marks/UPSTREAM.md",
+  ]) {
+    assert.deepEqual(
+      await readFile(join(packedRoot, path)),
+      await readFile(join(repository, path)),
+      `The package archive must preserve ${path} byte-for-byte.`,
+    );
+  }
   const packedPackageJsonPath = join(packedRoot, "package.json");
   const packedPackageJson = await Bun.file(packedPackageJsonPath).json();
   const packedReactJavaScript = await Bun.file(join(packedRoot, "dist/react/index.js")).text();
