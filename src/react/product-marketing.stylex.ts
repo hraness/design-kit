@@ -1761,7 +1761,7 @@ export const marketingStyles = stylex.create({
     "min-block-size": "2.75rem",
     "gap": "0.85rem",
     "padding": "0.55rem 0.5rem",
-    "margin-inline": "-0.5rem",
+    "margin-inline": "0",
     "border-top": "0",
     "border-right": "0",
     "border-bottom": "0",

@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "e3ae0ef901a26051fbf2d4aa1970469a68764f6a9e47f35666ab8d1f8cd488f6", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "07fe9b46e5688e840afee0a96baf167d8552bf3118be971dd3f1c818a1e60d13", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -236,7 +236,7 @@ async function verifyStrictMarketingCsp(browser: Browser, origin: string,
           overflow: element.scrollWidth > element.clientWidth + 1,
         }));
         assert.equal(natural.cap, "", `${label}: nested uncapped grid must not inherit its parent's limit`);
-        assert.equal(natural.overflow, false, `${label}: nested natural grid overflow`);
+        assert.equal(natural.overflow, false, `${label}: nested natural grid overflow at ${selector}`);
         if (configuration.width <= 768 || selector.includes("strict-natural-related")) assert.equal(natural.tracks, 1, `${label}: natural single-column layout`);
         else assert.ok(natural.tracks > 1, `${label}: natural desktop layout`);
       }

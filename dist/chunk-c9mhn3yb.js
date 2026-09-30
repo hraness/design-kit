@@ -1794,7 +1794,7 @@ var marketingStyles = {
     kVQ08L: "x4q3qzj",
     kOIVth: "x94aazo",
     kmVPX3: "x1v5tq4r",
-    kYk0Dm: "xvj9o80",
+    kYk0Dm: "xrxpjvj",
     k99D8V: "x6umtig",
     kNdqCV: "x1tj6v8e",
     kLjGic: "xaqea5y",
