@@ -10,11 +10,15 @@ import {
   ArticleTable,
   ArticleVideo,
   BottomBar,
+  ComparisonGlyph,
   ComparisonTable,
+  DiagramArrowhead,
   DitherSurface,
   DockedFooter,
   FoilMark,
   LaunchBeats,
+  MarketingAccount,
+  MarketingAccountActions,
   MarketingActionLink,
   MarketingArticle,
   MarketingCallToAction,
@@ -22,7 +26,9 @@ import {
   MarketingCardArt,
   MarketingCardRow,
   MarketingCodeBlock,
+  MarketingComparison,
   MarketingDataTable,
+  MarketingDiagram,
   MarketingFacts,
   MarketingField,
   MarketingFlow,
@@ -53,7 +59,6 @@ import {
   ProductHero,
   ProviderMark,
   ProviderMarkChip,
-  SyntaxCode,
   TopBar,
   articleFigureKinds,
   createParticleHaloRecipe,
@@ -63,8 +68,11 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-95mpmzc9.js";
-import"../chunk-h4k7yv6x.js";
+} from "../chunk-tt4qkwf6.js";
+import {
+  SyntaxCode
+} from "../chunk-fjf81bww.js";
+import"../chunk-gmea6p0d.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
@@ -112,7 +120,9 @@ export {
   MarketingFlow,
   MarketingField,
   MarketingFacts,
+  MarketingDiagram,
   MarketingDataTable,
+  MarketingComparison,
   MarketingCodeBlock,
   MarketingCardRow,
   MarketingCardArt,
@@ -120,11 +130,15 @@ export {
   MarketingCallToAction,
   MarketingArticle,
   MarketingActionLink,
+  MarketingAccountActions,
+  MarketingAccount,
   LaunchBeats,
   FoilMark,
   DockedFooter,
   DitherSurface,
+  DiagramArrowhead,
   ComparisonTable,
+  ComparisonGlyph,
   BottomBar,
   ArticleVideo,
   ArticleTable,

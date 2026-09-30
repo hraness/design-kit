@@ -160,3 +160,11 @@ test("invalid platform lists fail before rendering", () => {
   expect(() => renderToStaticMarkup(<PlatformBadges platforms={["macos", "macos"]} />)).toThrow(RangeError);
   expect(() => renderToStaticMarkup(<PlatformIcon platform="Mac" />)).toThrow(RangeError);
 });
+
+test("install commands render shell syntax tokens without changing the copied text", () => {
+  const document = render(renderToStaticMarkup(<PlatformInstall platforms={targets} />));
+  const command = document.querySelector("pre code");
+  expect(command?.getAttribute("data-language")).toBe("shell");
+  expect(command?.querySelectorAll("span").length).toBeGreaterThan(2);
+  expect(command?.textContent).toBe(targets[0]?.command ?? "");
+});

@@ -11,6 +11,12 @@
  * face. */
 @layer base {
   :root {
+    /* Shared studio category accents. Text names retain the foreground role. */
+    --hraness-studio-rose: light-dark(#b03a5b, #f39cb5);
+    --hraness-studio-indigo: light-dark(#4a4fbf, #a9adff);
+    --hraness-studio-amber: light-dark(#9a5a00, #f0b659);
+    --hraness-studio-emerald: light-dark(#1d7a55, #71d2a6);
+
     --hraness-type-reading-size: clamp(1rem, .95rem + .25vw, 1.0625rem);
     --hraness-type-reading-leading: 1.7;
     --hraness-type-reading-measure: 70ch;
@@ -82,5 +88,31 @@
     color: CanvasText;
     text-shadow: none;
     -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* Prose and secondary text actions share a quiet, persistent link affordance. */
+.hraness-text-link,
+.hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])),
+.plain-publication__article-body :where(a:not([role="button"], [data-emphasis], [data-foil])),
+.plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]) {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.hraness-text-link:is(:hover, :focus-visible),
+.hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])):is(:hover, :focus-visible),
+.plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]):is(:hover, :focus-visible) {
+  text-decoration-color: currentColor;
+}
+
+@media (forced-colors: active) {
+  .hraness-text-link,
+  .hraness-prose :where(a),
+  .plain-page :where(p, li, dd, dt, figcaption) a {
+    text-decoration-color: LinkText;
   }
 }

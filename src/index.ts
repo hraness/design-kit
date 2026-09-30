@@ -274,3 +274,5 @@ export type ThemeColors = {
 export function themeFor(mode: ColorMode): ThemeColors {
   return colors[mode];
 }
+
+export * from "./diagrams.js";

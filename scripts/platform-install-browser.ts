@@ -7,7 +7,7 @@ import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "
 // a padded card, and in 200, 230, and 280px columns at any viewport, all three
 // tabs fit inside the tab row without sideways scrolling or truncated names.
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { chromium, type BrowserContextOptions, type Page } from "playwright-core";
 import { createElement } from "react";
@@ -57,12 +57,13 @@ document.documentElement.dataset.hydrated = "";
   await rm(workspace, { force: true, recursive: true });
 }
 const stylesheet = await bundleBrowserStylesheet(join(repository, "src/styles.css"), repository);
+const compilerStylesheet = `${await bundleBrowserStylesheet(join(repository, "src/compiler-foundation.css"), repository)}\n${await readFile(join(repository, "dist/stylex.css"), "utf8")}`;
 const policy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'";
 const documentFor = (theme: string) => `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page.css"><script type="module" src="/app.js"></script></head><body><main><div id="root">${markup}</div></main></body></html>`;
 const pageCss = ".forced-selection-probe { position: absolute; visibility: hidden; color: HighlightText; background-color: Highlight; forced-color-adjust: none; } body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; } html[data-card] #root { padding: 16px; border: 1px solid; border-radius: 12px; } html[data-container=\"200\"] #root > * { inline-size: 200px; } html[data-container=\"230\"] #root > * { inline-size: 230px; } html[data-container=\"280\"] #root > * { inline-size: 280px; }";
 
 const browser = await chromium.launch({ ...verificationBrowserLaunchOptions(), executablePath: await executable() });
-type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean; container?: 200 | 230 | 280; forcedColors?: "none" | "active" };
+type OpenOptions = { delivery?: "standalone" | "compiler"; width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean; container?: 200 | 230 | 280; forcedColors?: "none" | "active" };
 async function open(options: OpenOptions = {}): Promise<Page> {
   const contextOptions: BrowserContextOptions = {
     colorScheme: options.colorScheme ?? "light",
@@ -91,7 +92,7 @@ async function open(options: OpenOptions = {}): Promise<Page> {
     const path = new URL(route.request().url()).pathname;
     if (path === "/") return route.fulfill({ contentType: "text/html", headers: { "content-security-policy": policy }, body: html });
     if (path === "/app.js") return route.fulfill({ contentType: "text/javascript", body: script });
-    if (path === "/styles.css") return route.fulfill({ contentType: "text/css", body: stylesheet });
+    if (path === "/styles.css") return route.fulfill({ contentType: "text/css", body: options.delivery === "compiler" ? compilerStylesheet : stylesheet });
     if (path === "/page.css") return route.fulfill({ contentType: "text/css", body: pageCss });
     return route.fulfill({ status: 404, body: "" });
   });
@@ -213,6 +214,21 @@ try {
       await page.screenshot({ path: join(process.env.PLATFORM_INSTALL_SCREENSHOTS, `platform-install-360-${colorScheme}.png`), fullPage: true });
     }
     await page.context().close();
+  }
+
+  // Shell token colors survive both standalone and compiler foundation delivery.
+  for (const delivery of ["standalone", "compiler"] as const) {
+    for (const theme of ["light", "dark"] as const) {
+      const page = await open({ platform: "Linux", delivery, theme });
+      const command = await page.locator('[data-platform="linux"] code').first().evaluate((node) => {
+        const token = node.querySelector(".syntax-token--command");
+        return { text: node.textContent, color: getComputedStyle(node).color, tokenColor: token === null ? null : getComputedStyle(token).color };
+      });
+      assert.equal(command.text, longCommand, `${delivery}/${theme}: syntax preserves the copyable command`);
+      assert.notEqual(command.tokenColor, null, `${delivery}/${theme}: the shell command has a syntax token`);
+      assert.notEqual(command.tokenColor, command.color, `${delivery}/${theme}: the shell command uses the syntax palette`);
+      await page.context().close();
+    }
   }
 
   // Narrow columns: every tab sits fully inside the tab row, the row does not

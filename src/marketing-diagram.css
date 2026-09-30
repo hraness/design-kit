@@ -1,0 +1,24 @@
+/* SVG source conventions shared by React and generated diagram consumers. */
+@layer components.hraness-design-kit.legacy {
+.hraness-diagram {
+  --diagram-accent: var(--primary);
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--foreground);
+  font-family: var(--font-text);
+}
+.hraness-diagram__scroll { max-inline-size: 100%; overflow-x: auto; }
+.hraness-diagram__scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.hraness-diagram__canvas { display: block; inline-size: 100%; min-inline-size: 40rem; block-size: auto; color: var(--diagram-accent); font-family: var(--font-text); font-size: 20px; }
+.hraness-diagram__label { fill: var(--foreground); font-family: var(--font-text); font-size: 20px; font-weight: 500; }
+.hraness-diagram__detail { fill: var(--muted); font-family: var(--font-text); font-size: 16px; font-weight: 400; }
+.hraness-diagram__node { fill: var(--background); stroke: var(--line); stroke-width: 1; }
+.hraness-diagram__connector,
+.hraness-diagram__icon { color: var(--diagram-accent); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.hraness-diagram figcaption { margin-block-start: 1rem; max-inline-size: 76ch; color: var(--muted); font-size: 0.875rem; line-height: 1.5; }
+@media (forced-colors: active) {
+  .hraness-diagram { --diagram-accent: CanvasText; }
+  .hraness-diagram__label, .hraness-diagram__detail { fill: CanvasText; }
+  .hraness-diagram__node { fill: Canvas; stroke: CanvasText; }
+}
+}

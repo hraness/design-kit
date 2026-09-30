@@ -39,7 +39,7 @@ const steps = [1, 2, 3].map((n) => ({
   id: `step-${String(n)}`,
   label: `Step ${String(n)}`,
   hint: `Shows step ${String(n)}.`,
-  render: () => <TerminalFrame describe={`Illustration of step ${String(n)}.`} lines={[{ kind: "output", text: `step ${String(n)}` }]} />,
+  render: () => <TerminalFrame describe={`Illustration of step ${String(n)}.`} lines={Array.from({ length: n * 3 }, (_, line) => ({ kind: "output" as const, text: `step ${String(n)} line ${String(line)}` }))} />,
 }));
 const caption = "Illustration. Names and text are made up.";
 

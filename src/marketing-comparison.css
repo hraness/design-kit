@@ -1,0 +1,162 @@
+/* Raw HTML counterpart to the shared MarketingComparison composition. */
+@layer components.hraness-design-kit.legacy {
+.hraness-marketing-comparison {
+  margin: 0;
+  min-inline-size: 0;
+  color: var(--hraness-marketing-ink, var(--foreground));
+  font-family: var(--font-text);
+}
+
+.hraness-marketing-comparison__scroll {
+  overflow-x: auto;
+  max-inline-size: 100%;
+}
+
+.hraness-marketing-comparison__scroll:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.hraness-marketing-comparison__table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+.hraness-marketing-comparison__caption {
+  padding-block-end: 1.25rem;
+  text-align: start;
+  font-size: 1.125rem;
+  font-weight: 550;
+  color: var(--foreground);
+}
+
+.hraness-marketing-comparison__corner {
+  min-inline-size: 9rem;
+  border-block-end: 1px solid var(--line);
+}
+
+.hraness-marketing-comparison__option {
+  padding: 1rem;
+  min-inline-size: 8.5rem;
+  border-block-end: 1px solid var(--line);
+  vertical-align: bottom;
+  font-weight: 600;
+}
+
+.hraness-marketing-comparison__option-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hraness-marketing-comparison__mark {
+  object-fit: contain;
+  flex-shrink: 0;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.hraness-marketing-comparison__row-label {
+  padding: 1rem 1rem 1rem 0;
+  min-inline-size: 9rem;
+  max-inline-size: 15rem;
+  border-block-end: 1px solid var(--line);
+  vertical-align: top;
+  font-weight: 500;
+}
+
+.hraness-marketing-comparison__cell {
+  padding: 1rem;
+  border-block-end: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.hraness-marketing-comparison [data-highlight] {
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+  color: var(--foreground);
+}
+
+@media (forced-colors: active) {
+.hraness-marketing-comparison [data-highlight] {
+  background-color: Canvas;
+}
+}
+
+.hraness-marketing-comparison__value {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.hraness-marketing-comparison__label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.hraness-marketing-comparison__glyph {
+  flex-shrink: 0;
+  margin-block-start: 0.1rem;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+}
+
+.hraness-marketing-comparison [data-comparison-status="yes"] .hraness-marketing-comparison__glyph {
+  color: var(--hraness-studio-emerald);
+}
+
+@media (forced-colors: active) {
+.hraness-marketing-comparison [data-comparison-status="yes"] .hraness-marketing-comparison__glyph {
+  color: CanvasText;
+}
+}
+
+.hraness-marketing-comparison [data-comparison-status="no"] .hraness-marketing-comparison__glyph {
+  color: var(--muted);
+}
+
+@media (forced-colors: active) {
+.hraness-marketing-comparison [data-comparison-status="no"] .hraness-marketing-comparison__glyph {
+  color: CanvasText;
+}
+}
+
+.hraness-marketing-comparison [data-comparison-status="partial"] .hraness-marketing-comparison__glyph,
+.hraness-marketing-comparison [data-comparison-status="depends"] .hraness-marketing-comparison__glyph,
+.hraness-marketing-comparison [data-comparison-status="optional"] .hraness-marketing-comparison__glyph {
+  color: var(--hraness-studio-amber);
+}
+
+@media (forced-colors: active) {
+.hraness-marketing-comparison [data-comparison-status="partial"] .hraness-marketing-comparison__glyph,
+.hraness-marketing-comparison [data-comparison-status="depends"] .hraness-marketing-comparison__glyph,
+.hraness-marketing-comparison [data-comparison-status="optional"] .hraness-marketing-comparison__glyph {
+  color: CanvasText;
+}
+}
+
+.hraness-marketing-comparison__text {
+  font-variant-numeric: tabular-nums;
+}
+
+.hraness-marketing-comparison__detail {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.45;
+  margin-block-start: 0.2rem;
+  max-inline-size: 26ch;
+}
+
+.hraness-marketing-comparison__note {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-block-start: 1rem;
+  max-inline-size: 76ch;
+}
+
+}

@@ -25,6 +25,7 @@ const UPSTREAM_CONTRACT = "hraness.portfolio-public/v1";
 const PUBLIC_PATH = "portfolio.public.generated.json";
 const BRANDS_PATH = "packages/brand-catalog/brands.yaml";
 const ARTWORK_PATH = "brand-artwork.json";
+const PACK_TONES = ["rose", "indigo", "amber", "emerald"] as const;
 /** Marks are compact path artwork; anything larger is not a registry mark. */
 const MARK_MAX_BYTES = 32 * 1024;
 const MARK_PATH_PATTERN = /^projects\/hraness\/public\/marks\/[a-z0-9]+(?:-[a-z0-9]+)*\.svg$/u;
@@ -116,6 +117,7 @@ function upstreamDigest(document: Readonly<Record<string, unknown>>): string {
     formatVersion: document.formatVersion,
     projects: document.projects,
     foundations: document.foundations,
+    packs: document.packs,
     relations: document.relations,
     url: document.url,
   }))}`;
@@ -296,6 +298,25 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
   });
   if (Object.keys(products).length === 0) fail(`${PUBLIC_PATH} lists no products.`);
 
+  const packIds = new Set<string>();
+  const packedProducts = new Set<string>();
+  const packs = list(document.packs, `${PUBLIC_PATH}.packs`).map((entry, index) => {
+    const where = `${PUBLIC_PATH}.packs[${index}]`;
+    const pack = record(entry, where);
+    const slug = text(pack.slug, `${where}.slug`);
+    if (!ID_PATTERN.test(slug) || packIds.has(slug)) fail(`${where}.slug must be a unique portfolio id.`);
+    packIds.add(slug);
+    const members = list(pack.members, `${where}.members`).map((member, memberIndex) => {
+      const id = text(member, `${where}.members[${memberIndex}]`);
+      if (!Object.hasOwn(products, id)) fail(`${where} names unknown public product ${id}.`);
+      if (packedProducts.has(id)) fail(`${where} repeats packed product ${id}.`);
+      packedProducts.add(id);
+      return id;
+    });
+    if (members.length === 0) fail(`${where}.members must not be empty.`);
+    return { slug, title: text(pack.title, `${where}.title`), tone: oneOf(pack.tone, PACK_TONES, `${where}.tone`), members };
+  });
+
   const relationIds = new Set<string>();
   const relations = list(document.relations, `${PUBLIC_PATH}.relations`).flatMap((entry, index) => {
     const where = `${PUBLIC_PATH}.relations[${index}]`;
@@ -336,6 +357,7 @@ export function buildPortfolioSnapshot(source: PortfolioSnapshotSource): Readonl
       ],
     },
     products,
+    packs,
     relations,
   };
   return { ...snapshot, digest: portfolioSnapshotDigest(snapshot) };

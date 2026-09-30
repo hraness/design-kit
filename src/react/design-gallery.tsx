@@ -1,5 +1,8 @@
 "use client";
 
+import { MarketingAccount, MarketingAccountActions } from "./marketing-account.js";
+import { MarketingComparison } from "./marketing-comparison.js";
+import { MarketingDiagram, DiagramArrowhead } from "./marketing-diagram.js";
 import {
   Badge,
   Button,
@@ -343,6 +346,7 @@ export function DesignSystemGallery({
           />
           <MarketingPillars
             ariaLabel="Relay in three points"
+            presentation="benefits"
             columns={3}
             pillars={[
               { label: "No hosted service", summary: "Jobs run on your machine and never wait on a server." },
@@ -522,40 +526,63 @@ export function DesignSystemGallery({
           <MarketingRelated
             groups={[
               {
-                heading: "Sibling tools",
+                heading: "Relationships",
+                tone: "rose",
                 headingId: "design-gallery-related-tools",
                 items: [
                   {
                     href: "#gallery-install",
                     name: "Ledger",
+                    domain: "ledger.example",
                     role: "Long-term storage for run logs",
                   },
                   {
                     href: "#marketing",
                     name: "Index",
+                    domain: "index.example",
                     role: "A local search index",
                   },
                 ],
               },
               {
-                heading: "Shared infrastructure",
+                heading: "Knowledge",
+                tone: "indigo",
                 headingId: "design-gallery-related-infra",
                 items: [
                   {
                     href: "#marketing",
                     name: "Relay",
+                    domain: "relay.example",
                     role: "The shared job runner",
                   },
                 ],
-                summary: "The runner the other tools depend on.",
               },
             ]}
-            heading="Related tools."
+            heading="Other tools from our studio"
             headingId="design-gallery-related-title"
             headingLevel={3}
-            label="Related"
-            summary="Each is a separate release. Its card says how it works with Relay."
           />
+          <MarketingDiagram width={720} height={216} label="Your sources stay on your device; your chosen agent reads the local workspace.">
+            <defs><DiagramArrowhead id="gallery-diagram-arrow" /></defs>
+            <rect className="hraness-diagram__node" x={24} y={40} width={276} height={136} rx={12} />
+            <rect className="hraness-diagram__node" x={420} y={40} width={276} height={136} rx={12} />
+            <path className="hraness-diagram__icon" d="M48 66h18v14H48z M53 84h8 M57 80v4" />
+            <text className="hraness-diagram__label" x={48} y={116}>Your sources</text>
+            <text className="hraness-diagram__detail" x={48} y={143}>Stored on your device</text>
+            <path className="hraness-diagram__connector" d="M320 108H400" markerEnd="url(#gallery-diagram-arrow)" />
+            <path className="hraness-diagram__icon" d="M444 73h18 M453 64v18 M447 67l12 12 M459 67l-12 12" />
+            <text className="hraness-diagram__label" x={444} y={116}>Your chosen agent</text>
+            <text className="hraness-diagram__detail" x={444} y={143}>Reads the local workspace</text>
+          </MarketingDiagram>
+          <MarketingComparison caption="Choose where your work lives" options={[{ name: "Relay" }, { name: "Hosted workspace" }]} highlight={0} rows={[
+            { label: "Works offline", values: [true, false] },
+            { label: "Bring your model", values: [true, { status: "optional", label: "On some plans" }] },
+            { label: "Local storage", values: [true, { status: "depends", detail: "Check the provider's export format." }] },
+            { label: "Cost", values: ["Free locally", "Subscription"] },
+          ]} note="An illustrative comparison. Product pages supply current facts and sources." />
+          <MarketingAccount id="gallery-account" summary="Keep your preferences and shared work together.">
+            <MarketingAccountActions primary={{ href: "#gallery-account", label: "Create account" }} signIn={{ href: "#gallery-account" }} />
+          </MarketingAccount>
           <MarketingMaker
             heading="Who builds Relay"
             headingId="design-gallery-maker-title"

@@ -23,6 +23,8 @@ import {
   portfolioProductIds,
   portfolioProductStatuses,
   portfolioProducts,
+  portfolioPacks,
+  portfolioRelatedGroups,
   portfolioProvenance,
   portfolioRelationDirections,
   portfolioRelationKinds,
@@ -34,8 +36,8 @@ import {
 } from "./portfolio.js";
 
 // Pinned facts. A snapshot regeneration must update these deliberately.
-const PINNED_DIGEST = "sha256:d43bbc1113c077b872d2e11a4a70490cd537d5734951d0c3c4bd8e061ce583a9";
-const PINNED_COMMIT = "82542df32e3b5db919c5d3778125ea2970d932f7";
+const PINNED_DIGEST = "sha256:72c3c0f85732551dc8d87e7b72ee3f6dfd90086623255a4e4b18b423136b0db5";
+const PINNED_COMMIT = "b190297ddf0a5b1447ad0494a6be32abfaacdd5c";
 
 const jsonFile = new URL("./portfolio.generated.json", import.meta.url);
 const moduleFile = new URL("./portfolio.generated.ts", import.meta.url);
@@ -68,7 +70,7 @@ describe("portfolio snapshot", () => {
   });
 
   test("pins the exact top-level and record shapes", () => {
-    expect(Object.keys(portfolioFacts)).toEqual(["contract", "formatVersion", "provenance", "products", "relations", "digest"]);
+    expect(Object.keys(portfolioFacts)).toEqual(["contract", "formatVersion", "provenance", "products", "packs", "relations", "digest"]);
     expect(portfolioFacts.contract).toBe("hraness.design-kit-portfolio/v1");
     expect(portfolioFacts.formatVersion).toBe(1);
     expect(portfolioProductIds.length).toBeGreaterThan(0);
@@ -174,6 +176,29 @@ describe("portfolio helpers", () => {
     ));
   });
 
+  test("studio groups preserve the selected set and homepage category order", () => {
+    fc.assert(fc.property(fc.array(fc.constantFrom(...portfolioProductIds)), (ids) => {
+      const groups = portfolioRelatedGroups(ids, "studio");
+      const actual = groups.flatMap((group) => group.items.map((item) => item.productId));
+      expect(new Set(actual)).toEqual(new Set(ids));
+      expect(actual.length).toBe(new Set(ids).size);
+      for (const group of groups) {
+        expect(group.items.length).toBeGreaterThan(0);
+        expect(group.headingId).toStartWith("studio-");
+        for (const item of group.items) {
+          expect(item.href).toBe(product(item.productId).canonicalUrl);
+          expect(item.role).toBe(product(item.productId).oneLiner);
+          expect(item.mark).toBe(product(item.productId).mark);
+        }
+      }
+      const packed = groups.filter((group) => group.tone !== "neutral").map((group) => group.heading);
+      expect(packed).toEqual(portfolioPacks.filter((pack) => pack.members.some((id) => ids.includes(id))).map((pack) => pack.title));
+    }));
+    expect(portfolioRelatedGroups([])).toEqual([]);
+    expect(() => portfolioRelatedGroups(["missing" as PortfolioProductId])).toThrow(PortfolioFactsError);
+    expect(() => portfolioRelatedGroups([], "invalid id")).toThrow(PortfolioFactsError);
+  });
+
   test("usesPairs() returns every detailed non-delivery relation with both products", () => {
     const pairs = usesPairs();
     expect(pairs.map((pair) => pair.relation.id)).toEqual(portfolioRelations
@@ -215,12 +240,13 @@ describe("portfolio boundary", () => {
 
 const COMMIT = "0123456789abcdef0123456789abcdef01234567";
 
-function upstream(body: Readonly<{ projects: unknown[]; relations?: unknown[] }>): string {
+function upstream(body: Readonly<{ projects: unknown[]; relations?: unknown[]; packs?: unknown[] }>): string {
   const document = {
     contract: "hraness.portfolio-public/v1",
     formatVersion: 1,
     projects: body.projects,
     foundations: [{ id: "ui", name: "ui" }],
+    packs: body.packs ?? [],
     relations: body.relations ?? [],
     url: "https://hraness.com/portfolio.json",
   };
@@ -347,6 +373,19 @@ describe("sync-portfolio-facts", () => {
         ...Object.keys(marks).sort().map((path) => ({ path, sha256: sha256Hex(marks[path] ?? "") })),
       ],
     });
+  });
+
+  test("projects only public pack fields and rejects ambiguous membership", () => {
+    const pack = { slug: "knowledge", title: "Knowledge", tone: "indigo", members: ["alpha", "beta"], privateNote: "never export" };
+    const withPacks = (packs: unknown[]) => source(upstream({ ...JSON.parse(fixture), packs }));
+    const snapshot = buildPortfolioSnapshot(withPacks([pack]));
+    expect(snapshot.packs).toEqual([{ slug: "knowledge", title: "Knowledge", tone: "indigo", members: ["alpha", "beta"] }]);
+    expect(renderPortfolioJson(snapshot)).not.toContain("never export");
+    for (const invalid of [
+      [pack, pack], [{ ...pack, tone: "invalid" }], [{ ...pack, members: [] }],
+      [{ ...pack, members: ["unknown"] }], [{ ...pack, members: ["alpha", "alpha"] }],
+      [pack, { ...pack, slug: "second" }],
+    ]) expect(() => buildPortfolioSnapshot(withPacks(invalid))).toThrow(PortfolioSyncError);
   });
 
   test("encodes marks as compact data URLs that decode to the collapsed source", () => {

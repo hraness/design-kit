@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -126,7 +126,9 @@
     "./testing": {
       "types": "./src/testing.ts",
       "import": "./dist/testing.js"
-    }
+    },
+    "./marketing-comparison.css": "./src/marketing-comparison.css",
+    "./marketing-diagram.css": "./src/marketing-diagram.css"
   },
   "main": "./dist/index.js",
   "types": "./src/index.ts",
@@ -209,6 +211,8 @@
     "src/react/production-data-preview-notice.stylex.ts",
     "src/react/product-marketing.stylex.ts",
     "src/react/product-marketing.tsx",
+    "src/react/marketing-account.tsx",
+    "src/react/marketing-account.stylex.ts",
     "src/react/route-state.stylex.ts",
     "src/react/route-state.tsx",
     "src/react/server.ts",
@@ -296,7 +300,14 @@
     "src/agent-setup.ts",
     "src/react/agent-setup-prompt.tsx",
     "src/react/agent-setup-prompt.stylex.ts",
-    "AGENT_SETUP.md"
+    "AGENT_SETUP.md",
+    "src/react/marketing-comparison.tsx",
+    "src/react/marketing-comparison.stylex.ts",
+    "src/marketing-comparison.css",
+    "src/diagrams.ts",
+    "src/react/marketing-diagram.tsx",
+    "src/react/marketing-diagram.stylex.ts",
+    "src/marketing-diagram.css"
   ],
   "scripts": {
     "build": "bun run ./scripts/build.ts",

@@ -197,3 +197,18 @@ describe("mockup copy details", () => {
     expect(markup).toContain('<div class="hkm-phone-body"><p>Today</p></div>');
   });
 });
+
+test("step walkthroughs reserve all panels while exposing only the selected one", () => {
+  const html = renderToStaticMarkup(<clientApi.StepThrough steps={[
+    { id: "first", label: "Choose", hint: "Private helper text.", render: () => <div>First view</div> },
+    { id: "second", label: "Review", render: () => <div>Tall view</div> },
+  ]} />);
+  expect(html).toContain('class="hkm-step-panel"');
+  expect(html).toContain('aria-hidden="true"');
+  expect(html).toContain('inert=""');
+  expect(html).toContain('class="hkm-showcase-status hkm-step-announcement"');
+  expect(html).toContain('aria-label="Back"');
+  expect(html).toContain('aria-label="Next"');
+  expect(html).toContain("First view");
+  expect(html).toContain("Tall view");
+});

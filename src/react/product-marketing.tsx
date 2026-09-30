@@ -546,6 +546,8 @@ export interface ProductHeroProps {
   readonly heading: string;
   readonly headingId: string;
   readonly headingLevel?: MarketingHeadingLevel;
+  /** An install command or installer selector directly below the summary. */
+  readonly install?: ReactNode;
   readonly name: string;
   /** Product-owned notice after the copy boundary, without an added wrapper. */
   readonly notice?: ReactNode;
@@ -571,6 +573,7 @@ export function ProductHero({
   heading,
   headingId,
   headingLevel = 1,
+  install,
   name,
   notice,
   proof,
@@ -587,11 +590,12 @@ export function ProductHero({
     >
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>
         {eyebrow === undefined || eyebrow === "" ? null : <p className={classNames("hraness-marketing-hero__eyebrow", undefined, tone === "accent" ? "accent" : "default")}>{eyebrow}</p>}
-        <p className={classNames("hraness-marketing-hero__name")}>{name}</p>
+        {name === "" ? null : <p className={classNames("hraness-marketing-hero__name")}>{name}</p>}
         <Heading className={classNames("hraness-marketing-hero__heading")} id={headingId} level={headingLevel}>
           {heading}
         </Heading>
         <p className={classNames("hraness-marketing-hero__summary")}>{summary}</p>
+        {install === undefined ? null : <div className={classNames("hraness-marketing-hero__install")}>{install}</div>}
         {example === undefined
           ? null
           : <p className={classNames("hraness-marketing-hero__example")}>{example}</p>}
@@ -627,6 +631,7 @@ export function ProductHero({
 }
 
 export interface MarketingPillar {
+  readonly icon?: ReactNode;
   readonly label: string;
   readonly summary: string;
 }
@@ -636,25 +641,28 @@ export function MarketingPillars({
   className,
   columns,
   pillars,
+  presentation = "columns",
 }: Readonly<{
   ariaLabel: string;
   className?: string;
   /** Static desktop columns without inline styles; omission uses the collection length. Mobile stays one column. */
   columns?: MarketingColumnCount;
   pillars: readonly MarketingPillar[];
+  presentation?: "columns" | "benefits";
 }>) {
-  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns);
+  const rootClassName = marketingColumnClassName("hraness-marketing-pillars", className, columns, presentation === "benefits" ? "benefits" : "default");
   if (pillars.length === 0) return null;
   return (
     <dl
       aria-label={ariaLabel}
       className={rootClassName}
       data-hraness-marketing="pillars"
+      data-presentation={presentation}
       style={columns === undefined ? { "--hraness-marketing-pillar-columns": String(pillars.length) } as Record<string, string> : undefined}
     >
       {pillars.map((pillar, index) => (
-        <div className={classNames("hraness-marketing-pillars__item", undefined, index === 0 ? "default" : "later")} key={pillar.label}>
-          <dt className={classNames("hraness-marketing-pillars__label")}>{pillar.label}</dt>
+        <div className={classNames("hraness-marketing-pillars__item", undefined, presentation === "benefits" ? "benefit" : index === 0 ? "default" : "later")} key={pillar.label}>
+          <dt className={classNames("hraness-marketing-pillars__label")}>{pillar.icon === undefined ? null : <span aria-hidden="true" className={classNames("hraness-marketing-pillars__icon")}>{pillar.icon}</span>}{pillar.label}</dt>
           <dd className={classNames("hraness-marketing-pillars__summary")}>{pillar.summary}</dd>
         </div>
       ))}
@@ -1481,8 +1489,10 @@ export function MarketingMaker({
 }
 
 export interface MarketingRelatedProduct {
-  /** Custom artwork in place of `mark`, drawn in the same 44px slot. */
+  /** Custom artwork in place of `mark`, drawn in the same 28px slot. */
   readonly art?: ReactNode;
+  /** Optional public host, displayed beside the product name. */
+  readonly domain?: string;
   readonly href: string;
   /** Transparent product mark, such as a portfolio item's `mark`; drawn as a foil mark before the name. */
   readonly mark?: string;
@@ -1496,12 +1506,16 @@ export interface MarketingRelatedProduct {
   readonly role: string;
 }
 
+export type MarketingRelatedTone = "rose" | "indigo" | "amber" | "emerald" | "neutral";
+
 export interface MarketingRelatedGroup {
   /** Heading naming this tier of siblings, rendered one level below the section heading. */
   readonly heading: string;
   readonly headingId: string;
   readonly items: readonly MarketingRelatedProduct[];
   readonly summary?: string;
+  /** The category color used on the studio portfolio. */
+  readonly tone?: MarketingRelatedTone;
 }
 
 function MarketingRelatedCards({
@@ -1512,23 +1526,28 @@ function MarketingRelatedCards({
   level: MarketingHeadingLevel;
 }>) {
   return (
-    <>
+    <ul className={classNames("hraness-marketing-related__list")}>
       {items.map((item) => (
-        <a className={classNames("hraness-marketing-related__card")} data-foil="" data-hraness-marketing="card" href={item.href} key={item.name}>
-          {isPresentNode(item.art) || (item.mark !== undefined && item.mark !== "")
-            ? (
-              <span aria-hidden="true" className={classNames("hraness-marketing-related__card-mark")}>
-                {isPresentNode(item.art) ? item.art : <FoilMark size={44} src={item.mark ?? ""} />}
-              </span>
-            )
-            : null}
-          <span className={classNames("hraness-marketing-related__card-text")}>
-            <Heading className={classNames("hraness-marketing-related__card-name")} level={level}>{item.name}</Heading>
-            <span className={classNames("hraness-marketing-related__card-role")}>{item.role}</span>
-          </span>
-        </a>
+        <li className={classNames("hraness-marketing-related__item")} key={item.name}>
+          <a className={classNames("hraness-marketing-related__card")} data-foil="" data-hraness-marketing="card" href={item.href}>
+            {isPresentNode(item.art) || (item.mark !== undefined && item.mark !== "")
+              ? (
+                <span aria-hidden="true" className={classNames("hraness-marketing-related__card-mark")}>
+                  {isPresentNode(item.art) ? item.art : <FoilMark size={28} src={item.mark ?? ""} />}
+                </span>
+              )
+              : null}
+            <div className={classNames("hraness-marketing-related__card-text")}>
+              <div className={classNames("hraness-marketing-related__card-heading")}>
+                <Heading className={classNames("hraness-marketing-related__card-name")} level={level}>{item.name}</Heading>
+                {item.domain === undefined ? null : <span className={classNames("hraness-marketing-related__card-domain")}>{item.domain}</span>}
+              </div>
+              <span className={classNames("hraness-marketing-related__card-role")}>{item.role}</span>
+            </div>
+          </a>
+        </li>
       ))}
-    </>
+    </ul>
   );
 }
 
@@ -1536,7 +1555,7 @@ type MarketingRelatedBody =
   | Readonly<{ groups: readonly MarketingRelatedGroup[]; items?: undefined }>
   | Readonly<{ groups?: undefined; items: readonly MarketingRelatedProduct[] }>;
 
-/** Linked cards for sibling products: each shows the product's mark, name, and one-line description. */
+/** Compact studio product rows, grouped by portfolio category when supplied. */
 export function MarketingRelated({
   className,
   heading,
@@ -1573,30 +1592,33 @@ export function MarketingRelated({
         summary={summary}
       />
       {groups === undefined
-        ? (
-          <MarketingCardRow>
-            <MarketingRelatedCards items={items} level={childHeadingLevel(headingLevel)} />
-          </MarketingCardRow>
-        )
-        : groups.map((group) => (
-          <div className={classNames("hraness-marketing-related__group")} key={group.headingId}>
-            <div className={classNames("hraness-marketing-related__group-header")}>
-              <Heading
-                className={classNames("hraness-marketing-related__group-heading")}
-                id={group.headingId}
-                level={childHeadingLevel(headingLevel)}
+        ? <MarketingRelatedCards items={items} level={childHeadingLevel(headingLevel)} />
+        : (
+          <div className={classNames("hraness-marketing-related__groups")}>
+            {groups.map((group) => (
+              <div
+                aria-labelledby={group.headingId}
+                className={classNames("hraness-marketing-related__group", undefined, group.tone ?? "neutral")}
+                data-tone={group.tone ?? "neutral"}
+                key={group.headingId}
               >
-                {group.heading}
-              </Heading>
-              {group.summary === undefined
-                ? null
-                : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
-            </div>
-            <MarketingCardRow ariaLabel={group.heading}>
-              <MarketingRelatedCards items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
-            </MarketingCardRow>
+                <div className={classNames("hraness-marketing-related__group-header")}>
+                  <Heading
+                    className={classNames("hraness-marketing-related__group-heading")}
+                    id={group.headingId}
+                    level={childHeadingLevel(headingLevel)}
+                  >
+                    {group.heading}
+                  </Heading>
+                  {group.summary === undefined
+                    ? null
+                    : <p className={classNames("hraness-marketing-related__group-summary")}>{group.summary}</p>}
+                </div>
+                <MarketingRelatedCards items={group.items} level={childHeadingLevel(childHeadingLevel(headingLevel))} />
+              </div>
+            ))}
           </div>
-        ))}
+        )}
     </section>
   );
 }

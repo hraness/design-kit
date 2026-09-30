@@ -37,7 +37,8 @@
   .plain-site.plain-publication
     a:not(.hraness-design-skip-link):is(:hover, :focus-visible)
 ) {
-  text-decoration: underline;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
 }
 
 :where(.plain-site.plain-publication a:not(.hraness-design-skip-link):focus-visible) {
@@ -697,7 +698,8 @@
 
 .plain-site.plain-publication.plain-publication--embedded .plain-publication__byline a {
   color: inherit;
-  text-decoration: underline;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-decoration-thickness: 1px;
 }
@@ -716,7 +718,8 @@
 }
 
 .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a {
-  text-decoration: underline;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
   text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
@@ -777,7 +780,7 @@
   line-height: 1.5;
 }
 
-.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table) {
+.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table, .hraness-marketing-comparison__table) {
   inline-size: 100%;
   margin: 1.5rem 0;
   border-collapse: collapse;
@@ -786,7 +789,7 @@
   line-height: 1.5;
 }
 
-.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table) :is(th, td) {
+.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table, .hraness-marketing-comparison__table) :is(th, td) {
   padding: 0.55rem 0.65rem 0.55rem 0;
   border-top: 1px solid var(--plain-line);
   overflow-wrap: break-word;
@@ -794,7 +797,7 @@
   vertical-align: top;
 }
 
-.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table) thead th {
+.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body table:not(.plain-publication__table, .hraness-marketing-comparison__table) thead th {
   border-top: 0;
   color: var(--plain-muted);
   font-weight: 700;

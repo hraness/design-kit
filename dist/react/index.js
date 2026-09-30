@@ -9,7 +9,7 @@ import {
 } from "../chunk-8834fh4n.js";
 import {
   PlatformInstall
-} from "../chunk-mr1vdcjq.js";
+} from "../chunk-8xfssb9c.js";
 import {
   ArticleBarChart,
   ArticleByline,
@@ -22,11 +22,15 @@ import {
   ArticleTable,
   ArticleVideo,
   BottomBar,
+  ComparisonGlyph,
   ComparisonTable,
+  DiagramArrowhead,
   DitherSurface,
   DockedFooter,
   FoilMark,
   LaunchBeats,
+  MarketingAccount,
+  MarketingAccountActions,
   MarketingActionLink,
   MarketingArticle,
   MarketingCallToAction,
@@ -34,7 +38,9 @@ import {
   MarketingCardArt,
   MarketingCardRow,
   MarketingCodeBlock,
+  MarketingComparison,
   MarketingDataTable,
+  MarketingDiagram,
   MarketingFacts,
   MarketingField,
   MarketingFlow,
@@ -65,7 +71,6 @@ import {
   ProductHero,
   ProviderMark,
   ProviderMarkChip,
-  SyntaxCode,
   TopBar,
   articleFigureKinds,
   createParticleHaloRecipe,
@@ -83,8 +88,10 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-95mpmzc9.js";
-import"../chunk-h4k7yv6x.js";
+} from "../chunk-tt4qkwf6.js";
+import {
+  SyntaxCode
+} from "../chunk-fjf81bww.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -113,7 +120,8 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-4d79eskk.js";
+} from "../chunk-c80g58j1.js";
+import"../chunk-gmea6p0d.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
@@ -6498,6 +6506,7 @@ function DesignSystemGallery({
                   }),
                   /* @__PURE__ */ jsx17(MarketingPillars, {
                     ariaLabel: "Relay in three points",
+                    presentation: "benefits",
                     columns: 3,
                     pillars: [{
                       label: "No hosted service",
@@ -6841,32 +6850,141 @@ Run the job, then show me its log.`,
                   }),
                   /* @__PURE__ */ jsx17(MarketingRelated, {
                     groups: [{
-                      heading: "Sibling tools",
+                      heading: "Relationships",
+                      tone: "rose",
                       headingId: "design-gallery-related-tools",
                       items: [{
                         href: "#gallery-install",
                         name: "Ledger",
+                        domain: "ledger.example",
                         role: "Long-term storage for run logs"
                       }, {
                         href: "#marketing",
                         name: "Index",
+                        domain: "index.example",
                         role: "A local search index"
                       }]
                     }, {
-                      heading: "Shared infrastructure",
+                      heading: "Knowledge",
+                      tone: "indigo",
                       headingId: "design-gallery-related-infra",
                       items: [{
                         href: "#marketing",
                         name: "Relay",
+                        domain: "relay.example",
                         role: "The shared job runner"
-                      }],
-                      summary: "The runner the other tools depend on."
+                      }]
                     }],
-                    heading: "Related tools.",
+                    heading: "Other tools from our studio",
                     headingId: "design-gallery-related-title",
-                    headingLevel: 3,
-                    label: "Related",
-                    summary: "Each is a separate release. Its card says how it works with Relay."
+                    headingLevel: 3
+                  }),
+                  /* @__PURE__ */ jsxs15(MarketingDiagram, {
+                    width: 720,
+                    height: 216,
+                    label: "Your sources stay on your device; your chosen agent reads the local workspace.",
+                    children: [
+                      /* @__PURE__ */ jsx17("defs", {
+                        children: /* @__PURE__ */ jsx17(DiagramArrowhead, {
+                          id: "gallery-diagram-arrow"
+                        })
+                      }),
+                      /* @__PURE__ */ jsx17("rect", {
+                        className: "hraness-diagram__node",
+                        x: 24,
+                        y: 40,
+                        width: 276,
+                        height: 136,
+                        rx: 12
+                      }),
+                      /* @__PURE__ */ jsx17("rect", {
+                        className: "hraness-diagram__node",
+                        x: 420,
+                        y: 40,
+                        width: 276,
+                        height: 136,
+                        rx: 12
+                      }),
+                      /* @__PURE__ */ jsx17("path", {
+                        className: "hraness-diagram__icon",
+                        d: "M48 66h18v14H48z M53 84h8 M57 80v4"
+                      }),
+                      /* @__PURE__ */ jsx17("text", {
+                        className: "hraness-diagram__label",
+                        x: 48,
+                        y: 116,
+                        children: "Your sources"
+                      }),
+                      /* @__PURE__ */ jsx17("text", {
+                        className: "hraness-diagram__detail",
+                        x: 48,
+                        y: 143,
+                        children: "Stored on your device"
+                      }),
+                      /* @__PURE__ */ jsx17("path", {
+                        className: "hraness-diagram__connector",
+                        d: "M320 108H400",
+                        markerEnd: "url(#gallery-diagram-arrow)"
+                      }),
+                      /* @__PURE__ */ jsx17("path", {
+                        className: "hraness-diagram__icon",
+                        d: "M444 73h18 M453 64v18 M447 67l12 12 M459 67l-12 12"
+                      }),
+                      /* @__PURE__ */ jsx17("text", {
+                        className: "hraness-diagram__label",
+                        x: 444,
+                        y: 116,
+                        children: "Your chosen agent"
+                      }),
+                      /* @__PURE__ */ jsx17("text", {
+                        className: "hraness-diagram__detail",
+                        x: 444,
+                        y: 143,
+                        children: "Reads the local workspace"
+                      })
+                    ]
+                  }),
+                  /* @__PURE__ */ jsx17(MarketingComparison, {
+                    caption: "Choose where your work lives",
+                    options: [{
+                      name: "Relay"
+                    }, {
+                      name: "Hosted workspace"
+                    }],
+                    highlight: 0,
+                    rows: [{
+                      label: "Works offline",
+                      values: [true, false]
+                    }, {
+                      label: "Bring your model",
+                      values: [true, {
+                        status: "optional",
+                        label: "On some plans"
+                      }]
+                    }, {
+                      label: "Local storage",
+                      values: [true, {
+                        status: "depends",
+                        detail: "Check the provider's export format."
+                      }]
+                    }, {
+                      label: "Cost",
+                      values: ["Free locally", "Subscription"]
+                    }],
+                    note: "An illustrative comparison. Product pages supply current facts and sources."
+                  }),
+                  /* @__PURE__ */ jsx17(MarketingAccount, {
+                    id: "gallery-account",
+                    summary: "Keep your preferences and shared work together.",
+                    children: /* @__PURE__ */ jsx17(MarketingAccountActions, {
+                      primary: {
+                        href: "#gallery-account",
+                        label: "Create account"
+                      },
+                      signIn: {
+                        href: "#gallery-account"
+                      }
+                    })
                   }),
                   /* @__PURE__ */ jsx17(MarketingMaker, {
                     heading: "Who builds Relay",
@@ -8173,7 +8291,9 @@ export {
   MarketingFlow,
   MarketingField,
   MarketingFacts,
+  MarketingDiagram,
   MarketingDataTable,
+  MarketingComparison,
   MarketingCodeBlock,
   MarketingCardRow,
   MarketingCardArt,
@@ -8181,6 +8301,8 @@ export {
   MarketingCallToAction,
   MarketingArticle,
   MarketingActionLink,
+  MarketingAccountActions,
+  MarketingAccount,
   LaunchBeats,
   LanternMaterialGallery,
   HeroBackdrop,
@@ -8192,12 +8314,14 @@ export {
   Fader,
   DockedFooter,
   DitherSurface,
+  DiagramArrowhead,
   DesignThemeProvider,
   DesignSystemGallery,
   DesignPortalThemeProvider,
   DesignPaletteProvider,
   DesignPaletteMenuButton,
   ComparisonTable,
+  ComparisonGlyph,
   ChatMessage,
   ChatComposer,
   BottomBar,

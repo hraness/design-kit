@@ -64,7 +64,10 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-4d79eskk.js";
+} from "./chunk-c80g58j1.js";
+import {
+  diagramMetrics
+} from "./chunk-gmea6p0d.js";
 import {
   detectPlatform,
   isKnownPlatformId,
@@ -189,6 +192,7 @@ export {
   fontFallbacks,
   escapeArticleHtml,
   elevation,
+  diagramMetrics,
   detectPlatform,
   designThemes,
   designThemeStorageKey,
