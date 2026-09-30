@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
@@ -74,7 +74,7 @@ const server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(request) 
   return new Response(`<!doctype html><html lang="en" data-theme="${theme}" class="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Marketing presets</title><link rel="stylesheet" href="/styles.css?mode=${mode}"><link rel="stylesheet" href="/fixture.css?ink=${ink}"></head><body>${mode === "raw" ? rawHtml : html}</body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; style-src 'self'; style-src-attr 'none'; font-src 'self'; img-src 'self'; base-uri 'none'" } });
 } });
 const executablePath = await provisionedBrowserExecutable();
-const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(process.platform === "linux" ? ["--no-sandbox"] : []) });
+const browser = await chromium.launch({ executablePath, headless: true, ...verificationBrowserLaunchOptions(process.platform === "linux" ? ["--no-sandbox"] : []) });
 const receipts: unknown[] = [];
 const missingInkControls: unknown[] = [];
 try {

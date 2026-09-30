@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
 
 import type { ProviderMarkDescriptor } from "../provider-marks.js";
 import { agentSetupClassName as cx } from "./agent-setup-prompt.stylex.js";
@@ -83,18 +83,55 @@ async function copyText(text: string, fallback: () => HTMLElement | null): Promi
     // A rendered source remains available when clipboard permission is denied.
   }
   const source = fallback();
+  if (source === null) return { ok: false, selected: false };
+  const documentValue = source.ownerDocument;
+  const focused = documentValue.activeElement as HTMLElement | null;
+  let buffer: HTMLTextAreaElement | null = null;
+  let copied = false;
+  let exactEvent = false;
+  const copyExact = (event: ClipboardEvent) => {
+    if (documentValue.activeElement !== buffer || event.clipboardData === null) return;
+    try {
+      event.clipboardData.setData("text/plain", text);
+      event.preventDefault();
+      exactEvent = event.defaultPrevented;
+    } catch { /* A matching textarea value can still use native copying. */ }
+  };
+  try {
+    buffer = documentValue.createElement("textarea");
+    buffer.value = text;
+    buffer.readOnly = true;
+    buffer.tabIndex = -1;
+    buffer.setAttribute("data-hraness-copy-buffer", "");
+    buffer.style.cssText = "position:fixed;left:0;top:0;width:1px;height:1px;padding:0;border:0;opacity:0;overflow:hidden;resize:none;pointer-events:none";
+    documentValue.body.append(buffer);
+    buffer.focus({ preventScroll: true });
+    buffer.select();
+    buffer.setSelectionRange(0, buffer.value.length);
+    documentValue.addEventListener("copy", copyExact);
+    copied = documentValue.execCommand("copy") === true && (buffer.value === text || exactEvent);
+  } catch {
+    copied = false;
+  } finally {
+    documentValue.removeEventListener("copy", copyExact);
+    buffer?.remove();
+    if (copied && focused?.isConnected === true && typeof focused.focus === "function") {
+      try { focused.focus({ preventScroll: true }); } catch { /* Copy success does not depend on focus restoration. */ }
+    }
+  }
+  if (copied) return { ok: true, selected: false };
   let selected = false;
   try {
-    const selection = source?.ownerDocument.defaultView?.getSelection();
-    if (source !== null && selection !== null && selection !== undefined) {
-      const range = source.ownerDocument.createRange();
+    const selection = documentValue.defaultView?.getSelection();
+    if (selection !== null && selection !== undefined) {
+      const range = documentValue.createRange();
       range.selectNodeContents(source);
       selection.removeAllRanges();
       selection.addRange(range);
       source.focus();
       selected = true;
     }
-    return { ok: selected && source?.ownerDocument.execCommand("copy") === true, selected };
+    return { ok: false, selected };
   } catch {
     return { ok: false, selected };
   }
@@ -122,14 +159,14 @@ function useCopy(text: string, subject: string, fallback: () => HTMLElement | nu
   }, [text, subject]);
 
   const copy = useCallback(async () => {
-    if (busy.current) return;
+    if (busy.current) return false;
     if (timer.current !== null) clearTimeout(timer.current);
     busy.current = true;
     const request = ++generation.current;
     setState("copying");
     setMessage(`Copying ${subject}.`);
     const result = await copyText(text, () => generation.current === request && latestText.current === text ? fallback() : null);
-    if (generation.current !== request || latestText.current !== text) return;
+    if (generation.current !== request || latestText.current !== text) return false;
     busy.current = false;
     setState(result.ok ? "copied" : "failed");
     setMessage(result.ok ? `Copied ${subject}.` : result.selected
@@ -143,6 +180,7 @@ function useCopy(text: string, subject: string, fallback: () => HTMLElement | nu
       setState("idle");
       setMessage("");
     }, 2000);
+    return result.ok && generation.current === request && latestText.current === text;
   }, [fallback, onCopied, subject, text]);
 
   return { state, message, copy };
@@ -156,7 +194,7 @@ function CopyGlyph({ copied }: Readonly<{ copied: boolean }>) {
   );
 }
 
-function CopyButton({ copy, overlay = false, state, subject }: Readonly<{ copy: () => Promise<void>; overlay?: boolean; state: CopyState; subject: string }>) {
+function CopyButton({ copy, overlay = false, state, subject }: Readonly<{ copy: () => Promise<boolean>; overlay?: boolean; state: CopyState; subject: string }>) {
   return (
     <button aria-busy={state === "copying" || undefined} aria-label={`${state === "copied" ? "Copied" : "Copy"} ${subject}`} className={cx(["copy", overlay && "copyOverlay"])} data-copy-state={state} disabled={state === "copying"} onClick={() => { void copy(); }} type="button">
       <CopyGlyph copied={state === "copied"} />
@@ -167,6 +205,29 @@ function CopyButton({ copy, overlay = false, state, subject }: Readonly<{ copy: 
 
 function CopyStatus({ children }: Readonly<{ children: ReactNode }>) {
   return <p aria-atomic="true" aria-live="polite" className={cx(["status"])} role="status">{children}</p>;
+}
+
+function closeReservedTab(tab: Window | null): void {
+  try { if (tab !== null && !tab.closed) tab.close(); } catch { /* An already closed reservation needs no cleanup. */ }
+}
+
+function reserveTargetTab(owner: Window | null): Window | null {
+  let tab: Window | null = null;
+  try {
+    // Reserve during activation; async clipboard work can outlive popup permission.
+    tab = owner?.open("about:blank", "_blank") ?? null;
+    if (tab !== null) {
+      tab.opener = null;
+      const policy = tab.document.createElement("meta");
+      policy.name = "referrer";
+      policy.content = "no-referrer";
+      tab.document.head.append(policy);
+    }
+    return tab;
+  } catch {
+    closeReservedTab(tab);
+    return null;
+  }
 }
 
 /** A quiet prompt preview with the complete source behind a native disclosure. */
@@ -180,14 +241,62 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
   }
   const id = useId();
   const [expanded, setExpanded] = useState(false);
+  const [handoffMessage, setHandoffMessage] = useState("");
   const details = useRef<HTMLDetailsElement>(null);
   const full = useRef<HTMLPreElement>(null);
+  const destinationKey = JSON.stringify(targets.map(({ id: targetId, href, mode }) => [targetId, href, mode ?? "prefill"]));
+  const latestHandoff = useRef({ prompt, destinationKey });
+  latestHandoff.current = { prompt, destinationKey };
+  const pendingHandoff = useRef<Readonly<{ tab: Window | null }> | null>(null);
   const fallback = useCallback(() => {
     if (details.current !== null) details.current.open = true;
     setExpanded(true);
     return full.current;
   }, []);
   const { state, message, copy } = useCopy(prompt, "setup prompt", fallback, onCopied);
+  const copyPrompt = useCallback(() => {
+    setHandoffMessage("");
+    return copy();
+  }, [copy]);
+
+  useEffect(() => {
+    setHandoffMessage("");
+    return () => {
+      const pending = pendingHandoff.current;
+      pendingHandoff.current = null;
+      closeReservedTab(pending?.tab ?? null);
+    };
+  }, [destinationKey, prompt]);
+
+  const copyAndOpen = (event: MouseEvent<HTMLAnchorElement>, target: AgentSetupTarget) => {
+    if (event.type === "auxclick" && event.button !== 1) return;
+    event.preventDefault();
+    if (pendingHandoff.current !== null || state === "copying") return;
+    const href = event.currentTarget.href;
+    // Begin clipboard work before a new foreground tab can blur this document.
+    const copying = copyPrompt();
+    const request = { tab: reserveTargetTab(event.currentTarget.ownerDocument.defaultView) };
+    pendingHandoff.current = request;
+    void (async () => {
+      const copied = await copying;
+      if (pendingHandoff.current !== request || latestHandoff.current.prompt !== prompt || latestHandoff.current.destinationKey !== destinationKey) {
+        closeReservedTab(request.tab);
+        return;
+      }
+      pendingHandoff.current = null;
+      if (!copied) {
+        closeReservedTab(request.tab);
+        return;
+      }
+      if (request.tab !== null && !request.tab.closed) {
+        try {
+          request.tab.location.replace(href);
+          return;
+        } catch { closeReservedTab(request.tab); }
+      }
+      setHandoffMessage(`Copied setup prompt. Open ${target.label} in a new tab.`);
+    })();
+  };
 
   useEffect(() => {
     if (typeof window.matchMedia !== "function") return;
@@ -216,7 +325,7 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
             <summary className={cx(["summary"])}>{expanded ? "Hide full prompt" : "Show full prompt"}</summary>
             <pre aria-label={`${label} full prompt`} className={cx(["pre", "full"])} ref={full} tabIndex={0}>{prompt}</pre>
           </details>
-          <CopyButton copy={copy} overlay state={state} subject="setup prompt" />
+          <CopyButton copy={copyPrompt} overlay state={state} subject="setup prompt" />
         </div>
         {targets.length === 0 ? null : (
           <aside aria-labelledby={`${id}-targets`} className={cx(["targets"])}>
@@ -224,8 +333,8 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
             <ul className={cx(["targetList"])}>
               {targets.map((target) => (
                 <li key={target.id}>
-                  <a aria-label={target.mode === "copy-and-open" ? `Copy prompt and open ${target.label}` : undefined} className={cx(["target"])} data-agent-target={target.id} data-agent-target-mode={target.mode ?? "prefill"} href={target.href} onClick={target.mode === "copy-and-open" ? () => { void copy(); } : undefined} rel="noopener noreferrer" target="_blank">
-                    <ProviderMark mark={target.mark} size={20} tone="plain" />
+                  <a aria-busy={target.mode === "copy-and-open" && state === "copying" || undefined} aria-disabled={target.mode === "copy-and-open" && state === "copying" || undefined} aria-label={target.mode === "copy-and-open" ? `Copy prompt and open ${target.label}` : undefined} className={cx(["target"])} data-agent-target={target.id} data-agent-target-mode={target.mode ?? "prefill"} href={target.href} onAuxClick={target.mode === "copy-and-open" ? (event) => { copyAndOpen(event, target); } : undefined} onClick={target.mode === "copy-and-open" ? (event) => { copyAndOpen(event, target); } : undefined} rel="noopener noreferrer" target="_blank">
+                    <ProviderMark mark={target.mark} size={20} tone="inherit" />
                     <span>{target.label}</span>
                   </a>
                 </li>
@@ -234,7 +343,7 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
           </aside>
         )}
       </div>
-      <CopyStatus>{message}</CopyStatus>
+      <CopyStatus>{handoffMessage || message}</CopyStatus>
     </section>
   );
 }
@@ -289,7 +398,7 @@ export function AgentCommandTabs({ commands, label = "Agent commands", initial, 
           <div className={cx(["frame"])}>
             <div className={cx(["commandBar"])}>
               <div className={cx(["commandLabels"])}>
-                <p className={cx(["panelLabel"])}><ProviderMark mark={entry.mark} size={20} tone="plain" />{entry.label}</p>
+                <p className={cx(["panelLabel"])}><ProviderMark mark={entry.mark} size={20} tone="inherit" />{entry.label}</p>
                 {entry.filename === undefined ? null : <span className={cx(["filename"])}>{entry.filename}</span>}
               </div>
               <CopyButton copy={copy} state={entry.id === current.id ? state : "idle"} subject={commandSubject(entry)} />

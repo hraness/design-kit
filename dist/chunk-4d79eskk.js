@@ -9,38 +9,11 @@ import {
   assertArticleHref,
   formatArticleDate
 } from "./chunk-77391vmq.js";
-
-// src/palette-color.ts
-function channels(hex) {
-  if (!/^#[0-9a-f]{6}$/iu.test(hex))
-    throw new Error("Palette colors must be six-digit hex values.");
-  return [Number.parseInt(hex.slice(1, 3), 16), Number.parseInt(hex.slice(3, 5), 16), Number.parseInt(hex.slice(5, 7), 16)];
-}
-function mixPaletteColor(color, toward, amount) {
-  const target = channels(toward);
-  return `#${channels(color).map((value, index) => Math.round(value * (1 - amount) + (target[index] ?? 0) * amount).toString(16).padStart(2, "0")).join("")}`;
-}
-function luminance(hex) {
-  const linearize = (channel) => {
-    const value = channel / 255;
-    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-  };
-  const [red, green, blue] = channels(hex);
-  return linearize(red) * 0.2126 + linearize(green) * 0.7152 + linearize(blue) * 0.0722;
-}
-function paletteContrast(a, b) {
-  const first = luminance(a);
-  const second = luminance(b);
-  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
-}
-function readablePaletteColor(color, toward, backgrounds, minimum) {
-  for (let step = 0;step <= 100; step += 1) {
-    const candidate = mixPaletteColor(color, toward, step / 100);
-    if (backgrounds.every((background) => paletteContrast(candidate, background) >= minimum))
-      return candidate;
-  }
-  throw new Error("The authored palette cannot meet its contrast contract.");
-}
+import {
+  mixPaletteColor,
+  paletteContrast,
+  readablePaletteColor
+} from "./chunk-vst6p4wd.js";
 
 // src/palettes.ts
 var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night", "paper"];
@@ -994,17 +967,18 @@ function formatRelativeTime(target, options = {}) {
 }
 // src/agent-setup.ts
 var MAX_AGENT_SETUP_URL = 1e4;
-function agentSetupTargets(prompt) {
+function agentSetupTargets(prompt, options = {}) {
   if (typeof prompt !== "string" || prompt.trim() === "")
     throw new RangeError("Agent setup prompt must contain text.");
-  const encoded = encodeURIComponent(prompt);
-  const prefill = (href, entry) => href.length <= MAX_AGENT_SETUP_URL ? {
+  const encoded = options.prefill === false ? "" : encodeURIComponent(prompt);
+  const prefill = (href, entry) => options.prefill !== false && href.length <= MAX_AGENT_SETUP_URL ? {
     href,
     mode: "prefill"
   } : {
     href: entry,
     mode: "copy-and-open"
   };
+  const codex = prefill(`codex://new?prompt=${encoded}`, "https://chatgpt.com/codex");
   return [{
     id: "dot",
     label: "OpenAI Dot",
@@ -1036,8 +1010,8 @@ function agentSetupTargets(prompt) {
     id: "codex-app",
     label: "Codex",
     mark: "codex",
-    host: "local",
-    ...prefill(`codex://new?prompt=${encoded}`, "https://chatgpt.com/codex")
+    host: codex.mode === "prefill" ? "local" : "cloud",
+    ...codex
   }, {
     id: "devin",
     label: "Devin",

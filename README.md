@@ -25,7 +25,7 @@ on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
 ### Clearer marketing controls and agent setup
 
-Version 0.32.0 pairs filled mockup controls with their semantic foreground, so selected labels remain readable across palettes, light and dark modes, nested themes, and forced colors. Showcase hints and figure captions are optional; figures keep accessible labels without adding a visible “Illustration” prefix or repeating alt text.
+Version 0.32.0 pairs filled mockup controls with their semantic foreground, so selected labels remain readable across palettes, light and dark modes, nested themes, and forced colors. Solid provider marks choose foregrounds using measured contrast, including midtone brand colors. Showcase hints and figure captions are optional; figures keep accessible labels without adding a visible “Illustration” prefix or repeating alt text.
 
 New client compositions `AgentSetupPrompt` and `AgentCommandTabs` share prompt previews, complete-source copying, provider marks, responsive actions, and keyboard navigation. The framework-neutral `agentSetupTargets(prompt)` helper centralizes documented computer-agent destinations. `MarketingSection.headingContent` places commands and actions beside a result preview, and `MarketingActionLink` uses the existing shared action recipe. The provider registry adds Obsidian, Supermemory, Mem0, and GitHub Copilot. `ProviderMark` gains `tone="inherit"` for glyphs that follow a control’s foreground. See [AGENT_SETUP.md](AGENT_SETUP.md) for usage and verified handoffs.
 
@@ -100,7 +100,10 @@ import { ProviderMark, ProviderMarkChip } from "@hraness/design-kit/react";
 ```
 
 `ProviderMark` renders an accent-tinted tile by default, a saturated brand
-tile with `tone="solid"`, or the bare glyph with `tone="plain"`. Identity
+tile with `tone="solid"`, or the bare glyph with `tone="plain"`. Use
+`tone="inherit"` inside controls to follow their foreground. Solid marks
+measure their ink at 4.5:1 or better; custom solid accents must use an opaque
+hex color with six digits. Identity
 artwork comes from vendored sources (`vendor/provider-marks/`, LobeHub
 icons 1.95.1 plus the Crush and Aider marks documented in its UPSTREAM.md);
 marks without published color art keep a retinted glyph, and unknown names

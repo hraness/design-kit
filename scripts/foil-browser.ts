@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -30,7 +30,7 @@ assert(hiddenAtom, "The sibling fixture must contain its emitted display:none at
 const laterAtoms = `@layer components.foil-regression-sibling.priority3{${hiddenAtom}}`;
 const base = `body{margin:0;padding:32px;background:var(--background);color:var(--foreground);font:16px system-ui}body[data-theme=light]{color-scheme:light;--foreground:#211d1b;--background:#fbf6f2}body[data-theme=dark]{color-scheme:dark;--foreground:#f2eee9;--background:#171412}.samples{display:flex;align-items:center;gap:24px}.hraness-marketing-header__inner{padding:0}.hraness-marketing-header__brand{font-size:24px}`;
 const executablePath = await provisionedBrowserExecutable();
-const browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(["--no-sandbox"]) });
+const browser = await chromium.launch({ executablePath, headless: true, ...verificationBrowserLaunchOptions(["--no-sandbox"]) });
 const output = process.env.FOIL_SCREENSHOT_DIR ?? join(tmpdir(), "hraness-foil-browser");
 await mkdir(output, { recursive: true });
 try {

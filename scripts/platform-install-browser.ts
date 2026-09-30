@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 // Browser gate for PlatformInstall: the built client entry hydrates under a
 // strict content policy (no inline script or style), selects the visitor's
 // operating system, moves between tabs with the keyboard, copies the exact
@@ -61,7 +61,7 @@ const policy = "default-src 'none'; script-src 'self'; style-src 'self'; img-src
 const documentFor = (theme: string) => `<!doctype html><html lang="en" data-theme="${theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Install</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page.css"><script type="module" src="/app.js"></script></head><body><main><div id="root">${markup}</div></main></body></html>`;
 const pageCss = ".forced-selection-probe { position: absolute; visibility: hidden; color: HighlightText; background-color: Highlight; forced-color-adjust: none; } body { margin: 0; background: var(--background); color: var(--foreground); } main { padding: 16px; max-inline-size: 48rem; margin-inline: auto; } html[data-card] #root { padding: 16px; border: 1px solid; border-radius: 12px; } html[data-container=\"200\"] #root > * { inline-size: 200px; } html[data-container=\"230\"] #root > * { inline-size: 230px; } html[data-container=\"280\"] #root > * { inline-size: 280px; }";
 
-const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable() });
+const browser = await chromium.launch({ ...verificationBrowserLaunchOptions(), executablePath: await executable() });
 type OpenOptions = { width?: number; theme?: string; platform?: string; javaScriptEnabled?: boolean; colorScheme?: "light" | "dark"; card?: boolean; container?: 200 | 230 | 280; forcedColors?: "none" | "active" };
 async function open(options: OpenOptions = {}): Promise<Page> {
   const contextOptions: BrowserContextOptions = {

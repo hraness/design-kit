@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, writeFile } from "node:fs/promises";
@@ -409,7 +409,7 @@ try {
     return new Response(`<!doctype html><html lang="en" class="${getDesignPaletteTheme("paper", theme).className}" data-theme="${theme}" data-palette="paper" data-hraness-theme="paper"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lantern material proof</title><link rel="stylesheet" href="/styles.css?route=${route}"><link id="react-aria-pressable-style" rel="stylesheet" href="/layout.css"></head><body><div id="root"></div><script type="module" src="/fixture.js"></script></body></html>`, { headers: { "content-type": "text/html", "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'" } });
   } });
   const executablePath = await provisionedBrowserExecutable();
-  browser = await chromium.launch({ executablePath, headless: true, args: verificationBrowserArguments(process.platform === "linux" ? ["--no-sandbox"] : []) });
+  browser = await chromium.launch({ executablePath, headless: true, ...verificationBrowserLaunchOptions(process.platform === "linux" ? ["--no-sandbox"] : []) });
   const opacityProof = await verifyLanternOpacity(browser, material, output);
   const headerOpacityProof = await verifySharedHeaderOpacity(browser, root);
   const marketingPaletteProof = await verifyMarketingPaletteActions(browser, root);

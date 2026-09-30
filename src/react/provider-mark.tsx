@@ -85,12 +85,7 @@ export function ProviderMark({ mark, className, label, size = 32, tone = "tile" 
       {hasArtwork ? <Artwork mark={resolved} tone={tone} /> : null}
       <span
         aria-hidden="true"
-        className={[
-          providerMarkClassName("monogram"),
-          hasArtwork ? "" : providerMarkClassName("monogramOnly"),
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        className={providerMarkClassName(hasArtwork ? "monogram" : ["monogram", "monogramOnly"])}
       >
         {resolved.monogram}
       </span>

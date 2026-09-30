@@ -1,4 +1,5 @@
 import { providerMarkAssets, type ProviderMarkArtwork } from "./provider-marks.generated.js";
+import { paletteContrast } from "./palette-color.js";
 
 /**
  * Canonical provider and agent identity for product surfaces. Each mark pairs
@@ -62,22 +63,16 @@ function foldedIdentity(identity: string): string {
   return identity.toLowerCase().replaceAll(/[^a-z0-9]/gu, "");
 }
 
-/** Perceived brightness (0-255) from the YIQ transform of one hex color. */
-function perceivedBrightness(hexColor: string): number | null {
-  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/u.exec(hexColor.toLowerCase());
-  if (match === null) return null;
-  return (
-    (Number.parseInt(match[1] ?? "0", 16) * 299 +
-      Number.parseInt(match[2] ?? "0", 16) * 587 +
-      Number.parseInt(match[3] ?? "0", 16) * 114) /
-    1000
-  );
-}
-
-/** A readable glyph color on top of the mark's accent. */
+/** An opaque glyph color at 4.5:1 or better on a six-digit brand accent. */
 export function providerMarkOnAccent(mark: Pick<ProviderMarkDescriptor, "accent">): string {
-  const brightness = perceivedBrightness(mark.accent);
-  return brightness !== null && brightness > 168 ? "#1c1917" : "#f7f6f2";
+  if (!/^#[0-9a-f]{6}$/iu.test(mark.accent)) throw new RangeError("Solid provider mark accents must be opaque six-digit hex colors.");
+  const moreReadable = (light: string, dark: string): string =>
+    paletteContrast(light, mark.accent) >= paletteContrast(dark, mark.accent) ? light : dark;
+  const preferred = moreReadable("#f7f6f2", "#1c1917");
+  // Retain warm ink where it passes; middle luminances may need pure ink.
+  return paletteContrast(preferred, mark.accent) >= 4.5
+    ? preferred
+    : moreReadable("#ffffff", "#000000");
 }
 
 /** Two-letter uppercase monogram from a display name, for uncovered marks. */

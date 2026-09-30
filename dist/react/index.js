@@ -83,7 +83,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-2f8fgmpv.js";
+} from "../chunk-95p0j72v.js";
 import"../chunk-h4k7yv6x.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
@@ -113,7 +113,7 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-833cbzk0.js";
+} from "../chunk-4d79eskk.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
@@ -123,7 +123,7 @@ import {
   characterLength,
   xPostLength
 } from "../chunk-cejpzyfh.js";
-import"../chunk-52t97yak.js";
+import"../chunk-vst6p4wd.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -378,13 +378,13 @@ var agentSetupStyles = {
   tab: {
     kGNEyG: "x6s0dn4",
     kysU6D: "xjyslct",
-    kWkggS: "xjbqb8w x1lf5oka xnwy5bs",
+    kWkggS: "xw51l6n x1jf9jbc xnwy5bs",
     kVAM5u: "x9r1u3d x1ylmb6m",
     kaIpWk: "x116uinm",
     ksu8eU: "x1y0btm7",
     kMzoRj: "xmkeg23",
     kB7OPa: "x9f619",
-    kMwMTN: "x12x9krh x10zor9s x1ggml12",
+    kMwMTN: "xm06a53 x10zor9s x1ggml12",
     kkrTdU: "x1ypdohk",
     k1xSpc: "x3nfvp2",
     kMv6JI: "xjb2p0i",
@@ -512,11 +512,63 @@ async function copyText(text, fallback) {
     }
   } catch {}
   const source = fallback();
+  if (source === null)
+    return {
+      ok: false,
+      selected: false
+    };
+  const documentValue = source.ownerDocument;
+  const focused = documentValue.activeElement;
+  let buffer = null;
+  let copied = false;
+  let exactEvent = false;
+  const copyExact = (event) => {
+    if (documentValue.activeElement !== buffer || event.clipboardData === null)
+      return;
+    try {
+      event.clipboardData.setData("text/plain", text);
+      event.preventDefault();
+      exactEvent = event.defaultPrevented;
+    } catch {}
+  };
+  try {
+    buffer = documentValue.createElement("textarea");
+    buffer.value = text;
+    buffer.readOnly = true;
+    buffer.tabIndex = -1;
+    buffer.setAttribute("data-hraness-copy-buffer", "");
+    buffer.style.cssText = "position:fixed;left:0;top:0;width:1px;height:1px;padding:0;border:0;opacity:0;overflow:hidden;resize:none;pointer-events:none";
+    documentValue.body.append(buffer);
+    buffer.focus({
+      preventScroll: true
+    });
+    buffer.select();
+    buffer.setSelectionRange(0, buffer.value.length);
+    documentValue.addEventListener("copy", copyExact);
+    copied = documentValue.execCommand("copy") === true && (buffer.value === text || exactEvent);
+  } catch {
+    copied = false;
+  } finally {
+    documentValue.removeEventListener("copy", copyExact);
+    buffer?.remove();
+    if (copied && focused?.isConnected === true && typeof focused.focus === "function") {
+      try {
+        focused.focus({
+          preventScroll: true
+        });
+      } catch {}
+    }
+  }
+  if (copied)
+    return {
+      ok: true,
+      selected: false
+    };
   let selected = false;
   try {
-    const selection = source?.ownerDocument.defaultView?.getSelection();
-    if (source !== null && selection !== null && selection !== undefined) {
-      const range = source.ownerDocument.createRange();
+    const selection = documentValue.defaultView?.getSelection();
+    if (selection !== null && selection !== undefined) {
+      const range = documentValue.createRange();
       range.selectNodeContents(source);
       selection.removeAllRanges();
       selection.addRange(range);
@@ -524,7 +576,7 @@ async function copyText(text, fallback) {
       selected = true;
     }
     return {
-      ok: selected && source?.ownerDocument.execCommand("copy") === true,
+      ok: false,
       selected
     };
   } catch {
@@ -556,7 +608,7 @@ function useCopy(text, subject, fallback, onCopied) {
   }, [text, subject]);
   const copy = useCallback(async () => {
     if (busy.current)
-      return;
+      return false;
     if (timer.current !== null)
       clearTimeout(timer.current);
     busy.current = true;
@@ -565,7 +617,7 @@ function useCopy(text, subject, fallback, onCopied) {
     setMessage(`Copying ${subject}.`);
     const result = await copyText(text, () => generation.current === request && latestText.current === text ? fallback() : null);
     if (generation.current !== request || latestText.current !== text)
-      return;
+      return false;
     busy.current = false;
     setState(result.ok ? "copied" : "failed");
     setMessage(result.ok ? `Copied ${subject}.` : result.selected ? `Copy failed. The ${subject} is selected; copy it with your keyboard.` : `Copy failed. Select the ${subject} and copy it with your keyboard.`);
@@ -580,6 +632,7 @@ function useCopy(text, subject, fallback, onCopied) {
       setState("idle");
       setMessage("");
     }, 2000);
+    return result.ok && generation.current === request && latestText.current === text;
   }, [fallback, onCopied, subject, text]);
   return {
     state,
@@ -655,6 +708,29 @@ function CopyStatus({
     children
   });
 }
+function closeReservedTab(tab) {
+  try {
+    if (tab !== null && !tab.closed)
+      tab.close();
+  } catch {}
+}
+function reserveTargetTab(owner) {
+  let tab = null;
+  try {
+    tab = owner?.open("about:blank", "_blank") ?? null;
+    if (tab !== null) {
+      tab.opener = null;
+      const policy = tab.document.createElement("meta");
+      policy.name = "referrer";
+      policy.content = "no-referrer";
+      tab.document.head.append(policy);
+    }
+    return tab;
+  } catch {
+    closeReservedTab(tab);
+    return null;
+  }
+}
 function AgentSetupPrompt({
   prompt,
   label = "Agent setup",
@@ -672,8 +748,23 @@ function AgentSetupPrompt({
   }
   const id = useId();
   const [expanded, setExpanded] = useState(false);
+  const [handoffMessage, setHandoffMessage] = useState("");
   const details = useRef(null);
   const full = useRef(null);
+  const destinationKey = JSON.stringify(targets.map(({
+    id: targetId,
+    href,
+    mode
+  }) => [targetId, href, mode ?? "prefill"]));
+  const latestHandoff = useRef({
+    prompt,
+    destinationKey
+  });
+  latestHandoff.current = {
+    prompt,
+    destinationKey
+  };
+  const pendingHandoff = useRef(null);
   const fallback = useCallback(() => {
     if (details.current !== null)
       details.current.open = true;
@@ -685,6 +776,52 @@ function AgentSetupPrompt({
     message,
     copy
   } = useCopy(prompt, "setup prompt", fallback, onCopied);
+  const copyPrompt = useCallback(() => {
+    setHandoffMessage("");
+    return copy();
+  }, [copy]);
+  useEffect(() => {
+    setHandoffMessage("");
+    return () => {
+      const pending = pendingHandoff.current;
+      pendingHandoff.current = null;
+      closeReservedTab(pending?.tab ?? null);
+    };
+  }, [destinationKey, prompt]);
+  const copyAndOpen = (event, target) => {
+    if (event.type === "auxclick" && event.button !== 1)
+      return;
+    event.preventDefault();
+    if (pendingHandoff.current !== null || state === "copying")
+      return;
+    const href = event.currentTarget.href;
+    const copying = copyPrompt();
+    const request = {
+      tab: reserveTargetTab(event.currentTarget.ownerDocument.defaultView)
+    };
+    pendingHandoff.current = request;
+    (async () => {
+      const copied = await copying;
+      if (pendingHandoff.current !== request || latestHandoff.current.prompt !== prompt || latestHandoff.current.destinationKey !== destinationKey) {
+        closeReservedTab(request.tab);
+        return;
+      }
+      pendingHandoff.current = null;
+      if (!copied) {
+        closeReservedTab(request.tab);
+        return;
+      }
+      if (request.tab !== null && !request.tab.closed) {
+        try {
+          request.tab.location.replace(href);
+          return;
+        } catch {
+          closeReservedTab(request.tab);
+        }
+      }
+      setHandoffMessage(`Copied setup prompt. Open ${target.label} in a new tab.`);
+    })();
+  };
   useEffect(() => {
     if (typeof window.matchMedia !== "function")
       return;
@@ -745,7 +882,7 @@ function AgentSetupPrompt({
                 ]
               }),
               /* @__PURE__ */ jsx2(CopyButton, {
-                copy,
+                copy: copyPrompt,
                 overlay: true,
                 state,
                 subject: "setup prompt"
@@ -765,13 +902,18 @@ function AgentSetupPrompt({
                 className: agentSetupClassName(["targetList"]),
                 children: targets.map((target) => /* @__PURE__ */ jsx2("li", {
                   children: /* @__PURE__ */ jsxs("a", {
+                    "aria-busy": target.mode === "copy-and-open" && state === "copying" || undefined,
+                    "aria-disabled": target.mode === "copy-and-open" && state === "copying" || undefined,
                     "aria-label": target.mode === "copy-and-open" ? `Copy prompt and open ${target.label}` : undefined,
                     className: agentSetupClassName(["target"]),
                     "data-agent-target": target.id,
                     "data-agent-target-mode": target.mode ?? "prefill",
                     href: target.href,
-                    onClick: target.mode === "copy-and-open" ? () => {
-                      copy();
+                    onAuxClick: target.mode === "copy-and-open" ? (event) => {
+                      copyAndOpen(event, target);
+                    } : undefined,
+                    onClick: target.mode === "copy-and-open" ? (event) => {
+                      copyAndOpen(event, target);
                     } : undefined,
                     rel: "noopener noreferrer",
                     target: "_blank",
@@ -779,7 +921,7 @@ function AgentSetupPrompt({
                       /* @__PURE__ */ jsx2(ProviderMark, {
                         mark: target.mark,
                         size: 20,
-                        tone: "plain"
+                        tone: "inherit"
                       }),
                       /* @__PURE__ */ jsx2("span", {
                         children: target.label
@@ -793,7 +935,7 @@ function AgentSetupPrompt({
         ]
       }),
       /* @__PURE__ */ jsx2(CopyStatus, {
-        children: message
+        children: handoffMessage || message
       })
     ]
   });
@@ -912,7 +1054,7 @@ function AgentCommandTabs({
                         /* @__PURE__ */ jsx2(ProviderMark, {
                           mark: entry.mark,
                           size: 20,
-                          tone: "plain"
+                          tone: "inherit"
                         }),
                         entry.label
                       ]

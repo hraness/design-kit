@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 // Browser proof for `@hraness/design-kit/mockups`. Every gallery fixture is
 // rendered on the server from dist, served with `mockups.css` alone, and
 // checked at phone and desktop widths under a light and a dark page: no
@@ -150,7 +150,7 @@ try {
     return new Response("Not found", { status: 404 });
   } });
   try {
-    const browser = await chromium.launch({ args: verificationBrowserArguments(), executablePath: await executable(), headless: true });
+    const browser = await chromium.launch({ ...verificationBrowserLaunchOptions(), executablePath: await executable(), headless: true });
     try {
       if (screenshots !== undefined) await mkdir(screenshots, { recursive: true });
       let cases = 0;

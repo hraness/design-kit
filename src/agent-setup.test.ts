@@ -41,7 +41,26 @@ describe("computer-agent setup destinations", () => {
     expect(targets.every(({ mode, href }) => mode === "copy-and-open" && href.length <= MAX_AGENT_SETUP_URL)).toBe(true);
     expect(targets.find(({ id }) => id === "cursor")?.href).toBe("https://cursor.com/");
     expect(targets.find(({ id }) => id === "codex-app")?.href).toBe("https://chatgpt.com/codex");
+    expect(targets.filter(({ host }) => host === "local").map(({ id }) => id)).toEqual(["cursor"]);
     expect(agentSetupTargets("short").filter(({ mode }) => mode === "prefill")).toHaveLength(2);
+  });
+
+  test("prompt-free products use canonical copy-and-open entries for every agent", () => {
+    fc.assert(fc.property(fc.string({ minLength: 1, maxLength: 400 }).filter((prompt) => prompt.trim() !== ""), (prompt) => {
+      const targets = agentSetupTargets(prompt, { prefill: false });
+      expect(targets).toHaveLength(6);
+      for (const target of targets) {
+        const url = new URL(target.href);
+        expect(target.mode).toBe("copy-and-open");
+        expect(url.protocol).toBe("https:");
+        expect(url.search).toBe("");
+        expect(url.hash).toBe("");
+      }
+      expect(targets.find(({ id }) => id === "cursor")?.href).toBe("https://cursor.com/");
+      expect(targets.find(({ id }) => id === "codex-app")?.href).toBe("https://chatgpt.com/codex");
+      expect(targets.filter(({ host }) => host === "local").map(({ id }) => id)).toEqual(["cursor"]);
+    }), { seed: 20260930 });
+    expect(agentSetupTargets("short", { prefill: true }).filter(({ mode }) => mode === "prefill")).toHaveLength(2);
   });
 
   test("rejects empty prompts rather than creating unusable handoffs", () => {

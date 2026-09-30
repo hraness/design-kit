@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { createServer } from "node:net";
 import { tmpdir } from "node:os";
@@ -163,7 +163,7 @@ async function evidence(page: Page): Promise<ThemeColorEvidence> {
 }
 
 async function openBrowser(executablePath: string): Promise<Browser> {
-  return chromium.launch({ args: verificationBrowserArguments(["--no-sandbox"]), executablePath, headless: true });
+  return chromium.launch({ ...verificationBrowserLaunchOptions(["--no-sandbox"]), executablePath, headless: true });
 }
 
 const work = await mkdtemp(join(tmpdir(), "hraness-global-error-browser-"));

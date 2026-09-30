@@ -46,11 +46,8 @@ export const providerMarkStyles = stylex.create({
       default: "var(--_mark-accent)",
       "@media (forced-colors: active)": "Canvas",
     },
-    backgroundImage: {
-      default:
-        "linear-gradient(180deg, color-mix(in srgb, white 22%, transparent), transparent 52%), linear-gradient(160deg, transparent, color-mix(in srgb, var(--_mark-accent) 78%, black))",
-      "@media (forced-colors: active)": "none",
-    },
+    backgroundImage: "none",
+    boxShadow: "none",
     color: "var(--_mark-on-accent, #f7f6f2)",
     outline: {
       default: "1px solid color-mix(in srgb, var(--_mark-accent) 70%, black)",

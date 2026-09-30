@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test";
+import fc from "fast-check";
 
 import { providerMarkAssets } from "./provider-marks.generated";
+import { paletteContrast } from "./palette-color";
 import {
   providerMark,
   providerMarkArtDataUri,
@@ -103,6 +105,29 @@ test("art data uris exist only where vendor-colored art exists", () => {
 test("on-accent colors flip between light and dark for contrast", () => {
   expect(providerMarkOnAccent({ accent: "#111418" })).toBe("#f7f6f2");
   expect(providerMarkOnAccent({ accent: "#ffde59" })).toBe("#1c1917");
+});
+
+test("solid ink rejects colors whose opacity and contrast cannot be measured", () => {
+  for (const accent of ["#f00", "red", "#ff000080", "transparent", "var(--brand)", "#gg0000"]) {
+    expect(() => providerMarkOnAccent({ accent })).toThrow(RangeError);
+  }
+});
+
+test("solid brand marks pair every registered accent with readable ink", () => {
+  for (const mark of providerMarks) {
+    expect(paletteContrast(providerMarkOnAccent(mark), mark.accent)).toBeGreaterThanOrEqual(4.5);
+  }
+  // Brightness alone picked pale ink on these midtone brand colors.
+  for (const accent of ["#d97757", "#ff6a00", "#3186ff", "#74b71b"]) {
+    expect(providerMarkOnAccent({ accent })).toBe("#1c1917");
+  }
+});
+
+test("solid brand ink meets contrast across arbitrary opaque sRGB accents", () => {
+  fc.assert(fc.property(fc.integer({ min: 0, max: 0xffffff }), (value) => {
+    const accent = `#${value.toString(16).padStart(6, "0")}`;
+    expect(paletteContrast(providerMarkOnAccent({ accent }), accent)).toBeGreaterThanOrEqual(4.5);
+  }), { numRuns: 2048, seed: 20260930 });
 });
 
 test("no artwork carries scriptable or event-handler markup", () => {

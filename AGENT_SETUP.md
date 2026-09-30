@@ -38,7 +38,8 @@ failures reveal and select the full source for keyboard copying.
 `label`, `mark`, `href`, `mode`, and `host`. Filter on `host === "local"`
 when a product needs the user's local computer. A cloud computer's durable
 storage still needs a product-specific workflow; a temporary coding session
-does not guarantee permanent memory. Targets do not submit prompts.
+does not guarantee permanent memory. Codex's desktop deep link is local;
+its web entry fallback is marked cloud. Targets do not submit prompts.
 
 Public documentation checked on September 30, 2026:
 
@@ -55,10 +56,16 @@ Composer links carry the complete encoded prompt. If a URL exceeds 10,000
 characters, the helper returns a normal entry link with `copy-and-open`.
 This avoids truncating a prompt at Cursor's documented URL limit.
 
+For products that keep prompts out of URLs, call
+`agentSetupTargets(prompt, { prefill: false })`. Every destination then uses
+its documented entry page with `copy-and-open`, including Cursor and Codex.
+
 Callers may supply other valid HTTP, HTTPS, or Codex destinations and
 provider identities directly. Use `mode: "copy-and-open"` for products
-without a documented prompt deep link. A clipboard failure is announced
-truthfully while native navigation remains available.
+without a documented prompt deep link. Enhanced handoffs open the provider
+after the complete current prompt has copied successfully. A failed copy
+keeps the full prompt visible and stays on the setup page. Destination links
+retain their native browser and no-JavaScript behavior.
 
 ## Product requirements
 

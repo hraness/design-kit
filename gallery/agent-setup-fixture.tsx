@@ -1,4 +1,8 @@
+import { providerMarkFallback } from "../src/provider-marks.js";
 import type * as AgentSetup from "../src/react/agent-setup-prompt.js";
+import type * as ProviderMarks from "../src/react/provider-mark.js";
+
+export type AgentSetupFixtureApi = Pick<typeof AgentSetup, "AgentSetupPrompt" | "AgentCommandTabs"> & Pick<typeof ProviderMarks, "ProviderMark">;
 
 export const agentSetupFixturePrompt = [
   "Install Sample in this workspace.",
@@ -29,15 +33,25 @@ const markInheritanceCommands: readonly AgentSetup.AgentCommand[] = [
   { id: "other", label: "Other agent", mark: "unknown-agent", command: "sample serve" },
 ];
 
-export function AgentSetupFixture({ api }: Readonly<{ api: Pick<typeof AgentSetup, "AgentSetupPrompt" | "AgentCommandTabs"> }>) {
-  const { AgentSetupPrompt, AgentCommandTabs } = api;
+const solidMarks = [
+  { id: "nvidia", label: "NVIDIA", mark: "nvidia" },
+  { id: "claude", label: "Claude Code", mark: "claudecode" },
+  { id: "gemini", label: "Gemini", mark: "gemini" },
+  { id: "neutral", label: "Neutral agent", mark: { ...providerMarkFallback("Neutral agent"), accent: "#777777" } },
+] as const;
+
+export function AgentSetupFixture({ api, prompt = agentSetupFixturePrompt }: Readonly<{ api: AgentSetupFixtureApi; prompt?: string }>) {
+  const { AgentSetupPrompt, AgentCommandTabs, ProviderMark } = api;
   return (
     <main>
-      <div id="prompt"><AgentSetupPrompt label="Set up Sample" prompt={agentSetupFixturePrompt} targets={agentSetupFixtureTargets} /></div>
+      <div id="prompt"><AgentSetupPrompt label="Set up Sample" prompt={prompt} targets={agentSetupFixtureTargets} /></div>
       <div id="commands"><AgentCommandTabs commands={agentSetupFixtureCommands} /></div>
-      <div className="fixture-narrow" id="narrow"><AgentSetupPrompt prompt={agentSetupFixturePrompt} targets={agentSetupFixtureTargets} /></div>
+      <div className="fixture-narrow" id="narrow"><AgentSetupPrompt prompt={prompt} targets={agentSetupFixtureTargets} /></div>
       <div className="fixture-accent" id="accent"><AgentCommandTabs commands={agentSetupFixtureCommands} label="Commands in an accent section" /></div>
       <div id="mark-inheritance"><AgentCommandTabs commands={markInheritanceCommands} label="Inherited provider ink" /></div>
+      <div className="fixture-solid" id="solid-marks" role="group" aria-label="Solid provider marks">
+        {solidMarks.map(({ id, label, mark }) => <span data-solid-mark={id} key={id}><ProviderMark label={label} mark={mark} size={48} tone="solid" /></span>)}
+      </div>
     </main>
   );
 }

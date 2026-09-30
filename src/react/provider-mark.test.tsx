@@ -47,7 +47,7 @@ test("an explicit label names the tile; otherwise it stays decorative", () => {
 test("solid tiles pin a readable on-accent glyph color", () => {
   const { document } = parseHTML(renderToStaticMarkup(<ProviderMark mark="nvidia" tone="solid" />));
   expect(document.querySelector(".hraness-provider-mark")?.getAttribute("style")).toContain(
-    "--_mark-on-accent:#f7f6f2",
+    "--_mark-on-accent:#1c1917",
   );
 });
 

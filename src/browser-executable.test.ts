@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { readdir, readFile } from "node:fs/promises";
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "../scripts/browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserArguments, verificationBrowserLaunchOptions } from "../scripts/browser-executable.js";
 
 const managedPath = "/cache/chromium-1234/chrome";
 const base = {
@@ -16,6 +16,42 @@ describe("provisioned verification browser", () => {
     expect(verificationBrowserArguments(["--no-sandbox", "--disable-features=Existing,PaintHolding", "--mute-audio", "--disable-features=Other"]))
       .toEqual(["--no-sandbox", "--mute-audio", "--disable-features=PaintHolding,MacAppCodeSignClone,Existing,Other"]);
     expect(verificationBrowserArguments()).toEqual(["--mute-audio", "--disable-features=PaintHolding,MacAppCodeSignClone"]);
+  });
+
+  test("retains pinned browser defaults with one physical feature switch", () => {
+    for (const features of ["Existing", "PaintHolding,MacAppCodeSignClone"]) {
+      for (const audio of [[], ["--mute-audio"]]) {
+        const defaults = ["--enable-automation", ...audio, `--disable-features=${features}`];
+        const options = verificationBrowserLaunchOptions(["--no-sandbox"], defaults);
+        const ignored = options.ignoreDefaultArgs as readonly string[];
+        // Playwright filters both its defaults and supplied arguments.
+        const physical = [...defaults, ...options.args ?? []].filter((argument) => !ignored.includes(argument));
+        const disabled = physical.filter((argument) => argument.startsWith("--disable-features="));
+        expect(disabled).toHaveLength(1);
+        const merged = disabled[0]?.slice("--disable-features=".length).split(",") ?? [];
+        expect(merged).toContain("PaintHolding");
+        expect(merged).toContain("MacAppCodeSignClone");
+        for (const feature of features.split(",")) expect(merged).toContain(feature);
+        expect(physical.filter((argument) => argument === "--mute-audio")).toHaveLength(1);
+        expect(physical).toContain("--enable-automation");
+        expect(physical).toContain("--no-sandbox");
+      }
+    }
+  });
+
+  test("fails closed when pinned feature defaults cannot be reconciled", () => {
+    expect(() => verificationBrowserLaunchOptions([], [])).toThrow("exactly one");
+    expect(() => verificationBrowserLaunchOptions([], ["--disable-features=One", "--disable-features=Two"])).toThrow("exactly one");
+    expect(() => verificationBrowserLaunchOptions(["--disable-features"], ["--disable-features=One"])).toThrow("--disable-features=value");
+  });
+
+  test("reads the installed exact pin's complete Chromium defaults", () => {
+    const options = verificationBrowserLaunchOptions(["--disable-features=CallerFeature"]);
+    const replacement = options.args?.find((argument) => argument.startsWith("--disable-features="));
+    expect(replacement).toContain("CallerFeature");
+    expect(replacement).toContain("PaintHolding");
+    expect(replacement).toContain("MacAppCodeSignClone");
+    expect(options.ignoreDefaultArgs).toHaveLength(1);
   });
 
   test("uses the pinned managed executable and reports its identity", async () => {
@@ -64,7 +100,7 @@ describe("provisioned verification browser", () => {
       if (!source.includes("chromium.launch(")) continue;
       launches += 1;
       expect(source).toContain('from "./browser-executable.js"');
-      expect(source).toContain("args: verificationBrowserArguments(");
+      expect(source).toContain("...verificationBrowserLaunchOptions(");
       expect(source).not.toContain("chromium.executablePath()");
       expect(source).not.toContain("/Applications/Google Chrome.app");
       expect(source).not.toContain("process.env.CHROME_PATH");

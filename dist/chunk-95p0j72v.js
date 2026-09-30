@@ -29,7 +29,7 @@ import {
   providerMark,
   providerMarkFallback,
   providerMarkOnAccent
-} from "./chunk-52t97yak.js";
+} from "./chunk-vst6p4wd.js";
 
 // src/react/provider-mark.stylex.ts
 import * as stylex from "@stylexjs/stylex";
@@ -55,7 +55,8 @@ var providerMarkStyles = {
   },
   solid: {
     kWkggS: "xpipt50 x9yvj25",
-    kKwaWg: "xs51ml9 xhobzj1",
+    kKwaWg: "x18o3ruo",
+    kGVxlE: "x1gnnqk1",
     kMwMTN: "x3mibv",
     kI3sdo: "x15sqzv3 xidp9i6",
     $$css: true
@@ -201,7 +202,7 @@ function ProviderMark({
       }) : null,
       /* @__PURE__ */ jsx("span", {
         "aria-hidden": "true",
-        className: [providerMarkClassName("monogram"), hasArtwork ? "" : providerMarkClassName("monogramOnly")].filter(Boolean).join(" "),
+        className: providerMarkClassName(hasArtwork ? "monogram" : ["monogram", "monogramOnly"]),
         children: resolved.monogram
       })
     ]

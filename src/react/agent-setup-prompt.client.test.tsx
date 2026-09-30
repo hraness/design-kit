@@ -6,7 +6,7 @@ import { renderToString } from "react-dom/server";
 
 import { AgentCommandTabs, AgentSetupPrompt, type AgentCommand } from "./agent-setup-prompt.js";
 
-const names = ["document", "Document", "Element", "HTMLElement", "Node", "navigator", "window", "getSelection", "matchMedia"] as const;
+const names = ["document", "Document", "Element", "HTMLElement", "Node", "navigator", "window", "getSelection", "matchMedia", "open"] as const;
 const globalRecord = globalThis as unknown as Record<string, unknown>;
 const originalDescriptors = new Map(names.map((name) => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
 let root: Root | null = null;
@@ -56,6 +56,64 @@ afterEach(() => {
 });
 
 const prompt = "First line.\n\n  Preserve spaces, `quotes`, and <tags>.\nLast line.\n";
+const copyTarget = { id: "claude", label: "Claude", mark: "example-agent", href: "https://claude.ai/new", mode: "copy-and-open" as const };
+
+function legacyClipboard(container: HTMLElement, { normalize = false, data = true }: { normalize?: boolean; data?: boolean } = {}) {
+  const documentValue = container.ownerDocument;
+  const view = documentValue.defaultView as unknown as { Event: typeof Event };
+  const original = documentValue.createElement.bind(documentValue);
+  const button = container.querySelector("button") as HTMLButtonElement;
+  let focused: Element | null = button;
+  const values: string[] = [];
+  const written: string[] = [];
+  Object.defineProperty(documentValue, "activeElement", { configurable: true, get: () => focused });
+  Object.defineProperty(button, "focus", { configurable: true, value: () => { focused = button; } });
+  Object.defineProperty(documentValue, "createElement", { configurable: true, value: (name: string) => {
+    const node = original(name);
+    if (name === "textarea") {
+      let value = "";
+      Object.defineProperty(node, "value", { configurable: true, get: () => value, set: (next: string) => { value = normalize ? next.replace(/\r\n?/gu, "\n") : next; } });
+      Object.defineProperty(node, "focus", { configurable: true, value: () => { focused = node; } });
+      Object.defineProperty(node, "select", { configurable: true, value: () => undefined });
+      Object.defineProperty(node, "setSelectionRange", { configurable: true, value: (start: number, end: number) => { expect(start).toBe(0); expect(end).toBe(value.length); } });
+    }
+    return node;
+  } });
+  const fire = () => {
+    const event = new view.Event("copy", { bubbles: true, cancelable: true });
+    Object.defineProperty(event, "clipboardData", { value: data ? { setData: (type: string, text: string) => { expect(type).toBe("text/plain"); written.push(text); } } : null });
+    documentValue.dispatchEvent(event);
+    return event;
+  };
+  Object.defineProperty(documentValue, "execCommand", { configurable: true, value: (command: string) => {
+    expect(command).toBe("copy");
+    expect(focused?.tagName).toBe("TEXTAREA");
+    values.push((focused as HTMLTextAreaElement).value);
+    fire();
+    return true;
+  } });
+  return { values, written, fire, restored: () => focused === button };
+}
+
+function targetTab(container: HTMLElement, blocked = false) {
+  const opened: string[][] = [];
+  const navigations: string[] = [];
+  const { document } = parseHTML("<!doctype html><html><head></head><body></body></html>");
+  const tab = {
+    opener: {} as unknown,
+    closed: false,
+    closeCount: 0,
+    document,
+    location: { replace: (href: string) => { navigations.push(href); } },
+    close: () => { tab.closed = true; tab.closeCount += 1; },
+  };
+  Object.defineProperty(container.ownerDocument.defaultView, "open", {
+    configurable: true,
+    value: (...args: string[]) => { opened.push(args); return blocked ? null : tab; },
+  });
+  return { opened, navigations, tab };
+}
+
 const commands: readonly AgentCommand[] = [
   // Linkedom rewrites self-closing SVG paths. Browser fixtures exercise the
   // actual provider art; this DOM harness uses the shared monogram fallback.
@@ -100,21 +158,44 @@ test("an ordinary prompt isolates a forced-color media stub left by another fixt
   expect(container.querySelector("details")?.hasAttribute("open")).toBe(false);
 });
 
-test("a denied clipboard expands and selects the complete source for legacy and manual copying", async () => {
+test("a denied clipboard uses an exact temporary buffer and restores focus after native copying", async () => {
   const container = hydrate(<AgentSetupPrompt prompt={prompt} />, { writeText: async () => { throw new Error("denied"); } });
-  const selected: { text: string; source: Element | null } = { text: "", source: null };
-  const document = container.ownerDocument;
-  const window = document.defaultView;
-  if (window === null) throw new Error("Missing window.");
-  Object.defineProperty(window, "getSelection", { configurable: true, value: () => ({ removeAllRanges: () => undefined, addRange: () => undefined }) });
-  Object.defineProperty(document, "createRange", { configurable: true, value: () => ({ selectNodeContents: (node: Element) => { selected.source = node; selected.text = node.textContent ?? ""; } }) });
-  Object.defineProperty(document, "execCommand", { configurable: true, value: () => true });
+  const clipboard = legacyClipboard(container);
   dispatch(container.querySelector("button"), "click");
   await settle();
-  expect(selected.text).toBe(prompt);
-  expect(selected.source).toBe(container.querySelector("details pre"));
+  expect(clipboard.values).toEqual([prompt]);
+  expect(clipboard.written).toEqual([prompt]);
+  expect(clipboard.restored()).toBe(true);
+  expect(container.ownerDocument.querySelector("[data-hraness-copy-buffer]")).toBeNull();
+  expect(clipboard.fire().defaultPrevented).toBe(false);
+  expect(clipboard.written).toEqual([prompt]);
   expect((container.querySelector("details") as HTMLDetailsElement).open).toBe(true);
   expect(container.querySelector("button")?.getAttribute("data-copy-state")).toBe("copied");
+});
+
+test("native copy events preserve CRLF source when textarea values normalize line endings", async () => {
+  const source = prompt.replace(/\n/gu, "\r\n");
+  const container = hydrate(<AgentSetupPrompt prompt={source} />, { writeText: async () => { throw new Error("denied"); } });
+  const clipboard = legacyClipboard(container, { normalize: true });
+  dispatch(container.querySelector("button"), "click");
+  await settle();
+  expect(clipboard.values).toEqual([prompt]);
+  expect(clipboard.written).toEqual([source]);
+  expect(container.querySelector("button")?.getAttribute("data-copy-state")).toBe("copied");
+  expect(container.ownerDocument.querySelector("[data-hraness-copy-buffer]")).toBeNull();
+});
+
+test("normalized legacy input without a clipboard-data override cannot open a provider", async () => {
+  const source = prompt.replace(/\n/gu, "\r\n");
+  const container = hydrate(<AgentSetupPrompt prompt={source} targets={[copyTarget]} />, { writeText: async () => { throw new Error("denied"); } });
+  const destination = targetTab(container);
+  legacyClipboard(container, { normalize: true, data: false });
+  dispatch(container.querySelector("a"), "click");
+  await settle();
+  expect(container.querySelector("button")?.getAttribute("data-copy-state")).toBe("failed");
+  expect(destination.navigations).toEqual([]);
+  expect(destination.tab.closed).toBe(true);
+  expect(container.ownerDocument.querySelector("[data-hraness-copy-buffer]")).toBeNull();
 });
 
 test("unavailable clipboard reports failure without claiming the source was selected", async () => {
@@ -141,15 +222,113 @@ test("copy hooks run once per successful action and cannot turn a copied prompt 
   expect(written).toEqual([prompt, prompt]);
 });
 
-test("copy-and-open preserves native link navigation while copying the exact prompt", async () => {
+test("copy-and-open isolates a reserved tab and waits for the full prompt before navigation", async () => {
   const written: string[] = [];
-  const container = hydrate(<AgentSetupPrompt prompt={prompt} targets={[{ id: "claude", label: "Claude", mark: "example-agent", href: "https://claude.ai/new", mode: "copy-and-open" }]} />, { writeText: async (text) => { written.push(text); } });
+  let finish: (() => void) | undefined;
+  let copied = 0;
+  const container = hydrate(<AgentSetupPrompt onCopied={() => { copied += 1; }} prompt={prompt} targets={[copyTarget]} />, { writeText: (text) => {
+    expect(destination.opened).toEqual([]);
+    written.push(text);
+    return new Promise<void>((resolve) => { finish = resolve; });
+  } });
+  const destination = targetTab(container);
   const link = container.querySelector("a");
   const event = dispatch(link, "click");
+  expect(event.defaultPrevented).toBe(true);
+  expect(destination.opened).toEqual([["about:blank", "_blank"]]);
+  expect(destination.tab.opener).toBeNull();
+  expect(destination.tab.document.querySelector('meta[name="referrer"]')?.getAttribute("content")).toBe("no-referrer");
+  expect(destination.navigations).toEqual([]);
+  expect(copied).toBe(0);
+  expect(link?.getAttribute("aria-busy")).toBe("true");
+  dispatch(link, "click");
+  expect(destination.opened).toHaveLength(1);
+  expect(written).toEqual([prompt]);
+  if (finish === undefined) throw new Error("Copy did not start.");
+  finish();
+  await settle();
+  expect(destination.navigations).toEqual(["https://claude.ai/new"]);
+  expect(destination.tab.closed).toBe(false);
+  expect(link?.getAttribute("href")).toBe("https://claude.ai/new");
+  expect(link?.getAttribute("target")).toBe("_blank");
+  expect(link?.getAttribute("rel")).toBe("noopener noreferrer");
+  expect(written).toEqual([prompt]);
+  expect(copied).toBe(1);
+});
+
+test("denied copy-and-open closes the reservation and keeps the full selected prompt on the page", async () => {
+  const container = hydrate(<AgentSetupPrompt prompt={prompt} targets={[copyTarget]} />, { writeText: async () => { throw new Error("denied"); } });
+  const destination = targetTab(container);
+  const selected: string[] = [];
+  Object.defineProperty(container.ownerDocument.defaultView, "getSelection", { configurable: true, value: () => ({ removeAllRanges: () => undefined, addRange: () => undefined }) });
+  Object.defineProperty(container.ownerDocument, "createRange", { configurable: true, value: () => ({ selectNodeContents: (node: Element) => { selected.push(node.textContent ?? ""); } }) });
+  Object.defineProperty(container.ownerDocument, "execCommand", { configurable: true, value: () => false });
+  const event = dispatch(container.querySelector("a"), "click");
+  await settle();
+  expect(event.defaultPrevented).toBe(true);
+  expect(destination.navigations).toEqual([]);
+  expect(destination.tab.closeCount).toBe(1);
+  expect((container.querySelector("details") as HTMLDetailsElement).open).toBe(true);
+  expect(selected).toEqual([prompt]);
+  expect(container.querySelector("details pre")?.textContent).toBe(prompt);
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("Copy failed. The setup prompt is selected; copy it with your keyboard.");
+});
+
+test("blocked popup permission copies the prompt and retains a real link for manual opening", async () => {
+  const written: string[] = [];
+  const container = hydrate(<AgentSetupPrompt prompt={prompt} targets={[copyTarget]} />, { writeText: async (text) => { written.push(text); } });
+  const destination = targetTab(container, true);
+  const event = dispatch(container.querySelector("a"), "click");
+  await settle();
+  expect(event.defaultPrevented).toBe(true);
+  expect(destination.navigations).toEqual([]);
+  expect(written).toEqual([prompt]);
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("Copied setup prompt. Open Claude in a new tab.");
+  expect(container.querySelector("a")?.getAttribute("href")).toBe("https://claude.ai/new");
+  expect(container.querySelector("a")?.getAttribute("target")).toBe("_blank");
+});
+
+test("prefilled destinations retain native navigation without copying or reserving another tab", async () => {
+  const written: string[] = [];
+  const container = hydrate(<AgentSetupPrompt prompt={prompt} targets={[{ ...copyTarget, mode: "prefill" }]} />, { writeText: async (text) => { written.push(text); } });
+  const destination = targetTab(container);
+  const event = dispatch(container.querySelector("a"), "click");
   await settle();
   expect(event.defaultPrevented).toBe(false);
-  expect(link?.getAttribute("href")).toBe("https://claude.ai/new");
-  expect(written).toEqual([prompt]);
+  expect(destination.opened).toEqual([]);
+  expect(written).toEqual([]);
+});
+
+test("a changed prompt closes pending handoff and cannot open a provider with stale source", async () => {
+  let finish: (() => void) | undefined;
+  let copied = 0;
+  const container = hydrate(<AgentSetupPrompt onCopied={() => { copied += 1; }} prompt={prompt} targets={[copyTarget]} />, { writeText: () => new Promise<void>((resolve) => { finish = resolve; }) });
+  const destination = targetTab(container);
+  dispatch(container.querySelector("a"), "click");
+  act(() => { root?.render(<AgentSetupPrompt onCopied={() => { copied += 1; }} prompt={"Use the new source.\n"} targets={[copyTarget]} />); });
+  expect(destination.tab.closeCount).toBe(1);
+  if (finish === undefined) throw new Error("Copy did not start.");
+  finish();
+  await settle();
+  expect(destination.navigations).toEqual([]);
+  expect(destination.tab.closeCount).toBe(1);
+  expect(copied).toBe(0);
+  expect(container.querySelector("details pre")?.textContent).toBe("Use the new source.\n");
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("");
+});
+
+test("unmounting a pending handoff closes its blank tab without later navigation", async () => {
+  let finish: (() => void) | undefined;
+  const container = hydrate(<AgentSetupPrompt prompt={prompt} targets={[copyTarget]} />, { writeText: () => new Promise<void>((resolve) => { finish = resolve; }) });
+  const destination = targetTab(container);
+  dispatch(container.querySelector("a"), "auxclick", { button: 1 });
+  act(() => { root?.unmount(); root = null; });
+  expect(destination.tab.closeCount).toBe(1);
+  if (finish === undefined) throw new Error("Copy did not start.");
+  finish();
+  await settle();
+  expect(destination.navigations).toEqual([]);
+  expect(destination.tab.closeCount).toBe(1);
 });
 
 test("native command tabs wrap with arrows, select with Home and End, and move focus", () => {

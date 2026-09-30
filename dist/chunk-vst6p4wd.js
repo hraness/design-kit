@@ -246,6 +246,38 @@ var providerMarkAssets = {
   }
 };
 
+// src/palette-color.ts
+function channels(hex) {
+  if (!/^#[0-9a-f]{6}$/iu.test(hex))
+    throw new Error("Palette colors must be six-digit hex values.");
+  return [Number.parseInt(hex.slice(1, 3), 16), Number.parseInt(hex.slice(3, 5), 16), Number.parseInt(hex.slice(5, 7), 16)];
+}
+function mixPaletteColor(color, toward, amount) {
+  const target = channels(toward);
+  return `#${channels(color).map((value, index) => Math.round(value * (1 - amount) + (target[index] ?? 0) * amount).toString(16).padStart(2, "0")).join("")}`;
+}
+function luminance(hex) {
+  const linearize = (channel) => {
+    const value = channel / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  };
+  const [red, green, blue] = channels(hex);
+  return linearize(red) * 0.2126 + linearize(green) * 0.7152 + linearize(blue) * 0.0722;
+}
+function paletteContrast(a, b) {
+  const first = luminance(a);
+  const second = luminance(b);
+  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+}
+function readablePaletteColor(color, toward, backgrounds, minimum) {
+  for (let step = 0;step <= 100; step += 1) {
+    const candidate = mixPaletteColor(color, toward, step / 100);
+    if (backgrounds.every((background) => paletteContrast(candidate, background) >= minimum))
+      return candidate;
+  }
+  throw new Error("The authored palette cannot meet its contrast contract.");
+}
+
 // src/provider-marks.ts
 var MARK_SPECS = {
   aider: {
@@ -420,15 +452,12 @@ var MARK_SPECS = {
 function foldedIdentity(identity) {
   return identity.toLowerCase().replaceAll(/[^a-z0-9]/gu, "");
 }
-function perceivedBrightness(hexColor) {
-  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/u.exec(hexColor.toLowerCase());
-  if (match === null)
-    return null;
-  return (Number.parseInt(match[1] ?? "0", 16) * 299 + Number.parseInt(match[2] ?? "0", 16) * 587 + Number.parseInt(match[3] ?? "0", 16) * 114) / 1000;
-}
 function providerMarkOnAccent(mark) {
-  const brightness = perceivedBrightness(mark.accent);
-  return brightness !== null && brightness > 168 ? "#1c1917" : "#f7f6f2";
+  if (!/^#[0-9a-f]{6}$/iu.test(mark.accent))
+    throw new RangeError("Solid provider mark accents must be opaque six-digit hex colors.");
+  const moreReadable = (light, dark) => paletteContrast(light, mark.accent) >= paletteContrast(dark, mark.accent) ? light : dark;
+  const preferred = moreReadable("#f7f6f2", "#1c1917");
+  return paletteContrast(preferred, mark.accent) >= 4.5 ? preferred : moreReadable("#ffffff", "#000000");
 }
 function providerMarkMonogram(displayName) {
   const monogram = displayName.trim().split(/\s+/u).filter(Boolean).slice(0, 2).map((word) => word[0] ?? "").join("").toUpperCase().replaceAll(/[^A-Z0-9]/gu, "").slice(0, 2);
@@ -484,4 +513,4 @@ function providerMarkArtDataUri(mark) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgDocument(mark.art, ""))}`;
 }
 
-export { providerMarkOnAccent, providerMarkMonogram, providerMark, providerMarks, providerMarkFallback, providerMarkGlyphDataUri, providerMarkArtDataUri };
+export { mixPaletteColor, paletteContrast, readablePaletteColor, providerMarkOnAccent, providerMarkMonogram, providerMark, providerMarks, providerMarkFallback, providerMarkGlyphDataUri, providerMarkArtDataUri };

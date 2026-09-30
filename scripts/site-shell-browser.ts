@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "playwright-core";
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 
 const root = resolve(import.meta.dir, "..");
 const entries = ["site-shell", "plain-site", "product-marketing", "product-marketing-foundation", "syntax-highlighting"];
@@ -35,7 +35,7 @@ const server = Bun.serve({ port: 0, hostname: "127.0.0.1", fetch(request) {
   <header data-hraness-marketing>Project</header>${grid ? '<div class="content-grid hraness-site-shell__content"><aside>Docs</aside>' : ""}<main data-hraness-marketing><p>Payment complete</p></main>${grid ? "</div>" : ""}<footer data-hraness-marketing id="product">Help and contact</footer><footer data-hraness-marketing id="network">By Hraness</footer>
   ${wrapped ? "</div>" : ""}</body></html>`, { headers: { "content-type": "text/html" } });
 } });
-const browser = await chromium.launch({ executablePath: await provisionedBrowserExecutable(), headless: true, args: verificationBrowserArguments() });
+const browser = await chromium.launch({ executablePath: await provisionedBrowserExecutable(), headless: true, ...verificationBrowserLaunchOptions() });
 try {
   for (const width of [390, 1280]) {
     const page = await browser.newPage({ viewport: { width, height: 1000 } });

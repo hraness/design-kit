@@ -1363,10 +1363,6 @@
     background-image: linear-gradient(142deg, #d8dce7 0, #666d7d 22%, #f4f5f8 43%, #4f5563 67%, #c9ced9 100%);
   }
 
-  .xs51ml9 {
-    background-image: linear-gradient(180deg,#ffffff38,transparent 52%),linear-gradient(160deg,transparent,color-mix(in srgb,var(--_mark-accent) 78%,black));
-  }
-
   .x1hkejs3 {
     background-image: linear-gradient(180deg,#ffffff3d,transparent 48%),linear-gradient(160deg,color-mix(in srgb,var(--_mark-accent) 26%,transparent),color-mix(in srgb,var(--_mark-accent) 6%,transparent) 74%);
   }

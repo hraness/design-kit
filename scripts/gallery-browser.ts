@@ -1,4 +1,4 @@
-import { provisionedBrowserExecutable, verificationBrowserArguments } from "./browser-executable.js";
+import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "./browser-executable.js";
 import { mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
@@ -2181,7 +2181,7 @@ try {
   try {
     const executablePath = await provisionedBrowserExecutable();
     const browser = await chromium.launch({
-      args: verificationBrowserArguments(["--no-sandbox"]),
+      ...verificationBrowserLaunchOptions(["--no-sandbox"]),
       executablePath,
       headless: true,
     });
