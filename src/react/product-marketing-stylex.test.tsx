@@ -39,6 +39,8 @@ test("finite column types are available through both public React entries and ev
   expectTypeOf<ComponentProps<typeof api.MarketingFacts>["columns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
   expectTypeOf<ComponentProps<typeof api.MarketingPillars>["columns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
   expectTypeOf<ComponentProps<typeof api.MarketingStatStrip>["columns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
+  expectTypeOf<ComponentProps<typeof api.MarketingCardRow>["columns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
+  expectTypeOf<ComponentProps<typeof api.MarketingPrimitives>["columns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
   expectTypeOf<api.ProductHeroProps["factsColumns"]>().toEqualTypeOf<ReactMarketingColumnCount | undefined>();
 });
 
@@ -209,7 +211,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("623a028ca95b3f7a91bd34f0e628c7bdd6afc66018c0642f0232c80dea5e1264");
+    .toBe("7b497293373e29c943731f26ee8640c37a2c3f4880f13162803a74185a5a0cdd");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));

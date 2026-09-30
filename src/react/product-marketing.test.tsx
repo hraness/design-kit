@@ -47,6 +47,27 @@ const steps = [
   { code: "tool run job-01", detail: "Run the named job.", label: "Execute" },
 ] as const;
 
+test("card and capability column caps remain server-safe and reject invalid counts", () => {
+  for (const columns of [1, 2, 3, 4] as const) {
+    const html = renderToStaticMarkup(<>
+      <MarketingCardRow columns={columns} cards={[{ title: "One" }, { title: "Two" }]} />
+      <MarketingPrimitives columns={columns} heading="Capabilities" headingId="capabilities"
+        items={[{ label: "Search", summary: "Find the decision." }]} />
+    </>);
+    expect(html).not.toMatch(/\sstyle=/u);
+    expect(html).toContain('data-hraness-marketing="card-row"');
+    expect(html).toContain('aria-labelledby="capabilities"');
+  }
+  for (const columns of [0, 5, NaN, Infinity, 1.5]) {
+    // @ts-expect-error Exercise untyped callers at the public boundary.
+    expect(() => renderToStaticMarkup(<MarketingCardRow columns={columns} />)).toThrow(RangeError);
+    expect(() => renderToStaticMarkup(
+      // @ts-expect-error Exercise untyped callers at the public boundary.
+      <MarketingPrimitives columns={columns} heading="Capabilities" headingId="capabilities" items={[]} />,
+    )).toThrow(RangeError);
+  }
+});
+
 test("the product hero renders a complete semantic narrative without client behavior", () => {
   const html = renderToStaticMarkup(
     <ProductHero

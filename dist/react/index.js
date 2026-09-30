@@ -83,7 +83,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-95p0j72v.js";
+} from "../chunk-95mpmzc9.js";
 import"../chunk-h4k7yv6x.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
@@ -6618,6 +6618,7 @@ Run the job, then show me its log.`,
                     ]
                   }),
                   /* @__PURE__ */ jsx17(MarketingPrimitives, {
+                    columns: 3,
                     heading: "Three objects cover most work.",
                     headingId: "design-gallery-primitives-title",
                     headingLevel: 3,
@@ -6691,6 +6692,7 @@ Run the job, then show me its log.`,
                   }),
                   /* @__PURE__ */ jsx17(MarketingCardRow, {
                     ariaLabel: "Release radar",
+                    columns: 2,
                     cards: [{
                       art: /* @__PURE__ */ jsx17("svg", {
                         "aria-hidden": "true",

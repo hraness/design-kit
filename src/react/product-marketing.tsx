@@ -225,16 +225,19 @@ export function MarketingCardRow({
   cards,
   children,
   className,
+  columns,
 }: Readonly<{
   ariaLabel?: string;
   cards?: readonly MarketingCardItem[];
   children?: ReactNode;
   className?: string;
+  /** Maximum columns; cards wrap to fit the available container width. */
+  columns?: MarketingColumnCount;
 }>) {
   return (
     <div
       aria-label={ariaLabel}
-      className={classNames("hraness-marketing-card-row", className)}
+      className={marketingColumnClassName("hraness-marketing-card-row", className, columns)}
       data-hraness-marketing="card-row"
     >
       {cards?.map((card) => (
@@ -1015,6 +1018,7 @@ export interface MarketingPrimitive {
 
 export function MarketingPrimitives({
   className,
+  columns,
   heading,
   headingId,
   headingLevel = 2,
@@ -1024,6 +1028,8 @@ export function MarketingPrimitives({
   summary,
 }: Readonly<{
   className?: string;
+  /** Maximum columns; items wrap to fit the available container width. */
+  columns?: MarketingColumnCount;
   heading: string;
   headingId: string;
   headingLevel?: MarketingHeadingLevel;
@@ -1040,7 +1046,7 @@ export function MarketingPrimitives({
       id={id}
     >
       <MarketingCollectionHeader {...{ heading, headingId, headingLevel, label, summary }} prefix="primitives" />
-      <ol className={classNames("hraness-marketing-primitives__list")}>
+      <ol className={marketingColumnClassName("hraness-marketing-primitives__list", undefined, columns)}>
         {items.map((item, index) => (
           <li className={classNames("hraness-marketing-primitive")} key={item.label}>
             <span aria-hidden="true" className={classNames("hraness-marketing-primitive__number")}>
