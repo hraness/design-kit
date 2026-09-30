@@ -70,13 +70,28 @@ async function open(palette: DesignPalette, theme: "light" | "dark", options: Br
   return { page, problems };
 }
 
+async function renderedState(page: Page): Promise<void> {
+  // The shared reduced-motion reset gives every element a 0.01ms transition.
+  // SVG descendants can briefly retain inherited ink from the previous state.
+  // Sample the actual painted state across two frames, then keep exact checks.
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+}
+
 async function assertSelectedMark(page: Page, root: string, label: string): Promise<void> {
+  await renderedState(page);
   const paint = await page.locator(`${root} [role="tab"][aria-selected="true"]`).evaluate((tab) => {
     const mark = tab.querySelector(".hraness-provider-mark");
     if (mark === null) throw new Error("Missing selected provider mark.");
     const glyph = mark.querySelector(".hraness-provider-mark__glyph");
     const monogram = mark.querySelector(".hraness-provider-mark__monogram");
+    const glyphAncestors: { node: string; opacity: string }[] = [];
+    for (let ancestor: Element | null = glyph; ancestor !== null; ancestor = ancestor.parentElement) {
+      glyphAncestors.push({ node: ancestor.tagName, opacity: getComputedStyle(ancestor).opacity });
+      if (ancestor === tab) break;
+    }
     const glyphPaints = glyph === null ? [] : [...glyph.querySelectorAll("path,polygon,polyline,circle,ellipse,rect,line,use")].flatMap((shape) => {
+      // Definition artwork is not directly painted in the selected glyph.
+      if (shape.closest("defs,clipPath,mask,pattern,marker,symbol") !== null) return [];
       const style = getComputedStyle(shape);
       return [style.fill, style.stroke].filter((color) => color !== "none" && color !== "rgba(0, 0, 0, 0)");
     });
@@ -87,6 +102,7 @@ async function assertSelectedMark(page: Page, root: string, label: string): Prom
       glyphColor: glyph === null ? null : getComputedStyle(glyph).color,
       glyphFill: glyph === null ? null : getComputedStyle(glyph).fill,
       glyphPaints,
+      glyphAncestors,
       monogramVisible: monogram !== null && getComputedStyle(monogram).display !== "none",
       monogramColor: monogram === null ? null : getComputedStyle(monogram).color,
     };
@@ -189,6 +205,7 @@ try {
 
         await page.emulateMedia({ forcedColors: "active" });
         await page.waitForFunction(() => document.querySelector("#narrow details")?.hasAttribute("open"));
+        await renderedState(page);
         const forced = await page.evaluate(() => {
           const selected = document.querySelector('#commands [role="tab"][aria-selected="true"]');
           const probe = document.querySelector(".system-selection-probe");
