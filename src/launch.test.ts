@@ -11,6 +11,7 @@ import {
   launchCopyProblems,
   launchPlaceholders,
   resolveLaunchBeats,
+  socialBeats,
   xPostLength,
 } from "./launch.js";
 import { launchFixtureBeats as beats, launchFixtureFacts as facts, launchFixtureMessaging as messaging, launchFixtureUrl } from "../gallery/launch-fixture.js";
@@ -130,8 +131,8 @@ describe("social kit", () => {
   const kit = buildSocialKit(resolved, messaging, release, URL);
   const options = { status: "Preview", publicInstall: false, tagline: messaging.tagline, canonicalUrl: URL } as const;
 
-  test("builds one post per beat with the URL only on the last", () => {
-    expect(kit.x).toHaveLength(beats.length);
+  test("builds one post per social beat with the URL only on the last", () => {
+    expect(kit.x).toHaveLength(beats.length - 1);
     expect(kit.x.at(-1)?.endsWith(URL)).toBe(true);
     expect(kit.x.slice(0, -1).some((post) => post.includes("https://"))).toBe(false);
     expect(kit.bluesky).toEqual(kit.x);
@@ -139,6 +140,54 @@ describe("social kit", () => {
     expect(kit.productHunt).toEqual({ tagline: messaging.tagline, description: messaging.meta, tags: ["Productivity"] });
     expect(kit.sources["x.0"]).toBe("beat:what");
     expect(Object.isFrozen(kit)).toBe(true);
+  });
+
+  test("keeps the limits beat in the launch post", () => {
+    const limits = must(resolved.find((beat) => beat.part === "limits")).post;
+    expect(socialBeats(resolved).some((beat) => beat.part === "limits")).toBe(false);
+    for (const text of [...kit.x, ...kit.bluesky, ...kit.threads, kit.linkedin, ...kit.showHnFacts]) expect(text).not.toContain(limits);
+    expect(Object.values(kit.sources).join(",")).not.toContain("beat:limits");
+  });
+
+  test("skips beats marked social: false and uses socialPost wording", () => {
+    const edited = resolved.map((beat) =>
+      beat.id === "does-phone"
+        ? { ...beat, social: false }
+        : beat.id === "who"
+          ? { ...beat, post: `${beat.post} Teams with one channel need something simpler.`, socialPost: "Relay is for small teams that answer customers in several places." }
+          : beat,
+    );
+    const cut = buildSocialKit(edited, messaging, release, URL);
+    expect(cut.x).toHaveLength(beats.length - 2);
+    expect(cut.x.join("\n")).not.toContain("phone app");
+    expect(cut.x).toContain("Relay is for small teams that answer customers in several places.");
+    expect(cut.linkedin).not.toContain("something simpler");
+    expect(cut.showHnFacts.join("\n")).not.toContain("something simpler");
+    expect(() => assertLaunchKit(edited, cut, options)).not.toThrow();
+  });
+
+  test("socialPost placeholders resolve from facts", () => {
+    const withSocial = beats.map((beat) => (beat.id === "how" ? { ...beat, socialPost: "Relay sends {channelCount} message types." } : beat));
+    const filled = resolveLaunchBeats(withSocial, facts);
+    expect(must(filled.find((beat) => beat.id === "how")).socialPost).not.toContain("{");
+    expect(problemsOf(() => resolveLaunchBeats(withSocial.map((beat) => (beat.id === "how" ? { ...beat, socialPost: "Relay sends 12 types." } : beat)), facts)).join("\n")).toContain(
+      "socialPost types a number",
+    );
+  });
+
+  test("rejects a kit that carries a caveat beat, and misplaced social flags", () => {
+    const limits = must(resolved.find((beat) => beat.part === "limits")).post;
+    const leaked = { ...kit, x: [kit.x[0] ?? "", limits, ...kit.x.slice(1)], linkedin: `${limits}\n\n${kit.linkedin}` };
+    const problems = problemsOf(() => assertLaunchKit(resolved, leaked, options)).join("\n");
+    expect(problems).toContain('x post 2 carries beat "limits"');
+    expect(problems).toContain('LinkedIn post carries beat "limits"');
+    expect(problems).toContain("more posts than social beats");
+    const flags = beats.map((beat) =>
+      beat.part === "status" ? { ...beat, social: false } : beat.part === "limits" ? { ...beat, socialPost: "Relay keeps history." } : beat,
+    );
+    const flagProblems = problemsOf(() => assertLaunchBeats(flags)).join("\n");
+    expect(flagProblems).toContain("cannot be marked social: false");
+    expect(flagProblems).toContain("cannot carry a socialPost");
   });
 
   test("the built kit passes assertLaunchKit", () => {

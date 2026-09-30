@@ -53,6 +53,7 @@ A beat is one short section that makes one claim and shows one visual. Write 7 t
 
 - The hero holds the title, the registry `meta` as the dek, the status line from release data, and the film when there is one.
 - Each beat has a headline of 70 characters or fewer, in sentence case with no period, and a post of 250 characters or fewer that works on its own as one social post.
+- Social posts carry claims only. The `limits` beat, and any caveat, known gap, negative finding, audit or review line, or legally required disclaimer, stay in the launch post, the docs, and the site, and never reach a social post, the Show HN facts, or the Product Hunt fields. Every social post must still be true on its own: when a caveat is what keeps a beat's claim accurate, give the beat a `socialPost` that states a narrower claim accurately without it, or mark the beat `social: false`.
 - Each beat has exactly one visual, and no two beats share one. Alt text is 125 characters or fewer. A mockup is labelled as an illustration in its alt text and caption.
 - Render beats with `LaunchBeats` from `@hraness/design-kit/react`. Each beat gets a `#beat-<id>` anchor.
 - After the beats: "Go deeper" links named for the reader's next task, then the social kit, then sources and the drafting and review note.
@@ -75,6 +76,8 @@ type LaunchBeat = {
   alt: string;
   facts?: string[];        // every placeholder key the beat uses
   detailHref?: string;     // a companion post
+  socialPost?: string;     // social wording when `post` keeps a caveat; accurate on its own
+  social?: boolean;        // false keeps the beat in the launch post only
 };
 
 type LaunchFacts = Record<string, { value: string; source: string }>;
@@ -91,7 +94,7 @@ type SocialKit = {
 ```
 
 - **Facts.** Type every number once, in the product's `LaunchFacts` module, with its source: versions, sizes, rates, counts, and prices. The post, the social kit, film captions, and store listings all import it. `resolveLaunchBeats(beats, facts)` fills `{key}` placeholders and rejects a beat that types a digit by hand.
-- **Checks.** `assertLaunchBeats(beats)` checks the order, the counts, the limits, and the wording rules. `buildSocialKit(beats, messaging, release, canonicalUrl)` builds each channel's posts from the beats, the Product Hunt fields from portfolio messaging, and the status from the release record. `assertLaunchKit(beats, kit, options)` checks each channel's length. It also checks that only the last post links, that the last post carries the status and the canonical URL without tracking parameters, that nothing asks the reader to install before a public install exists, and that no other product is named.
+- **Checks.** `assertLaunchBeats(beats)` checks the order, the counts, the limits, and the wording rules. `buildSocialKit(beats, messaging, release, canonicalUrl)` builds each channel's posts from the social beats (every beat except `limits` and beats marked `social: false`, using `socialPost` when a beat has one), the Product Hunt fields from portfolio messaging, and the status from the release record. `assertLaunchKit(beats, kit, options)` checks each channel's length. It also checks that only the last post links, that the last post carries the status and the canonical URL without tracking parameters, that nothing asks the reader to install before a public install exists, that no other product is named, and that no post or fact carries the text of a `limits` beat or a `social: false` beat.
 - **Social kit.** Build it only from an `indexable` post. A quarantined post has no social kit. Render it with `SocialKitPanel`, a closed `<details>` with a copy button and a character count per post. A person writes the Show HN post and the first Product Hunt comment; the kit gives them the facts.
 - **Words.** Social posts follow the rules below, plus: no hashtags, no emoji, and no thread markers such as "1/n".
 - **Admission.** A launch post passes the same admission gate as every other article. The launch helpers do not change it.
