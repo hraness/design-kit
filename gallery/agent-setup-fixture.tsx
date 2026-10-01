@@ -45,6 +45,7 @@ export function AgentSetupFixture({ api, prompt = agentSetupFixturePrompt }: Rea
   return (
     <main>
       <div id="prompt"><AgentSetupPrompt label="Set up Sample" prompt={prompt} targets={agentSetupFixtureTargets} /></div>
+      <div id="below"><AgentSetupPrompt prompt={prompt} targets={agentSetupFixtureTargets} targetsPlacement="below" /></div>
       <div id="commands"><AgentCommandTabs commands={agentSetupFixtureCommands} /></div>
       <div className="fixture-narrow" id="narrow"><AgentSetupPrompt prompt={prompt} targets={agentSetupFixtureTargets} /></div>
       <div className="fixture-accent" id="accent"><AgentCommandTabs commands={agentSetupFixtureCommands} label="Commands in an accent section" /></div>

@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { parseHTML } from "linkedom";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import { PlatformInstall } from "./platform-install.js";
 import { AgentCommandTabs, AgentSetupPrompt, type AgentCommand } from "./agent-setup-prompt.js";
 
 const prompt = "Read the instructions first.\n\nInstall the tool and inspect ./notes.\nKeep the final newline.\n";
@@ -93,4 +94,34 @@ test("invalid sources, duplicate ids, unknown initial commands, and unsafe desti
   expect(() => renderToStaticMarkup(<AgentCommandTabs commands={[]} />)).toThrow(RangeError);
   expect(() => renderToStaticMarkup(<AgentCommandTabs commands={commands} initial="missing" />)).toThrow(RangeError);
   expect(() => renderToStaticMarkup(<AgentCommandTabs commands={[commands[0] as AgentCommand, commands[0] as AgentCommand]} />)).toThrow(RangeError);
+});
+
+
+test("below targets opt into a compact grid without changing the default placement", () => {
+  const targets = [{ id: "codex", label: "Codex", mark: "codex", href: "codex://new" }];
+  const below = documentOf(renderToStaticMarkup(<AgentSetupPrompt prompt={prompt} targets={targets} targetsPlacement="below" />));
+  const responsive = documentOf(renderToStaticMarkup(<AgentSetupPrompt prompt={prompt} targets={targets} />));
+  expect(below.querySelector("[data-targets-placement]")?.getAttribute("data-targets-placement")).toBe("below");
+  expect(below.querySelector(".hraness-agent-setup__withTargets")).toBeNull();
+  expect(below.querySelector("aside ul")?.classList.contains("hraness-agent-setup__targetGrid")).toBe(true);
+  expect(responsive.querySelector(".hraness-agent-setup__withTargets")).not.toBeNull();
+  expect(responsive.querySelector(".hraness-agent-setup__targetGrid")).toBeNull();
+});
+
+test("setup prompt, agent command, and platform command share one copy presentation", () => {
+  const document = documentOf(renderToStaticMarkup(<>
+    <AgentSetupPrompt prompt={prompt} />
+    <AgentCommandTabs commands={commands.slice(0, 1)} />
+    <PlatformInstall platforms={[{ id: "macos", command: "sample install" }]} />
+  </>));
+  const controls = [...document.querySelectorAll("button[data-copy-state]")];
+  expect(controls).toHaveLength(3);
+  const sharedAtoms = controls.map((control) => control.className.split(" ").filter((name) => name.startsWith("x")));
+  // Prompt positioning adds atoms; every control contains the same button recipe.
+  for (const name of sharedAtoms[2] ?? []) expect(sharedAtoms.every((names) => names.includes(name))).toBe(true);
+  for (const control of controls) {
+    expect(control.classList.contains("hraness-setup-copy__button")).toBe(true);
+    expect(control.querySelector("svg")?.classList.contains("hraness-setup-copy__icon")).toBe(true);
+    expect(control.getAttribute("aria-label")).toStartWith("Copy ");
+  }
 });

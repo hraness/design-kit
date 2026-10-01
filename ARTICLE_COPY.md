@@ -118,13 +118,18 @@ Title: "How <consumer> uses <provider>". It lives on the consumer's host.
 
 A provider may keep one page, such as "Built on <provider>", that lists the products using it. Each entry is the registered relation's own sentence and a link to the consumer's "How <consumer> uses <provider>" post when one exists. The hub is an index. It does not restate each post.
 
-### Technique posts in two halves
+### Technique posts
 
 A technique post teaches one method, such as property tests, model checking, or proofs. It lives on hraness.com, and a product host may carry a product-specific version that shows the technique inside that product.
 
-- **First half, for any reader.** Ground it in problems people already know, such as vibe-coded slop (software a model wrote quickly that looks finished and breaks on the second use) and fragile foundations (a product built on code nobody checked). Use one familiar failure ("It only breaks if you save, lose connection, then reopen"). Then describe the brighter alternative: what it is like when a whole class of that failure cannot happen. No code or notation in this half.
-- **Second half, how Hraness does it.** Show the method with durable examples: laws, invariants, and small code excerpts that still read correctly after a refactor. Cite the repository file that holds the real example. Avoid line numbers and file names that change often, and keep internal jargon to the one term the technique needs.
-- End on the last supported fact. State what the technique does not prove, once, at its true scope.
+- Answer one useful question. Explain the reasoning with a concrete example the reader can follow, using code or notation where it helps.
+- Use public references when they clarify the method or support a claim. A product example belongs only when it helps answer the question; neither Hraness code nor a product recommendation is required.
+- Keep internal build diaries, verification logs, and implementation chronology out of the article. Teach the method in the order the reader needs it.
+- End on the last supported fact. State a material limitation where it changes the reader’s decision; do not append a generic disclaimer.
+
+### Illustrations
+
+Follow the [shared illustration guidance](https://github.com/hraness/.github/blob/main/STYLE.md). Use SlopCamera to create an illustration when it helps explain the article, with a limited brand palette and a reference that establishes the intended visual style. Record the tools, model, references, and actual asset source used; do not substitute a generic provenance claim. Keep captions useful and optional.
 
 ## Titles and formulas
 
@@ -152,10 +157,10 @@ Some products can be pointed at other people's accounts or data: authenticated b
 
 ## Drafting and review note
 
-Every article states who drafted it and who reviewed it, visibly, on every host. The owner decided this on 2026-09-23, as relayed to the task that added this guide. It applies to articles only; other pages follow `STYLE.md`.
+Every article states who drafted it and who reviewed it, visibly, on every host. This applies to articles only; other pages follow `STYLE.md`.
 
 - Render `ArticleProvenance`, or the `provenance` prop of `MarketingArticle`, from the admission record with `articleProvenanceFromAdmission()`. Do not type the sentence by hand.
-- An AI-drafted post from repository sources reads: "Drafted with AI from the source code and reviewed by <reviewer>."
+- The default AI drafting kind is `ai`: "Drafted with AI and reviewed by <reviewer>." Use `ai-from-source` and its "from the source code" wording only when the article was drafted from source code.
 - Name the reviewer as it is. An AI reviewer has `reviewerType: "ai"` and a name that says it is AI, for example "Claude Opus 5.5 (claude-opus-5-5) editorial review". The sentence says "human" only when `reviewerType` is `human-editor`.
 - Keep `humanReview` null unless a person reviewed the article. Never describe AI review as human review.
 - The byline is "Hraness" on every host. Do not credit a person, including the owner, for an AI-drafted post. A person who later adopts a post may switch the byline to their own name; the drafting and review note stays.
@@ -172,6 +177,7 @@ Every article URL has an `ArticleAdmission` record in its host's registry, check
 
 ## Freshness
 
+- Keep review, publication, and update metadata truthful. Educational bodies do not need repeated "as of" dates, build identifiers, or freshness labels; include a date or version in the prose only when the explanation depends on it.
 - Every record has `reassessOn`, 28 to 56 days after `review.reviewedOn`. `articleAdmissionsDue(registry, today)` lists the records to look at again.
 - Render versions, release dates, and status labels from release data (`package.json`, a published release file, or the portfolio facts). Never type a version into an article body.
 - Each record names its refresh triggers: a release tag bump, a change to a relation's `detail`, a rename, or a change to the feature the post describes.

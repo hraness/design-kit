@@ -11,6 +11,7 @@ import {
   platformMark,
   type PlatformId,
 } from "../platforms.js";
+import { SetupCopyButton } from "./setup-copy-button.js";
 import { SyntaxCode } from "./syntax-code.js";
 import { platformInstallClassName as cx } from "./platform-install.stylex.js";
 
@@ -29,7 +30,7 @@ interface PlatformInstallTargetBase {
   readonly label?: string;
   /** Where the command runs, such as "Terminal" or "PowerShell". */
   readonly shell?: string;
-  /** A short qualifier under the command, such as "Apple silicon" or "x86_64 and ARM64, glibc 2.34+". */
+  /** A short qualifier in the primary command footer, such as "Apple silicon" or "Requires Bun 1.3.14+". */
   readonly note?: ReactNode;
   readonly alternatives?: readonly PlatformInstallAlternative[];
 }
@@ -167,22 +168,12 @@ function PlatformMarkUse({ platform, symbolId }: Readonly<{ platform: PlatformId
   );
 }
 
-function CopyGlyph({ copied }: Readonly<{ copied: boolean }>) {
-  return (
-    <svg aria-hidden="true" className={cx(["copyIcon"])} fill="none" focusable="false" stroke="currentColor"
-      strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-      {copied
-        ? <path d="M5 12.5l4.5 4.5L19 7.5" />
-        : <><rect height="12" rx="2" width="12" x="8" y="8" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></>}
-    </svg>
-  );
-}
-
 function CommandBlock({
   caption,
   command,
   copyKey,
   onCopy,
+  note,
   status,
   subject,
 }: Readonly<{
@@ -190,6 +181,7 @@ function CommandBlock({
   command: string;
   copyKey: string;
   onCopy: (key: string, command: string, subject: string, pre: HTMLElement | null) => void;
+  note?: ReactNode;
   status: CopyStatus | null;
   subject: string;
 }>) {
@@ -199,21 +191,20 @@ function CommandBlock({
     <div className={cx(["command"])} data-copy-state={state}>
       <div className={cx(["commandBar", (caption === undefined || caption === "") && "commandBarEmpty"])}>
         <span className={cx(["shell"])}>{caption}</span>
-        <button
-          className={cx(["copy"])}
-          data-copy-state={state}
-          onClick={() => onCopy(copyKey, command, subject, preRef.current)}
-          type="button"
-        >
-          <CopyGlyph copied={state === "copied"} />
-          <span>{state === "copied" ? "Copied" : state === "failed" ? "Select to copy" : "Copy"}</span>
-          <span className={cx(["status"])}> {subject}</span>
-        </button>
+        <SetupCopyButton
+          className="hraness-platform-install__copy"
+          iconClassName="hraness-platform-install__copy-icon"
+          failedLabel="Select to copy"
+          onCopy={() => onCopy(copyKey, command, subject, preRef.current)}
+          state={state}
+          subject={subject}
+        />
       </div>
       {/* Focusable so keyboard users can scroll a long command sideways. */}
       <pre aria-label={subject} className={cx(["pre"])} ref={preRef} tabIndex={0}>
         <SyntaxCode className={cx(["code"])} code={command} language="shell" styles="classes" />
       </pre>
+      {note === undefined ? null : <div className={cx(["note", "commandNote"])}>{note}</div>}
     </div>
   );
 }
@@ -357,6 +348,7 @@ export function PlatformInstall({
                   command={target.command}
                   copyKey={`${target.id}:primary`}
                   onCopy={copy}
+                  note={target.note}
                   status={status}
                   subject={`${name} install command`}
                 />
@@ -377,7 +369,7 @@ export function PlatformInstall({
                   ))}
                 </ul>
               )}
-              {target.note === undefined ? null : <div className={cx(["note"])}>{target.note}</div>}
+              {target.command !== undefined || target.note === undefined ? null : <div className={cx(["note"])}>{target.note}</div>}
             </div>
           </div>
         );

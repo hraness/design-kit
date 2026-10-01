@@ -1,6 +1,6 @@
 {
   "name": "@hraness/design-kit",
-  "version": "0.35.0",
+  "version": "0.35.1",
   "description": "React components and CSS for Hraness apps and product sites: application shells, marketing sections, charts, themes, effects, and syntax highlighting. Built on @hraness/ui.",
   "license": "MIT",
   "type": "module",
@@ -300,6 +300,8 @@
     "src/agent-setup.ts",
     "src/react/agent-setup-prompt.tsx",
     "src/react/agent-setup-prompt.stylex.ts",
+    "src/react/setup-copy-button.tsx",
+    "src/react/setup-copy-button.stylex.ts",
     "AGENT_SETUP.md",
     "src/react/marketing-comparison.tsx",
     "src/react/marketing-comparison.stylex.ts",
