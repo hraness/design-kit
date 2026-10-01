@@ -2337,8 +2337,9 @@ var marketingStyles = {
     $$css: true
   },
   cardIcon: {
-    k1xSpc: "xrvj5dj",
-    kg9kkx: "xrdwe0",
+    k1xSpc: "x78zum5",
+    kvQiKF: "x1q0g3np",
+    kR2Kwr: "x1a02dak",
     kkeX5w: "x6s0dn4",
     kOIVth: "x8fetqu",
     kmVPX3: "x1aetswf",
@@ -2348,6 +2349,9 @@ var marketingStyles = {
   },
   card__icon: {
     k1xSpc: "x78zum5",
+    kVZ5iK: "x1c4vz4f",
+    kEE5IU: "x2lah0s",
+    kR2Kky: "x1vhnul8",
     kkeX5w: "x6s0dn4",
     kGmCso: "xl56j7k",
     kULEZF: "x1pf0uk5",
@@ -2358,6 +2362,9 @@ var marketingStyles = {
   },
   card__copy: {
     k1xSpc: "xrvj5dj",
+    kVZ5iK: "x1iyjqo2",
+    kEE5IU: "xs83m0k",
+    kR2Kky: "x1kfky9y",
     kNk6WL: "xc26acl",
     kdYMnH: "xesnm00",
     kOIVth: "x73f2yu",

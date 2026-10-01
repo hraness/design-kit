@@ -40,6 +40,14 @@ Filled showcases measure complete authored states in an owned DOM copy, then fit
 
 Design Kit suppresses transitions and animations with inline important declarations on the clone and its descendants before insertion. Those declarations last through both natural-height measurement and font fitting; removing a phase marker must not restore consumer motion. The live tree keeps its authored styles, and the copy is removed in `finally`. The browser regression includes the global reset, a nonterminal initial surface, the first terminal opening without a mode change, resizing, and enlarged text. Consumer font clamps would hide the faulty measurement and weaken the shared readable-size contract.
 
+Filled stages also own a sizing boundary. A slide may combine a phone, a readable terminal, and a desktop graphic deliberately scaled with `FitToWidth`. Recursive height rules reached into that nested graphic and made its scale calculation feed back into its height, eventually collapsing the graphic. Recursive type fitting also enlarged terminals drawn inside the graphic even though they were meant to scale with it.
+
+Fill now identifies top-level frames inside each stage-owned fit container, through ordinary product layout wrappers but without crossing another fit or mockup root. Only those frames receive fill height and fitted terminal type. `FitToWidth` records its declared minimum width so detached measurement clones can reproduce nested layouts from the outside in and scaled heights from the inside out. The mixed browser fixture tests stable reservations, complete visible frames, unchanged embedded type, explicit scale, resizing, both themes, and 200% text. This keeps product composition intact without an additional public sizing mode.
+
+## Icon cards need a reading width
+
+A fixed mark beside a shrinking grid track can leave almost no room for copy at 200% text. Shared icon cards use an intrinsically wrapping flex row: a 3.5rem mark and copy with a 10rem basis. The mark stays beside the complete title and summary when they fit; otherwise the copy wraps below and uses the available width. Both the raw CSS and compiled recipe own this behavior. The browser contract checks four viewport widths, ordinary and doubled text, both themes, and all delivery modes. Art cards and cards without icons retain their existing layout.
+
 ## Related
 
 The normative rules remain in the root `AGENTS.md`. [[documentation-ownership|Documentation ownership]] explains how those rules relate to executable contracts and this pull-based context.

@@ -93,7 +93,7 @@ export function FitToWidth({ children, className, minWidth = 400 }: Readonly<{ c
 
   const scaled = fit !== null && fit.scale < 1;
   return (
-    <div className={joinMockupClasses("hkm-fit", className)} ref={outer} style={scaled ? { height: fit.height } : undefined}>
+    <div className={joinMockupClasses("hkm-fit", className)} data-hkm-min-width={minWidth} ref={outer} style={scaled ? { height: fit.height } : undefined}>
       <div
         className="hkm-fit-inner"
         data-hkm-scaled={scaled ? "" : undefined}
@@ -350,10 +350,48 @@ export type ThroughStep = Readonly<{
   render: (state: Readonly<{ animated: boolean; theme: MockupTheme | undefined }>) => ReactNode;
 }>;
 
+/** Fill owns the outer shell and its top-level frames, never nested width-fit graphics. */
+function fillFrames(stage: HTMLElement): HTMLElement[] {
+  const frames: HTMLElement[] = [];
+  for (const panel of stage.querySelectorAll<HTMLElement>(":scope > .hkm-step-panel, :scope > .hkm-mode-surface")) {
+    const fit = panel.querySelector<HTMLElement>(":scope > .hkm-fit");
+    if (fit === null) continue;
+    for (const root of fit.querySelectorAll<HTMLElement>(".hkm-root")) {
+      const enclosingRoot = root.parentElement?.closest(".hkm-root");
+      if (root.closest(".hkm-fit") === fit && (enclosingRoot === null || enclosingRoot === undefined || !fit.contains(enclosingRoot))) frames.push(root);
+    }
+  }
+  return frames;
+}
+
+function presentationBodies(stage: HTMLElement): HTMLElement[] {
+  return fillFrames(stage).flatMap((frame) => [...frame.querySelectorAll<HTMLElement>(':scope > .hkm-window > [data-hkm-density="presentation"]')]);
+}
+
+/** Detached clones have no ResizeObserver. Recreate explicit graphic fits from the inside out. */
+function measureNestedFits(stage: HTMLElement): void {
+  const fits = [...stage.querySelectorAll<HTMLElement>("[data-hkm-min-width]")].filter((fit) => fit.parentElement?.classList.contains("hkm-step-panel") !== true && fit.parentElement?.classList.contains("hkm-mode-surface") !== true);
+  for (const fit of fits) {
+    const inner = fit.querySelector<HTMLElement>(":scope > .hkm-fit-inner");
+    if (inner === null) continue;
+    fit.style.removeProperty("height");
+    inner.style.removeProperty("transform");
+    inner.style.width = `${Math.max(fit.clientWidth, Number(fit.dataset.hkmMinWidth))}px`;
+  }
+  for (const fit of fits.reverse()) {
+    const inner = fit.querySelector<HTMLElement>(":scope > .hkm-fit-inner");
+    if (inner === null || inner.offsetWidth <= 0) continue;
+    const scale = Math.min(1, fit.clientWidth / inner.offsetWidth);
+    fit.style.height = `${inner.offsetHeight * scale}px`;
+    inner.style.transform = `scale(${scale})`;
+  }
+}
+
 /** Measure complete mounted slides at a readable baseline, separately from fitted paint. */
 function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   const owner = stage.parentElement;
   if (owner === null || stage.clientWidth <= 0) return;
+  for (const frame of fillFrames(stage)) frame.setAttribute("data-hkm-fill-frame", "");
   const probe = stage.cloneNode(true) as HTMLDivElement;
   probe.setAttribute("aria-hidden", "true");
   probe.setAttribute("inert", "");
@@ -362,7 +400,7 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   for (const sentinel of probe.querySelectorAll("[data-hkm-font-sentinel]")) sentinel.remove();
   for (const node of probe.querySelectorAll("[id]")) node.removeAttribute("id");
   for (const node of probe.querySelectorAll("[data-hkm-animated]")) node.removeAttribute("data-hkm-animated");
-  for (const body of probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+  for (const body of presentationBodies(probe)) body.style.removeProperty("--hkm-terminal-presentation-size");
   for (const fixture of probe.querySelectorAll<HTMLElement>("[data-hkm-measurement]")) fixture.hidden = false;
   // Even a reduced-motion reset can introduce tiny all-property transitions.
   // Synchronous measurements need final styles throughout the owned copy,
@@ -373,6 +411,7 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   }
   owner.append(probe);
   try {
+    measureNestedFits(probe);
     const naturalHeight = Math.max(minimumHeight, Math.ceil(probe.getBoundingClientRect().height));
     // The tallest complete slide establishes the floor. Fitted type never feeds
     // back into it, and changing the active tab never requests a measurement.
@@ -380,8 +419,8 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
     for (const fixture of probe.querySelectorAll("[data-hkm-measurement]")) fixture.remove();
     probe.style.blockSize = `${naturalHeight}px`;
     probe.removeAttribute("data-hkm-measuring");
-    const bodies = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null);
-    const copies = [...probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')];
+    const bodies = presentationBodies(stage).filter((body) => body.closest("[data-hkm-measurement]") === null);
+    const copies = presentationBodies(probe);
     for (const [index, copy] of copies.entries()) {
       const body = bodies[index];
       if (body === undefined) continue;
@@ -438,7 +477,8 @@ function useFittedShowcaseStage(fit: "natural" | "fill", source: unknown, variat
       fontSentinel.remove();
       node.style.removeProperty("--hkm-showcase-fill-height");
       node.removeAttribute("data-hkm-fitted");
-      for (const body of node.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+      for (const body of presentationBodies(node)) body.style.removeProperty("--hkm-terminal-presentation-size");
+      for (const frame of fillFrames(node)) frame.removeAttribute("data-hkm-fill-frame");
     };
   }, [fit, source, variation, minimumHeight]);
   return stage;
