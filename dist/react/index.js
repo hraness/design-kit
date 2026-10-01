@@ -6970,7 +6970,16 @@ Run the job, then show me its log.`,
                       label: "Cost",
                       values: ["Free locally", "Subscription"]
                     }],
-                    note: "An illustrative comparison. Product pages supply current facts and sources."
+                    note: /* @__PURE__ */ jsxs15("span", {
+                      children: [
+                        "An illustrative comparison. Product pages supply current facts and ",
+                        /* @__PURE__ */ jsx17("a", {
+                          href: "#articles",
+                          children: "sources"
+                        }),
+                        "."
+                      ]
+                    })
                   }),
                   /* @__PURE__ */ jsx17(MarketingAccount, {
                     id: "gallery-account",
@@ -7197,7 +7206,8 @@ Run the job, then show me its log.`,
             }),
             author: {
               kind: "organization",
-              name: "Hraness"
+              name: "Hraness",
+              href: "https://hraness.com"
             },
             dek: "Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed.",
             eyebrow: "Technique",
@@ -7225,8 +7235,15 @@ Run the job, then show me its log.`,
                 id: "gallery-article-problem",
                 children: "The problem"
               }),
-              /* @__PURE__ */ jsx17("p", {
-                children: "A provider signs the exact request body. Parsing the JSON and serializing it again changes whitespace and key order, and the signature check then fails on every retry."
+              /* @__PURE__ */ jsxs15("p", {
+                children: [
+                  "A provider signs the ",
+                  /* @__PURE__ */ jsx17("a", {
+                    href: "#gallery-article-approach",
+                    children: "exact request body"
+                  }),
+                  ". Parsing the JSON and serializing it again changes whitespace and key order, and the signature check then fails on every retry."
+                ]
               }),
               /* @__PURE__ */ jsx17(ArticleCallout, {
                 label: "Limit",
@@ -7324,6 +7341,13 @@ Run the job, then show me its log.`,
               published: "2026-09-02",
               title: "Relay 2.4 adds per-endpoint retry limits"
             }]
+          }),
+          /* @__PURE__ */ jsx17("p", {
+            className: "plain-publication__provenance",
+            children: /* @__PURE__ */ jsx17("a", {
+              href: "#gallery-article-title",
+              children: "Read the article"
+            })
           }),
           /* @__PURE__ */ jsxs15("div", {
             className: "hraness-prose",

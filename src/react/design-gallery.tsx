@@ -593,7 +593,7 @@ export function DesignSystemGallery({
             { label: "Bring your model", values: [true, { status: "optional", label: "On some plans" }] },
             { label: "Local storage", values: [true, { status: "depends", detail: "Check the provider's export format." }] },
             { label: "Cost", values: ["Free locally", "Subscription"] },
-          ]} note="An illustrative comparison. Product pages supply current facts and sources." />
+          ]} note={<span>An illustrative comparison. Product pages supply current facts and <a href="#articles">sources</a>.</span>} />
           <MarketingAccount id="gallery-account" summary="Keep your preferences and shared work together.">
             <MarketingAccountActions primary={{ href: "#gallery-account", label: "Create account" }} signIn={{ href: "#gallery-account" }} />
           </MarketingAccount>
@@ -695,7 +695,7 @@ export function DesignSystemGallery({
               ]}
             />
           )}
-          author={{ kind: "organization", name: "Hraness" }}
+          author={{ kind: "organization", name: "Hraness", href: "https://hraness.com" }}
           dek="Relay replays a failed webhook from the stored request body, so the retry sends the same bytes the provider signed."
           eyebrow="Technique"
           heading="Replaying webhooks without breaking signatures"
@@ -714,7 +714,7 @@ export function DesignSystemGallery({
         >
           <h2 id="gallery-article-problem">The problem</h2>
           <p>
-            A provider signs the exact request body. Parsing the JSON and serializing it again changes
+            A provider signs the <a href="#gallery-article-approach">exact request body</a>. Parsing the JSON and serializing it again changes
             whitespace and key order, and the signature check then fails on every retry.
           </p>
           <ArticleCallout label="Limit" tone="limit">
@@ -758,6 +758,7 @@ export function DesignSystemGallery({
             },
           ]}
         />
+        <p className="plain-publication__provenance"><a href="#gallery-article-title">Read the article</a></p>
         <div className="hraness-prose">
           <h3>Shared reading scale</h3>
           <p>
