@@ -133,8 +133,8 @@ try {
   assert.equal(build.success, true, build.logs.map(String).join("\n"));
 
   const probes = ["light", "dark"].map((theme) => `<span class="hkm-system-selection-probe" data-hkm-theme="${theme}"></span><span class="hkm-system-disabled-probe" data-hkm-theme="${theme}"></span>`).join("");
-  const page = (scheme: "light" | "dark", palette?: DesignPalette) => `<!doctype html><html lang="en"${palette === undefined ? "" : ` data-palette="${palette}" data-theme="${scheme}"`}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockups</title><link rel="stylesheet" href="/mockups.css">${palette === undefined ? "" : '<link rel="stylesheet" href="/palette.css">'}<link rel="stylesheet" href="/page-${scheme}.css"></head><body data-scheme="${scheme}">${fixture}<div id="showcase"></div><div id="steps"></div><div id="fill-steps"></div>${probes}<script type="module" src="/client-entry.js"></script></body></html>`;
-  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps, #fill-steps { margin-top: 32px; } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
+  const page = (scheme: "light" | "dark", palette?: DesignPalette) => `<!doctype html><html lang="en"${palette === undefined ? "" : ` data-palette="${palette}" data-theme="${scheme}"`}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockups</title><link rel="stylesheet" href="/mockups.css">${palette === undefined ? "" : '<link rel="stylesheet" href="/palette.css">'}<link rel="stylesheet" href="/page-${scheme}.css"></head><body data-scheme="${scheme}">${fixture}<div id="showcase"></div><div id="steps"></div><div id="fill-steps"></div><div id="fill-modes"></div>${probes}<script type="module" src="/client-entry.js"></script></body></html>`;
+  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps, #fill-steps, #fill-modes { margin-top: 32px; } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch(request) {
     const url = new URL(request.url);
     const scheme = url.searchParams.get("scheme") === "dark" ? "dark" : "light";
@@ -366,12 +366,115 @@ try {
             const [sparse, dense] = initial.terminals;
             assert(sparse !== undefined && dense !== undefined, `${label}: both terminal densities are covered`);
             assert(sparse.font > dense.font, `${label}: sparse content receives larger type than dense content`);
+            await tab.waitForSelector("#fill-modes [data-hkm-fitted]");
+            const observeMode = () => tab.locator("#fill-modes").evaluate((root) => {
+              const stage = root.querySelector<HTMLElement>(".hkm-mode-stage");
+              const active = stage?.querySelector<HTMLElement>('.hkm-mode-surface:not([data-hkm-measurement]):not([aria-hidden="true"])');
+              const frame = active?.querySelector<HTMLElement>(".hkm-window");
+              if (stage === null || stage === undefined || active === null || active === undefined || frame === null || frame === undefined) throw new Error("Missing filled mode surface");
+              const fixtures = [...stage.querySelectorAll<HTMLElement>("[data-hkm-measurement]")];
+              const terminals = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null).map((body) => ({
+                font: Number.parseFloat(getComputedStyle(body).fontSize), height: body.clientHeight, width: body.clientWidth,
+                scrollHeight: body.scrollHeight, scrollWidth: body.scrollWidth,
+              }));
+              return {
+                height: stage.getBoundingClientRect().height, width: stage.getBoundingClientRect().width,
+                frameHeight: frame.getBoundingClientRect().height, frameWidth: frame.getBoundingClientRect().width,
+                terminals, rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
+                hiddenFixtures: fixtures.filter((fixture) => fixture.hidden && fixture.inert && getComputedStyle(fixture).display === "none").length,
+                fixtures: fixtures.length, probes: root.querySelectorAll("[data-hkm-measuring]").length,
+                sentinels: stage.querySelectorAll("[data-hkm-font-sentinel]").length,
+                scales: [...stage.querySelectorAll<HTMLElement>(".hkm-fit-inner")].filter((inner) => inner.closest("[data-hkm-measurement]") === null).map((inner) => getComputedStyle(inner).transform),
+              };
+            });
+            const firstMode = await observeMode();
+            const modeStates = [];
+            for (const mode of ["Short", "Long"]) for (const option of ["Normal", "Full"]) {
+              await tab.locator("#fill-modes").getByRole("button", { name: mode, exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: option, exact: true }).click();
+              for (const surface of ["Terminal", "Report"]) {
+                await tab.locator("#fill-modes").getByRole("tab", { name: surface, exact: true }).click();
+                const actual = await observeMode();
+                const stateLabel = `${label}/mode/${mode}/${option}/${surface}`;
+                assert(Math.abs(actual.height - firstMode.height) < 1, `${stateLabel}: every authored choice keeps the same reserved height`);
+                assert(actual.height >= 280, `${stateLabel}: explicit height remains a minimum`);
+                assert(Math.abs(actual.frameHeight - actual.height) < 1 && Math.abs(actual.frameWidth - actual.width) < 1, `${stateLabel}: selected frame fills the panel`);
+                assert.equal(actual.fixtures, 8, `${stateLabel}: finite full-source combinations are reserved`);
+                assert.equal(actual.hiddenFixtures, actual.fixtures, `${stateLabel}: measurement fixtures remain hidden and inert`);
+                assert.equal(actual.probes, 0, `${stateLabel}: detached probes are removed`);
+                assert.equal(actual.sentinels, 1, `${stateLabel}: selection changes keep exactly one owned font observer`);
+                assert(actual.scales.every((scale) => scale === "none"), `${stateLabel}: readable content never scales down`);
+                for (const terminal of actual.terminals) {
+                  assert(terminal.font >= actual.rootFont && terminal.font <= actual.rootFont * 4, `${stateLabel}: type respects user size and the presentation ceiling`);
+                  assert(terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1, `${stateLabel}: complete source fits without clipping or horizontal overflow`);
+                }
+                modeStates.push({ mode, option, surface, ...actual });
+                if (screenshots !== undefined && ((mode === "Short" && option === "Normal" && surface === "Terminal") || (mode === "Long" && option === "Full"))) await tab.locator("#fill-modes").screenshot({ path: join(screenshots, `mode-fill-${scheme}-${width}-${mode}-${option}-${surface}.png`) });
+              }
+            }
+            fillEvidence.push({ label: `mode-${label}`, ...firstMode, states: modeStates });
             if (width === 390) {
               await tab.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
               await tab.waitForFunction(() => [...document.querySelectorAll<HTMLElement>('#fill-steps [data-hkm-density="presentation"]')].every((body) => Number.parseFloat(getComputedStyle(body).fontSize) >= 32 && body.scrollHeight <= body.clientHeight + 1));
               const zoomed = await observe();
               assert(zoomed.height >= initial.height, `${label}: larger user text can grow the natural stage`);
               assert.equal(zoomed.scale, "none");
+              await tab.waitForFunction(() => [...document.querySelectorAll<HTMLElement>('#fill-modes [data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null).every((body) => Number.parseFloat(getComputedStyle(body).fontSize) >= 32 && body.scrollHeight <= body.clientHeight + 1));
+              await tab.locator("#fill-modes").getByRole("tab", { name: "Terminal", exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Short", exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Normal", exact: true }).click();
+              const shortZoom = await observeMode();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Long", exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Full", exact: true }).click();
+              const longZoom = await observeMode();
+              assert(shortZoom.height >= firstMode.height, `${label}: text zoom can enlarge the complete choice reservation`);
+              assert(Math.abs(shortZoom.height - longZoom.height) < 1, `${label}: shortest to longest mode at 200% keeps the same stage`);
+              assert(longZoom.terminals.every((terminal) => terminal.font >= 32 && terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: longest state preserves all text at 200%`);
+              fillEvidence.push({ label: `mode-${label}/200%`, short: shortZoom, long: longZoom });
+              if (screenshots !== undefined) await tab.locator("#fill-modes").screenshot({ path: join(screenshots, `mode-fill-${scheme}-${width}-zoom.png`) });
+              await tab.evaluate(() => {
+                document.documentElement.style.cssText = "font-size:100%;block-size:100vh;overflow:hidden";
+                document.body.style.cssText = "block-size:100vh;box-sizing:border-box;overflow:hidden";
+                for (const child of [...document.body.children]) if (child instanceof HTMLElement && child.id !== "fill-modes") child.style.display = "none";
+                const fixture = document.getElementById("fill-modes");
+                if (fixture === null) throw new Error("Missing fixed mode fixture");
+                fixture.style.cssText = "max-block-size:100%;overflow:auto;margin:0";
+              });
+              await tab.locator("#fill-modes").getByRole("button", { name: "Short", exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Normal", exact: true }).click();
+              await tab.waitForFunction((height) => {
+                const stage = document.querySelector("#fill-modes .hkm-mode-stage");
+                return stage !== null && Math.abs(stage.getBoundingClientRect().height - height) < 1;
+              }, firstMode.height);
+              await tab.evaluate(async () => { await document.fonts.ready; await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))); });
+              const fixedEvent = await tab.evaluate(() => {
+                const stage = document.querySelector("#fill-modes .hkm-mode-stage");
+                if (stage === null) throw new Error("Missing fixed stage");
+                const boxes = () => ({ root: document.documentElement.getBoundingClientRect().toJSON(), stage: stage.getBoundingClientRect().toJSON() });
+                const before = boxes();
+                document.documentElement.style.fontSize = "200%";
+                return { before, synchronous: boxes() };
+              });
+              assert.equal(fixedEvent.before.root.width, fixedEvent.synchronous.root.width, `${label}: fixed root width cannot signal the font change`);
+              assert.equal(fixedEvent.before.root.height, fixedEvent.synchronous.root.height, `${label}: fixed root height cannot signal the font change`);
+              assert.equal(fixedEvent.before.stage.width, fixedEvent.synchronous.stage.width, `${label}: fixed stage width cannot signal the font change`);
+              assert.equal(fixedEvent.before.stage.height, fixedEvent.synchronous.stage.height, `${label}: reserved stage height cannot signal the font change`);
+              await tab.waitForFunction((height) => {
+                const stage = document.querySelector("#fill-modes .hkm-mode-stage");
+                return stage !== null && stage.getBoundingClientRect().height > height + 1;
+              }, fixedEvent.before.stage.height);
+              const fixedShort = await observeMode();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Long", exact: true }).click();
+              await tab.locator("#fill-modes").getByRole("button", { name: "Full", exact: true }).click();
+              const fixedLong = await observeMode();
+              assert(Math.abs(fixedShort.height - fixedLong.height) < 1, `${label}: fixed-shell zoom preserves the complete choice maximum`);
+              assert(fixedLong.terminals.every((terminal) => terminal.font >= 32 && terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: rem sentinel refits all text in a fixed viewport shell`);
+              fillEvidence.push({ label: `mode-${label}/fixed-root-200%`, fixedEvent, short: fixedShort, long: fixedLong });
+              const retainedStage = await tab.locator("#fill-modes .hkm-mode-stage").elementHandle();
+              assert(retainedStage !== null, `${label}: retain the owned stage for cleanup inspection`);
+              await tab.evaluate(() => window.dispatchEvent(new Event("mockups:unmount-mode-fill")));
+              assert(await retainedStage.evaluate((node) => !node.hasAttribute("data-hkm-fitted") && node.querySelector("[data-hkm-font-sentinel]") === null && (node as HTMLElement).style.getPropertyValue("--hkm-showcase-fill-height") === ""), `${label}: unmount removes the owned sentinel and fitted style`);
+              await retainedStage.dispose();
             }
           } finally {
             await context.close();
@@ -416,7 +519,7 @@ try {
         }
       }
       assert.equal(paletteCases, designPalettes.length * 2, "Every supported palette and mode must run");
-      console.log("Mockups browser checks passed: 11 frames fit phone and desktop in both themes; client tabs follow the keyboard model; filled walkthroughs fit sparse and dense content at four widths, retain stable frames, and honor 200% text zoom; selected, disabled, and completed controls meet 4.5:1 contrast with visible keyboard focus across standalone themes, all 5 palettes in both modes, and custom site accents; forced colors preserve system selection pairs.");
+      console.log("Mockups browser checks passed: 11 frames fit phone and desktop in both themes; client tabs follow the keyboard model; filled walkthroughs and all authored mode/option combinations fit sparse and dense content at four widths, retain stable frames, and honor 200% text zoom; selected, disabled, and completed controls meet 4.5:1 contrast with visible keyboard focus across standalone themes, all 5 palettes in both modes, and custom site accents; forced colors preserve system selection pairs.");
     } finally { await browser.close(); }
   } finally { await server.stop(true); }
 } finally { await rm(work, { recursive: true, force: true }); }

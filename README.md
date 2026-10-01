@@ -30,8 +30,18 @@ complete, wrapping copy. Illustration cards keep their separate `art` slot.
 `StepThrough fit="fill"` fills a stable stage with each slide, and
 `TerminalFrame density="presentation"` uses the available space for larger
 readable text. Complete source lines determine the fit before animation;
-user text zoom can enlarge the stage. The provider registry adds sourced marks
+user text zoom can enlarge the stage. `ModeShowcase fit="fill"` reserves the
+largest complete surface across every mode and option before a selection changes,
+with `height` as a minimum. The provider registry adds sourced marks
 for iMessage, WhatsApp, Beeper, Ollama, and Vercel.
+
+In fill mode, `ModeShowcase` renders each authored surface/mode/option combination
+as a hidden, inert, nonanimated measurement fixture. Render functions must be
+pure and provide complete content. The limit is 128 combinations. Visible
+presentation terminals fit their current content within that shared maximum;
+changing a mode or option never changes the reserved height. At narrower widths
+or larger user text settings, the stage can grow to keep the full content readable.
+Natural mode retains its existing scaling and page-height behavior.
 
 ### Joined showcase tabs
 

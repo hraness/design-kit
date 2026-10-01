@@ -52,6 +52,16 @@ const fillSteps = [
     kind: "output" as const, text: `Step ${index + 1}: read the saved project notes.`,
   }))} /> },
 ];
+const fillModes = [{ id: "short", label: "Short" }, { id: "long", label: "Long" }] as const;
+const fillOptions = [{ id: "normal", label: "Normal" }, { id: "full", label: "Full" }] as const;
+const fillSurfaces = [
+  { id: "terminal", label: "Terminal", render: ({ mode, option }: Readonly<{ mode: "short" | "long"; option: "normal" | "full" | undefined }>) => (
+    <TerminalFrame density="presentation" describe="A terminal shows the selected amount of saved project context." height={180} lines={mode === "short" ? [
+      { kind: "input", text: "relay run" }, { kind: "output", text: "Job saved.", tone: "ok" },
+    ] : Array.from({ length: option === "full" ? 12 : 6 }, (_, index) => ({ kind: "output" as const, text: `Step ${index + 1}: read the saved project notes.` }))} />
+  ) },
+  { id: "report", label: "Report", render: () => <BrowserFrame describe="A report gives the completed job summary." height={220} url="https://relay.example/report"><p>Completed jobs</p><p>Read the saved result.</p></BrowserFrame> },
+];
 const caption = "Illustration. Names and text are made up.";
 
 function mount(id: string) {
@@ -61,5 +71,8 @@ function mount(id: string) {
 }
 mount("showcase").render(<ModeShowcase caption={caption} modes={modes} status={({ mode }) => `Showing ${mode}`} surfaces={surfaces} />);
 mount("steps").render(<StepThrough caption={caption} steps={steps} />);
+const filledModes = mount("fill-modes");
+window.addEventListener("mockups:unmount-mode-fill", () => filledModes.unmount(), { once: true });
+filledModes.render(<ModeShowcase fit="fill" height={280} modes={fillModes} options={fillOptions} surfaces={fillSurfaces} />);
 mount("fill-steps").render(<StepThrough fit="fill" minWidth={280} steps={fillSteps} />);
 requestAnimationFrame(() => requestAnimationFrame(() => { document.documentElement.dataset.ready = "true"; }));

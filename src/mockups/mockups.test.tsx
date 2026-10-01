@@ -220,9 +220,29 @@ test("filled steps and presentation terminals are explicit server-safe options",
   const html = renderToStaticMarkup(<clientApi.StepThrough fit="fill" steps={[{ id: "run", label: "Run", render: () => terminal }]} />);
   expect(html).toContain('data-hkm-fit="fill"');
   expect(html).toContain('data-hkm-density="presentation"');
-  expect(html).not.toContain("--hkm-step-fill-height");
+  expect(html).not.toContain("--hkm-showcase-fill-height");
   expect(html).not.toContain("--hkm-terminal-presentation-size");
   expect(renderToStaticMarkup(<api.TerminalFrame describe="A terminal starts a job." lines={lines} />)).not.toContain("data-hkm-density");
   expect(() => renderToStaticMarkup(<api.TerminalFrame density={"small" as "standard"} describe="A terminal starts a job." lines={lines} />)).toThrow("Terminal density");
   expect(() => renderToStaticMarkup(<clientApi.StepThrough fit={"small" as "natural"} steps={[{ id: "run", label: "Run", render: () => terminal }]} />)).toThrow("StepThrough fit");
+});
+
+
+test("filled mode showcases reserve all authored combinations with inert nonanimated fixtures", () => {
+  const calls: Array<{ mode: string; option: string | undefined; animated: boolean }> = [];
+  const modes = [{ id: "short", label: "Short" }, { id: "long", label: "Long" }];
+  const options = [{ id: "normal", label: "Normal" }, { id: "full", label: "Full" }];
+  const surfaces = [{ id: "terminal", label: "Terminal", render: (state: { mode: string; option: string | undefined; animated: boolean }) => { calls.push(state); return <span>{state.mode}/{state.option}</span>; } }];
+  const html = renderToStaticMarkup(<clientApi.ModeShowcase fit="fill" height={280} modes={modes} options={options} surfaces={surfaces} />);
+  expect(html.match(/data-hkm-measurement=""/gu)).toHaveLength(4);
+  expect(html.match(/data-hkm-measurement="" hidden="" inert=""/gu)).toHaveLength(4);
+  expect(calls).toHaveLength(5);
+  expect(calls.every((call) => !call.animated)).toBe(true);
+  expect(calls.filter((call) => call.mode === "long").map((call) => call.option)).toEqual(["normal", "full"]);
+  expect(html).toContain('data-hkm-fit="fill"');
+  expect(html).not.toContain("--hkm-showcase-fill-height");
+  expect(renderToStaticMarkup(<clientApi.ModeShowcase modes={modes} surfaces={surfaces} />)).not.toContain("data-hkm-measurement");
+  expect(() => renderToStaticMarkup(<clientApi.ModeShowcase fit={"other" as "natural"} modes={modes} surfaces={surfaces} />)).toThrow("ModeShowcase fit");
+  expect(() => renderToStaticMarkup(<clientApi.ModeShowcase height={Infinity} modes={modes} surfaces={surfaces} />)).toThrow("finite");
+  expect(() => renderToStaticMarkup(<clientApi.ModeShowcase fit="fill" modes={Array.from({ length: 129 }, (_, index) => ({ id: String(index), label: String(index) }))} surfaces={surfaces} />)).toThrow("128");
 });

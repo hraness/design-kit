@@ -6,6 +6,7 @@ import {
   type ReactNode,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -145,8 +146,10 @@ export type ModeShowcaseProps<S extends string, M extends string, O extends stri
   status?: (state: Readonly<{ surface: S; mode: M; option: O | undefined }>) => ReactNode;
   /** Optional context that adds to the visual. Omit repeated descriptions or generic disclaimers. */
   caption?: string;
-  /** Page-window height in CSS pixels at full scale. */
+  /** Page-window cap in natural mode; minimum complete stage height in fill mode. */
   height?: number;
+  /** Reserve every authored choice at readable size, up to 128 combinations. */
+  fit?: "natural" | "fill";
   /** Narrowest layout width before the stage scales down. */
   minWidth?: number;
   theme?: MockupTheme;
@@ -164,6 +167,7 @@ export type ModeShowcaseProps<S extends string, M extends string, O extends stri
 export function ModeShowcase<S extends string, M extends string, O extends string = string>({
   caption,
   className,
+  fit = "natural",
   height = 440,
   initial,
   label,
@@ -181,7 +185,9 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   assertUniqueIds(modes, "ModeShowcase mode");
   if (options !== undefined) assertUniqueIds(options, "ModeShowcase option");
   const captionText = optionalText(caption, "ModeShowcase");
-  if (!(height > 0)) throw new RangeError("ModeShowcase height must be positive.");
+  if (!Number.isFinite(height) || !(height > 0)) throw new RangeError("ModeShowcase height must be finite and positive.");
+  if (fit !== "natural" && fit !== "fill") throw new RangeError("ModeShowcase fit must be natural or fill.");
+  if (fit === "fill" && surfaces.length * modes.length * (options?.length ?? 1) > 128) throw new RangeError("ModeShowcase fill supports up to 128 surface, mode, and option combinations.");
 
   const id = useId();
   const firstSurface = surfaces.find((surface) => surface.id === initial?.surface) ?? itemAt(surfaces, 0, "ModeShowcase surfaces");
@@ -198,6 +204,17 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   const modeChoice = modes.find((entry) => entry.id === mode) ?? itemAt(modes, 0, "ModeShowcase modes");
   const optionChoice = options?.find((entry) => entry.id === option);
   const optionInactive = optionInactiveModes.includes(mode);
+
+  // Pure, nonanimated authored states reserve one maximum before any choice.
+  // They stay hidden and inert; only a detached measurement clone reveals them.
+  const measurements = useMemo(() => fit !== "fill" ? null : surfaces.flatMap((entry) => modes.flatMap((choice) => (options ?? [{ id: undefined }]).map((optionChoice) => (
+    <div aria-hidden="true" className="hkm-mode-surface" data-hkm-measurement="" hidden inert key={JSON.stringify([entry.id, choice.id, optionChoice.id])}>
+      <div className="hkm-fit"><div className="hkm-fit-inner">
+        {entry.render({ animated: false, mode: choice.id, option: optionChoice.id, previousMode: choice.id, theme })}
+      </div></div>
+    </div>
+  )))), [fit, modes, options, surfaces, theme]);
+  const stage = useFittedShowcaseStage(fit, measurements, JSON.stringify([mode, option]), height);
 
   const chooseMode = (next: M) => {
     if (next === mode) return;
@@ -230,6 +247,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
     <figure
       aria-label={label?.(surface) ?? `Illustration of ${surface.label.toLowerCase()}`}
       className={joinMockupClasses("hkm-showcase", "hkm-modes", className)}
+      data-hkm-fit={fit === "fill" ? fit : undefined}
       data-hkm-theme={theme}
       data-nosnippet=""
     >
@@ -291,7 +309,8 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
           </div>
           {hint === "" ? null : <p className="hkm-showcase-hint">{hint}</p>}
         </div>
-        <div className="hkm-mode-stage">
+        <div className="hkm-mode-stage" ref={stage}>
+          {measurements}
           {surfaces.map((entry) => (
             <div
               aria-hidden={entry.id !== surface.id}
@@ -301,7 +320,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
               inert={entry.id !== surface.id}
               key={entry.id}
             >
-              <FitToWidth minWidth={minWidth}>
+              <FitToWidth minWidth={fit === "fill" ? 1 : minWidth}>
                 {entry.render({ animated: entry.id === surface.id && animated, mode, option, previousMode, theme })}
               </FitToWidth>
             </div>
@@ -332,7 +351,7 @@ export type ThroughStep = Readonly<{
 }>;
 
 /** Measure complete mounted slides at a readable baseline, separately from fitted paint. */
-function fitStepStage(stage: HTMLDivElement): void {
+function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   const owner = stage.parentElement;
   if (owner === null || stage.clientWidth <= 0) return;
   const probe = stage.cloneNode(true) as HTMLDivElement;
@@ -340,18 +359,21 @@ function fitStepStage(stage: HTMLDivElement): void {
   probe.setAttribute("inert", "");
   probe.setAttribute("data-hkm-measuring", "");
   probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;inset:0 auto auto 0;inline-size:${stage.getBoundingClientRect().width}px;block-size:auto;`;
+  for (const sentinel of probe.querySelectorAll("[data-hkm-font-sentinel]")) sentinel.remove();
   for (const node of probe.querySelectorAll("[id]")) node.removeAttribute("id");
   for (const node of probe.querySelectorAll("[data-hkm-animated]")) node.removeAttribute("data-hkm-animated");
   for (const body of probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+  for (const fixture of probe.querySelectorAll<HTMLElement>("[data-hkm-measurement]")) fixture.hidden = false;
   owner.append(probe);
   try {
-    const naturalHeight = Math.ceil(probe.getBoundingClientRect().height);
+    const naturalHeight = Math.max(minimumHeight, Math.ceil(probe.getBoundingClientRect().height));
     // The tallest complete slide establishes the floor. Fitted type never feeds
     // back into it, and changing the active tab never requests a measurement.
-    stage.style.setProperty("--hkm-step-fill-height", `${naturalHeight}px`);
+    stage.style.setProperty("--hkm-showcase-fill-height", `${naturalHeight}px`);
+    for (const fixture of probe.querySelectorAll("[data-hkm-measurement]")) fixture.remove();
     probe.style.blockSize = `${naturalHeight}px`;
     probe.removeAttribute("data-hkm-measuring");
-    const bodies = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')];
+    const bodies = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null);
     const copies = [...probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')];
     for (const [index, copy] of copies.entries()) {
       const body = bodies[index];
@@ -373,6 +395,46 @@ function fitStepStage(stage: HTMLDivElement): void {
   } finally {
     probe.remove();
   }
+}
+
+/** Share one measurement lifecycle across surface and walkthrough selectors. */
+function useFittedShowcaseStage(fit: "natural" | "fill", source: unknown, variation = "", minimumHeight = 0) {
+  const stage = useRef<HTMLDivElement>(null);
+  useIsomorphicLayoutEffect(() => {
+    const node = stage.current;
+    if (fit !== "fill" || node === null || typeof ResizeObserver === "undefined") return undefined;
+    // A rem-sized box changes even when both the document and stage are fixed.
+    const fontSentinel = document.createElement("span");
+    fontSentinel.setAttribute("data-hkm-font-sentinel", "");
+    fontSentinel.setAttribute("aria-hidden", "true");
+    fontSentinel.inert = true;
+    fontSentinel.style.cssText = "position:absolute;inline-size:1rem;block-size:1rem;visibility:hidden;pointer-events:none;inset:0 auto auto 0;";
+    node.append(fontSentinel);
+    let previous = "";
+    let disposed = false;
+    const measure = () => {
+      if (disposed) return;
+      const key = `${node.clientWidth}/${getComputedStyle(document.documentElement).fontSize}`;
+      if (key === previous) return;
+      previous = key;
+      fitShowcaseStage(node, minimumHeight);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    observer.observe(document.documentElement);
+    observer.observe(fontSentinel);
+    void document.fonts.ready.then(() => { previous = ""; measure(); });
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      fontSentinel.remove();
+      node.style.removeProperty("--hkm-showcase-fill-height");
+      node.removeAttribute("data-hkm-fitted");
+      for (const body of node.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+    };
+  }, [fit, source, variation, minimumHeight]);
+  return stage;
 }
 
 /**
@@ -402,32 +464,7 @@ export function StepThrough({
 }>) {
   assertUniqueIds(steps, "StepThrough step");
   if (fit !== "natural" && fit !== "fill") throw new RangeError("StepThrough fit must be natural or fill.");
-  const stage = useRef<HTMLDivElement>(null);
-  useIsomorphicLayoutEffect(() => {
-    const node = stage.current;
-    if (fit !== "fill" || node === null || typeof ResizeObserver === "undefined") return undefined;
-    let previous = "";
-    let disposed = false;
-    const measure = () => {
-      if (disposed) return;
-      const key = `${node.clientWidth}/${getComputedStyle(document.documentElement).fontSize}`;
-      if (key === previous) return;
-      previous = key;
-      fitStepStage(node);
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(node);
-    observer.observe(document.documentElement);
-    void document.fonts.ready.then(() => { previous = ""; measure(); });
-    return () => {
-      disposed = true;
-      observer.disconnect();
-      node.style.removeProperty("--hkm-step-fill-height");
-      node.removeAttribute("data-hkm-fitted");
-      for (const body of node.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
-    };
-  }, [fit, steps]);
+  const stage = useFittedShowcaseStage(fit, steps);
   const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));

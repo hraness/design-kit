@@ -2533,33 +2533,35 @@
   .hkm-showcase.hkm-steps .hkm-step-panel .hkm-root { border-start-start-radius: 0; border-start-end-radius: 0; box-shadow: none; }
   /* Fill uses the tallest complete slide as its natural height. It does not
    * scale text or ask fitted font sizes to determine the stage height. */
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) {
-    block-size: var(--hkm-step-fill-height, auto);
+  .hkm-showcase[data-hkm-fit="fill"] [data-hkm-measuring] .hkm-page { max-block-size: none; }
+
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) {
+    block-size: var(--hkm-showcase-fill-height, auto);
   }
 
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) .hkm-step-panel {
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) :is(.hkm-step-panel, .hkm-mode-surface) {
     align-self: stretch;
     min-block-size: 0;
   }
 
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) :is(.hkm-fit, .hkm-fit-inner, .hkm-root, .hkm-root > .hkm-window) {
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) :is(.hkm-fit, .hkm-fit-inner, .hkm-root, .hkm-root > .hkm-window) {
     block-size: 100%;
     min-block-size: 0;
   }
 
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) .hkm-window:has(> .hkm-page) {
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) .hkm-window:has(> .hkm-page) {
     display: flex;
     flex-direction: column;
   }
 
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) .hkm-window > .hkm-page {
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) .hkm-window > .hkm-page {
     flex: 1 1 auto;
     block-size: auto;
     min-block-size: 0;
     max-block-size: none;
   }
 
-  .hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) :is(.hkm-title-bar, .hkm-browser-bar) {
+  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) :is(.hkm-title-bar, .hkm-browser-bar) {
     flex: none;
   }
 
