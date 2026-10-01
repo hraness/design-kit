@@ -460,7 +460,8 @@ function renderArticleHtml(input) {
   const headingId = input.headingId ?? "article-title";
   const {
     published,
-    updated
+    updated,
+    showDates = true
   } = input;
   assertArticleDates(updated === undefined ? {
     published
@@ -474,21 +475,27 @@ function renderArticleHtml(input) {
       throw new RangeError("Contents links must point to a heading in this article.");
   }
   const tocId = `${headingId}-contents`;
-  const meta = [input.author === undefined ? "" : renderArticleBylineHtml(input.author) + SEPARATOR, dateHtml("Published", published), updated === undefined ? "" : SEPARATOR + dateHtml("Updated", updated)].join("");
-  const header = ['<header class="plain-publication__article-header">', present(input.eyebrow) ? `<p class="plain-publication__eyebrow">${escapeArticleHtml(input.eyebrow)}</p>` : "", `<h1 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(input.heading)}</h1>`, present(input.dek) ? `<p class="plain-publication__article-dek">${escapeArticleHtml(input.dek)}</p>` : "", `<p class="plain-publication__article-meta">${meta}</p>`, input.provenance === null ? "" : renderArticleProvenanceHtml(input.provenance), "</header>"].join("");
+  const meta = [input.author === undefined ? "" : renderArticleBylineHtml(input.author), showDates ? dateHtml("Published", published) : "", showDates && updated !== undefined ? dateHtml("Updated", updated) : ""].filter(Boolean).join(SEPARATOR);
+  const header = ['<header class="plain-publication__article-header">', present(input.eyebrow) ? `<p class="plain-publication__eyebrow">${escapeArticleHtml(input.eyebrow)}</p>` : "", `<h1 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(input.heading)}</h1>`, present(input.dek) ? `<p class="plain-publication__article-dek">${escapeArticleHtml(input.dek)}</p>` : "", meta === "" ? "" : `<p class="plain-publication__article-meta">${meta}</p>`, input.provenance === null ? "" : renderArticleProvenanceHtml(input.provenance), "</header>"].join("");
   const nav = toc.length === 0 ? "" : [`<nav aria-labelledby="${escapeArticleHtml(tocId)}" class="plain-publication__toc">`, `<p id="${escapeArticleHtml(tocId)}">${escapeArticleHtml(input.tocLabel ?? ARTICLE_TOC_LABEL)}</p>`, "<ol>", ...toc.map((item) => `<li><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.label)}</a></li>`), "</ol></nav>"].join("");
   return [`<article aria-labelledby="${escapeArticleHtml(headingId)}" class="${escapeArticleHtml(classes2(ROOT_CLASS, "plain-publication__article", input.className))}" data-hraness-article="" data-toc="${toc.length > 0 ? "aside" : "none"}"${input.id === undefined ? "" : ` id="${escapeArticleHtml(input.id)}"`}>`, header, '<div class="plain-publication__article-layout">', nav, `<div class="plain-publication__article-body">${input.bodyHtml}</div>`, "</div>", present(input.afterHtml) ? `<footer class="plain-publication__article-footer">${input.afterHtml}</footer>` : "", "</article>"].join("");
 }
 function renderArticleSourcesHtml({
   heading = ARTICLE_SOURCES_HEADING,
   headingId = "article-sources",
+  showDates = true,
   sources
 }) {
   if (sources.length === 0)
     return "";
-  for (const source of sources)
+  for (const source of sources) {
     assertArticleHref(source.href);
-  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__sources">`, `<h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2>`, "<ol>", ...sources.map((source) => [`<li><a href="${escapeArticleHtml(source.href)}">${escapeArticleHtml(source.title)}</a>`, "<span>", present(source.publisher) ? escapeArticleHtml(source.publisher) + SEPARATOR : "", dateHtml("Checked", source.checkedOn), "</span></li>"].join("")), "</ol></section>"].join("");
+    formatArticleDate(source.checkedOn);
+  }
+  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__sources">`, `<h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2>`, "<ol>", ...sources.map((source) => {
+    const meta = [present(source.publisher) ? escapeArticleHtml(source.publisher) : "", showDates ? dateHtml("Checked", source.checkedOn) : ""].filter(Boolean).join(SEPARATOR);
+    return [`<li><a href="${escapeArticleHtml(source.href)}">${escapeArticleHtml(source.title)}</a>`, meta === "" ? "" : `<span>${meta}</span>`, "</li>"].join("");
+  }), "</ol></section>"].join("");
 }
 function renderArticleCalloutHtml(input) {
   const tone = input.tone ?? "note";
@@ -521,6 +528,7 @@ function renderArticleIndexHtml({
   headingLevel = 2,
   id,
   items,
+  showDates = true,
   summary
 }) {
   if (![1, 2, 3, 4, 5].includes(headingLevel))
@@ -540,7 +548,7 @@ function renderArticleIndexHtml({
   }
   const heading1 = `h${headingLevel}`;
   const entry = `h${headingLevel + 1}`;
-  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="${escapeArticleHtml(classes2(ROOT_CLASS, "plain-publication__list", className))}" data-hraness-article-index=""${id === undefined ? "" : ` id="${escapeArticleHtml(id)}"`}>`, `<div class="plain-publication__section-heading"><${heading1} id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</${heading1}>`, present(summary) ? `<p>${escapeArticleHtml(summary)}</p>` : "", "</div>", '<div class="plain-publication__article-list">', ...items.map((item) => ['<article class="plain-publication__entry">', present(item.eyebrow) ? `<p class="plain-publication__entry-label">${escapeArticleHtml(item.eyebrow)}</p>` : "", `<${entry} class="plain-publication__entry-title"><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.title)}</a></${entry}>`, `<p class="plain-publication__entry-dek">${escapeArticleHtml(item.dek)}</p>`, '<p class="plain-publication__entry-meta">', dateHtml("Published", item.published), item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated), "</p></article>"].join("")), "</div></section>"].join("");
+  return [`<section aria-labelledby="${escapeArticleHtml(headingId)}" class="${escapeArticleHtml(classes2(ROOT_CLASS, "plain-publication__list", className))}" data-hraness-article-index=""${id === undefined ? "" : ` id="${escapeArticleHtml(id)}"`}>`, `<div class="plain-publication__section-heading"><${heading1} id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</${heading1}>`, present(summary) ? `<p>${escapeArticleHtml(summary)}</p>` : "", "</div>", '<div class="plain-publication__article-list">', ...items.map((item) => ['<article class="plain-publication__entry">', present(item.eyebrow) ? `<p class="plain-publication__entry-label">${escapeArticleHtml(item.eyebrow)}</p>` : "", `<${entry} class="plain-publication__entry-title"><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.title)}</a></${entry}>`, `<p class="plain-publication__entry-dek">${escapeArticleHtml(item.dek)}</p>`, showDates ? ['<p class="plain-publication__entry-meta">', dateHtml("Published", item.published), item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated), "</p>"].join("") : "", "</article>"].join("")), "</div></section>"].join("");
 }
 // src/status-page.ts
 var STATUS_PAGE_MAX_NEXT = 3;

@@ -181,7 +181,9 @@ jobs:
           mkdir "$pack"
           npm pack --ignore-scripts --pack-destination "$pack"
           npm publish "$pack"/*.tgz --access public --provenance --ignore-scripts --registry=https://registry.npmjs.org
-          for _ in $(seq 1 10); do
+          # npm can accept a version before its asynchronous registry processing
+          # exposes the version and provenance. Keep the check, with a ten-minute window.
+          for _ in $(seq 1 40); do
             predicate="$(npm view "$name@$version" dist.attestations.provenance.predicateType --prefer-online --registry=https://registry.npmjs.org 2>/dev/null || true)"
             if [[ "$predicate" == "https://slsa.dev/provenance/v1" ]]; then
               echo "Published $name@$version with provenance"

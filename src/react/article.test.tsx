@@ -77,6 +77,76 @@ test("MarketingArticle omits empty slots and rejects bad dates and contents link
   )).toThrow(RangeError);
 });
 
+test("evergreen article headers preserve authors and review credits without dates or empty metadata", () => {
+  for (const author of [undefined, { kind: "organization", name: "Hraness" } as const]) {
+    for (const updated of [undefined, "2026-09-24" as const]) {
+      const input = {
+        heading: "An evergreen explanation",
+        provenance,
+        published: "2026-09-23" as const,
+        showDates: false,
+        ...(author === undefined ? {} : { author }),
+        ...(updated === undefined ? {} : { updated }),
+      };
+      const html = renderArticleHtml({ ...input, bodyHtml: "<p>Body.</p>" });
+      expect(html).toBe(renderToStaticMarkup(<MarketingArticle {...input}><p>Body.</p></MarketingArticle>));
+      expect(html).not.toContain("<time");
+      expect(html).not.toContain("2026-09-");
+      expect(html).not.toContain(" · ");
+      expect(html).toContain("Drafted with AI from the source code and reviewed by");
+      if (author === undefined) {
+        expect(html).not.toContain("plain-publication__article-meta");
+      } else {
+        expect(html).toContain('<p class="plain-publication__article-meta"><span class="plain-publication__byline" data-author-kind="organization">By Hraness</span></p>');
+      }
+    }
+  }
+});
+
+test("evergreen indexes and sources retain their content without date-only rows", () => {
+  const items: ArticleIndexItem[] = [
+    { href: "/a", title: "A", dek: "Claim A.", published: "2026-09-20" },
+    { href: "/b", title: "B", dek: "Claim B.", published: "2026-09-10", updated: "2026-09-21" },
+  ];
+  const input = { heading: "Guides", headingId: "guides", items, showDates: false };
+  const index = renderArticleIndexHtml(input);
+  expect(index).toBe(renderToStaticMarkup(<ArticleIndex {...input} />));
+  expect(index).toContain('href="/a">A</a>');
+  expect(index).toContain("Claim B.");
+  expect(index).not.toContain("<time");
+  expect(index).not.toContain("plain-publication__entry-meta");
+  for (const publisher of [undefined, "", "Example & Co"]) {
+    const sources = [{
+      title: "Primary reference",
+      href: "https://example.com/source",
+      checkedOn: "2026-09-23" as const,
+      ...(publisher === undefined ? {} : { publisher }),
+    }];
+    const html = renderArticleSourcesHtml({ sources, showDates: false });
+    expect(html).toBe(renderToStaticMarkup(<ArticleSources sources={sources} showDates={false} />));
+    expect(html).toContain('<a href="https://example.com/source">Primary reference</a>');
+    expect(html).not.toContain("Checked");
+    expect(html).not.toContain("<time");
+    expect(html).not.toContain(" · ");
+    expect(html).not.toContain("<span></span>");
+    if (publisher) expect(html).toContain("<span>Example &amp; Co</span>");
+    else expect(html).not.toContain("<span");
+  }
+});
+
+test("hiding dates preserves metadata validation in both renderers", () => {
+  const article = { heading: "A", provenance: null, published: "2026-09-23" as const, updated: "2026-09-22" as const, showDates: false };
+  expect(() => renderArticleHtml({ ...article, bodyHtml: "<p>A.</p>" })).toThrow(/cannot precede/u);
+  expect(() => renderToStaticMarkup(<MarketingArticle {...article}><p>A.</p></MarketingArticle>)).toThrow(/cannot precede/u);
+  const items: ArticleIndexItem[] = [{ href: "/a", title: "A", dek: "A.", published: "2026-02-30" }];
+  const index = { heading: "Guides", headingId: "guides", items, showDates: false };
+  expect(() => renderArticleIndexHtml(index)).toThrow(RangeError);
+  expect(() => renderToStaticMarkup(<ArticleIndex {...index} />)).toThrow(RangeError);
+  const sources = [{ title: "Source", href: "/source", checkedOn: "2026-02-30" as const }];
+  expect(() => renderArticleSourcesHtml({ sources, showDates: false })).toThrow(RangeError);
+  expect(() => renderToStaticMarkup(<ArticleSources sources={sources} showDates={false} />)).toThrow(RangeError);
+});
+
 test("byline, provenance, and callout render stable hooks", () => {
   expect(renderToStaticMarkup(<ArticleByline author={{ kind: "person", name: "Sam" }} />))
     .toBe('<span class="plain-publication__byline" data-author-kind="person">By Sam</span>');
@@ -180,6 +250,7 @@ test("property: static and React markup agree for generated articles", () => {
       eyebrow: fc.option(textArb, { nil: undefined }),
       author: fc.option(fc.record({ kind: fc.constantFrom("organization" as const, "person" as const), name: textArb.filter((v) => v.trim() !== "") }), { nil: undefined }),
       published: dateArb,
+      showDates: fc.boolean(),
       toc: fc.array(fc.record({ href: fc.stringMatching(/^#[a-z][a-z0-9-]{0,8}$/u).map((v) => v as `#${string}`), label: textArb }), { maxLength: 3 }).map((items) => [...new Map(items.map((i) => [i.href, i])).values()]),
       reviewer: fc.option(textArb.filter((v) => !/human/iu.test(v)).map((v) => `AI review ${v}`.trim()), { nil: null }),
     }),
@@ -192,6 +263,7 @@ test("property: static and React markup agree for generated articles", () => {
         heading: input.heading,
         provenance: record,
         published: input.published,
+        showDates: input.showDates,
         toc: input.toc,
         ...(input.dek === undefined ? {} : { dek: input.dek }),
         ...(input.eyebrow === undefined ? {} : { eyebrow: input.eyebrow }),
@@ -214,13 +286,14 @@ test("property: static and React index and sources markup agree", () => {
     }), { maxLength: 4, selector: (item) => item.href }),
     fc.array(fc.record({ title: textArb, href: hrefArb, publisher: fc.option(textArb, { nil: undefined }), checkedOn: dateArb }), { maxLength: 3 }),
     textArb,
-    (rawItems, rawSources, heading) => {
+    fc.boolean(),
+    (rawItems, rawSources, heading, showDates) => {
       const items: ArticleIndexItem[] = rawItems.map(({ eyebrow, ...rest }) => (eyebrow === undefined ? rest : { ...rest, eyebrow }));
       const sources = rawSources.map(({ publisher, ...rest }) => (publisher === undefined ? rest : { ...rest, publisher }));
-      expect(renderArticleIndexHtml({ heading, headingId: "idx", items }))
-        .toBe(renderToStaticMarkup(<ArticleIndex heading={heading} headingId="idx" items={items} />));
-      expect(renderArticleSourcesHtml({ sources }))
-        .toBe(renderToStaticMarkup(<ArticleSources sources={sources} />));
+      expect(renderArticleIndexHtml({ heading, headingId: "idx", items, showDates }))
+        .toBe(renderToStaticMarkup(<ArticleIndex heading={heading} headingId="idx" items={items} showDates={showDates} />));
+      expect(renderArticleSourcesHtml({ sources, showDates }))
+        .toBe(renderToStaticMarkup(<ArticleSources sources={sources} showDates={showDates} />));
     },
   ), { numRuns: 150 });
 });

@@ -17,9 +17,15 @@ Limits are maximums. Count characters in the rendered text.
 | `provenance` | The drafting kind and the review on record. | | Omitting it on an AI-drafted post. |
 | `toc` | One entry per `h2`, only when the article has four or more. | Eight entries | Entries for `h3` headings. |
 | Body headings | Sentence case, each naming what the section shows. | 70 characters | Signpost headings such as "Overview", "Conclusion", or "Key takeaways". |
-| `ArticleSources` | Primary sources a reader can open, each with the date someone last checked the cited claim. | | Secondary summaries when the primary source is public. |
+| `ArticleSources` | Primary sources a reader can open, retaining the date someone last checked the cited claim in each record. | | Secondary summaries when the primary source is public. |
 | `ArticleRelatedProducts` | Siblings from the registered relations for this article, each shown with its mark, name, and one-line description. | Three items | Every product in the portfolio. |
 | `ArticleCallout` | A limit or warning the reader must see before acting. | One short paragraph | Decorative asides and restated body text. |
+
+### Date presentation
+
+For evergreen explanations, pass `showDates: false` to `MarketingArticle`, `ArticleIndex`, and `ArticleSources`, or their static equivalents `renderArticleHtml`, `renderArticleIndexHtml`, and `renderArticleSourcesHtml`. Each composition controls its own date presentation. Dates remain visible by default for release notes and other chronological writing.
+
+This option hides publication, update, or source-check dates from the rendered text. It keeps authors, review credits, source links, and publishers visible, and removes rows that would otherwise be empty. The `published`, `updated`, and `checkedOn` fields retain their existing types and validation. Keep their true values in article records and use them for feeds and structured metadata; hiding a date never changes it.
 
 ## Post shapes
 

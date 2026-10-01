@@ -83,6 +83,8 @@ export interface ArticleHtmlInput {
   readonly id?: string;
   readonly provenance: ArticleProvenanceRecord | null;
   readonly published: ArticleIsoDate;
+  /** Show publication and update dates. Defaults to true; dates remain required and validated when hidden. */
+  readonly showDates?: boolean;
   readonly toc?: readonly ArticleTocItem[];
   readonly tocLabel?: string;
   readonly updated?: ArticleIsoDate;
@@ -91,7 +93,7 @@ export interface ArticleHtmlInput {
 /** The static equivalent of `MarketingArticle`. */
 export function renderArticleHtml(input: ArticleHtmlInput): string {
   const headingId = input.headingId ?? "article-title";
-  const { published, updated } = input;
+  const { published, updated, showDates = true } = input;
   assertArticleDates(updated === undefined ? { published } : { published, updated });
   const toc = input.toc ?? [];
   for (const item of toc) {
@@ -99,16 +101,16 @@ export function renderArticleHtml(input: ArticleHtmlInput): string {
   }
   const tocId = `${headingId}-contents`;
   const meta = [
-    input.author === undefined ? "" : renderArticleBylineHtml(input.author) + SEPARATOR,
-    dateHtml("Published", published),
-    updated === undefined ? "" : SEPARATOR + dateHtml("Updated", updated),
-  ].join("");
+    input.author === undefined ? "" : renderArticleBylineHtml(input.author),
+    showDates ? dateHtml("Published", published) : "",
+    showDates && updated !== undefined ? dateHtml("Updated", updated) : "",
+  ].filter(Boolean).join(SEPARATOR);
   const header = [
     '<header class="plain-publication__article-header">',
     present(input.eyebrow) ? `<p class="plain-publication__eyebrow">${escapeArticleHtml(input.eyebrow)}</p>` : "",
     `<h1 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(input.heading)}</h1>`,
     present(input.dek) ? `<p class="plain-publication__article-dek">${escapeArticleHtml(input.dek)}</p>` : "",
-    `<p class="plain-publication__article-meta">${meta}</p>`,
+    meta === "" ? "" : `<p class="plain-publication__article-meta">${meta}</p>`,
     input.provenance === null ? "" : renderArticleProvenanceHtml(input.provenance),
     "</header>",
   ].join("");
@@ -135,21 +137,35 @@ export function renderArticleHtml(input: ArticleHtmlInput): string {
 export function renderArticleSourcesHtml({
   heading = ARTICLE_SOURCES_HEADING,
   headingId = "article-sources",
+  showDates = true,
   sources,
-}: Readonly<{ heading?: string; headingId?: string; sources: readonly ArticleSourceItem[] }>): string {
+}: Readonly<{
+  heading?: string;
+  headingId?: string;
+  /** Show check dates. Defaults to true; checkedOn remains required and validated when hidden. */
+  showDates?: boolean;
+  sources: readonly ArticleSourceItem[];
+}>): string {
   if (sources.length === 0) return "";
-  for (const source of sources) assertArticleHref(source.href);
+  for (const source of sources) {
+    assertArticleHref(source.href);
+    formatArticleDate(source.checkedOn);
+  }
   return [
     `<section aria-labelledby="${escapeArticleHtml(headingId)}" class="plain-publication__sources">`,
     `<h2 id="${escapeArticleHtml(headingId)}">${escapeArticleHtml(heading)}</h2>`,
     "<ol>",
-    ...sources.map((source) => [
-      `<li><a href="${escapeArticleHtml(source.href)}">${escapeArticleHtml(source.title)}</a>`,
-      "<span>",
-      present(source.publisher) ? escapeArticleHtml(source.publisher) + SEPARATOR : "",
-      dateHtml("Checked", source.checkedOn),
-      "</span></li>",
-    ].join("")),
+    ...sources.map((source) => {
+      const meta = [
+        present(source.publisher) ? escapeArticleHtml(source.publisher) : "",
+        showDates ? dateHtml("Checked", source.checkedOn) : "",
+      ].filter(Boolean).join(SEPARATOR);
+      return [
+        `<li><a href="${escapeArticleHtml(source.href)}">${escapeArticleHtml(source.title)}</a>`,
+        meta === "" ? "" : `<span>${meta}</span>`,
+        "</li>",
+      ].join("");
+    }),
     "</ol></section>",
   ].join("");
 }
@@ -228,6 +244,7 @@ export function renderArticleIndexHtml({
   headingLevel = 2,
   id,
   items,
+  showDates = true,
   summary,
 }: Readonly<{
   className?: string;
@@ -236,6 +253,8 @@ export function renderArticleIndexHtml({
   headingLevel?: 1 | 2 | 3 | 4 | 5;
   id?: string;
   items: readonly ArticleIndexItem[];
+  /** Show publication and update dates. Defaults to true; item dates remain required and validated when hidden. */
+  showDates?: boolean;
   summary?: string;
 }>): string {
   if (![1, 2, 3, 4, 5].includes(headingLevel)) throw new RangeError("Article index heading level must be 1 to 5.");
@@ -259,10 +278,13 @@ export function renderArticleIndexHtml({
       present(item.eyebrow) ? `<p class="plain-publication__entry-label">${escapeArticleHtml(item.eyebrow)}</p>` : "",
       `<${entry} class="plain-publication__entry-title"><a href="${escapeArticleHtml(item.href)}">${escapeArticleHtml(item.title)}</a></${entry}>`,
       `<p class="plain-publication__entry-dek">${escapeArticleHtml(item.dek)}</p>`,
-      '<p class="plain-publication__entry-meta">',
-      dateHtml("Published", item.published),
-      item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated),
-      "</p></article>",
+      showDates ? [
+        '<p class="plain-publication__entry-meta">',
+        dateHtml("Published", item.published),
+        item.updated === undefined ? "" : SEPARATOR + dateHtml("Updated", item.updated),
+        "</p>",
+      ].join("") : "",
+      "</article>",
     ].join("")),
     "</div></section>",
   ].join("");
