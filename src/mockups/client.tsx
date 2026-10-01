@@ -229,73 +229,84 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   return (
     <figure
       aria-label={label?.(surface) ?? `Illustration of ${surface.label.toLowerCase()}`}
-      className={joinMockupClasses("hkm-showcase", className)}
+      className={joinMockupClasses("hkm-showcase", "hkm-modes", className)}
       data-hkm-theme={theme}
       data-nosnippet=""
     >
-      <div className="hkm-showcase-controls">
-        {surfaces.length > 1 ? (
-          <div aria-label="Surface" className="hkm-tabs" role="tablist">
-            {surfaces.map((entry) => (
-              <button
-                aria-controls={`${id}-panel`}
-                aria-selected={entry.id === surface.id}
-                className="hkm-tab"
-                id={`${id}-tab-${entry.id}`}
-                key={entry.id}
-                onClick={() => setSurfaceId(entry.id)}
-                onKeyDown={onTabKey}
-                ref={(element) => {
-                  if (element === null) tabs.current.delete(entry.id);
-                  else tabs.current.set(entry.id, element);
-                }}
-                role="tab"
-                tabIndex={entry.id === surface.id ? 0 : -1}
-                type="button"
-              >
-                {entry.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-        <div className="hkm-showcase-settings">
-          <div className="hkm-showcase-row">
-            <span className="hkm-showcase-label" id={`${id}-mode`}>{modeLabel}</span>
-            <div aria-labelledby={`${id}-mode`} className="hkm-segmented" role="group">
-              {modes.map((entry) => (
-                <button aria-pressed={entry.id === mode} key={entry.id} onClick={() => chooseMode(entry.id)} type="button">
-                  {entry.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          {options === undefined ? null : (
+      {surfaces.length > 1 ? (
+        <div aria-label="Surface" className="hkm-tabs hkm-folder-tabs" role="tablist">
+          {surfaces.map((entry) => (
+            <button
+              aria-controls={`${id}-panel`}
+              aria-selected={entry.id === surface.id}
+              className="hkm-tab"
+              id={`${id}-tab-${entry.id}`}
+              key={entry.id}
+              onClick={() => setSurfaceId(entry.id)}
+              onKeyDown={onTabKey}
+              ref={(element) => {
+                if (element === null) tabs.current.delete(entry.id);
+                else tabs.current.set(entry.id, element);
+              }}
+              role="tab"
+              tabIndex={entry.id === surface.id ? 0 : -1}
+              type="button"
+            >
+              {entry.label}
+            </button>
+          ))}
+        </div>
+      ) : null}
+      <div
+        aria-labelledby={surfaces.length > 1 ? `${id}-tab-${surface.id}` : undefined}
+        className="hkm-showcase-stage hkm-mode-panel"
+        id={`${id}-panel`}
+        role={surfaces.length > 1 ? "tabpanel" : undefined}
+        style={{ "--hkm-page-height": `${height}px` } as CSSProperties}
+      >
+        <div className="hkm-showcase-controls">
+          <div className="hkm-showcase-settings">
             <div className="hkm-showcase-row">
-              <span className="hkm-showcase-label" id={`${id}-option`}>{optionLabel}</span>
-              <div aria-labelledby={`${id}-option`} className="hkm-segmented" role="group">
-                {options.map((entry) => (
-                  <button aria-pressed={entry.id === option} disabled={optionInactive} key={entry.id} onClick={() => chooseOption(entry.id)} type="button">
+              <span className="hkm-showcase-label" id={`${id}-mode`}>{modeLabel}</span>
+              <div aria-labelledby={`${id}-mode`} className="hkm-segmented" role="group">
+                {modes.map((entry) => (
+                  <button aria-pressed={entry.id === mode} key={entry.id} onClick={() => chooseMode(entry.id)} type="button">
                     {entry.label}
                   </button>
                 ))}
               </div>
             </div>
-          )}
+            {options === undefined ? null : (
+              <div className="hkm-showcase-row">
+                <span className="hkm-showcase-label" id={`${id}-option`}>{optionLabel}</span>
+                <div aria-labelledby={`${id}-option`} className="hkm-segmented" role="group">
+                  {options.map((entry) => (
+                    <button aria-pressed={entry.id === option} disabled={optionInactive} key={entry.id} onClick={() => chooseOption(entry.id)} type="button">
+                      {entry.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          {hint === "" ? null : <p className="hkm-showcase-hint">{hint}</p>}
         </div>
-        {hint === "" ? null : <p className="hkm-showcase-hint">{hint}</p>}
-      </div>
-      <div
-        aria-labelledby={surfaces.length > 1 ? `${id}-tab-${surface.id}` : undefined}
-        className="hkm-showcase-stage"
-        data-hkm-animated={animated ? "" : undefined}
-        data-hkm-from={animated ? previousMode : undefined}
-        id={`${id}-panel`}
-        role={surfaces.length > 1 ? "tabpanel" : undefined}
-        style={{ "--hkm-page-height": `${height}px` } as CSSProperties}
-      >
-        <FitToWidth minWidth={minWidth}>
-          {surface.render({ animated, mode, option, previousMode, theme })}
-        </FitToWidth>
+        <div className="hkm-mode-stage">
+          {surfaces.map((entry) => (
+            <div
+              aria-hidden={entry.id !== surface.id}
+              className="hkm-mode-surface"
+              data-hkm-animated={entry.id === surface.id && animated ? "" : undefined}
+              data-hkm-from={entry.id === surface.id && animated ? previousMode : undefined}
+              inert={entry.id !== surface.id}
+              key={entry.id}
+            >
+              <FitToWidth minWidth={minWidth}>
+                {entry.render({ animated: entry.id === surface.id && animated, mode, option, previousMode, theme })}
+              </FitToWidth>
+            </div>
+          ))}
+        </div>
       </div>
       {!hasStatus && captionText === undefined ? null : (
         <figcaption className="hkm-showcase-caption">
@@ -367,7 +378,7 @@ export function StepThrough({
   return (
     <figure aria-label={`Illustration: ${label.toLowerCase()}`} className={joinMockupClasses("hkm-showcase", "hkm-steps", className)} data-hkm-theme={theme} data-nosnippet="">
       <div className="hkm-showcase-controls">
-        <div aria-label={label} className="hkm-tabs hkm-step-tabs" role="tablist">
+        <div aria-label={label} className="hkm-tabs hkm-folder-tabs hkm-step-tabs" role="tablist">
           {steps.map((entry, position) => (
             <button
               aria-controls={`${id}-panel-${entry.id}`}

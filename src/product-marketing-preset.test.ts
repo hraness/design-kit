@@ -77,6 +77,8 @@ test("snapshot schema rejects floating sources, changed paths, and unknown asset
   for (const invalid of [null, {}, { ...valid, contractVersion: 2 }, { ...valid, source: { ...valid.source, commit: "main" } }, { ...valid, source: { ...valid.source, repository: "https://example.test" } }, { ...valid, files: { ...valid.files, "../outside": valid.files.LICENSE } }, { ...valid, files: { ...valid.files, LICENSE: { ...valid.files.LICENSE, path: "../LICENSE" } } }]) expect(() => parseMarketingSnapshot(invalid)).toThrow();
 });
 
+// Includes real Git operations and three Node checker processes; each checker
+// already has a 10s child deadline, so Bun's 5s unit-test default is too short.
 test("immutable snapshot installation rejects binary edits, unowned files, and symlinks", async () => {
   const root = await mkdtemp(join(tmpdir(), "marketing-snapshot-"));
   try {
@@ -127,7 +129,7 @@ test("immutable snapshot installation rejects binary edits, unowned files, and s
     await symlink(join(source, marketingSnapshotPaths[font]), join(output, font));
     await expect(checkMarketingSnapshot(output)).rejects.toThrow("symbolic link");
   } finally { await rm(root, { recursive: true, force: true }); }
-});
+}, 30_000);
 
 test("independent material and preset snapshots retire every pattern to the same flat background", async () => {
   const material = await readFile(new URL("./lantern-material.css", import.meta.url), "utf8");
