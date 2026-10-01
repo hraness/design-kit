@@ -678,6 +678,7 @@ export function DesignSystemGallery({
           after={(
             <ArticleSources
               headingId="gallery-article-sources"
+              showDates={false}
               sources={[
                 { checkedOn: "2026-09-20", href: "#articles", publisher: "Relay", title: "Relay 2.4 release notes" },
               ]}
@@ -693,6 +694,7 @@ export function DesignSystemGallery({
             review: { reviewer: "an independent AI editorial review", reviewerType: "ai" },
           }}
           published="2026-09-10"
+          showDates={false}
           toc={[
             { href: "#gallery-article-problem", label: "The problem" },
             { href: "#gallery-article-approach", label: "The approach" },

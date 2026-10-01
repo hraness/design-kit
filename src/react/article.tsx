@@ -93,6 +93,8 @@ export interface MarketingArticleProps {
   /** Required so every article decides its drafting note. Pass null only for writing with no AI involvement and no review record. */
   readonly provenance: ArticleProvenanceRecord | null;
   readonly published: ArticleIsoDate;
+  /** Show publication and update dates. Defaults to true; dates remain required and validated when hidden. */
+  readonly showDates?: boolean;
   readonly toc?: readonly ArticleTocItem[];
   readonly tocLabel?: string;
   readonly updated?: ArticleIsoDate;
@@ -116,6 +118,7 @@ export function MarketingArticle({
   id,
   provenance,
   published,
+  showDates = true,
   toc,
   tocLabel = ARTICLE_TOC_LABEL,
   updated,
@@ -138,11 +141,13 @@ export function MarketingArticle({
         {eyebrow === undefined || eyebrow === "" ? null : <p className="plain-publication__eyebrow">{eyebrow}</p>}
         <h1 id={headingId}>{heading}</h1>
         {dek === undefined || dek === "" ? null : <p className="plain-publication__article-dek">{dek}</p>}
-        <p className="plain-publication__article-meta">
-          {author === undefined ? null : <><ArticleByline author={author} /><Separator /></>}
-          <ArticleDate label="Published" value={published} />
-          {updated === undefined ? null : <><Separator /><ArticleDate label="Updated" value={updated} /></>}
-        </p>
+        {author === undefined && !showDates ? null : (
+          <p className="plain-publication__article-meta">
+            {author === undefined ? null : <><ArticleByline author={author} />{showDates ? <Separator /> : null}</>}
+            {showDates ? <ArticleDate label="Published" value={published} /> : null}
+            {!showDates || updated === undefined ? null : <><Separator /><ArticleDate label="Updated" value={updated} /></>}
+          </p>
+        )}
         {provenance === null ? null : <ArticleProvenance provenance={provenance} />}
       </header>
       <div className="plain-publication__article-layout">
@@ -165,14 +170,20 @@ export function MarketingArticle({
 export function ArticleSources({
   heading = ARTICLE_SOURCES_HEADING,
   headingId = "article-sources",
+  showDates = true,
   sources,
 }: Readonly<{
   heading?: string;
   headingId?: string;
+  /** Show check dates. Defaults to true; checkedOn remains required and validated when hidden. */
+  showDates?: boolean;
   sources: readonly ArticleSourceItem[];
 }>) {
   if (sources.length === 0) return null;
-  for (const source of sources) assertArticleHref(source.href);
+  for (const source of sources) {
+    assertArticleHref(source.href);
+    formatArticleDate(source.checkedOn);
+  }
   return (
     <section aria-labelledby={headingId} className="plain-publication__sources">
       <h2 id={headingId}>{heading}</h2>
@@ -180,10 +191,12 @@ export function ArticleSources({
         {sources.map((source) => (
           <li key={`${source.href}-${source.title}`}>
             <a href={source.href}>{source.title}</a>
-            <span>
-              {source.publisher === undefined || source.publisher === "" ? null : <>{source.publisher}<Separator /></>}
-              <ArticleDate label="Checked" value={source.checkedOn} />
-            </span>
+            {!showDates && (source.publisher === undefined || source.publisher === "") ? null : (
+              <span>
+                {source.publisher === undefined || source.publisher === "" ? null : <>{source.publisher}{showDates ? <Separator /> : null}</>}
+                {showDates ? <ArticleDate label="Checked" value={source.checkedOn} /> : null}
+              </span>
+            )}
           </li>
         ))}
       </ol>
@@ -253,6 +266,7 @@ export function ArticleIndex({
   headingLevel = 2,
   id,
   items,
+  showDates = true,
   summary,
 }: Readonly<{
   className?: string;
@@ -261,6 +275,8 @@ export function ArticleIndex({
   headingLevel?: 1 | 2 | 3 | 4 | 5;
   id?: string;
   items: readonly ArticleIndexItem[];
+  /** Show publication and update dates. Defaults to true; item dates remain required and validated when hidden. */
+  showDates?: boolean;
   summary?: string;
 }>) {
   if (![1, 2, 3, 4, 5].includes(headingLevel)) throw new RangeError("Article index heading level must be 1 to 5.");
@@ -290,10 +306,12 @@ export function ArticleIndex({
             {item.eyebrow === undefined || item.eyebrow === "" ? null : <p className="plain-publication__entry-label">{item.eyebrow}</p>}
             <EntryTag className="plain-publication__entry-title"><a href={item.href}>{item.title}</a></EntryTag>
             <p className="plain-publication__entry-dek">{item.dek}</p>
-            <p className="plain-publication__entry-meta">
-              <ArticleDate label="Published" value={item.published} />
-              {item.updated === undefined ? null : <><Separator /><ArticleDate label="Updated" value={item.updated} /></>}
-            </p>
+            {showDates ? (
+              <p className="plain-publication__entry-meta">
+                <ArticleDate label="Published" value={item.published} />
+                {item.updated === undefined ? null : <><Separator /><ArticleDate label="Updated" value={item.updated} /></>}
+              </p>
+            ) : null}
           </article>
         ))}
       </div>

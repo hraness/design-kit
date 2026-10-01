@@ -89,7 +89,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-6bfr0g23.js";
+} from "../chunk-4tgt8egt.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -121,7 +121,7 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-c80g58j1.js";
+} from "../chunk-fmeg5cxf.js";
 import"../chunk-gmea6p0d.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
@@ -7132,6 +7132,7 @@ Run the job, then show me its log.`,
           /* @__PURE__ */ jsxs15(MarketingArticle, {
             after: /* @__PURE__ */ jsx17(ArticleSources, {
               headingId: "gallery-article-sources",
+              showDates: false,
               sources: [{
                 checkedOn: "2026-09-20",
                 href: "#articles",
@@ -7155,6 +7156,7 @@ Run the job, then show me its log.`,
               }
             },
             published: "2026-09-10",
+            showDates: false,
             toc: [{
               href: "#gallery-article-problem",
               label: "The problem"

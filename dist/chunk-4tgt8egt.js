@@ -5318,6 +5318,7 @@ function MarketingArticle({
   id,
   provenance,
   published,
+  showDates = true,
   toc,
   tocLabel = ARTICLE_TOC_LABEL,
   updated
@@ -5356,7 +5357,7 @@ function MarketingArticle({
             className: "plain-publication__article-dek",
             children: dek
           }),
-          /* @__PURE__ */ jsxs4("p", {
+          author === undefined && !showDates ? null : /* @__PURE__ */ jsxs4("p", {
             className: "plain-publication__article-meta",
             children: [
               author === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
@@ -5364,14 +5365,14 @@ function MarketingArticle({
                   /* @__PURE__ */ jsx4(ArticleByline, {
                     author
                   }),
-                  /* @__PURE__ */ jsx4(Separator, {})
+                  showDates ? /* @__PURE__ */ jsx4(Separator, {}) : null
                 ]
               }),
-              /* @__PURE__ */ jsx4(ArticleDate, {
+              showDates ? /* @__PURE__ */ jsx4(ArticleDate, {
                 label: "Published",
                 value: published
-              }),
-              updated === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
+              }) : null,
+              !showDates || updated === undefined ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                 children: [
                   /* @__PURE__ */ jsx4(Separator, {}),
                   /* @__PURE__ */ jsx4(ArticleDate, {
@@ -5424,12 +5425,15 @@ function MarketingArticle({
 function ArticleSources({
   heading = ARTICLE_SOURCES_HEADING,
   headingId = "article-sources",
+  showDates = true,
   sources
 }) {
   if (sources.length === 0)
     return null;
-  for (const source of sources)
+  for (const source of sources) {
     assertArticleHref(source.href);
+    formatArticleDate(source.checkedOn);
+  }
   return /* @__PURE__ */ jsxs4("section", {
     "aria-labelledby": headingId,
     className: "plain-publication__sources",
@@ -5445,18 +5449,18 @@ function ArticleSources({
               href: source.href,
               children: source.title
             }),
-            /* @__PURE__ */ jsxs4("span", {
+            !showDates && (source.publisher === undefined || source.publisher === "") ? null : /* @__PURE__ */ jsxs4("span", {
               children: [
                 source.publisher === undefined || source.publisher === "" ? null : /* @__PURE__ */ jsxs4(Fragment3, {
                   children: [
                     source.publisher,
-                    /* @__PURE__ */ jsx4(Separator, {})
+                    showDates ? /* @__PURE__ */ jsx4(Separator, {}) : null
                   ]
                 }),
-                /* @__PURE__ */ jsx4(ArticleDate, {
+                showDates ? /* @__PURE__ */ jsx4(ArticleDate, {
                   label: "Checked",
                   value: source.checkedOn
-                })
+                }) : null
               ]
             })
           ]
@@ -5525,6 +5529,7 @@ function ArticleIndex({
   headingLevel = 2,
   id,
   items,
+  showDates = true,
   summary
 }) {
   if (![1, 2, 3, 4, 5].includes(headingLevel))
@@ -5582,7 +5587,7 @@ function ArticleIndex({
               className: "plain-publication__entry-dek",
               children: item.dek
             }),
-            /* @__PURE__ */ jsxs4("p", {
+            showDates ? /* @__PURE__ */ jsxs4("p", {
               className: "plain-publication__entry-meta",
               children: [
                 /* @__PURE__ */ jsx4(ArticleDate, {
@@ -5599,7 +5604,7 @@ function ArticleIndex({
                   ]
                 })
               ]
-            })
+            }) : null
           ]
         }, item.href))
       })
