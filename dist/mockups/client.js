@@ -169,110 +169,120 @@ function ModeShowcase({
   const hasStatus = statusNode !== undefined && statusNode !== null && statusNode !== false && statusNode !== "";
   return /* @__PURE__ */ jsxs("figure", {
     "aria-label": label?.(surface) ?? `Illustration of ${surface.label.toLowerCase()}`,
-    className: joinMockupClasses("hkm-showcase", className),
+    className: joinMockupClasses("hkm-showcase", "hkm-modes", className),
     "data-hkm-theme": theme,
     "data-nosnippet": "",
     children: [
+      surfaces.length > 1 ? /* @__PURE__ */ jsx("div", {
+        "aria-label": "Surface",
+        className: "hkm-tabs hkm-folder-tabs",
+        role: "tablist",
+        children: surfaces.map((entry) => /* @__PURE__ */ jsx("button", {
+          "aria-controls": `${id}-panel`,
+          "aria-selected": entry.id === surface.id,
+          className: "hkm-tab",
+          id: `${id}-tab-${entry.id}`,
+          onClick: () => setSurfaceId(entry.id),
+          onKeyDown: onTabKey,
+          ref: (element) => {
+            if (element === null)
+              tabs.current.delete(entry.id);
+            else
+              tabs.current.set(entry.id, element);
+          },
+          role: "tab",
+          tabIndex: entry.id === surface.id ? 0 : -1,
+          type: "button",
+          children: entry.label
+        }, entry.id))
+      }) : null,
       /* @__PURE__ */ jsxs("div", {
-        className: "hkm-showcase-controls",
-        children: [
-          surfaces.length > 1 ? /* @__PURE__ */ jsx("div", {
-            "aria-label": "Surface",
-            className: "hkm-tabs",
-            role: "tablist",
-            children: surfaces.map((entry) => /* @__PURE__ */ jsx("button", {
-              "aria-controls": `${id}-panel`,
-              "aria-selected": entry.id === surface.id,
-              className: "hkm-tab",
-              id: `${id}-tab-${entry.id}`,
-              onClick: () => setSurfaceId(entry.id),
-              onKeyDown: onTabKey,
-              ref: (element) => {
-                if (element === null)
-                  tabs.current.delete(entry.id);
-                else
-                  tabs.current.set(entry.id, element);
-              },
-              role: "tab",
-              tabIndex: entry.id === surface.id ? 0 : -1,
-              type: "button",
-              children: entry.label
-            }, entry.id))
-          }) : null,
-          /* @__PURE__ */ jsxs("div", {
-            className: "hkm-showcase-settings",
-            children: [
-              /* @__PURE__ */ jsxs("div", {
-                className: "hkm-showcase-row",
-                children: [
-                  /* @__PURE__ */ jsx("span", {
-                    className: "hkm-showcase-label",
-                    id: `${id}-mode`,
-                    children: modeLabel
-                  }),
-                  /* @__PURE__ */ jsx("div", {
-                    "aria-labelledby": `${id}-mode`,
-                    className: "hkm-segmented",
-                    role: "group",
-                    children: modes.map((entry) => /* @__PURE__ */ jsx("button", {
-                      "aria-pressed": entry.id === mode,
-                      onClick: () => chooseMode(entry.id),
-                      type: "button",
-                      children: entry.label
-                    }, entry.id))
-                  })
-                ]
-              }),
-              options === undefined ? null : /* @__PURE__ */ jsxs("div", {
-                className: "hkm-showcase-row",
-                children: [
-                  /* @__PURE__ */ jsx("span", {
-                    className: "hkm-showcase-label",
-                    id: `${id}-option`,
-                    children: optionLabel
-                  }),
-                  /* @__PURE__ */ jsx("div", {
-                    "aria-labelledby": `${id}-option`,
-                    className: "hkm-segmented",
-                    role: "group",
-                    children: options.map((entry) => /* @__PURE__ */ jsx("button", {
-                      "aria-pressed": entry.id === option,
-                      disabled: optionInactive,
-                      onClick: () => chooseOption(entry.id),
-                      type: "button",
-                      children: entry.label
-                    }, entry.id))
-                  })
-                ]
-              })
-            ]
-          }),
-          hint === "" ? null : /* @__PURE__ */ jsx("p", {
-            className: "hkm-showcase-hint",
-            children: hint
-          })
-        ]
-      }),
-      /* @__PURE__ */ jsx("div", {
         "aria-labelledby": surfaces.length > 1 ? `${id}-tab-${surface.id}` : undefined,
-        className: "hkm-showcase-stage",
-        "data-hkm-animated": animated ? "" : undefined,
-        "data-hkm-from": animated ? previousMode : undefined,
+        className: "hkm-showcase-stage hkm-mode-panel",
         id: `${id}-panel`,
         role: surfaces.length > 1 ? "tabpanel" : undefined,
         style: {
           "--hkm-page-height": `${height}px`
         },
-        children: /* @__PURE__ */ jsx(FitToWidth, {
-          minWidth,
-          children: surface.render({
-            animated,
-            mode,
-            option,
-            previousMode,
-            theme
+        children: [
+          /* @__PURE__ */ jsxs("div", {
+            className: "hkm-showcase-controls",
+            children: [
+              /* @__PURE__ */ jsxs("div", {
+                className: "hkm-showcase-settings",
+                children: [
+                  /* @__PURE__ */ jsxs("div", {
+                    className: "hkm-showcase-row",
+                    children: [
+                      /* @__PURE__ */ jsx("span", {
+                        className: "hkm-showcase-label",
+                        id: `${id}-mode`,
+                        children: modeLabel
+                      }),
+                      /* @__PURE__ */ jsx("div", {
+                        "aria-labelledby": `${id}-mode`,
+                        className: "hkm-segmented",
+                        role: "group",
+                        children: modes.map((entry) => /* @__PURE__ */ jsx("button", {
+                          "aria-pressed": entry.id === mode,
+                          onClick: () => chooseMode(entry.id),
+                          type: "button",
+                          children: entry.label
+                        }, entry.id))
+                      })
+                    ]
+                  }),
+                  options === undefined ? null : /* @__PURE__ */ jsxs("div", {
+                    className: "hkm-showcase-row",
+                    children: [
+                      /* @__PURE__ */ jsx("span", {
+                        className: "hkm-showcase-label",
+                        id: `${id}-option`,
+                        children: optionLabel
+                      }),
+                      /* @__PURE__ */ jsx("div", {
+                        "aria-labelledby": `${id}-option`,
+                        className: "hkm-segmented",
+                        role: "group",
+                        children: options.map((entry) => /* @__PURE__ */ jsx("button", {
+                          "aria-pressed": entry.id === option,
+                          disabled: optionInactive,
+                          onClick: () => chooseOption(entry.id),
+                          type: "button",
+                          children: entry.label
+                        }, entry.id))
+                      })
+                    ]
+                  })
+                ]
+              }),
+              hint === "" ? null : /* @__PURE__ */ jsx("p", {
+                className: "hkm-showcase-hint",
+                children: hint
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsx("div", {
+            className: "hkm-mode-stage",
+            children: surfaces.map((entry) => /* @__PURE__ */ jsx("div", {
+              "aria-hidden": entry.id !== surface.id,
+              className: "hkm-mode-surface",
+              "data-hkm-animated": entry.id === surface.id && animated ? "" : undefined,
+              "data-hkm-from": entry.id === surface.id && animated ? previousMode : undefined,
+              inert: entry.id !== surface.id,
+              children: /* @__PURE__ */ jsx(FitToWidth, {
+                minWidth,
+                children: entry.render({
+                  animated: entry.id === surface.id && animated,
+                  mode,
+                  option,
+                  previousMode,
+                  theme
+                })
+              })
+            }, entry.id))
           })
-        })
+        ]
       }),
       !hasStatus && captionText === undefined ? null : /* @__PURE__ */ jsxs("figcaption", {
         className: "hkm-showcase-caption",
@@ -332,7 +342,7 @@ function StepThrough({
         className: "hkm-showcase-controls",
         children: /* @__PURE__ */ jsx("div", {
           "aria-label": label,
-          className: "hkm-tabs hkm-step-tabs",
+          className: "hkm-tabs hkm-folder-tabs hkm-step-tabs",
           role: "tablist",
           children: steps.map((entry, position) => /* @__PURE__ */ jsxs("button", {
             "aria-controls": `${id}-panel-${entry.id}`,

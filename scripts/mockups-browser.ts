@@ -222,6 +222,7 @@ try {
             await assertControlFocus(tab, label);
 
             // Tabs pattern: arrow keys move and select, the panel follows, the status is live.
+            const initialModeHeight = await tab.locator("#showcase [role=tabpanel]").evaluate((node) => node.getBoundingClientRect().height);
             const firstTab = tab.locator("#showcase [role=tab]").first();
             await firstTab.focus();
             await tab.keyboard.press("ArrowRight");
@@ -232,8 +233,8 @@ try {
                 selected: active?.getAttribute("aria-selected"),
                 text: active?.textContent,
                 panelLabel: panel?.getAttribute("aria-labelledby") === active?.id,
-                panelImg: panel?.querySelector("[role=img]")?.getAttribute("aria-label"),
-                animated: panel?.hasAttribute("data-hkm-animated"),
+                panelImg: panel?.querySelector('.hkm-mode-surface:not([aria-hidden="true"]) [role=img]')?.getAttribute("aria-label"),
+                animated: panel?.querySelector('.hkm-mode-surface:not([aria-hidden="true"])')?.hasAttribute("data-hkm-animated"),
               };
             });
             assert.equal(tabState.selected, "true", `${label}: arrow key selects the next tab`);
@@ -241,11 +242,15 @@ try {
             assert(tabState.panelLabel, `${label}: panel is labelled by the selected tab`);
             assert.match(tabState.panelImg ?? "", /terminal/u, `${label}: panel shows the selected surface`);
             assert.equal(tabState.animated, false, `${label}: a surface change is a cut, not a transition`);
+            const nextModeHeight = await tab.locator("#showcase [role=tabpanel]").evaluate((node) => node.getBoundingClientRect().height);
+            assert(Math.abs(initialModeHeight - nextModeHeight) < 1, `${label}: switching surfaces preserves the tallest preview height`);
+            assert.equal(await tab.locator('#showcase .hkm-mode-surface:not([aria-hidden="true"])').count(), 1, `${label}: one active surface`);
+            assert.equal(await tab.locator('#showcase .hkm-mode-surface[inert]').count(), 1, `${label}: inactive surface stays inert`);
             const marked = tab.locator("#showcase [role=group] button", { hasText: "Marked" });
             await marked.click();
             assert.equal(await marked.getAttribute("aria-pressed"), "true", `${label}: mode button reports its state`);
-            assert.equal(await tab.locator("#showcase [role=tabpanel]").getAttribute("data-hkm-animated"), "", `${label}: transitions turn on after the first mode change`);
-            assert.equal(await tab.locator("#showcase [role=tabpanel]").getAttribute("data-hkm-from"), "plain", `${label}: the stage knows the previous mode`);
+            assert.equal(await tab.locator('#showcase .hkm-mode-surface:not([aria-hidden="true"])').getAttribute("data-hkm-animated"), "", `${label}: transitions turn on after the first mode change`);
+            assert.equal(await tab.locator('#showcase .hkm-mode-surface:not([aria-hidden="true"])').getAttribute("data-hkm-from"), "plain", `${label}: the stage knows the previous mode`);
             assert.match(await tab.locator("#showcase .hkm-showcase-status").innerText(), /Showing marked/u, `${label}: the live status follows the mode`);
             const initialStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
             await tab.locator("#steps").getByRole("button", { name: "Next" }).click();
@@ -258,10 +263,37 @@ try {
             assert.match(await tab.locator("#steps .hkm-step-announcement").textContent() ?? "", /Step 3 of 3/u, `${label}: Next reaches the last step`);
             const lastStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
             assert(Math.abs(initialStepHeight - lastStepHeight) < 1, `${label}: the last step preserves the same stage height`);
-            const folder = await tab.locator('#steps [role="tab"][aria-selected="true"]').evaluate((node) => ({ top: getComputedStyle(node).borderTopLeftRadius, bottom: getComputedStyle(node).borderBottomLeftRadius, shadow: getComputedStyle(node).boxShadow }));
-            assert.equal(folder.top, "12px", `${label}: folder tab top corner`);
-            assert.equal(folder.bottom, "0px", `${label}: folder tab joins the stage`);
-            assert.equal(folder.shadow, "none", `${label}: folder tab has no inset underline`);
+            for (const showcase of ["#showcase", "#steps"]) {
+              const folder = await tab.locator(`${showcase} [role="tab"][aria-selected="true"]`).evaluate((node) => {
+                const panel = document.getElementById(node.getAttribute("aria-controls") ?? "");
+                const frame = panel?.closest(".hkm-step-stage") ?? panel;
+                return {
+                  top: getComputedStyle(node).borderTopLeftRadius,
+                  bottom: getComputedStyle(node).borderBottomLeftRadius,
+                  shadow: getComputedStyle(node).boxShadow,
+                  seam: frame === null ? null : node.getBoundingClientRect().bottom - frame.getBoundingClientRect().top,
+                };
+              });
+              assert.equal(folder.top, "12px", `${label}/${showcase}: folder tab top corner`);
+              assert.equal(folder.bottom, "0px", `${label}/${showcase}: folder tab joins the panel`);
+              assert.equal(folder.shadow, "none", `${label}/${showcase}: folder tab has no inset underline`);
+              assert(folder.seam !== null && Math.abs(folder.seam - 1) < 1, `${label}/${showcase}: tab shares its lower border with the panel`);
+            }
+            for (const surfaceTab of await tab.locator("#showcase [role=tab]").all()) {
+              await surfaceTab.click();
+              const surface = await tab.locator("#showcase [role=tabpanel]").evaluate((node) => {
+                const active = node.querySelector('.hkm-mode-surface:not([aria-hidden="true"])');
+                const window = active?.querySelector('.hkm-fit-inner > .hkm-root > .hkm-window');
+                const style = window === null || window === undefined ? null : getComputedStyle(window);
+                return { height: node.getBoundingClientRect().height, shadow: style?.boxShadow, radius: style?.borderTopLeftRadius };
+              });
+              assert(Math.abs(initialModeHeight - surface.height) < 1, `${label}: every surface preserves the tallest preview height`);
+              assert.equal(surface.shadow, "none", `${label}: direct preview frame shares its panel border`);
+              assert.equal(surface.radius, "0px", `${label}: direct preview frame shares its panel corners`);
+            }
+            assert.equal(await tab.locator("#showcase [role=tabpanel] .hkm-showcase-controls").count(), 1, `${label}: mode controls belong to the selected surface panel`);
+            await tab.locator("#showcase [role=tab]").first().click();
+            assert.equal(await marked.getAttribute("aria-pressed"), "true", `${label}: mode selection persists across surfaces`);
 
             if (screenshots !== undefined) await tab.screenshot({ path: join(screenshots, `mockups-${scheme}-${String(width)}.png`), fullPage: true });
             cases += 1;
