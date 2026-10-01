@@ -6,6 +6,7 @@ import { basename, isAbsolute, join, relative, resolve } from "node:path";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
 import { chromium, type BrowserContext, type Page } from "playwright-core";
 import { designPalettes, paletteColors } from "../src/palettes.js";
+import { getDesignPaletteTheme } from "@hraness/design-kit";
 import { bundleBrowserStylesheet, nativeBrowserStylesheetAssets } from "./browser-stylesheet.js";
 
 const storageKey = "hraness-design-palette-v1";
@@ -30,6 +31,30 @@ function plainHtml(stylesheets: readonly string[], palette: Palette, mode: Mode 
   const [nested, self] = nestedPlainPalettes(palette);
   const probes = `<div data-plain-probes aria-hidden="true">${plainRoles.map((role) => `<span data-plain-role="${role}"></span>`).join("")}</div>`;
   return `<!doctype html><html lang="en" data-palette="${palette}"${mode === "system" ? "" : ` data-theme="${mode}"`}><head><meta charset="utf-8"><title>Plain palette verification</title>${stylesheets.map((href) => `<link rel="stylesheet" href="${href}">`).join("")}</head><body class="plain-site">${probes}<main>Selected document palette<section data-palette="${nested}" data-theme="light"><article class="plain-site" data-plain-nested>${probes}Nested light document</article></section><section class="plain-site" data-palette="${self}" data-plain-self>${probes}Nested system document</section><div data-forced-reference>System colors</div></main></body></html>`;
+}
+
+function staticSsrHtml(stylesheets: readonly string[], palette: Palette, initialMode: Mode, preference: Mode | "system"): string {
+  const rootClass = getDesignPaletteTheme(palette, initialMode).className;
+  const lightClass = getDesignPaletteTheme("paper", "light").className;
+  const darkClass = getDesignPaletteTheme("tokyo-night", "dark").className;
+  return `<!doctype html><html lang="en" class="${rootClass}" data-palette="${palette}"${preference === "system" ? "" : ` data-theme="${preference}"`}><head><meta charset="utf-8"><title>Server-rendered palette</title>${stylesheets.map((href) => `<link rel="stylesheet" href="${href}">`).join("")}</head><body><main data-palette-surface>Readable before JavaScript</main><section class="${lightClass}" data-theme="light" data-ssr-island="light">Fixed light island</section><section class="${darkClass}" data-palette="tokyo-night" data-theme="dark" data-ssr-island="dark">Fixed dark island</section><section data-palette="rose-pine" data-raw-system-island>System island</section></body></html>`;
+}
+
+async function assertStaticSsrPalette(page: Page, palette: Palette, mode: Mode, systemMode: Mode): Promise<void> {
+  for (const [selector, expectedPalette, expectedMode] of [
+    ["body", palette, mode],
+    ['[data-ssr-island="light"]', "paper", "light"],
+    ['[data-ssr-island="dark"]', "tokyo-night", "dark"],
+    ["[data-raw-system-island]", "rose-pine", systemMode],
+  ] as const) {
+    const expected = paletteColors[expectedPalette][expectedMode];
+    const actual = await page.locator(selector).evaluate((element) => {
+      const css = getComputedStyle(element);
+      return { background: css.backgroundColor, foreground: css.color };
+    });
+    assert.deepEqual(actual, { background: rgb(expected.background), foreground: rgb(expected.foreground) },
+      `${selector}: server-rendered ${palette}/${mode}/${systemMode} with later compiled union`);
+  }
 }
 
 async function assertPlainPalette(page: Page, palette: Palette, mode: Mode, systemMode: Mode, nestedOnly = false): Promise<void> {
@@ -234,7 +259,7 @@ try {
   const union = serializeStylexRuleUnionV1([...uiManifest.rules, ...designManifest.rules],
     [uiManifest.standaloneSerializer, designManifest.standaloneSerializer]);
   await writeFile(join(work, "palette-union.css"), union);
-  await writeFile(join(work, "palette-layout.css"), `${layout}\n[data-raw-island], [data-raw-system-island] { background-color: var(--background); color: var(--foreground); }\n${plainRoles.map((role) => `[data-plain-role="${role}"] { background-color: var(--plain-${role}); }`).join("\n")}\n`);
+  await writeFile(join(work, "palette-layout.css"), `${layout}\n[data-raw-island], [data-raw-system-island], [data-ssr-island] { background-color: var(--background); color: var(--foreground); }\n${plainRoles.map((role) => `[data-plain-role="${role}"] { background-color: var(--plain-${role}); }`).join("\n")}\n`);
   const deliveries = { standalone, "standalone-full": standaloneFull, "compiler-minimal": minimal, "compiler-full": full };
   for (const route of forcedRoutes) {
     await writeFile(join(work, `${route}.css`), deliveries[route]);
@@ -287,6 +312,29 @@ try {
   for (const palette of designPalettes) for (const mode of ["system", "light", "dark"] as const) {
     await writeFile(join(work, `raw-${palette}-${mode}.html`), `<!doctype html><html lang="en" data-hraness-theme="paper" data-palette="${palette}"${mode === "system" ? "" : ` data-theme="${mode}"`}><head><meta charset="utf-8"><title>Static palette</title><link rel="stylesheet" href="/compiler-minimal.css"><link rel="stylesheet" href="/palette-layout.css"><link rel="stylesheet" href="/legacy-paper.css"></head><body><main data-palette-surface>Readable before JavaScript</main><section data-palette="tokyo-night" data-theme="dark" data-raw-island>Static nested palette</section><section data-palette="rose-pine" data-raw-system-island>System nested palette</section></body></html>`);
   }
+  // System SSR can carry an initial concrete recipe before the bootstrap runs.
+  // Keep the real compiled union last, as required by compiler adopters.
+  for (const route of ["compiler-minimal", "compiler-full"] as const) {
+    for (const palette of designPalettes) for (const initialMode of ["light", "dark"] as const) {
+      for (const preference of ["system", initialMode] as const) {
+        await writeFile(join(work, `ssr-${route}-${palette}-${initialMode}-${preference}.html`), staticSsrHtml(
+          [`/${route}.css`, "/palette-union.css", "/palette-layout.css"], palette, initialMode, preference,
+        ));
+      }
+    }
+  }
+  const systemRootSelector = ":root[data-palette][data-palette=";
+  const systemRootPalettes = [...minimal.matchAll(/:root\[data-palette\]\[data-palette="?([a-z-]+)"?\]:not\(\[data-theme\]\)/gu)]
+    .map((match) => match[1]);
+  // Native-target lowering may repeat selectors in light-dark() support blocks.
+  assert.deepEqual([...new Set(systemRootPalettes)].sort(), [...designPalettes].sort(),
+    "The system negative control requires strengthened root selectors for every palette.");
+  await writeFile(join(work, "compiler-old-system.css"), minimal.replaceAll(systemRootSelector, ":root[data-palette="));
+  for (const initialMode of ["light", "dark"] as const) {
+    await writeFile(join(work, `ssr-old-system-${initialMode}.html`), staticSsrHtml(
+      ["/compiler-old-system.css", "/palette-union.css", "/palette-layout.css"], "gruvbox", initialMode, "system",
+    ));
+  }
   // Reproduce the former selectors without changing the real union or product
   // fixture. Native paint alone would hide this broken custom-property cascade.
   const oldMinimal = minimal.replaceAll(".hraness-palette.hraness-palette", ".hraness-palette");
@@ -313,7 +361,7 @@ try {
       if (!(await file.exists())) return new Response("Not found", { status: 404 });
       return new Response(file, { headers: {
         "content-type": name.endsWith(".js") ? "text/javascript" : name.endsWith(".css") ? "text/css" : "text/html",
-        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'",
+        "content-security-policy": `default-src 'none'; script-src ${name.startsWith("ssr-") ? "'none'" : "'self'"}; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'`,
       } });
     },
   });
@@ -343,13 +391,37 @@ try {
           }
         }
       }
+      for (const route of ["compiler-minimal", "compiler-full"] as const) {
+        for (const palette of designPalettes) for (const initialMode of ["light", "dark"] as const) {
+          for (const systemMode of ["light", "dark"] as const) {
+            await staticPage.emulateMedia({ colorScheme: systemMode, forcedColors: "none" });
+            for (const preference of ["system", initialMode] as const) {
+              const response = await staticPage.goto(`${origin}/ssr-${route}-${palette}-${initialMode}-${preference}.html`);
+              assert(response?.headers()["content-security-policy"]?.includes("script-src 'none'"), "SSR fixtures must prohibit scripts.");
+              await assertStaticSsrPalette(staticPage, palette, preference === "system" ? systemMode : preference, systemMode);
+              assert.equal(await staticPage.locator("html").evaluate((element) => getComputedStyle(element).colorScheme),
+                preference === "system" ? "light dark" : preference);
+            }
+          }
+        }
+      }
+      // The former equal-specificity rule must expose both opposite-OS failures.
+      for (const initialMode of ["light", "dark"] as const) {
+        const systemMode = initialMode === "light" ? "dark" : "light";
+        await staticPage.emulateMedia({ colorScheme: systemMode });
+        await staticPage.goto(`${origin}/ssr-old-system-${initialMode}.html`);
+        await assertStaticSsrPalette(staticPage, "gruvbox", initialMode, systemMode);
+        assert.notEqual(await staticPage.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor),
+          rgb(paletteColors.gruvbox[systemMode].background), "Old selectors must reproduce the fixed SSR palette under the opposite OS appearance.");
+      }
+      console.log("System SSR palette checks passed: all five palettes, both compiler foundations and initial recipes, both OS modes, explicit modes and nested islands; two old-selector controls reproduced the regression.");
       await staticPage.emulateMedia({ forcedColors: "active" });
       await staticPage.goto(`${origin}/raw-gruvbox-system.html`);
-      for (const selector of ["[data-raw-island]", "[data-raw-system-island]"]) {
+      for (const selector of ["html", "[data-raw-island]", "[data-raw-system-island]"]) {
         assert.deepEqual(await staticPage.locator(selector).evaluate((element) => {
           const css = getComputedStyle(element);
           return ["background", "foreground", "primary", "focus"].map((role) => css.getPropertyValue(`--hraness-palette-${role}`).trim());
-        }), ["Canvas", "CanvasText", "Highlight", "Highlight"], `${selector}: classless nested palette must preserve forced-color semantic roles`);
+        }), ["Canvas", "CanvasText", "Highlight", "Highlight"], `${selector}: classless palette boundary must preserve forced-color semantic roles`);
       }
       await staticContext.close();
       const plainContext = await browser.newContext({ javaScriptEnabled: false });

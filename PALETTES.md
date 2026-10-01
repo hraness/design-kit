@@ -22,11 +22,13 @@ to the head bootstrap and `DesignPaletteProvider`. For example,
 while preserving a visitor's saved choice. Keep browser theme-color metadata
 aligned with the chosen palette and use `ThemeColorSync` for later changes.
 
-For a system-first document, render `data-palette="gruvbox"` without a
-`data-theme` attribute. The generated CSS uses `light-dark()` before JavaScript,
-including when scripting is disabled. A concrete `data-theme="light"` or
-`data-theme="dark"` takes precedence. Static palette islands use the same two
-attributes; React portals retain their complete generated class.
+For a system-first document, render `class="hraness-palette"` and
+`data-palette="gruvbox"` without a `data-theme` attribute. The generated CSS uses
+`light-dark()` before JavaScript, including when scripting is disabled. The
+document keeps its system appearance when compiled palette recipes load later.
+Use a matching concrete class and `data-theme="light"` or `data-theme="dark"`
+for a fixed appearance. Static palette islands use the same two attributes;
+React portals retain their complete generated class.
 
 The full and minimal foundations include this behavior. Static sites with an
 existing stylesheet can import `@hraness/design-kit/palette-bridge.css`; it

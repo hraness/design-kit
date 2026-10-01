@@ -101,7 +101,7 @@
   .hraness-palette.hraness-palette[data-palette],
   :root[data-palette][data-theme],
   [data-palette][data-theme],
-  :root[data-palette]:not([data-theme]),
+  :root[data-palette][data-palette]:not([data-theme]),
   [data-palette]:not([data-theme]),
   :root.hraness-palette.hraness-palette[data-theme],
   .hraness-palette.hraness-palette[data-theme] {
