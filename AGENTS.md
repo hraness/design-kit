@@ -95,3 +95,8 @@
 - When a CI or policy gate scans complete Git history, check out the exact governed SHA and fetch only the fully qualified governed refs before scanning. Preserve the complete-history gate and reject unexpected refs instead of importing unrelated concurrent heads.
 - At closeout, record applicable branch, PR, check, merge, release, deployment, and production evidence. Archive only conclusively finished tasks, never from silence alone, and reclaim only freshly revalidated clean merged worktrees through the guarded exact-path flow.
 <!-- hraness-delivery:end -->
+
+<!-- system-one-verify:start -->
+- Use the installed `system-one-verify` skill for a pass/fail check only when earlier runs establish at least 8 KiB of output. Keep the required command unchanged and any host scheduler outside the wrapper; otherwise use native tools.
+- Read the saved complete log when warnings, coverage, or failure details matter. Compact output does not establish complete diagnostics; do not rerun a command solely to recover omitted output.
+<!-- system-one-verify:end -->
