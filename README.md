@@ -33,6 +33,10 @@ readable text. Complete source lines determine the fit before animation;
 user text zoom can enlarge the stage. The provider registry adds sourced marks
 for iMessage, WhatsApp, Beeper, Ollama, and Vercel.
 
+### Joined showcase tabs
+
+Version 0.35.3 brings the same folder tabs to mode showcases. Surface tabs attach to one panel containing the controls and preview, while mode and option selections persist across surfaces. A grid reserves the tallest preview so switching surfaces keeps the panel height stable; inactive previews remain hidden and inert. Single-surface showcases keep a complete rounded panel.
+
 ### Compact agent setup and consistent copying
 
 Version 0.35.2 lets evergreen articles, article indexes, and source lists hide visible dates with `showDates: false`. React and static renderers keep authors, review credits, and source publishers, remove empty date rows, and still require valid publication, update, and source-check metadata. Dates remain visible by default.
