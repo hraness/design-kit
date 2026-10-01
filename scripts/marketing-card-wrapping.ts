@@ -50,7 +50,25 @@ export async function inspectMarketingCardWrapping(page: Page, label: string, ou
         evidence.push({ width, zoom, cards });
         // Isolate the card row in its evidence image; the unrelated sticky
         // fixture header otherwise paints across the first enlarged card.
-        if (width === 320 || width === 390) await page.locator('.hraness-marketing-card-row[aria-label="Icon comparisons"]').screenshot({ path: join(output, `${label}-${width}-${zoom}-card-wrap.png`), style: ".hraness-marketing-header { visibility: hidden !important; }" });
+        if (width === 320 || width === 390) {
+          const headers = await page.evaluateHandle(() => [...document.querySelectorAll<HTMLElement>(".hraness-marketing-header")].map((node) => ({
+            node,
+            visibility: node.style.getPropertyValue("visibility"),
+            priority: node.style.getPropertyPriority("visibility"),
+          })));
+          try {
+            // CSSOM property writes preserve the fixture's strict style-src
+            // policy; Playwright's screenshot style option injects a style tag.
+            await headers.evaluate((items) => { for (const { node } of items) node.style.setProperty("visibility", "hidden", "important"); });
+            await page.locator('.hraness-marketing-card-row[aria-label="Icon comparisons"]').screenshot({ path: join(output, `${label}-${width}-${zoom}-card-wrap.png`) });
+          } finally {
+            await headers.evaluate((items) => { for (const { node, visibility, priority } of items) {
+              if (visibility) node.style.setProperty("visibility", visibility, priority);
+              else node.style.removeProperty("visibility");
+            } });
+            await headers.dispose();
+          }
+        }
       }
     }
     await writeFile(join(output, `${label}-card-wrap.json`), JSON.stringify(evidence, null, 2) + "\n");
