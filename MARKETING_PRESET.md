@@ -46,6 +46,8 @@ Editorial marketing uses the Nebula Sans display role at weight 550 with a fluid
 
 A sticky `.hraness-marketing-header` or `.hraness-marketing-header-surface` publishes `--hraness-sticky-offset` on `html` and on `.hraness-marketing-page`. The token height is the fallback; `StickyOffsetSync` from `@hraness/design-kit/react` or `syncStickyOffset` from `@hraness/design-kit/browser` replaces it with the measured header border box when the chrome wraps. Attach the site header as a direct child of the page, then put the main landmark immediately after it:
 
+The default synchronizer updates `html` and every enclosing marketing page or preset scope. This prevents a preset's fallback height from masking the live measurement in article headings or sticky contents lists. An explicit `target` remains scoped to that target. Teardown restores prior inline values. Use the measured variable for document scroll padding instead of a fixed pixel or rem value; public-route inspection can set `stickyOffset: true` after hydration to verify the measurement reaches `main`.
+
 ```tsx
 import { MarketingMain, MarketingPage, MarketingSiteHeader, StickyOffsetSync } from "@hraness/design-kit/react";
 

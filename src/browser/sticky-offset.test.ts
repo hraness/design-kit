@@ -43,6 +43,45 @@ test("publish writes the offset onto the marketing page so siblings inherit it",
   expect(publishStickyOffset(header)).toBe("56px");
   const page = document.querySelector(".hraness-marketing-page") as HTMLElement;
   expect(page.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+  expect(document.documentElement.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+});
+
+test("preset scopes cannot mask a measured document offset", () => {
+  const { document, header } = fixture('<div data-hraness-marketing-preset="editorial"><div class="hraness-marketing-page"><header class="hraness-marketing-header"></header><main></main></div></div>');
+  assert.ok(header !== null);
+  publishStickyOffset(header);
+  for (const element of [document.documentElement, ...document.querySelectorAll('[data-hraness-marketing-preset], .hraness-marketing-page')]) {
+    expect((element as HTMLElement).style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+  }
+});
+
+test("an explicit target remains scoped", () => {
+  const { document, header } = fixture();
+  assert.ok(header !== null);
+  const target = document.querySelector("main") as HTMLElement;
+  publishStickyOffset(header, target);
+  expect(target.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+  expect(document.documentElement.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("");
+});
+
+test("sync teardown restores authored inline values", () => {
+  const { document } = fixture('<div data-hraness-marketing-preset="editorial"><header class="hraness-marketing-header"></header><main></main></div>');
+  const shell = document.querySelector("[data-hraness-marketing-preset]") as HTMLElement;
+  shell.style.setProperty(stickyOffsetCustomProperty, "90px");
+  const cleanup = syncStickyOffset({ root: document });
+  expect(shell.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("56px");
+  cleanup();
+  expect(shell.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("90px");
+  expect(document.documentElement.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("");
+});
+
+test("sync teardown preserves a later caller's offset", () => {
+  const { document } = fixture();
+  const target = document.querySelector("main") as HTMLElement;
+  const cleanup = syncStickyOffset({ root: document, target });
+  target.style.setProperty(stickyOffsetCustomProperty, "110px");
+  cleanup();
+  expect(target.style.getPropertyValue(stickyOffsetCustomProperty)).toBe("110px");
 });
 
 function withResizeObserver<T>(

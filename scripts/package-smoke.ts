@@ -1282,9 +1282,10 @@ try {
   await writeFile(
     join(neutralConsumer, "browser.ts"),
     [
-      'import { defaultDesignTheme, installAppearanceMenus, type AppearanceMenuOptions } from "@hraness/design-kit/browser";',
+      'import { defaultDesignTheme, installAppearanceMenus, inspectMarketingHeader, type MarketingHeaderOptions, type AppearanceMenuOptions } from "@hraness/design-kit/browser";',
       "const options = null as AppearanceMenuOptions | null;",
-      "void [defaultDesignTheme, installAppearanceMenus, options];",
+      "const headerOptions: MarketingHeaderOptions = { brandLabel: 'Relay home' };",
+      "void [defaultDesignTheme, installAppearanceMenus, options, () => inspectMarketingHeader(headerOptions)];",
       "",
     ].join("\n"),
   );
@@ -1735,6 +1736,7 @@ try {
   if (!browserBundle.includes("installAppearanceMenus")) {
     throw new Error("Packed browser entry does not expose the appearance installer.");
   }
+  if (!browserBundle.includes("inspectMarketingHeader")) throw new Error("Packed browser entry does not expose the public-page header inspector.");
   if (
     !browserBundle.includes("buildXShareIntentUrl")
     || !browserBundle.includes("canShareFileNatively")

@@ -226,12 +226,12 @@ export const themeStyles = stylex.create({
     },
     lineHeight: "inherit",
     "min-block-size": {
-      default: "2rem",
-      [coarsePointer]: "3rem",
+      default: "var(--hraness-marketing-header-control-target, 2rem)",
+      [coarsePointer]: "max(3rem, var(--hraness-marketing-header-control-target, 3rem))",
     },
     "min-inline-size": {
-      default: "2rem",
-      [coarsePointer]: "3rem",
+      default: "var(--hraness-marketing-header-control-target, 2rem)",
+      [coarsePointer]: "max(3rem, var(--hraness-marketing-header-control-target, 3rem))",
     },
     opacity: {
       default: null,

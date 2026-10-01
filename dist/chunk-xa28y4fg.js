@@ -448,6 +448,7 @@ var marketingStyles = {
     $$css: true
   },
   header: {
+    "--hraness-marketing-header-control-target": "xlhppvv",
     "--hraness-sticky-offset": "x1ez4kp7",
     kMwMTN: "xtylnni xs5hli",
     knIRL8: "xrtw95r",

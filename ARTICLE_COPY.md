@@ -2,6 +2,8 @@
 
 The article components (`MarketingArticle`, `ArticleIndex`, and the static `renderArticleHtml` functions) give every Hraness host the same article shape. This guide says what goes in each part and which posts a host may publish. `STYLE.md` still owns voice and conventions, and `MARKETING_COPY.md` owns the product-page slots.
 
+Article and index pages use the host's product header, with the same brand mark, home link, navigation, and final appearance control as its homepage. Place that header before and outside the main landmark; the article's own title header remains inside the article. Breadcrumbs and feed links belong in the reading column. Run `inspectMarketingHeader` from `@hraness/design-kit/browser` against every rendered public route so a missing header cannot pass a layout check.
+
 A reader arrives with one question. The title names it, the dek answers it in one sentence, and the body shows the evidence.
 
 ## Parts of an article

@@ -89,7 +89,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-0s71p361.js";
+} from "../chunk-xa28y4fg.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -2180,8 +2180,8 @@ var paletteMenuStyles = {
     k1xSpc: "x3nfvp2",
     kjj79g: "xl56j7k",
     kH6xsr: "x3ct3a4",
-    kVQ08L: "x1qwoi4t",
-    kdYMnH: "x9hh0qe",
+    kVQ08L: "x5zky9q",
+    kdYMnH: "xq5ipov",
     kjBf7l: "xb2ck1y",
     kInvED: "x1ewu8gn",
     k8WAf4: "x18g2hj5",
@@ -5211,8 +5211,8 @@ var themeStyles = {
     kAXs8y: "xr5dkdi",
     kULEZF: "x130h922 xqnxffv",
     kLWn49: "x15bjb6t",
-    kVQ08L: "xd0akbl x9me654",
-    kdYMnH: "x1o8ym9z x11je3w3",
+    kVQ08L: "x5c9nq0 xczs0xf",
+    kdYMnH: "xye2cm2 x12c0uzw",
     kSiTet: "xijokvz",
     kjBf7l: "x14pgi42 x1x84bn5",
     kInvED: "xecyca2",
@@ -8027,18 +8027,23 @@ function resolveHeader(root, header) {
     return root.querySelector(header);
   return root.querySelector(stickyOffsetHeaderSelector);
 }
-function resolveTarget(header, target) {
+function resolveTargets(header, target) {
   if (target !== undefined)
-    return target;
-  const page = header.closest(".hraness-marketing-page");
-  return page ?? header.ownerDocument.documentElement;
+    return [target];
+  const targets = new Set([header.ownerDocument.documentElement]);
+  for (let ancestor = header;ancestor !== null; ancestor = ancestor.parentElement) {
+    if (ancestor.matches(".hraness-marketing-page, [data-hraness-marketing-preset]"))
+      targets.add(ancestor);
+  }
+  return [...targets];
 }
 function measureStickyOffset(header) {
   return `${header.getBoundingClientRect().height}px`;
 }
 function publishStickyOffset(header, target) {
   const value = measureStickyOffset(header);
-  resolveTarget(header, target).style.setProperty(stickyOffsetCustomProperty, value);
+  for (const destination of resolveTargets(header, target))
+    destination.style.setProperty(stickyOffsetCustomProperty, value);
   return value;
 }
 function syncStickyOffset(options = {}) {
@@ -8049,22 +8054,42 @@ function syncStickyOffset(options = {}) {
   const header = resolveHeader(root, options.header);
   if (header === null)
     return () => {};
-  const target = resolveTarget(header, options.target);
+  const targets = resolveTargets(header, options.target);
+  const prior = targets.map((target) => ({
+    target,
+    value: target.style.getPropertyValue(stickyOffsetCustomProperty),
+    priority: typeof target.style.getPropertyPriority === "function" ? target.style.getPropertyPriority(stickyOffsetCustomProperty) : ""
+  }));
+  let published;
   const publish = () => {
-    publishStickyOffset(header, target);
+    published = measureStickyOffset(header);
+    for (const target of targets)
+      target.style.setProperty(stickyOffsetCustomProperty, published);
+  };
+  const restore = () => {
+    for (const {
+      target,
+      value,
+      priority
+    } of prior) {
+      if (target.style.getPropertyValue(stickyOffsetCustomProperty) !== published || typeof target.style.getPropertyPriority === "function" && target.style.getPropertyPriority(stickyOffsetCustomProperty) !== "")
+        continue;
+      if (value)
+        target.style.setProperty(stickyOffsetCustomProperty, value, priority);
+      else
+        target.style.removeProperty(stickyOffsetCustomProperty);
+    }
   };
   publish();
   const view = document2.defaultView;
   if (view === null || typeof view.ResizeObserver !== "function") {
-    return () => {
-      target.style.removeProperty(stickyOffsetCustomProperty);
-    };
+    return restore;
   }
   const observer = new view.ResizeObserver(publish);
   observer.observe(header);
   return () => {
     observer.disconnect();
-    target.style.removeProperty(stickyOffsetCustomProperty);
+    restore();
   };
 }
 
