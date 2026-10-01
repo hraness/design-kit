@@ -84,6 +84,7 @@ function FitToWidth({
   const scaled = fit !== null && fit.scale < 1;
   return /* @__PURE__ */ jsx("div", {
     className: joinMockupClasses("hkm-fit", className),
+    "data-hkm-min-width": minWidth,
     ref: outer,
     style: scaled ? {
       height: fit.height
@@ -333,10 +334,48 @@ function ModeShowcase({
     ]
   });
 }
+function fillFrames(stage) {
+  const frames = [];
+  for (const panel of stage.querySelectorAll(":scope > .hkm-step-panel, :scope > .hkm-mode-surface")) {
+    const fit = panel.querySelector(":scope > .hkm-fit");
+    if (fit === null)
+      continue;
+    for (const root of fit.querySelectorAll(".hkm-root")) {
+      const enclosingRoot = root.parentElement?.closest(".hkm-root");
+      if (root.closest(".hkm-fit") === fit && (enclosingRoot === null || enclosingRoot === undefined || !fit.contains(enclosingRoot)))
+        frames.push(root);
+    }
+  }
+  return frames;
+}
+function presentationBodies(stage) {
+  return fillFrames(stage).flatMap((frame) => [...frame.querySelectorAll(':scope > .hkm-window > [data-hkm-density="presentation"]')]);
+}
+function measureNestedFits(stage) {
+  const fits = [...stage.querySelectorAll("[data-hkm-min-width]")].filter((fit) => fit.parentElement?.classList.contains("hkm-step-panel") !== true && fit.parentElement?.classList.contains("hkm-mode-surface") !== true);
+  for (const fit of fits) {
+    const inner = fit.querySelector(":scope > .hkm-fit-inner");
+    if (inner === null)
+      continue;
+    fit.style.removeProperty("height");
+    inner.style.removeProperty("transform");
+    inner.style.width = `${Math.max(fit.clientWidth, Number(fit.dataset.hkmMinWidth))}px`;
+  }
+  for (const fit of fits.reverse()) {
+    const inner = fit.querySelector(":scope > .hkm-fit-inner");
+    if (inner === null || inner.offsetWidth <= 0)
+      continue;
+    const scale = Math.min(1, fit.clientWidth / inner.offsetWidth);
+    fit.style.height = `${inner.offsetHeight * scale}px`;
+    inner.style.transform = `scale(${scale})`;
+  }
+}
 function fitShowcaseStage(stage, minimumHeight) {
   const owner = stage.parentElement;
   if (owner === null || stage.clientWidth <= 0)
     return;
+  for (const frame of fillFrames(stage))
+    frame.setAttribute("data-hkm-fill-frame", "");
   const probe = stage.cloneNode(true);
   probe.setAttribute("aria-hidden", "true");
   probe.setAttribute("inert", "");
@@ -348,7 +387,7 @@ function fitShowcaseStage(stage, minimumHeight) {
     node.removeAttribute("id");
   for (const node of probe.querySelectorAll("[data-hkm-animated]"))
     node.removeAttribute("data-hkm-animated");
-  for (const body of probe.querySelectorAll('[data-hkm-density="presentation"]'))
+  for (const body of presentationBodies(probe))
     body.style.removeProperty("--hkm-terminal-presentation-size");
   for (const fixture of probe.querySelectorAll("[data-hkm-measurement]"))
     fixture.hidden = false;
@@ -358,14 +397,15 @@ function fitShowcaseStage(stage, minimumHeight) {
   }
   owner.append(probe);
   try {
+    measureNestedFits(probe);
     const naturalHeight = Math.max(minimumHeight, Math.ceil(probe.getBoundingClientRect().height));
     stage.style.setProperty("--hkm-showcase-fill-height", `${naturalHeight}px`);
     for (const fixture of probe.querySelectorAll("[data-hkm-measurement]"))
       fixture.remove();
     probe.style.blockSize = `${naturalHeight}px`;
     probe.removeAttribute("data-hkm-measuring");
-    const bodies = [...stage.querySelectorAll('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null);
-    const copies = [...probe.querySelectorAll('[data-hkm-density="presentation"]')];
+    const bodies = presentationBodies(stage).filter((body) => body.closest("[data-hkm-measurement]") === null);
+    const copies = presentationBodies(probe);
     for (const [index, copy] of copies.entries()) {
       const body = bodies[index];
       if (body === undefined)
@@ -431,8 +471,10 @@ function useFittedShowcaseStage(fit, source, variation = "", minimumHeight = 0) 
       fontSentinel.remove();
       node.style.removeProperty("--hkm-showcase-fill-height");
       node.removeAttribute("data-hkm-fitted");
-      for (const body of node.querySelectorAll('[data-hkm-density="presentation"]'))
+      for (const body of presentationBodies(node))
         body.style.removeProperty("--hkm-terminal-presentation-size");
+      for (const frame of fillFrames(node))
+        frame.removeAttribute("data-hkm-fill-frame");
     };
   }, [fit, source, variation, minimumHeight]);
   return stage;

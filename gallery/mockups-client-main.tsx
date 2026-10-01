@@ -9,8 +9,8 @@ import * as builtMockups from "../dist/mockups/index.js";
 import type * as SourceClient from "../src/mockups/client.js";
 import type * as SourceMockups from "../src/mockups/index.js";
 
-const { ModeShowcase, StepThrough } = builtClient as typeof SourceClient;
-const { BrowserFrame, TerminalFrame } = builtMockups as typeof SourceMockups;
+const { FitToWidth, ModeShowcase, StepThrough } = builtClient as typeof SourceClient;
+const { BrowserFrame, PhoneFrame, TerminalFrame } = builtMockups as typeof SourceMockups;
 
 type Mode = "plain" | "marked";
 const modes = [
@@ -62,6 +62,23 @@ const fillSurfaces = [
   ) },
   { id: "report", label: "Report", render: () => <BrowserFrame describe="A report gives the completed job summary." height={220} url="https://relay.example/report"><p>Completed jobs</p><p>Read the saved result.</p></BrowserFrame> },
 ];
+const mixedSteps = [
+  { id: "phone", label: "Phone", render: () => <PhoneFrame describe="A phone shows the saved reading list." screenHeight={600}>
+    <div style={{ padding: "3rem 1rem" }}><p>Today’s reading</p><p>A saved story keeps its source and summary.</p></div>
+  </PhoneFrame> },
+  { id: "graphic", label: "Graphic", render: () => <FitToWidth minWidth={640}>
+    <BrowserFrame describe="A deliberately scaled desktop illustration shows a story and its export." url="https://relay.example/story">
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: 760, padding: "1.5rem" }}><p>The source and summary stay together.</p>
+        <TerminalFrame density="presentation" describe="A terminal drawn inside the desktop illustration." lines={[
+          { kind: "input", text: "relay export story" }, { kind: "output", text: "Saved story.md" },
+        ]} />
+      </div>
+    </BrowserFrame>
+  </FitToWidth> },
+  { id: "terminal", label: "Terminal", render: () => <TerminalFrame density="presentation" describe="A readable terminal exports the saved reading list." lines={[
+    { kind: "input", text: "relay export today" }, { kind: "output", text: "Saved reading.md" },
+  ]} /> },
+];
 const caption = "Illustration. Names and text are made up.";
 
 function mount(id: string) {
@@ -75,4 +92,6 @@ const filledModes = mount("fill-modes");
 window.addEventListener("mockups:unmount-mode-fill", () => filledModes.unmount(), { once: true });
 filledModes.render(<ModeShowcase fit="fill" height={280} initial={{ surface: "report", mode: "long", option: "full" }} modes={fillModes} options={fillOptions} surfaces={fillSurfaces} />);
 mount("fill-steps").render(<StepThrough fit="fill" minWidth={280} steps={fillSteps} />);
+mount("fill-mixed").render(<StepThrough fit="fill" steps={mixedSteps} />);
+mount("fill-mixed-modes").render(<ModeShowcase fit="fill" height={280} modes={[{ id: "saved", label: "Saved" }]} surfaces={mixedSteps} />);
 requestAnimationFrame(() => requestAnimationFrame(() => { document.documentElement.dataset.ready = "true"; }));

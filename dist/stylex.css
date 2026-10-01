@@ -2203,6 +2203,14 @@
     filter: saturate(1.08);
   }
 
+  .x1kfky9y {
+    flex-basis: 10rem;
+  }
+
+  .x1vhnul8 {
+    flex-basis: 3.5rem;
+  }
+
   .xdl72j9 {
     flex-basis: auto;
   }
@@ -2533,10 +2541,6 @@
 
   .x17bfdo5 {
     grid-template-columns: 2.25rem minmax(0, 1fr);
-  }
-
-  .xrdwe0 {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
   }
 
   .xx9t13c {

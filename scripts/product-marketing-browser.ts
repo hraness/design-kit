@@ -11,6 +11,7 @@ import type * as ProductMarketing from "../src/react/product-marketing.js";
 import { readStylexPackageManifest, serializeStylexRuleUnionV1 } from "@hraness/ui/stylex-build";
 import { ProductMarketingFixture, productMarketingConsumerCoverage, productMarketingCoverage } from "../gallery/product-marketing-fixture.js";
 import { ProductMarketingCspFixture, productMarketingCspGrids } from "../gallery/product-marketing-csp-fixture.js";
+import { inspectMarketingCardWrapping } from "./marketing-card-wrapping.js";
 import {
   browserStylesheetHasComponentPriorityRules,
   bundleBrowserStylesheet,
@@ -31,7 +32,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "768258e4eca72b90c0bd7a64d7d62dee145ea33656c2f6d29a1a2a929236f2ae", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "340ebb89ee65674f8b12e494573b30f3aee6891f03e2fc295b3fb0b1835b15a0", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -1000,6 +1001,7 @@ try {
         if (["desktop-light", "phone-dark", "tablet-light"].includes(settings.name)) {
           await page.locator('.hraness-marketing-card-row[aria-label="Icon comparisons"]').screenshot({ path: join(output, `${settings.name}-${mode}-icon-cards.png`) });
         }
+        if (settings.name === "desktop-light" || settings.name === "phone-dark") await inspectMarketingCardWrapping(page, `${settings.name}-${mode}`, output);
       }
       const summary = page.locator("details > summary").first();
       await page.keyboard.press("Shift");

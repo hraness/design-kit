@@ -2502,8 +2502,9 @@ export const marketingStyles = stylex.create({
     "text-decoration": "none"
   },
   "cardIcon": {
-    "display": "grid",
-    "grid-template-columns": "3.5rem minmax(0, 1fr)",
+    "display": "flex",
+    "flex-direction": "row",
+    "flex-wrap": "wrap",
     "align-items": "center",
     "gap": "1rem",
     "padding": "1.125rem",
@@ -2518,6 +2519,9 @@ export const marketingStyles = stylex.create({
   },
   "card__icon": {
     "display": "flex",
+    "flex-grow": "0",
+    "flex-shrink": "0",
+    "flex-basis": "3.5rem",
     "align-items": "center",
     "justify-content": "center",
     "inline-size": "3.5rem",
@@ -2527,6 +2531,9 @@ export const marketingStyles = stylex.create({
   },
   "card__copy": {
     "display": "grid",
+    "flex-grow": "1",
+    "flex-shrink": "1",
+    "flex-basis": "10rem",
     "align-content": "center",
     "min-inline-size": "0",
     "gap": "0.35rem"
