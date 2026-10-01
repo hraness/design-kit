@@ -352,6 +352,10 @@ function fitShowcaseStage(stage, minimumHeight) {
     body.style.removeProperty("--hkm-terminal-presentation-size");
   for (const fixture of probe.querySelectorAll("[data-hkm-measurement]"))
     fixture.hidden = false;
+  for (const node of [probe, ...probe.querySelectorAll("*")]) {
+    node.style.setProperty("transition", "none", "important");
+    node.style.setProperty("animation", "none", "important");
+  }
   owner.append(probe);
   try {
     const naturalHeight = Math.max(minimumHeight, Math.ceil(probe.getBoundingClientRect().height));
