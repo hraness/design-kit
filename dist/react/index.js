@@ -6320,6 +6320,7 @@ function DesignSystemGallery({
           /* @__PURE__ */ jsxs15("div", {
             className: "design-gallery__paper",
             "data-hraness-theme": "paper",
+            "data-palette": "paper",
             "data-theme": "light",
             children: [
               /* @__PURE__ */ jsx17(MarketingSiteHeader, {
@@ -6358,6 +6359,7 @@ function DesignSystemGallery({
           /* @__PURE__ */ jsxs15("div", {
             className: "design-gallery__paper",
             "data-hraness-theme": "paper",
+            "data-palette": "paper",
             "data-theme": "dark",
             children: [
               /* @__PURE__ */ jsx17(MarketingSiteHeader, {
