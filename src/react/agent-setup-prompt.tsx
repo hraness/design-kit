@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, ty
 import type { ProviderMarkDescriptor } from "../provider-marks.js";
 import { agentSetupClassName as cx } from "./agent-setup-prompt.stylex.js";
 import { ProviderMark } from "./provider-mark.js";
+import { SetupCopyButton } from "./setup-copy-button.js";
 import { SyntaxCode } from "./syntax-code.js";
 
 export interface AgentSetupTarget {
@@ -20,6 +21,8 @@ export interface AgentSetupPromptProps {
   readonly prompt: string;
   readonly label?: string;
   readonly targets?: readonly AgentSetupTarget[];
+  /** Keep provider actions below the prompt, or place them beside it in wide containers. */
+  readonly targetsPlacement?: "responsive" | "below";
   readonly className?: string;
   /** Runs once after a successful copy; callback failures do not change copy feedback. */
   readonly onCopied?: () => void;
@@ -186,21 +189,8 @@ function useCopy(text: string, subject: string, fallback: () => HTMLElement | nu
   return { state, message, copy };
 }
 
-function CopyGlyph({ copied }: Readonly<{ copied: boolean }>) {
-  return (
-    <svg aria-hidden="true" className={cx(["copyIcon"])} fill="none" focusable="false" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24">
-      {copied ? <path d="M5 12.5l4.5 4.5L19 7.5" /> : <><rect height="12" rx="2" width="12" x="8" y="8" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></>}
-    </svg>
-  );
-}
-
 function CopyButton({ copy, overlay = false, state, subject }: Readonly<{ copy: () => Promise<boolean>; overlay?: boolean; state: CopyState; subject: string }>) {
-  return (
-    <button aria-busy={state === "copying" || undefined} aria-label={`${state === "copied" ? "Copied" : "Copy"} ${subject}`} className={cx(["copy", overlay && "copyOverlay"])} data-copy-state={state} disabled={state === "copying"} onClick={() => { void copy(); }} type="button">
-      <CopyGlyph copied={state === "copied"} />
-      <span>{state === "copied" ? "Copied" : state === "copying" ? "Copying" : state === "failed" ? "Copy failed" : "Copy"}</span>
-    </button>
-  );
+  return <SetupCopyButton className={cx([overlay && "copyOverlay"], "hraness-agent-setup__copy")} iconClassName="hraness-agent-setup__copyIcon" onCopy={() => { void copy(); }} state={state} subject={subject} />;
 }
 
 function CopyStatus({ children }: Readonly<{ children: ReactNode }>) {
@@ -231,10 +221,11 @@ function reserveTargetTab(owner: Window | null): Window | null {
 }
 
 /** A quiet prompt preview with the complete source behind a native disclosure. */
-export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], className, onCopied }: AgentSetupPromptProps) {
+export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], targetsPlacement = "responsive", className, onCopied }: AgentSetupPromptProps) {
   assertText(prompt, "Agent setup prompt");
   assertText(label, "Agent setup label");
   assertEntries(targets, "Agent setup target");
+  if (targetsPlacement !== "responsive" && targetsPlacement !== "below") throw new RangeError("Unsupported agent setup targets placement.");
   for (const target of targets) {
     assertHref(target.href);
     if (target.mode !== undefined && target.mode !== "prefill" && target.mode !== "copy-and-open") throw new RangeError("Unsupported agent setup target mode.");
@@ -313,8 +304,8 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
   }, []);
 
   return (
-    <section aria-label={label} className={cx(["root"], className)} data-hraness-agent-setup-prompt="">
-      <div className={cx(["layout", targets.length > 0 && "withTargets"])}>
+    <section aria-label={label} className={cx(["root"], className)} data-hraness-agent-setup-prompt="" data-targets-placement={targetsPlacement}>
+      <div className={cx(["layout", targets.length > 0 && targetsPlacement === "responsive" && "withTargets"])}>
         <div className={cx(["frame"])} data-copy-state={state}>
           <div className={cx(["preview"])} hidden={expanded}>
             <pre aria-label={`${label} preview`} className={cx(["pre", "previewText"])}>{prompt}</pre>
@@ -330,7 +321,7 @@ export function AgentSetupPrompt({ prompt, label = "Agent setup", targets = [], 
         {targets.length === 0 ? null : (
           <aside aria-labelledby={`${id}-targets`} className={cx(["targets"])}>
             <p className={cx(["targetsLabel"])} id={`${id}-targets`}>Open in</p>
-            <ul className={cx(["targetList"])}>
+            <ul className={cx(["targetList", targetsPlacement === "below" && "targetGrid"])}>
               {targets.map((target) => (
                 <li key={target.id}>
                   <a aria-busy={target.mode === "copy-and-open" && state === "copying" || undefined} aria-disabled={target.mode === "copy-and-open" && state === "copying" || undefined} aria-label={target.mode === "copy-and-open" ? `Copy prompt and open ${target.label}` : undefined} className={cx(["target"])} data-agent-target={target.id} data-agent-target-mode={target.mode ?? "prefill"} href={target.href} onAuxClick={target.mode === "copy-and-open" ? (event) => { copyAndOpen(event, target); } : undefined} onClick={target.mode === "copy-and-open" ? (event) => { copyAndOpen(event, target); } : undefined} rel="noopener noreferrer" target="_blank">

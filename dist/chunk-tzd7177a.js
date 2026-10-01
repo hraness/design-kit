@@ -1,7 +1,7 @@
 import {
   SyntaxCode,
   platformInstallClassName
-} from "./chunk-fjf81bww.js";
+} from "./chunk-6ts4955n.js";
 import {
   detectPlatform,
   isKnownPlatformId,
@@ -13,7 +13,102 @@ import {
 
 // src/react/platform-install.tsx
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+
+// src/react/setup-copy-button.stylex.ts
+import * as stylex from "@stylexjs/stylex";
+var setupCopyButtonStyles = {
+  button: {
+    kGNEyG: "x6s0dn4",
+    kysU6D: "xjyslct",
+    kWkggS: "x17tv4j5 x1lf5oka xnwy5bs",
+    kVAM5u: "x3ugid2 x1ylmb6m",
+    kaIpWk: "x116uinm",
+    ksu8eU: "x1y0btm7",
+    kMzoRj: "xmkeg23",
+    kB7OPa: "x9f619",
+    kMwMTN: "xm06a53 x1ggml12",
+    kkrTdU: "x1ypdohk",
+    k1xSpc: "x3nfvp2 x1cfwndu",
+    kmuXW: "x2lah0s",
+    kMv6JI: "xtls1wf",
+    kGuDYH: "x1dcheo9",
+    k63SB2: "xk50ysn",
+    kOIVth: "x1neeqzj",
+    kjj79g: "xl56j7k",
+    kLWn49: "xo5v014",
+    kogj98: "x1ghz6dp",
+    kAzted: "xgbkey0",
+    kI3sdo: "x1a2a7pz xr5lfjo",
+    kInvED: "x1hl8ikr",
+    kmVPX3: "x1i4hug3",
+    $$css: true
+  },
+  icon: {
+    kZKoxP: "x1l36t39",
+    kmuXW: "x2lah0s",
+    kzqmXN: "xcdlrvm",
+    $$css: true
+  }
+};
+function setupCopyButtonClassName(part, caller) {
+  return [`hraness-setup-copy__${part}`, stylex.props(setupCopyButtonStyles[part]).className, caller].filter(Boolean).join(" ");
+}
+
+// src/react/setup-copy-button.tsx
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
+function SetupCopyButton({
+  className,
+  iconClassName,
+  onCopy,
+  state,
+  subject,
+  failedLabel = "Copy failed"
+}) {
+  return /* @__PURE__ */ jsxs("button", {
+    "aria-busy": state === "copying" || undefined,
+    "aria-label": `${state === "copied" ? "Copied" : "Copy"} ${subject}`,
+    className: setupCopyButtonClassName("button", className),
+    "data-copy-state": state,
+    disabled: state === "copying",
+    onClick: onCopy,
+    type: "button",
+    children: [
+      /* @__PURE__ */ jsx("svg", {
+        "aria-hidden": "true",
+        className: setupCopyButtonClassName("icon", iconClassName),
+        fill: "none",
+        focusable: "false",
+        stroke: "currentColor",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
+        strokeWidth: 2,
+        viewBox: "0 0 24 24",
+        children: state === "copied" ? /* @__PURE__ */ jsx("path", {
+          d: "M5 12.5l4.5 4.5L19 7.5"
+        }) : /* @__PURE__ */ jsxs(Fragment, {
+          children: [
+            /* @__PURE__ */ jsx("rect", {
+              height: "12",
+              rx: "2",
+              width: "12",
+              x: "8",
+              y: "8"
+            }),
+            /* @__PURE__ */ jsx("path", {
+              d: "M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
+            })
+          ]
+        })
+      }),
+      /* @__PURE__ */ jsx("span", {
+        children: state === "copied" ? "Copied" : state === "copying" ? "Copying" : state === "failed" ? failedLabel : "Copy"
+      })
+    ]
+  });
+}
+
+// src/react/platform-install.tsx
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 var copyResetMilliseconds = 2000;
 function assertTargets(platforms, defaultPlatform) {
   if (platforms.length === 0)
@@ -82,17 +177,17 @@ function PlatformMarkSymbols({
   ids,
   symbolId
 }) {
-  return /* @__PURE__ */ jsx("svg", {
+  return /* @__PURE__ */ jsx2("svg", {
     "aria-hidden": "true",
     className: platformInstallClassName(["markSymbols"]),
     focusable: "false",
     xmlns: "http://www.w3.org/2000/svg",
     children: ids.map((id) => {
       const mark = platformMark(id);
-      return /* @__PURE__ */ jsx("symbol", {
+      return /* @__PURE__ */ jsx2("symbol", {
         id: symbolId(id),
         viewBox: mark.viewBox,
-        children: /* @__PURE__ */ jsx("path", {
+        children: /* @__PURE__ */ jsx2("path", {
           d: mark.path
         })
       }, id);
@@ -103,7 +198,7 @@ function PlatformMarkUse({
   platform,
   symbolId
 }) {
-  return /* @__PURE__ */ jsx("svg", {
+  return /* @__PURE__ */ jsx2("svg", {
     "aria-hidden": "true",
     className: platformInstallClassName(["icon"]),
     "data-platform": platform,
@@ -111,39 +206,8 @@ function PlatformMarkUse({
     focusable: "false",
     viewBox: platformMark(platform).viewBox,
     xmlns: "http://www.w3.org/2000/svg",
-    children: /* @__PURE__ */ jsx("use", {
+    children: /* @__PURE__ */ jsx2("use", {
       href: `#${symbolId}`
-    })
-  });
-}
-function CopyGlyph({
-  copied
-}) {
-  return /* @__PURE__ */ jsx("svg", {
-    "aria-hidden": "true",
-    className: platformInstallClassName(["copyIcon"]),
-    fill: "none",
-    focusable: "false",
-    stroke: "currentColor",
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    strokeWidth: 2,
-    viewBox: "0 0 24 24",
-    children: copied ? /* @__PURE__ */ jsx("path", {
-      d: "M5 12.5l4.5 4.5L19 7.5"
-    }) : /* @__PURE__ */ jsxs(Fragment, {
-      children: [
-        /* @__PURE__ */ jsx("rect", {
-          height: "12",
-          rx: "2",
-          width: "12",
-          x: "8",
-          y: "8"
-        }),
-        /* @__PURE__ */ jsx("path", {
-          d: "M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
-        })
-      ]
     })
   });
 }
@@ -152,56 +216,48 @@ function CommandBlock({
   command,
   copyKey,
   onCopy,
+  note,
   status,
   subject
 }) {
   const preRef = useRef(null);
   const state = status?.key === copyKey ? status.ok ? "copied" : "failed" : "idle";
-  return /* @__PURE__ */ jsxs("div", {
+  return /* @__PURE__ */ jsxs2("div", {
     className: platformInstallClassName(["command"]),
     "data-copy-state": state,
     children: [
-      /* @__PURE__ */ jsxs("div", {
+      /* @__PURE__ */ jsxs2("div", {
         className: platformInstallClassName(["commandBar", (caption === undefined || caption === "") && "commandBarEmpty"]),
         children: [
-          /* @__PURE__ */ jsx("span", {
+          /* @__PURE__ */ jsx2("span", {
             className: platformInstallClassName(["shell"]),
             children: caption
           }),
-          /* @__PURE__ */ jsxs("button", {
-            className: platformInstallClassName(["copy"]),
-            "data-copy-state": state,
-            onClick: () => onCopy(copyKey, command, subject, preRef.current),
-            type: "button",
-            children: [
-              /* @__PURE__ */ jsx(CopyGlyph, {
-                copied: state === "copied"
-              }),
-              /* @__PURE__ */ jsx("span", {
-                children: state === "copied" ? "Copied" : state === "failed" ? "Select to copy" : "Copy"
-              }),
-              /* @__PURE__ */ jsxs("span", {
-                className: platformInstallClassName(["status"]),
-                children: [
-                  " ",
-                  subject
-                ]
-              })
-            ]
+          /* @__PURE__ */ jsx2(SetupCopyButton, {
+            className: "hraness-platform-install__copy",
+            iconClassName: "hraness-platform-install__copy-icon",
+            failedLabel: "Select to copy",
+            onCopy: () => onCopy(copyKey, command, subject, preRef.current),
+            state,
+            subject
           })
         ]
       }),
-      /* @__PURE__ */ jsx("pre", {
+      /* @__PURE__ */ jsx2("pre", {
         "aria-label": subject,
         className: platformInstallClassName(["pre"]),
         ref: preRef,
         tabIndex: 0,
-        children: /* @__PURE__ */ jsx(SyntaxCode, {
+        children: /* @__PURE__ */ jsx2(SyntaxCode, {
           className: platformInstallClassName(["code"]),
           code: command,
           language: "shell",
           styles: "classes"
         })
+      }),
+      note === undefined ? null : /* @__PURE__ */ jsx2("div", {
+        className: platformInstallClassName(["note", "commandNote"]),
+        children: note
       })
     ]
   });
@@ -286,25 +342,25 @@ function PlatformInstall({
     event.preventDefault();
     choose(target, true);
   };
-  return /* @__PURE__ */ jsxs("div", {
+  return /* @__PURE__ */ jsxs2("div", {
     className: platformInstallClassName(["root"], className),
     "data-hraness-platform-install": "",
     "data-selected-platform": current,
     "data-selection-source": source,
     id,
     children: [
-      /* @__PURE__ */ jsx(PlatformMarkSymbols, {
+      /* @__PURE__ */ jsx2(PlatformMarkSymbols, {
         ids,
         symbolId
       }),
-      /* @__PURE__ */ jsx("div", {
+      /* @__PURE__ */ jsx2("div", {
         "aria-label": label,
         className: platformInstallClassName(["tablist"]),
         onKeyDown,
         role: "tablist",
         children: platforms.map((target) => {
           const isSelected = target.id === current;
-          return /* @__PURE__ */ jsxs("button", {
+          return /* @__PURE__ */ jsxs2("button", {
             "aria-controls": `${baseId}-panel-${target.id}`,
             "aria-selected": isSelected,
             className: platformInstallClassName(["tab", isSelected && "tabSelected"]),
@@ -322,11 +378,11 @@ function PlatformInstall({
             tabIndex: isSelected ? 0 : -1,
             type: "button",
             children: [
-              /* @__PURE__ */ jsx(PlatformMarkUse, {
+              /* @__PURE__ */ jsx2(PlatformMarkUse, {
                 platform: target.id,
                 symbolId: symbolId(target.id)
               }),
-              /* @__PURE__ */ jsx("span", {
+              /* @__PURE__ */ jsx2("span", {
                 className: platformInstallClassName(["tabLabel"]),
                 children: labelOf(target)
               })
@@ -337,7 +393,7 @@ function PlatformInstall({
       platforms.map((target) => {
         const name = labelOf(target);
         const alternatives = target.alternatives ?? [];
-        return /* @__PURE__ */ jsx("div", {
+        return /* @__PURE__ */ jsx2("div", {
           "aria-labelledby": `${baseId}-tab-${target.id}`,
           className: platformInstallClassName(["panel"]),
           "data-availability": target.unavailable === true ? "unavailable" : "available",
@@ -345,38 +401,39 @@ function PlatformInstall({
           hidden: target.id !== current,
           id: `${baseId}-panel-${target.id}`,
           role: "tabpanel",
-          children: /* @__PURE__ */ jsxs("div", {
+          children: /* @__PURE__ */ jsxs2("div", {
             className: platformInstallClassName(["panelBody"]),
             children: [
-              /* @__PURE__ */ jsxs("p", {
+              /* @__PURE__ */ jsxs2("p", {
                 className: platformInstallClassName(["panelLabel"]),
                 children: [
-                  /* @__PURE__ */ jsx(PlatformMarkUse, {
+                  /* @__PURE__ */ jsx2(PlatformMarkUse, {
                     platform: target.id,
                     symbolId: symbolId(target.id)
                   }),
-                  /* @__PURE__ */ jsx("span", {
+                  /* @__PURE__ */ jsx2("span", {
                     children: name
                   })
                 ]
               }),
-              target.unavailable === true ? /* @__PURE__ */ jsx("div", {
+              target.unavailable === true ? /* @__PURE__ */ jsx2("div", {
                 className: platformInstallClassName(["unavailable"]),
                 children: target.unavailableNote
               }) : null,
-              target.command === undefined ? null : /* @__PURE__ */ jsx(CommandBlock, {
+              target.command === undefined ? null : /* @__PURE__ */ jsx2(CommandBlock, {
                 caption: target.shell,
                 command: target.command,
                 copyKey: `${target.id}:primary`,
                 onCopy: copy,
+                note: target.note,
                 status,
                 subject: `${name} install command`
               }),
-              alternatives.length === 0 ? null : /* @__PURE__ */ jsx("ul", {
+              alternatives.length === 0 ? null : /* @__PURE__ */ jsx2("ul", {
                 "aria-label": `Other ways to install on ${name}`,
                 className: platformInstallClassName(["alternatives"]),
-                children: alternatives.map((alternative, index) => /* @__PURE__ */ jsx("li", {
-                  children: /* @__PURE__ */ jsx(CommandBlock, {
+                children: alternatives.map((alternative, index) => /* @__PURE__ */ jsx2("li", {
+                  children: /* @__PURE__ */ jsx2(CommandBlock, {
                     caption: [alternative.label, alternative.shell].filter(Boolean).join(" · "),
                     command: alternative.command,
                     copyKey: `${target.id}:${index}`,
@@ -386,7 +443,7 @@ function PlatformInstall({
                   })
                 }, `${alternative.label}-${index}`))
               }),
-              target.note === undefined ? null : /* @__PURE__ */ jsx("div", {
+              target.command !== undefined || target.note === undefined ? null : /* @__PURE__ */ jsx2("div", {
                 className: platformInstallClassName(["note"]),
                 children: target.note
               })
@@ -394,7 +451,7 @@ function PlatformInstall({
           })
         }, target.id);
       }),
-      /* @__PURE__ */ jsx("p", {
+      /* @__PURE__ */ jsx2("p", {
         "aria-live": "polite",
         className: platformInstallClassName(["status"]),
         role: "status",
@@ -404,4 +461,4 @@ function PlatformInstall({
   });
 }
 
-export { PlatformInstall };
+export { SetupCopyButton, PlatformInstall };

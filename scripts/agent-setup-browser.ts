@@ -330,14 +330,27 @@ try {
             if (frame === undefined || rail === undefined) throw new Error("Missing prompt layout.");
             return { side: rail.left >= frame.right, below: rail.top >= frame.bottom };
           };
-          return { wide: positions("#prompt"), narrow: positions("#narrow") };
+          return { wide: positions("#prompt"), narrow: positions("#narrow"), below: positions("#below") };
         });
+        assert(layout.below.below, `${label}: below placement keeps actions under a wide prompt`);
         assert(layout.wide.side, `${label}: target rail sits beside a wide prompt`);
         assert(layout.narrow.below, `${label}: target rail stacks in a narrow container on a wide screen`);
         if (process.env.AGENT_SETUP_SCREENSHOTS !== undefined && palette === "gruvbox") {
           await mkdir(process.env.AGENT_SETUP_SCREENSHOTS, { recursive: true });
           await page.screenshot({ path: join(process.env.AGENT_SETUP_SCREENSHOTS, `agent-setup-${theme}-1280.png`), fullPage: true });
         }
+
+        for (const [width, columns] of [[1280, 3], [375, 2], [280, 1]] as const) {
+          await page.setViewportSize({ width, height: 900 });
+          const grid = await page.locator("#below aside ul").evaluate((list) => ({
+            columns: getComputedStyle(list).gridTemplateColumns.split(" ").length,
+            width: document.documentElement.scrollWidth,
+            viewport: document.documentElement.clientWidth,
+          }));
+          assert.equal(grid.columns, columns, `${label}: below actions use ${columns} columns at ${width}px`);
+          assert(grid.width <= grid.viewport, `${label}: below actions fit at ${width}px`);
+        }
+        await page.setViewportSize({ width: 1280, height: 900 });
 
         await page.emulateMedia({ forcedColors: "active" });
         await page.waitForFunction(() => document.querySelector("#narrow details")?.hasAttribute("open"));

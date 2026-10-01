@@ -214,38 +214,6 @@ var platformInstallStyles = {
     kmVPX3: "x1717udv",
     $$css: true
   },
-  copy: {
-    kGNEyG: "x6s0dn4",
-    kysU6D: "xjyslct",
-    kWkggS: "xf7cb96 x3oli7v xnwy5bs",
-    kVAM5u: "x1ls9zlr x1ylmb6m",
-    kaIpWk: "x116uinm",
-    ksu8eU: "x1y0btm7",
-    kMzoRj: "xmkeg23",
-    kB7OPa: "x9f619",
-    kMwMTN: "x1p5laik x1ggml12",
-    kkrTdU: "x1ypdohk",
-    k1xSpc: "x3nfvp2 x1cfwndu",
-    kmuXW: "x2lah0s",
-    kMv6JI: "x1vnz01h",
-    kGuDYH: "x1dcheo9",
-    k63SB2: "xk50ysn",
-    kOIVth: "x73f2yu",
-    kLWn49: "xo5v014",
-    kogj98: "x1ghz6dp",
-    kAzted: "x1in32aq x1rewkhn",
-    kI3sdo: "x1a2a7pz x11dsm9b",
-    kInvED: "x1y3gkto",
-    k8WAf4: "x1267ecw",
-    kg3NbH: "x1f6otoe",
-    $$css: true
-  },
-  copyIcon: {
-    kZKoxP: "x1at03k5",
-    kmuXW: "x2lah0s",
-    kzqmXN: "x2tfi8i",
-    $$css: true
-  },
   alternatives: {
     k1xSpc: "xrvj5dj",
     kOIVth: "x1uma3xh",
@@ -260,6 +228,14 @@ var platformInstallStyles = {
     kGuDYH: "xkpwil5",
     kLWn49: "x1evy7pa",
     kogj98: "x1ghz6dp",
+    $$css: true
+  },
+  commandNote: {
+    kLZC3w: "x1h3am7x x19dwuzr",
+    kPef9Z: "x13fuv20",
+    kEafiO: "x178xt8z",
+    k8WAf4: "x8fiyw4",
+    kg3NbH: "x1fi0nvg",
     $$css: true
   },
   unavailable: {
@@ -367,8 +343,6 @@ var hooks = {
   code: "hraness-platform-install__code",
   command: "hraness-platform-install__command",
   commandBar: "hraness-platform-install__command-bar",
-  copy: "hraness-platform-install__copy",
-  copyIcon: "hraness-platform-install__copy-icon",
   icon: "hraness-platform-icon",
   markSymbols: "hraness-platform-install__marks",
   note: "hraness-platform-install__note",

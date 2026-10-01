@@ -72,7 +72,7 @@ test("every command is in the markup, so each stays reachable without JavaScript
 test("copy buttons name their command and a polite status region announces results", () => {
   const document = render(renderToStaticMarkup(<PlatformInstall platforms={targets} />));
   const buttons = [...document.querySelectorAll("button.hraness-platform-install__copy")];
-  expect(buttons.map((button) => button.textContent)).toEqual([
+  expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
     "Copy macOS install command",
     "Copy macOS Homebrew command",
     "Copy Linux install command",
@@ -167,4 +167,17 @@ test("install commands render shell syntax tokens without changing the copied te
   expect(command?.getAttribute("data-language")).toBe("shell");
   expect(command?.querySelectorAll("span").length).toBeGreaterThan(2);
   expect(command?.textContent).toBe(targets[0]?.command ?? "");
+});
+
+
+test("platform notes stay inside their primary command and remain visible without a command", () => {
+  const document = render(renderToStaticMarkup(<PlatformInstall platforms={[
+    ...targets,
+    { id: "freebsd", label: "FreeBSD", unavailable: true, unavailableNote: "Build from source.", note: "Requires a C compiler." },
+  ]} />));
+  const mac = document.querySelector('[role="tabpanel"][data-platform="macos"]');
+  expect(mac?.querySelector(".hraness-platform-install__command > .hraness-platform-install__note")?.textContent).toBe("Apple silicon");
+  expect(mac?.querySelectorAll(".hraness-platform-install__note")).toHaveLength(1);
+  expect(mac?.querySelector(".hraness-platform-install__alternatives .hraness-platform-install__note")).toBeNull();
+  expect(document.querySelector('[role="tabpanel"][data-platform="freebsd"] .hraness-platform-install__note')?.textContent).toBe("Requires a C compiler.");
 });

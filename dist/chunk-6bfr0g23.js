@@ -1,7 +1,7 @@
 import {
   SyntaxCode,
   platformInstallClassName
-} from "./chunk-fjf81bww.js";
+} from "./chunk-6ts4955n.js";
 import {
   diagramMetrics
 } from "./chunk-gmea6p0d.js";

@@ -401,6 +401,7 @@ export function DesignSystemGallery({
           <MarketingSection heading="Ask your agent to set it up." headingId="gallery-agent-setup" headingLevel={3} label="Agent setup">
             <AgentSetupPrompt
               label="Relay agent setup"
+              targetsPlacement="below"
               prompt={"Install Relay from https://relay.example/install.sh.\nRead the project instructions before making changes.\nRun relay init in this workspace and create a job named sample.\nRun the job, then show me its log."}
               targets={[
                 { href: "https://claude.ai/new", id: "claude", label: "Claude", mark: "claudecode", mode: "copy-and-open" },

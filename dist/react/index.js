@@ -8,8 +8,9 @@ import {
   HeroBackdrop
 } from "../chunk-8834fh4n.js";
 import {
-  PlatformInstall
-} from "../chunk-8xfssb9c.js";
+  PlatformInstall,
+  SetupCopyButton
+} from "../chunk-tzd7177a.js";
 import {
   ArticleBarChart,
   ArticleByline,
@@ -88,10 +89,10 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-c9mhn3yb.js";
+} from "../chunk-6bfr0g23.js";
 import {
   SyntaxCode
-} from "../chunk-fjf81bww.js";
+} from "../chunk-6ts4955n.js";
 import {
   STATUS_PAGE_AGENT_PREFIX,
   STATUS_PAGE_BACK_LABEL,
@@ -290,41 +291,10 @@ var agentSetupStyles = {
     kA33Yr: "x13c0qn1",
     $$css: true
   },
-  copy: {
-    kGNEyG: "x6s0dn4",
-    kysU6D: "xjyslct",
-    kWkggS: "x17tv4j5 x1lf5oka xnwy5bs",
-    kVAM5u: "x3ugid2 x1ylmb6m",
-    kaIpWk: "x116uinm",
-    ksu8eU: "x1y0btm7",
-    kMzoRj: "xmkeg23",
-    kB7OPa: "x9f619",
-    kMwMTN: "xm06a53 x1ggml12",
-    kkrTdU: "x1ypdohk",
-    k1xSpc: "x3nfvp2 x1cfwndu",
-    kmuXW: "x2lah0s",
-    kMv6JI: "xjb2p0i",
-    kGuDYH: "x1dcheo9",
-    kOIVth: "x1neeqzj",
-    kjj79g: "xl56j7k",
-    kLWn49: "xo5v014",
-    kogj98: "x1ghz6dp",
-    kAzted: "xgbkey0",
-    kI3sdo: "x1a2a7pz xr5lfjo",
-    kInvED: "x1hl8ikr",
-    kmVPX3: "x1i4hug3",
-    $$css: true
-  },
   copyOverlay: {
     krVfgx: "x1of4z1n",
     kt4wiu: "xe388cy",
     kVAEAm: "x10l6tqk",
-    $$css: true
-  },
-  copyIcon: {
-    kZKoxP: "x1l36t39",
-    kmuXW: "x2lah0s",
-    kzqmXN: "xcdlrvm",
     $$css: true
   },
   targets: {
@@ -347,6 +317,12 @@ var agentSetupStyles = {
     kB88ic: "xe8uvvx",
     kogj98: "x1ghz6dp",
     kmVPX3: "x1717udv",
+    $$css: true
+  },
+  targetGrid: {
+    kumcoG: "xe92ajh",
+    "--_hraness-agent-target-columns": "x6fuqh4",
+    "--_hraness-agent-target-wide-columns": "x1ii36b5",
     $$css: true
   },
   target: {
@@ -479,7 +455,7 @@ function agentSetupClassName(parts, caller) {
 }
 
 // src/react/agent-setup-prompt.tsx
-import { jsx as jsx2, jsxs, Fragment } from "react/jsx-runtime";
+import { jsx as jsx2, jsxs } from "react/jsx-runtime";
 function commandSubject(entry) {
   return `${entry.label} ${entry.filename === undefined ? "command" : "configuration"}`;
 }
@@ -648,61 +624,20 @@ function useCopy(text, subject, fallback, onCopied) {
     copy
   };
 }
-function CopyGlyph({
-  copied
-}) {
-  return /* @__PURE__ */ jsx2("svg", {
-    "aria-hidden": "true",
-    className: agentSetupClassName(["copyIcon"]),
-    fill: "none",
-    focusable: "false",
-    stroke: "currentColor",
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    strokeWidth: 2,
-    viewBox: "0 0 24 24",
-    children: copied ? /* @__PURE__ */ jsx2("path", {
-      d: "M5 12.5l4.5 4.5L19 7.5"
-    }) : /* @__PURE__ */ jsxs(Fragment, {
-      children: [
-        /* @__PURE__ */ jsx2("rect", {
-          height: "12",
-          rx: "2",
-          width: "12",
-          x: "8",
-          y: "8"
-        }),
-        /* @__PURE__ */ jsx2("path", {
-          d: "M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
-        })
-      ]
-    })
-  });
-}
 function CopyButton({
   copy,
   overlay = false,
   state,
   subject
 }) {
-  return /* @__PURE__ */ jsxs("button", {
-    "aria-busy": state === "copying" || undefined,
-    "aria-label": `${state === "copied" ? "Copied" : "Copy"} ${subject}`,
-    className: agentSetupClassName(["copy", overlay && "copyOverlay"]),
-    "data-copy-state": state,
-    disabled: state === "copying",
-    onClick: () => {
+  return /* @__PURE__ */ jsx2(SetupCopyButton, {
+    className: agentSetupClassName([overlay && "copyOverlay"], "hraness-agent-setup__copy"),
+    iconClassName: "hraness-agent-setup__copyIcon",
+    onCopy: () => {
       copy();
     },
-    type: "button",
-    children: [
-      /* @__PURE__ */ jsx2(CopyGlyph, {
-        copied: state === "copied"
-      }),
-      /* @__PURE__ */ jsx2("span", {
-        children: state === "copied" ? "Copied" : state === "copying" ? "Copying" : state === "failed" ? "Copy failed" : "Copy"
-      })
-    ]
+    state,
+    subject
   });
 }
 function CopyStatus({
@@ -743,12 +678,15 @@ function AgentSetupPrompt({
   prompt,
   label = "Agent setup",
   targets = [],
+  targetsPlacement = "responsive",
   className,
   onCopied
 }) {
   assertText(prompt, "Agent setup prompt");
   assertText(label, "Agent setup label");
   assertEntries(targets, "Agent setup target");
+  if (targetsPlacement !== "responsive" && targetsPlacement !== "below")
+    throw new RangeError("Unsupported agent setup targets placement.");
   for (const target of targets) {
     assertHref(target.href);
     if (target.mode !== undefined && target.mode !== "prefill" && target.mode !== "copy-and-open")
@@ -851,9 +789,10 @@ function AgentSetupPrompt({
     "aria-label": label,
     className: agentSetupClassName(["root"], className),
     "data-hraness-agent-setup-prompt": "",
+    "data-targets-placement": targetsPlacement,
     children: [
       /* @__PURE__ */ jsxs("div", {
-        className: agentSetupClassName(["layout", targets.length > 0 && "withTargets"]),
+        className: agentSetupClassName(["layout", targets.length > 0 && targetsPlacement === "responsive" && "withTargets"]),
         children: [
           /* @__PURE__ */ jsxs("div", {
             className: agentSetupClassName(["frame"]),
@@ -907,7 +846,7 @@ function AgentSetupPrompt({
                 children: "Open in"
               }),
               /* @__PURE__ */ jsx2("ul", {
-                className: agentSetupClassName(["targetList"]),
+                className: agentSetupClassName(["targetList", targetsPlacement === "below" && "targetGrid"]),
                 children: targets.map((target) => /* @__PURE__ */ jsx2("li", {
                   children: /* @__PURE__ */ jsxs("a", {
                     "aria-busy": target.mode === "copy-and-open" && state === "copying" || undefined,
@@ -1669,11 +1608,11 @@ function PhaserDots({
 }
 
 // src/react/aurora-dots-background.tsx
-import { jsx as jsx5, jsxs as jsxs4, Fragment as Fragment2 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs4, Fragment } from "react/jsx-runtime";
 function AuroraDotsBackground() {
   const backgroundPresentation = stylex5.props(effectsStyles.auroraBackground);
   const dotsPresentation = stylex5.props(effectsStyles.auroraDots);
-  return /* @__PURE__ */ jsxs4(Fragment2, {
+  return /* @__PURE__ */ jsxs4(Fragment, {
     children: [
       /* @__PURE__ */ jsx5("div", {
         "aria-hidden": "true",
@@ -5293,7 +5232,7 @@ var themeStyles = {
 };
 
 // src/react/theme.tsx
-import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment3 } from "react/jsx-runtime";
+import { jsx as jsx14, jsxs as jsxs12, Fragment as Fragment2 } from "react/jsx-runtime";
 var concreteThemes = ["light", "dark"];
 var emptySubscribe = () => () => {
   return;
@@ -5335,7 +5274,7 @@ function DesignThemeProvider({
   nonce,
   storageKey = designThemeStorageKey
 }) {
-  return /* @__PURE__ */ jsxs12(Fragment3, {
+  return /* @__PURE__ */ jsxs12(Fragment2, {
     children: [
       forcedTheme === undefined ? /* @__PURE__ */ jsx14("script", {
         ...nonce === undefined ? {} : {
@@ -5542,7 +5481,7 @@ function ThemeColorSync({
 }
 
 // src/react/route-state.tsx
-import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment4 } from "react/jsx-runtime";
+import { jsx as jsx15, jsxs as jsxs13, Fragment as Fragment3 } from "react/jsx-runtime";
 var lowerHeading = {
   h1: "h2",
   h2: "h3",
@@ -5634,7 +5573,7 @@ function StatusPage({
           /* @__PURE__ */ jsxs13("div", {
             className: "hraness-status-page__actions",
             children: [
-              onRetry ? /* @__PURE__ */ jsxs13(Fragment4, {
+              onRetry ? /* @__PURE__ */ jsxs13(Fragment3, {
                 children: [
                   /* @__PURE__ */ jsx15("button", {
                     className: "hraness-status-page__action hraness-foil",
@@ -5802,7 +5741,7 @@ function GlobalErrorDocument({
   theme = defaultDesignTheme,
   ...props14
 }) {
-  const content = /* @__PURE__ */ jsxs13(Fragment4, {
+  const content = /* @__PURE__ */ jsxs13(Fragment3, {
     children: [
       diagnostics,
       /* @__PURE__ */ jsx15(RouteErrorPage, {
@@ -5822,7 +5761,7 @@ function GlobalErrorDocument({
             content: theme === "system" ? "light dark" : theme,
             name: "color-scheme"
           }),
-          theme === "system" ? /* @__PURE__ */ jsxs13(Fragment4, {
+          theme === "system" ? /* @__PURE__ */ jsxs13(Fragment3, {
             children: [
               /* @__PURE__ */ jsx15("meta", {
                 content: lightColor,
@@ -6004,7 +5943,7 @@ function RelativeTime({
 }
 
 // src/react/design-gallery.tsx
-import { jsx as jsx17, jsxs as jsxs15, Fragment as Fragment5 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs15, Fragment as Fragment4 } from "react/jsx-runtime";
 var designGallerySections = [{
   id: "foundation",
   label: "Foundation"
@@ -6592,6 +6531,7 @@ function DesignSystemGallery({
                     children: [
                       /* @__PURE__ */ jsx17(AgentSetupPrompt, {
                         label: "Relay agent setup",
+                        targetsPlacement: "below",
                         prompt: `Install Relay from https://relay.example/install.sh.
 Read the project instructions before making changes.
 Run relay init in this workspace and create a job named sample.
@@ -6646,7 +6586,7 @@ Run the job, then show me its log.`,
                   }),
                   /* @__PURE__ */ jsxs15(MarketingSection, {
                     heading: "A job keeps its name everywhere.",
-                    headingContent: /* @__PURE__ */ jsxs15(Fragment5, {
+                    headingContent: /* @__PURE__ */ jsxs15(Fragment4, {
                       children: [
                         /* @__PURE__ */ jsx17(MarketingCodeBlock, {
                           code: "relay run job-01"

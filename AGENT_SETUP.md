@@ -13,6 +13,7 @@ import { AgentCommandTabs, AgentSetupPrompt } from "@hraness/design-kit/react";
   label="Set up Relay with your agent"
   prompt={setupPrompt}
   targets={agentSetupTargets(setupPrompt)}
+  targetsPlacement="below"
 />
 <AgentCommandTabs commands={[
   { id: "terminal", label: "Codex", mark: "codex", command: "relay init" },
@@ -24,6 +25,9 @@ The prompt preview clips long text with a bottom fade. Copy sits at the
 bottom right and copies the complete source. A native disclosure reveals
 the complete prompt without JavaScript. Provider actions move beside the
 preview when the containing block is wide enough; narrower blocks stack.
+Set `targetsPlacement="below"` to keep actions under the prompt in a compact
+grid with up to three columns. Prompt, command-tab, and platform-install copy
+buttons share the same 44-pixel minimum height and visual treatment.
 The optional `onCopied` callback runs after a successful copy. Its errors
 cannot change clipboard feedback.
 
