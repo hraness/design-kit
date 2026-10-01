@@ -17,6 +17,11 @@ import {
 const REQUIRED_IDENTITIES: readonly ProviderMarkId[] = [
   "aider",
   "anthropic",
+  "beeper",
+  "imessage",
+  "ollama",
+  "vercel",
+  "whatsapp",
   "claude",
   "claudecode",
   "codex",
@@ -42,7 +47,11 @@ test("registry specs and generated artwork cover the same ids", () => {
 test("every mark has a glyph, a display name, an accent, and a monogram", () => {
   for (const mark of providerMarks) {
     expect(mark.glyph.body.length).toBeGreaterThan(0);
-    expect(mark.glyph.viewBox).toMatch(/^0 0 \d/u);
+    const viewBox = mark.glyph.viewBox.split(/\s+/u).map(Number);
+    expect(viewBox).toHaveLength(4);
+    expect(viewBox.every(Number.isFinite)).toBe(true);
+    expect(viewBox[2]).toBeGreaterThan(0);
+    expect(viewBox[3]).toBeGreaterThan(0);
     expect(mark.name.length).toBeGreaterThan(0);
     expect(mark.accent).toMatch(/^#[0-9a-f]{6}$/u);
     expect(mark.monogram.length).toBeGreaterThan(0);

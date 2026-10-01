@@ -253,6 +253,11 @@ export function DesignSystemGallery({
                 <ProviderMark mark="goose" label="Goose" size={40} />
                 <ProviderMark mark="gemini" label="Gemini" size={40} />
                 <ProviderMark mark="nvidia" label="NVIDIA" size={40} />
+                <ProviderMark mark="imessage" label="iMessage" size={40} tone="solid" />
+                <ProviderMark mark="whatsapp" label="WhatsApp" size={40} tone="solid" />
+                <ProviderMark mark="beeper" label="Beeper" size={40} tone="solid" />
+                <ProviderMark mark="ollama" label="Ollama" size={40} tone="solid" />
+                <ProviderMark mark="vercel" label="Vercel" size={40} tone="solid" />
               </WrappingRow>
             </CardContent>
           </Card>
@@ -314,6 +319,8 @@ export function DesignSystemGallery({
           />
           <MarketingMain>
           <ProductHero
+            align="start"
+            layout="split"
             actions={[
               { href: "#gallery-install", label: "Install Relay" },
               { href: "#shells", label: "See the workspace" },
@@ -448,6 +455,10 @@ export function DesignSystemGallery({
           <MarketingCardRow ariaLabel="Release radar" columns={2} cards={[
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#gallery-install", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter." },
+          ]} />
+          <MarketingCardRow ariaLabel="Agent choices" columns={2} cards={[
+            { icon: <ProviderMark mark="claudecode" size={56} tone="solid" />, href: "#gallery-install", title: "Claude Code", meta: "Use Relay from your terminal agent." },
+            { icon: <ProviderMark mark="codex" size={56} tone="solid" />, href: "#gallery-install", title: "Codex", meta: "Keep the same commands across your projects." },
           ]} />
           <MarketingTrustBoundary columns={2} heading="What leaves your machine." headingId="gallery-marketing-trust" headingLevel={3} label="Boundary" items={[
             { label: "Stays local", detail: "Source files and credentials." },

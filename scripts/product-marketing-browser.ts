@@ -31,7 +31,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "07fe9b46e5688e840afee0a96baf167d8552bf3118be971dd3f1c818a1e60d13", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "768258e4eca72b90c0bd7a64d7d62dee145ea33656c2f6d29a1a2a929236f2ae", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -58,6 +58,7 @@ const interactionCases = [
   ["current navigation", ".hraness-marketing-header__nav a", 0],
   ["ordinary navigation", ".hraness-marketing-header__nav a", 1],
   ["attribution link", ".hraness-marketing-quote__link", 0],
+  ["icon card", 'a.hraness-marketing-card[data-layout="icon"]', 0],
 ] as const;
 const properties = [
   "display", "position", "color", "background-color", "background-image", "background-position",
@@ -743,6 +744,7 @@ try {
   const configurations = [
     { name: "desktop-light", width: 1280, theme: "light" },
     { name: "phone-dark", width: 390, theme: "dark" },
+    { name: "tablet-light", width: 768, theme: "light" },
     { name: "rtl", width: 1100, theme: "light", direction: "rtl" },
     { name: "vertical-rtl", width: 1100, theme: "light", direction: "rtl", axis: "vertical" },
     { name: "coarse", width: 390, theme: "light", touch: true },
@@ -844,6 +846,32 @@ try {
       assert.equal(examples.length, 4, "All hero measure fixtures remain covered");
       assert.deepEqual(examples, measuredExamples.map(({ expected }) => expected),
       `${settings.name}/${mode}: example-only measure and omitted fallback`);
+      const splitHeroes = await page.locator('.hraness-marketing-hero[data-layout="split"]').evaluateAll((heroes) => heroes.map((hero) => {
+        const writingMode = getComputedStyle(hero).writingMode;
+        const vertical = writingMode.startsWith("vertical");
+        const rect = (selector: string) => {
+          const node = hero.querySelector(selector);
+          if (node === null) throw new Error(`Missing split hero slot: ${selector}`);
+          const box = node.getBoundingClientRect();
+          return {
+            inlineStart: vertical ? box.top : box.left, inlineEnd: vertical ? box.bottom : box.right,
+            blockStart: vertical ? (writingMode === "vertical-rl" ? -box.right : box.left) : box.top,
+            blockEnd: vertical ? (writingMode === "vertical-rl" ? -box.left : box.right) : box.bottom,
+          };
+        };
+        return { wide: matchMedia("(min-width: 64rem)").matches, copy: rect(".hraness-marketing-hero__copy"), frame: rect(".hraness-marketing-hero__frame"), proof: rect(".hraness-marketing-proof"), facts: rect(".hraness-marketing-facts") };
+      }));
+      assert.equal(splitHeroes.length, 2, `${settings.name}/${mode}: paper and accent split heroes`);
+      for (const hero of splitHeroes) {
+        if (hero.wide) assert(hero.copy.inlineEnd <= hero.frame.inlineStart + 1 || hero.frame.inlineEnd <= hero.copy.inlineStart + 1, `${settings.name}/${mode}: wide hero has two separate columns`);
+        else assert(hero.frame.blockStart >= hero.copy.blockEnd - 1, `${settings.name}/${mode}: narrow hero stacks copy before frame`);
+        for (const evidence of [hero.proof, hero.facts]) {
+          assert(evidence.inlineStart <= Math.min(hero.copy.inlineStart, hero.frame.inlineStart) + 1 && evidence.inlineEnd >= Math.max(hero.copy.inlineEnd, hero.frame.inlineEnd) - 1, `${settings.name}/${mode}: follow-on evidence spans both columns`);
+        }
+      }
+      if (mode === "standalone" && /^(phone|tablet|desktop)-(light|dark)$/u.test(settings.name)) {
+        await page.locator('.hraness-marketing-hero[data-layout="split"]').first().screenshot({ path: join(output, `${settings.name}-split-hero.png`) });
+      }
       assert.equal(await page.locator('.hraness-marketing-maker__links > li > a').getAttribute("class"), "fixture-maker-link");
       if (deliveryModes.includes(mode as typeof deliveryModes[number])) {
         assert.equal(await page.locator(".hraness-marketing-header").first().evaluate((node) => getComputedStyle(node).position), "sticky");
@@ -936,6 +964,41 @@ try {
             assert.ok(previous.art && next.art && previous.art.right + 8 < next.art.left,
               `${settings.name}/${mode}: art wells must not paint through the gutter`);
           }
+        }
+      }
+      if (settings.axis !== "vertical") {
+        const iconCards = await page.locator('.hraness-marketing-card[data-layout="icon"]').evaluateAll((cards) => cards.map((card) => {
+          const icon = card.querySelector(".hraness-marketing-card__icon");
+          const copy = card.querySelector(".hraness-marketing-card__copy");
+          const title = card.querySelector(".hraness-marketing-card__title");
+          const meta = card.querySelector(".hraness-marketing-card__meta");
+          if (!(icon instanceof HTMLElement) || !(copy instanceof HTMLElement) || !(title instanceof HTMLElement) || !(meta instanceof HTMLElement)) throw new Error("Missing icon card slots");
+          const box = (node: Element) => { const rect = node.getBoundingClientRect(); return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height }; };
+          return { card: box(card), icon: box(icon), copy: box(copy), title: box(title), meta: box(meta),
+            metaScroll: meta.scrollHeight, metaClient: meta.clientHeight, copyOverflow: copy.scrollWidth > copy.clientWidth + 1,
+            art: card.querySelector(".hraness-marketing-card__art") !== null, iconHidden: icon.getAttribute("aria-hidden"),
+            minCopy: getComputedStyle(copy).minInlineSize, metaMaximum: getComputedStyle(meta).maxBlockSize,
+            mark: icon.firstElementChild === null ? null : box(icon.firstElementChild),
+          };
+        }));
+        assert.equal(iconCards.length, 2);
+        for (const card of iconCards) {
+          const label = `${settings.name}/${mode}: compact icon card`;
+          assert.equal(card.art, false, `${label} must not add an art strip`);
+          assert.equal(card.iconHidden, "true");
+          assert.equal(card.minCopy, "0px");
+          assert.equal(card.metaMaximum, "none", `${label} must keep full comparison copy`);
+          assert.ok(card.metaScroll <= card.metaClient + 1, `${label} copy must not clip`);
+          assert.equal(card.copyOverflow, false, `${label} copy must not overflow`);
+          assert.ok(Math.abs(card.icon.width - 56) < 1 && Math.abs(card.icon.height - 56) < 1, `${label} keeps a square mark`);
+          assert.ok(card.mark !== null && Math.abs(card.mark.width - 56) < 1 && Math.abs(card.mark.height - 56) < 1, `${label} preserves mark proportions`);
+          assert.ok(Math.abs((card.icon.top + card.icon.bottom) - (card.copy.top + card.copy.bottom)) < 2, `${label} centers beside all copy`);
+          if (settings.direction === "rtl") assert.ok(card.icon.left >= card.title.right + 8 && card.icon.left >= card.meta.right + 8, `${label} keeps its icon at inline-start`);
+          else assert.ok(card.icon.right + 8 <= card.title.left && card.icon.right + 8 <= card.meta.left, `${label} keeps its icon left of title and summary`);
+          assert.ok(card.meta.bottom <= card.card.bottom - 8, `${label} contains full summary`);
+        }
+        if (["desktop-light", "phone-dark", "tablet-light"].includes(settings.name)) {
+          await page.locator('.hraness-marketing-card-row[aria-label="Icon comparisons"]').screenshot({ path: join(output, `${settings.name}-${mode}-icon-cards.png`) });
         }
       }
       const summary = page.locator("details > summary").first();

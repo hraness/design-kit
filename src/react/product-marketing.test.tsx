@@ -626,6 +626,26 @@ test("marketing card rows stretch equal-height items and reserve two-line meta",
   );
 });
 
+test("icon cards keep their identity beside complete copy and reject illustration mixing", () => {
+  const icon = <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /></svg>;
+  const { document } = parseHTML(renderToStaticMarkup(<MarketingCardRow cards={[
+    { icon, href: "/compare", title: "Local notes", meta: "Read every decision." },
+  ]} />));
+  const card = document.querySelector("a.hraness-marketing-card");
+  expect(card?.getAttribute("data-layout")).toBe("icon");
+  expect(card?.getAttribute("href")).toBe("/compare");
+  expect(card?.querySelector(".hraness-marketing-card__icon")?.getAttribute("aria-hidden")).toBe("true");
+  expect(card?.querySelector(".hraness-marketing-card__copy > h3")?.textContent).toBe("Local notes");
+  expect(card?.querySelector(".hraness-marketing-card__copy > p")?.textContent).toBe("Read every decision.");
+  expect(card?.querySelector(".hraness-marketing-card__art")).toBeNull();
+  expect(renderToStaticMarkup(<MarketingCard icon={icon} title="Card">Body</MarketingCard>)).toContain("hraness-marketing-card__body");
+  expect(renderToStaticMarkup(<MarketingCard icon={null} title="No visual" />)).not.toContain('data-layout="icon"');
+  expect(() => renderToStaticMarkup(
+    // @ts-expect-error Art and icon must not be authored together; the runtime also rejects foreign props.
+    <MarketingCard icon={icon} art={icon} title="Mixed" />,
+  )).toThrow("Marketing cards accept either icon or art, not both.");
+});
+
 test("empty quote and pillar collections render nothing", () => {
   expect(renderToStaticMarkup(
     <MarketingQuoteGrid heading="Quotes." headingId="q" label="Quotes" quotes={[]} />,

@@ -6,6 +6,12 @@ const vendorRoot = new URL("../vendor/provider-marks/", import.meta.url);
 const licenseHash = "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a";
 
 const FILE_HASHES: Readonly<Record<string, string>> = {
+  "lobehub/ollama.svg": "3a268218fb2e6e81fa31df70f70b51331625047794db81db21d35359428fae7a",
+  "lobehub/vercel.svg": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24",
+  "simple-icons/imessage.svg": "6f0701596b1b44ea9b863828b5a9363b77c30408bbb4655045378c33440de144",
+  "simple-icons/whatsapp.svg": "8fb209a53a61618c3483594b3e070481a35575d6aaecbe00a6fe386670c8fb1c",
+  "beeper.svg": "a37882b2bde6d4c547d299b4d79aca37af0ed804e051640e8ba81f84c2840b35",
+  "beeper-glyph.svg": "c67bab9c667fe3aed4773e22d2d17eae1981d349d34939d42ea1b42011c2c958",
   "aider.svg": "a65ba8794103b4dd1a103a996d651f43a0dc72def1e117a15c873aab7734c68a",
   "crush-heartbit.svg": "895c00a12ff691e14d021ca5c7a54049ba008f2b1386c82915596487136e3c60",
   "mem0-art.svg": "1644c756a22b30b98bd6311b1c188e42ef9492dd248205670c712d6f4380c8f9",
@@ -95,4 +101,18 @@ test("every vendored mark file is byte-exact and accounted for", async () => {
     const bytes = await Bun.file(new URL(file, vendorRoot)).arrayBuffer();
     expect(createHash("sha256").update(new Uint8Array(bytes)).digest("hex")).toBe(hash);
   }
+});
+
+
+test("messaging marks retain pinned source licenses and the separate Beeper notice", async () => {
+  for (const [file, digest] of [
+    ["SIMPLE-ICONS-LICENSE.md", "9046848b63a5c92bff14e4accca80bd987e0623b74adf9226ce5198d312b79d5"],
+    ["BEEPER-NOTICE.md", "cee69cab0dca73a02e370cc5aa11da4cdcbe13d0661ae7b14d3a298ac237fd05"],
+  ] as const) {
+    expect(createHash("sha256").update(new Uint8Array(await Bun.file(new URL(file, vendorRoot)).arrayBuffer())).digest("hex")).toBe(digest);
+  }
+  const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
+  expect(provenance).toContain("simple-icons");
+  expect(provenance).toContain("15.20.0");
+  expect(provenance).toContain("7437e04747d7acd64db81c5bf78ef82efbaf45e8");
 });

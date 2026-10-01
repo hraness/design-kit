@@ -492,6 +492,10 @@ export const marketingStyles = stylex.create({
     "font-weight": "500",
     "text-decoration": "none"
   },
+  heroSplit: {
+    "grid-template-columns": { "default": "minmax(0, 1fr)", "@media (min-width: 64rem)": "minmax(0, 1fr) minmax(0, 0.8fr)" },
+    "align-items": "center",
+  },
   "hero": {
     "position": "relative",
     "isolation": "isolate",
@@ -2497,6 +2501,42 @@ export const marketingStyles = stylex.create({
     },
     "text-decoration": "none"
   },
+  "cardIcon": {
+    "display": "grid",
+    "grid-template-columns": "3.5rem minmax(0, 1fr)",
+    "align-items": "center",
+    "gap": "1rem",
+    "padding": "1.125rem",
+    "outline": {
+      "default": null,
+      ":focus-visible": "2px solid var(--hraness-marketing-ink)"
+    },
+    "outline-offset": {
+      "default": null,
+      ":focus-visible": "3px"
+    }
+  },
+  "card__icon": {
+    "display": "flex",
+    "align-items": "center",
+    "justify-content": "center",
+    "inline-size": "3.5rem",
+    "block-size": "3.5rem",
+    "min-inline-size": "0",
+    "pointer-events": "none"
+  },
+  "card__copy": {
+    "display": "grid",
+    "align-content": "center",
+    "min-inline-size": "0",
+    "gap": "0.35rem"
+  },
+  "cardMetaIcon": {
+    "overflow": "visible",
+    "min-block-size": "0",
+    "max-block-size": "none",
+    "overflow-wrap": "anywhere"
+  },
   "card__art": {
     "display": "flex",
     "flex-grow": "0",
@@ -4427,10 +4467,12 @@ const recipes = {
   "hraness-marketing-trust-item__label": { "default": marketingStyles.trust_item__label },
   "hraness-marketing-trust-item__detail": { "default": marketingStyles.trust_item__detail },
   "hraness-marketing-card-row": { "default": marketingStyles.card_row },
-  "hraness-marketing-card": { "default": marketingStyles.card },
+  "hraness-marketing-card": { "default": marketingStyles.card, "icon": [marketingStyles.card, marketingStyles.cardIcon] },
+  "hraness-marketing-card__icon": { "default": marketingStyles.card__icon },
+  "hraness-marketing-card__copy": { "default": marketingStyles.card__copy },
   "hraness-marketing-card__art": { "default": marketingStyles.card__art },
   "hraness-marketing-card__title": { "default": marketingStyles.card__title },
-  "hraness-marketing-card__meta": { "default": marketingStyles.card__meta },
+  "hraness-marketing-card__meta": { "default": marketingStyles.card__meta, "icon": [marketingStyles.card__meta, marketingStyles.cardMetaIcon] },
   "hraness-marketing-card__body": { "default": marketingStyles.card__body },
   "hraness-marketing-quote-grid": { "default": marketingStyles.quote_grid },
   "hraness-marketing-quote": { "default": marketingStyles.quote },
@@ -4518,6 +4560,12 @@ export function marketingClassName(
   return [hook, stylex.props(selected,
     hook === "hraness-marketing-action" && marketingStyles.actionFocus,
     hook === "hraness-marketing-question" && questionMarker).className, caller]
+    .filter((value) => value !== undefined && value.length > 0).join(" ");
+}
+
+/** Compose the explicit hero layout without duplicating tone recipes. */
+export function marketingHeroClassName(caller: string | undefined, tone: "paper" | "accent", split: boolean): string {
+  return ["hraness-marketing-hero", stylex.props(tone === "accent" ? marketingStyles.heroAccent : marketingStyles.hero, split && marketingStyles.heroSplit).className, caller]
     .filter((value) => value !== undefined && value.length > 0).join(" ");
 }
 

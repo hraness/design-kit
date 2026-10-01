@@ -13,7 +13,7 @@ import {
   mixPaletteColor,
   paletteContrast,
   readablePaletteColor
-} from "./chunk-vst6p4wd.js";
+} from "./chunk-sabcr66p.js";
 
 // src/palettes.ts
 var designPalettes = ["catppuccin", "gruvbox", "rose-pine", "tokyo-night", "paper"];

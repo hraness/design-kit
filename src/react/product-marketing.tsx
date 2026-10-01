@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { FoilMark } from "./foil-mark.js";
 import { SyntaxCode } from "./syntax-code.js";
-import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant } from "./product-marketing.stylex.js";
+import { marketingClassName as classNames, marketingColumnClassName, marketingFactCellVariant, marketingHeroClassName } from "./product-marketing.stylex.js";
 import type { MarketingColumnCount } from "./product-marketing.stylex.js";
 
 export type { MarketingColumnCount } from "./product-marketing.stylex.js";
@@ -207,18 +207,21 @@ export function MarketingMain({
   );
 }
 
-export interface MarketingCardItem {
-  readonly art?: ReactNode;
+/** A compact identity icon and a full-width illustration are separate card layouts. */
+type MarketingCardVisual =
+  | Readonly<{ art?: ReactNode; icon?: never }>
+  | Readonly<{ art?: never; icon: ReactNode }>;
+
+export type MarketingCardItem = MarketingCardVisual & Readonly<{
   readonly href?: string;
   readonly meta?: ReactNode;
   readonly title: string;
-}
+}>;
 
 /**
  * Stretching product card row. Direct children share the tallest item's
- * height. Meta sits in a reserved two-line block; titles wrap without
- * clamping. Per-card art wells clip overflow so a logo surface cannot
- * paint through the gutter.
+ * height. Icon cards place complete copy beside a compact mark; illustration
+ * cards reserve a two-line meta block. Titles wrap without clamping.
  */
 export function MarketingCardRow({
   ariaLabel,
@@ -243,10 +246,7 @@ export function MarketingCardRow({
       {cards?.map((card) => (
         <MarketingCard
           key={card.title}
-          title={card.title}
-          {...(card.art === undefined ? {} : { art: card.art })}
-          {...(card.href === undefined ? {} : { href: card.href })}
-          {...(card.meta === undefined ? {} : { meta: card.meta })}
+          {...card}
         />
       ))}
       {children}
@@ -278,33 +278,37 @@ export function MarketingCard({
   children,
   className,
   href,
+  icon,
   meta,
   title,
-}: Readonly<{
-  art?: ReactNode;
+}: MarketingCardItem & Readonly<{
   children?: ReactNode;
   className?: string;
-  href?: string;
-  meta?: ReactNode;
-  title: string;
 }>) {
-  const body = (
-    <>
-      {isPresentNode(art) ? <MarketingCardArt>{art}</MarketingCardArt> : null}
-      <h3 className={classNames("hraness-marketing-card__title")}>{title}</h3>
-      {meta === undefined || meta === "" ? null : <p className={classNames("hraness-marketing-card__meta")}>{meta}</p>}
-      {isPresentNode(children) ? <div className={classNames("hraness-marketing-card__body")}>{children}</div> : null}
-    </>
-  );
+  const hasIcon = isPresentNode(icon);
+  if (hasIcon && isPresentNode(art)) throw new RangeError("Marketing cards accept either icon or art, not both.");
+  const copy = <>
+    <h3 className={classNames("hraness-marketing-card__title")}>{title}</h3>
+    {isPresentNode(meta) ? <p className={classNames("hraness-marketing-card__meta", undefined, hasIcon ? "icon" : "default")}>{meta}</p> : null}
+    {isPresentNode(children) ? <div className={classNames("hraness-marketing-card__body")}>{children}</div> : null}
+  </>;
+  const body = hasIcon ? <>
+    <div aria-hidden="true" className={classNames("hraness-marketing-card__icon")}>{icon}</div>
+    <div className={classNames("hraness-marketing-card__copy")}>{copy}</div>
+  </> : <>
+    {isPresentNode(art) ? <MarketingCardArt>{art}</MarketingCardArt> : null}
+    {copy}
+  </>;
+  const cardClassName = classNames("hraness-marketing-card", className, hasIcon ? "icon" : "default");
   if (href === undefined) {
     return (
-      <article className={classNames("hraness-marketing-card", className)} data-hraness-marketing="card">
+      <article className={cardClassName} data-hraness-marketing="card" data-layout={hasIcon ? "icon" : undefined}>
         {body}
       </article>
     );
   }
   return (
-    <a className={classNames("hraness-marketing-card", className)} data-hraness-marketing="card" href={href}>
+    <a className={cardClassName} data-hraness-marketing="card" data-layout={hasIcon ? "icon" : undefined} href={href}>
       {body}
     </a>
   );
@@ -541,13 +545,15 @@ export interface ProductHeroProps {
   readonly facts?: readonly MarketingFact[];
   /** Static fact columns without inline styles; omission uses the facts length. Mobile stays two columns. */
   readonly factsColumns?: MarketingColumnCount;
-  /** A product frame or other proof rendered full width below the copy. */
+  /** A product frame below the copy, or beside it in the split layout. */
   readonly frame?: ReactNode;
   readonly heading: string;
   readonly headingId: string;
   readonly headingLevel?: MarketingHeadingLevel;
   /** An install command or installer selector directly below the summary. */
   readonly install?: ReactNode;
+  /** Split copy and frame into two columns on wide screens. */
+  readonly layout?: "stack" | "split";
   readonly name: string;
   /** Product-owned notice after the copy boundary, without an added wrapper. */
   readonly notice?: ReactNode;
@@ -574,18 +580,22 @@ export function ProductHero({
   headingId,
   headingLevel = 1,
   install,
+  layout = "stack",
   name,
   notice,
   proof,
   summary,
   tone = "paper",
 }: Readonly<ProductHeroProps>) {
+  if (layout !== "stack" && layout !== "split") throw new RangeError("Hero layout must be stack or split.");
+  const split = layout === "split" && isPresentNode(frame);
   return (
     <header
       aria-labelledby={headingId}
-      className={classNames("hraness-marketing-hero", className, tone === "accent" ? "accent" : "default")}
+      className={marketingHeroClassName(className, tone, split)}
       data-align={align}
       data-hraness-marketing="hero"
+      data-layout={split ? "split" : undefined}
       data-tone={tone}
     >
       <div className={classNames("hraness-marketing-hero__copy", undefined, align === "start" ? "start" : "default")}>

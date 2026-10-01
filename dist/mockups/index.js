@@ -141,6 +141,7 @@ function BrowserWindow({
 }
 var TERMINAL_KINDS = new Set(["input", "output", "comment"]);
 function TerminalFrame({
+  density = "standard",
   fade,
   height,
   lines,
@@ -148,6 +149,8 @@ function TerminalFrame({
   title = "Terminal",
   ...root
 }) {
+  if (density !== "standard" && density !== "presentation")
+    throw new RangeError("Terminal density must be standard or presentation.");
   for (const line of lines) {
     if (!TERMINAL_KINDS.has(line.kind))
       throw new TypeError(`Unknown terminal line kind ${JSON.stringify(line.kind)}.`);
@@ -173,6 +176,7 @@ function TerminalFrame({
         }),
         /* @__PURE__ */ jsx("div", {
           className: "hkm-page hkm-terminal-body",
+          "data-hkm-density": density === "presentation" ? density : undefined,
           "data-hkm-fade": fades ? "" : undefined,
           style: pageStyle(height),
           children: /* @__PURE__ */ jsxs("div", {
