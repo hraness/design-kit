@@ -34,6 +34,12 @@ Forced-color overrides depend on the serialized theme selectors. The pinned Styl
 
 Product facts are the one data exception to product neutrality. The reserved `./portfolio` subpath will carry generated public portfolio facts for article and marketing consumers, with no product-specific components; [[plans/article-layer-and-portfolio-subpath|the article layer plan]] records its design.
 
+## Showcase measurement
+
+Filled showcases measure complete authored states in an owned DOM copy, then fit terminal text synchronously. Consumer motion rules must not affect that calculation. A global reduced-motion reset that sets `transition-duration: .01ms !important` can introduce an all-property transition even where a component declares none. The copy then reports its previous font and frame dimensions during the fitting loop, while the live terminal receives an oversized font.
+
+Design Kit suppresses transitions and animations with inline important declarations on the clone and its descendants before insertion. Those declarations last through both natural-height measurement and font fitting; removing a phase marker must not restore consumer motion. The live tree keeps its authored styles, and the copy is removed in `finally`. The browser regression includes the global reset, a nonterminal initial surface, the first terminal opening without a mode change, resizing, and enlarged text. Consumer font clamps would hide the faulty measurement and weaken the shared readable-size contract.
+
 ## Related
 
 The normative rules remain in the root `AGENTS.md`. [[documentation-ownership|Documentation ownership]] explains how those rules relate to executable contracts and this pull-based context.

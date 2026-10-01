@@ -73,6 +73,6 @@ mount("showcase").render(<ModeShowcase caption={caption} modes={modes} status={(
 mount("steps").render(<StepThrough caption={caption} steps={steps} />);
 const filledModes = mount("fill-modes");
 window.addEventListener("mockups:unmount-mode-fill", () => filledModes.unmount(), { once: true });
-filledModes.render(<ModeShowcase fit="fill" height={280} modes={fillModes} options={fillOptions} surfaces={fillSurfaces} />);
+filledModes.render(<ModeShowcase fit="fill" height={280} initial={{ surface: "report", mode: "long", option: "full" }} modes={fillModes} options={fillOptions} surfaces={fillSurfaces} />);
 mount("fill-steps").render(<StepThrough fit="fill" minWidth={280} steps={fillSteps} />);
 requestAnimationFrame(() => requestAnimationFrame(() => { document.documentElement.dataset.ready = "true"; }));

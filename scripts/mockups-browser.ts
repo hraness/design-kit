@@ -134,7 +134,7 @@ try {
 
   const probes = ["light", "dark"].map((theme) => `<span class="hkm-system-selection-probe" data-hkm-theme="${theme}"></span><span class="hkm-system-disabled-probe" data-hkm-theme="${theme}"></span>`).join("");
   const page = (scheme: "light" | "dark", palette?: DesignPalette) => `<!doctype html><html lang="en"${palette === undefined ? "" : ` data-palette="${palette}" data-theme="${scheme}"`}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockups</title><link rel="stylesheet" href="/mockups.css">${palette === undefined ? "" : '<link rel="stylesheet" href="/palette.css">'}<link rel="stylesheet" href="/page-${scheme}.css"></head><body data-scheme="${scheme}">${fixture}<div id="showcase"></div><div id="steps"></div><div id="fill-steps"></div><div id="fill-modes"></div>${probes}<script type="module" src="/client-entry.js"></script></body></html>`;
-  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps, #fill-steps, #fill-modes { margin-top: 32px; } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
+  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps, #fill-steps, #fill-modes { margin-top: 32px; } @media (prefers-reduced-motion: reduce) { #fill-modes, #fill-modes *, #fill-steps, #fill-steps * { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch(request) {
     const url = new URL(request.url);
     const scheme = url.searchParams.get("scheme") === "dark" ? "dark" : "light";
@@ -383,11 +383,27 @@ try {
                 terminals, rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
                 hiddenFixtures: fixtures.filter((fixture) => fixture.hidden && fixture.inert && getComputedStyle(fixture).display === "none").length,
                 fixtures: fixtures.length, probes: root.querySelectorAll("[data-hkm-measuring]").length,
+                stages: root.querySelectorAll(".hkm-mode-stage").length,
+                liveMotionOverrides: [...stage.querySelectorAll<HTMLElement>("*")].filter((node) => node.style.getPropertyPriority("transition") === "important" || node.style.getPropertyPriority("animation") === "important").length,
                 sentinels: stage.querySelectorAll("[data-hkm-font-sentinel]").length,
                 scales: [...stage.querySelectorAll<HTMLElement>(".hkm-fit-inner")].filter((inner) => inner.closest("[data-hkm-measurement]") === null).map((inner) => getComputedStyle(inner).transform),
               };
             });
             const firstMode = await observeMode();
+            assert.equal(await tab.locator("#fill-modes").getByRole("tab", { name: "Report", exact: true }).getAttribute("aria-selected"), "true", `${label}: start on the nonterminal surface`);
+            await tab.locator("#fill-modes").getByRole("tab", { name: "Terminal", exact: true }).click();
+            const firstTerminal = await observeMode();
+            assert(firstTerminal.terminals.every((terminal) => terminal.font >= firstTerminal.rootFont && terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: first terminal opening fits before any mode or option change`);
+            assert(Math.abs(firstTerminal.height - firstMode.height) < 1, `${label}: first surface-only switch keeps the reserved height`);
+            await tab.locator("#fill-modes").getByRole("tab", { name: "Report", exact: true }).click();
+            await tab.setViewportSize({ width: width + 17, height: 900 });
+            await tab.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+            await tab.setViewportSize({ width, height: 900 });
+            await tab.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+            await tab.locator("#fill-modes").getByRole("tab", { name: "Terminal", exact: true }).click();
+            const resizedTerminal = await observeMode();
+            assert(Math.abs(resizedTerminal.height - firstMode.height) < 1 && resizedTerminal.terminals.every((terminal) => terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: returning from the nonterminal surface after resize preserves complete text`);
+            fillEvidence.push({ label: `mode-${label}/first-open-and-resize`, first: firstTerminal, resized: resizedTerminal });
             const modeStates = [];
             for (const mode of ["Short", "Long"]) for (const option of ["Normal", "Full"]) {
               await tab.locator("#fill-modes").getByRole("button", { name: mode, exact: true }).click();
@@ -402,6 +418,8 @@ try {
                 assert.equal(actual.fixtures, 8, `${stateLabel}: finite full-source combinations are reserved`);
                 assert.equal(actual.hiddenFixtures, actual.fixtures, `${stateLabel}: measurement fixtures remain hidden and inert`);
                 assert.equal(actual.probes, 0, `${stateLabel}: detached probes are removed`);
+                assert.equal(actual.stages, 1, `${stateLabel}: the font-fitting copy is removed after measurement`);
+                assert.equal(actual.liveMotionOverrides, 0, `${stateLabel}: measurement motion overrides never reach live surfaces`);
                 assert.equal(actual.sentinels, 1, `${stateLabel}: selection changes keep exactly one owned font observer`);
                 assert(actual.scales.every((scale) => scale === "none"), `${stateLabel}: readable content never scales down`);
                 for (const terminal of actual.terminals) {

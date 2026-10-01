@@ -364,6 +364,13 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   for (const node of probe.querySelectorAll("[data-hkm-animated]")) node.removeAttribute("data-hkm-animated");
   for (const body of probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
   for (const fixture of probe.querySelectorAll<HTMLElement>("[data-hkm-measurement]")) fixture.hidden = false;
+  // Even a reduced-motion reset can introduce tiny all-property transitions.
+  // Synchronous measurements need final styles throughout the owned copy,
+  // including after the natural-height phase removes its measuring marker.
+  for (const node of [probe, ...probe.querySelectorAll<HTMLElement>("*")]) {
+    node.style.setProperty("transition", "none", "important");
+    node.style.setProperty("animation", "none", "important");
+  }
   owner.append(probe);
   try {
     const naturalHeight = Math.max(minimumHeight, Math.ceil(probe.getBoundingClientRect().height));
