@@ -367,28 +367,33 @@ try {
             assert(sparse !== undefined && dense !== undefined, `${label}: both terminal densities are covered`);
             assert(sparse.font > dense.font, `${label}: sparse content receives larger type than dense content`);
             await tab.waitForSelector("#fill-modes [data-hkm-fitted]");
-            const observeMode = () => tab.locator("#fill-modes").evaluate((root) => {
-              const stage = root.querySelector<HTMLElement>(".hkm-mode-stage");
-              const active = stage?.querySelector<HTMLElement>('.hkm-mode-surface:not([data-hkm-measurement]):not([aria-hidden="true"])');
-              const frame = active?.querySelector<HTMLElement>(".hkm-window");
-              if (stage === null || stage === undefined || active === null || active === undefined || frame === null || frame === undefined) throw new Error("Missing filled mode surface");
-              const fixtures = [...stage.querySelectorAll<HTMLElement>("[data-hkm-measurement]")];
-              const terminals = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null).map((body) => ({
-                font: Number.parseFloat(getComputedStyle(body).fontSize), height: body.clientHeight, width: body.clientWidth,
-                scrollHeight: body.scrollHeight, scrollWidth: body.scrollWidth,
-              }));
-              return {
-                height: stage.getBoundingClientRect().height, width: stage.getBoundingClientRect().width,
-                frameHeight: frame.getBoundingClientRect().height, frameWidth: frame.getBoundingClientRect().width,
-                terminals, rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
-                hiddenFixtures: fixtures.filter((fixture) => fixture.hidden && fixture.inert && getComputedStyle(fixture).display === "none").length,
-                fixtures: fixtures.length, probes: root.querySelectorAll("[data-hkm-measuring]").length,
-                stages: root.querySelectorAll(".hkm-mode-stage").length,
-                liveMotionOverrides: [...stage.querySelectorAll<HTMLElement>("*")].filter((node) => node.style.getPropertyPriority("transition") === "important" || node.style.getPropertyPriority("animation") === "important").length,
-                sentinels: stage.querySelectorAll("[data-hkm-font-sentinel]").length,
-                scales: [...stage.querySelectorAll<HTMLElement>(".hkm-fit-inner")].filter((inner) => inner.closest("[data-hkm-measurement]") === null).map((inner) => getComputedStyle(inner).transform),
-              };
-            });
+            const observeMode = async (settle = true) => {
+              // The owned copy measures synchronously; live authored transitions
+              // settle at paint before geometry assertions read the actual frame.
+              if (settle) await tab.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+              return tab.locator("#fill-modes").evaluate((root) => {
+                const stage = root.querySelector<HTMLElement>(".hkm-mode-stage");
+                const active = stage?.querySelector<HTMLElement>('.hkm-mode-surface:not([data-hkm-measurement]):not([aria-hidden="true"])');
+                const frame = active?.querySelector<HTMLElement>(".hkm-window");
+                if (stage === null || stage === undefined || active === null || active === undefined || frame === null || frame === undefined) throw new Error("Missing filled mode surface");
+                const fixtures = [...stage.querySelectorAll<HTMLElement>("[data-hkm-measurement]")];
+                const terminals = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].filter((body) => body.closest("[data-hkm-measurement]") === null).map((body) => ({
+                  font: Number.parseFloat(getComputedStyle(body).fontSize), height: body.clientHeight, width: body.clientWidth,
+                  scrollHeight: body.scrollHeight, scrollWidth: body.scrollWidth,
+                }));
+                return {
+                  height: stage.getBoundingClientRect().height, width: stage.getBoundingClientRect().width,
+                  frameHeight: frame.getBoundingClientRect().height, frameWidth: frame.getBoundingClientRect().width,
+                  terminals, rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
+                  hiddenFixtures: fixtures.filter((fixture) => fixture.hidden && fixture.inert && getComputedStyle(fixture).display === "none").length,
+                  fixtures: fixtures.length, probes: root.querySelectorAll("[data-hkm-measuring]").length,
+                  stages: root.querySelectorAll(".hkm-mode-stage").length,
+                  liveMotionOverrides: [...stage.querySelectorAll<HTMLElement>("*")].filter((node) => node.style.getPropertyPriority("transition") === "important" || node.style.getPropertyPriority("animation") === "important").length,
+                  sentinels: stage.querySelectorAll("[data-hkm-font-sentinel]").length,
+                  scales: [...stage.querySelectorAll<HTMLElement>(".hkm-fit-inner")].filter((inner) => inner.closest("[data-hkm-measurement]") === null).map((inner) => getComputedStyle(inner).transform),
+                };
+              });
+            };
             const firstMode = await observeMode();
             assert.equal(await tab.locator("#fill-modes").getByRole("tab", { name: "Report", exact: true }).getAttribute("aria-selected"), "true", `${label}: start on the nonterminal surface`);
             await tab.locator("#fill-modes").getByRole("tab", { name: "Terminal", exact: true }).click();
@@ -444,11 +449,14 @@ try {
               const shortZoom = await observeMode();
               await tab.locator("#fill-modes").getByRole("button", { name: "Long", exact: true }).click();
               await tab.locator("#fill-modes").getByRole("button", { name: "Full", exact: true }).click();
+              const immediateLongZoom = await observeMode(false);
               const longZoom = await observeMode();
+              const stableLongZoom = await observeMode();
+              assert.deepEqual(stableLongZoom, longZoom, `${label}: consecutive painted geometry snapshots stay stable`);
               assert(shortZoom.height >= firstMode.height, `${label}: text zoom can enlarge the complete choice reservation`);
               assert(Math.abs(shortZoom.height - longZoom.height) < 1, `${label}: shortest to longest mode at 200% keeps the same stage`);
               assert(longZoom.terminals.every((terminal) => terminal.font >= 32 && terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: longest state preserves all text at 200%`);
-              fillEvidence.push({ label: `mode-${label}/200%`, short: shortZoom, long: longZoom });
+              fillEvidence.push({ label: `mode-${label}/200%`, short: shortZoom, immediate: immediateLongZoom, long: longZoom, stable: stableLongZoom });
               if (screenshots !== undefined) await tab.locator("#fill-modes").screenshot({ path: join(screenshots, `mode-fill-${scheme}-${width}-zoom.png`) });
               await tab.evaluate(() => {
                 document.documentElement.style.cssText = "font-size:100%;block-size:100vh;overflow:hidden";
@@ -485,9 +493,11 @@ try {
               await tab.locator("#fill-modes").getByRole("button", { name: "Long", exact: true }).click();
               await tab.locator("#fill-modes").getByRole("button", { name: "Full", exact: true }).click();
               const fixedLong = await observeMode();
+              const stableFixedLong = await observeMode();
+              assert.deepEqual(stableFixedLong, fixedLong, `${label}: fixed-shell painted geometry stays stable`);
               assert(Math.abs(fixedShort.height - fixedLong.height) < 1, `${label}: fixed-shell zoom preserves the complete choice maximum`);
               assert(fixedLong.terminals.every((terminal) => terminal.font >= 32 && terminal.scrollHeight <= terminal.height + 1 && terminal.scrollWidth <= terminal.width + 1), `${label}: rem sentinel refits all text in a fixed viewport shell`);
-              fillEvidence.push({ label: `mode-${label}/fixed-root-200%`, fixedEvent, short: fixedShort, long: fixedLong });
+              fillEvidence.push({ label: `mode-${label}/fixed-root-200%`, fixedEvent, short: fixedShort, long: fixedLong, stable: stableFixedLong });
               const retainedStage = await tab.locator("#fill-modes .hkm-mode-stage").elementHandle();
               assert(retainedStage !== null, `${label}: retain the owned stage for cleanup inspection`);
               await tab.evaluate(() => window.dispatchEvent(new Event("mockups:unmount-mode-fill")));
