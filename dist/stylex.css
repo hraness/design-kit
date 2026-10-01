@@ -3066,10 +3066,6 @@
     min-block-size: 2.75rem;
   }
 
-  .xd0akbl {
-    min-block-size: 2rem;
-  }
-
   .xo67i2s {
     min-block-size: 3.25rem;
   }
@@ -3090,12 +3086,16 @@
     min-block-size: var(--hraness-marketing-header-action-height, 2rem);
   }
 
-  .x1jqubh4 {
-    min-block-size: var(--hraness-marketing-header-height, 2.75rem);
+  .x5c9nq0 {
+    min-block-size: var(--hraness-marketing-header-control-target, 2rem);
   }
 
-  .x1qwoi4t {
-    min-block-size: var(--interactive-target-compact, 2.75rem);
+  .x5zky9q {
+    min-block-size: var(--hraness-marketing-header-control-target, var(--interactive-target-compact, 2.75rem));
+  }
+
+  .x1jqubh4 {
+    min-block-size: var(--hraness-marketing-header-height, 2.75rem);
   }
 
   .x1j3ipif {
@@ -3114,10 +3114,6 @@
     min-inline-size: 0;
   }
 
-  .x1o8ym9z {
-    min-inline-size: 2rem;
-  }
-
   .xze7o54 {
     min-inline-size: 40rem;
   }
@@ -3134,8 +3130,12 @@
     min-inline-size: 9rem;
   }
 
-  .x9hh0qe {
-    min-inline-size: var(--interactive-target-compact, 2.75rem);
+  .xye2cm2 {
+    min-inline-size: var(--hraness-marketing-header-control-target, 2rem);
+  }
+
+  .xq5ipov {
+    min-inline-size: var(--hraness-marketing-header-control-target, var(--interactive-target-compact, 2.75rem));
   }
 
   .xz1t8dp {
@@ -4202,15 +4202,23 @@
     .xn27wch.xn27wch {
       min-block-size: max(2.75rem,var(--hraness-marketing-header-action-height, 2rem));
     }
+  }
 
+  @media (pointer: coarse) {
+    .xczs0xf.xczs0xf {
+      min-block-size: max(3rem,var(--hraness-marketing-header-control-target, 3rem));
+    }
+  }
+
+  @media (width <= 48rem) {
     .x1l2grcz.x1l2grcz {
       min-inline-size: 0;
     }
   }
 
   @media (pointer: coarse) {
-    .x11je3w3.x11je3w3 {
-      min-inline-size: 3rem;
+    .x12c0uzw.x12c0uzw {
+      min-inline-size: max(3rem,var(--hraness-marketing-header-control-target, 3rem));
     }
   }
 
@@ -5697,6 +5705,10 @@
 
 .xogmzgw {
   --hraness-marketing-grid-columns: initial;
+}
+
+.xlhppvv {
+  --hraness-marketing-header-control-target: 2.75rem;
 }
 
 .xphms39 {

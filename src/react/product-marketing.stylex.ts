@@ -88,6 +88,7 @@ export const marketingStyles = stylex.create({
     "-webkit-font-smoothing": "antialiased"
   },
   "header": {
+    "--hraness-marketing-header-control-target": "2.75rem",
     "--hraness-sticky-offset": "calc(var(--hraness-marketing-header-height, 2.75rem) + 1px)",
     "color": {
       "default": "var(--hraness-marketing-ink)",
