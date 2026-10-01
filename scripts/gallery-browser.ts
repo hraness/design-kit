@@ -144,6 +144,49 @@ function invariant(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
 }
 
+async function requirePublicationLinks(page: Page, label: string, forced = false): Promise<void> {
+  for (const selector of [
+    ".plain-publication__article-body a",
+    ".plain-publication__sources a",
+    "#articles > .plain-publication__provenance a",
+    ".hraness-marketing-comparison__note a",
+    ...(forced ? [".plain-publication__byline a"] : []),
+  ]) {
+    const link = page.locator(selector).first();
+    await link.blur();
+    await page.mouse.move(0, 0);
+    for (const state of ["rest", "hover", "focus"] as const) {
+      if (state === "hover") await link.hover();
+      if (state === "focus") {
+        await page.mouse.move(0, 0);
+        await page.keyboard.press("Tab");
+        await link.focus();
+      }
+      // Observe the settled color rather than sampling an in-flight transition.
+      // The assertion below retains the final computed style on timeout.
+      await page.waitForFunction(({ selector, bright }) => {
+        const element = document.querySelector(selector);
+        if (!element) return false;
+        const style = getComputedStyle(element);
+        return bright ? style.textDecorationColor === style.color : style.textDecorationColor !== style.color;
+      }, { selector, bright: forced || state !== "rest" }, { timeout: 2_000 }).catch(() => undefined);
+      const style = await link.evaluate((element) => {
+        const computed = getComputedStyle(element);
+        return { color: computed.color, decoration: computed.textDecorationLine,
+          decorationColor: computed.textDecorationColor, decorationStyle: computed.textDecorationStyle,
+          hovered: element.matches(":hover"), focused: element.matches(":focus-visible"),
+          transition: computed.transitionProperty, duration: computed.transitionDuration };
+      });
+      invariant(style.decoration.includes("underline") && style.decorationStyle === "dotted",
+        `${label}: ${selector} lost its dotted underline at ${state}: ${JSON.stringify(style)}`);
+      invariant(forced || state !== "rest" ? style.decorationColor === style.color : style.decorationColor !== style.color,
+        `${label}: ${selector} lost its ${forced ? "system" : state === "rest" ? "muted" : "interactive"} underline color at ${state}: ${JSON.stringify(style)}`);
+    }
+    await link.blur();
+    await page.mouse.move(0, 0);
+  }
+}
+
 // Exact pre-migration charts.css from 87b3eada2e9c1884f6293274f844b08a80c9917d.
 // SHA-256: 406f148b88ae75131ebcf4e4bba63e6b4c4013dc74f863135c2ce9f3384f8c8d.
 // This oracle never imports recipes, manifests, or generated component CSS.
@@ -2580,6 +2623,8 @@ try {
           `${layout.id}: plain links do not reveal an underline on interaction`,
         );
 
+        await requirePublicationLinks(page, layout.id);
+
         const appearanceTrigger = page.getByRole("button", { name: "Appearance: System" });
         await appearanceTrigger.focus();
         await page.keyboard.press("Enter");
@@ -2725,6 +2770,7 @@ try {
       await forcedPage.goto(`http://${server.hostname}:${String(server.port)}/`, {
         waitUntil: "networkidle",
       });
+      await requirePublicationLinks(forcedPage, "forced colors", true);
       await forcedPage.locator('.hraness-design-theme-toggle[data-ready="true"]').waitFor();
       invariant(await forcedPage.locator("[data-gallery-glass-top-bar]").evaluateAll((headers) => headers.length === 2 && headers.every((header) => getComputedStyle(header).backdropFilter === "none")), "Forced colors must remove glass header blur.");
       await forcedPage.getByRole("button", { name: "Appearance: System" }).focus();

@@ -725,8 +725,10 @@
   text-underline-offset: 0.18em;
 }
 
-.plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a:is(:hover, :focus-visible) {
-  text-decoration-color: currentColor;
+@media (forced-colors: none) {
+  .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a:is(:hover, :focus-visible) {
+    text-decoration-color: currentColor;
+  }
 }
 
 .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body pre {
@@ -952,6 +954,7 @@
     background: Canvas;
   }
 
+  .plain-site.plain-publication.plain-publication--embedded .plain-publication__byline a,
   .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a {
     text-decoration-color: LinkText;
   }

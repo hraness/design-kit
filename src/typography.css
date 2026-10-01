@@ -94,7 +94,7 @@
 /* Prose and secondary text actions share a quiet, persistent link affordance. */
 .hraness-text-link,
 .hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])),
-.plain-publication__article-body :where(a:not([role="button"], [data-emphasis], [data-foil])),
+:is(.plain-publication__article-body, .plain-publication__sources, .plain-publication__provenance, .hraness-marketing-comparison__note) :where(a:not([role="button"], [data-emphasis], [data-foil])),
 .plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]) {
   text-decoration-line: underline;
   text-decoration-style: dotted;
@@ -103,16 +103,20 @@
   text-underline-offset: 0.2em;
 }
 
-.hraness-text-link:is(:hover, :focus-visible),
-.hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])):is(:hover, :focus-visible),
-.plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]):is(:hover, :focus-visible) {
-  text-decoration-color: currentColor;
+@media (forced-colors: none) {
+  .hraness-text-link:is(:hover, :focus-visible),
+  .hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])):is(:hover, :focus-visible),
+  :is(.plain-publication__article-body, .plain-publication__sources, .plain-publication__provenance, .hraness-marketing-comparison__note) :where(a:not([role="button"], [data-emphasis], [data-foil])):is(:hover, :focus-visible),
+  .plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]):is(:hover, :focus-visible) {
+    text-decoration-color: currentColor;
+  }
 }
 
 @media (forced-colors: active) {
   .hraness-text-link,
-  .hraness-prose :where(a),
-  .plain-page :where(p, li, dd, dt, figcaption) a {
+  .hraness-prose :where(a:not([role="button"], [data-emphasis], [data-foil])),
+  :is(.plain-publication__article-body, .plain-publication__sources, .plain-publication__provenance, .hraness-marketing-comparison__note) :where(a:not([role="button"], [data-emphasis], [data-foil])),
+  .plain-page :where(p, li, dd, dt, figcaption) a:not([role="button"], [data-emphasis], [data-foil]) {
     text-decoration-color: LinkText;
   }
 }
