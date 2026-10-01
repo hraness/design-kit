@@ -6,9 +6,11 @@ export const productMarketingCoverage = [
   ["MarketingSiteHeader", ".hraness-marketing-header", 2],
   ["MarketingMain", ".hraness-marketing-main", 1],
   ["sticky sibling", "[data-hraness-sticky]", 1],
-  ["MarketingCardRow", ".hraness-marketing-card-row", 1],
-  ["MarketingCard", ".hraness-marketing-card", 2],
+  ["MarketingCardRow", ".hraness-marketing-card-row", 2],
+  ["MarketingCard", ".hraness-marketing-card", 4],
   ["MarketingCardArt", ".hraness-marketing-card__art", 2],
+  ["card icon", ".hraness-marketing-card__icon", 2],
+  ["card copy", ".hraness-marketing-card__copy", 2],
   ["MarketingSiteFooter", ".hraness-marketing-footer", 1],
   ["ProductHero", ".hraness-marketing-hero", 4],
   ["MarketingFlow", ".hraness-marketing-flow", 5],
@@ -105,7 +107,7 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       <MarketingMain>
       <div className="hraness-sticky-below-chrome" data-hraness-sticky>Index</div>
       {(["paper", "accent"] as const).flatMap((tone) => (["center", "start"] as const).map((align) => (
-        <ProductHero actions={actions} align={align} boundary="Local, optional sync." eyebrow="Reference tool"
+        <ProductHero layout={align === "start" ? "split" : "stack"} actions={actions} align={align} boundary="Local, optional sync." eyebrow="Reference tool"
           className={tone === "paper" && align === "start" ? "fixture-role-tokens" : ""}
           notice={tone === "paper" && align === "start" ? <p data-marketing-oracle="hero-notice">Consumer-owned notice.</p> : undefined}
           example="Ask for one inspectable receipt." facts={facts} heading="Keep every result visible."
@@ -157,6 +159,10 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       <MarketingCardRow ariaLabel="Release radar" cards={[
         { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#fixture", title: "Grok 4.7", meta: "First observed 21 September 2026." },
         { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="4" y="4" width="16" height="16" rx="4" /></svg>, href: "#quotes", title: "GLM 5.3 Flash", meta: "First observed 26 August 2026. Early DeepSWE 63.4% pass@1 across four runs on OpenRouter." },
+      ]} />
+      <MarketingCardRow ariaLabel="Icon comparisons" cards={[
+        { icon: <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" width="56" height="56"><circle cx="12" cy="12" r="8" /></svg>, href: "#fixture", title: "Local notes", meta: "Keep your notes on your own computer." },
+        { icon: <img alt="" src={fixtureMark} width="56" height="56" />, href: "#quotes", title: "Search across decisions", meta: "Find decisions in your notes and project history, including longer explanations that wrap on a phone." },
       ]} />
       <MarketingTrustBoundary heading="Make authority visible." headingId="trust" label="Trust" summary="No implicit sharing." items={[
         { label: "Local", detail: "Your source." }, { label: "Shared", detail: "An explicit receipt." },

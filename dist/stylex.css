@@ -109,6 +109,10 @@
     padding: 0;
   }
 
+  .x1aetswf {
+    padding: 1.125rem;
+  }
+
   .x194jd1b {
     padding: 1.1rem 7rem 1rem 1rem;
   }
@@ -1084,6 +1088,10 @@
     accent-color: var(--primary, Highlight);
   }
 
+  .xc26acl {
+    align-content: center;
+  }
+
   .xcdzlcm {
     align-content: space-between;
   }
@@ -1673,6 +1681,10 @@
 
   .x38bysi {
     block-size: 1rem;
+  }
+
+  .x1vlpzvb {
+    block-size: 3.5rem;
   }
 
   .x18o2qet {
@@ -2523,6 +2535,10 @@
     grid-template-columns: 2.25rem minmax(0, 1fr);
   }
 
+  .xrdwe0 {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+  }
+
   .xx9t13c {
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
@@ -2629,6 +2645,10 @@
 
   .x130h922 {
     inline-size: 2rem;
+  }
+
+  .x1pf0uk5 {
+    inline-size: 3.5rem;
   }
 
   .x6qm275 {
@@ -2964,6 +2984,10 @@
 
   .xwnj3u5 {
     max-block-size: min(38rem, 75dvh);
+  }
+
+  .x1vj640n {
+    max-block-size: none;
   }
 
   .xgyk9h7 {
@@ -4098,6 +4122,12 @@
   @media (width <= 48rem) {
     .x19m6iyc.x19m6iyc {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .x13f99nf.x13f99nf {
+      grid-template-columns: minmax(0, 1fr) minmax(0, .8fr);
     }
   }
 

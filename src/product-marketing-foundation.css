@@ -415,6 +415,13 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   z-index: 30;
 }
 
+/* Intrinsic media sizing is shared with raw HTML card icons. */
+.hraness-marketing-card__icon > :is(img, svg) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
 .hraness-marketing-card-row,
 .hraness-marketing-interface-grid,
 .hraness-marketing-trust-grid,
@@ -437,6 +444,11 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
  * backdrop hooks paints nothing and takes no space. */
 .hraness-marketing-hero-backdrop {
   display: none;
+}
+
+/* Supplemental proof belongs below both columns of a split hero. */
+.hraness-marketing-hero[data-layout="split"] > :where(.hraness-marketing-proof, .hraness-marketing-facts) {
+  grid-column: 1 / -1;
 }
 
 /* Keep all meaningful hero content above the inert decorative backdrop. */

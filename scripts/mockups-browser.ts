@@ -9,7 +9,7 @@ import { provisionedBrowserExecutable, verificationBrowserLaunchOptions } from "
 //
 // Set MOCKUPS_SCREENSHOTS=<dir> to keep a full-page screenshot per case.
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { chromium, type Page } from "playwright-core";
@@ -133,8 +133,8 @@ try {
   assert.equal(build.success, true, build.logs.map(String).join("\n"));
 
   const probes = ["light", "dark"].map((theme) => `<span class="hkm-system-selection-probe" data-hkm-theme="${theme}"></span><span class="hkm-system-disabled-probe" data-hkm-theme="${theme}"></span>`).join("");
-  const page = (scheme: "light" | "dark", palette?: DesignPalette) => `<!doctype html><html lang="en"${palette === undefined ? "" : ` data-palette="${palette}" data-theme="${scheme}"`}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockups</title><link rel="stylesheet" href="/mockups.css">${palette === undefined ? "" : '<link rel="stylesheet" href="/palette.css">'}<link rel="stylesheet" href="/page-${scheme}.css"></head><body data-scheme="${scheme}">${fixture}<div id="showcase"></div><div id="steps"></div>${probes}<script type="module" src="/client-entry.js"></script></body></html>`;
-  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps { margin-top: 32px; } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
+  const page = (scheme: "light" | "dark", palette?: DesignPalette) => `<!doctype html><html lang="en"${palette === undefined ? "" : ` data-palette="${palette}" data-theme="${scheme}"`}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mockups</title><link rel="stylesheet" href="/mockups.css">${palette === undefined ? "" : '<link rel="stylesheet" href="/palette.css">'}<link rel="stylesheet" href="/page-${scheme}.css"></head><body data-scheme="${scheme}">${fixture}<div id="showcase"></div><div id="steps"></div><div id="fill-steps"></div>${probes}<script type="module" src="/client-entry.js"></script></body></html>`;
+  const pageCss = (scheme: "light" | "dark") => `html { color-scheme: ${scheme}; } body { margin: 0; padding: 16px; background: Canvas; color: CanvasText; font: 16px system-ui, sans-serif; } [data-mockups-fixture] { display: grid; gap: 32px; } [data-mockups-fixture] section { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 24px; } figure { margin: 0; min-width: 0; } #showcase, #steps, #fill-steps { margin-top: 32px; } .hkm-system-selection-probe, .hkm-system-disabled-probe { position: absolute; visibility: hidden; forced-color-adjust: none; } .hkm-system-selection-probe { color: HighlightText; background: Highlight; } .hkm-system-disabled-probe { color: GrayText; background: ButtonFace; } .hkm-system-selection-probe[data-hkm-theme="light"], .hkm-system-disabled-probe[data-hkm-theme="light"] { color-scheme: light; } .hkm-system-selection-probe[data-hkm-theme="dark"], .hkm-system-disabled-probe[data-hkm-theme="dark"] { color-scheme: dark; }`;
   const server = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch(request) {
     const url = new URL(request.url);
     const scheme = url.searchParams.get("scheme") === "dark" ? "dark" : "light";
@@ -272,6 +272,82 @@ try {
         }
       }
       assert.equal(cases, 4, "Both page schemes at both widths must run");
+      const fillEvidence = [];
+      for (const scheme of ["light", "dark"] as const) {
+        for (const width of [320, 390, 768, 1440]) {
+          const label = `fill/${scheme}/${width}`;
+          const context = await browser.newContext({ viewport: { width, height: 900 }, colorScheme: scheme, reducedMotion: "reduce" });
+          const errors: string[] = [];
+          try {
+            const tab = await context.newPage();
+            tab.on("pageerror", (error) => errors.push(error.message));
+            tab.on("console", (message) => { if (message.type() === "error" || message.type() === "warning") errors.push(message.text()); });
+            await tab.goto(`http://127.0.0.1:${server.port}/?scheme=${scheme}`, { waitUntil: "networkidle" });
+            await tab.waitForSelector("#fill-steps [data-hkm-fitted]");
+            const observe = () => tab.locator("#fill-steps").evaluate((root) => {
+              const stage = root.querySelector(".hkm-step-stage");
+              const panel = root.querySelector('.hkm-step-panel[aria-hidden="false"]');
+              const frame = panel?.querySelector(".hkm-window");
+              if (stage === null || panel === null || frame === null || frame === undefined) throw new Error("Missing fill frame");
+              const inner = panel.querySelector(".hkm-fit-inner");
+              if (inner === null) throw new Error("Missing fill content");
+              return {
+                height: stage.getBoundingClientRect().height, frameHeight: frame.getBoundingClientRect().height,
+                width: stage.getBoundingClientRect().width, frameWidth: frame.getBoundingClientRect().width,
+                rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
+                scale: getComputedStyle(inner).transform,
+                probes: root.querySelectorAll("[data-hkm-measuring]").length,
+                terminals: [...root.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')].map((body) => ({
+                  font: Number.parseFloat(getComputedStyle(body).fontSize), height: body.clientHeight, scrollHeight: body.scrollHeight,
+                  width: body.clientWidth, scrollWidth: body.scrollWidth,
+                  wrappedRows: [...body.querySelectorAll<HTMLElement>(".hkm-terminal-line")].map((line) => Math.ceil((line.getBoundingClientRect().height - 0.5) / Number.parseFloat(getComputedStyle(line).lineHeight))),
+                })),
+              };
+            });
+            const initial = await observe();
+            await tab.locator("#fill-steps .hkm-step-stage").evaluate((node) => {
+              let changes = 0;
+              const observer = new MutationObserver((records) => { changes += records.length; });
+              observer.observe(node, { attributes: true, attributeFilter: ["style", "data-hkm-fitted"] });
+              Object.assign(node, { fittingMutations: () => { observer.disconnect(); return changes; } });
+            });
+            for (let step = 0; step < 3; step += 1) {
+              if (step > 0) await tab.locator("#fill-steps").getByRole("button", { name: "Next" }).click();
+              const actual = await observe();
+              assert(Math.abs(actual.height - initial.height) < 1, `${label}: changing steps keeps the stage stable`);
+              assert(Math.abs(actual.frameHeight - (actual.height - 2)) < 1, `${label}: active frame fills the stage`);
+              assert(Math.abs(actual.frameWidth - (actual.width - 2)) < 1, `${label}: active frame fills available width`);
+              assert.equal(actual.scale, "none", `${label}: presentation text never scales down`);
+              assert.deepEqual(actual.terminals[0]?.wrappedRows, [1, 1, 1], `${label}: growing sparse type adds no wrapping`);
+              assert.equal(actual.probes, 0, `${label}: measurement clone is removed`);
+              for (const terminal of actual.terminals) {
+                assert(terminal.font >= actual.rootFont, `${label}: type respects the rem floor`);
+                assert(terminal.font <= actual.rootFont * 4, `${label}: type respects the presentation maximum`);
+                assert(terminal.scrollHeight <= terminal.height + 1, `${label}: full terminal text fits vertically`);
+                assert(terminal.scrollWidth <= terminal.width + 1, `${label}: full terminal text wraps horizontally`);
+              }
+              if (screenshots !== undefined) await tab.locator("#fill-steps").screenshot({ path: join(screenshots, `fill-${scheme}-${width}-${step}.png`) });
+            }
+            const fittingMutations = await tab.locator("#fill-steps .hkm-step-stage").evaluate((node) => (node as HTMLDivElement & { fittingMutations: () => number }).fittingMutations());
+            assert.equal(fittingMutations, 0, `${label}: step animation does not refit the stage or repeat fitting observers`);
+            fillEvidence.push({ label, ...initial, fittingMutations });
+            const [sparse, dense] = initial.terminals;
+            assert(sparse !== undefined && dense !== undefined, `${label}: both terminal densities are covered`);
+            assert(sparse.font > dense.font, `${label}: sparse content receives larger type than dense content`);
+            if (width === 390) {
+              await tab.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
+              await tab.waitForFunction(() => [...document.querySelectorAll<HTMLElement>('#fill-steps [data-hkm-density="presentation"]')].every((body) => Number.parseFloat(getComputedStyle(body).fontSize) >= 32 && body.scrollHeight <= body.clientHeight + 1));
+              const zoomed = await observe();
+              assert(zoomed.height >= initial.height, `${label}: larger user text can grow the natural stage`);
+              assert.equal(zoomed.scale, "none");
+            }
+          } finally {
+            await context.close();
+            assert.deepEqual(errors, [], `${label}: browser errors`);
+          }
+        }
+      }
+      if (screenshots !== undefined) await writeFile(join(screenshots, "fill-evidence.json"), JSON.stringify(fillEvidence, null, 2) + "\n");
       let paletteCases = 0;
       for (const palette of designPalettes) {
         for (const mode of ["light", "dark"] as const) {
@@ -308,7 +384,7 @@ try {
         }
       }
       assert.equal(paletteCases, designPalettes.length * 2, "Every supported palette and mode must run");
-      console.log("Mockups browser checks passed: 11 frames fit phone and desktop in both themes; client tabs follow the keyboard model; selected, disabled, and completed controls meet 4.5:1 contrast with visible keyboard focus across standalone themes, all 5 palettes in both modes, and custom site accents; forced colors preserve system selection pairs.");
+      console.log("Mockups browser checks passed: 11 frames fit phone and desktop in both themes; client tabs follow the keyboard model; filled walkthroughs fit sparse and dense content at four widths, retain stable frames, and honor 200% text zoom; selected, disabled, and completed controls meet 4.5:1 contrast with visible keyboard focus across standalone themes, all 5 palettes in both modes, and custom site accents; forced colors preserve system selection pairs.");
     } finally { await browser.close(); }
   } finally { await server.stop(true); }
 } finally { await rm(work, { recursive: true, force: true }); }

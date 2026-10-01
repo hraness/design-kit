@@ -226,7 +226,7 @@ async function assertSolidMarks(page: Page, label: string): Promise<void> {
       paints,
     };
   }));
-  assert.equal(marks.length, 4, `${label}: brand and midpoint fallback fixtures render`);
+  assert.equal(marks.length, 9, `${label}: all messaging, runtime, brand, and midpoint fallback fixtures render`);
   for (const mark of marks) {
     assert.equal(mark.image, "none", `${label}/${mark.name}: solid foreground is paired to the actual opaque base fill`);
     assert.equal(mark.shadow, "none", `${label}/${mark.name}: solid paint has no shadow overlay`);

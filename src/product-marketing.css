@@ -707,6 +707,17 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   padding-block: var(--hraness-marketing-hero-space, clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem));
 }
 
+.hraness-marketing-hero[data-layout="split"] {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+@media (min-width: 64rem) {
+  .hraness-marketing-hero[data-layout="split"] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  }
+}
+
 /* Hero backdrops are retired. Hand-authored markup that still ships the old
  * backdrop hooks paints nothing and takes no space. */
 .hraness-marketing-hero-backdrop {
@@ -1698,6 +1709,49 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   box-shadow: var(--hraness-marketing-surface-shadow);
 }
 
+.hraness-marketing-card[data-layout="icon"] {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem;
+}
+
+.hraness-marketing-card[data-layout="icon"]:focus-visible {
+  outline: 2px solid var(--hraness-marketing-ink);
+  outline-offset: 3px;
+}
+
+.hraness-marketing-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  min-inline-size: 0;
+  pointer-events: none;
+}
+
+.hraness-marketing-card__icon > :is(img, svg) {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.hraness-marketing-card__copy {
+  display: grid;
+  align-content: center;
+  min-inline-size: 0;
+  gap: 0.35rem;
+}
+
+.hraness-marketing-card[data-layout="icon"] .hraness-marketing-card__meta {
+  overflow: visible;
+  min-block-size: 0;
+  max-block-size: none;
+  overflow-wrap: anywhere;
+}
+
 .hraness-marketing-card__art {
   display: flex;
   flex: 0 0 auto;
@@ -2264,6 +2318,11 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
     -webkit-text-fill-color: CanvasText;
     filter: none;
   }
+}
+
+/* Supplemental proof belongs below both columns of a split hero. */
+.hraness-marketing-hero[data-layout="split"] > :where(.hraness-marketing-proof, .hraness-marketing-facts) {
+  grid-column: 1 / -1;
 }
 
 /* Keep all meaningful hero content above the inert decorative backdrop. */

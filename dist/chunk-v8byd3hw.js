@@ -30,7 +30,7 @@ import {
   providerMark,
   providerMarkFallback,
   providerMarkOnAccent
-} from "./chunk-vst6p4wd.js";
+} from "./chunk-sabcr66p.js";
 
 // src/react/provider-mark.stylex.ts
 import * as stylex from "@stylexjs/stylex";
@@ -681,6 +681,11 @@ var marketingStyles = {
     kLh5Sq: "x1qzg9v8",
     ko3Kzr: "xk50ysn",
     kyVV8l: "x1hl2dhg",
+    $$css: true
+  },
+  heroSplit: {
+    kg9kkx: "x1mkdm3x x13f99nf",
+    kkeX5w: "x6s0dn4",
     $$css: true
   },
   hero: {
@@ -2331,6 +2336,40 @@ var marketingStyles = {
     kyVV8l: "x1hl2dhg",
     $$css: true
   },
+  cardIcon: {
+    k1xSpc: "xrvj5dj",
+    kg9kkx: "xrdwe0",
+    kkeX5w: "x6s0dn4",
+    kOIVth: "x8fetqu",
+    kmVPX3: "x1aetswf",
+    kI3sdo: "xg81e2w",
+    kVtf5F: "xj3ae5l",
+    $$css: true
+  },
+  card__icon: {
+    k1xSpc: "x78zum5",
+    kkeX5w: "x6s0dn4",
+    kGmCso: "xl56j7k",
+    kULEZF: "x1pf0uk5",
+    kLWsYc: "x1vlpzvb",
+    kdYMnH: "xesnm00",
+    kLXb5Q: "x47corl",
+    $$css: true
+  },
+  card__copy: {
+    k1xSpc: "xrvj5dj",
+    kNk6WL: "xc26acl",
+    kdYMnH: "xesnm00",
+    kOIVth: "x73f2yu",
+    $$css: true
+  },
+  cardMetaIcon: {
+    kVQacm: "x1rea2x4",
+    kVQ08L: "x159srwy",
+    kLO5vc: "x1vj640n",
+    k7QVf6: "xj0a0fe",
+    $$css: true
+  },
   card__art: {
     k1xSpc: "x78zum5",
     kVZ5iK: "x1c4vz4f",
@@ -3612,7 +3651,14 @@ var recipes = {
     default: marketingStyles.card_row
   },
   "hraness-marketing-card": {
-    default: marketingStyles.card
+    default: marketingStyles.card,
+    icon: [marketingStyles.card, marketingStyles.cardIcon]
+  },
+  "hraness-marketing-card__icon": {
+    default: marketingStyles.card__icon
+  },
+  "hraness-marketing-card__copy": {
+    default: marketingStyles.card__copy
   },
   "hraness-marketing-card__art": {
     default: marketingStyles.card__art
@@ -3621,7 +3667,8 @@ var recipes = {
     default: marketingStyles.card__title
   },
   "hraness-marketing-card__meta": {
-    default: marketingStyles.card__meta
+    default: marketingStyles.card__meta,
+    icon: [marketingStyles.card__meta, marketingStyles.cardMetaIcon]
   },
   "hraness-marketing-card__body": {
     default: marketingStyles.card__body
@@ -3764,6 +3811,22 @@ function marketingClassName(hook, caller, variant = "default") {
   const selected = variants[variant];
   return [hook, stylex3.props(selected, hook === "hraness-marketing-action" && marketingStyles.actionFocus, hook === "hraness-marketing-question" && questionMarker).className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
 }
+function marketingHeroClassName(caller, tone, split) {
+  return ["hraness-marketing-hero", {
+    0: {
+      className: "x1n2onr6 xc8icb0 xtylnni xrtw95r x19vpta5 xesnm00 xvueqy4 xrvj5dj x1kfhdh0 xgu4rd8"
+    },
+    2: {
+      className: "x1n2onr6 xc8icb0 x102ovp5 xs5hli xrtw95r x19vpta5 xesnm00 xvueqy4 xrvj5dj x1kfhdh0 xgu4rd8 xvor1dj x9yvj25 x18o3ruo xhobzj1 x1y4qj14 x2c5uud x103pssi x1ug5rqp x182nak8 x1pjo12s x12koezg xzln6ae x1u7o2vf x1tzqu68 x1fdtg7e xcrev8p x5kubdt xwaqzdf xmdugnb x18z9243 xv2i73l xtthz4l xug5yj x1cfjbvc x1a4igh8 xsdpl10 x1sz4vi2 x4aylkk"
+    },
+    1: {
+      className: "x1n2onr6 xc8icb0 xtylnni xrtw95r x19vpta5 xesnm00 xvueqy4 xrvj5dj x1kfhdh0 xgu4rd8 x1mkdm3x x13f99nf x6s0dn4"
+    },
+    3: {
+      className: "x1n2onr6 xc8icb0 x102ovp5 xs5hli xrtw95r x19vpta5 xesnm00 xvueqy4 xrvj5dj x1kfhdh0 xgu4rd8 xvor1dj x9yvj25 x18o3ruo xhobzj1 x1y4qj14 x2c5uud x103pssi x1ug5rqp x182nak8 x1pjo12s x12koezg xzln6ae x1u7o2vf x1tzqu68 x1fdtg7e xcrev8p x5kubdt xwaqzdf xmdugnb x18z9243 xv2i73l xtthz4l xug5yj x1cfjbvc x1a4igh8 xsdpl10 x1sz4vi2 x4aylkk x1mkdm3x x13f99nf x6s0dn4"
+    }
+  }[!!(tone === "accent") << 1 | !!split << 0].className, caller].filter((value) => value !== undefined && value.length > 0).join(" ");
+}
 function marketingFactCellVariant(index) {
   return index === 0 ? "default" : index < 2 ? "later" : index % 2 === 0 ? "row-odd" : "row";
 }
@@ -3902,16 +3965,7 @@ function MarketingCardRow({
     "data-hraness-marketing": "card-row",
     children: [
       cards?.map((card) => /* @__PURE__ */ jsx3(MarketingCard, {
-        title: card.title,
-        ...card.art === undefined ? {} : {
-          art: card.art
-        },
-        ...card.href === undefined ? {} : {
-          href: card.href
-        },
-        ...card.meta === undefined ? {} : {
-          meta: card.meta
-        }
+        ...card
       }, card.title)),
       children
     ]
@@ -3935,38 +3989,62 @@ function MarketingCard({
   children,
   className,
   href,
+  icon,
   meta,
   title
 }) {
-  const body = /* @__PURE__ */ jsxs3(Fragment2, {
+  const hasIcon = isPresentNode(icon);
+  if (hasIcon && isPresentNode(art))
+    throw new RangeError("Marketing cards accept either icon or art, not both.");
+  const copy = /* @__PURE__ */ jsxs3(Fragment2, {
     children: [
-      isPresentNode(art) ? /* @__PURE__ */ jsx3(MarketingCardArt, {
-        children: art
-      }) : null,
       /* @__PURE__ */ jsx3("h3", {
         className: marketingClassName("hraness-marketing-card__title"),
         children: title
       }),
-      meta === undefined || meta === "" ? null : /* @__PURE__ */ jsx3("p", {
-        className: marketingClassName("hraness-marketing-card__meta"),
+      isPresentNode(meta) ? /* @__PURE__ */ jsx3("p", {
+        className: marketingClassName("hraness-marketing-card__meta", undefined, hasIcon ? "icon" : "default"),
         children: meta
-      }),
+      }) : null,
       isPresentNode(children) ? /* @__PURE__ */ jsx3("div", {
         className: marketingClassName("hraness-marketing-card__body"),
         children
       }) : null
     ]
   });
+  const body = hasIcon ? /* @__PURE__ */ jsxs3(Fragment2, {
+    children: [
+      /* @__PURE__ */ jsx3("div", {
+        "aria-hidden": "true",
+        className: marketingClassName("hraness-marketing-card__icon"),
+        children: icon
+      }),
+      /* @__PURE__ */ jsx3("div", {
+        className: marketingClassName("hraness-marketing-card__copy"),
+        children: copy
+      })
+    ]
+  }) : /* @__PURE__ */ jsxs3(Fragment2, {
+    children: [
+      isPresentNode(art) ? /* @__PURE__ */ jsx3(MarketingCardArt, {
+        children: art
+      }) : null,
+      copy
+    ]
+  });
+  const cardClassName = marketingClassName("hraness-marketing-card", className, hasIcon ? "icon" : "default");
   if (href === undefined) {
     return /* @__PURE__ */ jsx3("article", {
-      className: marketingClassName("hraness-marketing-card", className),
+      className: cardClassName,
       "data-hraness-marketing": "card",
+      "data-layout": hasIcon ? "icon" : undefined,
       children: body
     });
   }
   return /* @__PURE__ */ jsx3("a", {
-    className: marketingClassName("hraness-marketing-card", className),
+    className: cardClassName,
     "data-hraness-marketing": "card",
+    "data-layout": hasIcon ? "icon" : undefined,
     href,
     children: body
   });
@@ -4178,17 +4256,22 @@ function ProductHero({
   headingId,
   headingLevel = 1,
   install,
+  layout = "stack",
   name,
   notice,
   proof,
   summary,
   tone = "paper"
 }) {
+  if (layout !== "stack" && layout !== "split")
+    throw new RangeError("Hero layout must be stack or split.");
+  const split = layout === "split" && isPresentNode(frame);
   return /* @__PURE__ */ jsxs3("header", {
     "aria-labelledby": headingId,
-    className: marketingClassName("hraness-marketing-hero", className, tone === "accent" ? "accent" : "default"),
+    className: marketingHeroClassName(className, tone, split),
     "data-align": align,
     "data-hraness-marketing": "hero",
+    "data-layout": split ? "split" : undefined,
     "data-tone": tone,
     children: [
       /* @__PURE__ */ jsxs3("div", {

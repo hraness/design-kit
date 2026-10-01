@@ -106,13 +106,15 @@ const TERMINAL_KINDS = new Set(["input", "output", "comment"]);
  * Commands and output are sample text; keep them to commands the product ships.
  */
 export function TerminalFrame({
+  density = "standard",
   fade,
   height,
   lines,
   prompt = "$",
   title = "Terminal",
   ...root
-}: MockupRootProps & Readonly<{ title?: string; prompt?: string; lines: readonly TerminalLine[]; height?: number; fade?: boolean }>) {
+}: MockupRootProps & Readonly<{ title?: string; prompt?: string; lines: readonly TerminalLine[]; height?: number; fade?: boolean; density?: "standard" | "presentation" }>) {
+  if (density !== "standard" && density !== "presentation") throw new RangeError("Terminal density must be standard or presentation.");
   for (const line of lines) {
     if (!TERMINAL_KINDS.has(line.kind)) throw new TypeError(`Unknown terminal line kind ${JSON.stringify(line.kind)}.`);
   }
@@ -125,7 +127,7 @@ export function TerminalFrame({
           <span className="hkm-title">{title}</span>
           <span />
         </div>
-        <div className="hkm-page hkm-terminal-body" data-hkm-fade={fades ? "" : undefined} style={pageStyle(height)}>
+        <div className="hkm-page hkm-terminal-body" data-hkm-density={density === "presentation" ? density : undefined} data-hkm-fade={fades ? "" : undefined} style={pageStyle(height)}>
           <div className="hkm-terminal-lines">
             {lines.map((line, index) => (
               <div className="hkm-terminal-line" data-hkm-beat={line.beat} data-hkm-line={line.kind} data-hkm-tone={line.tone} key={index}>

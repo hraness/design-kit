@@ -215,7 +215,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("07fe9b46e5688e840afee0a96baf167d8552bf3118be971dd3f1c818a1e60d13");
+    .toBe("768258e4eca72b90c0bd7a64d7d62dee145ea33656c2f6d29a1a2a929236f2ae");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -379,4 +379,19 @@ test("the public collector compiles native logical edges, backgrounds, media, an
   for (const side of ["top", "right", "bottom", "left"]) {
     expect(recipeRules(marketingStyles.planPrimary).join("")).toContain(`border-${side}-color:`);
   }
+});
+
+
+test("split heroes are optional, typed, and server-safe with a frame", () => {
+  expectTypeOf<api.ProductHeroProps["layout"]>().toEqualTypeOf<"stack" | "split" | undefined>();
+  for (const tone of ["paper", "accent"] as const) {
+    const { document } = parseHTML(renderToStaticMarkup(<api.ProductHero {...columnHero} layout="split" tone={tone} frame={<span>Result</span>} className="hero-caller" />));
+    const hero = document.querySelector("header");
+    if (hero === null) throw new Error("Missing hero");
+    expect(hero.getAttribute("data-layout")).toBe("split");
+    expect(hero.className.split(" ").at(-1)).toBe("hero-caller");
+    expect(document.querySelector("[style],script")).toBeNull();
+  }
+  for (const frame of [undefined, null, false]) expect(renderToStaticMarkup(<api.ProductHero {...columnHero} layout="split" frame={frame} />)).not.toContain('data-layout="split"');
+  expect(() => renderToStaticMarkup(<api.ProductHero {...columnHero} layout={"other" as "split"} />)).toThrow("Hero layout");
 });

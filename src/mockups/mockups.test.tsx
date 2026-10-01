@@ -212,3 +212,17 @@ test("step walkthroughs reserve all panels while exposing only the selected one"
   expect(html).toContain("First view");
   expect(html).toContain("Tall view");
 });
+
+
+test("filled steps and presentation terminals are explicit server-safe options", () => {
+  const lines = [{ kind: "input" as const, text: "relay run" }];
+  const terminal = <api.TerminalFrame density="presentation" describe="A terminal starts a job." lines={lines} />;
+  const html = renderToStaticMarkup(<clientApi.StepThrough fit="fill" steps={[{ id: "run", label: "Run", render: () => terminal }]} />);
+  expect(html).toContain('data-hkm-fit="fill"');
+  expect(html).toContain('data-hkm-density="presentation"');
+  expect(html).not.toContain("--hkm-step-fill-height");
+  expect(html).not.toContain("--hkm-terminal-presentation-size");
+  expect(renderToStaticMarkup(<api.TerminalFrame describe="A terminal starts a job." lines={lines} />)).not.toContain("data-hkm-density");
+  expect(() => renderToStaticMarkup(<api.TerminalFrame density={"small" as "standard"} describe="A terminal starts a job." lines={lines} />)).toThrow("Terminal density");
+  expect(() => renderToStaticMarkup(<clientApi.StepThrough fit={"small" as "natural"} steps={[{ id: "run", label: "Run", render: () => terminal }]} />)).toThrow("StepThrough fit");
+});

@@ -89,7 +89,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-4tgt8egt.js";
+} from "../chunk-v8byd3hw.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -121,7 +121,7 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-fmeg5cxf.js";
+} from "../chunk-thv5t11w.js";
 import"../chunk-gmea6p0d.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
@@ -132,7 +132,7 @@ import {
   characterLength,
   xPostLength
 } from "../chunk-cejpzyfh.js";
-import"../chunk-vst6p4wd.js";
+import"../chunk-sabcr66p.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -6219,6 +6219,36 @@ function DesignSystemGallery({
                           mark: "nvidia",
                           label: "NVIDIA",
                           size: 40
+                        }),
+                        /* @__PURE__ */ jsx17(ProviderMark, {
+                          mark: "imessage",
+                          label: "iMessage",
+                          size: 40,
+                          tone: "solid"
+                        }),
+                        /* @__PURE__ */ jsx17(ProviderMark, {
+                          mark: "whatsapp",
+                          label: "WhatsApp",
+                          size: 40,
+                          tone: "solid"
+                        }),
+                        /* @__PURE__ */ jsx17(ProviderMark, {
+                          mark: "beeper",
+                          label: "Beeper",
+                          size: 40,
+                          tone: "solid"
+                        }),
+                        /* @__PURE__ */ jsx17(ProviderMark, {
+                          mark: "ollama",
+                          label: "Ollama",
+                          size: 40,
+                          tone: "solid"
+                        }),
+                        /* @__PURE__ */ jsx17(ProviderMark, {
+                          mark: "vercel",
+                          label: "Vercel",
+                          size: 40,
+                          tone: "solid"
                         })
                       ]
                     })
@@ -6398,6 +6428,8 @@ function DesignSystemGallery({
               /* @__PURE__ */ jsxs15(MarketingMain, {
                 children: [
                   /* @__PURE__ */ jsx17(ProductHero, {
+                    align: "start",
+                    layout: "split",
                     actions: [{
                       href: "#gallery-install",
                       label: "Install Relay"
@@ -6675,6 +6707,29 @@ Run the job, then show me its log.`,
                       href: "#gallery-install",
                       title: "GLM 5.3 Flash",
                       meta: "First observed 26 August 2026. Early DeepSWE coverage on OpenRouter."
+                    }]
+                  }),
+                  /* @__PURE__ */ jsx17(MarketingCardRow, {
+                    ariaLabel: "Agent choices",
+                    columns: 2,
+                    cards: [{
+                      icon: /* @__PURE__ */ jsx17(ProviderMark, {
+                        mark: "claudecode",
+                        size: 56,
+                        tone: "solid"
+                      }),
+                      href: "#gallery-install",
+                      title: "Claude Code",
+                      meta: "Use Relay from your terminal agent."
+                    }, {
+                      icon: /* @__PURE__ */ jsx17(ProviderMark, {
+                        mark: "codex",
+                        size: 56,
+                        tone: "solid"
+                      }),
+                      href: "#gallery-install",
+                      title: "Codex",
+                      meta: "Keep the same commands across your projects."
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingTrustBoundary, {

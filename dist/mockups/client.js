@@ -290,16 +290,102 @@ function ModeShowcase({
     ]
   });
 }
+function fitStepStage(stage) {
+  const owner = stage.parentElement;
+  if (owner === null || stage.clientWidth <= 0)
+    return;
+  const probe = stage.cloneNode(true);
+  probe.setAttribute("aria-hidden", "true");
+  probe.setAttribute("inert", "");
+  probe.setAttribute("data-hkm-measuring", "");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;inset:0 auto auto 0;inline-size:${stage.getBoundingClientRect().width}px;block-size:auto;`;
+  for (const node of probe.querySelectorAll("[id]"))
+    node.removeAttribute("id");
+  for (const node of probe.querySelectorAll("[data-hkm-animated]"))
+    node.removeAttribute("data-hkm-animated");
+  for (const body of probe.querySelectorAll('[data-hkm-density="presentation"]'))
+    body.style.removeProperty("--hkm-terminal-presentation-size");
+  owner.append(probe);
+  try {
+    const naturalHeight = Math.ceil(probe.getBoundingClientRect().height);
+    stage.style.setProperty("--hkm-step-fill-height", `${naturalHeight}px`);
+    probe.style.blockSize = `${naturalHeight}px`;
+    probe.removeAttribute("data-hkm-measuring");
+    const bodies = [...stage.querySelectorAll('[data-hkm-density="presentation"]')];
+    const copies = [...probe.querySelectorAll('[data-hkm-density="presentation"]')];
+    for (const [index, copy] of copies.entries()) {
+      const body = bodies[index];
+      if (body === undefined)
+        continue;
+      const lines = [...copy.querySelectorAll(".hkm-terminal-line")];
+      const wrappedRows = (line) => Math.ceil((line.getBoundingClientRect().height - 0.5) / Number.parseFloat(getComputedStyle(line).lineHeight));
+      const baselineRows = lines.map(wrappedRows);
+      let low = 1;
+      let high = 4;
+      for (let attempt = 0;attempt < 9; attempt += 1) {
+        const candidate = (low + high) / 2;
+        copy.style.setProperty("--hkm-terminal-presentation-size", `${candidate}rem`);
+        if (copy.scrollHeight <= copy.clientHeight + 1 && copy.scrollWidth <= copy.clientWidth + 1 && lines.every((line, index2) => {
+          const baseline = baselineRows[index2];
+          return baseline !== undefined && wrappedRows(line) <= baseline;
+        }))
+          low = candidate;
+        else
+          high = candidate;
+      }
+      body.style.setProperty("--hkm-terminal-presentation-size", `${Math.floor(low * 1000) / 1000}rem`);
+    }
+    stage.setAttribute("data-hkm-fitted", "");
+  } finally {
+    probe.remove();
+  }
+}
 function StepThrough({
   caption,
   className,
   initial,
+  fit = "natural",
   label = "Steps",
   minWidth = 400,
   steps,
   theme
 }) {
   assertUniqueIds(steps, "StepThrough step");
+  if (fit !== "natural" && fit !== "fill")
+    throw new RangeError("StepThrough fit must be natural or fill.");
+  const stage = useRef(null);
+  useIsomorphicLayoutEffect(() => {
+    const node = stage.current;
+    if (fit !== "fill" || node === null || typeof ResizeObserver === "undefined")
+      return;
+    let previous = "";
+    let disposed = false;
+    const measure = () => {
+      if (disposed)
+        return;
+      const key = `${node.clientWidth}/${getComputedStyle(document.documentElement).fontSize}`;
+      if (key === previous)
+        return;
+      previous = key;
+      fitStepStage(node);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    observer.observe(document.documentElement);
+    document.fonts.ready.then(() => {
+      previous = "";
+      measure();
+    });
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      node.style.removeProperty("--hkm-step-fill-height");
+      node.removeAttribute("data-hkm-fitted");
+      for (const body of node.querySelectorAll('[data-hkm-density="presentation"]'))
+        body.style.removeProperty("--hkm-terminal-presentation-size");
+    };
+  }, [fit, steps]);
   const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step2) => step2.id === initial)));
@@ -325,6 +411,7 @@ function StepThrough({
   return /* @__PURE__ */ jsxs("figure", {
     "aria-label": `Illustration: ${label.toLowerCase()}`,
     className: joinMockupClasses("hkm-showcase", "hkm-steps", className),
+    "data-hkm-fit": fit === "fill" ? fit : undefined,
     "data-hkm-theme": theme,
     "data-nosnippet": "",
     children: [
@@ -364,6 +451,7 @@ function StepThrough({
       }),
       /* @__PURE__ */ jsx("div", {
         className: "hkm-showcase-stage hkm-step-stage",
+        ref: stage,
         children: steps.map((entry, position) => /* @__PURE__ */ jsx("div", {
           "aria-hidden": position !== current,
           "aria-labelledby": `${id}-tab-${entry.id}`,
@@ -372,7 +460,16 @@ function StepThrough({
           id: `${id}-panel-${entry.id}`,
           inert: position !== current,
           role: "tabpanel",
-          children: /* @__PURE__ */ jsx(FitToWidth, {
+          children: fit === "fill" ? /* @__PURE__ */ jsx("div", {
+            className: "hkm-fit",
+            children: /* @__PURE__ */ jsx("div", {
+              className: "hkm-fit-inner",
+              children: entry.render({
+                animated: position === current && animated,
+                theme
+              })
+            })
+          }) : /* @__PURE__ */ jsx(FitToWidth, {
             minWidth,
             children: entry.render({
               animated: position === current && animated,

@@ -320,6 +320,50 @@ export type ThroughStep = Readonly<{
   render: (state: Readonly<{ animated: boolean; theme: MockupTheme | undefined }>) => ReactNode;
 }>;
 
+/** Measure complete mounted slides at a readable baseline, separately from fitted paint. */
+function fitStepStage(stage: HTMLDivElement): void {
+  const owner = stage.parentElement;
+  if (owner === null || stage.clientWidth <= 0) return;
+  const probe = stage.cloneNode(true) as HTMLDivElement;
+  probe.setAttribute("aria-hidden", "true");
+  probe.setAttribute("inert", "");
+  probe.setAttribute("data-hkm-measuring", "");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;inset:0 auto auto 0;inline-size:${stage.getBoundingClientRect().width}px;block-size:auto;`;
+  for (const node of probe.querySelectorAll("[id]")) node.removeAttribute("id");
+  for (const node of probe.querySelectorAll("[data-hkm-animated]")) node.removeAttribute("data-hkm-animated");
+  for (const body of probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+  owner.append(probe);
+  try {
+    const naturalHeight = Math.ceil(probe.getBoundingClientRect().height);
+    // The tallest complete slide establishes the floor. Fitted type never feeds
+    // back into it, and changing the active tab never requests a measurement.
+    stage.style.setProperty("--hkm-step-fill-height", `${naturalHeight}px`);
+    probe.style.blockSize = `${naturalHeight}px`;
+    probe.removeAttribute("data-hkm-measuring");
+    const bodies = [...stage.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')];
+    const copies = [...probe.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')];
+    for (const [index, copy] of copies.entries()) {
+      const body = bodies[index];
+      if (body === undefined) continue;
+      const lines = [...copy.querySelectorAll<HTMLElement>(".hkm-terminal-line")];
+      const wrappedRows = (line: HTMLElement) => Math.ceil((line.getBoundingClientRect().height - 0.5) / Number.parseFloat(getComputedStyle(line).lineHeight));
+      const baselineRows = lines.map(wrappedRows);
+      let low = 1;
+      let high = 4;
+      for (let attempt = 0; attempt < 9; attempt += 1) {
+        const candidate = (low + high) / 2;
+        copy.style.setProperty("--hkm-terminal-presentation-size", `${candidate}rem`);
+        if (copy.scrollHeight <= copy.clientHeight + 1 && copy.scrollWidth <= copy.clientWidth + 1 && lines.every((line, index) => { const baseline = baselineRows[index]; return baseline !== undefined && wrappedRows(line) <= baseline; })) low = candidate;
+        else high = candidate;
+      }
+      body.style.setProperty("--hkm-terminal-presentation-size", `${Math.floor(low * 1000) / 1000}rem`);
+    }
+    stage.setAttribute("data-hkm-fitted", "");
+  } finally {
+    probe.remove();
+  }
+}
+
 /**
  * Folder tabs and chevron controls walk a flow. All render functions stay mounted
  * to reserve the tallest panel; inactive panels are inert and visually hidden.
@@ -329,12 +373,15 @@ export function StepThrough({
   caption,
   className,
   initial,
+  fit = "natural",
   label = "Steps",
   minWidth = 400,
   steps,
   theme,
 }: Readonly<{
   steps: readonly ThroughStep[];
+  /** Fill the tallest natural slide and fit presentation terminals without scaling. */
+  fit?: "natural" | "fill";
   caption?: string;
   initial?: string;
   label?: string;
@@ -343,6 +390,33 @@ export function StepThrough({
   className?: string;
 }>) {
   assertUniqueIds(steps, "StepThrough step");
+  if (fit !== "natural" && fit !== "fill") throw new RangeError("StepThrough fit must be natural or fill.");
+  const stage = useRef<HTMLDivElement>(null);
+  useIsomorphicLayoutEffect(() => {
+    const node = stage.current;
+    if (fit !== "fill" || node === null || typeof ResizeObserver === "undefined") return undefined;
+    let previous = "";
+    let disposed = false;
+    const measure = () => {
+      if (disposed) return;
+      const key = `${node.clientWidth}/${getComputedStyle(document.documentElement).fontSize}`;
+      if (key === previous) return;
+      previous = key;
+      fitStepStage(node);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    observer.observe(document.documentElement);
+    void document.fonts.ready.then(() => { previous = ""; measure(); });
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      node.style.removeProperty("--hkm-step-fill-height");
+      node.removeAttribute("data-hkm-fitted");
+      for (const body of node.querySelectorAll<HTMLElement>('[data-hkm-density="presentation"]')) body.style.removeProperty("--hkm-terminal-presentation-size");
+    };
+  }, [fit, steps]);
   const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));
@@ -365,7 +439,7 @@ export function StepThrough({
   };
 
   return (
-    <figure aria-label={`Illustration: ${label.toLowerCase()}`} className={joinMockupClasses("hkm-showcase", "hkm-steps", className)} data-hkm-theme={theme} data-nosnippet="">
+    <figure aria-label={`Illustration: ${label.toLowerCase()}`} className={joinMockupClasses("hkm-showcase", "hkm-steps", className)} data-hkm-fit={fit === "fill" ? fit : undefined} data-hkm-theme={theme} data-nosnippet="">
       <div className="hkm-showcase-controls">
         <div aria-label={label} className="hkm-tabs hkm-step-tabs" role="tablist">
           {steps.map((entry, position) => (
@@ -392,7 +466,7 @@ export function StepThrough({
           ))}
         </div>
       </div>
-      <div className="hkm-showcase-stage hkm-step-stage">
+      <div className="hkm-showcase-stage hkm-step-stage" ref={stage}>
         {steps.map((entry, position) => (
           <div
             aria-hidden={position !== current}
@@ -404,7 +478,9 @@ export function StepThrough({
             key={entry.id}
             role="tabpanel"
           >
-            <FitToWidth minWidth={minWidth}>{entry.render({ animated: position === current && animated, theme })}</FitToWidth>
+            {fit === "fill"
+              ? <div className="hkm-fit"><div className="hkm-fit-inner">{entry.render({ animated: position === current && animated, theme })}</div></div>
+              : <FitToWidth minWidth={minWidth}>{entry.render({ animated: position === current && animated, theme })}</FitToWidth>}
           </div>
         ))}
       </div>

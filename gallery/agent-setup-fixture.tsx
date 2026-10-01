@@ -34,6 +34,11 @@ const markInheritanceCommands: readonly AgentSetup.AgentCommand[] = [
 ];
 
 const solidMarks = [
+  { id: "imessage", label: "iMessage", mark: "imessage" },
+  { id: "whatsapp", label: "WhatsApp", mark: "whatsapp" },
+  { id: "beeper", label: "Beeper", mark: "beeper" },
+  { id: "ollama", label: "Ollama", mark: "ollama" },
+  { id: "vercel", label: "Vercel", mark: "vercel" },
   { id: "nvidia", label: "NVIDIA", mark: "nvidia" },
   { id: "claude", label: "Claude Code", mark: "claudecode" },
   { id: "gemini", label: "Gemini", mark: "gemini" },
