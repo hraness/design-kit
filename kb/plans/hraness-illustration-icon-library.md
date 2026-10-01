@@ -154,9 +154,10 @@ icons, and a hosted icon CDN.
 7. Migrate product repos: bump `@hraness/design-kit` to v0.22.0, vendor the
    product's set (members + mark + only the served shared anchors) from the
    pinned package via `sync:icons`, and byte-compare in a parity test so
-   upgrades surface drift. **In progress** — PRs: sponge #333, wordcell #160,
-   aicharts #510, soundfish #208, stripe-history #65, act60.me #106,
-   slopcamera #262. Platonik's repository is archived (read-only): the same
+   upgrades surface drift. **Merged** — sponge #333, wordcell #160,
+   aicharts #510, soundfish #208, stripe-history #65, act60.me #106, and
+   slopcamera #262 all landed on the pinned v0.22.0 release with passing
+   required checks. Platonik's repository is archived (read-only): the same
    change is committed locally on `feat/shared-icon-library` and cannot be
    pushed. Roughday #103 lands the same pattern on v0.22.2: sync:icons in
    the build chain, a byte-exact parity test, and removal of the stray
