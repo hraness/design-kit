@@ -726,6 +726,7 @@
 }
 
 @media (forced-colors: none) {
+  .plain-site.plain-publication.plain-publication--embedded .plain-publication__byline a:is(:hover, :focus-visible),
   .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a:is(:hover, :focus-visible) {
     text-decoration-color: currentColor;
   }

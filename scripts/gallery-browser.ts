@@ -146,11 +146,11 @@ function invariant(value: unknown, message: string): asserts value {
 
 async function requirePublicationLinks(page: Page, label: string, forced = false): Promise<void> {
   for (const selector of [
+    ".plain-publication__byline a",
     ".plain-publication__article-body a",
     ".plain-publication__sources a",
     "#articles > .plain-publication__provenance a",
     ".hraness-marketing-comparison__note a",
-    ...(forced ? [".plain-publication__byline a"] : []),
   ]) {
     const link = page.locator(selector).first();
     await link.blur();
