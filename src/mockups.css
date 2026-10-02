@@ -2329,20 +2329,11 @@
   }
 
   .hkm-showcase .hkm-step-number {
-    display: inline-grid;
-    place-items: center;
-    inline-size: 20px;
-    block-size: 20px;
-    border: 1px solid currentColor;
-    border-radius: 50%;
-    font-size: 11px;
+    flex: none;
+    color: var(--hkm-sc-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
     font-variant-numeric: tabular-nums;
-  }
-
-  .hkm-showcase .hkm-tab[data-hkm-done] .hkm-step-number {
-    border-color: var(--hkm-accent);
-    background: var(--hkm-accent);
-    color: var(--hkm-accent-foreground);
   }
 
   .hkm-showcase .hkm-showcase-settings {
@@ -2412,11 +2403,26 @@
     outline-color: var(--hkm-accent-foreground);
   }
 
+  .hkm-showcase .hkm-showcase-hints {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  .hkm-showcase .hkm-showcase-hints > .hkm-showcase-hint {
+    grid-area: 1 / 1;
+  }
+
+  .hkm-showcase .hkm-showcase-hint[data-hkm-reserving] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .hkm-showcase .hkm-showcase-hint {
     min-block-size: 2.9em;
     margin: 0;
     color: var(--hkm-sc-muted);
     font-size: 13px;
+    overflow-wrap: anywhere;
   }
 
   .hkm-showcase .hkm-showcase-stage {
@@ -2512,14 +2518,14 @@
     }
   }
 
-  /* Folder tabs share an edge with each showcase panel. */
+  /* Mode selectors retain a shared edge with their preview panel. */
   .hkm-showcase:is(.hkm-steps, .hkm-modes) { gap: 0; }
   .hkm-showcase.hkm-steps .hkm-showcase-controls { padding: 0; border: 0; border-radius: 0; background: transparent; }
   .hkm-showcase .hkm-folder-tabs { gap: 6px; margin: 0; padding: 0; border: 0; position: relative; z-index: 1; }
   .hkm-showcase .hkm-folder-tabs .hkm-tab { min-block-size: 48px; padding: 12px 18px; border: 1px solid var(--hkm-sc-line); border-block-end: 0; border-radius: 12px 12px 0 0; background: var(--hkm-sc-field); color: var(--hkm-sc-muted); }
   .hkm-showcase .hkm-folder-tabs .hkm-tab[aria-selected="true"] { background: var(--hkm-sc-bg); color: var(--hkm-sc-fg); }
   .hkm-showcase .hkm-folder-tabs .hkm-tab:hover { color: var(--hkm-sc-fg); }
-  .hkm-showcase.hkm-steps .hkm-step-stage { display: grid; border: 1px solid var(--hkm-sc-line); border-radius: 0 12px 12px 12px; background: var(--hkm-sc-bg); margin-block-start: -1px; overflow: clip; }
+  .hkm-showcase.hkm-steps .hkm-step-stage { display: grid; min-inline-size: 0; border: 1px solid var(--hkm-sc-line); border-radius: 12px; background: var(--hkm-sc-bg); overflow: clip; }
   .hkm-showcase.hkm-modes .hkm-mode-panel { border: 1px solid var(--hkm-sc-line); border-radius: 12px; background: var(--hkm-sc-bg); overflow: clip; }
   .hkm-showcase.hkm-modes .hkm-folder-tabs + .hkm-mode-panel { border-start-start-radius: 0; margin-block-start: -1px; }
   .hkm-showcase.hkm-modes .hkm-showcase-controls { border: 0; border-block-end: 1px solid var(--hkm-sc-line); border-radius: 0; }
@@ -2527,10 +2533,13 @@
   .hkm-mode-surface { grid-area: 1 / 1; min-inline-size: 0; align-self: start; }
   .hkm-mode-surface[aria-hidden="true"] { visibility: hidden; pointer-events: none; }
   .hkm-showcase.hkm-modes .hkm-mode-surface > .hkm-fit > .hkm-fit-inner > .hkm-root,
-  .hkm-showcase.hkm-modes .hkm-mode-surface > .hkm-fit > .hkm-fit-inner > .hkm-root > .hkm-window { border: 0; border-radius: 0; box-shadow: none; }
+  .hkm-showcase.hkm-modes .hkm-mode-surface > .hkm-fit > .hkm-fit-inner > .hkm-root > .hkm-window,
+  .hkm-showcase.hkm-steps .hkm-step-panel > .hkm-fit > .hkm-fit-inner > .hkm-root,
+  .hkm-showcase.hkm-steps .hkm-step-panel > .hkm-fit > .hkm-fit-inner > .hkm-root > .hkm-window { border: 0; border-radius: 0; box-shadow: none; }
   .hkm-step-panel { grid-area: 1 / 1; min-inline-size: 0; align-self: start; }
   .hkm-step-panel[aria-hidden="true"] { visibility: hidden; pointer-events: none; }
-  .hkm-showcase.hkm-steps .hkm-step-panel .hkm-root { border-start-start-radius: 0; border-start-end-radius: 0; box-shadow: none; }
+  /* Browser and app titles use the same chrome geometry inside a sequence. */
+  .hkm-showcase .hkm-root :is(.hkm-title-bar, .hkm-browser-bar) { block-size: 44px; font-size: 13px; }
   /* Fill uses the tallest complete slide as its natural height. It does not
    * scale text or ask fitted font sizes to determine the stage height. */
   .hkm-showcase[data-hkm-fit="fill"] [data-hkm-measuring] [data-hkm-fill-frame] > .hkm-window > .hkm-page { max-block-size: none; }
@@ -2567,11 +2576,39 @@
     flex: none;
   }
 
-  .hkm-showcase.hkm-steps .hkm-step-nav { justify-content: space-between; padding-block-start: 18px; gap: 16px; }
-  .hkm-showcase.hkm-steps .hkm-step-button { display: inline-grid; place-items: center; min-inline-size: 52px; min-block-size: 52px; padding: 10px; border: 0; border-radius: 12px; background: transparent; color: var(--hkm-sc-fg); }
-  .hkm-showcase.hkm-steps .hkm-step-button[data-hkm-primary] { background: var(--hkm-sc-fg); color: var(--hkm-sc-bg); }
-  .hkm-showcase.hkm-steps .hkm-step-button:disabled { color: var(--hkm-sc-muted); background: transparent; }
-  .hkm-showcase.hkm-steps .hkm-step-button[data-hkm-primary]:disabled { background: var(--hkm-sc-field); }
+  /* A compact selector keeps navigation beside the tabs. The full selector
+   * stacks labels and explanations beside the preview when its own width fits. */
+  .hkm-showcase.hkm-steps { font-size: 1rem; line-height: 1.5; }
+  .hkm-showcase .hkm-step-layout { display: grid; gap: 16px; align-items: start; min-inline-size: 0; }
+  .hkm-showcase.hkm-steps .hkm-step-controls { gap: 12px; min-inline-size: 0; }
+  .hkm-showcase.hkm-steps .hkm-step-nav { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; min-inline-size: 0; padding: 0; }
+  .hkm-showcase.hkm-steps .hkm-step-button { display: inline-grid; place-items: center; inline-size: 44px; min-inline-size: 44px; min-block-size: 44px; padding: 0; border: 1px solid var(--hkm-sc-line); border-radius: 10px; background: var(--hkm-sc-bg); color: var(--hkm-sc-fg); }
+  .hkm-showcase.hkm-steps .hkm-step-button:hover:enabled { background: var(--hkm-sc-field); }
+  .hkm-showcase.hkm-steps .hkm-step-button:disabled { color: var(--hkm-sc-muted); cursor: default; }
+  .hkm-showcase .hkm-step-count { display: none; color: var(--hkm-sc-muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; text-align: center; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs { gap: 4px; margin: 0; padding: 4px; border: 0; min-inline-size: 0; scroll-padding-inline: 4px; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { gap: 8px; min-block-size: 44px; padding: 9px 12px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--hkm-sc-fg); font-size: 1rem; line-height: 1.5; font-weight: 550; text-align: start; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab:hover { background: var(--hkm-sc-field); }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] { border-color: var(--hkm-sc-line); background: var(--hkm-sc-field); color: var(--hkm-sc-fg); }
+  .hkm-showcase .hkm-step-copy { display: flex; flex-direction: column; gap: 5px; min-inline-size: 0; }
+  .hkm-showcase .hkm-step-label { font: inherit; }
+  .hkm-showcase .hkm-step-hint { display: none; color: var(--hkm-sc-muted); font-size: 0.875rem; line-height: 1.5; font-weight: 400; }
+  .hkm-showcase .hkm-step-descriptions { display: grid; padding-inline: 4px; }
+  .hkm-showcase .hkm-step-description { grid-area: 1 / 1; margin: 0; color: var(--hkm-sc-muted); font-size: 0.875rem; line-height: 1.5; }
+  .hkm-showcase .hkm-step-description:not([data-hkm-active]) { visibility: hidden; }
+  .hkm-showcase .hkm-step-panel:focus-visible { outline: 2px solid var(--hkm-accent); outline-offset: -4px; }
+  @container hkm-showcase (min-width: 720px) {
+    .hkm-showcase .hkm-step-layout { grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.6fr); gap: 24px; }
+    .hkm-showcase.hkm-steps .hkm-step-nav { align-items: start; row-gap: 12px; }
+    .hkm-showcase.hkm-steps .hkm-step-button:first-child { grid-area: 1 / 1; }
+    .hkm-showcase.hkm-steps .hkm-step-button:last-child { grid-area: 1 / 3; }
+    .hkm-showcase .hkm-step-count { display: block; grid-area: 1 / 2; align-self: center; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs { grid-area: 2 / 1 / 3 / -1; flex-direction: column; gap: 6px; padding: 4px; overflow: visible; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { display: grid; grid-template-columns: 1.5ch minmax(0, 1fr); align-items: start; gap: 12px; padding: 12px; white-space: normal; }
+    .hkm-showcase.hkm-steps .hkm-step-number { padding-block-start: 0.125rem; }
+    .hkm-showcase .hkm-step-hint { display: block; }
+    .hkm-showcase .hkm-step-descriptions { display: none; }
+  }
   .hkm-showcase.hkm-steps .hkm-step-announcement { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .hkm-showcase:is(.hkm-steps, .hkm-modes) .hkm-showcase-caption { margin-block-start: 1rem; }
 
@@ -2679,12 +2716,26 @@
 
     .hkm-showcase .hkm-tab[aria-selected="true"],
     .hkm-showcase .hkm-segmented button[aria-pressed="true"],
-    .hkm-showcase .hkm-tab[data-hkm-done] .hkm-step-number,
+    .hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"],
+    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"],
     .hkm-root .hkm-popover-item[data-hkm-selected],
     .hkm-root .hkm-work-mark {
       forced-color-adjust: none;
       background: Highlight;
       color: HighlightText;
+    }
+
+    .hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"] :is(.hkm-step-number, .hkm-step-hint) {
+      color: HighlightText;
+    }
+
+    /* Fill stages reserve their authored field for the live preview. Keep the
+     * selected tab in the system pair even when that fill rule is authored by
+     * a consumer layer with a stronger declaration. */
+    .hkm-showcase[data-hkm-fit="fill"].hkm-steps .hkm-tab[aria-selected="true"] {
+      forced-color-adjust: none;
+      background: Highlight !important;
+      color: HighlightText !important;
     }
 
     .hkm-showcase .hkm-segmented button[aria-pressed="true"]:disabled {
@@ -2706,5 +2757,20 @@
     .hkm-showcase .hkm-segmented button[aria-pressed="true"]:focus-visible {
       outline-color: HighlightText;
     }
+  }
+}
+
+/* Consumer layers and palette variable chains can add stronger declarations
+ * after the legacy component layer. Keep the system selection pair as the
+ * final forced-colors contract. */
+@media (forced-colors: active) {
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] {
+    forced-color-adjust: none;
+    background: Highlight !important;
+    color: HighlightText !important;
+  }
+
+  .hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"] :is(.hkm-step-number, .hkm-step-hint) {
+    color: HighlightText !important;
   }
 }

@@ -22,6 +22,9 @@ import {
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
 import { useState } from "react";
 
+import { BrowserFrame, SampleText } from "../mockups/index.js";
+import { StepThrough } from "../mockups/client.js";
+
 import { AnimatedRailStage } from "./animated-rail-stage.js";
 import { AgentCommandTabs, AgentSetupPrompt } from "./agent-setup-prompt.js";
 import { AppShell } from "./app-shell.js";
@@ -127,6 +130,7 @@ export const designGalleryRecipeCoverage = [
   "platform install commands",
   "production preview notice",
   "relative time",
+  "responsive product walkthroughs",
   "status pages",
   "syntax highlighting",
 ] as const;
@@ -166,6 +170,29 @@ const foilDeckExamples = [
   { label: "Radial frame", ornament: "radial", preset: "aurora" },
   { label: "Facet frame", ornament: "facets", preset: "max" },
 ] as const;
+
+/** The example illustrates job state without exposing implementation commands. */
+function GalleryJobPreview({ state }: Readonly<{ state: "ready" | "running" | "saved" }>) {
+  const completed = state === "saved";
+  return (
+    <BrowserFrame describe={`A conceptual job interface shows a weekly report ${state === "ready" ? "ready to run" : state === "running" ? "being prepared" : "saved beside its source"}.`} url="relay.example/jobs/weekly-report">
+      <div className="design-gallery__walkthrough-preview">
+        <p className="design-gallery__walkthrough-context">WORKSPACE / JOBS</p>
+        <p className="design-gallery__walkthrough-title"><SampleText>Weekly report</SampleText><span className="design-gallery__walkthrough-state">{state === "ready" ? "Ready" : completed ? "Saved" : "Running"}</span></p>
+        <dl className="design-gallery__walkthrough-facts">
+          <div><dt>Source</dt><dd><SampleText>orders.csv</SampleText></dd></div>
+          <div><dt>Run</dt><dd><SampleText>{state === "ready" ? "On demand" : "run-042"}</SampleText></dd></div>
+        </dl>
+        <ol className="design-gallery__walkthrough-checks">
+          <li><span>Check input</span><span>{state === "ready" ? "Waiting" : "Complete"}</span></li>
+          <li><span>Build report</span><span>{state === "ready" ? "Waiting" : completed ? "Complete" : "In progress"}</span></li>
+          <li><span>Save output</span><span>{completed ? "Complete" : "Waiting"}</span></li>
+        </ol>
+        <div className="design-gallery__walkthrough-result"><span>{completed ? "Saved report" : "Output"}</span><strong><SampleText>{completed ? "weekly-report.md" : "Weekly report"}</SampleText></strong><span>{completed ? "12 sections · Source attached" : "Available after the run finishes"}</span></div>
+      </div>
+    </BrowserFrame>
+  );
+}
 
 /** Product-neutral executable reference for the public composition layer. */
 export function DesignSystemGallery({
@@ -419,6 +446,13 @@ export function DesignSystemGallery({
               { command: "claude mcp add relay -- relay serve", id: "claude", label: "Claude Code", mark: "claudecode" },
               { command: "codex mcp add relay -- relay serve", id: "codex", label: "Codex", mark: "codex" },
             ]} label="Relay agent commands" />
+          </MarketingSection>
+          <MarketingSection heading="Show the result at each step." headingId="gallery-walkthrough" headingLevel={3} label="Walkthrough" summary="Use short labels and visible explanations beside a compact illustration of what changes.">
+            <StepThrough fit="fill" label="Run a Relay job" steps={[
+              { id: "choose", label: "Choose a job", hint: "Pick a saved job and review the file it reads before starting the run.", render: () => <GalleryJobPreview state="ready" /> },
+              { id: "run", label: "Watch the run", hint: "See the input check, transformation, and saved output as separate stages.", render: () => <GalleryJobPreview state="running" /> },
+              { id: "inspect", label: "Read the result", hint: "Open the saved report with the run ID and source file beside it.", render: () => <GalleryJobPreview state="saved" /> },
+            ]} />
           </MarketingSection>
           <MarketingPrimitives
             columns={3}

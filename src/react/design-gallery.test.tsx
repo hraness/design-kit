@@ -41,6 +41,7 @@ test("the public gallery covers the composition boundary", () => {
   expect(designGalleryRecipeCoverage).toContain("production preview notice");
   expect(designGalleryRecipeCoverage).toContain("platform install commands");
   expect(designGalleryRecipeCoverage).toContain("relative time");
+  expect(designGalleryRecipeCoverage).toContain("responsive product walkthroughs");
   expect(designGalleryTouchKinds).toEqual(["button", "link", "radio", "range"]);
 });
 
@@ -106,6 +107,8 @@ test("the gallery is product-neutral and server renderable", () => {
   expect(html).toContain("hraness-design-production-data-preview-notice");
   expect(html).toContain('data-hraness-platform-install=""');
   expect(html).toContain('data-hraness-platform-badges=""');
+  expect(html).toContain('aria-label="Run a Relay job"');
+  expect(html).toContain("design-gallery__walkthrough-preview");
   expect(html).toContain("hraness-design-dither-surface");
   expect(html).toContain('data-density="medium"');
   expect(html).toContain('data-gallery-dither=""');

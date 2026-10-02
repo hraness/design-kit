@@ -2303,6 +2303,11 @@ try {
     ...foundationOutput.path.split("/"),
   );
   const finalFoundationCss = await readFile(foundationCssPath, "utf8");
+  assert.match(
+    finalFoundationCss,
+    /\.hkm-step-layout\b/u,
+    "The compiler-only foundation must style the gallery walkthrough without a second CSS import.",
+  );
   if (!finalFoundationCss.includes("components.hraness-design-kit.legacy")
     || !finalFoundationCss.includes("--navigation-rail-width")) {
     throw new Error("Final client foundation lost design-kit legacy or token content.");
@@ -2738,6 +2743,37 @@ try {
     ].join("\n"),
   );
   await run(["node", "./notice-react18.mjs"], react18Consumer);
+  await writeFile(
+    join(react18Consumer, "walkthrough-react18.mjs"),
+    [
+      'import assert from "node:assert/strict";',
+      'import { createElement } from "react";',
+      'import { renderToStaticMarkup } from "react-dom/server";',
+      'import { ModeShowcase, StepThrough } from "@hraness/design-kit/mockups/client";',
+      'const render = () => createElement("button", { type: "button" }, "Inspect preview");',
+      'const steps = [{ id: "find", label: "Find", hint: "Find a saved session.", render }, { id: "preview", label: "Preview", hint: "Review its changes before saving.", render }];',
+      'const modes = [{ id: "before", label: "Before", hint: "Original session." }, { id: "after", label: "After", hint: "Reviewed session." }];',
+      'const fixtures = [',
+      '  { component: StepThrough, props: { fit: "fill", label: "Session walkthrough", steps }, hook: "hkm-step-panel", inactive: 1, reservedHints: 0 },',
+      '  { component: ModeShowcase, props: { fit: "fill", modes, surfaces: steps }, hook: "hkm-mode-surface", inactive: 5, reservedHints: 3 },',
+      '];',
+      'for (const fixture of fixtures) {',
+      '  const html = renderToStaticMarkup(createElement(fixture.component, fixture.props));',
+      '  const panels = [...html.matchAll(/<div[^>]*>/gu)].map(match => match[0]).filter(tag => tag.includes(fixture.hook));',
+      '  const inactive = panels.filter(tag => tag.includes(\'aria-hidden="true"\'));',
+      '  const active = panels.filter(tag => tag.includes(\'aria-hidden="false"\'));',
+      '  assert.equal(inactive.length, fixture.inactive, "React 18 packed walkthrough retains every inactive and measurement panel.");',
+      '  assert.equal(active.length, 1, "React 18 packed walkthrough exposes exactly one active panel.");',
+      '  assert.ok(inactive.every(tag => tag.includes(\'inert=""\')), "React 18 packed walkthrough keeps hidden buttons out of keyboard navigation.");',
+      '  assert.ok(active.every(tag => !tag.includes("inert=")), "React 18 packed walkthrough leaves its active preview interactive.");',
+      '  const reservations = [...html.matchAll(/<p[^>]*>/gu)].map(match => match[0]).filter(tag => tag.includes("data-hkm-reserving"));',
+      '  assert.equal(reservations.length, fixture.reservedHints, "React 18 packed showcases reserve each inactive explanation.");',
+      '  assert.ok(reservations.every(tag => tag.includes(\'aria-hidden="true"\') && tag.includes(\'inert=""\')), "React 18 packed hint reservations remain hidden and inert.");',
+      '}',
+      "",
+    ].join("\n"),
+  );
+  await run(["node", "./walkthrough-react18.mjs"], react18Consumer);
   await writeFile(
     join(react18Consumer, "index.ts"),
     [

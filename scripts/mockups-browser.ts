@@ -41,6 +41,8 @@ async function assertControlContrast(tab: Page, label: string): Promise<void> {
       "[data-hkm-controls-fixture] .hkm-segmented button",
       "[data-hkm-controls-fixture] .hkm-step-button",
       "[data-hkm-controls-fixture] [data-hkm-done] .hkm-step-number",
+      ".hkm-showcase.hkm-steps .hkm-step-number",
+      ".hkm-showcase.hkm-steps .hkm-step-hint",
       ".hkm-root .hkm-popover-item[data-hkm-selected]",
       ".hkm-root .hkm-popover-item[data-hkm-selected] .hkm-popover-detail",
       ".hkm-root .hkm-work-mark",
@@ -99,7 +101,7 @@ async function assertForcedControlColors(tab: Page, label: string): Promise<void
     const selectors = [
       '[data-hkm-controls-fixture] .hkm-tab[aria-selected="true"]',
       '[data-hkm-controls-fixture] .hkm-segmented button[aria-pressed="true"]:not(:disabled)',
-      "[data-hkm-controls-fixture] [data-hkm-done] .hkm-step-number",
+      '.hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"]',
       ".hkm-root .hkm-popover-item[data-hkm-selected]",
       ".hkm-root .hkm-work-mark",
     ];
@@ -114,7 +116,7 @@ async function assertForcedControlColors(tab: Page, label: string): Promise<void
     };
   });
   assert(forced.selected.length >= 10, `${label}: every filled selection is present`);
-  for (const selected of forced.selected) {
+    for (const selected of forced.selected) {
     assert.notEqual(selected.system.color, selected.system.background, `${label}: the system selection colors differ`);
     assert.deepEqual(selected.actual, selected.system, `${label}/${selected.name}: selected labels use their own scheme's Highlight and HighlightText`);
   }
@@ -264,7 +266,20 @@ try {
             assert.match(await tab.locator("#steps .hkm-step-announcement").textContent() ?? "", /Step 3 of 3/u, `${label}: Next reaches the last step`);
             const lastStepHeight = await tab.locator("#steps .hkm-step-stage").evaluate((node) => node.getBoundingClientRect().height);
             assert(Math.abs(initialStepHeight - lastStepHeight) < 1, `${label}: the last step preserves the same stage height`);
-            for (const showcase of ["#showcase", "#steps"]) {
+            const stepList = tab.locator('#steps [role="tablist"]');
+            const verticalSteps = await stepList.getAttribute("aria-orientation") === "vertical";
+            await tab.locator("#steps").getByRole("tab", { name: "Step 3", exact: true }).focus();
+            await tab.keyboard.press(verticalSteps ? "ArrowRight" : "ArrowDown");
+            assert.equal(await tab.locator('#steps [role="tab"][aria-selected="true"]').getAttribute("aria-label"), "Step 3", `${label}: perpendicular arrows retain page navigation`);
+            await tab.keyboard.press("Home");
+            assert.equal(await tab.locator('#steps [role="tab"][aria-selected="true"]').getAttribute("aria-label"), "Step 1", `${label}: Home selects the first step`);
+            await tab.keyboard.press(verticalSteps ? "ArrowDown" : "ArrowRight");
+            assert.equal(await tab.locator('#steps [role="tab"][aria-selected="true"]').getAttribute("aria-label"), "Step 2", `${label}: arrows follow the selector orientation`);
+            await tab.keyboard.press("End");
+            assert.equal(await tab.locator('#steps [role="tab"][aria-selected="true"]').getAttribute("aria-label"), "Step 3", `${label}: End selects the last step`);
+            await tab.keyboard.press("Tab");
+            assert(await tab.locator('#steps [role="tabpanel"][aria-hidden="false"]').evaluate((node) => node === document.activeElement), `${label}: keyboard focus reaches the selected preview`);
+            for (const showcase of ["#showcase"]) {
               const folder = await tab.locator(`${showcase} [role="tab"][aria-selected="true"]`).evaluate((node) => {
                 const panel = document.getElementById(node.getAttribute("aria-controls") ?? "");
                 const frame = panel?.closest(".hkm-step-stage") ?? panel;
@@ -321,12 +336,25 @@ try {
               const stage = root.querySelector(".hkm-step-stage");
               const panel = root.querySelector('.hkm-step-panel[aria-hidden="false"]');
               const frame = panel?.querySelector(".hkm-window");
-              if (stage === null || panel === null || frame === null || frame === undefined) throw new Error("Missing fill frame");
+              const controls = root.querySelector(".hkm-step-controls");
+              const list = root.querySelector('[role="tablist"]');
+              const previous = root.querySelector('.hkm-step-button[aria-label="Back"]');
+              const next = root.querySelector('.hkm-step-button[aria-label="Next"]');
+              if (stage === null || panel === null || frame === null || frame === undefined || controls === null || list === null || previous === null || next === null) throw new Error("Missing fill frame or navigation");
               const inner = panel.querySelector(".hkm-fit-inner");
               if (inner === null) throw new Error("Missing fill content");
               return {
                 height: stage.getBoundingClientRect().height, frameHeight: frame.getBoundingClientRect().height,
                 width: stage.getBoundingClientRect().width, frameWidth: frame.getBoundingClientRect().width,
+                walkthroughHeight: root.getBoundingClientRect().height,
+                navigation: {
+                  vertical: list.getAttribute("aria-orientation") === "vertical",
+                  controls: controls.getBoundingClientRect().toJSON(), list: list.getBoundingClientRect().toJSON(),
+                  previous: previous.getBoundingClientRect().toJSON(), next: next.getBoundingClientRect().toJSON(), stage: stage.getBoundingClientRect().toJSON(),
+                  tabFonts: [...list.querySelectorAll(".hkm-step-label")].map((node) => getComputedStyle(node).fontSize),
+                  numbers: [...list.querySelectorAll(".hkm-step-number")].map((node) => ({ border: getComputedStyle(node).borderTopWidth, radius: getComputedStyle(node).borderTopLeftRadius, background: getComputedStyle(node).backgroundColor })),
+                  headers: [...stage.querySelectorAll(".hkm-title-bar,.hkm-browser-bar")].map((node) => ({ height: node.getBoundingClientRect().height, font: getComputedStyle(node).fontSize })),
+                },
                 rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
                 scale: getComputedStyle(inner).transform,
                 probes: root.querySelectorAll("[data-hkm-measuring]").length,
@@ -338,6 +366,19 @@ try {
               };
             });
             const initial = await observe();
+            const navigation = initial.navigation;
+            assert(Math.abs(navigation.previous.top - navigation.next.top) < 1, `${label}: both arrows share the top row`);
+            assert(navigation.previous.height >= 44 && navigation.next.height >= 44, `${label}: navigation meets the touch target minimum`);
+            assert(new Set(navigation.tabFonts).size === 1, `${label}: every label has the same font size`);
+            assert(navigation.numbers.every((number) => number.border === "0px" && number.radius === "0px" && number.background === "rgba(0, 0, 0, 0)"), `${label}: step numbers are plain text`);
+            assert(new Set(navigation.headers.map((header) => header.height)).size === 1 && new Set(navigation.headers.map((header) => header.font)).size === 1, `${label}: browser and terminal chrome have consistent sizes`);
+            if (navigation.vertical) {
+              assert(navigation.controls.right < navigation.stage.left, `${label}: descriptive selector sits beside the preview`);
+              assert(navigation.list.top >= navigation.previous.bottom, `${label}: arrows remain above the stacked choices`);
+            } else {
+              assert(navigation.previous.right <= navigation.list.left && navigation.list.right <= navigation.next.left, `${label}: arrows bracket the compact tab strip`);
+              assert(navigation.next.bottom < navigation.stage.top, `${label}: compact navigation remains above the preview`);
+            }
             await tab.locator("#fill-steps .hkm-step-stage").evaluate((node) => {
               let changes = 0;
               const observer = new MutationObserver((records) => { changes += records.length; });
@@ -348,6 +389,7 @@ try {
               if (step > 0) await tab.locator("#fill-steps").getByRole("button", { name: "Next" }).click();
               const actual = await observe();
               assert(Math.abs(actual.height - initial.height) < 1, `${label}: changing steps keeps the stage stable`);
+              assert(Math.abs(actual.walkthroughHeight - initial.walkthroughHeight) < 1, `${label}: descriptions and navigation reserve stable space`);
               assert(Math.abs(actual.frameHeight - (actual.height - 2)) < 1, `${label}: active frame fills the stage`);
               assert(Math.abs(actual.frameWidth - (actual.width - 2)) < 1, `${label}: active frame fills available width`);
               assert.equal(actual.scale, "none", `${label}: presentation text never scales down`);
@@ -368,7 +410,7 @@ try {
             fillEvidence.push(await inspectNestedFit(tab, label, screenshots, "#fill-mixed-modes"));
             const [sparse, dense] = initial.terminals;
             assert(sparse !== undefined && dense !== undefined, `${label}: both terminal densities are covered`);
-            assert(sparse.font > dense.font, `${label}: sparse content receives larger type than dense content`);
+            assert.equal(sparse.font, dense.font, `${label}: every authored terminal uses one consistent type size`);
             await tab.waitForSelector("#fill-modes [data-hkm-fitted]");
             const observeMode = async (settle = true) => {
               // The owned copy measures synchronously; live authored transitions
@@ -386,6 +428,8 @@ try {
                 }));
                 return {
                   height: stage.getBoundingClientRect().height, width: stage.getBoundingClientRect().width,
+                  walkthroughHeight: root.getBoundingClientRect().height,
+                  stageOffset: stage.getBoundingClientRect().top - root.getBoundingClientRect().top,
                   frameHeight: frame.getBoundingClientRect().height, frameWidth: frame.getBoundingClientRect().width,
                   terminals, rootFont: Number.parseFloat(getComputedStyle(document.documentElement).fontSize),
                   hiddenFixtures: fixtures.filter((fixture) => fixture.hidden && fixture.inert && getComputedStyle(fixture).display === "none").length,
@@ -421,6 +465,7 @@ try {
                 const actual = await observeMode();
                 const stateLabel = `${label}/mode/${mode}/${option}/${surface}`;
                 assert(Math.abs(actual.height - firstMode.height) < 1, `${stateLabel}: every authored choice keeps the same reserved height`);
+                assert(Math.abs(actual.walkthroughHeight - firstMode.walkthroughHeight) < 1 && Math.abs(actual.stageOffset - firstMode.stageOffset) < 1, `${stateLabel}: descriptions reserve space without moving the preview`);
                 assert(actual.height >= 280, `${stateLabel}: explicit height remains a minimum`);
                 assert(Math.abs(actual.frameHeight - actual.height) < 1 && Math.abs(actual.frameWidth - actual.width) < 1, `${stateLabel}: selected frame fills the panel`);
                 assert.equal(actual.fixtures, 8, `${stateLabel}: finite full-source combinations are reserved`);
@@ -544,6 +589,11 @@ try {
             assert.equal(rgbHex(custom.color), "#173428", `${label}: custom accent foreground`);
 
             await tab.emulateMedia({ forcedColors: "active" });
+            // Forced colors repaint through the authored 160ms color
+            // transitions; wait two frames plus the longest transition before
+            // sampling so the assertion reads the settled system pair.
+            await tab.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+            await new Promise<void>((resolve) => setTimeout(resolve, 250));
             await assertForcedControlColors(tab, label);
             paletteCases += 1;
           } finally { await context.close(); }
