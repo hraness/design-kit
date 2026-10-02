@@ -143,6 +143,7 @@
     "src/browser/artifact-share.ts",
     "src/browser/foil.ts",
     "src/browser/index.ts",
+    "src/browser/marketing-header.ts",
     "src/browser/status-field.ts",
     "src/browser/status-page.ts",
     "src/browser/sticky-offset.ts",

@@ -115,29 +115,6 @@ async function assertForcedControlColors(tab: Page, label: string): Promise<void
       focus: { actual: getComputedStyle(focus).outlineColor, system: system(focus).color },
     };
   });
-  if (label === "catppuccin/light") {
-    const debug = await tab.evaluate(() => {
-      const node = [...document.querySelectorAll<HTMLElement>('.hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"]')].find((candidate) => candidate.textContent?.trim().startsWith("Run"));
-      if (node === undefined) return null;
-      const rules: string[] = [];
-      const visit = (list: CSSRuleList) => {
-        for (const rule of [...list]) {
-          if (rule instanceof CSSStyleRule && node.matches(rule.selectorText) && /background|color|forced-color-adjust/.test(rule.cssText)) rules.push(rule.cssText);
-          if (rule instanceof CSSGroupingRule) visit(rule.cssRules);
-        }
-      };
-      for (const sheet of [...document.styleSheets]) {
-        try {
-          visit(sheet.cssRules);
-        } catch {
-          continue; // Cross-origin sheets deny cssRules; the local sheet supplies the selection rules.
-        }
-      }
-      const style = getComputedStyle(node);
-      return { media: matchMedia("(forced-colors: active)").matches, fit: node.closest(".hkm-showcase")?.getAttribute("data-hkm-fit"), background: style.backgroundColor, color: style.color, forcedColorAdjust: style.forcedColorAdjust, rules };
-    });
-    console.log("FORCED_DEBUG", JSON.stringify(debug));
-  }
   assert(forced.selected.length >= 10, `${label}: every filled selection is present`);
     for (const selected of forced.selected) {
     assert.notEqual(selected.system.color, selected.system.background, `${label}: the system selection colors differ`);
@@ -612,6 +589,11 @@ try {
             assert.equal(rgbHex(custom.color), "#173428", `${label}: custom accent foreground`);
 
             await tab.emulateMedia({ forcedColors: "active" });
+            // Forced colors repaint through the authored 160ms color
+            // transitions; wait two frames plus the longest transition before
+            // sampling so the assertion reads the settled system pair.
+            await tab.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+            await new Promise<void>((resolve) => setTimeout(resolve, 250));
             await assertForcedControlColors(tab, label);
             paletteCases += 1;
           } finally { await context.close(); }

@@ -2760,12 +2760,17 @@
   }
 }
 
-/* Consumer layers can add a fill-stage tab rule after the legacy component
- * layer. Keep the system selection pair as the final forced-colors contract. */
+/* Consumer layers and palette variable chains can add stronger declarations
+ * after the legacy component layer. Keep the system selection pair as the
+ * final forced-colors contract. */
 @media (forced-colors: active) {
-  .hkm-showcase[data-hkm-fit="fill"].hkm-steps .hkm-tab[aria-selected="true"] {
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] {
     forced-color-adjust: none;
     background: Highlight !important;
+    color: HighlightText !important;
+  }
+
+  .hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"] :is(.hkm-step-number, .hkm-step-hint) {
     color: HighlightText !important;
   }
 }
