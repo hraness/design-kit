@@ -132,6 +132,15 @@ import {
   characterLength,
   xPostLength
 } from "../chunk-cejpzyfh.js";
+import {
+  BrowserFrame
+} from "../chunk-r4eh9b75.js";
+import {
+  StepThrough
+} from "../chunk-kd2sn8wh.js";
+import {
+  SampleText
+} from "../chunk-evb02bc1.js";
 import"../chunk-sabcr66p.js";
 import {
   __require
@@ -5976,7 +5985,7 @@ var designGallerySections = [{
   label: "Syntax"
 }];
 var designGalleryTouchKinds = ["button", "link", "radio", "range"];
-var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "platform install commands", "production preview notice", "relative time", "status pages", "syntax highlighting"];
+var designGalleryRecipeCoverage = ["@hraness/ui primitives", "animated rail stage", "application shells", "article layer", "charts", "chat message and composer", "dither surface", "fader", "foil card surface", "layout surfaces", "Lantern material", "playback transport", "plain site and publication grammar", "product-marketing grammar", "Nebula Sans typography", "procedural effects", "platform install commands", "production preview notice", "relative time", "responsive product walkthroughs", "status pages", "syntax highlighting"];
 var designGalleryRelativeTimeNow = Date.UTC(2026, 8, 26, 12, 0, 0);
 var relativeTimeExamples = [{
   id: "seconds",
@@ -6044,6 +6053,116 @@ var foilDeckExamples = [{
   ornament: "facets",
   preset: "max"
 }];
+function GalleryJobPreview({
+  state
+}) {
+  const completed = state === "saved";
+  return /* @__PURE__ */ jsx17(BrowserFrame, {
+    describe: `A conceptual job interface shows a weekly report ${state === "ready" ? "ready to run" : state === "running" ? "being prepared" : "saved beside its source"}.`,
+    url: "relay.example/jobs/weekly-report",
+    children: /* @__PURE__ */ jsxs15("div", {
+      className: "design-gallery__walkthrough-preview",
+      children: [
+        /* @__PURE__ */ jsx17("p", {
+          className: "design-gallery__walkthrough-context",
+          children: "WORKSPACE / JOBS"
+        }),
+        /* @__PURE__ */ jsxs15("p", {
+          className: "design-gallery__walkthrough-title",
+          children: [
+            /* @__PURE__ */ jsx17(SampleText, {
+              children: "Weekly report"
+            }),
+            /* @__PURE__ */ jsx17("span", {
+              className: "design-gallery__walkthrough-state",
+              children: state === "ready" ? "Ready" : completed ? "Saved" : "Running"
+            })
+          ]
+        }),
+        /* @__PURE__ */ jsxs15("dl", {
+          className: "design-gallery__walkthrough-facts",
+          children: [
+            /* @__PURE__ */ jsxs15("div", {
+              children: [
+                /* @__PURE__ */ jsx17("dt", {
+                  children: "Source"
+                }),
+                /* @__PURE__ */ jsx17("dd", {
+                  children: /* @__PURE__ */ jsx17(SampleText, {
+                    children: "orders.csv"
+                  })
+                })
+              ]
+            }),
+            /* @__PURE__ */ jsxs15("div", {
+              children: [
+                /* @__PURE__ */ jsx17("dt", {
+                  children: "Run"
+                }),
+                /* @__PURE__ */ jsx17("dd", {
+                  children: /* @__PURE__ */ jsx17(SampleText, {
+                    children: state === "ready" ? "On demand" : "run-042"
+                  })
+                })
+              ]
+            })
+          ]
+        }),
+        /* @__PURE__ */ jsxs15("ol", {
+          className: "design-gallery__walkthrough-checks",
+          children: [
+            /* @__PURE__ */ jsxs15("li", {
+              children: [
+                /* @__PURE__ */ jsx17("span", {
+                  children: "Check input"
+                }),
+                /* @__PURE__ */ jsx17("span", {
+                  children: state === "ready" ? "Waiting" : "Complete"
+                })
+              ]
+            }),
+            /* @__PURE__ */ jsxs15("li", {
+              children: [
+                /* @__PURE__ */ jsx17("span", {
+                  children: "Build report"
+                }),
+                /* @__PURE__ */ jsx17("span", {
+                  children: state === "ready" ? "Waiting" : completed ? "Complete" : "In progress"
+                })
+              ]
+            }),
+            /* @__PURE__ */ jsxs15("li", {
+              children: [
+                /* @__PURE__ */ jsx17("span", {
+                  children: "Save output"
+                }),
+                /* @__PURE__ */ jsx17("span", {
+                  children: completed ? "Complete" : "Waiting"
+                })
+              ]
+            })
+          ]
+        }),
+        /* @__PURE__ */ jsxs15("div", {
+          className: "design-gallery__walkthrough-result",
+          children: [
+            /* @__PURE__ */ jsx17("span", {
+              children: completed ? "Saved report" : "Output"
+            }),
+            /* @__PURE__ */ jsx17("strong", {
+              children: /* @__PURE__ */ jsx17(SampleText, {
+                children: completed ? "weekly-report.md" : "Weekly report"
+              })
+            }),
+            /* @__PURE__ */ jsx17("span", {
+              children: completed ? "12 sections · Source attached" : "Available after the run finishes"
+            })
+          ]
+        })
+      ]
+    })
+  });
+}
 function DesignSystemGallery({
   isNestedInMain = false
 }) {
@@ -6599,6 +6718,39 @@ Run the job, then show me its log.`,
                         label: "Relay agent commands"
                       })
                     ]
+                  }),
+                  /* @__PURE__ */ jsx17(MarketingSection, {
+                    heading: "Show the result at each step.",
+                    headingId: "gallery-walkthrough",
+                    headingLevel: 3,
+                    label: "Walkthrough",
+                    summary: "Use short labels and visible explanations beside a compact illustration of what changes.",
+                    children: /* @__PURE__ */ jsx17(StepThrough, {
+                      fit: "fill",
+                      label: "Run a Relay job",
+                      steps: [{
+                        id: "choose",
+                        label: "Choose a job",
+                        hint: "Pick a saved job and review the file it reads before starting the run.",
+                        render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
+                          state: "ready"
+                        })
+                      }, {
+                        id: "run",
+                        label: "Watch the run",
+                        hint: "See the input check, transformation, and saved output as separate stages.",
+                        render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
+                          state: "running"
+                        })
+                      }, {
+                        id: "inspect",
+                        label: "Read the result",
+                        hint: "Open the saved report with the run ID and source file beside it.",
+                        render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
+                          state: "saved"
+                        })
+                      }]
+                    })
                   }),
                   /* @__PURE__ */ jsx17(MarketingPrimitives, {
                     columns: 3,

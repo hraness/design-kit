@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
 import { renderToStaticMarkup } from "react-dom/server";
+import { parseHTML } from "linkedom";
 
 import { mockupFixtureHandles, mockupFixtures, MockupsFixture } from "../../gallery/mockups-fixture.js";
 import { assertFakeHandles, assertNoHeadings, assertRoleImgWithLabel, htmlText, renderMatrix, stripMockupSamples } from "../testing.js";
@@ -168,6 +169,23 @@ describe("mockup copy details", () => {
     expect(steps).not.toContain("<figcaption");
   });
 
+  test("showcase explanations include the surface and reserve inactive complete choices without exposing them", () => {
+    const html = renderToStaticMarkup(<clientApi.ModeShowcase
+      modes={[{ id: "short", label: "Short", hint: "Ready." }, { id: "long", label: "Long", hint: "Review every recorded source before opening the result." }]}
+      options={[{ id: "brief", label: "Brief", hint: "One passage." }, { id: "full", label: "Full", hint: "Read the surrounding paragraphs too." }]}
+      surfaces={[{ id: "document", label: "Document", hint: "Shows the saved document.", render: () => <span>Document</span> }]}
+    />);
+    expect(html).toContain("Shows the saved document. Ready. One passage.");
+    expect(html).toContain("Shows the saved document. Review every recorded source before opening the result. Read the surrounding paragraphs too.");
+    const reserved: string[] = [];
+    new HTMLRewriter().on('[data-hkm-reserving]', { element(element) {
+      expect(element.getAttribute("aria-hidden")).toBe("true");
+      expect(element.hasAttribute("inert")).toBe(true);
+      reserved.push(element.tagName);
+    } }).transform(html);
+    expect(reserved).toHaveLength(3);
+  });
+
   test("counts read as singular only for exactly one", () => {
     const article = (count: number) => renderToStaticMarkup(
       <api.ArticlePage
@@ -211,6 +229,31 @@ test("step walkthroughs reserve all panels while exposing only the selected one"
   expect(html).toContain('aria-label="Next"');
   expect(html).toContain("First view");
   expect(html).toContain("Tall view");
+  const { document } = parseHTML(html);
+  const panels = [...document.querySelectorAll(".hkm-step-panel")];
+  expect(panels.map((panel) => panel.hasAttribute("inert"))).toEqual([false, true]);
+  expect(panels.map((panel) => panel.getAttribute("aria-hidden"))).toEqual(["false", "true"]);
+});
+
+test("mode surfaces and measuring copies retain the actual inert attribute only when inactive", () => {
+  const html = renderToStaticMarkup(<clientApi.ModeShowcase
+    fit="fill"
+    modes={[{ id: "plain", label: "Plain" }]}
+    surfaces={[
+      { id: "first", label: "First", render: () => <button type="button">First action</button> },
+      { id: "second", label: "Second", render: () => <button type="button">Second action</button> },
+    ]}
+  />);
+  const { document } = parseHTML(html);
+  const surfaces = [...document.querySelectorAll(".hkm-mode-surface:not([data-hkm-measurement])")];
+  expect(surfaces.map((surface) => surface.hasAttribute("inert"))).toEqual([false, true]);
+  const measurements = [...document.querySelectorAll("[data-hkm-measurement]")];
+  expect(measurements).toHaveLength(2);
+  for (const measurement of measurements) {
+    expect(measurement.hasAttribute("inert")).toBe(true);
+    expect(measurement.hasAttribute("hidden")).toBe(true);
+  }
+  expect(html).not.toContain('inert="false"');
 });
 
 
@@ -225,6 +268,32 @@ test("filled steps and presentation terminals are explicit server-safe options",
   expect(renderToStaticMarkup(<api.TerminalFrame describe="A terminal starts a job." lines={lines} />)).not.toContain("data-hkm-density");
   expect(() => renderToStaticMarkup(<api.TerminalFrame density={"small" as "standard"} describe="A terminal starts a job." lines={lines} />)).toThrow("Terminal density");
   expect(() => renderToStaticMarkup(<clientApi.StepThrough fit={"small" as "natural"} steps={[{ id: "run", label: "Run", render: () => terminal }]} />)).toThrow("StepThrough fit");
+});
+
+test("step navigation leads the preview and descriptions stay associated with their tabs", () => {
+  const html = renderToStaticMarkup(<clientApi.StepThrough initial="read" label="Review a run" steps={[
+    { id: "start", label: "Start", hint: "Choose the input.", render: () => <span>Input</span> },
+    { id: "read", label: "Read", hint: "Read the saved result and its source.", render: () => <span>Result</span> },
+    { id: "keep", label: "Keep", hint: "  ", render: () => <span>Saved</span> },
+  ]} />);
+  const document = parseHTML(html).document;
+  const navigation = must(document.querySelector(".hkm-step-nav") ?? undefined);
+  expect(navigation.firstElementChild?.getAttribute("aria-label")).toBe("Back");
+  expect(navigation.lastElementChild?.getAttribute("aria-label")).toBe("Next");
+  expect(document.querySelector(".hkm-step-controls")?.nextElementSibling?.className).toContain("hkm-step-stage");
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  expect(tabs.map((tab) => tab.getAttribute("aria-label"))).toEqual(["Start", "Read", "Keep"]);
+  expect(tabs.map((tab) => tab.getAttribute("tabindex"))).toEqual(["-1", "0", "-1"]);
+  for (const tab of tabs) {
+    const descriptionId = tab.getAttribute("aria-describedby");
+    if (descriptionId === null) expect(tab.getAttribute("aria-label")).toBe("Keep");
+    else expect(document.getElementById(descriptionId)?.className).toBe("hkm-step-hint");
+    const panel = document.getElementById(must(tab.getAttribute("aria-controls") ?? undefined));
+    expect(panel?.getAttribute("aria-labelledby")).toBe(tab.id);
+    expect(panel?.getAttribute("tabindex")).toBe(tab.getAttribute("tabindex"));
+  }
+  expect(document.querySelector("figcaption")).toBeNull();
+  expect(document.querySelector('[aria-live="polite"]')?.textContent).toContain("Step 2 of 3. Read the saved result and its source.");
 });
 
 

@@ -13,7 +13,8 @@ describe("mockup control color pairs", () => {
     // The running dot carries no text. Every other solid fill has a label or glyph.
     const decorative = ".hkm-root .hkm-agent-turn[data-hkm-tone=\"running\"] .hkm-agent-status";
     const filled = rules.filter(({ selector }) => selector !== decorative);
-    expect(filled.length).toBeGreaterThanOrEqual(4);
+    // Plain step numbers no longer add an accent-filled label.
+    expect(filled.length).toBeGreaterThanOrEqual(3);
     for (const { declarations } of filled) {
       expect(declarations).toContain("color: var(--hkm-accent-foreground);");
     }
@@ -71,12 +72,13 @@ describe("mockup control color pairs", () => {
     const forced = css.slice(css.indexOf("@media (forced-colors: active)"));
     for (const selector of [
       '.hkm-segmented button[aria-pressed="true"],',
-      ".hkm-tab[data-hkm-done] .hkm-step-number,",
+      '.hkm-step-tabs .hkm-tab[aria-selected="true"],',
       ".hkm-popover-item[data-hkm-selected],",
       ".hkm-work-mark",
     ]) expect(forced).toContain(selector);
     expect(forced).toContain("background: Highlight;");
     expect(forced).toContain("color: HighlightText;");
+    expect(forced).toMatch(/\.hkm-tab\[aria-selected="true"\] :is\(\.hkm-step-number, \.hkm-step-hint\)\s*\{\s*color: HighlightText;/u);
     expect(forced).toMatch(/\.hkm-segmented button\[aria-pressed="true"\]:focus-visible\s*\{\s*outline-color: HighlightText;/u);
     expect(forced).toMatch(/\.hkm-segmented button\[aria-pressed="true"\]:disabled\s*\{\s*background: ButtonFace;\s*color: GrayText;/u);
   });

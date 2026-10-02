@@ -467,6 +467,7 @@ function requireAggregateContract(source: string): void {
     '@import "./product-marketing.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
+    '@import "./mockups.css";',
     '@import "./palette-bridge.css";',
     '@import "./lantern-material.css";',
   ];
@@ -497,6 +498,7 @@ function requireCompilerFoundationContract(source: string): void {
     '@import "./status-page.css";',
     '@import "./product-marketing-foundation.css";',
     '@import "./design-gallery.css";',
+    '@import "./mockups.css";',
     '@import "./lantern-material.css";',
   ];
   const statements = topLevelStatements(source, "src/compiler-foundation.css");

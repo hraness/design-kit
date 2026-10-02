@@ -9,6 +9,7 @@ import {
   useMemo,
   useRef,
   useState,
+  version,
 } from "react";
 
 import { joinMockupClasses, type MockupTheme } from "./core.js";
@@ -22,6 +23,18 @@ import { joinMockupClasses, type MockupTheme } from "./core.js";
 // React warns about useLayoutEffect during server rendering; these shells
 // measure only in the browser.
 const useIsomorphicLayoutEffect: typeof useLayoutEffect = typeof document === "undefined" ? () => undefined : useLayoutEffect;
+
+// React 18 drops unknown boolean attributes; React 19 recognizes inert as
+// boolean. Keep the actual HTML attribute in both supported runtimes. The
+// record describes compatibility attributes without claiming React 18's
+// HTMLAttributes (or React 19's boolean-only inert prop) accepts both forms.
+const inertAttribute: Readonly<Record<string, true | "">> = {
+  inert: Number.parseInt(version, 10) >= 19 ? true : "",
+};
+const noInertAttribute: Readonly<Record<string, true | "">> = {};
+function inertAttributes(inactive: boolean): Readonly<Record<string, true | "">> {
+  return inactive ? inertAttribute : noInertAttribute;
+}
 
 function assertUniqueIds(items: readonly Readonly<{ id: string }>[], what: string): void {
   if (items.length === 0) throw new RangeError(`${what} needs at least one entry.`);
@@ -128,6 +141,8 @@ export type ShowcaseState<M extends string, O extends string = string> = Readonl
 export type ShowcaseSurface<S extends string, M extends string, O extends string = string> = Readonly<{
   id: S;
   label: string;
+  /** Optional explanation of what this surface illustrates. */
+  hint?: string;
   render: (state: ShowcaseState<M, O>) => ReactNode;
 }>;
 
@@ -208,7 +223,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   // Pure, nonanimated authored states reserve one maximum before any choice.
   // They stay hidden and inert; only a detached measurement clone reveals them.
   const measurements = useMemo(() => fit !== "fill" ? null : surfaces.flatMap((entry) => modes.flatMap((choice) => (options ?? [{ id: undefined }]).map((optionChoice) => (
-    <div aria-hidden="true" className="hkm-mode-surface" data-hkm-measurement="" hidden inert key={JSON.stringify([entry.id, choice.id, optionChoice.id])}>
+    <div aria-hidden="true" className="hkm-mode-surface" data-hkm-measurement="" hidden {...inertAttributes(true)} key={JSON.stringify([entry.id, choice.id, optionChoice.id])}>
       <div className="hkm-fit"><div className="hkm-fit-inner">
         {entry.render({ animated: false, mode: choice.id, option: optionChoice.id, previousMode: choice.id, theme })}
       </div></div>
@@ -238,10 +253,12 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
   };
 
   const statusNode = status?.({ mode, option, surface: surface.id });
-  const hint = [modeChoice.hint, optionInactive ? undefined : optionChoice?.hint]
-    .map((text) => optionalText(text, "ModeShowcase hint"))
-    .filter((text) => text !== undefined)
-    .join(" ");
+  const describeChoice = (surfaceHint: string | undefined, modeHint: string | undefined, optionHint: string | undefined) =>
+    [surfaceHint, modeHint, optionHint].map((text) => optionalText(text, "ModeShowcase hint")).filter((text) => text !== undefined).join(" ");
+  const hint = describeChoice(surface.hint, modeChoice.hint, optionInactive ? undefined : optionChoice?.hint);
+  const hints = [...new Set(surfaces.flatMap((entry) => modes.flatMap((choice) =>
+    (optionInactiveModes.includes(choice.id) ? [undefined] : (options ?? [undefined])).map((optionEntry) =>
+      describeChoice(entry.hint, choice.hint, optionEntry?.hint)))))].filter((text) => text !== "");
   const hasStatus = statusNode !== undefined && statusNode !== null && statusNode !== false && statusNode !== "";
   return (
     <figure
@@ -307,7 +324,12 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
               </div>
             )}
           </div>
-          {hint === "" ? null : <p className="hkm-showcase-hint">{hint}</p>}
+          {hints.length === 0 ? null : (
+            <div className="hkm-showcase-hints">
+              <p className="hkm-showcase-hint">{hint}</p>
+              {hints.filter((text) => text !== hint).map((text) => <p aria-hidden="true" className="hkm-showcase-hint" data-hkm-reserving="" {...inertAttributes(true)} key={text}>{text}</p>)}
+            </div>
+          )}
         </div>
         <div className="hkm-mode-stage" ref={stage}>
           {measurements}
@@ -317,7 +339,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
               className="hkm-mode-surface"
               data-hkm-animated={entry.id === surface.id && animated ? "" : undefined}
               data-hkm-from={entry.id === surface.id && animated ? previousMode : undefined}
-              inert={entry.id !== surface.id}
+              {...inertAttributes(entry.id !== surface.id)}
               key={entry.id}
             >
               <FitToWidth minWidth={fit === "fill" ? 1 : minWidth}>
@@ -345,7 +367,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
 export type ThroughStep = Readonly<{
   id: string;
   label: string;
-  /** Optional accessible context; the visual keeps its own explanation. */
+  /** Optional explanation beside the label, and above the preview on compact screens. */
   hint?: string;
   render: (state: Readonly<{ animated: boolean; theme: MockupTheme | undefined }>) => ReactNode;
 }>;
@@ -416,14 +438,14 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
     // The tallest complete slide establishes the floor. Fitted type never feeds
     // back into it, and changing the active tab never requests a measurement.
     stage.style.setProperty("--hkm-showcase-fill-height", `${naturalHeight}px`);
-    for (const fixture of probe.querySelectorAll("[data-hkm-measurement]")) fixture.remove();
     probe.style.blockSize = `${naturalHeight}px`;
     probe.removeAttribute("data-hkm-measuring");
     const bodies = presentationBodies(stage).filter((body) => body.closest("[data-hkm-measurement]") === null);
     const copies = presentationBodies(probe);
-    for (const [index, copy] of copies.entries()) {
-      const body = bodies[index];
-      if (body === undefined) continue;
+    // Every authored state uses one readable size. A short terminal must not
+    // become a different typographic scale when the next tab has more lines.
+    let sharedSize = 4;
+    for (const copy of copies) {
       const lines = [...copy.querySelectorAll<HTMLElement>(".hkm-terminal-line")];
       const wrappedRows = (line: HTMLElement) => Math.ceil((line.getBoundingClientRect().height - 0.5) / Number.parseFloat(getComputedStyle(line).lineHeight));
       const baselineRows = lines.map(wrappedRows);
@@ -435,8 +457,9 @@ function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
         if (copy.scrollHeight <= copy.clientHeight + 1 && copy.scrollWidth <= copy.clientWidth + 1 && lines.every((line, index) => { const baseline = baselineRows[index]; return baseline !== undefined && wrappedRows(line) <= baseline; })) low = candidate;
         else high = candidate;
       }
-      body.style.setProperty("--hkm-terminal-presentation-size", `${Math.floor(low * 1000) / 1000}rem`);
+      sharedSize = Math.min(sharedSize, low);
     }
+    for (const body of bodies) body.style.setProperty("--hkm-terminal-presentation-size", `${Math.floor(sharedSize * 1000) / 1000}rem`);
     stage.setAttribute("data-hkm-fitted", "");
   } finally {
     probe.remove();
@@ -485,9 +508,10 @@ function useFittedShowcaseStage(fit: "natural" | "fill", source: unknown, variat
 }
 
 /**
- * Folder tabs and chevron controls walk a flow. All render functions stay mounted
- * to reserve the tallest panel; inactive panels are inert and visually hidden.
- * The keyboard model matches `ModeShowcase`.
+ * A descriptive selector walks a flow beside its preview, with a compact tab
+ * strip on narrower screens. All render functions stay mounted to reserve the
+ * tallest panel; inactive panels are inert and visually hidden. The keyboard
+ * model matches `ModeShowcase`.
  */
 export function StepThrough({
   caption,
@@ -500,7 +524,7 @@ export function StepThrough({
   theme,
 }: Readonly<{
   steps: readonly ThroughStep[];
-  /** Fill the tallest natural slide and fit presentation terminals without scaling. */
+  /** Fill the tallest natural slide and fit presentation terminals at one shared size. */
   fit?: "natural" | "fill";
   caption?: string;
   initial?: string;
@@ -516,17 +540,44 @@ export function StepThrough({
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));
   const [animated, setAnimated] = useState(false);
+  const [vertical, setVertical] = useState(false);
+  const layout = useRef<HTMLDivElement>(null);
+  const tablist = useRef<HTMLDivElement>(null);
   const tabs = useRef(new Map<number, HTMLButtonElement>());
   const current = Math.min(index, steps.length - 1);
-  const step = itemAt(steps, current, "StepThrough steps");
+  const hints = steps.map((entry) => optionalText(entry.hint, "StepThrough hint"));
+  const currentHint = hints[current];
+
+  useIsomorphicLayoutEffect(() => {
+    const node = layout.current;
+    if (node === null || typeof ResizeObserver === "undefined") return undefined;
+    const measure = () => setVertical(node.clientWidth >= 720);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    const list = tablist.current;
+    const selected = tabs.current.get(current);
+    if (vertical || list === null || selected === undefined) return;
+    const bounds = list.getBoundingClientRect();
+    const active = selected.getBoundingClientRect();
+    // Scroll only the owned strip, without moving the surrounding page.
+    if (active.left < bounds.left) list.scrollLeft += active.left - bounds.left;
+    else if (active.right > bounds.right) list.scrollLeft += active.right - bounds.right;
+  }, [current, vertical]);
 
   const go = (next: number, focus = false) => {
     if (next < 0 || next >= steps.length || next === current) return;
     setIndex(next);
     setAnimated(true);
-    if (focus) tabs.current.get(next)?.focus();
+    if (focus) tabs.current.get(next)?.focus({ preventScroll: true });
   };
   const onTabKey = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (vertical && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
+    if (!vertical && (event.key === "ArrowUp" || event.key === "ArrowDown")) return;
     const next = nextTabIndex(event.key, current, steps.length);
     if (next === undefined) return;
     event.preventDefault();
@@ -535,61 +586,75 @@ export function StepThrough({
 
   return (
     <figure aria-label={`Illustration: ${label.toLowerCase()}`} className={joinMockupClasses("hkm-showcase", "hkm-steps", className)} data-hkm-fit={fit === "fill" ? fit : undefined} data-hkm-theme={theme} data-nosnippet="">
-      <div className="hkm-showcase-controls">
-        <div aria-label={label} className="hkm-tabs hkm-folder-tabs hkm-step-tabs" role="tablist">
-          {steps.map((entry, position) => (
-            <button
-              aria-controls={`${id}-panel-${entry.id}`}
-              aria-selected={position === current}
-              className="hkm-tab"
-              data-hkm-done={position < current ? "" : undefined}
-              id={`${id}-tab-${entry.id}`}
-              key={entry.id}
-              onClick={() => go(position)}
-              onKeyDown={onTabKey}
-              ref={(element) => {
-                if (element === null) tabs.current.delete(position);
-                else tabs.current.set(position, element);
-              }}
-              role="tab"
-              tabIndex={position === current ? 0 : -1}
-              type="button"
-            >
-              <span aria-hidden="true" className="hkm-step-number">{position + 1}</span>
-              {entry.label}
+      <div className="hkm-step-layout" ref={layout}>
+        <div className="hkm-showcase-controls hkm-step-controls">
+          <div className="hkm-step-nav">
+            <button aria-label="Back" className="hkm-step-button" disabled={current === 0} onClick={() => go(current - 1)} type="button">
+              <svg aria-hidden="true" focusable="false" height="20" viewBox="0 0 24 24" width="20"><path d="m14.5 5-7 7 7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
             </button>
+            <span aria-hidden="true" className="hkm-step-count">{current + 1} / {steps.length}</span>
+            <div aria-label={label} aria-orientation={vertical ? "vertical" : "horizontal"} className="hkm-tabs hkm-step-tabs" ref={tablist} role="tablist">
+              {steps.map((entry, position) => (
+                <button
+                  aria-controls={`${id}-panel-${entry.id}`}
+                  aria-describedby={hints[position] === undefined ? undefined : `${id}-hint-${entry.id}`}
+                  aria-label={entry.label}
+                  aria-selected={position === current}
+                  className="hkm-tab"
+                  data-hkm-done={position < current ? "" : undefined}
+                  id={`${id}-tab-${entry.id}`}
+                  key={entry.id}
+                  onClick={() => go(position)}
+                  onKeyDown={onTabKey}
+                  ref={(element) => {
+                    if (element === null) tabs.current.delete(position);
+                    else tabs.current.set(position, element);
+                  }}
+                  role="tab"
+                  tabIndex={position === current ? 0 : -1}
+                  type="button"
+                >
+                  <span aria-hidden="true" className="hkm-step-number">{position + 1}</span>
+                  <span className="hkm-step-copy">
+                    <span className="hkm-step-label">{entry.label}</span>
+                    {hints[position] === undefined ? null : <span className="hkm-step-hint" id={`${id}-hint-${entry.id}`}>{hints[position]}</span>}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <button aria-label="Next" className="hkm-step-button" disabled={current === steps.length - 1} onClick={() => go(current + 1)} type="button">
+              <svg aria-hidden="true" focusable="false" height="20" viewBox="0 0 24 24" width="20"><path d="m9.5 5 7 7-7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
+            </button>
+          </div>
+          {hints.some((hint) => hint !== undefined) ? (
+            <div aria-hidden="true" className="hkm-step-descriptions">
+              {steps.map((entry, position) => <p className="hkm-step-description" data-hkm-active={position === current ? "" : undefined} key={entry.id}>{hints[position]}</p>)}
+            </div>
+          ) : null}
+        </div>
+        <div className="hkm-showcase-stage hkm-step-stage" ref={stage}>
+          {steps.map((entry, position) => (
+            <div
+              aria-hidden={position !== current}
+              aria-labelledby={`${id}-tab-${entry.id}`}
+              className="hkm-step-panel"
+              data-hkm-animated={position === current && animated ? "" : undefined}
+              id={`${id}-panel-${entry.id}`}
+              {...inertAttributes(position !== current)}
+              key={entry.id}
+              role="tabpanel"
+              tabIndex={position === current ? 0 : -1}
+            >
+              {fit === "fill"
+                ? <div className="hkm-fit"><div className="hkm-fit-inner">{entry.render({ animated: position === current && animated, theme })}</div></div>
+                : <FitToWidth minWidth={minWidth}>{entry.render({ animated: position === current && animated, theme })}</FitToWidth>}
+            </div>
           ))}
         </div>
       </div>
-      <div className="hkm-showcase-stage hkm-step-stage" ref={stage}>
-        {steps.map((entry, position) => (
-          <div
-            aria-hidden={position !== current}
-            aria-labelledby={`${id}-tab-${entry.id}`}
-            className="hkm-step-panel"
-            data-hkm-animated={position === current && animated ? "" : undefined}
-            id={`${id}-panel-${entry.id}`}
-            inert={position !== current}
-            key={entry.id}
-            role="tabpanel"
-          >
-            {fit === "fill"
-              ? <div className="hkm-fit"><div className="hkm-fit-inner">{entry.render({ animated: position === current && animated, theme })}</div></div>
-              : <FitToWidth minWidth={minWidth}>{entry.render({ animated: position === current && animated, theme })}</FitToWidth>}
-          </div>
-        ))}
-      </div>
-      <div className="hkm-step-nav">
-        <button aria-label="Back" className="hkm-step-button" disabled={current === 0} onClick={() => go(current - 1)} type="button">
-          <svg aria-hidden="true" focusable="false" height="28" viewBox="0 0 24 24" width="28"><path d="m14.5 5-7 7 7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
-        </button>
-        <span aria-live="polite" className="hkm-showcase-status hkm-step-announcement">
-          Step {current + 1} of {steps.length}{step.hint === undefined ? "" : `. ${step.hint}`}
-        </span>
-        <button aria-label="Next" className="hkm-step-button" data-hkm-primary="" disabled={current === steps.length - 1} onClick={() => go(current + 1)} type="button">
-          <svg aria-hidden="true" focusable="false" height="28" viewBox="0 0 24 24" width="28"><path d="m9.5 5 7 7-7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
-        </button>
-      </div>
+      <span aria-live="polite" className="hkm-showcase-status hkm-step-announcement">
+        Step {current + 1} of {steps.length}{currentHint === undefined ? "" : `. ${currentHint}`}
+      </span>
       {captionText === undefined ? null : (
         <figcaption className="hkm-showcase-caption"><span>{captionText}</span></figcaption>
       )}
