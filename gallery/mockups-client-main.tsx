@@ -45,9 +45,10 @@ const fillSteps = [
   { id: "command", label: "Run", hint: "Choose the first command and inspect its saved result.", render: () => <TerminalFrame density="presentation" describe="A terminal starts a saved job." lines={[
     { kind: "input", text: "relay run" }, { kind: "output", text: "Job saved.", tone: "ok" },
   ]} /> },
-  { id: "report", label: "Read", hint: "Review the complete report, including the saved rows and the checks that explain what changed between runs.", render: () => <BrowserFrame describe="A report lists the completed work." height={360} url="https://relay.example/report">
+  // Product markup often wraps a frame; the wrapped frame must still fill the stage.
+  { id: "report", label: "Read", hint: "Review the complete report, including the saved rows and the checks that explain what changed between runs.", render: () => <div style={{ display: "grid", gap: 8 }}><BrowserFrame describe="A report lists the completed work." height={360} url="https://relay.example/report">
     <div style={{ padding: "1.5rem" }}><p>Completed jobs</p><p>Read the result and choose the next job.</p></div>
-  </BrowserFrame> },
+  </BrowserFrame></div> },
   { id: "details", label: "Inspect", hint: "Keep useful context beside the result.", render: () => <TerminalFrame density="presentation" describe="A terminal lists the steps in a completed job." lines={Array.from({ length: 10 }, (_, index) => ({
     kind: "output" as const, text: `Step ${index + 1}: read the saved project notes.`,
   }))} /> },

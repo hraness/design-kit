@@ -5,6 +5,7 @@ import {
   assertFakeHandles,
   assertNoHeadings,
   assertRoleImgWithLabel,
+  assertWalkthroughCopy,
   blogConformance,
   ConformanceError,
   htmlText,
@@ -167,5 +168,13 @@ describe("markup helpers", () => {
     expect(() => assertFakeHandles("<p>ask me@gmail.com</p>", [])).toThrow("gmail.com");
     expect(() => assertFakeHandles('<a href="https://github.com/x">x</a>', [])).toThrow("github.com");
     expect(() => assertFakeHandles('<a href="https://docs.example.com/x">x</a>', [])).not.toThrow();
+  });
+
+  test("assertWalkthroughCopy keeps step labels and hints short", () => {
+    expect(() => assertWalkthroughCopy([{ id: "join", label: "Join duplicates", hint: "Records that share an email become one person." }])).not.toThrow();
+    expect(() => assertWalkthroughCopy([{ id: "join", label: "Join all the duplicates", hint: "Short." }])).toThrow("4 words");
+    expect(() => assertWalkthroughCopy([{ id: "join", label: "Join", hint: "x".repeat(61) }])).toThrow("61 characters");
+    expect(() => assertWalkthroughCopy([{ id: "join", label: "Join", hint: "One. Two." }])).toThrow("more than one sentence");
+    expect(() => assertWalkthroughCopy([{ id: "join", label: "Join", hint: "  " }])).not.toThrow();
   });
 });

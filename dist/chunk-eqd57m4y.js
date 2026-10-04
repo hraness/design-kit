@@ -354,19 +354,60 @@ function ModeShowcase({
     ]
   });
 }
-function fillFrames(stage) {
-  const frames = [];
+function panelFillFrames(stage) {
+  const panels = [];
   for (const panel of stage.querySelectorAll(":scope > .hkm-step-panel, :scope > .hkm-mode-surface")) {
     const fit = panel.querySelector(":scope > .hkm-fit");
     if (fit === null)
       continue;
+    const frames = [];
     for (const root of fit.querySelectorAll(".hkm-root")) {
       const enclosingRoot = root.parentElement?.closest(".hkm-root");
       if (root.closest(".hkm-fit") === fit && (enclosingRoot === null || enclosingRoot === undefined || !fit.contains(enclosingRoot)))
         frames.push(root);
     }
+    panels.push(frames);
   }
-  return frames;
+  return panels;
+}
+function fillFrames(stage) {
+  return panelFillFrames(stage).flat();
+}
+function markFillFrames(stage) {
+  for (const frames of panelFillFrames(stage)) {
+    for (const frame2 of frames)
+      frame2.setAttribute("data-hkm-fill-frame", "");
+    const [frame] = frames;
+    if (frames.length !== 1 || frame === undefined)
+      continue;
+    const path = [];
+    for (let node = frame.parentElement;node !== null; node = node.parentElement) {
+      path.push(node);
+      if (node.classList.contains("hkm-fit-inner"))
+        break;
+    }
+    if (path.every(stacksVertically))
+      for (const node of path)
+        node.setAttribute("data-hkm-fill-path", "");
+  }
+}
+function stacksVertically(node) {
+  if (node.hasAttribute("data-hkm-fill-path"))
+    return true;
+  const style = getComputedStyle(node);
+  if (style.display === "block" || style.display === "flow-root")
+    return true;
+  if (style.display === "grid")
+    return style.gridTemplateColumns.trim().split(/\s+/u).length === 1;
+  if (style.display === "flex")
+    return style.flexDirection.startsWith("column");
+  return false;
+}
+function clearFillFrames(stage) {
+  for (const node of stage.querySelectorAll("[data-hkm-fill-frame], [data-hkm-fill-path]")) {
+    node.removeAttribute("data-hkm-fill-frame");
+    node.removeAttribute("data-hkm-fill-path");
+  }
 }
 function presentationBodies(stage) {
   return fillFrames(stage).flatMap((frame) => [...frame.querySelectorAll(':scope > .hkm-window > [data-hkm-density="presentation"]')]);
@@ -394,8 +435,7 @@ function fitShowcaseStage(stage, minimumHeight) {
   const owner = stage.parentElement;
   if (owner === null || stage.clientWidth <= 0)
     return;
-  for (const frame of fillFrames(stage))
-    frame.setAttribute("data-hkm-fill-frame", "");
+  markFillFrames(stage);
   const probe = stage.cloneNode(true);
   probe.setAttribute("aria-hidden", "true");
   probe.setAttribute("inert", "");
@@ -491,8 +531,7 @@ function useFittedShowcaseStage(fit, source, variation = "", minimumHeight = 0) 
       node.removeAttribute("data-hkm-fitted");
       for (const body of presentationBodies(node))
         body.style.removeProperty("--hkm-terminal-presentation-size");
-      for (const frame of fillFrames(node))
-        frame.removeAttribute("data-hkm-fill-frame");
+      clearFillFrames(node);
     };
   }, [fit, source, variation, minimumHeight]);
   return stage;
@@ -511,6 +550,13 @@ function StepThrough({
   if (fit !== "natural" && fit !== "fill")
     throw new RangeError("StepThrough fit must be natural or fill.");
   const stage = useFittedShowcaseStage(fit, steps);
+  useIsomorphicLayoutEffect(() => {
+    const node = stage.current;
+    if (fit === "fill" || node === null)
+      return;
+    markFillFrames(node);
+    return () => clearFillFrames(node);
+  }, [fit, steps]);
   const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));
