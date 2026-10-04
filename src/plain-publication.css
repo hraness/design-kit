@@ -25,7 +25,7 @@
   flex: 1 0 auto;
 }
 
-:where(.plain-site.plain-publication a:not(.hraness-design-skip-link)) {
+:where(.plain-site.plain-publication a:not(.hraness-design-skip-link)):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   color: var(--plain-link);
   overflow-wrap: anywhere;
   text-decoration: none;
@@ -36,12 +36,12 @@
 :where(
   .plain-site.plain-publication
     a:not(.hraness-design-skip-link):is(:hover, :focus-visible)
-) {
+):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   text-decoration-line: underline;
   text-decoration-style: dotted;
 }
 
-:where(.plain-site.plain-publication a:not(.hraness-design-skip-link):focus-visible) {
+:where(.plain-site.plain-publication a:not(.hraness-design-skip-link):focus-visible):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   border-radius: 1px;
   outline: 1px dotted currentColor;
   outline-offset: 3px;
@@ -50,7 +50,7 @@
 :where(
   .plain-site.plain-publication
     a:not(.hraness-design-skip-link):focus:not(:focus-visible)
-) {
+):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   outline: none;
 }
 
@@ -726,6 +726,7 @@
 }
 
 @media (forced-colors: none) {
+  .plain-site.plain-publication.plain-publication--embedded .plain-publication__byline a:is(:hover, :focus-visible),
   .plain-site.plain-publication.plain-publication--embedded .plain-publication__article-body a:is(:hover, :focus-visible) {
     text-decoration-color: currentColor;
   }

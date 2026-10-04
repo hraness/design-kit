@@ -309,6 +309,16 @@ export function DesignSystemGallery({
             </p>
           </div>
         </div>
+        <div
+          aria-label="Plain site account actions"
+          className="design-gallery__plain-theme plain-site plain-publication"
+        >
+          <div className="plain-page">
+            <MarketingAccount id="plain-account" summary="Keep your preferences across devices.">
+              <MarketingAccountActions primary={{ href: "#plain-account", label: "Create account" }} signIn={{ href: "#plain-account" }} />
+            </MarketingAccount>
+          </div>
+        </div>
       </section>
 
       <section className="design-gallery__section" id="paper-theme">

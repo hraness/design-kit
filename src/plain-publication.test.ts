@@ -81,7 +81,7 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
     ":where(.plain-header a, .plain-page a, .plain-footer a)",
   );
   expect(plainSiteCss).toMatch(
-    /:where\(\.plain-header a, \.plain-page a, \.plain-footer a\)\s*\{[^}]*text-decoration:\s*none;/su,
+    /:where\(\.plain-header a, \.plain-page a, \.plain-footer a\):not\(:where\(\.hraness-marketing-account__primary, \.hraness-marketing-account__sign-in\)\)\s*\{[^}]*text-decoration:\s*none;/su,
   );
   expect(plainSiteCss).toMatch(
     /\.plain-page a:is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration:\s*underline;/u,
@@ -99,7 +99,7 @@ test("plain chrome preserves resolved themes, safe areas, and semantic link role
     ":where(.plain-site.plain-publication a:not(.hraness-design-skip-link))",
   );
   expect(publicationCss).toMatch(
-    /:where\(\.plain-site\.plain-publication a:not\(\.hraness-design-skip-link\)\)\s*\{[^}]*text-decoration:\s*none;/su,
+    /:where\(\.plain-site\.plain-publication a:not\(\.hraness-design-skip-link\)\):not\(:where\(\.hraness-marketing-account__primary, \.hraness-marketing-account__sign-in\)\)\s*\{[^}]*text-decoration:\s*none;/su,
   );
   expect(publicationCss).toMatch(
     /a:not\(\.hraness-design-skip-link\):is\(:hover, :focus-visible\)[\s\S]*?\{[^}]*text-decoration-line:\s*underline;[^}]*text-decoration-style:\s*dotted;/u,
