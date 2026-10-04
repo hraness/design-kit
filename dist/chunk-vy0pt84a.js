@@ -7,7 +7,7 @@ import {
   SampleText,
   WindowLights,
   compact
-} from "./chunk-kz59614q.js";
+} from "./chunk-fcs5qekr.js";
 // src/mockups/frames.tsx
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 var MOCKUP_EXAMPLE_HOST = /(^|\.)(example(\.(com|net|org))?|test|invalid|localhost)$/u;

@@ -1,6 +1,6 @@
 import {
   joinMockupClasses
-} from "./chunk-kz59614q.js";
+} from "./chunk-fcs5qekr.js";
 
 // src/mockups/client.tsx
 import { useId, useLayoutEffect, useMemo, useRef, useState, version } from "react";
