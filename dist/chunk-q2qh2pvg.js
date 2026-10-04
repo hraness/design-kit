@@ -3,8 +3,10 @@ import {
   platformInstallClassName
 } from "./chunk-6ts4955n.js";
 import {
-  diagramMetrics
-} from "./chunk-gmea6p0d.js";
+  MARKETING_MARQUEE_CONTROL_ICONS,
+  diagramMetrics,
+  resolveMarketingMarquee
+} from "./chunk-m4jk57fw.js";
 import {
   isPlatformId,
   platformLabel,
@@ -30,7 +32,7 @@ import {
   providerMark,
   providerMarkFallback,
   providerMarkOnAccent
-} from "./chunk-sabcr66p.js";
+} from "./chunk-1vqmtbrs.js";
 
 // src/react/provider-mark.stylex.ts
 import * as stylex from "@stylexjs/stylex";
@@ -6488,6 +6490,140 @@ function MarketingComparison({
   });
 }
 
+// src/react/marketing-marquee.tsx
+import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+var ROOT_CLASS2 = "hraness-marketing-marquee";
+function MarqueeItem({
+  item
+}) {
+  return /* @__PURE__ */ jsxs7("li", {
+    className: `${ROOT_CLASS2}__item`,
+    children: [
+      item.mark.kind === "glyph" ? /* @__PURE__ */ jsx7("svg", {
+        "aria-hidden": "true",
+        className: `${ROOT_CLASS2}__mark`,
+        fill: "currentColor",
+        focusable: "false",
+        height: "20",
+        width: "20",
+        children: /* @__PURE__ */ jsx7("use", {
+          href: `#${item.mark.symbolId}`
+        })
+      }) : /* @__PURE__ */ jsx7("span", {
+        "aria-hidden": "true",
+        className: `${ROOT_CLASS2}__monogram`,
+        children: item.mark.monogram
+      }),
+      /* @__PURE__ */ jsx7("span", {
+        className: `${ROOT_CLASS2}__name`,
+        children: item.name
+      })
+    ]
+  });
+}
+function ControlIcon({
+  icon
+}) {
+  return /* @__PURE__ */ jsx7("svg", {
+    "aria-hidden": "true",
+    className: `${ROOT_CLASS2}__control-icon`,
+    "data-icon": icon,
+    fill: "currentColor",
+    focusable: "false",
+    height: "16",
+    viewBox: "0 0 16 16",
+    width: "16",
+    children: /* @__PURE__ */ jsx7("path", {
+      d: MARKETING_MARQUEE_CONTROL_ICONS[icon]
+    })
+  });
+}
+function MarketingMarquee(props6) {
+  const marquee = resolveMarketingMarquee(props6);
+  const items = marquee.items.map((item) => /* @__PURE__ */ jsx7(MarqueeItem, {
+    item
+  }, item.name));
+  return /* @__PURE__ */ jsxs7("section", {
+    "aria-labelledby": marquee.labelId,
+    className: marquee.className,
+    "data-align": marquee.align,
+    "data-hraness-marketing": "marquee",
+    id: marquee.id,
+    children: [
+      marquee.symbols.length === 0 ? null : /* @__PURE__ */ jsx7("svg", {
+        "aria-hidden": "true",
+        className: `${ROOT_CLASS2}__sprite`,
+        focusable: "false",
+        height: "0",
+        width: "0",
+        children: marquee.symbols.map((symbol) => /* @__PURE__ */ jsx7("symbol", {
+          dangerouslySetInnerHTML: {
+            __html: symbol.body
+          },
+          id: symbol.id,
+          viewBox: symbol.viewBox
+        }, symbol.id))
+      }),
+      /* @__PURE__ */ jsxs7("div", {
+        className: `${ROOT_CLASS2}__header`,
+        children: [
+          /* @__PURE__ */ jsxs7("p", {
+            className: `${ROOT_CLASS2}__label`,
+            id: marquee.labelId,
+            children: [
+              marquee.label.before,
+              /* @__PURE__ */ jsx7("strong", {
+                className: `${ROOT_CLASS2}__count`,
+                children: marquee.label.count
+              }),
+              marquee.label.after
+            ]
+          }),
+          marquee.action === null ? null : /* @__PURE__ */ jsx7("a", {
+            className: `${ROOT_CLASS2}__action hraness-text-link`,
+            href: marquee.action.href,
+            children: marquee.action.label
+          })
+        ]
+      }),
+      /* @__PURE__ */ jsx7("input", {
+        className: `${ROOT_CLASS2}__toggle`,
+        id: marquee.toggleId,
+        type: "checkbox"
+      }),
+      /* @__PURE__ */ jsx7("div", {
+        className: `${ROOT_CLASS2}__viewport`,
+        children: /* @__PURE__ */ jsx7("div", {
+          className: `${ROOT_CLASS2}__track`,
+          children: Array.from({
+            length: marquee.copies
+          }, (_, index) => /* @__PURE__ */ jsx7("ul", {
+            "aria-hidden": index === 0 ? undefined : "true",
+            className: `${ROOT_CLASS2}__list`,
+            children: items
+          }, index))
+        })
+      }),
+      /* @__PURE__ */ jsxs7("label", {
+        className: `${ROOT_CLASS2}__control`,
+        htmlFor: marquee.toggleId,
+        children: [
+          /* @__PURE__ */ jsx7("span", {
+            className: `${ROOT_CLASS2}__control-text`,
+            children: marquee.pauseLabel
+          }),
+          /* @__PURE__ */ jsx7(ControlIcon, {
+            icon: "pause"
+          }),
+          /* @__PURE__ */ jsx7(ControlIcon, {
+            icon: "play"
+          })
+        ]
+      })
+    ]
+  });
+}
+
 // src/react/marketing-diagram.tsx
 import * as stylex6 from "@stylexjs/stylex";
 
@@ -6528,13 +6664,13 @@ var diagramStyles = {
 };
 
 // src/react/marketing-diagram.tsx
-import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
 function DiagramArrowhead({
   id
 }) {
   if (id.trim() === "" || /\s/u.test(id))
     throw new RangeError("Diagram arrowhead needs one nonempty SVG ID.");
-  return /* @__PURE__ */ jsx7("marker", {
+  return /* @__PURE__ */ jsx8("marker", {
     id,
     markerHeight: diagramMetrics.arrowheadSize,
     markerUnits: "userSpaceOnUse",
@@ -6543,7 +6679,7 @@ function DiagramArrowhead({
     refX: "5.5",
     refY: "3",
     viewBox: "0 0 6 6",
-    children: /* @__PURE__ */ jsx7("path", {
+    children: /* @__PURE__ */ jsx8("path", {
       d: "M0 0 L6 3 L0 6 Z",
       fill: "context-stroke"
     })
@@ -6561,16 +6697,16 @@ function MarketingDiagram({
     throw new RangeError("Marketing diagram dimensions must be positive.");
   if (label.trim() === "")
     throw new RangeError("Marketing diagram needs a useful accessible label.");
-  return /* @__PURE__ */ jsxs7("figure", {
+  return /* @__PURE__ */ jsxs8("figure", {
     className: ["hraness-diagram", stylex6.props(diagramStyles.figure).className, className].filter(Boolean).join(" "),
     children: [
-      /* @__PURE__ */ jsx7("div", {
+      /* @__PURE__ */ jsx8("div", {
         ...stylex6.props(diagramStyles.scroll),
         className: `hraness-diagram__scroll ${stylex6.props(diagramStyles.scroll).className}`,
         "aria-label": label,
         role: "region",
         tabIndex: 0,
-        children: /* @__PURE__ */ jsx7("svg", {
+        children: /* @__PURE__ */ jsx8("svg", {
           ...stylex6.props(diagramStyles.canvas),
           className: `hraness-diagram__canvas ${stylex6.props(diagramStyles.canvas).className}`,
           "aria-label": label,
@@ -6581,7 +6717,7 @@ function MarketingDiagram({
           children
         })
       }),
-      caption === undefined || caption === null ? null : /* @__PURE__ */ jsx7("figcaption", {
+      caption === undefined || caption === null ? null : /* @__PURE__ */ jsx8("figcaption", {
         ...stylex6.props(diagramStyles.caption),
         children: caption
       })
@@ -6761,7 +6897,7 @@ var layoutSurfaceStyles = {
 };
 
 // src/react/surfaces.tsx
-import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
 var ditherSurfaceDensityStyles = {
   coarse: ditherSurfaceStyles.coarse,
   fine: ditherSurfaceStyles.fine,
@@ -6773,7 +6909,7 @@ function DitherSurface({
   xstyle,
   ...props8
 }) {
-  return /* @__PURE__ */ jsx8(ThemedSurface, {
+  return /* @__PURE__ */ jsx9(ThemedSurface, {
     ...props8,
     className: cn("hraness-design-dither-surface", className),
     "data-density": density,
@@ -6799,31 +6935,31 @@ function TopBar({
   const titlePresentation = stylex7.props(layoutSurfaceStyles.topBarTitle);
   const contentPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
   const actionsPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.topBarActions);
-  return /* @__PURE__ */ jsxs8("header", {
+  return /* @__PURE__ */ jsxs9("header", {
     ...rootPresentation,
     ...props8,
     className: cn("hraness-design-top-bar", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     children: [
-      /* @__PURE__ */ jsxs8("div", {
+      /* @__PURE__ */ jsxs9("div", {
         ...leadingPresentation,
         className: cn("hraness-design-top-bar__leading", leadingPresentation.className),
         children: [
           leading,
-          title === undefined ? null : /* @__PURE__ */ jsx8("div", {
+          title === undefined ? null : /* @__PURE__ */ jsx9("div", {
             ...titlePresentation,
             className: cn("hraness-design-top-bar__title", titlePresentation.className),
             children: title
           })
         ]
       }),
-      children === undefined ? null : /* @__PURE__ */ jsx8("div", {
+      children === undefined ? null : /* @__PURE__ */ jsx9("div", {
         ...contentPresentation,
         className: cn("hraness-design-top-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx8("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx9("div", {
         ...actionsPresentation,
         className: cn("hraness-design-top-bar__actions", actionsPresentation.className),
         children: actions
@@ -6842,22 +6978,22 @@ function BottomBar({
   const leadingPresentation = stylex7.props(layoutSurfaceStyles.barPart);
   const contentPresentation = stylex7.props(layoutSurfaceStyles.barPart, layoutSurfaceStyles.barContent);
   const actionsPresentation = stylex7.props(layoutSurfaceStyles.barPart);
-  return /* @__PURE__ */ jsxs8("footer", {
+  return /* @__PURE__ */ jsxs9("footer", {
     ...rootPresentation,
     ...props8,
     className: cn("hraness-design-bottom-bar", rootPresentation.className, className),
     children: [
-      leading === undefined ? null : /* @__PURE__ */ jsx8("div", {
+      leading === undefined ? null : /* @__PURE__ */ jsx9("div", {
         ...leadingPresentation,
         className: cn("hraness-design-bottom-bar__leading", leadingPresentation.className),
         children: leading
       }),
-      /* @__PURE__ */ jsx8("div", {
+      /* @__PURE__ */ jsx9("div", {
         ...contentPresentation,
         className: cn("hraness-design-bottom-bar__content", contentPresentation.className),
         children
       }),
-      actions === undefined ? null : /* @__PURE__ */ jsx8("div", {
+      actions === undefined ? null : /* @__PURE__ */ jsx9("div", {
         ...actionsPresentation,
         className: cn("hraness-design-bottom-bar__actions", actionsPresentation.className),
         children: actions
@@ -6874,7 +7010,7 @@ function PageCanvas({
 }) {
   const Element = as;
   const presentation2 = stylex7.props(layoutSurfaceStyles.pageCanvas, inset === "content" ? layoutSurfaceStyles.pageContentInset : layoutSurfaceStyles.pageNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx8(Element, {
+  return /* @__PURE__ */ jsx9(Element, {
     ...presentation2,
     ...props8,
     className: cn("hraness-design-page-canvas", presentation2.className, className),
@@ -6895,14 +7031,14 @@ var DockedFooter = forwardRef(function DockedFooter2({
 }, ref) {
   const rootPresentation = stylex7.props(layoutSurfaceStyles.surface, layoutSurfaceStyles.dockedFooter, position === "absolute" ? layoutSurfaceStyles.dockedAbsolute : position === "sticky" ? layoutSurfaceStyles.dockedSticky : layoutSurfaceStyles.dockedFixed);
   const contentPresentation = stylex7.props(layoutSurfaceStyles.dockedContent, density === "compact" ? inset === "content" ? layoutSurfaceStyles.dockedContentCompactInset : layoutSurfaceStyles.dockedContentCompactNoInset : inset === "content" ? layoutSurfaceStyles.dockedContentDefaultInset : layoutSurfaceStyles.dockedContentDefaultNoInset, size === "wide" && layoutSurfaceStyles.wideSize, size === "full" && layoutSurfaceStyles.fullSize);
-  return /* @__PURE__ */ jsx8("footer", {
+  return /* @__PURE__ */ jsx9("footer", {
     ...rootPresentation,
     ...props8,
     className: cn("hraness-design-docked-footer", rootPresentation.className, className),
     "data-position": position,
     "data-surface": surface,
     ref,
-    children: /* @__PURE__ */ jsx8("div", {
+    children: /* @__PURE__ */ jsx9("div", {
       ...contentPresentation,
       className: cn("hraness-design-docked-footer__content", contentPresentation.className, contentClassName),
       "data-density": density,
@@ -7353,7 +7489,7 @@ var effectsStyles = {
 };
 
 // src/react/procedural-backdrop.tsx
-import { jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 var colorVariables = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -7414,7 +7550,7 @@ function ProceduralBackdrop({
   const gridPresentation = stylex8.props(effectsStyles.proceduralSlot, effectsStyles.proceduralGrid);
   const ripplesPresentation = stylex8.props(effectsStyles.proceduralSlot, effectsStyles.proceduralRipples);
   const ripplePresentation = stylex8.props(effectsStyles.proceduralRipple);
-  return /* @__PURE__ */ jsxs9("div", {
+  return /* @__PURE__ */ jsxs10("div", {
     ...props9,
     ...INERT_PROPS,
     "aria-hidden": "true",
@@ -7425,7 +7561,7 @@ function ProceduralBackdrop({
     role: "presentation",
     style: rootStyle,
     children: [
-      showAtmosphere ? /* @__PURE__ */ jsx9("span", {
+      showAtmosphere ? /* @__PURE__ */ jsx10("span", {
         className: cn2("hraness-design-procedural-backdrop__atmosphere", atmospherePresentation.className),
         children: recipe.atmosphere.map((layer, index) => {
           const layerStyle = {
@@ -7443,17 +7579,17 @@ function ProceduralBackdrop({
             "--hraness-design-procedural-layer-x": `${layer.x}%`,
             "--hraness-design-procedural-layer-y": `${layer.y}%`
           };
-          return /* @__PURE__ */ jsx9("i", {
+          return /* @__PURE__ */ jsx10("i", {
             className: cn2("hraness-design-procedural-backdrop__cloud", cloudPresentation.className),
             style: layerStyle
           }, index);
         })
       }) : null,
-      showGrid ? /* @__PURE__ */ jsx9("span", {
+      showGrid ? /* @__PURE__ */ jsx10("span", {
         className: cn2("hraness-design-procedural-backdrop__grid", gridPresentation.className),
         style: gridStyle
       }) : null,
-      showRipple ? /* @__PURE__ */ jsx9("span", {
+      showRipple ? /* @__PURE__ */ jsx10("span", {
         className: cn2("hraness-design-procedural-backdrop__ripples", ripplesPresentation.className),
         style: rippleStyle,
         children: recipe.ripple.contours.map((contour, index) => {
@@ -7463,7 +7599,7 @@ function ProceduralBackdrop({
             "--hraness-design-procedural-ripple-opacity": contour.opacity,
             "--hraness-design-procedural-ripple-size": `${contour.size}%`
           };
-          return /* @__PURE__ */ jsx9("i", {
+          return /* @__PURE__ */ jsx10("i", {
             className: cn2("hraness-design-procedural-backdrop__ripple", ripplePresentation.className),
             style: contourStyle
           }, index);
@@ -7474,7 +7610,7 @@ function ProceduralBackdrop({
 }
 
 // src/react/platform-icons.tsx
-import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs11 } from "react/jsx-runtime";
 var sizeParts = {
   inherit: undefined,
   lg: "iconLg",
@@ -7494,7 +7630,7 @@ function PlatformIcon({
   if (label !== undefined && label.trim() === "")
     throw new RangeError("A platform icon label must not be blank.");
   const mark = platformMark(platform);
-  return /* @__PURE__ */ jsx10("svg", {
+  return /* @__PURE__ */ jsx11("svg", {
     "aria-hidden": label === undefined ? true : undefined,
     "aria-label": label,
     className: platformInstallClassName(["icon", sizeParts[size]], className),
@@ -7504,7 +7640,7 @@ function PlatformIcon({
     role: label === undefined ? undefined : "img",
     viewBox: mark.viewBox,
     xmlns: "http://www.w3.org/2000/svg",
-    children: /* @__PURE__ */ jsx10("path", {
+    children: /* @__PURE__ */ jsx11("path", {
       d: mark.path
     })
   });
@@ -7531,29 +7667,29 @@ function PlatformBadges({
     seen.add(badge.id);
   }
   const listName = label ?? "Supported platforms";
-  return /* @__PURE__ */ jsxs10("div", {
+  return /* @__PURE__ */ jsxs11("div", {
     className: platformInstallClassName(["badges"], className),
     "data-hraness-platform-badges": "",
     children: [
-      label === null ? null : /* @__PURE__ */ jsx10("span", {
+      label === null ? null : /* @__PURE__ */ jsx11("span", {
         "aria-hidden": "true",
         className: platformInstallClassName(["badgesLabel"]),
         children: label
       }),
-      /* @__PURE__ */ jsx10("ul", {
+      /* @__PURE__ */ jsx11("ul", {
         "aria-label": listName,
         className: platformInstallClassName(["badgesList"]),
-        children: badges.map((badge) => /* @__PURE__ */ jsxs10("li", {
+        children: badges.map((badge) => /* @__PURE__ */ jsxs11("li", {
           className: platformInstallClassName(["badge"]),
           "data-platform": badge.id,
           children: [
-            /* @__PURE__ */ jsx10(PlatformIcon, {
+            /* @__PURE__ */ jsx11(PlatformIcon, {
               platform: badge.id
             }),
-            /* @__PURE__ */ jsx10("span", {
+            /* @__PURE__ */ jsx11("span", {
               children: badge.label ?? platformLabel(badge.id)
             }),
-            badge.note === undefined ? null : /* @__PURE__ */ jsx10("span", {
+            badge.note === undefined ? null : /* @__PURE__ */ jsx11("span", {
               className: platformInstallClassName(["badgeNote"]),
               children: badge.note
             })
@@ -7567,7 +7703,7 @@ function PlatformBadges({
 // src/react/particle-halo.tsx
 import { cn as cn3 } from "@hraness/ui";
 import * as stylex9 from "@stylexjs/stylex";
-import { jsx as jsx11, jsxs as jsxs11 } from "react/jsx-runtime";
+import { jsx as jsx12, jsxs as jsxs12 } from "react/jsx-runtime";
 var colorVariables2 = {
   highlight: "var(--hraness-design-procedural-highlight)",
   key: "var(--hraness-design-procedural-key)",
@@ -7603,14 +7739,14 @@ function ParticleHalo({
   const fieldPresentation = stylex9.props(effectsStyles.particleField);
   const particlePresentation = stylex9.props(effectsStyles.particle);
   const contentPresentation = stylex9.props(effectsStyles.particleContent);
-  return /* @__PURE__ */ jsxs11("div", {
+  return /* @__PURE__ */ jsxs12("div", {
     ...props10,
     className: cn3("hraness-design-particle-halo", rootPresentation.className, className),
     "data-recipe-version": recipe.version,
     "data-variation": recipe.variation,
     style: rootStyle,
     children: [
-      /* @__PURE__ */ jsx11("span", {
+      /* @__PURE__ */ jsx12("span", {
         "aria-hidden": "true",
         className: cn3("hraness-design-particle-halo__particles", fieldPresentation.className),
         role: "presentation",
@@ -7626,13 +7762,13 @@ function ParticleHalo({
             "--hraness-design-particle-x": `${particle.x}%`,
             "--hraness-design-particle-y": `${particle.y}%`
           };
-          return /* @__PURE__ */ jsx11("i", {
+          return /* @__PURE__ */ jsx12("i", {
             className: cn3("hraness-design-particle-halo__particle", particlePresentation.className),
             style: particleStyle
           }, index);
         })
       }),
-      /* @__PURE__ */ jsx11("div", {
+      /* @__PURE__ */ jsx12("div", {
         className: cn3("hraness-design-particle-halo__content", contentPresentation.className),
         children
       })
@@ -7641,7 +7777,7 @@ function ParticleHalo({
 }
 
 // src/react/launch-beats.tsx
-import { jsx as jsx12, jsxs as jsxs12 } from "react/jsx-runtime";
+import { jsx as jsx13, jsxs as jsxs13 } from "react/jsx-runtime";
 var HEADING_TAGS2 = {
   2: "h2",
   3: "h3",
@@ -7672,7 +7808,7 @@ function LaunchBeats({
   const Heading2 = HEADING_TAGS2[headingLevel];
   if (Heading2 === undefined)
     throw new RangeError("Launch beat heading level must be 2 to 4.");
-  return /* @__PURE__ */ jsx12("div", {
+  return /* @__PURE__ */ jsx13("div", {
     className: ["plain-publication__beats", className].filter(Boolean).join(" "),
     "data-hraness-launch-beats": "",
     children: beats.map((beat) => {
@@ -7680,28 +7816,28 @@ function LaunchBeats({
       const visual = renderVisual(beat);
       if (visual === null || visual === undefined || visual === false)
         throw new RangeError(`Launch beat ${JSON.stringify(beat.id)} needs a visual.`);
-      return /* @__PURE__ */ jsxs12("section", {
+      return /* @__PURE__ */ jsxs13("section", {
         "aria-labelledby": `${anchor}-heading`,
         className: "plain-publication__beat",
         "data-part": beat.part,
         id: anchor,
         children: [
-          /* @__PURE__ */ jsx12(Heading2, {
+          /* @__PURE__ */ jsx13(Heading2, {
             id: `${anchor}-heading`,
             children: beat.headline
           }),
-          /* @__PURE__ */ jsx12("p", {
+          /* @__PURE__ */ jsx13("p", {
             children: beat.post
           }),
-          /* @__PURE__ */ jsx12(ArticleFigure, {
+          /* @__PURE__ */ jsx13(ArticleFigure, {
             caption: caption?.(beat),
             kind: figureKind(beat),
             label: beat.alt,
             children: visual
           }),
-          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx12("p", {
+          beat.detailHref === undefined ? null : /* @__PURE__ */ jsx13("p", {
             className: "plain-publication__beat-detail",
-            children: /* @__PURE__ */ jsx12("a", {
+            children: /* @__PURE__ */ jsx13("a", {
               href: beat.detailHref,
               children: detailLabel
             })
@@ -7712,4 +7848,4 @@ function LaunchBeats({
   });
 }
 
-export { ProviderMark, ProviderMarkChip, foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, marketingPatterns, MarketingActionLink, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonGlyph, ComparisonTable, effectsStyles, MarketingAccount, MarketingAccountActions, MarketingComparison, DiagramArrowhead, MarketingDiagram, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, PlatformIcon, PlatformBadges, ParticleHalo, launchBeatAnchor, LaunchBeats };
+export { ProviderMark, ProviderMarkChip, foilEdge, foilTextImage, foilHalo, foilTextHalo, foilStyles, foilClassName, foilMarkClassName, FoilMark, marketingPatterns, MarketingActionLink, MarketingPage, MarketingField, MarketingMain, MarketingCardRow, MarketingCardArt, MarketingCard, MarketingSiteHeader, MarketingSiteFooter, MarketingFlow, MarketingFacts, ProductHero, MarketingPillars, MarketingInstallPanel, marketingProofFrameAddress, MarketingProofFrame, MarketingDataTable, MarketingCodeBlock, MarketingSectionLabel, MarketingSection, MarketingPrimitives, MarketingNotice, MarketingStatStrip, MarketingInterfaceGrid, MarketingTrustBoundary, MarketingQuoteGrid, MarketingPricing, MarketingQuestionList, MarketingMaker, MarketingRelated, MarketingCallToAction, ArticleByline, ArticleProvenance, MarketingArticle, ArticleSources, ArticleCallout, ArticleRelatedProducts, ArticleIndex, articleFigureKinds, ArticleFigure, ArticleVideo, ArticleTable, ArticleBarChart, ComparisonGlyph, ComparisonTable, effectsStyles, MarketingAccount, MarketingAccountActions, MarketingComparison, MarketingMarquee, DiagramArrowhead, MarketingDiagram, DitherSurface, TopBar, BottomBar, PageCanvas, DockedFooter, proceduralBackdropVariants, proceduralRecipeVersion, createProceduralBackdropRecipe, createParticleHaloRecipe, ProceduralBackdrop, PlatformIcon, PlatformBadges, ParticleHalo, launchBeatAnchor, LaunchBeats };

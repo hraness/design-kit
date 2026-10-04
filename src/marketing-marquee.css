@@ -1,0 +1,281 @@
+/* Raw HTML counterpart to MarketingMarquee and renderMarketingMarqueeHtml.
+ * The static layout is the default: a wrapped list with hidden duplicates.
+ * Motion is added only on screens whose readers allow it, so reduced motion,
+ * print, and unsupported media all keep every name readable in place. */
+@layer components.hraness-design-kit.legacy {
+.hraness-marketing-marquee {
+  --_hraness-marquee-ink: var(--hraness-marketing-ink, var(--foreground, CanvasText));
+  --_hraness-marquee-muted: var(--hraness-marketing-muted, var(--muted, GrayText));
+  --_hraness-marquee-line: var(--hraness-marketing-line, color-mix(in srgb, var(--_hraness-marquee-ink) 12%, transparent));
+  --_hraness-marquee-line-strong: var(--hraness-marketing-line-strong, color-mix(in srgb, var(--_hraness-marquee-ink) 22%, transparent));
+  --_hraness-marquee-gap: clamp(1.75rem, 3vw, 2.5rem);
+  --_hraness-marquee-fade: clamp(1.5rem, 6vw, 4.5rem);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "header header" "viewport control";
+  align-items: center;
+  gap: 1rem 0.75rem;
+  box-sizing: border-box;
+  inline-size: min(100%, var(--hraness-marketing-measure, 72rem));
+  min-inline-size: 0;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  padding-inline: var(--hraness-marketing-gutter, clamp(1.25rem, 4vw, 3rem));
+  color: var(--_hraness-marquee-muted);
+  font-family: var(--hraness-marketing-text-font, var(--font-text, inherit));
+}
+
+.hraness-marketing-marquee__header {
+  grid-area: header;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  min-inline-size: 0;
+}
+
+.hraness-marketing-marquee[data-align="center"] .hraness-marketing-marquee__header {
+  justify-content: center;
+  text-align: center;
+}
+
+.hraness-marketing-marquee__label {
+  margin: 0;
+  color: var(--_hraness-marquee-ink);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.hraness-marketing-marquee__count {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.hraness-marketing-marquee__action {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 1.5rem;
+  color: var(--_hraness-marquee-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.hraness-marketing-marquee__action:hover {
+  color: var(--_hraness-marquee-ink);
+}
+
+.hraness-marketing-marquee__viewport {
+  grid-area: viewport;
+  min-inline-size: 0;
+}
+
+.hraness-marketing-marquee__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem var(--_hraness-marquee-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hraness-marketing-marquee[data-align="center"] .hraness-marketing-marquee__list {
+  justify-content: center;
+}
+
+.hraness-marketing-marquee__list[aria-hidden="true"] {
+  display: none;
+}
+
+.hraness-marketing-marquee__item {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--_hraness-marquee-muted);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.hraness-marketing-marquee__mark {
+  flex: none;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  fill: currentColor;
+}
+
+.hraness-marketing-marquee__monogram {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1.5px solid currentColor;
+  border-radius: 0.3125rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.hraness-marketing-marquee__sprite {
+  position: absolute;
+  inline-size: 0;
+  block-size: 0;
+  overflow: hidden;
+}
+
+.hraness-marketing-marquee__toggle,
+.hraness-marketing-marquee__control {
+  display: none;
+}
+
+.hraness-marketing-marquee__control-text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hraness-marketing-marquee__control-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.hraness-marketing-marquee__control-icon[data-icon="play"],
+.hraness-marketing-marquee__toggle:checked ~ .hraness-marketing-marquee__control .hraness-marketing-marquee__control-icon[data-icon="pause"] {
+  display: none;
+}
+
+.hraness-marketing-marquee__toggle:checked ~ .hraness-marketing-marquee__control .hraness-marketing-marquee__control-icon[data-icon="play"] {
+  display: block;
+}
+
+/* About 3.75 seconds per item, so long and short lists move at a similar pace. */
+.hraness-marketing-marquee__list:has(> :nth-child(8)) { --_hraness-marquee-duration: 30s; }
+.hraness-marketing-marquee__list:has(> :nth-child(10)) { --_hraness-marquee-duration: 38s; }
+.hraness-marketing-marquee__list:has(> :nth-child(12)) { --_hraness-marquee-duration: 45s; }
+.hraness-marketing-marquee__list:has(> :nth-child(14)) { --_hraness-marquee-duration: 53s; }
+.hraness-marketing-marquee__list:has(> :nth-child(16)) { --_hraness-marquee-duration: 60s; }
+.hraness-marketing-marquee__list:has(> :nth-child(18)) { --_hraness-marquee-duration: 68s; }
+.hraness-marketing-marquee__list:has(> :nth-child(20)) { --_hraness-marquee-duration: 75s; }
+.hraness-marketing-marquee__list:has(> :nth-child(24)) { --_hraness-marquee-duration: 90s; }
+.hraness-marketing-marquee__list:has(> :nth-child(28)) { --_hraness-marquee-duration: 105s; }
+.hraness-marketing-marquee__list:has(> :nth-child(32)) { --_hraness-marquee-duration: 120s; }
+.hraness-marketing-marquee__list:has(> :nth-child(40)) { --_hraness-marquee-duration: 150s; }
+.hraness-marketing-marquee__list:has(> :nth-child(48)) { --_hraness-marquee-duration: 180s; }
+.hraness-marketing-marquee__list:has(> :nth-child(56)) { --_hraness-marquee-duration: 210s; }
+
+@media screen and (prefers-reduced-motion: no-preference) {
+.hraness-marketing-marquee__viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 var(--_hraness-marquee-fade), #000 calc(100% - var(--_hraness-marquee-fade)), transparent);
+}
+
+.hraness-marketing-marquee__track {
+  display: flex;
+  inline-size: max-content;
+}
+
+.hraness-marketing-marquee__list,
+.hraness-marketing-marquee__list[aria-hidden="true"] {
+  display: flex;
+  flex: none;
+  flex-wrap: nowrap;
+  padding-inline-end: var(--_hraness-marquee-gap);
+  animation: hraness-marketing-marquee var(--hraness-marketing-marquee-duration, var(--_hraness-marquee-duration, 26s)) linear infinite;
+  will-change: transform;
+}
+
+.hraness-marketing-marquee[data-align="center"] .hraness-marketing-marquee__list {
+  justify-content: flex-start;
+}
+
+:is([dir="rtl"] .hraness-marketing-marquee__list, .hraness-marketing-marquee__list:dir(rtl)) {
+  animation-name: hraness-marketing-marquee-rtl;
+}
+
+.hraness-marketing-marquee__toggle {
+  display: block;
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  appearance: none;
+}
+
+.hraness-marketing-marquee__control {
+  grid-area: control;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid var(--_hraness-marquee-line);
+  border-radius: 999px;
+  color: var(--_hraness-marquee-muted);
+  cursor: pointer;
+}
+
+.hraness-marketing-marquee__control:hover {
+  border-color: var(--_hraness-marquee-line-strong);
+  color: var(--_hraness-marquee-ink);
+}
+
+.hraness-marketing-marquee__toggle:focus-visible ~ .hraness-marketing-marquee__control {
+  outline: 2px solid var(--hraness-marketing-accent, var(--focus, Highlight));
+  outline-offset: 2px;
+}
+
+.hraness-marketing-marquee__toggle:checked ~ .hraness-marketing-marquee__viewport .hraness-marketing-marquee__list {
+  animation-play-state: paused;
+}
+}
+
+@media screen and (prefers-reduced-motion: no-preference) and (hover: hover) {
+.hraness-marketing-marquee__viewport:hover .hraness-marketing-marquee__list {
+  animation-play-state: paused;
+}
+}
+
+@media (pointer: coarse) {
+.hraness-marketing-marquee__action {
+  min-block-size: 2.75rem;
+}
+}
+
+@media (forced-colors: active) {
+.hraness-marketing-marquee__viewport {
+  mask-image: none;
+}
+
+.hraness-marketing-marquee__control {
+  border-color: ButtonBorder;
+  color: ButtonText;
+}
+}
+
+@keyframes hraness-marketing-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes hraness-marketing-marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+}

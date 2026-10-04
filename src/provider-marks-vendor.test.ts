@@ -10,6 +10,29 @@ const FILE_HASHES: Readonly<Record<string, string>> = {
   "lobehub/vercel.svg": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24",
   "simple-icons/imessage.svg": "6f0701596b1b44ea9b863828b5a9363b77c30408bbb4655045378c33440de144",
   "simple-icons/whatsapp.svg": "8fb209a53a61618c3483594b3e070481a35575d6aaecbe00a6fe386670c8fb1c",
+  "simple-icons/apple.svg": "2a1509dccd25e6d2bc7a11a8e52941077e1a48555e192ce638699b9f083c2a7c",
+  "simple-icons/bluesky.svg": "49752973164fbbf4464fbb4776f011c1eff207e5d7ad9254e031af025814eb75",
+  "simple-icons/facebook.svg": "b06d18d844ed621b89faffb1a33440cc0ec4f1ffea9f36191f50db19a47c59a6",
+  "simple-icons/github.svg": "3bf8cceead820aec50d4ee825a3fd02c5a1cd6665cc9cf4cbf3d9c8861a204bb",
+  "simple-icons/gmail.svg": "a537f5d85d9a27efa3a5d6086e8df6072ee93f76b4d176639a5e483f74b74b9f",
+  "simple-icons/google.svg": "d8cf9fb2d5e234e03254f1d6400d8cc8160c309b010d031a64f37084b5a21d01",
+  "simple-icons/instagram.svg": "f53af2d1fc5292ba1433b5c1faf50005ce6a997fa302d1816989929f379a59dc",
+  "simple-icons/reddit.svg": "00e5008d56567543cf956561e61d5bf9bf629f520c7488a4d9a00164c29dd8ba",
+  "simple-icons/substack.svg": "2ccf1b8fcdda9a8073e5bcfbb57c1a99e114eba05a8d274ba7b2ed05d19b302a",
+  "simple-icons/telegram.svg": "147fd8f8923e7e5f463fe98c0eb9913bead6b2ae59935728cda141002ec8a7c9",
+  "simple-icons/threads.svg": "8d4e0be28b72e417b02ae2e8f1d1ca4e3ab4adc025e6a1e2451b6d979f16d47a",
+  "simple-icons/tiktok.svg": "6f54ac8d325faacea8935bdc44cbed60206a6b408641799e5fea1cba7c1a0af7",
+  "simple-icons/twitch.svg": "dbe27bc02a01b8d89b6259cacef328c9fa70bb13c29f38c36eb1421863f6f0b6",
+  "simple-icons/x.svg": "693e68863eceb8dc9f72e2acd386ab9c20a10858dab2c076212f7084cb7a32fe",
+  "simple-icons/ycombinator.svg": "436dba1269c2a8211434ee3eb454f4fd97e414caedfbf590fe2de07f36319028",
+  "simple-icons/youtube.svg": "5038808acbbc4e6edda16cbeb1cc6dec80e4e4ee4e227e039c41229fa222aa8c",
+  "bootstrap-icons/calendar-event-fill.svg": "319e8f6320ba0935026306c585e18d107d4745960071416e767fa6695e1f647a",
+  "bootstrap-icons/filetype-csv.svg": "a58164b5eb8835e2dc1beda1d201e0fee591641a0b56a80dfe9323cfdcc25a05",
+  "bootstrap-icons/globe2.svg": "4365f2044bae83b1fc81cae38169777f62131103782ed74236b8e289822cad58",
+  "bootstrap-icons/linkedin.svg": "ddcbb2735eea12f090ea0ee371d1b9a3462531dc11efd0e944adc2d38c71e2df",
+  "bootstrap-icons/microsoft.svg": "07cd60851cc37e07d04383d82b8448fb27b8f3ed7946b1f2a648d6f728c495a6",
+  "bootstrap-icons/person-vcard-fill.svg": "67dc3842c14d533f84acb9c387f8b7419a5c62c7fa36089cd2c25213999b195d",
+  "bootstrap-icons/shop.svg": "657ce97e1e971d1902d3c9cddd1517401454c124c8b17ce1970965366902fce0",
   "beeper.svg": "a37882b2bde6d4c547d299b4d79aca37af0ed804e051640e8ba81f84c2840b35",
   "beeper-glyph.svg": "c67bab9c667fe3aed4773e22d2d17eae1981d349d34939d42ea1b42011c2c958",
   "aider.svg": "a65ba8794103b4dd1a103a996d651f43a0dc72def1e117a15c873aab7734c68a",
@@ -115,4 +138,15 @@ test("messaging marks retain pinned source licenses and the separate Beeper noti
   expect(provenance).toContain("simple-icons");
   expect(provenance).toContain("15.20.0");
   expect(provenance).toContain("7437e04747d7acd64db81c5bf78ef82efbaf45e8");
+});
+
+test("Bootstrap Icons marks retain the pinned MIT license and source release", async () => {
+  const license = await Bun.file(new URL("BOOTSTRAP-ICONS-LICENSE", vendorRoot)).arrayBuffer();
+  expect(createHash("sha256").update(new Uint8Array(license)).digest("hex"))
+    .toBe("0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969");
+  const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
+  expect(provenance).toContain("bootstrap-icons");
+  expect(provenance).toContain("1.13.1");
+  expect(provenance).toContain("ce0e49dd063243118a115f17ad1fe1fe7576d552");
+  expect(provenance).toContain("ijombt4v6bv5CLeXvRWKy7CuM3TRTuPEuGaGKvTV5cz65rQSY8RQ2JcHt6b90cBBAC7s8fsf2EkQDldzCoXUjw==");
 });

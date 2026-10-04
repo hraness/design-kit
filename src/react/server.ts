@@ -5,6 +5,7 @@ export * from "./procedural-recipe.js";
 export * from "./product-marketing.js";
 export * from "./marketing-account.js";
 export * from "./marketing-comparison.js";
+export * from "./marketing-marquee.js";
 export * from "./surfaces.js";
 export * from "./syntax-code.js";
 export * from "./foil-mark.js";

@@ -2,6 +2,7 @@
 
 import { MarketingAccount, MarketingAccountActions } from "./marketing-account.js";
 import { MarketingComparison } from "./marketing-comparison.js";
+import { MarketingMarquee } from "./marketing-marquee.js";
 import { MarketingDiagram, DiagramArrowhead } from "./marketing-diagram.js";
 import {
   Badge,
@@ -377,6 +378,24 @@ export function DesignSystemGallery({
             name="Relay"
             notice={<p data-gallery-marketing-slot="notice">This example release runs locally.</p>}
             summary="Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
+          />
+          <MarketingMarquee
+            action={{ href: "#gallery-install", label: "Set up your agent" }}
+            id="design-gallery-marquee"
+            items={[
+              { name: "Claude Code" },
+              { name: "Codex" },
+              { name: "Cursor" },
+              { name: "Gemini CLI" },
+              { name: "GitHub Copilot" },
+              { name: "Goose" },
+              { name: "opencode" },
+              { name: "Crush" },
+              { name: "Aider" },
+              { name: "Amp" },
+              { name: "Devin" },
+            ]}
+            label="Works with {count} coding agents"
           />
           <MarketingPillars
             ariaLabel="Relay in three points"

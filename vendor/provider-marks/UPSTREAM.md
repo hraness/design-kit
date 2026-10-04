@@ -47,6 +47,22 @@ it, and the `-color` artwork carries the vendor's brand fills.
   The downloaded package was checked against its npm SHA-512 integrity value
   `vo7/gojtNbh+dzKx6TGriI26O8MDn2MYUJUU4hKso6mTK1tFWl1OFPIg+D2BiAvXdyAy4z+gk/K1NvpYxh9D1A==`.
   Product names and marks remain the property of their respective owners.
+- `simple-icons/{apple,bluesky,facebook,github,gmail,google,instagram,reddit,substack,telegram,threads,tiktok,twitch,x,ycombinator,youtube}.svg`:
+  unmodified `icons/<name>.svg` files from the same `simple-icons` **15.20.0**
+  package, source revision `c9fac384f61d731f7a4e7d0c0a3df7b4774f4bcc`, checked
+  against the same npm SHA-512 integrity value and covered by the same
+  CC0-1.0 license. The package metadata records each artwork source and brand
+  color; the registry uses those colors as tile accents. The Y Combinator mark
+  also identifies Hacker News, which uses it as its logo. Product names and
+  marks remain the property of their respective owners.
+- `bootstrap-icons/{linkedin,microsoft}.svg` and the generic
+  `bootstrap-icons/{filetype-csv,person-vcard-fill,calendar-event-fill,shop,globe2}.svg`
+  glyphs: unmodified `icons/<name>.svg` files from `bootstrap-icons`
+  **1.13.1**, source revision `ce0e49dd063243118a115f17ad1fe1fe7576d552`. The
+  downloaded package was checked against its npm SHA-512 integrity value
+  `ijombt4v6bv5CLeXvRWKy7CuM3TRTuPEuGaGKvTV5cz65rQSY8RQ2JcHt6b90cBBAC7s8fsf2EkQDldzCoXUjw==`.
+  The complete MIT license is retained in `BOOTSTRAP-ICONS-LICENSE`. The
+  LinkedIn and Microsoft names and marks remain the property of their owners.
 - `beeper.svg`: Beeper's official adaptive icon from `beeper/static` at commit
   `7437e04747d7acd64db81c5bf78ef82efbaf45e8`,
   [`brand/Beeper_Adaptive_Icon_108dp.svg`](https://github.com/beeper/static/blob/7437e04747d7acd64db81c5bf78ef82efbaf45e8/brand/Beeper_Adaptive_Icon_108dp.svg),
