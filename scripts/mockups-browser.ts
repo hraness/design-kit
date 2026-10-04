@@ -379,6 +379,7 @@ try {
               assert(Math.abs(navigation.selected.right - (navigation.stage.left + 1)) < 1, `${label}: the selected step joins the preview's start edge`);
               assert(Math.abs(navigation.list.top - navigation.stage.top) < 1, `${label}: the stacked steps start flush with the preview's top edge`);
               assert(navigation.previous.top >= navigation.list.bottom, `${label}: arrows follow the stacked choices`);
+              assert(navigation.list.bottom <= navigation.stage.bottom + 1, `${label}: the stacked steps never hang past the preview`);
               assert(navigation.stageRadii.startStart === "0px" && navigation.stageRadii.endStart !== "0px", `${label}: only the corner the steps meet is square`);
             } else {
               assert(navigation.previous.right <= navigation.list.left && navigation.list.right <= navigation.next.left, `${label}: arrows bracket the compact tab strip`);

@@ -138,7 +138,7 @@ import {
 } from "../chunk-vy0pt84a.js";
 import {
   StepThrough
-} from "../chunk-fxwed3e5.js";
+} from "../chunk-eqd57m4y.js";
 import {
   SampleText
 } from "../chunk-fcs5qekr.js";
@@ -6763,21 +6763,21 @@ Run the job, then show me its log.`,
                       steps: [{
                         id: "choose",
                         label: "Choose a job",
-                        hint: "Pick a saved job and review the file it reads before starting the run.",
+                        hint: "Pick a saved job and check the file it reads.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "ready"
                         })
                       }, {
                         id: "run",
                         label: "Watch the run",
-                        hint: "See the input check, transformation, and saved output as separate stages.",
+                        hint: "The input check, the transform, and the saved output.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "running"
                         })
                       }, {
                         id: "inspect",
                         label: "Read the result",
-                        hint: "Open the saved report with the run ID and source file beside it.",
+                        hint: "Open the report beside its run ID and source.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "saved"
                         })

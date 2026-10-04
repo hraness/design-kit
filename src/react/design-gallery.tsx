@@ -468,9 +468,9 @@ export function DesignSystemGallery({
           </MarketingSection>
           <MarketingSection heading="Show the result at each step." headingId="gallery-walkthrough" headingLevel={3} label="Walkthrough" summary="Use short labels and visible explanations beside a compact illustration of what changes.">
             <StepThrough fit="fill" label="Run a Relay job" steps={[
-              { id: "choose", label: "Choose a job", hint: "Pick a saved job and review the file it reads before starting the run.", render: () => <GalleryJobPreview state="ready" /> },
-              { id: "run", label: "Watch the run", hint: "See the input check, transformation, and saved output as separate stages.", render: () => <GalleryJobPreview state="running" /> },
-              { id: "inspect", label: "Read the result", hint: "Open the saved report with the run ID and source file beside it.", render: () => <GalleryJobPreview state="saved" /> },
+              { id: "choose", label: "Choose a job", hint: "Pick a saved job and check the file it reads.", render: () => <GalleryJobPreview state="ready" /> },
+              { id: "run", label: "Watch the run", hint: "The input check, the transform, and the saved output.", render: () => <GalleryJobPreview state="running" /> },
+              { id: "inspect", label: "Read the result", hint: "Open the report beside its run ID and source.", render: () => <GalleryJobPreview state="saved" /> },
             ]} />
           </MarketingSection>
           <MarketingPrimitives

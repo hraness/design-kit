@@ -2593,9 +2593,35 @@
     min-block-size: 0;
   }
 
-  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-frame] > .hkm-window:has(> .hkm-page) {
+  /* A slide never leaves an empty band under a shorter frame. Each panel's
+   * single top-level frame grows to the stage through any product wrappers
+   * (marked as the fill path), and its window body takes the remaining height. */
+  /* Important so a product wrapper's own single-column grid or block layout
+   * cannot leave the extra height in its rows instead of the frame. */
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-path] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-path] > :is([data-hkm-fill-path], [data-hkm-fill-frame]) {
+    flex: 1 1 auto;
+    block-size: auto;
+    min-block-size: 0;
+  }
+
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-path] > [data-hkm-fill-frame] > .hkm-window {
+    block-size: 100%;
+  }
+
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-frame] > .hkm-window:has(> .hkm-page),
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-path] > [data-hkm-fill-frame] > .hkm-window {
     display: flex;
     flex-direction: column;
+  }
+
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-path] > [data-hkm-fill-frame] > .hkm-window > :last-child:not(.hkm-title-bar, .hkm-browser-bar) {
+    flex: 1 1 auto;
+    min-block-size: 0;
   }
 
   .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-frame] > .hkm-window > .hkm-page {
@@ -2605,8 +2631,33 @@
     max-block-size: none;
   }
 
-  .hkm-showcase[data-hkm-fit="fill"] :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-frame] > .hkm-window > :is(.hkm-title-bar, .hkm-browser-bar) {
+  .hkm-showcase :is(.hkm-step-stage, .hkm-mode-stage):not([data-hkm-measuring]) [data-hkm-fill-frame] > .hkm-window > :is(.hkm-title-bar, .hkm-browser-bar) {
     flex: none;
+  }
+
+  /* The panel draws the frame, so a wrapped window drops its own edge too. */
+  .hkm-showcase :is(.hkm-step-panel, .hkm-mode-surface) [data-hkm-fill-path] > [data-hkm-fill-frame],
+  .hkm-showcase :is(.hkm-step-panel, .hkm-mode-surface) [data-hkm-fill-path] > [data-hkm-fill-frame] > .hkm-window {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* A walkthrough stage is at least as tall as its tallest slide and its step
+   * list, so a selected step never hangs past the preview's edge. Natural
+   * walkthroughs stretch their unscaled slides the same way. */
+  .hkm-showcase.hkm-steps[data-hkm-fit="fill"] .hkm-step-stage:not([data-hkm-measuring]) {
+    block-size: auto;
+    min-block-size: var(--hkm-showcase-fill-height, 0px);
+  }
+
+  .hkm-showcase.hkm-steps:not([data-hkm-fit="fill"]) .hkm-step-stage > .hkm-step-panel {
+    align-self: stretch;
+  }
+
+  .hkm-showcase.hkm-steps:not([data-hkm-fit="fill"]) .hkm-step-panel > .hkm-fit:not(:has(> [data-hkm-scaled])),
+  .hkm-showcase.hkm-steps:not([data-hkm-fit="fill"]) .hkm-step-panel > .hkm-fit > .hkm-fit-inner:not([data-hkm-scaled]) {
+    block-size: 100%;
   }
 
   /* A walkthrough is one tabbed selector: the steps and the preview share an
