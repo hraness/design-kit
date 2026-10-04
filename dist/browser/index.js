@@ -1548,6 +1548,9 @@ function inspectMarketingHeader(options = {}, document = globalThis.document) {
   const image = mark?.querySelector("img");
   const brandHref = brand?.getAttribute("href") ?? null;
   const brandLabel = (brand?.getAttribute("aria-label") ?? brand?.textContent)?.trim() || null;
+  const brandCopy = brand?.cloneNode(true);
+  brandCopy?.querySelectorAll(".hraness-foil-mark, svg, img").forEach((element) => element.remove());
+  const brandName = brandCopy?.textContent?.replace(/\s+/gu, " ").trim() || null;
   const brandMark = image?.getAttribute("src") ?? null;
   const nav = header?.querySelector("nav.hraness-marketing-header__nav");
   const links = [...nav?.querySelectorAll("a[href]") ?? []].map((link) => ({
@@ -1563,6 +1566,8 @@ function inspectMarketingHeader(options = {}, document = globalThis.document) {
       problems.push("The product home link is missing or points to a different page.");
     if (brandLabel === null || options.brandLabel !== undefined && brandLabel !== options.brandLabel)
       problems.push("The product home link has a missing or inconsistent name.");
+    if (options.brandName !== undefined && brandName !== options.brandName)
+      problems.push("The visible product wordmark does not match its canonical display name.");
     if (brand?.hasAttribute("data-foil") !== true || mark === null || mark === undefined || image === null || image === undefined || !mark.querySelector(".hraness-foil-mark__paint") || !brandMark) {
       problems.push("The product home link is missing its foil mark and artwork fallback.");
     } else if (options.brandMark !== undefined && brandMark !== options.brandMark) {
@@ -1599,6 +1604,32 @@ function inspectMarketingHeader(options = {}, document = globalThis.document) {
           if (box2.width <= 0 || box2.height <= 0 || hidden)
             problems.push(`The product ${name} is not visible.`);
         }
+        if (options.brandName !== undefined && brand) {
+          const textNodes = [];
+          const walker = document.createTreeWalker(brand, 4);
+          for (let node = walker.nextNode();node !== null; node = walker.nextNode()) {
+            if (node.parentElement && !node.parentElement.closest(".hraness-foil-mark, svg, img"))
+              textNodes.push(node);
+          }
+          if (textNodes.some((node) => node.textContent?.trim() && node.parentElement && view.getComputedStyle(node.parentElement).textTransform !== "none")) {
+            problems.push("The product wordmark changes canonical casing with CSS.");
+          }
+          const renderedName = textNodes.filter((node) => {
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const box2 = range.getBoundingClientRect();
+            if (box2.width <= 0 || box2.height <= 0)
+              return false;
+            for (let ancestor = node.parentElement;ancestor !== null; ancestor = ancestor.parentElement) {
+              const style = view.getComputedStyle(ancestor);
+              if (style.display === "none" || style.visibility === "hidden" || style.visibility === "collapse" || Number(style.opacity) === 0)
+                return false;
+            }
+            return true;
+          }).map((node) => node.textContent).join("").replace(/\s+/gu, " ").trim();
+          if (renderedName !== options.brandName)
+            problems.push("The rendered product wordmark is not visible with its canonical display name.");
+        }
         const box = header.getBoundingClientRect();
         if (box.left < -1 || box.right > view.innerWidth + 1)
           problems.push("The product header extends outside the viewport.");
@@ -1630,6 +1661,7 @@ function inspectMarketingHeader(options = {}, document = globalThis.document) {
     appearanceCount: appearances.length,
     brandHref,
     brandLabel,
+    brandName,
     brandMark,
     links,
     problems

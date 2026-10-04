@@ -269,6 +269,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "header__brand": {
+    "text-transform": "none",
     "display": "inline-flex",
     "align-items": "center",
     "gap": "0.4rem",
@@ -467,6 +468,7 @@ export const marketingStyles = stylex.create({
     }
   },
   "footer__name": {
+    "text-transform": "none",
     "overflow": "hidden",
     "text-overflow": "ellipsis",
     "white-space": "nowrap"
@@ -1813,6 +1815,7 @@ export const marketingStyles = stylex.create({
     "column-gap": "0.6rem"
   },
   "related__card_name": {
+    "text-transform": "none",
     "margin": "0",
     "color": "var(--hraness-marketing-ink)",
     "font-family": "var(--hraness-marketing-text-font)",

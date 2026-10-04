@@ -30,6 +30,13 @@ test("the product-marketing entry is product-neutral and independently importabl
   expect(css).toContain("box-shadow: var(--hraness-marketing-chrome-shadow)");
 });
 
+test("wordmark roles preserve source casing instead of inheriting text transforms", () => {
+  for (const selector of ["header__brand", "footer__name", "hero__name", "related__card-name"]) {
+    const rule = css.match(new RegExp(`\\.hraness-marketing-${selector} \\{([^}]*)\\}`, "u"))?.[1];
+    expect(rule).toContain("text-transform: none;");
+  }
+});
+
 test("automatic flow syntax does not override typography or base color owned by the component", async () => {
   const syntax = await Bun.file(new URL("./syntax-highlighting.css", import.meta.url)).text();
   const codeRule = syntax.match(/\.syntax-code\s*\{([^}]+)\}/u)?.[1];

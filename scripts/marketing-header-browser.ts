@@ -59,7 +59,7 @@ try {
       await page.goto(`http://${server.hostname}:${server.port}/?theme=${theme}`);
       await page.evaluate(() => document.fonts.ready);
       await page.waitForFunction(() => typeof (window as unknown as { stopOffset?: unknown }).stopOffset === "function", undefined, { timeout: 10000 });
-      const options = { brandLabel: "Relay home", brandMark: "/relay.svg", stickyOffset: true };
+      const options = { brandName: "Relay", brandLabel: "Relay home", brandMark: "/relay.svg", stickyOffset: true };
       const inspection = await page.evaluate(inspectMarketingHeader, options);
       if (inspection.problems.length > 0) console.error(await page.locator("[data-hraness-appearance-menu] summary").evaluate(element => ({ html: element.outerHTML, ancestors: [...(function*(){for(let node: Element | null = element; node; node = node.parentElement) yield node;})()].map(node => ({ tag: node.tagName, class: node.className })).slice(0, 6), width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height, minWidth: getComputedStyle(element).minInlineSize, minHeight: getComputedStyle(element).minBlockSize, compactTarget: getComputedStyle(element).getPropertyValue("--interactive-target-compact"), headerTarget: getComputedStyle(element).getPropertyValue("--hraness-marketing-header-action-height") })));
       assert.deepEqual(inspection.problems, [], `${width}/${theme}`);
@@ -91,6 +91,33 @@ try {
       });
       assert.equal(laterWrite.value, laterWrite.measured, "Sticky teardown preserves a later matching-value write");
       assert.equal(laterWrite.priority, "important", "Sticky teardown preserves a later priority write");
+      const caseStyle = await page.addStyleTag({ content: ".hraness-marketing-header__brand{text-transform:lowercase!important}" });
+      assert.ok((await page.evaluate(inspectMarketingHeader, options)).problems.includes("The product wordmark changes canonical casing with CSS."), "CSS casing must not override the canonical wordmark");
+      await caseStyle.evaluate(element => element.parentNode?.removeChild(element));
+      await page.locator(".hraness-marketing-header__brand").evaluate(element => { if (element.lastChild) element.lastChild.textContent = "relay"; });
+      assert.ok((await page.evaluate(inspectMarketingHeader, options)).problems.includes("The visible product wordmark does not match its canonical display name."), "A correct aria-label must not hide a lowercase wordmark");
+      await page.locator(".hraness-marketing-header__brand").evaluate(element => { if (element.lastChild) element.lastChild.textContent = "Relay"; });
+      assert.deepEqual((await page.evaluate(inspectMarketingHeader, options)).problems, [], "Restoring source casing restores the canonical header");
+      await page.locator(".hraness-marketing-header__brand").evaluate(element => {
+        const wordmark = document.createElement("span");
+        wordmark.setAttribute("aria-hidden", "true");
+        wordmark.setAttribute("data-wordmark-case-control", "");
+        wordmark.textContent = "Relay";
+        if (!element.lastChild) throw new Error("Missing wordmark text.");
+        element.lastChild.replaceWith(wordmark);
+      });
+      assert.deepEqual((await page.evaluate(inspectMarketingHeader, options)).problems, [], "Aria-hidden wordmarks remain visually displayed");
+      const wordmark = page.locator("[data-wordmark-case-control]");
+      await wordmark.evaluate(element => { element.style.textTransform = "lowercase"; });
+      assert.ok((await page.evaluate(inspectMarketingHeader, options)).problems.includes("The product wordmark changes canonical casing with CSS."), "Child wordmarks cannot bypass casing checks with aria-hidden");
+      await wordmark.evaluate(element => { element.style.textTransform = "none"; });
+      const parentCaseStyle = await page.addStyleTag({ content: ".hraness-marketing-header__brand{text-transform:lowercase!important}" });
+      assert.deepEqual((await page.evaluate(inspectMarketingHeader, options)).problems, [], "Only the effective transform on rendered text controls its casing");
+      await parentCaseStyle.evaluate(element => element.parentNode?.removeChild(element));
+      await wordmark.evaluate(element => { element.style.display = "none"; });
+      assert.ok((await page.evaluate(inspectMarketingHeader, options)).problems.includes("The rendered product wordmark is not visible with its canonical display name."), "A hidden canonical wordmark must not pass through the accessible label");
+      await wordmark.evaluate(element => { element.style.display = ""; });
+      assert.deepEqual((await page.evaluate(inspectMarketingHeader, options)).problems, [], "Restoring wordmark visibility restores the canonical header");
       const hiddenStyle = await page.addStyleTag({ content: "[data-hraness-appearance-menu]{opacity:0!important}" });
       assert.ok((await page.evaluate(inspectMarketingHeader, options)).problems.includes("The product appearance trigger is not visible."), "Hidden-appearance counterfactual must fail");
       await hiddenStyle.evaluate(element => element.parentNode?.removeChild(element));
@@ -101,7 +128,7 @@ try {
       scenes++;
     } finally { await page.close(); }
   }
-  console.log(`Verified ${scenes} article-header viewport/theme scenes, authored sticky-state restoration, and ${scenes * 4} missing-header/layout/appearance/clearance counterfactuals; browser ${browser.version()}; executable ${executablePath}.`);
+  console.log(`Verified ${scenes} article-header viewport/theme scenes, authored sticky-state restoration, and ${scenes * 8} wordmark-visibility/case/missing-header/layout/appearance/clearance counterfactuals; browser ${browser.version()}; executable ${executablePath}.`);
 } finally {
   await browser?.close();
   server.stop(true);
