@@ -2,7 +2,7 @@ import {
   providerMark,
   providerMarkMonogram,
   providerMarkOnAccent
-} from "./chunk-gpsekwkj.js";
+} from "./chunk-w1y1m3m7.js";
 
 // src/mockups/core.tsx
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";

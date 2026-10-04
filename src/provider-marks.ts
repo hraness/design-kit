@@ -6,11 +6,13 @@ import { paletteContrast } from "./palette-color.js";
  * a retintable monochrome glyph (`glyph`, every fill resolves to
  * currentColor) with vendor-colored artwork when the source publishes one
  * (`art`). `accent` is our chosen tile color: the vendor's brand fill where
- * one exists, otherwise a compatible tone. Assets are vendored under
- * `vendor/provider-marks/` with provenance in that directory's UPSTREAM.md.
+ * one exists, otherwise a compatible tone. `generic` marks are neutral glyphs
+ * for sources that have no brand, such as a CSV file or a website. Assets are
+ * vendored under `vendor/provider-marks/` with provenance in that directory's
+ * UPSTREAM.md.
  */
 
-export type ProviderMarkKind = "agent" | "vendor";
+export type ProviderMarkKind = "agent" | "generic" | "vendor";
 
 interface ProviderMarkSpec {
   readonly accent: string;
@@ -33,21 +35,30 @@ const MARK_SPECS = {
   anthropic: { accent: "#d97757", aliases: ["anthropic"], kind: "vendor", name: "Anthropic" },
   apple: { accent: "#000000", aliases: ["apple", "apple contacts", "macos contacts"], kind: "vendor", name: "Apple" },
   beeper: { accent: "#6953f2", aliases: ["beeper", "beeper chat"], kind: "vendor", name: "Beeper" },
+  bluesky: { accent: "#1185fe", aliases: ["bluesky", "bsky"], kind: "vendor", name: "Bluesky" },
+  calendar: { accent: "#6f6962", aliases: ["calendar", "icalendar", "ics"], kind: "generic", name: "Calendar" },
   claude: { accent: "#d97757", aliases: ["claude"], kind: "vendor", name: "Claude" },
   claudecode: { accent: "#d97757", aliases: ["claude code", "claude-code"], kind: "agent", name: "Claude Code" },
   codex: { accent: "#111418", aliases: ["codex", "codex cli"], kind: "agent", name: "Codex" },
   crush: { accent: "#ff388b", aliases: ["crush", "charm crush"], kind: "agent", name: "Crush" },
+  csv: { accent: "#6f6962", aliases: ["csv", "csv file"], kind: "generic", name: "CSV" },
   cursor: { accent: "#1f2328", aliases: ["cursor"], kind: "agent", name: "Cursor" },
   deepseek: { accent: "#4d6bfe", aliases: ["deepseek"], kind: "vendor", name: "DeepSeek" },
   devin: { accent: "#3969ca", aliases: ["devin", "cognition"], kind: "agent", name: "Devin" },
-  gemini: { accent: "#3186ff", aliases: ["gemini", "google", "google deepmind", "google ai"], kind: "vendor", name: "Gemini" },
+  facebook: { accent: "#0866ff", aliases: ["facebook", "fb"], kind: "vendor", name: "Facebook" },
+  gemini: { accent: "#3186ff", aliases: ["gemini", "google deepmind", "google ai"], kind: "vendor", name: "Gemini" },
   geminicli: { accent: "#3186ff", aliases: ["gemini cli", "gemini-cli"], kind: "agent", name: "Gemini CLI" },
+  github: { accent: "#181717", aliases: ["github"], kind: "vendor", name: "GitHub" },
   githubcopilot: { accent: "#1f2328", aliases: ["github copilot", "github-copilot", "copilot"], kind: "agent", name: "GitHub Copilot" },
+  gmail: { accent: "#ea4335", aliases: ["gmail", "google mail"], kind: "vendor", name: "Gmail" },
+  google: { accent: "#4285f4", aliases: ["google"], kind: "vendor", name: "Google" },
   goose: { accent: "#0e7c86", aliases: ["goose", "block goose"], kind: "agent", name: "Goose" },
   imessage: { accent: "#34da50", aliases: ["imessage", "apple messages"], kind: "vendor", name: "iMessage" },
+  instagram: { accent: "#ff0069", aliases: ["instagram"], kind: "vendor", name: "Instagram" },
   linkedin: { accent: "#0a66c2", aliases: ["linkedin", "linked in", "linkedin export"], kind: "vendor", name: "LinkedIn" },
   mem0: { accent: "#cbb2ff", aliases: ["mem0", "memzero"], kind: "vendor", name: "Mem0" },
   meta: { accent: "#0082fb", aliases: ["meta", "meta ai", "llama"], kind: "vendor", name: "Meta" },
+  microsoft: { accent: "#0078d4", aliases: ["microsoft", "microsoft graph", "outlook", "microsoft outlook"], kind: "vendor", name: "Microsoft" },
   mistral: { accent: "#fa500f", aliases: ["mistral", "mistral ai"], kind: "vendor", name: "Mistral" },
   moonshot: { accent: "#5b5bd6", aliases: ["moonshot", "moonshot ai", "kimi"], kind: "vendor", name: "Moonshot AI" },
   nvidia: { accent: "#74b71b", aliases: ["nvidia"], kind: "vendor", name: "NVIDIA" },
@@ -57,10 +68,22 @@ const MARK_SPECS = {
   perplexity: { accent: "#22b8cd", aliases: ["perplexity", "perplexity ai"], kind: "vendor", name: "Perplexity" },
   opencode: { accent: "#d97706", aliases: ["opencode", "open code"], kind: "agent", name: "opencode" },
   qwen: { accent: "#615ced", aliases: ["qwen", "tongyi"], kind: "vendor", name: "Qwen" },
+  reddit: { accent: "#ff4500", aliases: ["reddit"], kind: "vendor", name: "Reddit" },
+  storefront: { accent: "#6f6962", aliases: ["storefront", "shop"], kind: "generic", name: "Storefront" },
+  substack: { accent: "#ff6719", aliases: ["substack"], kind: "vendor", name: "Substack" },
   supermemory: { accent: "#2563eb", aliases: ["supermemory", "supermemory ai"], kind: "vendor", name: "Supermemory" },
+  telegram: { accent: "#26a5e4", aliases: ["telegram"], kind: "vendor", name: "Telegram" },
+  threads: { accent: "#000000", aliases: ["threads"], kind: "vendor", name: "Threads" },
+  tiktok: { accent: "#000000", aliases: ["tiktok"], kind: "vendor", name: "TikTok" },
+  twitch: { accent: "#9146ff", aliases: ["twitch"], kind: "vendor", name: "Twitch" },
+  vcard: { accent: "#6f6962", aliases: ["vcard", "vcf"], kind: "generic", name: "vCard" },
   vercel: { accent: "#000000", aliases: ["vercel", "vercel ai gateway"], kind: "vendor", name: "Vercel" },
+  website: { accent: "#6f6962", aliases: ["website", "web"], kind: "generic", name: "Website" },
   whatsapp: { accent: "#25d366", aliases: ["whatsapp", "whats app"], kind: "vendor", name: "WhatsApp" },
+  x: { accent: "#000000", aliases: ["x", "twitter", "x.com"], kind: "vendor", name: "X" },
   xai: { accent: "#1a1a1a", aliases: ["xai", "x.ai", "grok", "spacexai"], kind: "vendor", name: "xAI" },
+  ycombinator: { accent: "#f0652f", aliases: ["y combinator", "hacker news", "hn"], kind: "vendor", name: "Y Combinator" },
+  youtube: { accent: "#ff0000", aliases: ["youtube"], kind: "vendor", name: "YouTube" },
   zai: { accent: "#2d4d9e", aliases: ["zai", "z.ai", "z ai", "zhipu"], kind: "vendor", name: "Z.AI" },
 } as const satisfies Record<keyof typeof providerMarkAssets, ProviderMarkSpec>;
 
