@@ -237,14 +237,34 @@ function assertFakeHandles(html, allowedHandles, label = "markup") {
       fail(`${label} links to ${match[1] ?? ""}, which is not a reserved example domain.`);
   }
 }
+var WALKTHROUGH_COPY_LIMITS = Object.freeze({
+  labelWords: 3,
+  hintCharacters: 60
+});
+function assertWalkthroughCopy(steps, label = "walkthrough") {
+  for (const step of steps) {
+    const words = step.label.trim().split(/\s+/u).filter(Boolean).length;
+    if (words === 0 || words > WALKTHROUGH_COPY_LIMITS.labelWords)
+      fail(`${label} step "${step.id}" label has ${String(words)} words; use one to ${String(WALKTHROUGH_COPY_LIMITS.labelWords)}.`);
+    const hint = step.hint?.trim();
+    if (hint === undefined || hint === "")
+      continue;
+    if (hint.length > WALKTHROUGH_COPY_LIMITS.hintCharacters)
+      fail(`${label} step "${step.id}" hint is ${String(hint.length)} characters; keep it within ${String(WALKTHROUGH_COPY_LIMITS.hintCharacters)}.`);
+    if ((hint.match(/[.!?](\s|$)/gu) ?? []).length > 1)
+      fail(`${label} step "${step.id}" hint has more than one sentence.`);
+  }
+}
 export {
   stripMockupSamples,
   renderMatrix,
   htmlText,
   blogConformance,
+  assertWalkthroughCopy,
   assertRoleImgWithLabel,
   assertNoHeadings,
   assertFakeHandles,
+  WALKTHROUGH_COPY_LIMITS,
   ConformanceError,
   BLOG_CONFORMANCE_LIMITS
 };
