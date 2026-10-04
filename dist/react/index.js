@@ -90,7 +90,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-1dgm85ta.js";
+} from "../chunk-q2cfjmte.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -6424,6 +6424,26 @@ function DesignSystemGallery({
                 })
               })
             ]
+          }),
+          /* @__PURE__ */ jsx17("div", {
+            "aria-label": "Plain site account actions",
+            className: "design-gallery__plain-theme plain-site plain-publication",
+            children: /* @__PURE__ */ jsx17("div", {
+              className: "plain-page",
+              children: /* @__PURE__ */ jsx17(MarketingAccount, {
+                id: "plain-account",
+                summary: "Keep your preferences across devices.",
+                children: /* @__PURE__ */ jsx17(MarketingAccountActions, {
+                  primary: {
+                    href: "#plain-account",
+                    label: "Create account"
+                  },
+                  signIn: {
+                    href: "#plain-account"
+                  }
+                })
+              })
+            })
           })
         ]
       }),

@@ -6121,7 +6121,7 @@ var marketingAccountStyles = {
   },
   signIn: {
     kGNEyG: "x6s0dn4",
-    kMwMTN: "x11jfisy",
+    kMwMTN: "x11jfisy x1ljrylj",
     k1xSpc: "x3nfvp2",
     kMv6JI: "x1d3so1v",
     kGuDYH: "x1lkfr7t",
@@ -6132,7 +6132,7 @@ var marketingAccountStyles = {
     kInvED: "xj3ae5l",
     kMnn75: "xujl8zx",
     kmVMDM: "xi2nhp4",
-    k1TLXF: "x6k6sr1 x9ojkr9 xnnf6oi",
+    k1TLXF: "x6k6sr1 x9ojkr9 x1e7jyuc xnnf6oi",
     kNySMw: "xyi4chj",
     kcSHmL: "xdsgf93",
     $$css: true

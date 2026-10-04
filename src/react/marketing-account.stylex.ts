@@ -56,7 +56,7 @@ export const marketingAccountStyles = stylex.create({
   },
   signIn: {
     alignItems: "center",
-    color: "var(--foreground)",
+    color: { default: "var(--foreground)", "@media (forced-colors: active)": "LinkText" },
     display: "inline-flex",
     fontFamily: "var(--font-text)",
     fontSize: "1.0625rem",
@@ -67,7 +67,7 @@ export const marketingAccountStyles = stylex.create({
     outlineOffset: { default: null, ":focus-visible": "3px" },
     textDecorationLine: "underline",
     textDecorationStyle: "dotted",
-    textDecorationColor: { default: "color-mix(in srgb, currentColor 45%, transparent)", ":hover": "currentColor", "@media (forced-colors: active)": "LinkText" },
+    textDecorationColor: { default: "color-mix(in srgb, currentColor 45%, transparent)", ":hover": "currentColor", ":focus-visible": "currentColor", "@media (forced-colors: active)": "LinkText" },
     textDecorationThickness: "1px",
     textUnderlineOffset: "0.22em",
   },

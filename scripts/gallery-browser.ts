@@ -144,13 +144,65 @@ function invariant(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
 }
 
+async function requireMarketingAccountActions(page: Page, label: string): Promise<void> {
+  for (const id of ["plain-account", "gallery-account"]) {
+    const action = page.locator(`#${id} .hraness-marketing-account__primary`);
+    await action.blur();
+    await page.mouse.move(0, 0);
+    for (const state of ["rest", "hover", "focus"] as const) {
+      if (state === "hover") await action.hover();
+      if (state === "focus") {
+        await page.mouse.move(0, 0);
+        await page.keyboard.press("Tab");
+        await action.focus();
+      }
+      const paint = await action.evaluate((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 1;
+        const context = canvas.getContext("2d");
+        if (context === null) throw new Error("Account contrast probe could not create a canvas.");
+        const luminance = (color: string): number => {
+          context.clearRect(0, 0, 1, 1);
+          context.fillStyle = color;
+          context.fillRect(0, 0, 1, 1);
+          const channels = context.getImageData(0, 0, 1, 1).data;
+          if (channels[3] !== 255) throw new Error(`Account paint must be opaque: ${color}`);
+          return Array.from(channels).slice(0, 3).reduce((sum, channel, index) => {
+            const value = channel / 255;
+            const linear = value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+            return sum + linear * ([0.2126, 0.7152, 0.0722][index] ?? 0);
+          }, 0);
+        };
+        const foreground = luminance(style.color), background = luminance(style.backgroundColor);
+        return { contrast: (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05),
+          label: element.textContent?.trim(), decoration: style.textDecorationLine,
+          height: rect.height, alignItems: style.alignItems, justifyContent: style.justifyContent,
+          focusVisible: element.matches(":focus-visible"), outlineWidth: style.outlineWidth, outlineStyle: style.outlineStyle };
+      });
+      invariant(paint.label === "Create account" && paint.contrast >= 4.5,
+        `${label}: ${id} ${state} account label is unreadable: ${JSON.stringify(paint)}`);
+      invariant(paint.decoration === "none" && paint.height >= 56
+        && paint.alignItems === "center" && paint.justifyContent === "center",
+        `${label}: ${id} ${state} account button lost its presentation: ${JSON.stringify(paint)}`);
+      if (state === "focus") invariant(paint.focusVisible && Number.parseFloat(paint.outlineWidth) >= 2 && paint.outlineStyle === "solid",
+        `${label}: ${id} account action lost its keyboard focus: ${JSON.stringify(paint)}`);
+    }
+    await action.blur();
+    await page.mouse.move(0, 0);
+  }
+}
+
 async function requirePublicationLinks(page: Page, label: string, forced = false): Promise<void> {
   for (const selector of [
     ".plain-publication__article-body a",
     ".plain-publication__sources a",
     "#articles > .plain-publication__provenance a",
     ".hraness-marketing-comparison__note a",
-    ...(forced ? [".plain-publication__byline a"] : []),
+    ".plain-publication__byline a",
+    "#plain-account .hraness-marketing-account__sign-in",
+    "#gallery-account .hraness-marketing-account__sign-in",
   ]) {
     const link = page.locator(selector).first();
     await link.blur();
@@ -2624,6 +2676,7 @@ try {
         );
 
         await requirePublicationLinks(page, layout.id);
+        await requireMarketingAccountActions(page, layout.id);
 
         const appearanceTrigger = page.getByRole("button", { name: "Appearance: System" });
         await appearanceTrigger.focus();
@@ -2717,6 +2770,8 @@ try {
         await page.keyboard.press("ArrowDown");
         await page.keyboard.press("Enter");
         await page.locator('html[data-theme="dark"]').waitFor();
+        await requirePublicationLinks(page, `${layout.id}: dark theme`);
+        await requireMarketingAccountActions(page, `${layout.id}: dark theme`);
         await requireShellBackgrounds(page, `${layout.id}: dark theme`);
         await requireEffectBackgrounds(page, true, `${layout.id}: dark theme`);
         // Isolate CDP media emulation from the preceding appearance assertions.
@@ -2771,6 +2826,7 @@ try {
         waitUntil: "networkidle",
       });
       await requirePublicationLinks(forcedPage, "forced colors", true);
+      await requireMarketingAccountActions(forcedPage, "forced colors");
       await forcedPage.locator('.hraness-design-theme-toggle[data-ready="true"]').waitFor();
       invariant(await forcedPage.locator("[data-gallery-glass-top-bar]").evaluateAll((headers) => headers.length === 2 && headers.every((header) => getComputedStyle(header).backdropFilter === "none")), "Forced colors must remove glass header blur.");
       await forcedPage.getByRole("button", { name: "Appearance: System" }).focus();
