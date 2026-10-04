@@ -8,7 +8,9 @@ const licenseHash = "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c8
 const FILE_HASHES: Readonly<Record<string, string>> = {
   "lobehub/ollama.svg": "3a268218fb2e6e81fa31df70f70b51331625047794db81db21d35359428fae7a",
   "lobehub/vercel.svg": "4874d52d8b2ce7c309cbd10c424fee123b2c9483e76d76ad0dca41794483eb24",
+  "simple-icons/apple.svg": "2a1509dccd25e6d2bc7a11a8e52941077e1a48555e192ce638699b9f083c2a7c",
   "simple-icons/imessage.svg": "6f0701596b1b44ea9b863828b5a9363b77c30408bbb4655045378c33440de144",
+  "bootstrap-icons/linkedin.svg": "ddcbb2735eea12f090ea0ee371d1b9a3462531dc11efd0e944adc2d38c71e2df",
   "simple-icons/whatsapp.svg": "8fb209a53a61618c3483594b3e070481a35575d6aaecbe00a6fe386670c8fb1c",
   "beeper.svg": "a37882b2bde6d4c547d299b4d79aca37af0ed804e051640e8ba81f84c2840b35",
   "beeper-glyph.svg": "c67bab9c667fe3aed4773e22d2d17eae1981d349d34939d42ea1b42011c2c958",
@@ -115,4 +117,14 @@ test("messaging marks retain pinned source licenses and the separate Beeper noti
   expect(provenance).toContain("simple-icons");
   expect(provenance).toContain("15.20.0");
   expect(provenance).toContain("7437e04747d7acd64db81c5bf78ef82efbaf45e8");
+});
+
+test("the LinkedIn mark retains the pinned Bootstrap Icons MIT license and release", async () => {
+  const license = await Bun.file(new URL("BOOTSTRAP-ICONS-LICENSE", vendorRoot)).arrayBuffer();
+  expect(createHash("sha256").update(new Uint8Array(license)).digest("hex"))
+    .toBe("0fb3e11bd57e896c5a512afd64864d28a37de45d19835016c87ca1ad19ead969");
+  const provenance = await Bun.file(new URL("UPSTREAM.md", vendorRoot)).text();
+  expect(provenance).toContain("bootstrap-icons");
+  expect(provenance).toContain("1.13.1");
+  expect(provenance).toContain("ce0e49dd063243118a115f17ad1fe1fe7576d552");
 });

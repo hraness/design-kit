@@ -47,6 +47,20 @@ it, and the `-color` artwork carries the vendor's brand fills.
   The downloaded package was checked against its npm SHA-512 integrity value
   `vo7/gojtNbh+dzKx6TGriI26O8MDn2MYUJUU4hKso6mTK1tFWl1OFPIg+D2BiAvXdyAy4z+gk/K1NvpYxh9D1A==`.
   Product names and marks remain the property of their respective owners.
+- `simple-icons/apple.svg`: the unmodified `icons/apple.svg` file from the
+  same `simple-icons` **15.20.0** package and integrity value above, under
+  the same CC0-1.0 license. Its icon metadata cites
+  [apple.com](https://www.apple.com) as the source, with brand color
+  `#000000`. It identifies Apple sources such as Apple Contacts.
+- `bootstrap-icons/linkedin.svg`: the unmodified `icons/linkedin.svg` file
+  from `bootstrap-icons` **1.13.1** (upstream `twbs/icons`, tag `v1.13.1`,
+  commit `ce0e49dd063243118a115f17ad1fe1fe7576d552`). Simple Icons no longer
+  publishes a LinkedIn mark. The downloaded package was checked against its
+  npm SHA-512 integrity value
+  `ijombt4v6bv5CLeXvRWKy7CuM3TRTuPEuGaGKvTV5cz65rQSY8RQ2JcHt6b90cBBAC7s8fsf2EkQDldzCoXUjw==`.
+  The complete MIT license is retained in `BOOTSTRAP-ICONS-LICENSE`. The tile
+  accent `#0A66C2` is LinkedIn's published brand blue. LinkedIn and its mark
+  remain the property of LinkedIn Corporation.
 - `beeper.svg`: Beeper's official adaptive icon from `beeper/static` at commit
   `7437e04747d7acd64db81c5bf78ef82efbaf45e8`,
   [`brand/Beeper_Adaptive_Icon_108dp.svg`](https://github.com/beeper/static/blob/7437e04747d7acd64db81c5bf78ef82efbaf45e8/brand/Beeper_Adaptive_Icon_108dp.svg),

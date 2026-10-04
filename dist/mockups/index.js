@@ -22,10 +22,11 @@ import {
   isEmojiOnly,
   mockupAddress,
   phoneStyle
-} from "../chunk-r4eh9b75.js";
+} from "../chunk-san9drwt.js";
 import {
   Avatar,
   Hotspot,
+  MockupBrandMark,
   MockupGlyph,
   MockupRoot,
   PlaceholderPhoto,
@@ -39,7 +40,8 @@ import {
   mockupGlyphNames,
   mockupHash,
   mockupInitials
-} from "../chunk-evb02bc1.js";
+} from "../chunk-kz59614q.js";
+import"../chunk-gpsekwkj.js";
 import"../chunk-5gtx3pza.js";
 export {
   phoneStyle,
@@ -67,6 +69,7 @@ export {
   PhoneFrame,
   MockupRoot,
   MockupGlyph,
+  MockupBrandMark,
   MenuBarPopover,
   MacWindow,
   MOCKUP_EXAMPLE_HOST,

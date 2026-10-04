@@ -15,7 +15,7 @@ export type MockupFixture = Readonly<{ name: string; kind: string; render: (them
 export function mockupFixtures(api: typeof Mockups): readonly MockupFixture[] {
   const {
     AgentSession, ArticlePage, BrowserFrame, ChatThread, Inbox, InboxMessage, InboxRow, MacWindow, MenuBarPopover,
-    PhoneFrame, SocialFeed, SocialPost, TerminalFrame, WorkFeed, WorkPost,
+    MockupBrandMark, PhoneFrame, SocialFeed, SocialPost, TerminalFrame, WorkFeed, WorkPost,
   } = api;
   const optOut = { "data-sample-skip": "" } as const;
   const rows = [
@@ -52,8 +52,13 @@ export function mockupFixtures(api: typeof Mockups): readonly MockupFixture[] {
     {
       name: "Desktop window", kind: "app-window",
       render: (theme) => (
-        <MacWindow describe="Illustration of a desktop window with a sidebar." sidebar={<span>Jobs</span>} theme={theme} title="Relay">
+        <MacWindow describe="Illustration of a desktop window with a sidebar and three source marks." sidebar={<span>Jobs</span>} theme={theme} title="Relay">
           <p>Two jobs queued.</p>
+          <p style={{ display: "flex", gap: 8, marginTop: 12 }}>
+            <MockupBrandMark name="Apple Contacts" size={28} />
+            <MockupBrandMark name="LinkedIn" size={28} />
+            <MockupBrandMark name="iMessage" size={28} />
+          </p>
         </MacWindow>
       ),
     },

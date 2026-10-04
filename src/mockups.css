@@ -107,6 +107,39 @@
     flex: none;
   }
 
+  /* Brand marks are app-icon tiles: the vendor glyph in readable ink on the
+   * vendor color. The glyph variant follows the surrounding text instead. */
+  .hkm-root .hkm-brand-mark {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    inline-size: var(--hkm-mark-size, 32px);
+    block-size: var(--hkm-mark-size, 32px);
+    border-radius: calc(var(--hkm-mark-size, 32px) * 0.26);
+    background: var(--hkm-mark-accent, var(--hkm-field));
+    color: var(--hkm-mark-ink, var(--hkm-muted));
+    box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.1));
+    font: 650 calc(var(--hkm-mark-size, 32px) * 0.36)/1 var(--hkm-font);
+    letter-spacing: 0.01em;
+  }
+
+  .hkm-root .hkm-brand-mark svg {
+    display: block;
+    inline-size: 56%;
+    block-size: 56%;
+  }
+
+  .hkm-root .hkm-brand-mark[data-hkm-variant="glyph"] {
+    background: none;
+    box-shadow: none;
+    color: inherit;
+  }
+
+  .hkm-root .hkm-brand-mark[data-hkm-variant="glyph"] svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
   .hkm-root .hkm-avatar {
     display: inline-grid;
     flex: none;
@@ -2525,7 +2558,7 @@
   .hkm-showcase .hkm-folder-tabs .hkm-tab { min-block-size: 48px; padding: 12px 18px; border: 1px solid var(--hkm-sc-line); border-block-end: 0; border-radius: 12px 12px 0 0; background: var(--hkm-sc-field); color: var(--hkm-sc-muted); }
   .hkm-showcase .hkm-folder-tabs .hkm-tab[aria-selected="true"] { background: var(--hkm-sc-bg); color: var(--hkm-sc-fg); }
   .hkm-showcase .hkm-folder-tabs .hkm-tab:hover { color: var(--hkm-sc-fg); }
-  .hkm-showcase.hkm-steps .hkm-step-stage { display: grid; min-inline-size: 0; border: 1px solid var(--hkm-sc-line); border-radius: 12px; background: var(--hkm-sc-bg); overflow: clip; }
+  .hkm-showcase.hkm-steps .hkm-step-stage { display: grid; min-inline-size: 0; border: 1px solid var(--hkm-sc-line); border-radius: var(--hkm-step-radius, 12px); background: var(--hkm-sc-bg); overflow: clip; }
   .hkm-showcase.hkm-modes .hkm-mode-panel { border: 1px solid var(--hkm-sc-line); border-radius: 12px; background: var(--hkm-sc-bg); overflow: clip; }
   .hkm-showcase.hkm-modes .hkm-folder-tabs + .hkm-mode-panel { border-start-start-radius: 0; margin-block-start: -1px; }
   .hkm-showcase.hkm-modes .hkm-showcase-controls { border: 0; border-block-end: 1px solid var(--hkm-sc-line); border-radius: 0; }
@@ -2576,36 +2609,72 @@
     flex: none;
   }
 
-  /* A compact selector keeps navigation beside the tabs. The full selector
-   * stacks labels and explanations beside the preview when its own width fits. */
-  .hkm-showcase.hkm-steps { font-size: 1rem; line-height: 1.5; }
-  .hkm-showcase .hkm-step-layout { display: grid; gap: 16px; align-items: start; min-inline-size: 0; }
-  .hkm-showcase.hkm-steps .hkm-step-controls { gap: 12px; min-inline-size: 0; }
-  .hkm-showcase.hkm-steps .hkm-step-nav { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; min-inline-size: 0; padding: 0; }
-  .hkm-showcase.hkm-steps .hkm-step-button { display: inline-grid; place-items: center; inline-size: 44px; min-inline-size: 44px; min-block-size: 44px; padding: 0; border: 1px solid var(--hkm-sc-line); border-radius: 10px; background: var(--hkm-sc-bg); color: var(--hkm-sc-fg); }
-  .hkm-showcase.hkm-steps .hkm-step-button:hover:enabled { background: var(--hkm-sc-field); }
-  .hkm-showcase.hkm-steps .hkm-step-button:disabled { color: var(--hkm-sc-muted); cursor: default; }
-  .hkm-showcase .hkm-step-count { display: none; color: var(--hkm-sc-muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; text-align: center; }
-  .hkm-showcase.hkm-steps .hkm-step-tabs { gap: 4px; margin: 0; padding: 4px; border: 0; min-inline-size: 0; scroll-padding-inline: 4px; }
-  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { gap: 8px; min-block-size: 44px; padding: 9px 12px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--hkm-sc-fg); font-size: 1rem; line-height: 1.5; font-weight: 550; text-align: start; }
-  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab:hover { background: var(--hkm-sc-field); }
-  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] { border-color: var(--hkm-sc-line); background: var(--hkm-sc-field); color: var(--hkm-sc-fg); }
-  .hkm-showcase .hkm-step-copy { display: flex; flex-direction: column; gap: 5px; min-inline-size: 0; }
-  .hkm-showcase .hkm-step-label { font: inherit; }
-  .hkm-showcase .hkm-step-hint { display: none; color: var(--hkm-sc-muted); font-size: 0.875rem; line-height: 1.5; font-weight: 400; }
-  .hkm-showcase .hkm-step-descriptions { display: grid; padding-inline: 4px; }
+  /* A walkthrough is one tabbed selector: the steps and the preview share an
+   * edge. Compact layouts attach a tab strip to the preview's top edge between
+   * Back and Next. Wide layouts stack the steps on its start edge, flush with
+   * a square corner, and put Back and Next under them. The selected tab takes
+   * the window-chrome color so it reads as part of the frame below it. */
+  .hkm-showcase.hkm-steps {
+    --hkm-step-radius: 12px;
+    --hkm-step-tab-radius: 10px;
+    --hkm-step-tab-selected: var(--hkm-chrome);
+    --hkm-step-tab-hover: color-mix(in srgb, var(--hkm-chrome) 55%, transparent);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .hkm-showcase .hkm-step-layout { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "controls" "stage" "descriptions"; align-items: start; min-inline-size: 0; }
+  .hkm-showcase.hkm-steps .hkm-step-controls { grid-area: controls; position: relative; z-index: 1; min-inline-size: 0; margin-block-end: -1px; }
+  .hkm-showcase.hkm-steps .hkm-step-stage { grid-area: stage; }
+  .hkm-showcase.hkm-steps .hkm-step-nav { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; grid-template-areas: "back tabs next"; align-items: end; gap: 6px; min-inline-size: 0; padding: 0; }
+  .hkm-showcase.hkm-steps .hkm-step-button { display: inline-grid; place-items: center; inline-size: 44px; min-inline-size: 44px; min-block-size: 44px; margin-block-end: 1px; padding: 0; border: 0; border-radius: var(--hkm-step-tab-radius); background: transparent; color: var(--hkm-sc-fg); }
+  .hkm-showcase.hkm-steps .hkm-step-button:first-child { grid-area: back; }
+  .hkm-showcase.hkm-steps .hkm-step-button:last-child { grid-area: next; }
+  .hkm-showcase.hkm-steps .hkm-step-button:hover:enabled { background: var(--hkm-step-tab-hover); }
+  .hkm-showcase.hkm-steps .hkm-step-button:disabled { background: transparent; color: var(--hkm-sc-muted); cursor: default; }
+  .hkm-showcase .hkm-step-count { display: none; grid-area: count; color: var(--hkm-sc-muted); font: 500 0.8125rem/1 var(--hkm-mono); font-variant-numeric: tabular-nums; text-align: center; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs { grid-area: tabs; display: flex; gap: 2px; min-inline-size: 0; margin: 0; padding: 0; overflow-x: auto; overflow-y: hidden; border: 0; scrollbar-width: none; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs::-webkit-scrollbar { display: none; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { display: inline-flex; flex: 0 1 auto; align-items: center; gap: 10px; min-inline-size: 44px; min-block-size: 44px; padding: 10px 16px; border: 1px solid transparent; border-block-end: 0; border-radius: var(--hkm-step-tab-radius) var(--hkm-step-tab-radius) 0 0; background: transparent; color: var(--hkm-sc-muted); font-size: 0.9375rem; line-height: 1.4; font-weight: 550; text-align: start; white-space: nowrap; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab:hover { background: var(--hkm-step-tab-hover); color: var(--hkm-sc-fg); }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] { border-color: var(--hkm-sc-line); background: var(--hkm-step-tab-selected); color: var(--hkm-sc-fg); }
+  /* A preview pinned to its own theme lends that theme to the selected tab,
+   * so a dark window on a light page still reads as one frame. */
+  .hkm-showcase.hkm-steps:has(.hkm-step-panel[aria-hidden="false"] .hkm-root[data-hkm-theme="dark"]) .hkm-step-tabs .hkm-tab[aria-selected="true"] { color-scheme: dark; }
+  .hkm-showcase.hkm-steps:has(.hkm-step-panel[aria-hidden="false"] .hkm-root[data-hkm-theme="light"]) .hkm-step-tabs .hkm-tab[aria-selected="true"] { color-scheme: light; }
+  .hkm-showcase.hkm-steps:has(.hkm-step-panel[aria-hidden="false"] .hkm-root[data-hkm-theme]) .hkm-step-tabs .hkm-tab[aria-selected="true"] { color: var(--hkm-fg); }
+  .hkm-showcase.hkm-steps:has(.hkm-step-panel[aria-hidden="false"] .hkm-root[data-hkm-theme]) .hkm-step-tabs .hkm-tab[aria-selected="true"] :is(.hkm-step-number, .hkm-step-label) { color: var(--hkm-fg); }
+  .hkm-showcase.hkm-steps:has(.hkm-step-panel[aria-hidden="false"] .hkm-root[data-hkm-theme]) .hkm-step-tabs .hkm-tab[aria-selected="true"] .hkm-step-hint { color: var(--hkm-muted); }
+  .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab:focus-visible { outline-offset: -3px; }
+  .hkm-showcase.hkm-steps .hkm-step-number { color: var(--hkm-sc-muted); font: 500 0.8125rem/1.4 var(--hkm-mono); }
+  .hkm-showcase.hkm-steps .hkm-tab[aria-selected="true"] .hkm-step-number { color: var(--hkm-sc-fg); }
+  .hkm-showcase .hkm-step-copy { display: flex; flex-direction: column; gap: 4px; min-inline-size: 0; }
+  .hkm-showcase .hkm-step-label { overflow: hidden; font: inherit; text-overflow: ellipsis; }
+  .hkm-showcase .hkm-step-hint { display: none; color: var(--hkm-sc-muted); font-size: 0.875rem; line-height: 1.45; font-weight: 400; }
+  .hkm-showcase .hkm-step-descriptions { grid-area: descriptions; display: grid; padding: 12px 4px 0; }
   .hkm-showcase .hkm-step-description { grid-area: 1 / 1; margin: 0; color: var(--hkm-sc-muted); font-size: 0.875rem; line-height: 1.5; }
   .hkm-showcase .hkm-step-description:not([data-hkm-active]) { visibility: hidden; }
   .hkm-showcase .hkm-step-panel:focus-visible { outline: 2px solid var(--hkm-accent); outline-offset: -4px; }
+  /* A strip too narrow for every label keeps the selected label and shows
+   * numbers for the rest; each label stays the tab's accessible name. */
+  .hkm-showcase.hkm-steps .hkm-step-tabs[data-hkm-compact] .hkm-tab:not([aria-selected="true"]) { flex: none; justify-content: center; padding-inline: 12px; }
+  .hkm-showcase.hkm-steps .hkm-step-tabs[data-hkm-compact] .hkm-tab:not([aria-selected="true"]) .hkm-step-copy { display: none; }
+  @container hkm-showcase (max-width: 519px) {
+    .hkm-showcase.hkm-steps .hkm-step-nav { grid-template-columns: 40px minmax(0, 1fr) 40px; gap: 4px; }
+    .hkm-showcase.hkm-steps .hkm-step-button { inline-size: 40px; min-inline-size: 40px; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { gap: 8px; padding-inline: 12px; font-size: 0.875rem; }
+  }
   @container hkm-showcase (min-width: 720px) {
-    .hkm-showcase .hkm-step-layout { grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.6fr); gap: 24px; }
-    .hkm-showcase.hkm-steps .hkm-step-nav { align-items: start; row-gap: 12px; }
-    .hkm-showcase.hkm-steps .hkm-step-button:first-child { grid-area: 1 / 1; }
-    .hkm-showcase.hkm-steps .hkm-step-button:last-child { grid-area: 1 / 3; }
-    .hkm-showcase .hkm-step-count { display: block; grid-area: 1 / 2; align-self: center; }
-    .hkm-showcase.hkm-steps .hkm-step-tabs { grid-area: 2 / 1 / 3 / -1; flex-direction: column; gap: 6px; padding: 4px; overflow: visible; }
-    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { display: grid; grid-template-columns: 1.5ch minmax(0, 1fr); align-items: start; gap: 12px; padding: 12px; white-space: normal; }
-    .hkm-showcase.hkm-steps .hkm-step-number { padding-block-start: 0.125rem; }
+    .hkm-showcase .hkm-step-layout { grid-template-columns: minmax(200px, 0.72fr) minmax(0, 1.6fr); grid-template-areas: "controls stage"; align-items: stretch; }
+    .hkm-showcase.hkm-steps .hkm-step-controls { margin-block-end: 0; margin-inline-end: -1px; }
+    .hkm-showcase.hkm-steps .hkm-step-stage { align-self: stretch; border-start-start-radius: 0; }
+    .hkm-showcase.hkm-steps .hkm-step-nav { grid-template-areas: "tabs tabs tabs" "back count next"; align-items: center; row-gap: 14px; column-gap: 6px; }
+    .hkm-showcase.hkm-steps .hkm-step-button { margin: 0; }
+    .hkm-showcase .hkm-step-count { display: block; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs { flex-direction: column; gap: 2px; overflow: visible; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab { display: grid; flex: none; grid-template-columns: 2.5ch minmax(0, 1fr); align-items: start; gap: 12px; padding: 14px 16px; border: 1px solid transparent; border-inline-end: 0; border-radius: var(--hkm-step-tab-radius) 0 0 var(--hkm-step-tab-radius); white-space: normal; }
+    .hkm-showcase.hkm-steps .hkm-step-tabs .hkm-tab[aria-selected="true"] { border-color: var(--hkm-sc-line); }
+    .hkm-showcase.hkm-steps .hkm-step-number { padding-block-start: 0.1rem; }
+    .hkm-showcase .hkm-step-label { overflow: visible; }
     .hkm-showcase .hkm-step-hint { display: block; }
     .hkm-showcase .hkm-step-descriptions { display: none; }
   }

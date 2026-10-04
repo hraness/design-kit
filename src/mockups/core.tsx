@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
+import { providerMark, providerMarkMonogram, providerMarkOnAccent } from "../provider-marks.js";
+
 /*
  * Shared pieces for the code-built mockups. Server-safe plain React: no hooks,
  * no context, no StyleX, and no runtime dependency other than React, so a film
@@ -303,6 +305,34 @@ export function MockupGlyph({
     >
       {GLYPHS[name]}
     </svg>
+  );
+}
+
+/**
+ * A product's brand mark from the shared provider-mark registry, such as
+ * "Apple Contacts", "LinkedIn", or "iMessage". `tile` draws the vendor glyph
+ * in readable ink on the brand color, like an app icon; `glyph` follows the
+ * surrounding text color. Names without a registered mark get a neutral
+ * monogram tile, never an invented logo. Decorative: always aria-hidden, so
+ * name the product in nearby text.
+ */
+export function MockupBrandMark({
+  className,
+  name,
+  size = 32,
+  variant = "tile",
+}: Readonly<{ name: string; size?: number; variant?: "tile" | "glyph"; className?: string }>) {
+  if (!(size > 0)) throw new RangeError("MockupBrandMark size must be positive.");
+  const mark = providerMark(name);
+  const style = { "--hkm-mark-size": `${String(size)}px`, ...(mark === undefined || variant !== "tile" ? {} : { "--hkm-mark-accent": mark.accent, "--hkm-mark-ink": providerMarkOnAccent(mark) }) } as CSSProperties;
+  if (mark === undefined) {
+    return <span aria-hidden="true" className={joinMockupClasses("hkm-brand-mark", className)} data-hkm-monogram="" style={style}>{providerMarkMonogram(name)}</span>;
+  }
+  return (
+    <span aria-hidden="true" className={joinMockupClasses("hkm-brand-mark", className)} data-hkm-mark={mark.id} data-hkm-variant={variant} style={style}>
+      {/* Generated from vendored, sanitized artwork in provider-marks.generated.ts. */}
+      <svg dangerouslySetInnerHTML={{ __html: mark.glyph.body }} fill="currentColor" focusable="false" viewBox={mark.glyph.viewBox} />
+    </span>
   );
 }
 
