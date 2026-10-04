@@ -23,6 +23,55 @@ Pin a GitHub release tag:
 installation so the framework-neutral root and syntax highlighter can be used
 on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
+## Render a first application header
+
+In an existing React 18 or 19 application with the dependencies above installed,
+load the complete precompiled stylesheet once in your global CSS file:
+
+```css
+@import "@hraness/design-kit/styles.css";
+```
+
+If you use Tailwind, put its import first. This route needs no application StyleX
+compiler. It loads the shared presentation layers and default webfonts; do not
+combine it with the compiler-adopter route described in
+[Load the presentation layer](#load-the-presentation-layer).
+
+In `App.tsx`, render a header and your application content:
+
+```tsx
+import { TopBar } from "@hraness/design-kit/react";
+
+export default function App() {
+  return (
+    <>
+      <TopBar title="My workspace" />
+      <main>
+        <h1>Saved work</h1>
+        <p>Your application owns the content and state.</p>
+      </main>
+    </>
+  );
+}
+```
+
+Run your application's existing development command. You see a solid, non-sticky
+header titled “My workspace” above “Saved work”. `TopBar` renders a semantic
+`header`; it does not supply application routing or a `main` landmark for you.
+
+## Find the right documentation
+
+- [Load styles or adopt the StyleX compiler](#load-the-presentation-layer): choose one stylesheet route.
+- [Use application compositions](#use-application-compositions): shells, navigation, and surfaces.
+- [Explain a technical product](#explain-a-technical-product): marketing compositions and complete examples.
+- [Publish articles](#publish-articles) and [article copy guidance](ARTICLE_COPY.md): article structure and review requirements.
+- [Show status pages](#show-status-pages): error and not-found pages.
+- [Use charts and syntax](#use-charts-and-syntax): application-owned data and code display.
+- [Appearance and fonts](#appearance-and-fonts) and [palette reference](PALETTES.md): themes and typography.
+- [Run the gallery](#gallery) or [develop the package](#development).
+
+## Release notes and focused examples
+
 ### Article links and account actions
 
 Version 0.40.1 strengthens the dotted underline on embedded article author links during hover and keyboard focus. Account prompts in plain pages retain a readable Create account button and a dotted Sign in link, with visible keyboard focus and system colors in high contrast mode.
