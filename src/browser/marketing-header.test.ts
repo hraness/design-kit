@@ -9,7 +9,7 @@ const header = `<header data-hraness-marketing="header"><div class="hraness-mark
   <div class="hraness-marketing-header__actions"><a href="/#install">Install</a><details data-hraness-appearance-menu><summary aria-label="Appearance"></summary><div><input type="radio"></div></details></div>
 </div></header>`;
 const main = '<main><article><header><h1>A decision that lasts</h1></header></article></main>';
-const options = { brandLabel: "Relay home", brandMark: "/relay.svg", measure: false } as const;
+const options = { brandName: "Relay", brandLabel: "Relay home", brandMark: "/relay.svg", measure: false } as const;
 function inspect(html: string) {
   return inspectMarketingHeader(options, parseHTML(`<html><body>${html}</body></html>`).document as unknown as Document);
 }
@@ -38,6 +38,23 @@ describe("complete public-page header inspection", () => {
     [header + main + '<details data-hraness-appearance-menu><summary>Appearance</summary></details>', "Expected 1 appearance controls; found 2."],
   ])("rejects an inconsistent shell %#", (html, problem) => {
     expect(inspect(html).problems).toContain(problem);
+  });
+  test.each(["peopleblade", "PEOPLEBLADE", "peopleblade.com"])("rejects the visible wordmark %s even with a canonical accessible label", (wordmark) => {
+    const html = header.replaceAll("Relay", "PeopleBlade").replace(">PeopleBlade</a>", `>${wordmark}</a>`) + main;
+    const document = parseHTML(`<html><body>${html}</body></html>`).document as unknown as Document;
+    const result = inspectMarketingHeader({ ...options, brandName: "PeopleBlade", brandLabel: "PeopleBlade home" }, document);
+    expect(result.brandLabel).toBe("PeopleBlade home");
+    expect(result.problems).toContain("The visible product wordmark does not match its canonical display name.");
+  });
+  test.each(["PeopleBlade", "ALGAL", "Rough Day", "aicharts", "icon.place"])("accepts exact canonical casing %s independently of technical identifiers", (brandName) => {
+    const html = header.replaceAll("Relay", brandName) + main;
+    const document = parseHTML(`<html><body>${html}</body></html>`).document as unknown as Document;
+    expect(inspectMarketingHeader({ ...options, brandName, brandLabel: `${brandName} home` }, document).problems).toEqual([]);
+  });
+  test("aria-hidden text remains a visible wordmark rather than an accessible-label substitute", () => {
+    const visible = header.replace(">Relay</a>", '><span aria-hidden="true">Relay</span></a>') + main;
+    expect(inspect(visible).problems).toEqual([]);
+    expect(inspect(visible.replace(">Relay</span></a>", ">relay</span></a>")).problems).toContain("The visible product wordmark does not match its canonical display name.");
   });
   test("the header count cannot pass vacuously or admit duplicates", () => {
     fc.assert(fc.property(fc.integer({ min: 0, max: 8 }), count => {

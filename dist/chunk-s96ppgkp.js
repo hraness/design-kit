@@ -533,6 +533,7 @@ var marketingStyles = {
     $$css: true
   },
   header__brand: {
+    ksq1ai: "x6mezaz",
     k1xSpc: "x3nfvp2",
     kkeX5w: "x6s0dn4",
     kOIVth: "x1neeqzj",
@@ -659,6 +660,7 @@ var marketingStyles = {
     $$css: true
   },
   footer__name: {
+    ksq1ai: "x6mezaz",
     kVQacm: "xb3r6kr",
     kd00dl: "xlyipyv",
     kBYq9C: "xuxw1ft",
@@ -1844,6 +1846,7 @@ var marketingStyles = {
     $$css: true
   },
   related__card_name: {
+    ksq1ai: "x6mezaz",
     kogj98: "x1ghz6dp",
     kMwMTN: "xtylnni",
     knIRL8: "xrtw95r",

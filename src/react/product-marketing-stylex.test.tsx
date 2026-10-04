@@ -215,7 +215,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("340ebb89ee65674f8b12e494573b30f3aee6891f03e2fc295b3fb0b1835b15a0");
+    .toBe("627c8cd90a4332c4f1b31d3f9242b086448dab2580ddfadc96c1fbe6ea6abfbf");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));

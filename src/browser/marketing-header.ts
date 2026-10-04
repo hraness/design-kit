@@ -1,6 +1,7 @@
 export interface MarketingHeaderOptions {
   readonly brandHref?: string;
   readonly brandLabel?: string;
+  readonly brandName?: string;
   readonly brandMark?: string;
   /** Fixed-theme and authentication pages may explicitly omit appearance. */
   readonly appearance?: "required" | "omitted";
@@ -15,6 +16,7 @@ export interface MarketingHeaderInspection {
   readonly appearanceCount: number;
   readonly brandHref: string | null;
   readonly brandLabel: string | null;
+  readonly brandName: string | null;
   readonly brandMark: string | null;
   readonly links: readonly Readonly<{ href: string; label: string }>[];
   readonly problems: readonly string[];
@@ -44,6 +46,9 @@ export function inspectMarketingHeader(
   const image = mark?.querySelector("img");
   const brandHref = brand?.getAttribute("href") ?? null;
   const brandLabel = (brand?.getAttribute("aria-label") ?? brand?.textContent)?.trim() || null;
+  const brandCopy = brand?.cloneNode(true) as Element | undefined;
+  brandCopy?.querySelectorAll(".hraness-foil-mark, svg, img").forEach(element => element.remove());
+  const brandName = brandCopy?.textContent?.replace(/\s+/gu, " ").trim() || null;
   const brandMark = image?.getAttribute("src") ?? null;
   const nav = header?.querySelector("nav.hraness-marketing-header__nav");
   const links = [...(nav?.querySelectorAll("a[href]") ?? [])].map(link => ({
@@ -57,6 +62,7 @@ export function inspectMarketingHeader(
     }
     if (brandHref !== (options.brandHref ?? "/")) problems.push("The product home link is missing or points to a different page.");
     if (brandLabel === null || (options.brandLabel !== undefined && brandLabel !== options.brandLabel)) problems.push("The product home link has a missing or inconsistent name.");
+    if (options.brandName !== undefined && brandName !== options.brandName) problems.push("The visible product wordmark does not match its canonical display name.");
     if (brand?.hasAttribute("data-foil") !== true || mark === null || mark === undefined || image === null || image === undefined || !mark.querySelector(".hraness-foil-mark__paint") || !brandMark) {
       problems.push("The product home link is missing its foil mark and artwork fallback.");
     } else if (options.brandMark !== undefined && brandMark !== options.brandMark) {
@@ -89,6 +95,28 @@ export function inspectMarketingHeader(
           }
           if (box.width <= 0 || box.height <= 0 || hidden) problems.push(`The product ${name} is not visible.`);
         }
+        if (options.brandName !== undefined && brand) {
+          const textNodes: Text[] = [];
+          const walker = document.createTreeWalker(brand, 4);
+          for (let node = walker.nextNode(); node !== null; node = walker.nextNode()) {
+            if (node.parentElement && !node.parentElement.closest(".hraness-foil-mark, svg, img")) textNodes.push(node as Text);
+          }
+          if (textNodes.some(node => node.textContent?.trim() && node.parentElement && view.getComputedStyle(node.parentElement).textTransform !== "none")) {
+            problems.push("The product wordmark changes canonical casing with CSS.");
+          }
+          const renderedName = textNodes.filter(node => {
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const box = range.getBoundingClientRect();
+            if (box.width <= 0 || box.height <= 0) return false;
+            for (let ancestor = node.parentElement; ancestor !== null; ancestor = ancestor.parentElement) {
+              const style = view.getComputedStyle(ancestor);
+              if (style.display === "none" || style.visibility === "hidden" || style.visibility === "collapse" || Number(style.opacity) === 0) return false;
+            }
+            return true;
+          }).map(node => node.textContent).join("").replace(/\s+/gu, " ").trim();
+          if (renderedName !== options.brandName) problems.push("The rendered product wordmark is not visible with its canonical display name.");
+        }
         const box = header.getBoundingClientRect();
         if (box.left < -1 || box.right > view.innerWidth + 1) problems.push("The product header extends outside the viewport.");
         const inner = header.querySelector(".hraness-marketing-header__inner");
@@ -109,5 +137,5 @@ export function inspectMarketingHeader(
       }
     }
   }
-  return { headerCount: headers.length, appearanceCount: appearances.length, brandHref, brandLabel, brandMark, links, problems };
+  return { headerCount: headers.length, appearanceCount: appearances.length, brandHref, brandLabel, brandName, brandMark, links, problems };
 }

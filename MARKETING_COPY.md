@@ -4,6 +4,18 @@ The product-marketing components give every Hraness site the same page shape. Th
 
 A reader arrives asking "What is this, and is it for me?" Answer that in the hero, show evidence next, and keep build details for the documentation.
 
+## Product names
+
+Every product name is the exact display name from the portfolio messaging record, `messaging.names.name`. Use that value in headers, footers, heroes, related-product cards, social cards, metadata, README headings, and CLI banners. Preserve its case and punctuation: `PeopleBlade`, `TextButler`, `GhostGet`, `SlopCamera`, `SlopTrade`, `ALGAL`, `Sys1`, `Rough Day`, and `Hraness`. Intentionally lowercase names such as `aicharts`, `icon.place`, and `act60.me` stay lowercase.
+
+Pass the display name unchanged to `MarketingSiteHeader.brand`, `MarketingSiteFooter.name`, `ProductHero.name`, and related-product `name` slots. Derive accessible labels from the same value, such as `${displayName} home`. Social-image declarations use it for both `name` and the visible `brand`; keep the domain in `domain`.
+
+Commands, package names, repository names, domains, URL paths, anchor IDs, and audience keys are technical identifiers. Keep them separate and unchanged. `sys1.io` remains a domain, but its wordmark is `Sys1`; `rough.day` remains a domain, but its wordmark is `Rough Day`. A domain-shaped display name is valid only when the messaging record itself names the product that way.
+
+Do not call `toLowerCase()` or `toUpperCase()` on a display name, and do not use CSS `text-transform` to restyle it. Source text must already contain the canonical form. Wordmark roles preserve source casing even when surrounding copy has a different typographic convention.
+
+In public-page checks, pass the registry name as ``inspectMarketingHeader({ brandName: displayName, brandLabel: `${displayName} home` })``. `brandName` checks visible text independently of the accessible label and, in a rendered browser, rejects CSS casing transforms. Keep that expectation independent of the homepage's current text so the same mistake on every route cannot pass.
+
 ## Slots
 
 Limits are maximums. Count characters in the rendered text.

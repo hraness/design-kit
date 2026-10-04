@@ -42,6 +42,21 @@ function marketingMarkupPattern(snippet: string): RegExp {
   }).join(""), "u");
 }
 
+test.each(["PeopleBlade", "TextButler", "GhostGet", "SlopCamera", "SlopTrade", "ALGAL", "Hraness", "Rough Day", "Sys1", "aicharts", "icon.place", "act60.me", "SWFT"])("product identity slots preserve the canonical display name %s", (name) => {
+  const href = "/products/product-id";
+  const { document } = parseHTML(renderToStaticMarkup(<>
+    <MarketingSiteHeader brand={name} brandHref={href} brandLabel={`${name} home`} links={[]} />
+    <MarketingSiteFooter brand={null} brandHref={href} name={name} />
+    <ProductHero name={name} heading="A useful result" headingId="product-title" summary="An example." />
+    <MarketingRelated heading="Products" headingId="products" items={[{ name, href, role: "A related product." }]} />
+  </>));
+  for (const selector of [".hraness-marketing-header__brand", ".hraness-marketing-footer__name", ".hraness-marketing-hero__name", ".hraness-marketing-related__card-name"]) {
+    expect(document.querySelector(selector)?.textContent).toBe(name);
+  }
+  expect(document.querySelector(".hraness-marketing-header__brand")?.getAttribute("aria-label")).toBe(`${name} home`);
+  expect(document.querySelector(".hraness-marketing-header__brand")?.getAttribute("href")).toBe(href);
+});
+
 const steps = [
   { code: "tool init", detail: "Create one exact workspace.", label: "Initialize" },
   { code: "tool run job-01", detail: "Run the named job.", label: "Execute" },

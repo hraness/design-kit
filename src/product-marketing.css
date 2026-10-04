@@ -396,6 +396,7 @@
 }
 
 .hraness-marketing-header__brand {
+  text-transform: none;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -510,6 +511,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-footer__name {
+  text-transform: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -750,6 +752,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-hero__name {
+  text-transform: none;
   position: absolute;
   inline-size: 1px;
   block-size: 1px;
@@ -1499,6 +1502,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 }
 
 .hraness-marketing-related__card-name {
+  text-transform: none;
   margin: 0;
   color: var(--hraness-marketing-ink);
   font-family: var(--hraness-marketing-text-font);
