@@ -30,7 +30,7 @@ import {
   providerMark,
   providerMarkFallback,
   providerMarkOnAccent
-} from "./chunk-sabcr66p.js";
+} from "./chunk-gpsekwkj.js";
 
 // src/react/provider-mark.stylex.ts
 import * as stylex from "@stylexjs/stylex";

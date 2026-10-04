@@ -1,3 +1,9 @@
+import {
+  providerMark,
+  providerMarkMonogram,
+  providerMarkOnAccent
+} from "./chunk-gpsekwkj.js";
+
 // src/mockups/core.tsx
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 function joinMockupClasses(...values) {
@@ -501,6 +507,47 @@ function MockupGlyph({
     children: GLYPHS[name]
   });
 }
+function MockupBrandMark({
+  className,
+  name,
+  size = 32,
+  variant = "tile"
+}) {
+  if (!(size > 0))
+    throw new RangeError("MockupBrandMark size must be positive.");
+  const mark = providerMark(name);
+  const style = {
+    "--hkm-mark-size": `${String(size)}px`,
+    ...mark === undefined || variant !== "tile" ? {} : {
+      "--hkm-mark-accent": mark.accent,
+      "--hkm-mark-ink": providerMarkOnAccent(mark)
+    }
+  };
+  if (mark === undefined) {
+    return /* @__PURE__ */ jsx("span", {
+      "aria-hidden": "true",
+      className: joinMockupClasses("hkm-brand-mark", className),
+      "data-hkm-monogram": "",
+      style,
+      children: providerMarkMonogram(name)
+    });
+  }
+  return /* @__PURE__ */ jsx("span", {
+    "aria-hidden": "true",
+    className: joinMockupClasses("hkm-brand-mark", className),
+    "data-hkm-mark": mark.id,
+    "data-hkm-variant": variant,
+    style,
+    children: /* @__PURE__ */ jsx("svg", {
+      dangerouslySetInnerHTML: {
+        __html: mark.glyph.body
+      },
+      fill: "currentColor",
+      focusable: "false",
+      viewBox: mark.glyph.viewBox
+    })
+  });
+}
 function WindowLights() {
   return /* @__PURE__ */ jsxs("span", {
     "aria-hidden": "true",
@@ -513,4 +560,4 @@ function WindowLights() {
   });
 }
 
-export { joinMockupClasses, assertMockupDescription, MockupRoot, SampleText, SampleParagraphs, compact, mockupHash, mockupInitials, Avatar, PlaceholderPhoto, ScrollFade, Hotspot, mockupGlyphNames, MockupGlyph, WindowLights };
+export { joinMockupClasses, assertMockupDescription, MockupRoot, SampleText, SampleParagraphs, compact, mockupHash, mockupInitials, Avatar, PlaceholderPhoto, ScrollFade, Hotspot, mockupGlyphNames, MockupGlyph, MockupBrandMark, WindowLights };

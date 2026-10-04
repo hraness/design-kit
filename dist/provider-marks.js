@@ -6,7 +6,7 @@ import {
   providerMarkMonogram,
   providerMarkOnAccent,
   providerMarks
-} from "./chunk-sabcr66p.js";
+} from "./chunk-gpsekwkj.js";
 import"./chunk-5gtx3pza.js";
 export {
   providerMarks,

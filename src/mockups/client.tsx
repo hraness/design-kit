@@ -367,7 +367,7 @@ export function ModeShowcase<S extends string, M extends string, O extends strin
 export type ThroughStep = Readonly<{
   id: string;
   label: string;
-  /** Optional explanation beside the label, and above the preview on compact screens. */
+  /** Optional explanation beside the label, and below the preview on compact screens. */
   hint?: string;
   render: (state: Readonly<{ animated: boolean; theme: MockupTheme | undefined }>) => ReactNode;
 }>;
@@ -508,10 +508,12 @@ function useFittedShowcaseStage(fit: "natural" | "fill", source: unknown, variat
 }
 
 /**
- * A descriptive selector walks a flow beside its preview, with a compact tab
- * strip on narrower screens. All render functions stay mounted to reserve the
- * tallest panel; inactive panels are inert and visually hidden. The keyboard
- * model matches `ModeShowcase`.
+ * A tabbed walkthrough: the steps and the preview share one edge. Compact
+ * layouts attach a tab strip to the preview's top edge between Back and Next;
+ * at 720px and wider the steps stack on its start edge with their
+ * explanations. All render functions stay mounted to reserve the tallest
+ * panel; inactive panels are inert and visually hidden. The keyboard model
+ * matches `ModeShowcase`.
  */
 export function StepThrough({
   caption,
@@ -557,6 +559,30 @@ export function StepThrough({
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+
+  // A strip that cannot show every label in full keeps only the selected
+  // label visible; the rest show their numbers and keep their accessible names.
+  useIsomorphicLayoutEffect(() => {
+    const list = tablist.current;
+    if (list === null || typeof ResizeObserver === "undefined") return undefined;
+    let disposed = false;
+    const measure = () => {
+      if (disposed) return;
+      list.removeAttribute("data-hkm-compact");
+      if (vertical) return;
+      const truncated = [...list.querySelectorAll<HTMLElement>(".hkm-step-label")].some((label) => label.scrollWidth > label.clientWidth + 1);
+      if (truncated) list.setAttribute("data-hkm-compact", "");
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    void document.fonts.ready.then(measure);
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      list.removeAttribute("data-hkm-compact");
+    };
+  }, [current, vertical]);
 
   useIsomorphicLayoutEffect(() => {
     const list = tablist.current;
@@ -626,11 +652,6 @@ export function StepThrough({
               <svg aria-hidden="true" focusable="false" height="20" viewBox="0 0 24 24" width="20"><path d="m9.5 5 7 7-7 7" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" /></svg>
             </button>
           </div>
-          {hints.some((hint) => hint !== undefined) ? (
-            <div aria-hidden="true" className="hkm-step-descriptions">
-              {steps.map((entry, position) => <p className="hkm-step-description" data-hkm-active={position === current ? "" : undefined} key={entry.id}>{hints[position]}</p>)}
-            </div>
-          ) : null}
         </div>
         <div className="hkm-showcase-stage hkm-step-stage" ref={stage}>
           {steps.map((entry, position) => (
@@ -651,6 +672,11 @@ export function StepThrough({
             </div>
           ))}
         </div>
+        {hints.some((hint) => hint !== undefined) ? (
+          <div aria-hidden="true" className="hkm-step-descriptions">
+            {steps.map((entry, position) => <p className="hkm-step-description" data-hkm-active={position === current ? "" : undefined} key={entry.id}>{hints[position]}</p>)}
+          </div>
+        ) : null}
       </div>
       <span aria-live="polite" className="hkm-showcase-status hkm-step-announcement">
         Step {current + 1} of {steps.length}{currentHint === undefined ? "" : `. ${currentHint}`}

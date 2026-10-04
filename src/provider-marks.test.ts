@@ -17,8 +17,10 @@ import {
 const REQUIRED_IDENTITIES: readonly ProviderMarkId[] = [
   "aider",
   "anthropic",
+  "apple",
   "beeper",
   "imessage",
+  "linkedin",
   "ollama",
   "vercel",
   "whatsapp",

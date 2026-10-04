@@ -71,7 +71,7 @@ describe("mockup roots", () => {
         expect(html).toContain(`data-hkm-theme="${theme}"`);
         expect(html).toContain('data-nosnippet=""');
         for (const [tag] of html.matchAll(/<[a-z]+\b[^>]*\sstyle="[^"]*(?:#|rgb|hsl)[^>]*>/gu)) {
-          expect(tag).toMatch(/class="[^"]*hkm-(?:avatar|photo)/u);
+          expect(tag).toMatch(/class="[^"]*hkm-(?:avatar|photo|brand-mark)/u);
         }
       }
     });
@@ -281,6 +281,8 @@ test("step navigation leads the preview and descriptions stay associated with th
   expect(navigation.firstElementChild?.getAttribute("aria-label")).toBe("Back");
   expect(navigation.lastElementChild?.getAttribute("aria-label")).toBe("Next");
   expect(document.querySelector(".hkm-step-controls")?.nextElementSibling?.className).toContain("hkm-step-stage");
+  // Tabs attach to the preview's edge, so compact explanations follow the preview.
+  expect(document.querySelector(".hkm-step-stage")?.nextElementSibling?.className).toBe("hkm-step-descriptions");
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   expect(tabs.map((tab) => tab.getAttribute("aria-label"))).toEqual(["Start", "Read", "Keep"]);
   expect(tabs.map((tab) => tab.getAttribute("tabindex"))).toEqual(["-1", "0", "-1"]);
@@ -314,4 +316,25 @@ test("filled mode showcases reserve all authored combinations with inert nonanim
   expect(() => renderToStaticMarkup(<clientApi.ModeShowcase fit={"other" as "natural"} modes={modes} surfaces={surfaces} />)).toThrow("ModeShowcase fit");
   expect(() => renderToStaticMarkup(<clientApi.ModeShowcase height={Infinity} modes={modes} surfaces={surfaces} />)).toThrow("finite");
   expect(() => renderToStaticMarkup(<clientApi.ModeShowcase fit="fill" modes={Array.from({ length: 129 }, (_, index) => ({ id: String(index), label: String(index) }))} surfaces={surfaces} />)).toThrow("128");
+});
+
+test("brand marks draw registered vendor glyphs and never invent a logo", () => {
+  const document = parseHTML(`<div>${renderToStaticMarkup(<>
+    <api.MockupBrandMark name="Apple Contacts" />
+    <api.MockupBrandMark name="LinkedIn export" size={24} />
+    <api.MockupBrandMark name="iMessage" variant="glyph" />
+    <api.MockupBrandMark name="Unknown Source" />
+  </>)}</div>`).document;
+  const marks = [...document.querySelectorAll(".hkm-brand-mark")];
+  expect(marks.map((mark) => mark.getAttribute("data-hkm-mark"))).toEqual(["apple", "linkedin", "imessage", null]);
+  for (const mark of marks) expect(mark.getAttribute("aria-hidden")).toBe("true");
+  expect(marks[0]?.getAttribute("style")).toContain("--hkm-mark-accent:#000000");
+  expect(marks[1]?.getAttribute("style")).toContain("--hkm-mark-size:24px");
+  expect(marks[1]?.getAttribute("style")).toContain("--hkm-mark-accent:#0a66c2");
+  expect(marks[2]?.getAttribute("style")).not.toContain("--hkm-mark-accent");
+  for (const mark of marks.slice(0, 3)) expect(mark.querySelector("svg path")).not.toBeNull();
+  expect(marks[3]?.querySelector("svg")).toBeNull();
+  expect(marks[3]?.textContent).toBe("US");
+  expect(() => renderToStaticMarkup(<api.MockupBrandMark name="LinkedIn" size={0} />)).toThrow("size");
+  expect(css).toContain(".hkm-root .hkm-brand-mark {");
 });
