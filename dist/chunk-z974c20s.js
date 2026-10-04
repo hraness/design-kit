@@ -1,6 +1,6 @@
 import {
   joinMockupClasses
-} from "./chunk-evb02bc1.js";
+} from "./chunk-kz59614q.js";
 
 // src/mockups/client.tsx
 import { useId, useLayoutEffect, useMemo, useRef, useState, version } from "react";
@@ -534,6 +534,31 @@ function StepThrough({
   }, []);
   useIsomorphicLayoutEffect(() => {
     const list = tablist.current;
+    if (list === null || typeof ResizeObserver === "undefined")
+      return;
+    let disposed = false;
+    const measure = () => {
+      if (disposed)
+        return;
+      list.removeAttribute("data-hkm-compact");
+      if (vertical)
+        return;
+      const truncated = [...list.querySelectorAll(".hkm-step-label")].some((label2) => label2.scrollWidth > label2.clientWidth + 1);
+      if (truncated)
+        list.setAttribute("data-hkm-compact", "");
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    document.fonts.ready.then(measure);
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      list.removeAttribute("data-hkm-compact");
+    };
+  }, [current, vertical]);
+  useIsomorphicLayoutEffect(() => {
+    const list = tablist.current;
     const selected = tabs.current.get(current);
     if (vertical || list === null || selected === undefined)
       return;
@@ -576,125 +601,114 @@ function StepThrough({
         className: "hkm-step-layout",
         ref: layout,
         children: [
-          /* @__PURE__ */ jsxs("div", {
+          /* @__PURE__ */ jsx("div", {
             className: "hkm-showcase-controls hkm-step-controls",
-            children: [
-              /* @__PURE__ */ jsxs("div", {
-                className: "hkm-step-nav",
-                children: [
-                  /* @__PURE__ */ jsx("button", {
-                    "aria-label": "Back",
-                    className: "hkm-step-button",
-                    disabled: current === 0,
-                    onClick: () => go(current - 1),
-                    type: "button",
-                    children: /* @__PURE__ */ jsx("svg", {
-                      "aria-hidden": "true",
-                      focusable: "false",
-                      height: "20",
-                      viewBox: "0 0 24 24",
-                      width: "20",
-                      children: /* @__PURE__ */ jsx("path", {
-                        d: "m14.5 5-7 7 7 7",
-                        fill: "none",
-                        stroke: "currentColor",
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        strokeWidth: "1.75"
-                      })
-                    })
-                  }),
-                  /* @__PURE__ */ jsxs("span", {
+            children: /* @__PURE__ */ jsxs("div", {
+              className: "hkm-step-nav",
+              children: [
+                /* @__PURE__ */ jsx("button", {
+                  "aria-label": "Back",
+                  className: "hkm-step-button",
+                  disabled: current === 0,
+                  onClick: () => go(current - 1),
+                  type: "button",
+                  children: /* @__PURE__ */ jsx("svg", {
                     "aria-hidden": "true",
-                    className: "hkm-step-count",
-                    children: [
-                      current + 1,
-                      " / ",
-                      steps.length
-                    ]
-                  }),
-                  /* @__PURE__ */ jsx("div", {
-                    "aria-label": label,
-                    "aria-orientation": vertical ? "vertical" : "horizontal",
-                    className: "hkm-tabs hkm-step-tabs",
-                    ref: tablist,
-                    role: "tablist",
-                    children: steps.map((entry, position) => /* @__PURE__ */ jsxs("button", {
-                      "aria-controls": `${id}-panel-${entry.id}`,
-                      "aria-describedby": hints[position] === undefined ? undefined : `${id}-hint-${entry.id}`,
-                      "aria-label": entry.label,
-                      "aria-selected": position === current,
-                      className: "hkm-tab",
-                      "data-hkm-done": position < current ? "" : undefined,
-                      id: `${id}-tab-${entry.id}`,
-                      onClick: () => go(position),
-                      onKeyDown: onTabKey,
-                      ref: (element) => {
-                        if (element === null)
-                          tabs.current.delete(position);
-                        else
-                          tabs.current.set(position, element);
-                      },
-                      role: "tab",
-                      tabIndex: position === current ? 0 : -1,
-                      type: "button",
-                      children: [
-                        /* @__PURE__ */ jsx("span", {
-                          "aria-hidden": "true",
-                          className: "hkm-step-number",
-                          children: position + 1
-                        }),
-                        /* @__PURE__ */ jsxs("span", {
-                          className: "hkm-step-copy",
-                          children: [
-                            /* @__PURE__ */ jsx("span", {
-                              className: "hkm-step-label",
-                              children: entry.label
-                            }),
-                            hints[position] === undefined ? null : /* @__PURE__ */ jsx("span", {
-                              className: "hkm-step-hint",
-                              id: `${id}-hint-${entry.id}`,
-                              children: hints[position]
-                            })
-                          ]
-                        })
-                      ]
-                    }, entry.id))
-                  }),
-                  /* @__PURE__ */ jsx("button", {
-                    "aria-label": "Next",
-                    className: "hkm-step-button",
-                    disabled: current === steps.length - 1,
-                    onClick: () => go(current + 1),
-                    type: "button",
-                    children: /* @__PURE__ */ jsx("svg", {
-                      "aria-hidden": "true",
-                      focusable: "false",
-                      height: "20",
-                      viewBox: "0 0 24 24",
-                      width: "20",
-                      children: /* @__PURE__ */ jsx("path", {
-                        d: "m9.5 5 7 7-7 7",
-                        fill: "none",
-                        stroke: "currentColor",
-                        strokeLinecap: "round",
-                        strokeLinejoin: "round",
-                        strokeWidth: "1.75"
-                      })
+                    focusable: "false",
+                    height: "20",
+                    viewBox: "0 0 24 24",
+                    width: "20",
+                    children: /* @__PURE__ */ jsx("path", {
+                      d: "m14.5 5-7 7 7 7",
+                      fill: "none",
+                      stroke: "currentColor",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "1.75"
                     })
                   })
-                ]
-              }),
-              hints.some((hint) => hint !== undefined) ? /* @__PURE__ */ jsx("div", {
-                "aria-hidden": "true",
-                className: "hkm-step-descriptions",
-                children: steps.map((entry, position) => /* @__PURE__ */ jsx("p", {
-                  className: "hkm-step-description",
-                  "data-hkm-active": position === current ? "" : undefined,
-                  children: hints[position]
-                }, entry.id))
-              }) : null
-            ]
+                }),
+                /* @__PURE__ */ jsxs("span", {
+                  "aria-hidden": "true",
+                  className: "hkm-step-count",
+                  children: [
+                    current + 1,
+                    " / ",
+                    steps.length
+                  ]
+                }),
+                /* @__PURE__ */ jsx("div", {
+                  "aria-label": label,
+                  "aria-orientation": vertical ? "vertical" : "horizontal",
+                  className: "hkm-tabs hkm-step-tabs",
+                  ref: tablist,
+                  role: "tablist",
+                  children: steps.map((entry, position) => /* @__PURE__ */ jsxs("button", {
+                    "aria-controls": `${id}-panel-${entry.id}`,
+                    "aria-describedby": hints[position] === undefined ? undefined : `${id}-hint-${entry.id}`,
+                    "aria-label": entry.label,
+                    "aria-selected": position === current,
+                    className: "hkm-tab",
+                    "data-hkm-done": position < current ? "" : undefined,
+                    id: `${id}-tab-${entry.id}`,
+                    onClick: () => go(position),
+                    onKeyDown: onTabKey,
+                    ref: (element) => {
+                      if (element === null)
+                        tabs.current.delete(position);
+                      else
+                        tabs.current.set(position, element);
+                    },
+                    role: "tab",
+                    tabIndex: position === current ? 0 : -1,
+                    type: "button",
+                    children: [
+                      /* @__PURE__ */ jsx("span", {
+                        "aria-hidden": "true",
+                        className: "hkm-step-number",
+                        children: position + 1
+                      }),
+                      /* @__PURE__ */ jsxs("span", {
+                        className: "hkm-step-copy",
+                        children: [
+                          /* @__PURE__ */ jsx("span", {
+                            className: "hkm-step-label",
+                            children: entry.label
+                          }),
+                          hints[position] === undefined ? null : /* @__PURE__ */ jsx("span", {
+                            className: "hkm-step-hint",
+                            id: `${id}-hint-${entry.id}`,
+                            children: hints[position]
+                          })
+                        ]
+                      })
+                    ]
+                  }, entry.id))
+                }),
+                /* @__PURE__ */ jsx("button", {
+                  "aria-label": "Next",
+                  className: "hkm-step-button",
+                  disabled: current === steps.length - 1,
+                  onClick: () => go(current + 1),
+                  type: "button",
+                  children: /* @__PURE__ */ jsx("svg", {
+                    "aria-hidden": "true",
+                    focusable: "false",
+                    height: "20",
+                    viewBox: "0 0 24 24",
+                    width: "20",
+                    children: /* @__PURE__ */ jsx("path", {
+                      d: "m9.5 5 7 7-7 7",
+                      fill: "none",
+                      stroke: "currentColor",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: "1.75"
+                    })
+                  })
+                })
+              ]
+            })
           }),
           /* @__PURE__ */ jsx("div", {
             className: "hkm-showcase-stage hkm-step-stage",
@@ -725,7 +739,16 @@ function StepThrough({
                 theme
               })
             })))
-          })
+          }),
+          hints.some((hint) => hint !== undefined) ? /* @__PURE__ */ jsx("div", {
+            "aria-hidden": "true",
+            className: "hkm-step-descriptions",
+            children: steps.map((entry, position) => /* @__PURE__ */ jsx("p", {
+              className: "hkm-step-description",
+              "data-hkm-active": position === current ? "" : undefined,
+              children: hints[position]
+            }, entry.id))
+          }) : null
         ]
       }),
       /* @__PURE__ */ jsxs("span", {

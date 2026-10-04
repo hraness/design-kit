@@ -25,9 +25,29 @@ on their own. React 18 or 19 and React DOM 18 or 19 are also peer dependencies.
 
 ### Provider bands
 
-Version 0.38.0 adds `MarketingMarquee` and the matching static `renderMarketingMarqueeHtml`: a quiet band of provider marks and names under a label that counts them, such as “Works with 23 services”. The count is the number of items passed, so the label always matches the band. On screens that allow motion the band scrolls slowly; hovering or the round checkbox control pauses it. Under reduced motion and in print it is one wrapped, static list. Duplicate copies that fill the loop are hidden from assistive technology. See [Explain a technical product](#explain-a-technical-product) for usage.
+Version 0.39.0 adds `MarketingMarquee` and the matching static `renderMarketingMarqueeHtml`: a quiet band of provider marks and names under a label that counts them, such as “Works with 23 services”. The count is the number of items passed, so the label always matches the band. On screens that allow motion the band scrolls slowly; hovering or the round checkbox control pauses it. Under reduced motion and in print it is one wrapped, static list. Duplicate copies that fill the loop are hidden from assistive technology. See [Explain a technical product](#explain-a-technical-product) for usage.
 
-The provider registry adds marks for Apple, Bluesky, Facebook, GitHub, Gmail, Google, Instagram, LinkedIn, Microsoft, Reddit, Substack, Telegram, Threads, TikTok, Twitch, X, Y Combinator (also matched by “Hacker News”), and YouTube, plus `generic` glyphs for CSV files, vCards, calendar files, storefronts, and websites. `providerMark("google")` now returns Google's mark; Gemini keeps `gemini`, “Google DeepMind”, and “Google AI”.
+The provider registry adds marks for Bluesky, Facebook, GitHub, Gmail, Google, Instagram, Microsoft, Reddit, Substack, Telegram, Threads, TikTok, Twitch, X, Y Combinator (also matched by “Hacker News”), and YouTube, plus `generic` glyphs for CSV files, vCards, calendar files, storefronts, and websites. `providerMark("google")` now returns Google's mark; Gemini keeps `gemini`, “Google DeepMind”, and “Google AI”.
+
+### Tabbed walkthroughs and brand marks
+
+Version 0.38.0 draws `StepThrough` as one tabbed selector: the steps and the
+preview share an edge. Below 720px the tabs sit on the preview's top edge
+between one Back and one Next arrow, and the selected tab takes the window
+title-bar color so it reads as part of the frame. When the labels do not fit,
+the other tabs show only their numbers and keep their labels as accessible
+names. At 720px and wider the steps stack on the preview's start edge, flush
+with its square top corner, and Back and Next follow the list. Step
+explanations now sit below the preview on small screens. Product CSS that
+replaced the arrow glyphs, moved the tabs, or reset the preview's corner
+radius should be deleted; it now draws a second arrow or breaks the shared
+edge.
+
+`MockupBrandMark` draws a product's mark from the provider-mark registry as an
+app-icon tile or a plain glyph, and draws a neutral monogram for names without
+a registered mark. The registry adds Apple (also matched by "Apple Contacts")
+from Simple Icons and LinkedIn from Bootstrap Icons, with provenance in
+`vendor/provider-marks/UPSTREAM.md`.
 
 ### Descriptive walkthroughs
 

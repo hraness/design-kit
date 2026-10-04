@@ -351,6 +351,8 @@ try {
                   vertical: list.getAttribute("aria-orientation") === "vertical",
                   controls: controls.getBoundingClientRect().toJSON(), list: list.getBoundingClientRect().toJSON(),
                   previous: previous.getBoundingClientRect().toJSON(), next: next.getBoundingClientRect().toJSON(), stage: stage.getBoundingClientRect().toJSON(),
+                  selected: list.querySelector('[aria-selected="true"]')?.getBoundingClientRect().toJSON(),
+                  stageRadii: { startStart: getComputedStyle(stage).borderStartStartRadius, startEnd: getComputedStyle(stage).borderStartEndRadius, endStart: getComputedStyle(stage).borderEndStartRadius },
                   tabFonts: [...list.querySelectorAll(".hkm-step-label")].map((node) => getComputedStyle(node).fontSize),
                   numbers: [...list.querySelectorAll(".hkm-step-number")].map((node) => ({ border: getComputedStyle(node).borderTopWidth, radius: getComputedStyle(node).borderTopLeftRadius, background: getComputedStyle(node).backgroundColor })),
                   headers: [...stage.querySelectorAll(".hkm-title-bar,.hkm-browser-bar")].map((node) => ({ height: node.getBoundingClientRect().height, font: getComputedStyle(node).fontSize })),
@@ -373,11 +375,17 @@ try {
             assert(navigation.numbers.every((number) => number.border === "0px" && number.radius === "0px" && number.background === "rgba(0, 0, 0, 0)"), `${label}: step numbers are plain text`);
             assert(new Set(navigation.headers.map((header) => header.height)).size === 1 && new Set(navigation.headers.map((header) => header.font)).size === 1, `${label}: browser and terminal chrome have consistent sizes`);
             if (navigation.vertical) {
-              assert(navigation.controls.right < navigation.stage.left, `${label}: descriptive selector sits beside the preview`);
-              assert(navigation.list.top >= navigation.previous.bottom, `${label}: arrows remain above the stacked choices`);
+              assert(navigation.list.right <= navigation.stage.left + 1.5, `${label}: descriptive selector sits beside the preview`);
+              assert(Math.abs(navigation.selected.right - (navigation.stage.left + 1)) < 1, `${label}: the selected step joins the preview's start edge`);
+              assert(Math.abs(navigation.list.top - navigation.stage.top) < 1, `${label}: the stacked steps start flush with the preview's top edge`);
+              assert(navigation.previous.top >= navigation.list.bottom, `${label}: arrows follow the stacked choices`);
+              assert(navigation.stageRadii.startStart === "0px" && navigation.stageRadii.endStart !== "0px", `${label}: only the corner the steps meet is square`);
             } else {
               assert(navigation.previous.right <= navigation.list.left && navigation.list.right <= navigation.next.left, `${label}: arrows bracket the compact tab strip`);
-              assert(navigation.next.bottom < navigation.stage.top, `${label}: compact navigation remains above the preview`);
+              assert(navigation.next.bottom <= navigation.stage.top + 0.5, `${label}: compact navigation remains above the preview`);
+              assert(Math.abs(navigation.selected.bottom - (navigation.stage.top + 1)) < 1, `${label}: the selected tab joins the preview's top edge`);
+              assert(navigation.selected.left > navigation.stage.left + 12, `${label}: tabs start inside the preview's rounded corner`);
+              assert(navigation.stageRadii.startStart !== "0px" && navigation.stageRadii.startEnd !== "0px", `${label}: the compact preview keeps both rounded top corners`);
             }
             await tab.locator("#fill-steps .hkm-step-stage").evaluate((node) => {
               let changes = 0;

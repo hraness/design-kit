@@ -49,7 +49,6 @@ import {
   MarketingInterfaceGrid,
   MarketingMain,
   MarketingMaker,
-  MarketingMarquee,
   MarketingNotice,
   MarketingPage,
   MarketingPillars,
@@ -90,7 +89,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-q2qh2pvg.js";
+} from "../chunk-13bq7myc.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -122,8 +121,8 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-fgzdgxc4.js";
-import"../chunk-m4jk57fw.js";
+} from "../chunk-s222cmt9.js";
+import"../chunk-gmea6p0d.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
@@ -135,14 +134,14 @@ import {
 } from "../chunk-cejpzyfh.js";
 import {
   BrowserFrame
-} from "../chunk-r4eh9b75.js";
+} from "../chunk-san9drwt.js";
 import {
   StepThrough
-} from "../chunk-kd2sn8wh.js";
+} from "../chunk-z974c20s.js";
 import {
   SampleText
-} from "../chunk-evb02bc1.js";
-import"../chunk-1vqmtbrs.js";
+} from "../chunk-kz59614q.js";
+import"../chunk-gpsekwkj.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -6597,37 +6596,6 @@ function DesignSystemGallery({
                     }),
                     summary: "Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
                   }),
-                  /* @__PURE__ */ jsx17(MarketingMarquee, {
-                    action: {
-                      href: "#gallery-install",
-                      label: "Set up your agent"
-                    },
-                    id: "design-gallery-marquee",
-                    items: [{
-                      name: "Claude Code"
-                    }, {
-                      name: "Codex"
-                    }, {
-                      name: "Cursor"
-                    }, {
-                      name: "Gemini CLI"
-                    }, {
-                      name: "GitHub Copilot"
-                    }, {
-                      name: "Goose"
-                    }, {
-                      name: "opencode"
-                    }, {
-                      name: "Crush"
-                    }, {
-                      name: "Aider"
-                    }, {
-                      name: "Amp"
-                    }, {
-                      name: "Devin"
-                    }],
-                    label: "Works with {count} coding agents"
-                  }),
                   /* @__PURE__ */ jsx17(MarketingPillars, {
                     ariaLabel: "Relay in three points",
                     presentation: "benefits",
@@ -8520,7 +8488,6 @@ export {
   MarketingPillars,
   MarketingPage,
   MarketingNotice,
-  MarketingMarquee,
   MarketingMaker,
   MarketingMain,
   MarketingInterfaceGrid,

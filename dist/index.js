@@ -23,6 +23,7 @@ import {
   designThemeStorageKey,
   designThemes,
   elevation,
+  escapeArticleHtml,
   fontFallbacks,
   fontFamilies,
   fontWeights,
@@ -43,6 +44,13 @@ import {
   parseStatusPageRoutes,
   radius,
   relativeTimeUnits,
+  renderArticleBylineHtml,
+  renderArticleCalloutHtml,
+  renderArticleHtml,
+  renderArticleIndexHtml,
+  renderArticleProvenanceHtml,
+  renderArticleRelatedHtml,
+  renderArticleSourcesHtml,
   renderStatusPageHtml,
   resolveDesignPalettePreference,
   resolveDesignTheme,
@@ -56,24 +64,10 @@ import {
   themeFor,
   typeScale,
   typography
-} from "./chunk-fgzdgxc4.js";
+} from "./chunk-s222cmt9.js";
 import {
-  MARKETING_MARQUEE_CONTROL_ICONS,
-  MARKETING_MARQUEE_COUNT_TOKEN,
-  MARKETING_MARQUEE_DEFAULT_PAUSE_LABEL,
-  MARKETING_MARQUEE_MAX_ITEMS,
-  diagramMetrics,
-  escapeArticleHtml,
-  renderArticleBylineHtml,
-  renderArticleCalloutHtml,
-  renderArticleHtml,
-  renderArticleIndexHtml,
-  renderArticleProvenanceHtml,
-  renderArticleRelatedHtml,
-  renderArticleSourcesHtml,
-  renderMarketingMarqueeHtml,
-  resolveMarketingMarquee
-} from "./chunk-m4jk57fw.js";
+  diagramMetrics
+} from "./chunk-gmea6p0d.js";
 import {
   detectPlatform,
   isKnownPlatformId,
@@ -130,7 +124,7 @@ import {
   providerMarkMonogram,
   providerMarkOnAccent,
   providerMarks
-} from "./chunk-1vqmtbrs.js";
+} from "./chunk-gpsekwkj.js";
 import"./chunk-5gtx3pza.js";
 export {
   typography,
@@ -145,11 +139,9 @@ export {
   resolveSyntaxLanguage,
   resolveStatusPage,
   resolveRelativeTime,
-  resolveMarketingMarquee,
   resolveDesignTheme,
   resolveDesignPalettePreference,
   renderStatusPageHtml,
-  renderMarketingMarqueeHtml,
   renderArticleSourcesHtml,
   renderArticleRelatedHtml,
   renderArticleProvenanceHtml,
@@ -244,10 +236,6 @@ export {
   STATUS_PAGE_BACK_LABEL,
   STATUS_PAGE_AGENT_PREFIX,
   MAX_AGENT_SETUP_URL,
-  MARKETING_MARQUEE_MAX_ITEMS,
-  MARKETING_MARQUEE_DEFAULT_PAUSE_LABEL,
-  MARKETING_MARQUEE_COUNT_TOKEN,
-  MARKETING_MARQUEE_CONTROL_ICONS,
   ArticleAdmissionError,
   ARTICLE_TOC_LABEL,
   ARTICLE_SOURCES_HEADING,
