@@ -28,6 +28,7 @@ export * from "./production-data-preview-notice.js";
 export * from "./product-marketing.js";
 export * from "./marketing-account.js";
 export * from "./marketing-comparison.js";
+export * from "./marketing-marquee.js";
 export * from "./route-state.js";
 export * from "./sticky-offset.js";
 export * from "./surfaces.js";

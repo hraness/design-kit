@@ -61,6 +61,20 @@ it, and the `-color` artwork carries the vendor's brand fills.
   The complete MIT license is retained in `BOOTSTRAP-ICONS-LICENSE`. The tile
   accent `#0A66C2` is LinkedIn's published brand blue. LinkedIn and its mark
   remain the property of LinkedIn Corporation.
+- `simple-icons/{bluesky,facebook,github,gmail,google,instagram,reddit,substack,telegram,threads,tiktok,twitch,x,ycombinator,youtube}.svg`:
+  unmodified `icons/<name>.svg` files from the same `simple-icons` **15.20.0**
+  package, source revision `c9fac384f61d731f7a4e7d0c0a3df7b4774f4bcc`, checked
+  against the same npm SHA-512 integrity value and covered by the same
+  CC0-1.0 license. The package metadata records each artwork source and brand
+  color; the registry uses those colors as tile accents. The Y Combinator mark
+  also identifies Hacker News, which uses it as its logo. Product names and
+  marks remain the property of their respective owners.
+- `bootstrap-icons/microsoft.svg` and the generic
+  `bootstrap-icons/{filetype-csv,person-vcard-fill,calendar-event-fill,shop,globe2}.svg`
+  glyphs: unmodified `icons/<name>.svg` files from the same `bootstrap-icons`
+  **1.13.1** package and integrity value as the LinkedIn mark, under the same
+  MIT license in `BOOTSTRAP-ICONS-LICENSE`. Microsoft and its mark remain the
+  property of Microsoft Corporation.
 - `beeper.svg`: Beeper's official adaptive icon from `beeper/static` at commit
   `7437e04747d7acd64db81c5bf78ef82efbaf45e8`,
   [`brand/Beeper_Adaptive_Icon_108dp.svg`](https://github.com/beeper/static/blob/7437e04747d7acd64db81c5bf78ef82efbaf45e8/brand/Beeper_Adaptive_Icon_108dp.svg),

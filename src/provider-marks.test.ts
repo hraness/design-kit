@@ -77,6 +77,63 @@ test("provider and agent identities stay distinct", () => {
   expect(providerMark("gemini")?.id).not.toBe(providerMark("geminicli")?.id);
 });
 
+test("every display name and alias folds to exactly one mark", () => {
+  const owners = new Map<string, string>();
+  for (const mark of providerMarks) {
+    for (const identity of [mark.name, mark.id, ...mark.aliases]) {
+      const folded = identity.toLowerCase().replaceAll(/[^a-z0-9]/gu, "");
+      expect(folded.length).toBeGreaterThan(0);
+      const owner = owners.get(folded);
+      if (owner !== undefined && owner !== mark.id) throw new Error(`${identity} belongs to both ${owner} and ${mark.id}.`);
+      owners.set(folded, mark.id);
+      expect(providerMark(identity)?.id).toBe(mark.id);
+    }
+  }
+});
+
+test("web services and source formats resolve to their own marks", () => {
+  const expected: Readonly<Record<string, ProviderMarkId>> = {
+    "Apple": "apple",
+    "Bluesky": "bluesky",
+    "Facebook": "facebook",
+    "GitHub": "github",
+    "Gmail": "gmail",
+    "Google": "google",
+    "Hacker News": "ycombinator",
+    "Instagram": "instagram",
+    "LinkedIn": "linkedin",
+    "Microsoft Graph": "microsoft",
+    "Outlook": "microsoft",
+    "Reddit": "reddit",
+    "Substack": "substack",
+    "Telegram": "telegram",
+    "Threads": "threads",
+    "TikTok": "tiktok",
+    "Twitch": "twitch",
+    "Twitter": "x",
+    "X": "x",
+    "YouTube": "youtube",
+    "CSV": "csv",
+    "vCard": "vcard",
+    "ics": "calendar",
+    "Storefront": "storefront",
+    "Website": "website",
+  };
+  for (const [identity, id] of Object.entries(expected)) expect(providerMark(identity)?.id).toBe(id);
+  expect(providerMark("Google DeepMind")?.id).toBe("gemini");
+  expect(providerMark("x.ai")?.id).toBe("xai");
+  expect(providerMark("GitHub Copilot")?.id).toBe("githubcopilot");
+});
+
+test("generic marks stay neutral and never claim vendor artwork", () => {
+  const generic = providerMarks.filter((mark) => mark.kind === "generic").map((mark) => mark.id).sort();
+  expect(generic).toEqual(["calendar", "csv", "storefront", "vcard", "website"]);
+  for (const mark of providerMarks.filter((candidate) => candidate.kind === "generic")) {
+    expect(mark.art).toBeNull();
+    expect(mark.accent).toBe("#6f6962");
+  }
+});
+
 test("unknown identities resolve to undefined, and the fallback never claims artwork", () => {
   expect(providerMark("Not A Provider")).toBeUndefined();
   const fallback = providerMarkFallback("Not A Provider");

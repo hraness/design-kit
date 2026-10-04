@@ -41,6 +41,7 @@ const COMPILER_STYLESHEET_PATHS = [
   "src/effects.css",
   "src/fonts.css",
   "src/lantern-material.css",
+  "src/marketing-marquee.css",
   "src/mockups.css",
   "src/palette-bridge.css",
   "src/palette-system.css",

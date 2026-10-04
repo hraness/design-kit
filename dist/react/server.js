@@ -36,6 +36,7 @@ import {
   MarketingInterfaceGrid,
   MarketingMain,
   MarketingMaker,
+  MarketingMarquee,
   MarketingNotice,
   MarketingPage,
   MarketingPillars,
@@ -68,16 +69,16 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-mf9zawap.js";
+} from "../chunk-s96ppgkp.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
-import"../chunk-gmea6p0d.js";
+import"../chunk-6mx403v5.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
 import"../chunk-cejpzyfh.js";
-import"../chunk-gpsekwkj.js";
+import"../chunk-w1y1m3m7.js";
 import"../chunk-5gtx3pza.js";
 export {
   proceduralRecipeVersion,
@@ -113,6 +114,7 @@ export {
   MarketingPillars,
   MarketingPage,
   MarketingNotice,
+  MarketingMarquee,
   MarketingMaker,
   MarketingMain,
   MarketingInterfaceGrid,

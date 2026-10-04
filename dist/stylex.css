@@ -4031,6 +4031,10 @@
     .x1k5gbb1.x1k5gbb1 {
       color: highlighttext;
     }
+
+    .x1ljrylj.x1ljrylj {
+      color: linktext;
+    }
   }
 
   @media (width <= 48rem) {

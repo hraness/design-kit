@@ -49,6 +49,7 @@ import {
   MarketingInterfaceGrid,
   MarketingMain,
   MarketingMaker,
+  MarketingMarquee,
   MarketingNotice,
   MarketingPage,
   MarketingPillars,
@@ -89,7 +90,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-mf9zawap.js";
+} from "../chunk-s96ppgkp.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -121,8 +122,8 @@ import {
   resolveStatusPage,
   statusPageRoutesAttribute,
   suggestStatusRoute
-} from "../chunk-s222cmt9.js";
-import"../chunk-gmea6p0d.js";
+} from "../chunk-dc8v05zh.js";
+import"../chunk-6mx403v5.js";
 import"../chunk-wzvdn8ey.js";
 import"../chunk-he8eznb1.js";
 import"../chunk-77391vmq.js";
@@ -134,14 +135,14 @@ import {
 } from "../chunk-cejpzyfh.js";
 import {
   BrowserFrame
-} from "../chunk-san9drwt.js";
+} from "../chunk-vy0pt84a.js";
 import {
   StepThrough
-} from "../chunk-z974c20s.js";
+} from "../chunk-eqd57m4y.js";
 import {
   SampleText
-} from "../chunk-kz59614q.js";
-import"../chunk-gpsekwkj.js";
+} from "../chunk-fcs5qekr.js";
+import"../chunk-w1y1m3m7.js";
 import {
   __require
 } from "../chunk-5gtx3pza.js";
@@ -6423,6 +6424,26 @@ function DesignSystemGallery({
                 })
               })
             ]
+          }),
+          /* @__PURE__ */ jsx17("div", {
+            "aria-label": "Plain site account actions",
+            className: "design-gallery__plain-theme plain-site plain-publication",
+            children: /* @__PURE__ */ jsx17("div", {
+              className: "plain-page",
+              children: /* @__PURE__ */ jsx17(MarketingAccount, {
+                id: "plain-account",
+                summary: "Keep your preferences across devices.",
+                children: /* @__PURE__ */ jsx17(MarketingAccountActions, {
+                  primary: {
+                    href: "#plain-account",
+                    label: "Create account"
+                  },
+                  signIn: {
+                    href: "#plain-account"
+                  }
+                })
+              })
+            })
           })
         ]
       }),
@@ -6596,6 +6617,37 @@ function DesignSystemGallery({
                     }),
                     summary: "Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
                   }),
+                  /* @__PURE__ */ jsx17(MarketingMarquee, {
+                    action: {
+                      href: "#gallery-install",
+                      label: "Set up your agent"
+                    },
+                    id: "design-gallery-marquee",
+                    items: [{
+                      name: "Claude Code"
+                    }, {
+                      name: "Codex"
+                    }, {
+                      name: "Cursor"
+                    }, {
+                      name: "Gemini CLI"
+                    }, {
+                      name: "GitHub Copilot"
+                    }, {
+                      name: "Goose"
+                    }, {
+                      name: "opencode"
+                    }, {
+                      name: "Crush"
+                    }, {
+                      name: "Aider"
+                    }, {
+                      name: "Amp"
+                    }, {
+                      name: "Devin"
+                    }],
+                    label: "Works with {count} coding agents"
+                  }),
                   /* @__PURE__ */ jsx17(MarketingPillars, {
                     ariaLabel: "Relay in three points",
                     presentation: "benefits",
@@ -6731,21 +6783,21 @@ Run the job, then show me its log.`,
                       steps: [{
                         id: "choose",
                         label: "Choose a job",
-                        hint: "Pick a saved job and review the file it reads before starting the run.",
+                        hint: "Pick a saved job and check the file it reads.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "ready"
                         })
                       }, {
                         id: "run",
                         label: "Watch the run",
-                        hint: "See the input check, transformation, and saved output as separate stages.",
+                        hint: "The input check, the transform, and the saved output.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "running"
                         })
                       }, {
                         id: "inspect",
                         label: "Read the result",
-                        hint: "Open the saved report with the run ID and source file beside it.",
+                        hint: "Open the report beside its run ID and source.",
                         render: () => /* @__PURE__ */ jsx17(GalleryJobPreview, {
                           state: "saved"
                         })
@@ -8488,6 +8540,7 @@ export {
   MarketingPillars,
   MarketingPage,
   MarketingNotice,
+  MarketingMarquee,
   MarketingMaker,
   MarketingMain,
   MarketingInterfaceGrid,

@@ -305,3 +305,22 @@ export function assertFakeHandles(html: string, allowedHandles: readonly string[
     if (!RESERVED_HOST.test(match[1] ?? "")) fail(`${label} links to ${match[1] ?? ""}, which is not a reserved example domain.`);
   }
 }
+
+/** Limits from MARKETING_COPY.md for `StepThrough` steps. */
+export const WALKTHROUGH_COPY_LIMITS = Object.freeze({ labelWords: 3, hintCharacters: 60 });
+
+/**
+ * Walkthrough labels name a step in at most three words, and each hint is one
+ * sentence of at most 60 characters, so the wide step list stays no taller
+ * than the illustration it sits beside.
+ */
+export function assertWalkthroughCopy(steps: readonly Readonly<{ id: string; label: string; hint?: string }>[], label = "walkthrough"): void {
+  for (const step of steps) {
+    const words = step.label.trim().split(/\s+/u).filter(Boolean).length;
+    if (words === 0 || words > WALKTHROUGH_COPY_LIMITS.labelWords) fail(`${label} step "${step.id}" label has ${String(words)} words; use one to ${String(WALKTHROUGH_COPY_LIMITS.labelWords)}.`);
+    const hint = step.hint?.trim();
+    if (hint === undefined || hint === "") continue;
+    if (hint.length > WALKTHROUGH_COPY_LIMITS.hintCharacters) fail(`${label} step "${step.id}" hint is ${String(hint.length)} characters; keep it within ${String(WALKTHROUGH_COPY_LIMITS.hintCharacters)}.`);
+    if ((hint.match(/[.!?](\s|$)/gu) ?? []).length > 1) fail(`${label} step "${step.id}" hint has more than one sentence.`);
+  }
+}

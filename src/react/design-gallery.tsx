@@ -2,6 +2,7 @@
 
 import { MarketingAccount, MarketingAccountActions } from "./marketing-account.js";
 import { MarketingComparison } from "./marketing-comparison.js";
+import { MarketingMarquee } from "./marketing-marquee.js";
 import { MarketingDiagram, DiagramArrowhead } from "./marketing-diagram.js";
 import {
   Badge,
@@ -308,6 +309,16 @@ export function DesignSystemGallery({
             </p>
           </div>
         </div>
+        <div
+          aria-label="Plain site account actions"
+          className="design-gallery__plain-theme plain-site plain-publication"
+        >
+          <div className="plain-page">
+            <MarketingAccount id="plain-account" summary="Keep your preferences across devices.">
+              <MarketingAccountActions primary={{ href: "#plain-account", label: "Create account" }} signIn={{ href: "#plain-account" }} />
+            </MarketingAccount>
+          </div>
+        </div>
       </section>
 
       <section className="design-gallery__section" id="paper-theme">
@@ -377,6 +388,24 @@ export function DesignSystemGallery({
             name="Relay"
             notice={<p data-gallery-marketing-slot="notice">This example release runs locally.</p>}
             summary="Relay runs the same job wherever you start it and writes a log you can read afterward: inputs, outputs, and how long it took."
+          />
+          <MarketingMarquee
+            action={{ href: "#gallery-install", label: "Set up your agent" }}
+            id="design-gallery-marquee"
+            items={[
+              { name: "Claude Code" },
+              { name: "Codex" },
+              { name: "Cursor" },
+              { name: "Gemini CLI" },
+              { name: "GitHub Copilot" },
+              { name: "Goose" },
+              { name: "opencode" },
+              { name: "Crush" },
+              { name: "Aider" },
+              { name: "Amp" },
+              { name: "Devin" },
+            ]}
+            label="Works with {count} coding agents"
           />
           <MarketingPillars
             ariaLabel="Relay in three points"
@@ -449,9 +478,9 @@ export function DesignSystemGallery({
           </MarketingSection>
           <MarketingSection heading="Show the result at each step." headingId="gallery-walkthrough" headingLevel={3} label="Walkthrough" summary="Use short labels and visible explanations beside a compact illustration of what changes.">
             <StepThrough fit="fill" label="Run a Relay job" steps={[
-              { id: "choose", label: "Choose a job", hint: "Pick a saved job and review the file it reads before starting the run.", render: () => <GalleryJobPreview state="ready" /> },
-              { id: "run", label: "Watch the run", hint: "See the input check, transformation, and saved output as separate stages.", render: () => <GalleryJobPreview state="running" /> },
-              { id: "inspect", label: "Read the result", hint: "Open the saved report with the run ID and source file beside it.", render: () => <GalleryJobPreview state="saved" /> },
+              { id: "choose", label: "Choose a job", hint: "Pick a saved job and check the file it reads.", render: () => <GalleryJobPreview state="ready" /> },
+              { id: "run", label: "Watch the run", hint: "The input check, the transform, and the saved output.", render: () => <GalleryJobPreview state="running" /> },
+              { id: "inspect", label: "Read the result", hint: "Open the report beside its run ID and source.", render: () => <GalleryJobPreview state="saved" /> },
             ]} />
           </MarketingSection>
           <MarketingPrimitives

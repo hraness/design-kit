@@ -111,7 +111,7 @@
   box-sizing: border-box;
 }
 
-:where(.plain-header a, .plain-page a, .plain-footer a) {
+:where(.plain-header a, .plain-page a, .plain-footer a):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   color: var(--plain-link);
   overflow-wrap: anywhere;
   text-decoration: none;
@@ -123,7 +123,7 @@
   .plain-header a:is(:hover, :focus-visible),
   .plain-page a:is(:hover, :focus-visible),
   .plain-footer a:is(:hover, :focus-visible)
-) {
+):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   text-decoration: underline;
 }
 
@@ -131,7 +131,7 @@
   .plain-header a:focus-visible,
   .plain-page a:focus-visible,
   .plain-footer a:focus-visible
-) {
+):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   border-radius: 1px;
   outline: 1px dotted currentColor;
   outline-offset: 3px;
@@ -141,7 +141,7 @@
   .plain-header a:focus:not(:focus-visible),
   .plain-page a:focus:not(:focus-visible),
   .plain-footer a:focus:not(:focus-visible)
-) {
+):not(:where(.hraness-marketing-account__primary, .hraness-marketing-account__sign-in)) {
   outline: none;
 }
 

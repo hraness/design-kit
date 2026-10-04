@@ -373,17 +373,61 @@ export type ThroughStep = Readonly<{
 }>;
 
 /** Fill owns the outer shell and its top-level frames, never nested width-fit graphics. */
-function fillFrames(stage: HTMLElement): HTMLElement[] {
-  const frames: HTMLElement[] = [];
+function panelFillFrames(stage: HTMLElement): HTMLElement[][] {
+  const panels: HTMLElement[][] = [];
   for (const panel of stage.querySelectorAll<HTMLElement>(":scope > .hkm-step-panel, :scope > .hkm-mode-surface")) {
     const fit = panel.querySelector<HTMLElement>(":scope > .hkm-fit");
     if (fit === null) continue;
+    const frames: HTMLElement[] = [];
     for (const root of fit.querySelectorAll<HTMLElement>(".hkm-root")) {
       const enclosingRoot = root.parentElement?.closest(".hkm-root");
       if (root.closest(".hkm-fit") === fit && (enclosingRoot === null || enclosingRoot === undefined || !fit.contains(enclosingRoot))) frames.push(root);
     }
+    panels.push(frames);
   }
-  return frames;
+  return panels;
+}
+
+function fillFrames(stage: HTMLElement): HTMLElement[] {
+  return panelFillFrames(stage).flat();
+}
+
+/**
+ * Mark each panel's frame, and the product wrappers between it and the fit,
+ * so a frame wrapped in product markup still grows to the full stage instead
+ * of leaving an empty band under a shorter slide. A panel with several
+ * top-level frames keeps its own arrangement.
+ */
+function markFillFrames(stage: HTMLElement): void {
+  for (const frames of panelFillFrames(stage)) {
+    for (const frame of frames) frame.setAttribute("data-hkm-fill-frame", "");
+    const [frame] = frames;
+    if (frames.length !== 1 || frame === undefined) continue;
+    const path: HTMLElement[] = [];
+    for (let node = frame.parentElement; node !== null; node = node.parentElement) {
+      path.push(node);
+      if (node.classList.contains("hkm-fit-inner")) break;
+    }
+    // Only single-column wrappers become a stack; a side-by-side product
+    // layout keeps its own arrangement.
+    if (path.every(stacksVertically)) for (const node of path) node.setAttribute("data-hkm-fill-path", "");
+  }
+}
+
+function stacksVertically(node: HTMLElement): boolean {
+  if (node.hasAttribute("data-hkm-fill-path")) return true;
+  const style = getComputedStyle(node);
+  if (style.display === "block" || style.display === "flow-root") return true;
+  if (style.display === "grid") return style.gridTemplateColumns.trim().split(/\s+/u).length === 1;
+  if (style.display === "flex") return style.flexDirection.startsWith("column");
+  return false;
+}
+
+function clearFillFrames(stage: HTMLElement): void {
+  for (const node of stage.querySelectorAll("[data-hkm-fill-frame], [data-hkm-fill-path]")) {
+    node.removeAttribute("data-hkm-fill-frame");
+    node.removeAttribute("data-hkm-fill-path");
+  }
 }
 
 function presentationBodies(stage: HTMLElement): HTMLElement[] {
@@ -413,7 +457,7 @@ function measureNestedFits(stage: HTMLElement): void {
 function fitShowcaseStage(stage: HTMLDivElement, minimumHeight: number): void {
   const owner = stage.parentElement;
   if (owner === null || stage.clientWidth <= 0) return;
-  for (const frame of fillFrames(stage)) frame.setAttribute("data-hkm-fill-frame", "");
+  markFillFrames(stage);
   const probe = stage.cloneNode(true) as HTMLDivElement;
   probe.setAttribute("aria-hidden", "true");
   probe.setAttribute("inert", "");
@@ -501,7 +545,7 @@ function useFittedShowcaseStage(fit: "natural" | "fill", source: unknown, variat
       node.style.removeProperty("--hkm-showcase-fill-height");
       node.removeAttribute("data-hkm-fitted");
       for (const body of presentationBodies(node)) body.style.removeProperty("--hkm-terminal-presentation-size");
-      for (const frame of fillFrames(node)) frame.removeAttribute("data-hkm-fill-frame");
+      clearFillFrames(node);
     };
   }, [fit, source, variation, minimumHeight]);
   return stage;
@@ -538,6 +582,14 @@ export function StepThrough({
   assertUniqueIds(steps, "StepThrough step");
   if (fit !== "natural" && fit !== "fill") throw new RangeError("StepThrough fit must be natural or fill.");
   const stage = useFittedShowcaseStage(fit, steps);
+  // Natural walkthroughs fit by width only, but still stretch each slide's
+  // frame to the shared stage height. Fill walkthroughs mark frames while fitting.
+  useIsomorphicLayoutEffect(() => {
+    const node = stage.current;
+    if (fit === "fill" || node === null) return undefined;
+    markFillFrames(node);
+    return () => clearFillFrames(node);
+  }, [fit, steps]);
   const captionText = optionalText(caption, "StepThrough");
   const id = useId();
   const [index, setIndex] = useState(() => Math.max(0, steps.findIndex((step) => step.id === initial)));
