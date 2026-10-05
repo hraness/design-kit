@@ -2676,6 +2676,7 @@ var marketingStyles = {
     kGmCso: "x1qughib",
     kOIVth: "x8fetqu",
     kF3gjK: "xgepmj6",
+    kJVvJu: "x18wjirm",
     kMwMTN: "xtylnni",
     kkrTdU: "x1ypdohk",
     kLh5Sq: "x1ksoetq",
@@ -2688,12 +2689,16 @@ var marketingStyles = {
     kNmtQP: "x1h4a8v0",
     kF3crb: "x17thtq2",
     kJ3DBm: "x1ioofie",
-    kLigFv: "x1bz48vb",
+    kLZV2q: "x78hkw1 x4oqjru",
+    kVDYEw: "xjocvvi",
+    k7kefo: "x15fj410",
+    kLigFv: "xba5a1s",
     $$css: true
   },
   question__answer: {
     k2kXS: "xjq529q",
     kF3gjK: "xs0puwk",
+    kJVvJu: "x18wjirm",
     kMwMTN: "xs87ocq",
     kN5DiO: "x1dbl2gt",
     $$css: true
