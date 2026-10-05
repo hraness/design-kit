@@ -137,7 +137,7 @@ A technique post teaches one method, such as property tests, model checking, or 
 
 ### Illustrations
 
-Follow the [shared illustration guidance](https://github.com/hraness/.github/blob/main/STYLE.md). Use SlopCamera to create an illustration when it helps explain the article, with a limited brand palette and a reference that establishes the intended visual style. Record the tools, model, references, and actual asset source used; do not substitute a generic provenance claim. Keep captions useful and optional.
+Follow the [shared illustration guidance](https://github.com/hraness/.github/blob/main/STYLE.md). Use Slopcamera to create an illustration when it helps explain the article, with a limited brand palette and a reference that establishes the intended visual style. Record the tools, model, references, and actual asset source used; do not substitute a generic provenance claim. Keep captions useful and optional.
 
 ## Titles and formulas
 
