@@ -4,14 +4,14 @@ export const portfolioSnapshot = {
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "d75ebaa21ae0576c1d6c71e1bea23c93b866601c",
-    "committedOn": "2026-09-30",
+    "commit": "26b167cd5701caf2aec8ff15a0fd046d940bc6b5",
+    "committedOn": "2026-10-05",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:ba365e481a8b15c4a19503b1628e1b7ae9399e47055dde02bae124183a3e1447",
+    "upstreamDigest": "sha256:0d3dd93744fc4adf183d81a4b62e4ba5bbca6dc417b6236fa99de7d19e6d7ecf",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "4c9e41dd1cb711d21a2da086de6b7d4adac2990ccda3909fa1cacf3b0ff44369"
+        "sha256": "665c543651734bc2778c0bc50033cbb40e9604defbafbab83832e37af2a28e19"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
@@ -19,7 +19,7 @@ export const portfolioSnapshot = {
       },
       {
         "path": "brand-artwork.json",
-        "sha256": "7b1ba29f24352b33e666af059b8efbb273dd68269600b04d4d15ef4c94743876"
+        "sha256": "ed55cc7bdfe2b3c897ce8742ed2809a0b7df9f90ac59192e1fe0c4a86bee7164"
       },
       {
         "path": "projects/hraness/public/marks/act60.svg",
@@ -32,6 +32,10 @@ export const portfolioSnapshot = {
       {
         "path": "projects/hraness/public/marks/algal.svg",
         "sha256": "856ad5092fc3ac85863ba0ba079c8a2e1ecb195df06bd289a2602899244b4272"
+      },
+      {
+        "path": "projects/hraness/public/marks/alt.svg",
+        "sha256": "4544a61738e99296e072876b4807150bf7bfa57c5f4388cd9d3d646000a3ccd4"
       },
       {
         "path": "projects/hraness/public/marks/clankdar.svg",
@@ -72,6 +76,10 @@ export const portfolioSnapshot = {
       {
         "path": "projects/hraness/public/marks/message-like-me.svg",
         "sha256": "5d30fa25c2f69d5dd1c4315189a3e9653be232baaf6cbf5cb4ce46b8dbcaab27"
+      },
+      {
+        "path": "projects/hraness/public/marks/midiplace.svg",
+        "sha256": "27ff03a1d987c9714d21b3e94033127154de0a1a70c4150446cc6ddee5ba8c8c"
       },
       {
         "path": "projects/hraness/public/marks/oh-computer.svg",
@@ -130,6 +138,10 @@ export const portfolioSnapshot = {
         "sha256": "44855079c3dea26397d798926ec5689115e084ca26367b7ab73c7b0ea8b18119"
       },
       {
+        "path": "projects/hraness/public/marks/textmock.svg",
+        "sha256": "5780ba86aa03bf148a562bf40d50321d21df6df8d824ae902674abc2afd1fe05"
+      },
+      {
         "path": "projects/hraness/public/marks/valhalla.svg",
         "sha256": "ae060052dc1550a4d377e3c4ebba9f2a5e5e58be1dafe8256a2a885063e84c24"
       },
@@ -177,7 +189,7 @@ export const portfolioSnapshot = {
           "home-live": "Keep the recent work in view.",
           "home-file-copy": "Try a smaller copy. Keep a way back.",
           "home-results": "38% smaller on requests it compacted.",
-          "home-film": "Watch it in 75 seconds.",
+          "home-film": "Watch it in 34 seconds.",
           "home-install": "Start with one session.",
           "home-questions": "Before you install.",
           "home-related": "Other tools from our studio",
@@ -226,7 +238,7 @@ export const portfolioSnapshot = {
         "long": "Excalibur (xcb) is a terminal and router for developers who pay for more than one coding agent. Type the work into one conversation, and xcb sends each task to a Claude, Codex, or Devin account that is signed in, idle, and not at a known usage limit, on a model that fits the job. Tasks keep running after you close the terminal, every session appears on one screen, and each account runs one task at a time. Other agents can hand xcb work with one JSON command. xcb is free and MIT licensed, with releases for macOS and Linux.",
         "hero": {
           "heading": "Use your Claude, Codex, and Devin plans from one agent.",
-          "summary": "Excalibur (xcb) is for developers who pay for more than one coding agent. Each task runs in Claude Code, Codex, or the Devin CLI on an account that is signed in, idle, and not at a known limit. Use its terminal or your own agent or app.",
+          "summary": "Use the AI plans you already pay for. xcb routes each task to an available account, from your terminal or app.",
           "primaryAction": "Install xcb",
           "secondaryAction": "See how it works"
         },
@@ -629,34 +641,29 @@ export const portfolioSnapshot = {
       "canonicalUrl": "https://textbutler.app",
       "status": "active",
       "copyStatus": "proposed",
-      "aliases": [
-        "Message Like Me"
-      ],
+      "aliases": [],
       "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 590 588' width='590' height='588'%3E%3Cpath d='M0 0 C3.7021 0.9255 6.4331 2.1039 9.8203 3.8086 C33.3452 15.4968 57.4529 25.6075 82.8125 32.625 C86.8765 33.9594 89.1312 34.8704 92 38 C94.1691 42.578 95.597 47.0155 96.75 51.9375 C105.3381 84.8912 129.1005 113.746 158.0735 131.0774 C177.2853 142.2466 197.9348 149.8729 220 153 C221.3651 153.1953 221.3651 153.1953 222.7578 153.3945 C260.3492 157.7055 302.6036 147.646 332.6899 124.0808 C335.2718 121.9568 337.7934 119.7763 340.2803 117.542 C341.9152 116.076 343.5857 114.65 345.2578 113.2266 C362.5093 98.1812 375.0458 78.2509 381.7461 56.4062 C382.0482 55.4221 382.3503 54.438 382.6616 53.4241 C383.2507 51.4713 383.8233 49.5135 384.3774 47.5505 C385.9755 42.1672 387.2446 38.3557 392 35 C395.584 33.3897 399.2571 32.186 403 31 C404.083 30.6466 405.1659 30.2933 406.2817 29.9292 C408.6243 29.1663 410.9682 28.4075 413.3132 27.6523 C433.7067 21.0444 453.5375 13.4298 472.3054 2.9961 C477.7181 0 477.7181 0 481 0 C481.0467 12.693 481.082 25.3859 481.1036 38.0789 C481.114 43.9748 481.128 49.8707 481.1509 55.7666 C481.1729 61.4725 481.1846 67.1783 481.1898 72.8843 C481.1934 75.0448 481.2005 77.2053 481.2115 79.3658 C481.412 120.7375 472.888 158.7884 447 192 C446.3194 192.9023 445.6388 193.8047 444.9375 194.7344 C416.3304 231.3601 374.5581 253.3259 329 260 C320.2884 261.0318 311.6364 261.154 302.8718 261.1611 C301.3938 261.1661 299.9157 261.1711 298.3928 261.1762 C294.3653 261.1892 290.3377 261.1957 286.3102 261.2002 C283.7817 261.2031 281.2532 261.2072 278.7248 261.2117 C270.7787 261.2253 262.8327 261.235 254.8867 261.2389 C245.7802 261.2434 236.6739 261.2609 227.5675 261.2899 C220.4859 261.3117 213.4043 261.3216 206.3227 261.3229 C202.1135 261.324 197.9044 261.3296 193.6952 261.3478 C163.0583 261.472 136.0157 258.5483 107.2949 247.679 C106.4164 247.3466 105.5379 247.0143 104.6328 246.6719 C103.8582 246.3738 103.0837 246.0757 102.2856 245.7686 C97.5982 244.1082 97.5982 244.1082 92.8005 244.7058 C92.0504 245.0955 91.3002 245.4852 90.5273 245.8867 C89.6464 246.3248 88.7654 246.7628 87.8577 247.2141 C86.894 247.7003 85.9304 248.1865 84.9375 248.6875 C61.3112 260.0322 35.6255 267.7281 10 273 C8.7867 273.2523 8.7867 273.2523 7.5488 273.5098 C-4.0855 275.8955 -15.1202 277.1809 -27 277 C-25.3641 273.7281 -24.3294 272.1014 -21.9375 269.5625 C2.4619 242.1765 15.288 203.3126 13.875 166.75 C13.0762 157.4147 10.4775 148.7963 7.7305 139.8789 C2.7207 123.3966 -0.1826 106.9524 -0.1135 89.6851 C-0.1137 88.7082 -0.1138 87.7314 -0.114 86.725 C-0.1133 83.5328 -0.1055 80.3406 -0.0977 77.1484 C-0.0958 74.9207 -0.0944 72.693 -0.0934 70.4652 C-0.0896 64.6292 -0.0798 58.7932 -0.0687 52.9572 C-0.0584 46.991 -0.0539 41.0248 -0.0488 35.0586 C-0.0381 23.3724 -0.0211 11.6862 0 0 Z ' transform='translate%2868,270%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C6.8496 0.0001 13.699 -0.0137 20.5486 -0.0308 C25.91 -0.042 31.2714 -0.0439 36.6329 -0.0434 C39.1574 -0.0446 41.6819 -0.0489 44.2064 -0.0567 C63.3887 -0.1108 82.8493 0.0066 101.6213 4.4353 C102.5676 4.6515 103.5138 4.8676 104.4888 5.0903 C119.6158 8.6599 133.1818 13.7911 146.8713 21.1853 C147.5444 21.54 148.2174 21.8946 148.9109 22.26 C162.6556 29.509 174.5849 38.5065 185.8713 49.1853 C186.6925 49.9536 187.5136 50.7219 188.3596 51.5134 C220.1762 82.1919 235.9745 125.1447 237.4338 168.6853 C237.477 169.8893 237.5202 171.0933 237.5647 172.3337 C237.6701 175.2842 237.7722 178.2347 237.8713 181.1853 C177.1878 214.3549 177.1878 214.3549 158.8323 210.5564 C151.6117 207.9496 146.6734 204.9021 142.6995 198.2126 C140.0778 192.4954 139.0856 186.4481 137.9338 180.3103 C134.2729 160.8391 124.8987 144.1095 108.5588 132.4353 C95.1947 123.6496 79.3058 116.1065 63.0003 116.0381 C61.8247 116.031 60.649 116.0238 59.4377 116.0164 C58.1561 116.0138 56.8746 116.0111 55.5542 116.0083 C53.519 115.9984 53.519 115.9984 51.4426 115.9884 C46.9462 115.9687 42.4498 115.957 37.9534 115.947 C36.3982 115.943 34.8431 115.9389 33.288 115.9347 C25.9709 115.9156 18.6539 115.9014 11.3368 115.8931 C2.9325 115.8833 -5.4714 115.8571 -13.8755 115.8166 C-20.3956 115.7862 -26.9156 115.7716 -33.4357 115.7683 C-37.3175 115.7659 -41.1989 115.7572 -45.0805 115.7318 C-74.4696 115.5658 -100.5287 118.1185 -122.9412 139.3728 C-135.7309 152.8595 -143.2102 169.5004 -146.0037 187.7478 C-147.1841 194.3582 -149.109 200.4944 -154.2458 205.072 C-161.4566 210.0856 -168.2706 212.294 -177.1287 211.1853 C-194.7966 206.8473 -211.4584 197.5573 -227.7537 189.7478 C-229.0416 189.1324 -230.3295 188.5169 -231.6565 187.8828 C-232.8565 187.3033 -234.0564 186.7238 -235.2927 186.1267 C-236.3699 185.6079 -237.4471 185.0892 -238.5569 184.5547 C-241.1287 183.1853 -241.1287 183.1853 -243.1287 181.1853 C-243.5975 177.6056 -243.4606 173.9795 -243.4412 170.3728 C-243.4355 169.2935 -243.4299 168.2141 -243.4241 167.1021 C-242.7275 120.0562 -221.4831 78.9885 -188.5093 46.136 C-158.1217 16.7697 -115.7152 1.8102 -73.9607 0.6345 C-73.231 0.6137 -72.5012 0.5929 -71.7494 0.5714 C-47.8402 -0.0871 -23.9161 -0.0019 0 0 Z ' transform='translate%28311.128662109375,40.814697265625%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.8909 0.1924 1.7818 0.3848 2.6997 0.583 C5.9365 1.335 9.1574 2.1376 12.3765 2.9619 C21.6086 5.3006 30.8581 7.0572 40.2773 8.4609 C41.3569 8.6238 42.4364 8.7867 43.5486 8.9546 C57.6085 10.9603 71.6517 11.4188 85.8398 11.3984 C86.6237 11.3978 87.4076 11.3972 88.2152 11.3966 C114.4849 11.342 140.4586 9.1714 165.5789 1.0537 C170.2085 -0.3972 173.6011 -1.2844 178.4023 0.2109 C181.6798 3.0571 182.3517 4.5985 182.7109 8.9453 C181.6692 23.3449 168.4745 36.5795 158.5898 45.9609 C136.4483 65.0292 107.503 74.7578 78.4023 73.2109 C50.8408 70.8727 27.0272 60.8078 7.4023 41.2109 C6.5889 40.4091 5.7755 39.6073 4.9375 38.7812 C-2.2872 31.2478 -10.9632 19.8732 -11.9727 9.2734 C-11.5585 4.7868 -10.8308 3.2593 -7.5977 0.2109 C-4.3471 -0.8726 -3.2573 -0.7085 0 0 Z ' transform='translate%28222.59765625,310.7890625%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C8.176 4.7656 13.9158 12.0195 16.9375 21 C19.2756 30.367 18.3166 38.3415 14 47 C8.5855 55.3913 1.5736 62.0972 -8.3633 64.5938 C-19.6329 66.3301 -28.7001 64.7079 -38.1875 58.4375 C-45.0857 52.9105 -49.7749 44.7121 -51 36 C-51.9467 24.3944 -49.4287 15.7487 -42.3164 6.4883 C-31.427 -5.2091 -13.8754 -7.7489 0 0 Z ' transform='translate%28263,204%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C6.2372 4.9898 10.0487 11.8918 12.75 19.3125 C14.0462 31.4216 12.944 41.3809 5.25 51.0625 C-1.0317 57.7095 -9.4841 61.7212 -18.5742 62.5156 C-30.0556 62.7434 -37.861 59.2704 -46.1602 51.5312 C-52.6985 44.7569 -55.406 37.1682 -55.75 27.8125 C-55.37 17.4666 -51.6937 8.5864 -44.25 1.3125 C-30.4055 -9.0597 -14.3198 -9.718 0 0 Z ' transform='translate%28391.25,206.6875%29' fill='%232474d4'/%3E%3C/svg%3E",
       "messaging": {
         "formatVersion": 1,
         "product": "textbutler",
         "names": {
           "name": "TextButler",
-          "command": "textbutler",
-          "formerly": [
-            "Message Like Me"
-          ]
+          "command": "textbutler"
         },
         "category": "Messaging assistant for Mac",
         "tagline": "An AI butler in your messaging apps.",
         "short": "AI butler for the iMessage, WhatsApp, and Beeper chats you choose",
-        "meta": "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac and answers as a clearly marked assistant.",
-        "medium": "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose on your Mac. Turn it on for one person, and it replies as a clearly marked assistant that knows your history with them.",
-        "long": "TextButler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper, and it replies as a clearly marked assistant that keeps notes on each person in files you can edit. New installs start paused and every contact starts off. Choose a local model, your Gateway key, or a connected subscription; local-model replies are in testing. Hosted AI providers receive the context needed to write a reply. TextButler is free and MIT licensed.",
+        "meta": "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose. It runs on your Mac with the model or AI subscription you select.",
+        "medium": "TextButler is an AI butler for the iMessage, WhatsApp, and Beeper chats you choose on your Mac. Turn it on for a conversation to draft or send replies using your shared history.",
+        "long": "TextButler is an AI butler for your messages, running on your Mac. Turn it on for the chats you choose in iMessage, WhatsApp, or Beeper. It uses conversation history and notes on each person in files you can edit. New installs start paused. Choose a local model, your Gateway key, or a connected subscription. Reply labels are on by default and configurable per person. Hosted AI providers receive the context needed to write a reply; optional web search uses a Gateway key. TextButler is free and MIT licensed.",
         "hero": {
           "heading": "An AI butler in your messaging apps.",
-          "summary": "A clearly marked AI assistant answers the people you choose, from your Mac.",
+          "summary": "An AI assistant answers the chats you choose, from your Mac.",
           "primaryAction": "Have your agent set it up",
           "secondaryAction": "See how it works"
         },
         "headings": {
-          "how-title": "From “butler” to a marked reply.",
+          "how-title": "From a message to a reply.",
           "supports-title": "What it works with",
           "models-title": "Pick what writes replies",
           "setup-title": "Your agent sets it up. You stay in charge.",
@@ -672,7 +679,7 @@ export const portfolioSnapshot = {
           "prefer-to-do-it-yourself": "Prefer to do it yourself?",
           "your-agent-speaks-its-language": "Your agent speaks its language",
           "it-s-there-when-you-aren-t": "It’s there when you aren’t.",
-          "it-never-pretends-to-be-you": "It never pretends to be you.",
+          "it-never-pretends-to-be-you": "Choose how replies are marked.",
           "it-runs-on-your-mac": "It runs on your Mac.",
           "site-title": "TextButler: an AI butler for iMessage and WhatsApp on Mac",
           "home-writer-local": "A local model on your Mac",
@@ -683,7 +690,7 @@ export const portfolioSnapshot = {
           "home-flow-indicator": "👀, right away.",
           "home-flow-context": "It reads the room.",
           "home-flow-model": "Your chosen model writes the reply.",
-          "home-flow-send": "Marked, then sent.",
+          "home-flow-send": "Reply in the same chat.",
           "home-flow-step-in": "You can step in anytime.",
           "home-setup-agent": "Ask your agent.",
           "home-setup-mac": "Say yes to your Mac.",
@@ -694,7 +701,7 @@ export const portfolioSnapshot = {
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-29"
+        "reviewedOn": "2026-10-01"
       }
     },
     "wrench": {
@@ -795,14 +802,14 @@ export const portfolioSnapshot = {
           ]
         },
         "category": "People research for agents",
-        "tagline": "See how someone thinks, and where every claim comes from.",
+        "tagline": "Learn everything about anyone based on their internet presence",
         "short": "Free agent skill that writes dated dossiers on people, sources cited",
         "meta": "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
         "medium": "Soulscrape is a free agent skill that writes a dated dossier on how a person decides, writes, argues, and changes their mind, with every claim tied to its sources. Keep it private, or publish it.",
         "long": "Soulscrape is a free, MIT-licensed agent skill that turns sources you're allowed to use into a dated dossier on one person: how they decide, write, argue, and change their mind. It runs inside Claude Code, Codex, or another agent that loads skills, with your own model and tools, and needs no Soulscrape account. Facts, stated beliefs, patterns, and speculation stay apart, and the dossier lists what the record cannot settle. Keep it private, or publish it with a free Hraness account as a web page, a JSON packet, and a Markdown copy anyone can cite.",
         "hero": {
-          "heading": "See how someone thinks, and where every claim comes from.",
-          "summary": "Turn sources into a dated dossier, with evidence behind every claim.",
+          "heading": "Learn everything about anyone based on their internet presence",
+          "summary": "Turn their writing, talks, and posts into a detailed dossier, with sources for every claim.",
           "primaryAction": "Install the skill",
           "secondaryAction": "Browse the dossiers"
         },
@@ -811,8 +818,8 @@ export const portfolioSnapshot = {
           "examples-title": "Explore a finished dossier",
           "method-title": "Read the claims alongside their evidence",
           "use-cases-title": "Use the research in your own work",
-          "install-title": "Install and write your first dossier",
-          "indexes-title": "Publish when you are ready",
+          "install-title": "Ask your agent to set it up",
+          "indexes-title": "Publish your dossier",
           "boundaries-title": "Keep the research within its limits",
           "questions-title": "Questions",
           "related-title": "Other tools from our studio",
@@ -836,7 +843,7 @@ export const portfolioSnapshot = {
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-24"
+        "reviewedOn": "2026-09-30"
       }
     },
     "iconplace": {
@@ -1355,7 +1362,7 @@ export const portfolioSnapshot = {
         "long": "Act 60 promises large Puerto Rico tax savings, but fees, yearly costs, and the federal residency rules decide the real number. act60.me models the move before you make it: a calculator that itemizes one-time and annual costs beside its assumptions, guides that cite the official sources and the date each was checked, and a private day tracker for the presence tests a calendar can measure. Investor applications filed in 2026 face a December 31 deadline; the guides say which rules changed and which still apply.",
         "hero": {
           "heading": "Puerto Rico Act 60 calculator",
-          "summary": "Estimate Act 60 savings from the export-services benefit (formerly Act 20) and the investor benefit (formerly Act 22) after fees, the investor donation, and yearly costs. Rates and source dates sit beside the result. No account needed.",
+          "summary": "Estimate your Act 60 savings after fees and yearly costs. No account required.",
           "primaryAction": "Estimate your savings",
           "secondaryAction": "Choose your guide"
         },
@@ -1590,6 +1597,101 @@ export const portfolioSnapshot = {
         "reviewedOn": "2026-09-24"
       }
     },
+    "textmock": {
+      "id": "textmock",
+      "name": "Textmock",
+      "oneLiner": "Fictional text message screenshots and animations, made in your browser",
+      "brandDescription": null,
+      "canonicalUrl": "https://textmock.com",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": [],
+      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M7 3h18a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H13l-7 7v-7H7a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5Zm3 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'/%3E%3C/svg%3E",
+      "messaging": {
+        "formatVersion": 1,
+        "product": "textmock",
+        "names": {
+          "name": "Textmock"
+        },
+        "category": "Text message mockup studio",
+        "tagline": "Create text message screenshots and animations in your browser.",
+        "short": "Fictional text message screenshots and animations, made in your browser",
+        "meta": "Textmock lets you make fictional text message screenshots and animations in your browser, in iMessage, WhatsApp, Telegram, and Instagram styles.",
+        "medium": "Textmock lets you make fictional text message screenshots and animations in your browser. Write the conversation, time each message, and export a PNG, GIF, or MP4, or share a link someone can open and edit.",
+        "long": "Textmock is a browser studio for fictional text conversations in stories, demos, and designs. Write the messages and choose who sends each one, then add reactions, read receipts, photos, and video clips. Set when each message appears, play the exchange back, and export a PNG screenshot, a looping GIF, or a silent MP4 that your browser renders on your device. Your draft stays in your browser; download a backup or share a scene link someone can open and make their own. Free exports use the iMessage style and carry a small Textmock signature. Pro removes it and adds Instagram, WhatsApp, and Telegram styles. Textmock does not send messages.",
+        "hero": {
+          "heading": "Say it in a conversation.",
+          "summary": "A joke for your group chat, a moment in your story, or a product demo that feels like real life. Make it in a few taps, right in your browser.",
+          "primaryAction": "Make a conversation",
+          "secondaryAction": "Read the introduction"
+        },
+        "status": {
+          "default": "proposed"
+        }
+      }
+    },
+    "midiplace": {
+      "id": "midiplace",
+      "name": "midi.place",
+      "oneLiner": "Research lab for content-addressed MIDI ideas and variations",
+      "brandDescription": null,
+      "canonicalUrl": "https://midi.place",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": [],
+      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M7 21a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm13-5a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM11 4h15v6H14v13h-3V4Zm13 6v8h-3V10h3Z'/%3E%3C/svg%3E",
+      "messaging": {
+        "formatVersion": 1,
+        "product": "midiplace",
+        "names": {
+          "name": "midi.place"
+        },
+        "category": "MIDI research lab",
+        "tagline": "Compare MIDI ideas and their variations.",
+        "short": "Research lab for content-addressed MIDI ideas and variations",
+        "meta": "midi.place is a research lab for content-addressed MIDI ideas: original loops, controlled variations, and replayable generation receipts.",
+        "medium": "midi.place is a research lab for content-addressed MIDI ideas. It compares original loops with controlled variations, keeps a replayable receipt for every generation, and renders audio with Soundfish. The public site is not live yet.",
+        "hero": {
+          "heading": "Compare MIDI ideas and their variations.",
+          "summary": "midi.place is a research lab for content-addressed MIDI ideas: original loops, controlled variations, and replayable generation receipts.",
+          "primaryAction": "Open midi.place"
+        },
+        "status": {
+          "default": "proposed"
+        }
+      }
+    },
+    "alt": {
+      "id": "alt",
+      "name": "Alt",
+      "oneLiner": "Personal canvas with an on-device model and replayable plans",
+      "brandDescription": null,
+      "canonicalUrl": "https://alt.dog",
+      "status": "active",
+      "copyStatus": "proposed",
+      "aliases": [],
+      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M4 17C4 8 8 3 16 3s13 5 13 13v13H16C8 29 4 25 4 17Zm6 1c0-5 2-8 6-8s6 3 6 8v4h-4v-3c-1 3-8 4-8-1Zm4-1c0 3 4 2 4-1s-4-3-4 1Z'/%3E%3C/svg%3E",
+      "messaging": {
+        "formatVersion": 1,
+        "product": "alt",
+        "names": {
+          "name": "Alt"
+        },
+        "category": "Personal canvas",
+        "tagline": "A canvas for questions, drawings, and small tools.",
+        "short": "Personal canvas with an on-device model and replayable plans",
+        "meta": "Alt is a canvas for questions, drawings, and small tools, with a model that runs on your device and optional encrypted sync.",
+        "medium": "Alt is a personal workspace you can reshape with a local model. It keeps an editable plan with replayable history, and your plans, reading, tools, and conversations stay on your device, with optional encrypted sync.",
+        "hero": {
+          "heading": "A canvas for questions, drawings, and small tools.",
+          "summary": "Alt is a canvas for questions, drawings, and small tools, with a model that runs on your device and optional encrypted sync.",
+          "primaryAction": "Open Alt"
+        },
+        "status": {
+          "default": "proposed"
+        }
+      }
+    },
     "pattern-language": {
       "id": "pattern-language",
       "name": "Pattern Language",
@@ -1728,7 +1830,8 @@ export const portfolioSnapshot = {
         "oh-computer",
         "sponge",
         "sloptrade",
-        "roughday"
+        "roughday",
+        "alt"
       ]
     },
     {
@@ -1738,7 +1841,9 @@ export const portfolioSnapshot = {
       "members": [
         "iconplace",
         "slopcamera",
-        "soundfish"
+        "soundfish",
+        "textmock",
+        "midiplace"
       ]
     },
     {
@@ -1829,7 +1934,16 @@ export const portfolioSnapshot = {
       "kind": "contract",
       "direction": "shared",
       "label": "shared bundle format",
-      "detail": "Both tools implement the versioned message-like-me.local-message-bundle interchange without importing each other's private state."
+      "detail": "Both tools read and write the same versioned TextButler local message bundle format without importing each other's private state."
+    },
+    {
+      "id": "runtime:gobstopper:aicharts:installs",
+      "source": "gobstopper",
+      "target": "aicharts",
+      "kind": "runtime",
+      "direction": "forward",
+      "label": "installs",
+      "detail": "The Gobstopper installer adds aicharts and turns on its local usage history, which stays on your computer and never uploads."
     },
     {
       "id": "runtime:gobstopper:xcb:compacts-sessions-for",
@@ -1841,13 +1955,13 @@ export const portfolioSnapshot = {
       "detail": "Excalibur (xcb) uses Gobstopper's elision policy to drop stale tool output from Claude Code and Codex prompts once context passes a threshold, and keeps the original output in local history. It is on by default."
     },
     {
-      "id": "contract:xcb:aicharts:exports-sessions-for",
+      "id": "runtime:xcb:aicharts:installs",
       "source": "xcb",
       "target": "aicharts",
-      "kind": "contract",
+      "kind": "runtime",
       "direction": "forward",
-      "label": "exports sessions for",
-      "detail": "Excalibur (xcb) measures subscription usage locally and, when you turn on exports, writes session files in the aicharts format. Automatic upload is not available."
+      "label": "installs",
+      "detail": "The Excalibur (xcb) installer adds aicharts and turns on its local usage history, which stays on your computer. With exports on, xcb also writes session files in the aicharts format; automatic upload is not available."
     },
     {
       "id": "contract:soulscrape:peopleblade:exports-dossier-packets",
@@ -2084,5 +2198,5 @@ export const portfolioSnapshot = {
       "detail": "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
     }
   ],
-  "digest": "sha256:1af50f624f0d06ec13e1531564a8066795ae3fed732210b6f642179730100103"
+  "digest": "sha256:4cc6210bb3827828fd7f75b0c9a1b8182acbcf098071c5db8855bf4a8a0a8e5e"
 } as const;
