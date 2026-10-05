@@ -2408,6 +2408,7 @@ export const marketingStyles = stylex.create({
       "@media (forced-colors: active)": "LinkText"
     },
     "text-decoration-line": "underline",
+    "text-decoration-style": "dotted",
     "text-decoration-color": {
       "default": "color-mix(in srgb, currentColor 40%, transparent)",
       ":hover": "currentColor",

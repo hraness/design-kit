@@ -1221,7 +1221,7 @@ export function MarketingInterfaceGrid({
               ? null
               : (
                 <p className={classNames("hraness-marketing-interface__action")}>
-                  <a className={classNames("hraness-marketing-interface__link")} href={entry.link.href}>{entry.link.label}</a>
+                  <a className={classNames("hraness-marketing-interface__link")} data-hraness-marketing="interfaces" href={entry.link.href}>{entry.link.label}</a>
                 </p>
               )}
           </article>

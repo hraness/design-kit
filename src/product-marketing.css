@@ -1691,6 +1691,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 .hraness-marketing-interface__link {
   color: var(--hraness-marketing-muted);
   text-decoration-line: underline;
+  text-decoration-style: dotted;
   text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
