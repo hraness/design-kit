@@ -36,8 +36,8 @@ import {
 } from "./portfolio.js";
 
 // Pinned facts. A snapshot regeneration must update these deliberately.
-const PINNED_DIGEST = "sha256:4cc6210bb3827828fd7f75b0c9a1b8182acbcf098071c5db8855bf4a8a0a8e5e";
-const PINNED_COMMIT = "26b167cd5701caf2aec8ff15a0fd046d940bc6b5";
+const PINNED_DIGEST = "sha256:2b479271b1d93256390327d29e63d23add0595150cae675eb99635fac8dc6973";
+const PINNED_COMMIT = "64d51361007d5d38b3a4f0911c3bae58ca20de63";
 
 const jsonFile = new URL("./portfolio.generated.json", import.meta.url);
 const moduleFile = new URL("./portfolio.generated.ts", import.meta.url);
@@ -61,6 +61,19 @@ describe("portfolio snapshot", () => {
     expect(markPaths).toEqual([...markPaths].sort());
     for (const path of markPaths) expect(path).toMatch(/^projects\/hraness\/public\/marks\/[a-z0-9-]+\.svg$/u);
     expect(markPaths.length).toBe(portfolioProductIds.length);
+  });
+
+  test("install labels preserve the canonical display name and technical identity", () => {
+    const entry = product("slopcamera");
+    const messaging = portfolioSnapshot.products.slopcamera.messaging;
+    expect(entry.name).toBe("SlopCamera");
+    for (const label of [
+      messaging.hero?.primaryAction,
+      messaging.headings["home-install"],
+      messaging.headings["agent-home-install"],
+    ]) expect(label).toContain(entry.name);
+    expect(entry.id).toBe("slopcamera");
+    expect(new URL(entry.canonicalUrl).hostname).toBe("slopcamera.com");
   });
 
   test("the JSON export and the module carry the same bytes", async () => {
