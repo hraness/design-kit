@@ -48,7 +48,9 @@ and their types are marked deprecated. Remove them when convenient.
 
 A product that still passes decorative artwork should delete it rather than
 recreate it in product CSS. Floating or blurred elements behind the heading make
-it harder to read, especially on phones.
+it harder to read, especially on phones. The one page-level drawing the kit
+supports is a [product landscape](LANDSCAPE.md), which sits in the margins
+behind the whole page rather than behind the hero copy.
 
 `ProductHero` stays available from the server entry and no longer crosses a
 client boundary. The `@hraness/design-kit/react/hero-backdrop` export remains a

@@ -90,7 +90,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-s96ppgkp.js";
+} from "../chunk-9sjaav5t.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -7920,6 +7920,38 @@ Run the job, then show me its log.`,
                     children: "Decorative paint is pointer-transparent and removable in forced colors. Marketing actions use system button colors so their labels stay readable."
                   })
                 ]
+              })
+            ]
+          }),
+          /* @__PURE__ */ jsxs15("div", {
+            className: "design-gallery__landscape",
+            "data-hraness-landscape": "contained",
+            style: {
+              "--hraness-landscape-image": `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300'/%3E%3Cg fill='none' stroke='white' stroke-width='1.5'%3E%3Cpath d='M0 240 L40 190 L70 215 L110 150 L150 205 L170 185'/%3E%3Cpath d='M230 185 L260 150 L300 200 L340 140 L370 180 L400 160'/%3E%3Cpath d='M20 270 C60 250 100 262 150 250'/%3E%3Cpath d='M250 252 C300 262 340 248 390 262'/%3E%3Ccircle cx='340' cy='60' r='16'/%3E%3C/g%3E%3C/svg%3E")`
+            },
+            children: [
+              /* @__PURE__ */ jsxs15("div", {
+                className: "design-gallery__landscape-copy",
+                children: [
+                  /* @__PURE__ */ jsx17("h3", {
+                    children: "Product landscape"
+                  }),
+                  /* @__PURE__ */ jsx17("p", {
+                    children: "One product drawing, tinted from the palette and tiled down the page. Code and tables stay solid with rounded edges; small cards and callouts frost over it."
+                  })
+                ]
+              }),
+              /* @__PURE__ */ jsx17("pre", {
+                className: "design-gallery__landscape-code",
+                "data-hraness-landscape-surface": "solid",
+                children: /* @__PURE__ */ jsx17("code", {
+                  children: "relay run job-01"
+                })
+              }),
+              /* @__PURE__ */ jsx17("p", {
+                className: "design-gallery__landscape-note",
+                "data-hraness-landscape-surface": "glass",
+                children: "The log is written next to the job."
               })
             ]
           })

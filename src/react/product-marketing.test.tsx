@@ -691,6 +691,14 @@ test("editorial and minimal presets remain explicit, server-safe composition bou
   expect(() => renderToStaticMarkup(<MarketingPage preset={"unknown" as "editorial"}>Invalid</MarketingPage>)).toThrow();
 });
 
+test("the landscape prop marks the page host and rejects unknown hosts", () => {
+  for (const landscape of ["page", "contained", "off"] as const) {
+    expect(renderToStaticMarkup(<MarketingPage landscape={landscape}>Content</MarketingPage>)).toContain(`data-hraness-landscape="${landscape}"`);
+  }
+  expect(renderToStaticMarkup(<MarketingPage>Content</MarketingPage>)).not.toContain("data-hraness-landscape");
+  expect(() => renderToStaticMarkup(<MarketingPage landscape={"body" as "page"}>Invalid</MarketingPage>)).toThrow(RangeError);
+});
+
 test("optional generic labels omit their slots while factual labels remain visible", () => {
   const html = renderToStaticMarkup(<><MarketingQuestionList heading="Questions" headingId="questions" questions={[{ question: "How?", answer: "A concrete answer." }]} /><MarketingInstallPanel heading="Install" headingId="install"><code>relay run</code></MarketingInstallPanel><MarketingMaker heading="Maker" headingId="maker"><p>Product-owned biography.</p></MarketingMaker></>);
   expect(html).not.toContain("hraness-marketing-questions__label");
