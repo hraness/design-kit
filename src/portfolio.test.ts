@@ -65,11 +65,12 @@ describe("portfolio snapshot", () => {
 
   test("install labels preserve the canonical display name and technical identity", () => {
     const entry = product("slopcamera");
+    const messaging = portfolioSnapshot.products.slopcamera.messaging;
     expect(entry.name).toBe("SlopCamera");
     for (const label of [
-      entry.messaging.hero?.primaryAction,
-      entry.messaging.headings["home-install"],
-      entry.messaging.headings["agent-home-install"],
+      messaging.hero?.primaryAction,
+      messaging.headings["home-install"],
+      messaging.headings["agent-home-install"],
     ]) expect(label).toContain(entry.name);
     expect(entry.id).toBe("slopcamera");
     expect(new URL(entry.canonicalUrl).hostname).toBe("slopcamera.com");
