@@ -63,6 +63,18 @@ describe("portfolio snapshot", () => {
     expect(markPaths.length).toBe(portfolioProductIds.length);
   });
 
+  test("install labels preserve the canonical display name and technical identity", () => {
+    const entry = product("slopcamera");
+    expect(entry.name).toBe("SlopCamera");
+    for (const label of [
+      entry.messaging.hero?.primaryAction,
+      entry.messaging.headings["home-install"],
+      entry.messaging.headings["agent-home-install"],
+    ]) expect(label).toContain(entry.name);
+    expect(entry.id).toBe("slopcamera");
+    expect(new URL(entry.canonicalUrl).hostname).toBe("slopcamera.com");
+  });
+
   test("the JSON export and the module carry the same bytes", async () => {
     const json = await Bun.file(jsonFile).text();
     expect(json).toBe(renderPortfolioJson(portfolioSnapshot));
