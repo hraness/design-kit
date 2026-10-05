@@ -1195,7 +1195,7 @@ export const marketingStyles = stylex.create({
     "display": "flex",
     "align-items": "center",
     "gap": "0.75rem",
-    "padding": "0.8rem 1rem",
+    "padding": "0.5rem 1rem",
     "background-image": { default: "var(--hraness-marketing-frame-chrome, none)", "@media (forced-colors: active)": "none" },
     "box-shadow": { default: "var(--hraness-marketing-chrome-shadow)", "@media (forced-colors: active)": "none" },
     "border-block-end": { "default": "var(--hraness-marketing-chrome-rule)", "@media (forced-colors: active)": "1px solid CanvasText" },
@@ -2216,10 +2216,10 @@ export const marketingStyles = stylex.create({
     "grid-template-columns": "repeat(auto-fit, minmax(min(100%, var(--_hraness-marketing-grid-track, 16rem)), 1fr))"
   },
   "interface": {
-    "display": "grid",
+    "display": "flex",
+    "flex-direction": "column",
     "min-inline-size": "0",
     "min-block-size": "100%",
-    "align-content": "start",
     "gap": "0.5rem",
     "padding": "clamp(1.25rem, 2.5vw, 1.75rem)",
     "border-top": {
@@ -2394,6 +2394,25 @@ export const marketingStyles = stylex.create({
     "color": "var(--hraness-marketing-muted)",
     "font-size": "0.95rem",
     "line-height": "1.5"
+  },
+  "interface__action": {
+    "margin-block-start": "auto",
+    "font-size": "0.85rem",
+    "text-align": "end"
+  },
+  "interface__link": {
+    "color": {
+      "default": "var(--hraness-marketing-muted)",
+      ":hover": "var(--hraness-marketing-ink)"
+    },
+    "text-decoration-line": "underline",
+    "text-decoration-color": {
+      "default": "color-mix(in srgb, currentColor 40%, transparent)",
+      ":hover": "currentColor",
+      ":focus-visible": "currentColor"
+    },
+    "text-decoration-thickness": "1px",
+    "text-underline-offset": "0.18em"
   },
   "trust_item__label": {
     "margin": "0",
@@ -4483,6 +4502,8 @@ const recipes = {
   "hraness-marketing-trust-item": { "default": marketingStyles.trust_item },
   "hraness-marketing-interface__heading": { "default": marketingStyles.interface__heading },
   "hraness-marketing-interface__summary": { "default": marketingStyles.interface__summary },
+  "hraness-marketing-interface__action": { "default": marketingStyles.interface__action },
+  "hraness-marketing-interface__link": { "default": marketingStyles.interface__link },
   "hraness-marketing-trust-item__label": { "default": marketingStyles.trust_item__label },
   "hraness-marketing-trust-item__detail": { "default": marketingStyles.trust_item__detail },
   "hraness-marketing-card-row": { "default": marketingStyles.card_row },

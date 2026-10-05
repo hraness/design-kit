@@ -235,6 +235,52 @@ test("the marketing compositions preserve headings, native disclosure, and produ
   expect(html).toMatch(marketingMarkupPattern('<h3 class="hraness-marketing-interface__heading">CLI</h3>'));
 });
 
+test("an interface card's reference link renders as its last child", () => {
+  const html = renderToStaticMarkup(
+    <MarketingInterfaceGrid
+      heading="One operation, three interfaces."
+      headingId="interfaces-title"
+      interfaces={[
+        {
+          example: <pre><code>relay run</code></pre>,
+          label: "CLI",
+          link: { href: "https://example.com/cli", label: "Read the CLI guide" },
+          summary: "For terminals and scripts.",
+        },
+        { label: "SDK", summary: "For typed application code." },
+      ]}
+      label="Interfaces"
+    />,
+  );
+  const { document } = parseHTML(html);
+  const cards = [...document.querySelectorAll("article.hraness-marketing-interface")];
+  expect(cards).toHaveLength(2);
+  const action = cards[0]?.querySelector(":scope > p.hraness-marketing-interface__action:last-child");
+  expect(action).not.toBeNull();
+  const link = action?.querySelector("a.hraness-marketing-interface__link");
+  expect(link?.getAttribute("href")).toBe("https://example.com/cli");
+  expect(link?.textContent).toBe("Read the CLI guide");
+  expect(cards[1]?.querySelector(".hraness-marketing-interface__action")).toBeNull();
+  expect(html).not.toMatch(/onClick|<script\b/iu);
+});
+
+test("a window or terminal chrome without a title draws only the window lights", () => {
+  const { document } = parseHTML(renderToStaticMarkup(
+    <MarketingProofFrame chrome="terminal"><pre><code>relay run</code></pre></MarketingProofFrame>,
+  ));
+  const frame = document.querySelector("figure.hraness-marketing-proof-frame");
+  expect(frame?.getAttribute("data-chrome")).toBe("terminal");
+  expect(frame?.querySelectorAll(".hraness-marketing-proof-frame__light")).toHaveLength(3);
+  expect(frame?.querySelector(".hraness-marketing-proof-frame__title")).toBeNull();
+  const windowHtml = renderToStaticMarkup(
+    <MarketingProofFrame chrome="window"><pre><code>relay run</code></pre></MarketingProofFrame>,
+  );
+  expect(windowHtml).toContain('data-chrome="window"');
+  expect(() => renderToStaticMarkup(
+    <MarketingProofFrame chrome="browser"><pre><code>relay run</code></pre></MarketingProofFrame>,
+  )).toThrow(RangeError);
+});
+
 test("the data table renders a captioned figure with row headings, numeric columns, and honest scope", () => {
   const html = renderToStaticMarkup(
     <MarketingDataTable

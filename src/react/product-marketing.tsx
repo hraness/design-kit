@@ -745,7 +745,8 @@ export function marketingProofFrameAddress(url: string): string {
  * A captioned frame around a screenshot, recording, or code-built mockup.
  * `chrome` draws a window title bar, a browser address bar, or a terminal
  * title bar above the content. A `title` without `chrome` keeps the window
- * bar. The browser bar shows `url` as host and path.
+ * bar. The browser bar shows `url` as host and path. A window or terminal
+ * bar without a title draws only the window lights.
  */
 export function MarketingProofFrame({
   caption,
@@ -773,8 +774,8 @@ export function MarketingProofFrame({
   if (url !== undefined && chrome !== "browser") throw new RangeError("Proof frame url needs chrome=\"browser\".");
   const bar = chrome ?? (title === undefined ? undefined : "window");
   const label = bar === "browser" ? (url === undefined ? title : marketingProofFrameAddress(url)) : title;
-  if (bar !== undefined && (label === undefined || label.trim() === "")) {
-    throw new RangeError(`Proof frame chrome=${bar} needs ${bar === "browser" ? "a url or title" : "a title"}.`);
+  if (bar === "browser" && (label === undefined || label.trim() === "")) {
+    throw new RangeError("Proof frame chrome=browser needs a url or title.");
   }
   return (
     <figure
@@ -793,7 +794,9 @@ export function MarketingProofFrame({
             </span>
             {bar === "browser"
               ? <span className={classNames("hraness-marketing-proof-frame__address")}>{label}</span>
-              : <span className={classNames("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default")}>{label}</span>}
+              : label === undefined || label.trim() === ""
+                ? null
+                : <span className={classNames("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default")}>{label}</span>}
           </div>
         )}
       <div className={classNames("hraness-marketing-proof-frame__content")}>{children}</div>
@@ -1168,6 +1171,8 @@ export function MarketingStatStrip({
 export interface MarketingInterface {
   readonly example?: ReactNode;
   readonly label: string;
+  /** A reference link pinned to the foot of the card, aligned to the end. */
+  readonly link?: MarketingLink;
   readonly summary: string;
 }
 
@@ -1212,6 +1217,13 @@ export function MarketingInterfaceGrid({
             </Heading>
             <p className={classNames("hraness-marketing-interface__summary")}>{entry.summary}</p>
             {entry.example}
+            {entry.link === undefined
+              ? null
+              : (
+                <p className={classNames("hraness-marketing-interface__action")}>
+                  <a className={classNames("hraness-marketing-interface__link")} href={entry.link.href}>{entry.link.label}</a>
+                </p>
+              )}
           </article>
         ))}
       </div>

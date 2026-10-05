@@ -153,8 +153,8 @@ export function ProductMarketingFixture({ api }: Readonly<{ api: typeof Marketin
       <MarketingNotice tone="error">That link expired.</MarketingNotice>
       <MarketingStatStrip ariaLabel="Observed counts" source={<>Snapshot <strong data-marketing-oracle="stats-strong">today</strong><span data-marketing-oracle="stats-span">only</span></>} stats={facts} />
       <MarketingInterfaceGrid heading="Choose an interface." headingId="interfaces-title" id="interfaces" label="Interfaces" summary="One result." interfaces={[
-        { label: "CLI", summary: "For terminal users.", example: <p data-marketing-oracle="interface-paragraph">Consumer paragraph.</p> },
-        { label: "SDK", summary: "For typed code.", example: <pre data-marketing-oracle="interface-pre"><code data-marketing-oracle="interface-code">relay.run()</code></pre> },
+        { label: "CLI", summary: "For terminal users.", example: <p data-marketing-oracle="interface-paragraph">Consumer paragraph.</p>, link: { href: "#interfaces", label: "Read the CLI guide" } },
+        { label: "SDK", summary: "For typed code.", example: <pre data-marketing-oracle="interface-pre"><code data-marketing-oracle="interface-code">relay.run()</code></pre>, link: { href: "#interfaces", label: "Read the SDK guide" } },
       ]} />
       <MarketingCardRow ariaLabel="Release radar" cards={[
         { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#fixture", title: "Grok 4.7", meta: "First observed 21 September 2026." },
