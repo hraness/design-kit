@@ -512,8 +512,8 @@ export function DesignSystemGallery({
             <p>Consumer-owned content can include <a href="#gallery-install">links</a> and <code>inline code</code>.</p>
           </MarketingSection>
           <MarketingInterfaceGrid columns={2} heading="Choose your interface." headingId="gallery-marketing-interfaces" headingLevel={3} label="Interfaces" interfaces={[
-            { label: "CLI", summary: "Run a named job.", example: <MarketingCodeBlock code="relay run job-01" /> },
-            { label: "SDK", summary: "Use typed application code." },
+            { label: "CLI", summary: "Run a named job.", example: <MarketingCodeBlock code="relay run job-01" />, link: { href: "#gallery-install", label: "Read the CLI guide" } },
+            { label: "SDK", summary: "Use typed application code.", link: { href: "#gallery-install", label: "Read the SDK guide" } },
           ]} />
           <MarketingCardRow ariaLabel="Release radar" columns={2} cards={[
             { art: <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="8" /></svg>, href: "#marketing", title: "Grok 4.7", meta: "First observed 21 September 2026." },

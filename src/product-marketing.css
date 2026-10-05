@@ -1081,7 +1081,7 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.8rem 1rem;
+  padding: 0.5rem 1rem;
   background-image: var(--hraness-marketing-frame-chrome, none);
   box-shadow: var(--hraness-marketing-chrome-shadow);
   border-block-end: var(--hraness-marketing-chrome-rule);
@@ -1641,16 +1641,25 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
 
 .hraness-marketing-interface,
 .hraness-marketing-trust-item {
-  display: grid;
   min-inline-size: 0;
   min-block-size: 100%;
-  align-content: start;
   gap: 0.5rem;
   padding: clamp(1.25rem, 2.5vw, 1.75rem);
   border: var(--hraness-marketing-surface-rule);
   border-radius: var(--hraness-marketing-frame-radius);
   background: var(--hraness-marketing-surface);
   box-shadow: var(--hraness-marketing-surface-shadow);
+}
+
+/* A vertical column lets the optional action pin to the foot of the card. */
+.hraness-marketing-interface {
+  display: flex;
+  flex-direction: column;
+}
+
+.hraness-marketing-trust-item {
+  display: grid;
+  align-content: start;
 }
 
 .hraness-marketing-interface :where(.hraness-marketing-interface__heading, p),
@@ -1672,8 +1681,40 @@ html:has(:is(.hraness-marketing-header, .hraness-marketing-header-surface):not([
   line-height: 1.5;
 }
 
-.hraness-marketing-interface pre {
+/* The card's reference link sits at the foot, quiet and end-aligned. */
+.hraness-marketing-interface .hraness-marketing-interface__action {
+  margin-block-start: auto;
+  font-size: 0.85rem;
+  text-align: end;
+}
+
+.hraness-marketing-interface__link {
+  color: var(--hraness-marketing-muted);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.hraness-marketing-interface__link:hover,
+.hraness-marketing-interface__link:focus-visible {
+  color: var(--hraness-marketing-ink);
+  text-decoration-color: currentColor;
+}
+
+@media (forced-colors: active) {
+  .hraness-marketing-interface__link {
+    color: LinkText;
+  }
+}
+
+.hraness-marketing-interface > :where(pre) {
   margin-block-start: 0.5rem;
+}
+
+.hraness-marketing-interface :where(pre) {
+  font-size: 0.78rem;
 }
 
 /* Equal-height product card rows. Direct children stretch to the tallest

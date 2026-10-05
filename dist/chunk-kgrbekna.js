@@ -1269,7 +1269,7 @@ var marketingStyles = {
     k1xSpc: "x78zum5",
     kkeX5w: "x6s0dn4",
     kOIVth: "x8233eu",
-    kmVPX3: "x86o7ao",
+    kmVPX3: "xrqs5gp",
     kb5WsR: "x1drtmal xhobzj1",
     kTJQHc: "xs301gt xwaqzdf",
     ke4D0g: "xothggy x1j9yjdw",
@@ -2214,10 +2214,10 @@ var marketingStyles = {
     $$css: true
   },
   interface: {
-    k1xSpc: "xrvj5dj",
+    k1xSpc: "x78zum5",
+    kvQiKF: "xdt5ytf",
     kdYMnH: "xesnm00",
     kVQ08L: "x1ljpu7r",
-    kNk6WL: "x10ukxgv",
     kOIVth: "x13z6uf9",
     kmVPX3: "x1nn0urv",
     k99D8V: "x17p5ghk x18z9243",
@@ -2283,6 +2283,21 @@ var marketingStyles = {
     kMwMTN: "xs87ocq",
     kLh5Sq: "xyr29y3",
     kN5DiO: "x1evy7pa",
+    $$css: true
+  },
+  interface__action: {
+    kAiAap: "x1n5yk0f",
+    kLh5Sq: "x1qzg9v8",
+    kMCLAl: "xp4054r",
+    $$css: true
+  },
+  interface__link: {
+    kMwMTN: "xs87ocq x16tyrwk x1eyr600 x1ljrylj",
+    kXaGww: "xujl8zx",
+    kCBxTS: "xi2nhp4",
+    kRHfhz: "x4k6xgu x9ojkr9 x1e7jyuc",
+    kKoZWP: "xyi4chj",
+    k1PBYE: "x5hzr90",
     $$css: true
   },
   trust_item__label: {
@@ -3659,6 +3674,12 @@ var recipes = {
   "hraness-marketing-interface__summary": {
     default: marketingStyles.interface__summary
   },
+  "hraness-marketing-interface__action": {
+    default: marketingStyles.interface__action
+  },
+  "hraness-marketing-interface__link": {
+    default: marketingStyles.interface__link
+  },
   "hraness-marketing-trust-item__label": {
     default: marketingStyles.trust_item__label
   },
@@ -4475,8 +4496,8 @@ function MarketingProofFrame({
     throw new RangeError('Proof frame url needs chrome="browser".');
   const bar = chrome ?? (title === undefined ? undefined : "window");
   const label = bar === "browser" ? url === undefined ? title : marketingProofFrameAddress(url) : title;
-  if (bar !== undefined && (label === undefined || label.trim() === "")) {
-    throw new RangeError(`Proof frame chrome=${bar} needs ${bar === "browser" ? "a url or title" : "a title"}.`);
+  if (bar === "browser" && (label === undefined || label.trim() === "")) {
+    throw new RangeError("Proof frame chrome=browser needs a url or title.");
   }
   return /* @__PURE__ */ jsxs3("figure", {
     className: marketingClassName("hraness-marketing-proof-frame", className),
@@ -4504,7 +4525,7 @@ function MarketingProofFrame({
           bar === "browser" ? /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-proof-frame__address"),
             children: label
-          }) : /* @__PURE__ */ jsx3("span", {
+          }) : label === undefined || label.trim() === "" ? null : /* @__PURE__ */ jsx3("span", {
             className: marketingClassName("hraness-marketing-proof-frame__title", undefined, bar === "terminal" ? "terminal" : "default"),
             children: label
           })
@@ -4882,7 +4903,16 @@ function MarketingInterfaceGrid({
               className: marketingClassName("hraness-marketing-interface__summary"),
               children: entry.summary
             }),
-            entry.example
+            entry.example,
+            entry.link === undefined ? null : /* @__PURE__ */ jsx3("p", {
+              className: marketingClassName("hraness-marketing-interface__action"),
+              children: /* @__PURE__ */ jsx3("a", {
+                className: marketingClassName("hraness-marketing-interface__link"),
+                "data-hraness-marketing": "interfaces",
+                href: entry.link.href,
+                children: entry.link.label
+              })
+            })
           ]
         }, entry.label))
       })

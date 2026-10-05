@@ -85,6 +85,10 @@
     padding: .5rem 1rem 4rem;
   }
 
+  .xrqs5gp {
+    padding: .5rem 1rem;
+  }
+
   .x1i4hug3 {
     padding: .65rem .8rem;
   }
@@ -99,10 +103,6 @@
 
   .xslvvub {
     padding: .75rem .95rem;
-  }
-
-  .x86o7ao {
-    padding: .8rem 1rem;
   }
 
   .x1717udv {
@@ -2943,6 +2943,10 @@
     margin-block-start: 1rem;
   }
 
+  .x1n5yk0f {
+    margin-block-start: auto;
+  }
+
   .xvc5jky {
     margin-inline-start: auto;
   }
@@ -3390,6 +3394,10 @@
     text-align: center;
   }
 
+  .xp4054r {
+    text-align: end;
+  }
+
   .x1yc453h {
     text-align: start;
   }
@@ -3426,6 +3434,10 @@
 
   .xtvhhri {
     text-transform: uppercase;
+  }
+
+  .x5hzr90 {
+    text-underline-offset: .18em;
   }
 
   .xdsgf93 {
@@ -3711,6 +3723,10 @@
 
   .xemv0ly:is([data-hovered], :hover), .xmm8vmt:is([data-focused], [data-hovered], :focus-visible, :hover) {
     color: var(--hraness-appearance-accent-foreground, var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText)));
+  }
+
+  .x1eyr600:focus-visible {
+    color: var(--hraness-marketing-ink);
   }
 
   .x89zja:is([data-hovered], :hover) {

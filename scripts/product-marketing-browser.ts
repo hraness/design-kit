@@ -32,7 +32,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "d73aadc873410e05dd148143c693baa6e263053bb4caa80db3859842e1f48dab", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "fa2bffaf56437ae902d57cc8ea8cfc60a5535f694a106a3e6fcb16a8e4ff55fa", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -1087,8 +1087,10 @@ try {
   const mismatchEvidencePath = join(output, "mismatch-summary.json");
   await writeFile(mismatchEvidencePath, mismatchEvidence, { flag: "wx" });
   assert.deepEqual(failures, [], "Unexpected browser errors after all fixture pages closed");
+  const mismatchSample = deliveryMismatchSamples.slice(0, 24)
+    .map(({ label, index, hook, property, actual, expected }) => `${label} #${index} ${hook} ${property}: ${JSON.stringify(actual)} !== ${JSON.stringify(expected)}`);
   assert.equal(deliveryMismatchCount, 0,
-    `Delivery differs from the projected original-source oracle; retained snapshots and mismatch summary: ${mismatchEvidencePath}`);
+    `Delivery differs from the projected original-source oracle; retained snapshots and mismatch summary: ${mismatchEvidencePath}\n${mismatchSample.join("\n")}`);
   const stylesheetHashes = { legacySha256,
     native: [...nativeOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     projectedNative: [...projectedOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),

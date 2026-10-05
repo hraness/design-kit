@@ -90,7 +90,7 @@ import {
   marketingProofFrameAddress,
   proceduralBackdropVariants,
   proceduralRecipeVersion
-} from "../chunk-w76f3ah1.js";
+} from "../chunk-kgrbekna.js";
 import {
   SyntaxCode
 } from "../chunk-6ts4955n.js";
@@ -6872,10 +6872,18 @@ Run the job, then show me its log.`,
                       summary: "Run a named job.",
                       example: /* @__PURE__ */ jsx17(MarketingCodeBlock, {
                         code: "relay run job-01"
-                      })
+                      }),
+                      link: {
+                        href: "#gallery-install",
+                        label: "Read the CLI guide"
+                      }
                     }, {
                       label: "SDK",
-                      summary: "Use typed application code."
+                      summary: "Use typed application code.",
+                      link: {
+                        href: "#gallery-install",
+                        label: "Read the SDK guide"
+                      }
                     }]
                   }),
                   /* @__PURE__ */ jsx17(MarketingCardRow, {
