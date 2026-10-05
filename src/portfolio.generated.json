@@ -3,14 +3,14 @@
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "64d51361007d5d38b3a4f0911c3bae58ca20de63",
+    "commit": "75818ad82d287cca6e3fd974541562cca7297fb2",
     "committedOn": "2026-10-05",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:a540c73eab4c3e7a363b8d2ebf9f1b5860e9ec89f486cc8a8d7ed737fb8a860b",
+    "upstreamDigest": "sha256:96e3f66b305a39ec07eed238b779436cc26a0bb823951d37af79bc343b9a50ca",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "862131d360164a8cb5a1dcf688993459d6f8077876ac5f6354117f497d318f98"
+        "sha256": "6ffe64db886ce45e0cf81cf7534832dae1982e1526cacf1b95345f1fbb36352e"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
@@ -801,7 +801,7 @@
           ]
         },
         "category": "People research for agents",
-        "tagline": "Learn everything about anyone based on their internet presence",
+        "tagline": "Learn everything about anyone from their internet presence",
         "short": "Free agent skill that writes dated dossiers on people, sources cited",
         "meta": "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
         "medium": "Soulscrape is a free agent skill that writes a dated dossier on how a person decides, writes, argues, and changes their mind, with every claim tied to its sources. Keep it private, or publish it.",
@@ -2197,5 +2197,5 @@
       "detail": "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
     }
   ],
-  "digest": "sha256:2b479271b1d93256390327d29e63d23add0595150cae675eb99635fac8dc6973"
+  "digest": "sha256:eabb4369e2180151554d3387914d36cb1053014d02e882fc4fa8a23066d75b81"
 }
