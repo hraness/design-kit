@@ -1712,7 +1712,7 @@ assert.deepEqual(
     [4000, 4130, 4200],
     [6000],
     [7000],
-    [8000, 8040],
+    [8000, 8040, 8200],
   ],
   "Design-kit raw StyleX priorities no longer map to the reviewed eight-rank inventory",
 );

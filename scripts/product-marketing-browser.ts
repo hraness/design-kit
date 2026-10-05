@@ -32,7 +32,7 @@ async function legacyStylesheetHash(): Promise<string> {
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   assert(source.startsWith(syntaxImport), "The marketing entry lost its exact syntax import");
   const grammarSha256 = createHash("sha256").update(source.slice(syntaxImport.length)).digest("hex");
-  assert.equal(grammarSha256, "627c8cd90a4332c4f1b31d3f9242b086448dab2580ddfadc96c1fbe6ea6abfbf", "The independent static CSS grammar changed");
+  assert.equal(grammarSha256, "d73aadc873410e05dd148143c693baa6e263053bb4caa80db3859842e1f48dab", "The independent static CSS grammar changed");
   return createHash("sha256").update(source).digest("hex");
 }
 
@@ -1011,7 +1011,7 @@ try {
       await settle(page);
       assert.equal(await page.locator("details").first().getAttribute("open"), "");
       const matrix = await summary.evaluate((node) => getComputedStyle(node, "::after").transform);
-      assert.match(matrix, /^matrix\(0\.70710\d*, 0\.70710\d*, -0\.70710\d*, 0\.70710\d*, 0, 0\)$/u);
+      assert.match(matrix, /^matrix\(-0\.70710\d*, 0\.70710\d*, -0\.70710\d*, -0\.70710\d*, 0, 0\)$/u);
       const state: Observation[] = [...await snapshot(page, ".hraness-marketing-question__summary, .hraness-marketing-question__answer, .hraness-marketing-question__answer [data-marketing-oracle]")];
       await page.keyboard.press("Space");
       await settle(page);

@@ -3026,6 +3026,7 @@ export const marketingStyles = stylex.create({
     "justify-content": "space-between",
     "gap": "1rem",
     "padding-block": "1rem",
+    "padding-inline": "var(--hraness-marketing-question-inline-inset, 1.25rem)",
     "color": "var(--hraness-marketing-ink)",
     "cursor": "pointer",
     "font-size": "1.05rem",
@@ -3041,15 +3042,22 @@ export const marketingStyles = stylex.create({
       "font-size": "1.25rem",
       "font-weight": "400",
       "line-height": "1",
+      "transition-duration": {
+        "default": "240ms",
+        "@media (prefers-reduced-motion: reduce)": "0ms"
+      },
+      "transition-property": "transform",
+      "transition-timing-function": "cubic-bezier(0.16, 1, 0.3, 1)",
       "transform": {
         "default": null,
-        [stylex.when.ancestor("[open]", questionMarker)]: "rotate(45deg)"
+        [stylex.when.ancestor("[open]", questionMarker)]: "rotate(135deg)"
       }
     }
   },
   "question__answer": {
     "max-inline-size": "var(--hraness-marketing-prose-measure)",
     "padding-block": "0 1.5rem",
+    "padding-inline": "var(--hraness-marketing-question-inline-inset, 1.25rem)",
     "color": "var(--hraness-marketing-muted)",
     "line-height": "1.6"
   },

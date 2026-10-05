@@ -2172,7 +2172,7 @@ try {
       [4000, 4130, 4200],
       [6000],
       [7000],
-      [8000, 8040],
+      [8000, 8040, 8200],
     ]),
     "Gallery design-kit manifest no longer matches its reviewed eight-rank inventory.",
   );

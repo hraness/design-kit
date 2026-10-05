@@ -83,8 +83,19 @@ test("the marketing grammar keeps compact, coarse-pointer, and forced-color cont
   expect(css).toContain("min-block-size: 3rem");
   expect(css).toContain("background: Canvas;");
   expect(css).toContain("color: CanvasText;");
-  expect(css).not.toContain("transition:");
+  // The only motion the grammar owns is the question glyph's + to × turn.
+  for (const rule of css.matchAll(/[^{}@]+\{[^{}]*\btransition:[^;]+;[^{}]*\}/gu)) {
+    expect(rule[0]).toContain("hraness-marketing-question summary::after");
+  }
   expect(css).not.toContain("animation:");
+});
+
+test("question rows inset their content and turn the marker with a restrained motion", () => {
+  expect(css).toMatch(/\.hraness-marketing-question summary \{[^}]*padding-inline: var\(--hraness-marketing-question-inline-inset, 1\.25rem\)/u);
+  expect(css).toMatch(/\.hraness-marketing-question__answer \{[^}]*padding-inline: var\(--hraness-marketing-question-inline-inset, 1\.25rem\)/u);
+  expect(css).toMatch(/\.hraness-marketing-question summary::after \{[^}]*transition: transform 240ms cubic-bezier\(0\.16, 1, 0\.3, 1\)/u);
+  expect(css).toMatch(/\.hraness-marketing-question\[open\] summary::after \{\s*transform: rotate\(135deg\);/u);
+  expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\) \{\s*\.hraness-marketing-question summary::after \{\s*transition: none;/u);
 });
 
 test("the hero eyebrow is a plain muted label, not a badge", () => {

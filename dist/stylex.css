@@ -864,6 +864,10 @@
     padding-inline: var(--hraness-marketing-gutter);
   }
 
+  .x18wjirm {
+    padding-inline: var(--hraness-marketing-question-inline-inset, 1.25rem);
+  }
+
   .xfmotut {
     padding-inline: var(--layout-chrome-inset);
   }
@@ -4943,8 +4947,26 @@
     transform: translate3d(0, -4vh, 0);
   }
 
-  .x1bz48vb.x1bz48vb:where(.x1mw0dh9[open] *):after {
-    transform: rotate(45deg);
+  .x78hkw1:after {
+    transition-duration: .24s;
+  }
+
+  .xjocvvi:after {
+    transition-property: transform;
+  }
+
+  .x15fj410:after {
+    transition-timing-function: cubic-bezier(.16, 1, .3, 1);
+  }
+
+  .xba5a1s.xba5a1s:where(.x1mw0dh9[open] *):after {
+    transform: rotate(135deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .x4oqjru.x4oqjru:after {
+      transition-duration: 0s;
+    }
   }
 }
 

@@ -215,7 +215,7 @@ test("the reviewed static grammar and 30-token foundation stay separate from own
   const syntaxImport = '@import "./syntax-highlighting.css";\n@import "./site-shell.css";\n\n';
   expect(legacy).toStartWith(syntaxImport);
   expect(createHash("sha256").update(legacy.slice(syntaxImport.length)).digest("hex"))
-    .toBe("627c8cd90a4332c4f1b31d3f9242b086448dab2580ddfadc96c1fbe6ea6abfbf");
+    .toBe("d73aadc873410e05dd148143c693baa6e263053bb4caa80db3859842e1f48dab");
   const tokenNames = (text: string) => [...new Set([...(text.match(/:where\([\s\S]*?\)\s*\{([^}]*)\}/u)?.[1] ?? "").matchAll(/(--hraness-marketing-[a-z-]+):/gu)].map((match) => match[1]))].sort();
   expect(tokenNames(foundation)).toHaveLength(30);
   expect(tokenNames(foundation)).toEqual(tokenNames(legacy));
@@ -301,7 +301,7 @@ test("the public collector compiles native logical edges, backgrounds, media, an
   expect(css).toContain("forced-colors");
   expect(css).toContain("pointer: coarse");
   expect(css).toContain("[open]");
-  expect(css).toContain("rotate(45deg)");
+  expect(css).toContain("rotate(135deg)");
   expect(a.code).not.toContain("inject(");
   const recipeRules = (recipe: stylex.CompiledStyles) => {
     const tokens = new Set(stylex.props(recipe).className?.split(" ") ?? []);
