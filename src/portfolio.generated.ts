@@ -4,14 +4,14 @@ export const portfolioSnapshot = {
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "26b167cd5701caf2aec8ff15a0fd046d940bc6b5",
+    "commit": "64d51361007d5d38b3a4f0911c3bae58ca20de63",
     "committedOn": "2026-10-05",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:0d3dd93744fc4adf183d81a4b62e4ba5bbca6dc417b6236fa99de7d19e6d7ecf",
+    "upstreamDigest": "sha256:a540c73eab4c3e7a363b8d2ebf9f1b5860e9ec89f486cc8a8d7ed737fb8a860b",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "665c543651734bc2778c0bc50033cbb40e9604defbafbab83832e37af2a28e19"
+        "sha256": "862131d360164a8cb5a1dcf688993459d6f8077876ac5f6354117f497d318f98"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
@@ -922,7 +922,7 @@ export const portfolioSnapshot = {
         "hero": {
           "heading": "Give your agent a multimedia studio.",
           "summary": "Make images, animation, 3D scenes, and video with your coding agent. Direct the details. Keep the source.",
-          "primaryAction": "Install Slopcamera",
+          "primaryAction": "Install SlopCamera",
           "secondaryAction": "Watch the films"
         },
         "headings": {
@@ -934,7 +934,7 @@ export const portfolioSnapshot = {
           "home-start-animation": "Make an animated film",
           "home-start-world": "Build a little world",
           "home-start-footage": "Give footage a new life",
-          "home-install": "Install Slopcamera for your agent.",
+          "home-install": "Install SlopCamera for your agent.",
           "home-design": "Your tools. Your files.",
           "home-questions": "Common questions",
           "home-cta": "Make something worth replaying.",
@@ -942,7 +942,7 @@ export const portfolioSnapshot = {
           "agent-home-examples": "See what you can make",
           "agent-home-revision": "Direct it again",
           "agent-home-workflow": "From an idea to a finished piece",
-          "agent-home-install": "Install Slopcamera",
+          "agent-home-install": "Install SlopCamera",
           "agent-home-tools": "Choose your tools",
           "agent-home-privacy": "Cost and privacy",
           "agent-home-explore": "Explore"
@@ -2198,5 +2198,5 @@ export const portfolioSnapshot = {
       "detail": "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
     }
   ],
-  "digest": "sha256:4cc6210bb3827828fd7f75b0c9a1b8182acbcf098071c5db8855bf4a8a0a8e5e"
+  "digest": "sha256:2b479271b1d93256390327d29e63d23add0595150cae675eb99635fac8dc6973"
 } as const;
