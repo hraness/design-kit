@@ -133,16 +133,22 @@ function MarketingActions({
  * gutter for every direct child role. Products set `--hraness-site-accent`
  * on this element or on a parent.
  */
+/** Where a product landscape draws (see LANDSCAPE.md): behind the whole page, behind one element, or nowhere. */
+export type ProductLandscapeHost = "page" | "contained" | "off";
+
 export function MarketingPage({
   children,
   className,
   id,
+  landscape,
   preset,
   pattern,
 }: Readonly<{
   children: ReactNode;
   className?: string;
   id?: string;
+  /** Draw the product landscape from product-landscape.css behind this page. */
+  landscape?: ProductLandscapeHost;
   /** Opt in to the separately imported product-marketing-preset.css contract. */
   preset?: MarketingPreset;
   /**
@@ -153,9 +159,10 @@ export function MarketingPage({
   pattern?: MarketingPattern;
 }>) {
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal") throw new RangeError("Unknown marketing preset.");
+  if (landscape !== undefined && landscape !== "page" && landscape !== "contained" && landscape !== "off") throw new RangeError("Unknown landscape host.");
   assertMarketingPattern(pattern);
   return (
-    <div className={classNames("hraness-marketing-page", className)} data-hraness-marketing="page" data-hraness-marketing-preset={preset} data-hraness-pattern={pattern} id={id}>
+    <div className={classNames("hraness-marketing-page", className)} data-hraness-landscape={landscape} data-hraness-marketing="page" data-hraness-marketing-preset={preset} data-hraness-pattern={pattern} id={id}>
       {children}
     </div>
   );

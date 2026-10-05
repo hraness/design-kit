@@ -1,0 +1,202 @@
+/* Product landscape: one product-owned illustration drawn behind marketing,
+ * documentation, and blog pages. See LANDSCAPE.md.
+ *
+ * The product supplies a grayscale luminance mask (light drawing on black) and
+ * the kit tints it with the page's own text mixed into its background, so the
+ * drawing follows every palette and appearance without an accent colour. The
+ * mask tiles down the page, so long pages never run out of scenery.
+ *
+ * Hosts:
+ * - `data-hraness-landscape="page"` on <body> or on any element inside it paints
+ *   the layer behind the whole document. `data-hraness-landscape="off"` anywhere
+ *   on the page turns it off, for application routes under a shared layout.
+ * - `data-hraness-landscape="contained"` paints the layer behind one element.
+ *
+ * Products set `--hraness-landscape-image` (and optionally the narrow image,
+ * opacity, and strength) on :root with root-relative or absolute URLs. Without
+ * an image the mask is fully transparent, so an unconfigured host paints
+ * nothing. Forced colours and print never draw the layer. */
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) {
+  --_hraness-landscape-ink: var(
+    --hraness-landscape-ink,
+    color-mix(
+      in oklch,
+      var(--foreground, var(--plain-foreground, CanvasText)) var(--hraness-landscape-strength, 30%),
+      var(--background, var(--plain-background, Canvas))
+    )
+  );
+  position: relative;
+  isolation: isolate;
+}
+
+@supports (mask-mode: luminance) or (-webkit-mask-source-type: luminance) {
+  :is(
+    body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+    [data-hraness-landscape="contained"]
+  )::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--_hraness-landscape-ink);
+    content: "";
+    opacity: var(--hraness-landscape-opacity, 0.5);
+    pointer-events: none;
+    -webkit-mask-image: var(--hraness-landscape-image, linear-gradient(transparent, transparent));
+    mask-image: var(--hraness-landscape-image, linear-gradient(transparent, transparent));
+    -webkit-mask-source-type: luminance;
+    mask-mode: luminance;
+    -webkit-mask-position: top center;
+    mask-position: top center;
+    -webkit-mask-repeat: repeat-y;
+    mask-repeat: repeat-y;
+    -webkit-mask-size: 100% auto;
+    mask-size: 100% auto;
+  }
+
+  @media (max-width: 48rem) {
+    :is(
+      body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+      [data-hraness-landscape="contained"]
+    )::before {
+      opacity: var(--hraness-landscape-opacity-narrow, 0.36);
+      -webkit-mask-image: var(--hraness-landscape-image-narrow, var(--hraness-landscape-image, linear-gradient(transparent, transparent)));
+      mask-image: var(--hraness-landscape-image-narrow, var(--hraness-landscape-image, linear-gradient(transparent, transparent)));
+    }
+  }
+}
+
+@media (forced-colors: active), print {
+  :is(
+    body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+    [data-hraness-landscape="contained"]
+  )::before {
+    display: none;
+  }
+}
+
+/* Page wrappers that repaint the page colour would hide the drawing behind a
+ * hard-edged slab. Over a landscape they let the identical body colour show. */
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) :is(.hraness-marketing-page, .plain-site:not(body), .plain-footer, [data-hraness-landscape-surface="clear"]) {
+  background: transparent;
+}
+
+/* Reading surfaces stay opaque and gain rounded edges: code, tables, and any
+ * product element marked `data-hraness-landscape-surface="solid"`. */
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) :is(.plain-publication__article-body pre, .plain-publication__table-scroll, [data-hraness-landscape-surface="solid"]) {
+  border-radius: var(--hraness-landscape-radius, 0.75rem);
+  background: var(--hraness-landscape-solid, var(--plain-surface, var(--hraness-marketing-surface, var(--background, Canvas))));
+}
+
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) .plain-publication__article-body pre {
+  padding: 0.9rem 1.1rem;
+}
+
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) .plain-publication__table-scroll {
+  border: 1px solid var(--plain-line, color-mix(in srgb, currentColor 14%, transparent));
+}
+
+/* Small cards and callouts become frosted panels over the drawing, using the
+ * sticky header's material. Without backdrop support, under reduced
+ * transparency, and in forced colours they keep their opaque surface. Keep the
+ * browser aliases in separate feature queries: CSS optimizers can collapse
+ * adjacent aliases to the prefixed property and lose Chromium blur. */
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) :is(
+  .hraness-marketing-card,
+  .hraness-marketing-quote,
+  .hraness-marketing-plan,
+  .hraness-marketing-trust-item,
+  .hraness-marketing-interface,
+  .hraness-marketing-primitive,
+  .plain-publication__callout,
+  .plain-publication__social-kit-item,
+  [data-hraness-landscape-surface="glass"]
+) {
+  --_hraness-landscape-glass-base: var(--hraness-landscape-glass, var(--hraness-marketing-surface, var(--plain-surface, var(--background, Canvas))));
+  background: var(--_hraness-landscape-glass-base);
+}
+
+:is(
+  body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+  [data-hraness-landscape="contained"]
+) [data-hraness-landscape-surface="glass"] {
+  border-radius: var(--hraness-landscape-radius, 0.75rem);
+}
+
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  :is(
+    body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+    [data-hraness-landscape="contained"]
+  ) :is(
+    .hraness-marketing-card,
+    .hraness-marketing-quote,
+    .hraness-marketing-plan,
+    .hraness-marketing-trust-item,
+    .hraness-marketing-interface,
+    .hraness-marketing-primitive,
+    .plain-publication__callout,
+    .plain-publication__social-kit-item,
+    [data-hraness-landscape-surface="glass"]
+  ) {
+    background: color-mix(in srgb, var(--_hraness-landscape-glass-base) 82%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  :is(
+    body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+    [data-hraness-landscape="contained"]
+  ) :is(
+    .hraness-marketing-card,
+    .hraness-marketing-quote,
+    .hraness-marketing-plan,
+    .hraness-marketing-trust-item,
+    .hraness-marketing-interface,
+    .hraness-marketing-primitive,
+    .plain-publication__callout,
+    .plain-publication__social-kit-item,
+    [data-hraness-landscape-surface="glass"]
+  ) {
+    background: color-mix(in srgb, var(--_hraness-landscape-glass-base) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  :is(
+    body:is([data-hraness-landscape="page"], :has([data-hraness-landscape="page"])):not(:has([data-hraness-landscape="off"])),
+    [data-hraness-landscape="contained"]
+  ) :is(
+    .hraness-marketing-card,
+    .hraness-marketing-quote,
+    .hraness-marketing-plan,
+    .hraness-marketing-trust-item,
+    .hraness-marketing-interface,
+    .hraness-marketing-primitive,
+    .plain-publication__callout,
+    .plain-publication__social-kit-item,
+    [data-hraness-landscape-surface="glass"]
+  ) {
+    background: var(--_hraness-landscape-glass-base);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

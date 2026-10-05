@@ -21,7 +21,7 @@ import {
   WrappingRow,
 } from "@hraness/ui";
 import { Chart01Icon, CodeIcon, DashboardSquare01Icon } from "@hugeicons/core-free-icons";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 
 import { BrowserFrame, SampleText } from "../mockups/index.js";
 import { StepThrough } from "../mockups/client.js";
@@ -1061,6 +1061,21 @@ export function DesignSystemGallery({
             <h3>Semantic content stays ordinary DOM</h3>
             <p>Decorative paint is pointer-transparent and removable in forced colors. Marketing actions use system button colors so their labels stay readable.</p>
           </div>
+        </div>
+        <div
+          className="design-gallery__landscape"
+          data-hraness-landscape="contained"
+          style={{
+            "--hraness-landscape-image":
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300'/%3E%3Cg fill='none' stroke='white' stroke-width='1.5'%3E%3Cpath d='M0 240 L40 190 L70 215 L110 150 L150 205 L170 185'/%3E%3Cpath d='M230 185 L260 150 L300 200 L340 140 L370 180 L400 160'/%3E%3Cpath d='M20 270 C60 250 100 262 150 250'/%3E%3Cpath d='M250 252 C300 262 340 248 390 262'/%3E%3Ccircle cx='340' cy='60' r='16'/%3E%3C/g%3E%3C/svg%3E\")",
+          } as CSSProperties}
+        >
+          <div className="design-gallery__landscape-copy">
+            <h3>Product landscape</h3>
+            <p>One product drawing, tinted from the palette and tiled down the page. Code and tables stay solid with rounded edges; small cards and callouts frost over it.</p>
+          </div>
+          <pre className="design-gallery__landscape-code" data-hraness-landscape-surface="solid"><code>relay run job-01</code></pre>
+          <p className="design-gallery__landscape-note" data-hraness-landscape-surface="glass">The log is written next to the job.</p>
         </div>
       </section>
 

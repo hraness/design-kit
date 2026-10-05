@@ -3921,14 +3921,18 @@ function MarketingPage({
   children,
   className,
   id,
+  landscape,
   preset,
   pattern
 }) {
   if (preset !== undefined && preset !== "editorial" && preset !== "minimal")
     throw new RangeError("Unknown marketing preset.");
+  if (landscape !== undefined && landscape !== "page" && landscape !== "contained" && landscape !== "off")
+    throw new RangeError("Unknown landscape host.");
   assertMarketingPattern(pattern);
   return /* @__PURE__ */ jsx3("div", {
     className: marketingClassName("hraness-marketing-page", className),
+    "data-hraness-landscape": landscape,
     "data-hraness-marketing": "page",
     "data-hraness-marketing-preset": preset,
     "data-hraness-pattern": pattern,
