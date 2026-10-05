@@ -2403,7 +2403,9 @@ export const marketingStyles = stylex.create({
   "interface__link": {
     "color": {
       "default": "var(--hraness-marketing-muted)",
-      ":hover": "var(--hraness-marketing-ink)"
+      ":hover": "var(--hraness-marketing-ink)",
+      ":focus-visible": "var(--hraness-marketing-ink)",
+      "@media (forced-colors: active)": "LinkText"
     },
     "text-decoration-line": "underline",
     "text-decoration-color": {

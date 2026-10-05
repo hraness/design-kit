@@ -3725,6 +3725,10 @@
     color: var(--hraness-appearance-accent-foreground, var(--hraness-material-ink, var(--ui-accent-foreground, ButtonText)));
   }
 
+  .x1eyr600:focus-visible {
+    color: var(--hraness-marketing-ink);
+  }
+
   .x89zja:is([data-hovered], :hover) {
     color: var(--secondary-foreground);
   }

@@ -1087,8 +1087,10 @@ try {
   const mismatchEvidencePath = join(output, "mismatch-summary.json");
   await writeFile(mismatchEvidencePath, mismatchEvidence, { flag: "wx" });
   assert.deepEqual(failures, [], "Unexpected browser errors after all fixture pages closed");
+  const mismatchSample = deliveryMismatchSamples.slice(0, 24)
+    .map(({ label, index, hook, property, actual, expected }) => `${label} #${index} ${hook} ${property}: ${JSON.stringify(actual)} !== ${JSON.stringify(expected)}`);
   assert.equal(deliveryMismatchCount, 0,
-    `Delivery differs from the projected original-source oracle; retained snapshots and mismatch summary: ${mismatchEvidencePath}`);
+    `Delivery differs from the projected original-source oracle; retained snapshots and mismatch summary: ${mismatchEvidencePath}\n${mismatchSample.join("\n")}`);
   const stylesheetHashes = { legacySha256,
     native: [...nativeOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),
     projectedNative: [...projectedOracle.assets].filter(([, asset]) => asset.contentType === "text/css").map(([url, asset]) => ({ url, sha256: createHash("sha256").update(asset.body).digest("hex") })).sort((a, b) => a.url.localeCompare(b.url)),

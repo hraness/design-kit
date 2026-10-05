@@ -2292,7 +2292,7 @@ var marketingStyles = {
     $$css: true
   },
   interface__link: {
-    kMwMTN: "xs87ocq x16tyrwk",
+    kMwMTN: "xs87ocq x16tyrwk x1eyr600 x1ljrylj",
     kXaGww: "xujl8zx",
     kRHfhz: "x4k6xgu x9ojkr9 x1e7jyuc",
     kKoZWP: "xyi4chj",
