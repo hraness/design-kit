@@ -3,14 +3,14 @@
   "formatVersion": 1,
   "provenance": {
     "registry": "https://hraness.com/portfolio.json",
-    "commit": "75818ad82d287cca6e3fd974541562cca7297fb2",
-    "committedOn": "2026-10-05",
+    "commit": "3d85ced04478bcf651187c7e763c0835b52b1914",
+    "committedOn": "2026-10-06",
     "upstreamContract": "hraness.portfolio-public/v1",
-    "upstreamDigest": "sha256:96e3f66b305a39ec07eed238b779436cc26a0bb823951d37af79bc343b9a50ca",
+    "upstreamDigest": "sha256:d3c6e7497c52cbf8feeb67bbf63a004da493edc62c244d03591f0d4324d2f7c5",
     "files": [
       {
         "path": "portfolio.public.generated.json",
-        "sha256": "6ffe64db886ce45e0cf81cf7534832dae1982e1526cacf1b95345f1fbb36352e"
+        "sha256": "9a51b8984c826a6f04f44d21c8203a34e297a4ea7d8b75a6c3feed731971b163"
       },
       {
         "path": "packages/brand-catalog/brands.yaml",
@@ -18,11 +18,7 @@
       },
       {
         "path": "brand-artwork.json",
-        "sha256": "ed55cc7bdfe2b3c897ce8742ed2809a0b7df9f90ac59192e1fe0c4a86bee7164"
-      },
-      {
-        "path": "projects/hraness/public/marks/act60.svg",
-        "sha256": "b1e625903ac5deb8b9ac79469028122dd50d62cab36c433025a3976710723918"
+        "sha256": "aa9afcda60f948b8bf2fe35ee83f0f99339188e008ffd0ad3d76c0e619e0246c"
       },
       {
         "path": "projects/hraness/public/marks/aicharts.svg",
@@ -31,14 +27,6 @@
       {
         "path": "projects/hraness/public/marks/algal.svg",
         "sha256": "856ad5092fc3ac85863ba0ba079c8a2e1ecb195df06bd289a2602899244b4272"
-      },
-      {
-        "path": "projects/hraness/public/marks/alt.svg",
-        "sha256": "4544a61738e99296e072876b4807150bf7bfa57c5f4388cd9d3d646000a3ccd4"
-      },
-      {
-        "path": "projects/hraness/public/marks/clankdar.svg",
-        "sha256": "12e321d88ec806e138b54ec2f00a605784486c26800d82c38c06a1ae0073efff"
       },
       {
         "path": "projects/hraness/public/marks/direct.svg",
@@ -77,10 +65,6 @@
         "sha256": "5d30fa25c2f69d5dd1c4315189a3e9653be232baaf6cbf5cb4ce46b8dbcaab27"
       },
       {
-        "path": "projects/hraness/public/marks/midiplace.svg",
-        "sha256": "27ff03a1d987c9714d21b3e94033127154de0a1a70c4150446cc6ddee5ba8c8c"
-      },
-      {
         "path": "projects/hraness/public/marks/oh-computer.svg",
         "sha256": "b9c62d7ef8168eae34a8cf388efb8d1ac9ec609a6d3d31b8e81af5c7a9f5724d"
       },
@@ -97,24 +81,8 @@
         "sha256": "7c7c7c1268adf68b68b898d64bac96355e4feecc75cebcd149281b663148c5fc"
       },
       {
-        "path": "projects/hraness/public/marks/sleepyland.svg",
-        "sha256": "7be74f2cd185a6fb9478129b300d63e56c73f36a33281ce7c798b21316f20225"
-      },
-      {
-        "path": "projects/hraness/public/marks/slopcamera.svg",
-        "sha256": "219710e5aa5ad5f989fd1235dd6f93ef9e92875508c6f9c799c0c240eb74eafa"
-      },
-      {
-        "path": "projects/hraness/public/marks/sloptrade.svg",
-        "sha256": "b9e9f1fd911bb3e60c7b3cd176b7681aa0480b9a6724c087b66518366ad636e6"
-      },
-      {
         "path": "projects/hraness/public/marks/soulscrape.svg",
         "sha256": "465f2e57d5cede402c38c5cb73095a916682ff0a1826ca21738974661e71c6b0"
-      },
-      {
-        "path": "projects/hraness/public/marks/soundfish.svg",
-        "sha256": "9b10a443bc233da65da7b91f3b91f390ac11d0aa7aa16874539219560b979471"
       },
       {
         "path": "projects/hraness/public/marks/sponge.svg",
@@ -127,10 +95,6 @@
       {
         "path": "projects/hraness/public/marks/swft.svg",
         "sha256": "972d1586b23396c1e8324a5cb58758c2f2f044a26a010740c93352595e3abf41"
-      },
-      {
-        "path": "projects/hraness/public/marks/sys1.svg",
-        "sha256": "5e561b80286aca3c94b5de7c10140545620db92978a7b273f1cd9d10167b88e3"
       },
       {
         "path": "projects/hraness/public/marks/system-one-skills.svg",
@@ -781,7 +745,7 @@
     "soulscrape": {
       "id": "soulscrape",
       "name": "Soulscrape",
-      "oneLiner": "Free agent skill that writes dated dossiers on people, sources cited",
+      "oneLiner": "Free agent skill that writes dated dossiers on people, companies, and products",
       "brandDescription": "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
       "canonicalUrl": "https://soulscrape.com",
       "status": "active",
@@ -800,15 +764,15 @@
             "Ensoul"
           ]
         },
-        "category": "People research for agents",
-        "tagline": "Learn everything about anyone from their internet presence",
-        "short": "Free agent skill that writes dated dossiers on people, sources cited",
-        "meta": "Soulscrape is a free agent skill that writes a dated dossier on a person, with every claim tied to its sources, kept private or published.",
-        "medium": "Soulscrape is a free agent skill that writes a dated dossier on how a person decides, writes, argues, and changes their mind, with every claim tied to its sources. Keep it private, or publish it.",
-        "long": "Soulscrape is a free, MIT-licensed agent skill that turns sources you're allowed to use into a dated dossier on one person: how they decide, write, argue, and change their mind. It runs inside Claude Code, Codex, or another agent that loads skills, with your own model and tools, and needs no Soulscrape account. Facts, stated beliefs, patterns, and speculation stay apart, and the dossier lists what the record cannot settle. Keep it private, or publish it with a free Hraness account as a web page, a JSON packet, and a Markdown copy anyone can cite.",
+        "category": "Subject research for agents",
+        "tagline": "Capture the soul of any person, company, or product",
+        "short": "Free agent skill that writes dated dossiers on people, companies, and products",
+        "meta": "Soulscrape is a free agent skill that writes a dated dossier on a person, company, or product, with every claim tied to its sources, kept private or published.",
+        "medium": "Soulscrape is a free agent skill that writes a dated dossier on a person, a company, or a product: how they decide, work, and change, with every claim tied to its sources. Keep it private, or publish it.",
+        "long": "Soulscrape is a free, MIT-licensed agent skill that turns sources you're allowed to use into a dated dossier on one subject: a person's judgment and writing, a company's decisions and history, or a product's design and development. It runs inside Claude Code, Codex, or another agent that loads skills, with your own model and tools, and needs no Soulscrape account. Facts, stated beliefs, patterns, and speculation stay apart, and the dossier lists what the record cannot settle. Keep it private, or publish it with a free Hraness account as a web page, a JSON packet, and a Markdown copy anyone can cite.",
         "hero": {
-          "heading": "Learn everything about anyone based on their internet presence",
-          "summary": "Turn their writing, talks, and posts into a detailed dossier, with sources for every claim.",
+          "heading": "Capture the soul of any person, company, or product",
+          "summary": "Turn public writing, talks, releases, and filings into a dated dossier, with a source for every claim.",
           "primaryAction": "Install the skill",
           "secondaryAction": "Browse the dossiers"
         },
@@ -822,11 +786,12 @@
           "boundaries-title": "Keep the research within its limits",
           "questions-title": "Questions",
           "related-title": "Other tools from our studio",
-          "cta-title": "Start with one person",
+          "cta-title": "Start with one subject",
           "home-flow-sources": "Choose the sources",
           "home-flow-read": "Read the dossier",
           "home-flow-publish": "Keep it private or publish",
           "home-use-agent": "Give an agent context",
+          "home-use-subject": "Dossier a company or product",
           "home-use-research": "Research a person",
           "home-use-writing": "Write about someone",
           "home-use-personas": "Prepare an authorized assistant",
@@ -842,7 +807,7 @@
         "status": {
           "default": "proposed"
         },
-        "reviewedOn": "2026-09-30"
+        "reviewedOn": "2026-10-05"
       }
     },
     "iconplace": {
@@ -888,243 +853,6 @@
         "reviewedOn": "2026-09-30"
       }
     },
-    "slopcamera": {
-      "id": "slopcamera",
-      "name": "SlopCamera",
-      "oneLiner": "A multimedia studio for your coding agent",
-      "brandDescription": "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
-      "canonicalUrl": "https://slopcamera.com",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [
-        "Atet",
-        "Graphics"
-      ],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 590 524' width='590' height='524'%3E%3Cpath d='M0 0 C1.343 -0.0071 2.6859 -0.0142 4.0695 -0.0215 C5.5315 -0.019 6.9935 -0.0165 8.4998 -0.014 C10.064 -0.0183 11.6283 -0.0235 13.1925 -0.0294 C17.4322 -0.0428 21.6719 -0.0434 25.9117 -0.0409 C29.4553 -0.0398 32.9989 -0.0447 36.5425 -0.0495 C44.9052 -0.0606 53.2679 -0.061 61.6306 -0.055 C70.2478 -0.0489 78.8648 -0.0612 87.4819 -0.0825 C94.8893 -0.1002 102.2967 -0.1062 109.7041 -0.1029 C114.1242 -0.1011 118.5442 -0.1037 122.9643 -0.1176 C127.1225 -0.1302 131.2805 -0.1282 135.4388 -0.1152 C137.6844 -0.1117 139.93 -0.123 142.1756 -0.1348 C151.4848 -0.0864 159.3372 0.3399 166.2581 7.2607 C171.7335 14.4589 175.5535 22.5438 179.5081 30.6357 C180.8368 33.3287 182.1704 36.0194 183.5042 38.7099 C184.1473 40.0085 184.7903 41.3071 185.4529 42.645 C188.1403 48.0278 190.8813 53.3826 193.7852 58.6523 C195.9287 62.5642 197.7552 66.4318 199.3518 70.6005 C202.2921 78.0773 202.2921 78.0773 207.2581 84.2607 C213.1219 86.4931 219.5115 85.6576 225.6531 85.3012 C243.3229 85.0263 261.6037 95.7751 274.0081 107.5107 C292.4302 126.8828 297.6088 149.6055 297.501 175.6489 C297.5029 177.1215 297.5048 178.5942 297.5068 180.1115 C297.5116 184.1226 297.504 188.1336 297.4938 192.1447 C297.4849 196.4159 297.4868 200.6871 297.4872 204.9584 C297.4862 212.1723 297.4776 219.3861 297.4639 226.6001 C297.4501 233.882 297.4429 241.1638 297.4434 248.4458 C297.4446 271.6151 297.3981 294.7837 297.2705 317.9527 C297.2583 320.2149 297.2474 322.4771 297.2364 324.7393 C297.1961 332.7778 297.1352 340.8156 297.0367 348.8535 C297.0104 351.187 296.9901 353.5205 296.9767 355.854 C296.8267 379.5899 292.6378 399.0683 276.2581 417.2607 C275.6677 417.9439 275.0773 418.6271 274.469 419.331 C262.2424 432.5982 243.479 441.2803 225.4661 442.4405 C222.4058 442.5048 219.3517 442.5084 216.2908 442.4877 C215.1384 442.488 213.986 442.4883 212.7987 442.4886 C209.0221 442.4872 205.2456 442.4717 201.469 442.456 C198.8377 442.4523 196.2064 442.4494 193.5751 442.4474 C186.6738 442.4398 179.7725 442.4202 172.8711 442.398 C165.8191 442.3775 158.7671 442.3684 151.7151 442.3584 C137.8961 442.3369 124.0771 442.3028 110.2581 442.2607 C111.6953 437.9489 115.0043 436.303 118.5706 433.7607 C153.4402 408.2147 179.8016 368.9436 188.2581 326.2607 C183.8005 325.2573 179.3419 324.2585 174.8831 323.2607 C173.6121 322.9745 172.3411 322.6884 171.0315 322.3935 C169.2139 321.9875 169.2139 321.9875 167.3596 321.5732 C166.239 321.3218 165.1183 321.0705 163.9637 320.8115 C161.3916 320.1942 161.3916 320.1942 159.2581 320.2607 C158.9062 321.4466 158.5543 322.6326 158.1917 323.8544 C151.6406 345.5113 142.8023 365.7109 128.2581 383.2607 C127.7779 383.8477 127.2977 384.4347 126.803 385.0395 C99.9179 417.8222 61.8715 437.6023 19.7822 441.981 C7.5155 442.9546 -4.8492 442.7141 -17.1485 442.6966 C-20.5655 442.6935 -23.9824 442.6997 -27.3993 442.7056 C-35.4663 442.7196 -43.5333 442.7182 -51.6003 442.7067 C-59.8723 442.6952 -68.144 442.7094 -76.416 442.7361 C-83.5751 442.7584 -90.734 442.7649 -97.8931 442.7591 C-102.1444 442.7557 -106.3956 442.7579 -110.6469 442.7753 C-114.6413 442.7909 -118.6352 442.7867 -122.6296 442.768 C-124.7638 442.7627 -126.898 442.7767 -129.0322 442.7917 C-150.9758 442.6271 -171.4 434.7279 -187.4021 419.6865 C-206.1044 400.2972 -210.3699 377.0716 -210.2595 351.2976 C-210.2649 349.1437 -210.2721 346.9898 -210.2807 344.836 C-210.2988 339.0364 -210.292 333.2371 -210.2792 327.4376 C-210.269 321.3392 -210.2785 315.2409 -210.2848 309.1425 C-210.292 298.9069 -210.2825 288.6714 -210.2634 278.4357 C-210.2416 266.6369 -210.2487 254.8384 -210.2707 243.0395 C-210.2889 232.87 -210.2914 222.7005 -210.2809 212.531 C-210.2747 206.4743 -210.2738 200.4177 -210.2871 194.3611 C-210.2987 188.6653 -210.2905 182.9699 -210.2675 177.2742 C-210.2623 175.1958 -210.2637 173.1175 -210.2726 171.0392 C-210.3653 147.1524 -204.8989 125.8321 -187.7419 108.2607 C-164.5866 85.9408 -138.197 84.4693 -107.6439 84.6549 C-103.509 84.6754 -99.3741 84.6691 -95.2391 84.6668 C-88.3009 84.6669 -81.3629 84.6864 -74.4248 84.7187 C-66.4659 84.7556 -58.5074 84.7644 -50.5485 84.7574 C-42.8133 84.751 -35.0783 84.762 -27.3432 84.7814 C-24.0874 84.7894 -20.8317 84.7923 -17.5759 84.7907 C37.3536 84.7872 80.4807 98.5265 120.0706 138.0107 C121.8012 139.7592 123.5305 141.5092 125.2581 143.2607 C126.9236 144.9285 128.5899 146.5955 130.2581 148.2607 C130.9997 147.9881 131.7413 147.7154 132.5054 147.4345 C135.8587 146.2049 139.2146 144.9827 142.5706 143.7607 C144.3215 143.1168 144.3215 143.1168 146.1077 142.4599 C147.226 142.0539 148.3442 141.6478 149.4964 141.2294 C150.528 140.8524 151.5597 140.4753 152.6226 140.0869 C155.2581 139.2607 155.2581 139.2607 158.2581 139.2607 C153.6385 131.4476 148.456 124.8662 142.2581 118.2607 C140.7774 116.5745 139.2983 114.887 137.8206 113.1982 C107.8813 80.1101 60.4232 59.0521 16.2112 55.9794 C14.6437 55.9016 13.076 55.8291 11.5081 55.7607 C10.1824 55.7009 10.1824 55.7009 8.8299 55.6398 C-9.3491 54.8891 -27.5521 54.635 -45.7419 54.2607 C-44.5199 50.3152 -43.1015 46.826 -41.0544 43.2412 C-40.5255 42.3091 -39.9966 41.377 -39.4516 40.4167 C-38.8874 39.4371 -38.3232 38.4575 -37.7419 37.4482 C-36.8695 35.9275 -36.8695 35.9275 -35.9795 34.3762 C-34.7963 32.3163 -33.6112 30.2577 -32.424 28.2001 C-30.9026 25.5415 -29.4152 22.8677 -27.9411 20.1826 C-23.2363 11.7114 -19.3703 4.8824 -9.9289 1.1481 C-6.4748 0.1863 -3.5824 0.0063 0 0 Z M-96.5232 180.1826 C-98.7419 182.2607 -98.7419 182.2607 -101.195 184.1357 C-120.1919 199.9858 -130.8754 228.152 -133.281 252.0029 C-135.4133 278.6932 -128.2972 306.5285 -111.6794 327.8232 C-110.3829 329.3164 -109.0704 330.7959 -107.7419 332.2607 C-107.0574 333.0741 -106.3729 333.8875 -105.6677 334.7255 C-92.1722 350.4501 -75.243 360.6532 -55.7419 367.2607 C-54.5212 367.6745 -53.3004 368.0883 -52.0427 368.5146 C-23.4823 376.6707 6.7834 370.7122 32.3518 356.6865 C57.9507 341.3803 75.7268 315.9223 83.2581 287.2607 C85.123 279.1522 85.6112 271.3157 85.5706 263.0107 C85.5657 261.8199 85.5608 260.6292 85.5557 259.4023 C85.4392 250.6476 84.7114 242.7033 82.2581 234.2607 C81.765 232.4625 81.765 232.4625 81.262 230.6279 C72.6139 201.9604 53.1664 179.5646 27.2698 164.9638 C-12.3043 144.1395 -63.5661 148.8057 -96.5232 180.1826 Z ' transform='translate%28251.74191284179688,40.73930358886719%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "slopcamera",
-        "names": {
-          "name": "SlopCamera",
-          "command": "slopcamera",
-          "formerly": [
-            "Atet",
-            "Graphics"
-          ]
-        },
-        "category": "Media studio for agents",
-        "tagline": "A multimedia studio for your coding agent.",
-        "short": "A multimedia studio for your coding agent",
-        "meta": "SlopCamera lets your coding agent make images, diagrams, animation, 3D scenes, and video from source files it can keep revising.",
-        "medium": "SlopCamera is a media studio for coding agents. Codex, Claude Code, and other agents make images, diagrams, animation, 3D scenes, and edited video from source files they can keep revising.",
-        "long": "Agents that write code can also make media, but generated assets usually arrive as finished files nobody can change. SlopCamera is a media studio for coding agents: images, diagrams, animation, 3D scenes, and edited video are built from source files the agent can keep revising, so a change is a new render, not a new prompt lottery. Codex, Claude Code, and other command-capable agents drive it through the CLI and skill. SlopCamera is free and open source.",
-        "hero": {
-          "heading": "Give your agent a multimedia studio.",
-          "summary": "Make images, animation, 3D scenes, and video with your coding agent. Direct the details. Keep the source.",
-          "primaryAction": "Install SlopCamera",
-          "secondaryAction": "Watch the films"
-        },
-        "headings": {
-          "home-examples": "Take an idea somewhere strange.",
-          "home-revision": "The next version starts with a sentence.",
-          "home-revision-original": "Original",
-          "home-revision-revised": "Revised",
-          "home-start": "What will you make first?",
-          "home-start-animation": "Make an animated film",
-          "home-start-world": "Build a little world",
-          "home-start-footage": "Give footage a new life",
-          "home-install": "Install SlopCamera for your agent.",
-          "home-design": "Your tools. Your files.",
-          "home-questions": "Common questions",
-          "home-cta": "Make something worth replaying.",
-          "home-search-title": "SlopCamera: video, diagrams and 3D your coding agent can revise",
-          "agent-home-examples": "See what you can make",
-          "agent-home-revision": "Direct it again",
-          "agent-home-workflow": "From an idea to a finished piece",
-          "agent-home-install": "Install SlopCamera",
-          "agent-home-tools": "Choose your tools",
-          "agent-home-privacy": "Cost and privacy",
-          "agent-home-explore": "Explore"
-        },
-        "status": {
-          "default": "proposed"
-        },
-        "reviewedOn": "2026-09-30"
-      }
-    },
-    "soundfish": {
-      "id": "soundfish",
-      "name": "Soundfish",
-      "oneLiner": "Album pages with a waveform player and comments pinned to moments",
-      "brandDescription": "Soundfish gives your album a page of its own, with a waveform player and comments pinned to moments. Upload a new take and listeners hear it at the same link.",
-      "canonicalUrl": "https://sound.fish",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 731 734' width='731' height='734'%3E%3Cpath d='M0 0 C2 1.375 2 1.375 4 3 C4 3.66 4 4.32 4 5 C4.66 5 5.32 5 6 5 C7.619 6.8257 9.2306 8.6583 10.8086 10.5195 C13.2655 13.3005 15.8581 15.8945 18.5 18.5 C22.3069 22.2653 25.9159 26.1015 29.3906 30.1719 C31.5649 32.6417 33.9074 34.9179 36.2539 37.2227 C38.0648 39.0659 39.7532 40.9782 41.4375 42.9375 C43.8562 45.7458 46.359 48.3997 49 51 C51.5793 53.5397 54.0222 56.1245 56.375 58.875 C59.1162 62.0668 62.0069 65.043 65 68 C67.8899 70.8552 70.6845 73.715 73.3125 76.8125 C77.0073 81.1392 81.052 85.1082 85.1184 89.0813 C88.6564 92.5632 91.9555 96.1877 95.2012 99.9429 C98.2182 103.3931 101.3597 106.7247 104.5 110.0625 C105.1252 110.7309 105.7504 111.3993 106.3945 112.0879 C109.4661 115.3598 112.5691 118.5879 115.7539 121.75 C118.0881 124.0681 120.3165 126.4199 122.4375 128.9375 C124.8562 131.7458 127.359 134.3997 130 137 C132.5587 139.5196 134.9817 142.0812 137.3125 144.8125 C141.0968 149.2204 145.2311 153.245 149.3594 157.3281 C152.1761 160.1782 154.8003 163.1361 157.3984 166.1836 C158.9859 167.984 160.6489 169.6455 162.375 171.3125 C166.9918 175.8779 171.0111 180.8845 175 186 C175.7954 187.0171 176.5907 188.0341 177.4102 189.082 C203.4663 223.8924 214.4886 268.2619 208.8125 311.25 C204.2827 342.1541 192.0733 370.6234 174 396 C173.4686 396.7531 172.9372 397.5063 172.3896 398.2822 C164.8861 408.8712 157.0826 418.7222 148 428 C147.2446 428.8057 146.4892 429.6113 145.7109 430.4414 C141.5552 434.7861 137.1677 438.4909 132.375 442.125 C118.1987 452.8766 108.997 466.1029 106 484 C105.4666 491.8529 106.4957 499.3041 108 507 C101.5965 503.3806 101.5965 503.3806 98.7656 501.5742 C81.9011 490.9099 62.5187 487.8777 43 486 C44 484 44 484 47.7695 482.5898 C49.4494 482.0357 51.1305 481.4852 52.8125 480.9375 C72.2254 474.3427 90.217 465.1568 108 455 C109.0905 454.3916 110.1811 453.7831 111.3047 453.1562 C115.1426 450.0859 117.5648 446.3952 120.25 442.3125 C121.0964 441.0449 121.0964 441.0449 121.96 439.7517 C146.4792 402.6921 163.4229 359.2612 154.3125 314.125 C153.6223 311.0584 152.8425 308.028 152 305 C151.6378 303.6826 151.2755 302.3652 150.9023 301.0078 C144.85 281.271 133.6552 261.1962 118.7383 246.8203 C117 245 117 245 117 243 C115.68 242.34 114.36 241.68 113 241 C111.3409 239.5378 109.7199 238.0319 108.125 236.5 C91.7698 221.5006 72.9009 211.998 52.3125 204.125 C51.1626 203.6849 50.0127 203.2447 48.8279 202.7913 C42.1416 200.3144 35.4134 198.2192 28.5398 196.3433 C27.7145 196.1161 26.8892 195.8889 26.0389 195.6549 C24.0265 195.1013 22.0133 194.5504 20 194 C20.0014 194.9308 20.0014 194.9308 20.0028 195.8804 C20.1939 326.7345 20.1939 326.7345 19.7109 370.9963 C19.6877 373.2913 19.67 375.5862 19.6538 377.8812 C19.3713 413.9227 12.672 445.5273 -11 474 C-11.845 475.0287 -11.845 475.0287 -12.707 476.0781 C-33.378 500.5286 -66.8937 520.4326 -99 524 C-99.8714 524.1083 -100.7428 524.2166 -101.6406 524.3281 C-135.0328 527.9536 -167.5061 519.369 -193.9907 498.646 C-215.4177 481.093 -231.1873 456.7172 -235 429 C-235.2806 425.0782 -235.3345 421.1809 -235.3125 417.25 C-235.3076 416.2009 -235.3027 415.1517 -235.2976 414.0708 C-234.8139 381.8396 -217.6604 352.7254 -194.9688 330.6641 C-164.8173 303.6071 -128.4704 290.2632 -88 292 C-59.184 293.9941 -32.929 305.9424 -10 323 C-8.7683 323.886 -7.5345 324.7692 -6.2988 325.6497 C-5.2102 326.4253 -4.1216 327.2009 -3 328 C-2.2157 272.7783 -1.8077 217.5546 -1.4709 162.3288 C-1.4434 157.8217 -1.4153 153.3147 -1.3871 148.8077 C-1.3218 138.3798 -1.2586 127.9519 -1.1982 117.524 C-1.1885 115.8386 -1.1787 114.1531 -1.1688 112.4676 C-1.0689 95.3341 -0.981 78.2012 -1.0083 61.0674 C-1.01 59.8465 -1.0117 58.6257 -1.0135 57.3678 C-1.0224 51.8736 -1.0376 46.3796 -1.0655 40.8855 C-1.1156 27.2329 -0.6678 13.6358 0 0 Z ' transform='translate%28470,158%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C1.0441 0.9359 2.0883 1.8717 3.1641 2.8359 C7.8871 7.1223 12.5062 11.4741 17 16 C18.4655 17.4551 19.9317 18.9094 21.3984 20.3633 C23.0574 22.013 24.7162 23.6627 26.375 25.3125 C27.6125 26.5374 27.6125 26.5374 28.875 27.7871 C33.219 32.1139 37.4098 36.502 41.4048 41.1531 C43.866 44.0026 46.4347 46.7437 49 49.5 C50.0471 50.6391 51.094 51.7784 52.1406 52.918 C53.7504 54.6531 55.3749 56.3756 57.0469 58.0508 C68.6166 70.0185 73.5408 86.9424 73.4202 103.2129 C72.725 124.3019 60.4214 140.1676 45.7168 154.2844 C43.9853 156.0147 42.3911 157.8108 40.7969 159.668 C36.3341 164.803 31.6479 169.7151 26.9609 174.6445 C22.9857 178.8424 19.145 183.1049 15.4453 187.5488 C14.9684 188.0277 14.4914 188.5066 14 189 C13.34 189 12.68 189 12 189 C11.34 190.32 10.68 191.64 10 193 C-10.6299 216.1358 -38.8594 231.4598 -70 234 C-101.5947 235.7553 -133.5774 228.9248 -157.9004 207.3113 C-162.6933 202.8212 -167.282 198.1303 -171.875 193.4375 C-173.2491 192.0519 -174.6241 190.6671 -176 189.2832 C-177.3315 187.9383 -178.6623 186.5926 -179.9922 185.2461 C-180.5934 184.6375 -181.1945 184.029 -181.8139 183.402 C-185.5106 179.6233 -189.038 175.7322 -192.487 171.726 C-194.3491 169.6018 -196.3336 167.639 -198.375 165.6875 C-215.4083 148.828 -228.8857 128.5768 -229.4375 103.9375 C-228.7237 80.3583 -219.1321 60.731 -203.5938 43.4414 C-202 42 -202 42 -200 42 C-200 41.34 -200 40.68 -200 40 C-198.5127 38.5377 -198.5127 38.5377 -196.467 36.8447 C-192.2539 33.26 -188.3823 29.4471 -184.5273 25.4844 C-183.1183 24.0529 -181.7088 22.622 -180.2988 21.1914 C-178.1247 18.9805 -175.9538 16.7667 -173.7913 14.5444 C-161.7422 2.1796 -149.5555 -9.1961 -133.625 -16.375 C-132.7407 -16.7836 -131.8564 -17.1923 -130.9453 -17.6133 C-118.7897 -23.0798 -106.2767 -26.5705 -93 -28 C-91.3758 -28.1837 -91.3758 -28.1837 -89.7188 -28.3711 C-57.214 -31.3905 -24.4433 -22.0062 0 0 Z ' transform='translate%28280,264%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C32.16 28.7617 49.0336 65.7505 51.6091 108.6299 C53.3249 149.0278 39.183 190.0369 11.7812 219.9609 C5.0995 227.0115 -2.0615 233.4303 -9.4062 239.7734 C-13.136 243.0084 -16.5773 246.4904 -20.043 250.0039 C-22.7773 252.7001 -25.6408 255.2088 -28.5586 257.7031 C-29.9853 258.9519 -31.333 260.2904 -32.6562 261.6484 C-34.2812 263.2109 -34.2812 263.2109 -36.2812 263.2109 C-36.6332 262.2325 -36.9851 261.2541 -37.3477 260.2461 C-40.3993 252.1428 -43.4686 245.6204 -49.2812 239.2109 C-49.9606 238.4259 -50.6399 237.6409 -51.3398 236.832 C-56.2446 231.2453 -61.458 226.0106 -66.7383 220.7812 C-69.3603 218.131 -71.7996 215.3884 -74.2227 212.5586 C-82.0906 203.5859 -90.4054 195.0188 -98.8906 186.6328 C-101.5954 183.8927 -104.1074 181.0328 -106.6055 178.1055 C-109.0454 175.3471 -111.6815 172.8014 -114.3047 170.2188 C-116.8656 167.6174 -119.232 164.8733 -121.6055 162.1016 C-123.2394 160.2582 -124.9467 158.5458 -126.7188 156.8359 C-129.2812 154.2109 -129.2812 154.2109 -129.2812 152.2109 C-129.9412 152.2109 -130.6012 152.2109 -131.2812 152.2109 C-131.2812 151.5509 -131.2812 150.8909 -131.2812 150.2109 C-131.9412 150.2109 -132.6012 150.2109 -133.2812 150.2109 C-134.7266 148.7422 -134.7266 148.7422 -136.4062 146.7109 C-138.9238 143.7442 -141.5029 140.9352 -144.2812 138.2109 C-147.4122 135.1217 -150.3219 131.9235 -153.1836 128.5859 C-155.3532 126.1295 -157.5947 123.749 -159.8481 121.3696 C-179.0811 100.9872 -195.1099 78.2975 -195.3086 49.207 C-194.6156 30.7442 -188.2254 15.2323 -176.2812 1.2109 C-175.6883 0.4736 -175.0953 -0.2638 -174.4844 -1.0234 C-156.9887 -21.9893 -128.9394 -32.3728 -102.3945 -35.4062 C-64.3032 -38.8312 -28.6132 -24.3212 0 0 Z ' transform='translate%28408.28125,86.7890625%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "soundfish",
-        "names": {
-          "name": "Soundfish",
-          "command": "soundfish"
-        },
-        "category": "Album pages for musicians",
-        "tagline": "Give your album a page of its own.",
-        "short": "Album pages with a waveform player and comments pinned to moments",
-        "meta": "Soundfish gives your album a page of its own, with a waveform player and comments pinned to moments. Upload a new take and listeners hear it at the same link.",
-        "medium": "Soundfish gives your album a page of its own, with a waveform player and comments pinned to moments. Upload a new take and listeners hear it at the same link while earlier takes stay dated.",
-        "long": "Soundfish gives your album a page of its own. Upload MP3, WAV, or FLAC tracks and share one link to a waveform player where listeners heart tracks and pin comments to the moment they mean. Each track keeps its takes in order: upload a new one and listeners hear it at the same link, while earlier takes stay dated. Keep an album unlisted, publish it to your artist page, or embed the player on any site. Listening needs no account; a free Hraness account publishes one album of up to 10 tracks. Agents can publish with the soundfish CLI, and a browser MIDI editor is in beta.",
-        "hero": {
-          "heading": "Give your album a page of its own.",
-          "summary": "Upload tracks and share one link to a waveform player with hearts and comments pinned to the moment. A new take lands at the same link.",
-          "primaryAction": "Upload an album",
-          "secondaryAction": "Hear an album page"
-        },
-        "headings": {
-          "home-features": "Every album page has a player, comments, and play counts.",
-          "home-midi": "Sketch the next idea in the MIDI editor.",
-          "home-comparison": "How Soundfish compares",
-          "home-releases": "Recent releases",
-          "home-interfaces": "For listeners, makers, and agents",
-          "home-questions": "Common questions",
-          "home-search-title": "Soundfish: album pages with timestamped comments",
-          "home-eyebrow": "Music for agents",
-          "home-closing": "Share it today. Improve it at the same link.",
-          "home-interface-listeners": "For listeners",
-          "home-interface-makers": "For makers",
-          "home-interface-agents": "For agents"
-        },
-        "status": {
-          "default": "proposed"
-        },
-        "reviewedOn": "2026-09-24"
-      }
-    },
-    "sys1": {
-      "id": "sys1",
-      "name": "Sys1",
-      "oneLiner": "Saves repository check results and adds scoped code review",
-      "brandDescription": "Sys1 helps coding agents review changes against your repository's rules, with probability-scored answers from hosted Jev, a local model, or your own server.",
-      "canonicalUrl": "https://sys1.io",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160' width='160' height='160'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M40 16H120Q144 16 144 40V120Q144 144 120 144H40Q16 144 16 120V40Q16 16 40 16Z M76 42H96V108H112V124H52V108H76V63L56 75L47 61Z'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "sys1",
-        "names": {
-          "name": "Sys1",
-          "command": "sys1"
-        },
-        "category": "Coding agent tools",
-        "tagline": "Saved checks and code review",
-        "short": "Saves repository check results and adds scoped code review",
-        "meta": "Sys1 gives coding agents tools to review code, check completion claims, and get structured answers from Jev or a local model.",
-        "medium": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes. Review and completion checks are advisory.",
-        "long": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes. Its code review and completion checks are experimental and advisory. Agents and applications can also ask yes/no, choice, and score questions and receive validated answers with probabilities. Choose TypeSafe’s hosted Jev, an experimental local model, or a compatible server. Use the Node or Bun client, embed the router, or call its local HTTP gateway. The Sys1 site also offers System One Skills, an independent package that compacts noisy test and build output without Sys1 or a model. Sys1 is MIT licensed.",
-        "hero": {
-          "heading": "Keep checks and code review together.",
-          "summary": "Sys1 runs your repository check, keeps the output local, and saves a result you can inspect later. Add a scoped review when you need a second pass on the changes.",
-          "primaryAction": "Install Sys1",
-          "secondaryAction": "Explore the workflows"
-        },
-        "headings": {
-          "review-heading": "Useful checks, inside your agent’s workflow.",
-          "benchmarks-heading": "For compact output alone.",
-          "launch-heading": "Meet Sys1.",
-          "system-heading": "Three parts, one system.",
-          "how-heading": "Use small decisions in your own code.",
-          "trial-heading": "Test the decision on your task.",
-          "integration-heading": "Three ways to call Sys1.",
-          "ecosystem-heading": "What Sys1 connects to.",
-          "install-heading": "Install Sys1.",
-          "questions-heading": "Before you begin.",
-          "docs-title": "Set up your first useful check",
-          "getting-started-title": "Install Sys1",
-          "workflows-title": "Save a check and continue its review",
-          "connect-jev-title": "Connect hosted Jev for model calls",
-          "audit-title": "Review changes with your agent",
-          "verify-title": "Check a completion message",
-          "compact-checks-title": "Compact test output",
-          "system-one-title": "Ask for a structured decision",
-          "integration-title": "Integration modes",
-          "backends-title": "Other backends",
-          "profiles-title": "Reuse application questions",
-          "research-title": "Evaluate a model for your task",
-          "workflow-review-heading": "Review a change against your rules",
-          "workflow-completion-heading": "Check what “done” means",
-          "docs-install-cli": "Install the CLI",
-          "docs-first-jev-request": "Make your first Jev request",
-          "docs-model-errors": "Choose the model and handle failures",
-          "docs-portable-client": "Portable client",
-          "docs-embedded-router": "Embedded Bun router",
-          "docs-loopback-http": "Loopback HTTP"
-        },
-        "channels": {
-          "social": {
-            "imageDescription": "Keep checks and code review together."
-          }
-        },
-        "status": {
-          "default": "proposed"
-        },
-        "reviewedOn": "2026-09-30"
-      }
-    },
-    "sloptrade": {
-      "id": "sloptrade",
-      "name": "SlopTrade",
-      "oneLiner": "Build prompt that turns a coding agent into a trading-system designer",
-      "brandDescription": "SlopTrade is a build prompt your coding agent turns into a personal stock trading system, where your rules approve every order.",
-      "canonicalUrl": "https://sloptrade.com",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [
-        "Invest"
-      ],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 639 710' width='639' height='710'%3E%3Cpath d='M0 0 C1.7542 0.9542 3.5082 1.909 5.262 2.864 C6.2387 3.3956 7.2155 3.9273 8.2218 4.475 C20.9794 11.4778 33.3261 19.2359 45.748 26.8096 C53.2923 31.3954 60.8925 35.8253 68.6172 40.0977 C73.0736 42.6038 77.4102 45.2826 81.75 47.9844 C87.0884 51.2952 92.487 54.5056 97.8779 57.73 C100.9746 59.5833 104.0689 61.4405 107.1633 63.2976 C108.8584 64.3149 110.5535 65.332 112.2488 66.3489 C116.4836 68.8892 120.7175 71.431 124.9492 73.9766 C133.6127 79.1856 142.2927 84.3645 151 89.5 C161.3654 95.6138 171.6878 101.797 182 108 C186.1243 110.4803 190.2493 112.9595 194.375 115.4375 C195.9523 116.3851 195.9523 116.3851 197.5615 117.3518 C203.6169 120.985 209.6867 124.592 215.7739 128.1716 C219.3582 130.2807 222.9366 132.3993 226.5122 134.5229 C228.1419 135.4906 229.7731 136.4558 231.4058 137.4185 C233.612 138.7243 235.8073 140.0467 238 141.375 C239.2169 142.1046 240.4338 142.8342 241.6875 143.5859 C248.0772 148.2425 251.1231 152.2525 253 160 C253.1737 162.6305 253.2476 165.2686 253.2461 167.9048 C253.2484 168.6743 253.2507 169.4438 253.2531 170.2367 C253.2584 172.8124 253.2494 175.3878 253.2405 177.9635 C253.2414 179.8298 253.2431 181.6961 253.2457 183.5625 C253.2502 188.6888 253.2422 193.815 253.2321 198.9413 C253.2235 204.4702 253.2264 209.9991 253.2279 215.528 C253.229 225.1065 253.2227 234.685 253.2115 244.2635 C253.1952 258.1124 253.19 271.9612 253.1875 285.8101 C253.1831 308.2788 253.1698 330.7474 253.1509 353.2161 C253.1325 375.0429 253.1184 396.8697 253.1099 418.6965 C253.1093 420.0418 253.1088 421.3871 253.1083 422.7732 C253.1057 429.5221 253.1031 436.271 253.1006 443.02 C253.0799 499.0133 253.0447 555.0067 253 611 C247.9389 610.1587 244.1085 607.9771 239.75 605.375 C238.9337 604.895 238.1174 604.415 237.2764 603.9204 C234.5118 602.2898 231.7552 600.6464 229 599 C227.9804 598.3916 226.9607 597.7831 225.9102 597.1562 C217.232 591.9727 208.5709 586.7608 199.918 581.5352 C192.4217 577.0172 184.8778 572.5888 177.3125 568.1875 C169.2166 563.477 161.1532 558.7193 153.1309 553.8848 C145.2126 549.1165 137.2631 544.4015 129.3125 539.6875 C119.6283 533.9455 109.9579 528.1821 100.3125 522.375 C88.9099 515.5143 77.4326 508.7841 65.9453 502.0664 C58.9711 497.9871 52.0143 493.8789 45.0652 489.7571 C40.256 486.9088 35.4321 484.0887 30.5898 481.2969 C29.5119 480.6739 28.434 480.0508 27.3235 479.4089 C25.2568 478.2159 23.1878 477.027 21.116 475.843 C3.1546 465.4639 3.1546 465.4639 0 456 C-0.094 453.5045 -0.1237 451.0066 -0.123 448.5093 C-0.1242 447.736 -0.1254 446.9626 -0.1265 446.1658 C-0.1292 443.5531 -0.1247 440.9404 -0.1203 438.3277 C-0.1207 436.4442 -0.1216 434.5607 -0.1228 432.6772 C-0.1251 427.4849 -0.1211 422.2925 -0.1161 417.1002 C-0.1118 411.5072 -0.1132 405.9141 -0.114 400.3211 C-0.1145 390.6252 -0.1113 380.9293 -0.1057 371.2335 C-0.0976 357.2148 -0.095 343.196 -0.0937 329.1773 C-0.0916 306.4347 -0.0849 283.6921 -0.0754 260.9495 C-0.0663 238.8528 -0.0592 216.7561 -0.0549 194.6594 C-0.0547 193.2981 -0.0544 191.9369 -0.0541 190.5343 C-0.0528 183.7054 -0.0516 176.8765 -0.0503 170.0476 C-0.04 113.365 -0.0223 56.6825 0 0 Z ' transform='translate%2849,49%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.66 0 1.32 0 2 0 C2.0913 36.2985 2.162 72.597 2.2043 108.8956 C2.2093 113.1814 2.2144 117.4672 2.2197 121.7529 C2.2208 122.6061 2.2218 123.4594 2.2229 124.3384 C2.2403 138.152 2.2718 151.9656 2.3086 165.7791 C2.346 179.954 2.3682 194.1289 2.3764 208.3039 C2.3818 217.05 2.3992 225.7959 2.4317 234.542 C2.4553 241.2494 2.4578 247.9568 2.4524 254.6643 C2.4535 257.4152 2.4615 260.1661 2.4768 262.917 C2.4967 266.6717 2.4919 270.4256 2.481 274.1803 C2.4927 275.2698 2.5043 276.3593 2.5163 277.4818 C2.4574 284.9694 1.1877 290.1724 -3.7209 296.0664 C-9.3786 300.8138 -15.4945 304.4158 -21.9375 308 C-24.2563 309.3132 -26.574 310.6283 -28.8906 311.9453 C-30.0682 312.6134 -31.2457 313.2814 -32.459 313.9697 C-38.082 317.1937 -43.6369 320.5283 -49.1875 323.875 C-50.2422 324.51 -51.2969 325.145 -52.3835 325.7993 C-55.949 327.948 -59.512 330.1007 -63.0747 332.2539 C-73.2945 338.4273 -83.5935 344.4619 -93.8965 350.4951 C-109.2072 359.461 -124.4842 368.4779 -139.6875 377.625 C-146.8841 381.954 -154.0961 386.2483 -161.375 390.4375 C-178.5155 400.306 -195.4913 410.4491 -212.375 420.75 C-239.124 437.062 -239.124 437.062 -251 443 C-253.2342 440.7658 -252.245 435.2466 -252.2881 432.1221 C-252.3059 431.0828 -252.3237 430.0435 -252.3421 428.9727 C-252.4975 419.3089 -252.5842 409.644 -252.6521 399.9793 C-252.698 393.4941 -252.7649 387.0107 -252.8848 380.5264 C-253.0004 374.2485 -253.0601 367.9723 -253.0826 361.6935 C-253.1002 359.3159 -253.1367 356.9383 -253.1936 354.5613 C-253.5656 338.2374 -251.0499 326.9236 -242.2814 313.0443 C-240.6175 310.3897 -239.1463 307.6465 -237.6875 304.875 C-236.7931 303.2492 -235.8973 301.6242 -235 300 C-230.6142 292.0117 -226.3455 283.9703 -222.1401 275.8857 C-218.8776 269.631 -215.5221 263.4325 -212.125 257.25 C-206.0717 246.2225 -200.2791 235.066 -194.499 223.8936 C-187.6132 210.6019 -180.5507 197.4096 -173.3945 184.2617 C-171.035 179.9224 -168.703 175.5696 -166.3867 171.207 C-165.7987 170.1051 -165.2106 169.0032 -164.6047 167.8679 C-163.4724 165.7449 -162.3457 163.6189 -161.2253 161.4895 C-160.7153 160.5365 -160.2052 159.5835 -159.6797 158.6016 C-159.2335 157.7593 -158.7873 156.9171 -158.3276 156.0493 C-157 154 -157 154 -154 152 C-145.4062 156.7658 -136.9089 161.6165 -128.5703 166.8203 C-123.3129 170.03 -117.9703 173.0891 -112.6218 176.144 C-109.1836 178.1162 -105.8446 180.1052 -102.5586 182.3281 C-100.2304 184.1823 -100.2304 184.1823 -98 184 C-97.5782 183.1761 -97.1563 182.3523 -96.7217 181.5034 C-89.504 167.4225 -82.2818 153.3533 -74.647 139.4927 C-70.2258 131.4544 -65.9199 123.3562 -61.625 115.25 C-56.4048 105.4005 -51.167 95.5612 -45.875 85.75 C-45.3118 84.7055 -44.7487 83.6609 -44.1685 82.5847 C-43.0287 80.471 -41.8889 78.3573 -40.749 76.2437 C-32.0223 60.0594 -23.3718 43.8456 -14.9487 27.501 C-10.1538 18.2261 -5.1518 9.0809 0 0 Z ' transform='translate%28588,218%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.2335 10.8845 0.4103 21.7681 0.5181 32.6546 C0.5699 37.7118 0.64 42.7673 0.7544 47.8235 C0.8644 52.7191 0.9231 57.613 0.9488 62.5097 C0.967 64.3615 1.0026 66.2132 1.0573 68.0643 C1.4497 81.9156 -1.5434 91.3023 -8.8268 103.0892 C-10.3557 105.5793 -11.737 108.1399 -13.1094 110.7188 C-13.9888 112.3129 -14.869 113.9067 -15.75 115.5 C-20.2933 123.7697 -24.6781 132.1127 -29 140.5 C-33.1821 148.6133 -37.4158 156.6883 -41.8125 164.6875 C-46.7832 173.7314 -51.6605 182.8229 -56.5 191.9375 C-56.8656 192.626 -57.2312 193.3144 -57.6079 194.0237 C-62.2153 202.7039 -66.7845 211.4031 -71.3125 220.125 C-75.5119 228.2113 -79.8225 236.2291 -84.2068 244.2166 C-89.3481 253.5971 -94.3725 263.0394 -99.3936 272.4846 C-103.2204 279.6798 -107.0791 286.8556 -111 294 C-114.5485 293.1129 -116.6094 292.2206 -119.6914 290.4023 C-120.6239 289.8553 -121.5564 289.3083 -122.5171 288.7446 C-123.5221 288.1483 -124.5271 287.5519 -125.5625 286.9375 C-127.1241 286.0198 -127.1241 286.0198 -128.7173 285.0835 C-134.6652 281.5828 -140.5943 278.0507 -146.5195 274.5117 C-147.7466 273.7803 -148.9737 273.0488 -150.238 272.2952 C-152.6412 270.8612 -155.0418 269.423 -157.4397 267.9802 C-158.5295 267.3293 -159.6193 266.6784 -160.7422 266.0078 C-161.7101 265.4266 -162.678 264.8454 -163.6753 264.2466 C-165.8541 262.8425 -165.8541 262.8425 -168 263 C-168.3613 263.7027 -168.7225 264.4054 -169.0947 265.1294 C-175.7676 278.0936 -182.4963 291.0143 -189.5283 303.7876 C-193.2885 310.6398 -196.913 317.5558 -200.5 324.5 C-204.5525 332.3455 -208.6791 340.1393 -212.9375 347.875 C-217.3509 355.8976 -221.6166 363.9867 -225.8125 372.125 C-230.8505 381.8899 -235.9496 391.6196 -241.125 401.3125 C-242.0663 403.0829 -242.0663 403.0829 -243.0266 404.8892 C-243.9145 406.547 -243.9145 406.547 -244.8203 408.2383 C-245.5979 409.6929 -245.5979 409.6929 -246.3911 411.177 C-248.1327 414.2329 -249.926 417.1576 -252 420 C-252.66 420 -253.32 420 -254 420 C-254.0236 392.0927 -254.0411 364.1855 -254.0518 336.2782 C-254.0569 323.3151 -254.0639 310.352 -254.0754 297.3889 C-254.0855 286.0664 -254.0919 274.7438 -254.0941 263.4212 C-254.0954 257.4478 -254.0983 251.4744 -254.1057 245.501 C-254.1223 231.3855 -254.1007 217.2709 -254.017 203.1557 C-253.9996 199.9338 -253.9884 196.7118 -253.9776 193.4899 C-253.957 188.2228 -253.9085 182.9566 -253.8398 177.6899 C-253.8178 175.735 -253.804 173.78 -253.7991 171.825 C-253.7906 169.142 -253.751 166.4612 -253.7036 163.7786 C-253.7078 163.0025 -253.7121 162.2264 -253.7164 161.4269 C-253.5526 155.2134 -251.5532 151.8936 -248 147 C-245.6714 144.894 -245.6714 144.894 -243.3047 143.3672 C-242.4317 142.7971 -241.5587 142.227 -240.6592 141.6396 C-239.7817 141.0986 -238.9041 140.5575 -238 140 C-237.2024 139.5079 -236.4048 139.0158 -235.583 138.5088 C-233.1121 137.0202 -230.6223 135.5689 -228.125 134.125 C-219.4408 129.0525 -210.8314 123.8693 -202.25 118.625 C-192.0633 112.4099 -181.7882 106.3764 -171.4319 100.4492 C-163.5088 95.9028 -155.6954 91.1994 -147.9109 86.4204 C-138.749 80.8108 -129.4798 75.3897 -120.2048 69.9697 C-112.4654 65.4468 -104.7515 60.8897 -97.0791 56.2539 C-92.4332 53.4519 -87.7779 50.6655 -83.125 47.875 C-80.957 46.5743 -78.789 45.2735 -76.6211 43.9727 C-72.2591 41.3555 -67.8971 38.7383 -63.5352 36.1211 C-62.4835 35.4901 -61.4319 34.8591 -60.3484 34.209 C-58.2431 32.9459 -56.1378 31.6828 -54.0325 30.4199 C-49.2729 27.5647 -44.514 24.7085 -39.7578 21.8477 C-35.7048 19.4101 -31.6478 16.9793 -27.5889 14.5518 C-25.7415 13.4445 -23.896 12.3341 -22.0518 11.2217 C-19.0173 9.3917 -15.9778 7.5703 -12.9375 5.75 C-11.5169 4.8893 -11.5169 4.8893 -10.0676 4.0112 C-9.1881 3.4867 -8.3085 2.9623 -7.4023 2.4219 C-6.6237 1.9536 -5.845 1.4854 -5.0427 1.0029 C-3 0 -3 0 0 0 Z ' transform='translate%28590,50%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "sloptrade",
-        "names": {
-          "name": "SlopTrade",
-          "command": "sloptrade",
-          "formerly": [
-            "Invest"
-          ]
-        },
-        "category": "Trading system build prompt",
-        "tagline": "Design an AI trading system that fails closed.",
-        "short": "Build prompt that turns a coding agent into a trading-system designer",
-        "meta": "SlopTrade is a build prompt your coding agent turns into a personal stock trading system, where your rules approve every order.",
-        "medium": "SlopTrade is a build prompt your coding agent turns into a personal stock trading system. AI writes the research and scans for setups, and your rules approve every order.",
-        "long": "SlopTrade is a build prompt: a researched architecture and specification your coding agent turns into a personal stock trading system. AI writes the research and scans for setups; your rules approve every order, and the system fails closed when evidence is missing or limits are hit. You end with a trading system you built and can inspect end to end, not a black box that trades for you. The prompt and its architecture are documented in the repository.",
-        "hero": {
-          "heading": "AI writes the research. Your rules make the trade.",
-          "summary": "A researched build prompt your coding agent turns into a personal trading system where your rules approve every order.",
-          "primaryAction": "Get the prompt",
-          "secondaryAction": "See how it works"
-        },
-        "headings": {
-          "home-desk": "See the desk you'll own",
-          "home-system": "What your agent builds",
-          "home-sequence": "Start with order placement off",
-          "home-access": "Who can do what",
-          "home-comparison": "How it compares",
-          "home-running": "What you need to run it",
-          "home-buy": "Buy the prompt",
-          "home-notes": "Read the design notes",
-          "home-questions": "Questions"
-        },
-        "status": {
-          "default": "proposed",
-          "tagline": "authored"
-        },
-        "reviewedOn": "2026-09-24"
-      }
-    },
     "hraness": {
       "id": "hraness",
       "name": "Hraness",
@@ -1158,43 +886,6 @@
         "status": {
           "default": "proposed",
           "tagline": "authored"
-        },
-        "reviewedOn": "2026-09-24"
-      }
-    },
-    "sleepyland": {
-      "id": "sleepyland",
-      "name": "Sleepyland",
-      "oneLiner": "Free sleep sounds made in your browser, with sourced sleep guides",
-      "brandDescription": "Sleepyland is a free sound machine that makes brown, pink, or white noise and ocean waves in your browser, with sourced guides to sleep.",
-      "canonicalUrl": "https://sleepy.land",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 728 612' width='728' height='612'%3E%3Cpath d='M0 0 C1.3617 0.0056 2.7235 0.0113 4.1265 0.0171 C14.3166 0.1397 23.817 0.8887 33.75 3.3125 C34.5708 3.5112 35.3916 3.7099 36.2373 3.9146 C65.0301 11.0513 89.1083 24.9483 110.75 45.3125 C111.3894 45.8874 112.0288 46.4623 112.6875 47.0547 C123.8307 57.5015 132.8163 70.7999 139.75 84.3125 C140.4268 85.6145 141.1035 86.9164 141.8008 88.2578 C149.0713 102.6965 155.75 119.9567 155.75 136.3125 C156.7603 136.2889 156.7603 136.2889 157.791 136.2649 C189.0997 135.6326 216.1936 142.0982 240.75 162.3125 C241.5247 162.9235 242.2995 163.5345 243.0977 164.1641 C264.1447 181.6104 276.5635 209.2516 279.2891 236.0547 C281.6782 265.6483 273.1655 294.8754 253.9062 317.6797 C251.2416 320.6152 248.5162 323.473 245.75 326.3125 C244.8973 327.2754 244.8973 327.2754 244.0273 328.2578 C227.786 346.1191 200.4345 355.8548 177.0238 357.5884 C173.2579 357.6968 169.503 357.7177 165.7356 357.7002 C163.6026 357.7083 163.6026 357.7083 161.4264 357.7165 C157.5295 357.7308 153.6328 357.7268 149.7359 357.7193 C145.5135 357.7146 141.2912 357.7271 137.0689 357.7374 C128.8166 357.7545 120.5644 357.7554 112.3121 357.7501 C105.5992 357.7461 98.8864 357.7476 92.1735 357.7529 C90.7358 357.754 90.7358 357.754 89.2691 357.7552 C87.3215 357.7567 85.3738 357.7582 83.4262 357.7598 C65.1968 357.7735 46.9675 357.7681 28.7381 357.7566 C12.0934 357.7467 -4.5511 357.7596 -21.1957 357.7835 C-38.325 357.808 -55.4543 357.8175 -72.5837 357.8109 C-82.185 357.8074 -91.7863 357.8095 -101.3877 357.8271 C-109.5606 357.8419 -117.7334 357.8424 -125.9063 357.825 C-130.0686 357.8166 -134.2307 357.8143 -138.393 357.8297 C-173.8478 357.9515 -202.1954 352.0585 -229.25 327.3125 C-230.0724 326.5726 -230.8948 325.8327 -231.7422 325.0703 C-251.9325 305.9978 -262.2767 278.5975 -263.5352 251.2539 C-264.263 224.2558 -256.0945 195.3387 -237.25 175.3125 C-236.7605 174.7835 -236.271 174.2545 -235.7666 173.7095 C-214.2192 150.5972 -188.4464 138.7222 -157.25 135.3125 C-157.1049 134.685 -156.9598 134.0574 -156.8103 133.4109 C-145.9504 86.9633 -123.4958 48.3931 -82.2529 22.5176 C-68.8653 14.4628 -54.309 8.4118 -39.1875 4.5625 C-38.4092 4.3637 -37.631 4.165 -36.8291 3.9602 C-24.6229 1.0196 -12.5372 -0.0548 0 0 Z M-69.875 111.2344 C-89.0731 134.8721 -97.4685 164.1303 -95.25 194.3125 C-92.6412 217.305 -83.514 237.9131 -68.25 255.3125 C-67.5758 256.1427 -66.9016 256.9728 -66.207 257.8281 C-49.6548 277.579 -22.6062 289.9087 2.75 292.3125 C31.7236 294.0622 60.7117 288.0118 83.2305 268.6328 C87.1966 264.9803 91.0215 261.2067 94.75 257.3125 C91.5038 255.6894 88.6138 257.0325 85.125 257.75 C61.4676 262.2058 37.2417 257.8579 16.9766 244.6328 C-3.6536 229.7971 -17.9781 209.79 -22.792 184.4607 C-24.9976 169.2998 -24.3896 152.7738 -19.25 138.3125 C-18.6893 136.725 -18.6893 136.725 -18.1172 135.1055 C-9.056 111.7324 7.3173 94.7609 29.7812 84.0078 C35.3181 81.6427 40.9272 79.828 46.75 78.3125 C46.75 77.6525 46.75 76.9925 46.75 76.3125 C3.8735 64.7772 -40.1682 78.1678 -69.875 111.2344 Z ' transform='translate%28313.25,203.6875%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C1.0112 -0.0051 2.0224 -0.0101 3.0643 -0.0154 C4.1785 -0.0159 5.2927 -0.0164 6.4406 -0.0169 C7.6218 -0.0213 8.8029 -0.0257 10.0199 -0.0302 C13.9995 -0.0436 17.9792 -0.0497 21.9589 -0.0559 C24.8035 -0.0638 27.648 -0.072 30.4926 -0.0806 C39.0447 -0.1046 47.5967 -0.1198 56.1488 -0.1327 C58.5642 -0.1364 60.9796 -0.1404 63.3949 -0.1444 C78.3933 -0.1697 93.3916 -0.1917 108.39 -0.2042 C111.8641 -0.2071 115.3383 -0.2101 118.8124 -0.2131 C120.1076 -0.2142 120.1076 -0.2142 121.429 -0.2153 C135.417 -0.228 149.4049 -0.2612 163.3929 -0.3029 C177.7533 -0.3453 192.1135 -0.3689 206.4739 -0.3741 C214.5371 -0.3775 222.6001 -0.3893 230.6632 -0.4222 C238.2482 -0.4531 245.8327 -0.4586 253.4178 -0.4468 C256.2025 -0.4466 258.9873 -0.4549 261.772 -0.4725 C265.5727 -0.4951 269.3721 -0.4869 273.1728 -0.471 C274.2758 -0.4849 275.3788 -0.4988 276.5153 -0.5131 C283.5912 -0.44 287.5356 0.7143 293.1242 5.137 C296.8378 10.7822 297.7105 15.3741 297.6417 22.1199 C297.6523 23.4093 297.6523 23.4093 297.663 24.7248 C297.6805 27.5422 297.669 30.3586 297.6554 33.1761 C297.6581 35.1457 297.662 37.1153 297.667 39.0849 C297.6729 43.202 297.6644 47.3188 297.6456 51.4358 C297.6228 56.7063 297.636 61.9759 297.6599 67.2462 C297.6744 71.3092 297.6698 75.3721 297.6594 79.4351 C297.6568 81.3783 297.66 83.3215 297.6693 85.2647 C297.6795 87.9812 297.664 90.6965 297.6417 93.4129 C297.6498 94.211 297.6579 95.009 297.6663 95.8313 C297.5508 103.4673 293.8647 107.5375 288.8742 112.887 C285.8977 116.1394 283.04 119.4239 280.3117 122.887 C275.6105 128.845 270.6505 134.5741 265.693 140.3182 C263.1436 143.2738 260.6022 146.2363 258.0617 149.1995 C257.5651 149.7785 257.0686 150.3576 256.557 150.9542 C251.3846 156.9913 246.2534 163.0631 241.1242 169.137 C239.2911 171.3039 237.4577 173.4705 235.6242 175.637 C234.7192 176.7069 233.8143 177.7769 232.882 178.8792 C231.0245 181.0735 229.1651 183.2662 227.3039 185.4573 C222.9878 190.5428 218.6979 195.6417 214.4992 200.8245 C210.9219 205.2228 207.1782 209.43 203.3624 213.6214 C200.3154 217.046 197.4467 220.6031 194.5617 224.1644 C190.353 229.297 186.005 234.3106 181.6725 239.3387 C179.1512 242.267 176.6379 245.2022 174.1242 248.137 C171.0931 251.6757 168.0602 255.2127 165.0187 258.7425 C158.9506 265.7913 152.9708 272.9025 147.1242 280.137 C142.9297 279.2382 138.7714 278.3137 134.632 277.1839 C124.1515 274.3582 113.9209 273.0289 103.1242 272.137 C101.0077 267.4528 99.3158 262.7603 97.7785 257.8672 C94.4607 247.3529 90.43 237.8042 85.1242 228.137 C84.5828 227.1174 84.0414 226.0977 83.4835 225.0472 C79.6415 218.0997 75.0572 211.8351 70.2111 205.5667 C67.8301 202.4801 65.8759 199.6405 64.1242 196.137 C64.8628 195.2772 65.6014 194.4174 66.3624 193.5315 C79.1726 178.6458 79.1726 178.6458 91.6867 163.512 C95.5138 158.8049 99.5584 154.3401 103.6632 149.8753 C106.7993 146.3858 109.7447 142.7655 112.6789 139.1058 C114.5206 136.8697 116.3882 134.6996 118.3195 132.5433 C119.1405 131.6177 119.1405 131.6177 119.9782 130.6734 C121.0514 129.4679 122.1341 128.2706 123.2272 127.0831 C126.3711 123.5309 127.9543 120.9273 128.1242 116.137 C126.4451 114.4579 124.3818 115.0087 122.0777 115.0057 C120.9842 115.0017 119.8907 114.9977 118.7641 114.9936 C117.5537 114.9941 116.3434 114.9946 115.0963 114.9952 C113.8297 114.9917 112.5631 114.9882 111.2581 114.9846 C108.496 114.9773 105.7339 114.9719 102.9717 114.9683 C98.601 114.9612 94.2305 114.9456 89.8598 114.927 C77.4287 114.8744 64.9977 114.8261 52.5665 114.8111 C44.9726 114.8018 37.379 114.7717 29.7852 114.7298 C26.8883 114.7174 23.9913 114.7123 21.0944 114.7146 C17.0387 114.7169 12.9839 114.6948 8.9284 114.667 C7.1311 114.6769 7.1311 114.6769 5.2974 114.687 C-2.699 114.5973 -7.2638 113.5538 -13.1883 107.9495 C-18.5214 99.0611 -17.1857 87.8234 -17.1766 77.8206 C-17.1805 76.0366 -17.1848 74.2526 -17.1896 72.4686 C-17.197 68.7425 -17.1968 65.0166 -17.1915 61.2906 C-17.1857 56.5306 -17.2027 51.771 -17.2259 47.011 C-17.2406 43.3314 -17.2415 39.6519 -17.2383 35.9723 C-17.2389 34.2178 -17.2441 32.4632 -17.2542 30.7086 C-17.2666 28.2515 -17.2597 25.7951 -17.2481 23.3379 C-17.2488 21.9439 -17.2494 20.5499 -17.2501 19.1136 C-16.5133 11.2852 -13.8045 6.2011 -7.8758 1.137 C-4.9426 0.1593 -3.0553 0.0081 0 0 Z ' transform='translate%28380.87583446502686,50.862985610961914%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C4.6215 5.9593 5.1516 10.5409 5.1611 17.8743 C5.1661 18.7819 5.1711 19.6895 5.1762 20.6247 C5.1908 23.6313 5.1976 26.6379 5.2031 29.6445 C5.2089 31.7334 5.2146 33.8222 5.2204 35.9111 C5.2309 40.2933 5.2368 44.6756 5.2402 49.0579 C5.2457 54.6702 5.2697 60.2822 5.2982 65.8944 C5.3168 70.2104 5.322 74.5264 5.3236 78.8424 C5.3266 80.9113 5.3346 82.9801 5.3478 85.0489 C5.3648 87.9453 5.3629 90.8411 5.3564 93.7375 C5.3657 94.5902 5.3749 95.4429 5.3844 96.3214 C5.3376 102.9942 3.9649 106.9894 -0.6875 111.75 C-8.1582 116.8245 -16.3455 116.283 -25.0625 116.1875 C-26.8922 116.1778 -26.8922 116.1778 -28.7588 116.168 C-40.1863 116.073 -51.59 115.6168 -63 115 C-63.0595 114.2722 -63.1189 113.5445 -63.1802 112.7947 C-66.646 72.1273 -78.0986 37.9661 -110 10.6875 C-115.011 6.6297 -120.2531 3.0408 -125.6992 -0.4062 C-128 -2 -128 -2 -129 -4 C-114.5698 -4.1541 -100.1395 -4.3023 -85.7092 -4.443 C-79.0081 -4.5085 -72.307 -4.576 -65.606 -4.6482 C-59.1351 -4.7178 -52.6641 -4.7821 -46.1932 -4.8427 C-43.7285 -4.8667 -41.2639 -4.8926 -38.7992 -4.9205 C-35.3384 -4.9594 -31.8775 -4.9913 -28.4165 -5.0217 C-26.8995 -5.0411 -26.8995 -5.0411 -25.3519 -5.061 C-7.0215 -5.1959 -7.0215 -5.1959 0 0 Z ' transform='translate%28673,342%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "sleepyland",
-        "names": {
-          "name": "Sleepyland"
-        },
-        "category": "Sleep sound machine",
-        "tagline": "Steady sound for sleep, made in your browser.",
-        "short": "Free sleep sounds made in your browser, with sourced sleep guides",
-        "meta": "Sleepyland is a free sound machine that makes brown, pink, or white noise and ocean waves in your browser, with sourced guides to sleep.",
-        "medium": "Sleepyland is a free sound machine that makes brown, pink, or white noise and ocean waves in your browser as you listen, with no recordings, account, or ads. Beside it are sourced guides to sleep.",
-        "long": "Sleepyland is a free sound machine that runs in your browser. Press play and it makes brown, pink, or white noise and ocean surf on your device as you listen, with no recordings to download and no account to create. Start from Sleep, Relax, or Focus, then tune the noise color, warmth, volumes, and the time between waves. Beside the sound machine, Sleepyland publishes short guides to sleep, sound, and light that link every source. It is built by Hraness.",
-        "hero": {
-          "heading": "Steady sound for sleep, made in your browser.",
-          "summary": "Press play for deep brown noise and slow ocean waves, made on your device as you listen. Free, no account, and every guide links its sources.",
-          "primaryAction": "Play sound",
-          "secondaryAction": "Read the guides"
-        },
-        "headings": {
-          "home-search-title": "Free Brown, Pink & White Noise and Ocean Waves | Sleepyland"
-        },
-        "status": {
-          "default": "proposed"
         },
         "reviewedOn": "2026-09-24"
       }
@@ -1336,79 +1027,6 @@
         "reviewedOn": "2026-09-24"
       }
     },
-    "act60": {
-      "id": "act60",
-      "name": "act60.me",
-      "oneLiner": "Estimate Act 60 savings after real costs, with sourced guides and a day tracker",
-      "brandDescription": "act60.me estimates Puerto Rico Act 60 savings after fees and yearly costs. Sourced guides cover applying, residency, and moving; a private tracker counts days.",
-      "canonicalUrl": "https://act60.me",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 855 856' width='855' height='856'%3E%3Cpath d='M0 0 C1.753 -0.0046 3.506 -0.0099 5.2589 -0.0159 C8.9194 -0.0248 12.5796 -0.0224 16.24 -0.0125 C20.9045 -0.001 25.5683 -0.0212 30.2327 -0.0504 C33.849 -0.0688 37.465 -0.0684 41.0813 -0.0627 C42.7999 -0.0626 44.5185 -0.0685 46.2371 -0.081 C60.2263 -0.1684 70.4585 1.1427 80.75 11.1406 C88.6759 19.5538 91.577 27.6715 91.2539 39.2227 C90.3197 47.949 86.3212 54.5601 79.9102 60.4336 C71.8054 66.9039 63.0404 68.308 52.9102 69.4336 C52.9102 84.9436 52.9102 100.4536 52.9102 116.4336 C56.6742 116.3872 60.4383 116.3408 64.3164 116.293 C68.0501 116.2616 71.7838 116.2374 75.5176 116.2139 C78.0697 116.194 80.6218 116.1669 83.1738 116.1318 C114.6775 115.7101 143.7566 120.495 171.9102 135.4336 C170.042 139.1699 168.5701 141.0129 165.6633 143.8916 C164.7851 144.7664 163.907 145.6412 163.0022 146.5425 C162.0501 147.4811 161.0981 148.4197 160.1172 149.3867 C159.1378 150.3609 158.1584 151.3351 157.1493 152.3388 C154.0118 155.4585 150.8677 158.5715 147.7227 161.6836 C144.5963 164.7823 141.4714 167.8824 138.3495 170.9855 C136.4068 172.9161 134.4614 174.844 132.5129 176.7689 C127.9651 181.2834 123.5602 185.8451 119.3892 190.7106 C115.8799 194.7987 112.1023 198.6352 108.3477 202.4961 C107.5233 203.3746 106.6989 204.2531 105.8496 205.1582 C105.0433 205.9826 104.237 206.8069 103.4062 207.6562 C102.6862 208.4066 101.9662 209.1569 101.2244 209.9299 C98.9102 211.4336 98.9102 211.4336 95.9111 211.2742 C93.3247 210.5497 90.8814 209.7792 88.3984 208.7617 C87.5676 208.4293 86.7368 208.0969 85.8809 207.7544 C85.0037 207.401 84.1264 207.0477 83.2227 206.6836 C40.8023 190.0885 -4.3831 190.935 -46.4395 208.2563 C-54.0474 211.6356 -61.0896 215.956 -68.0898 220.4336 C-69.1371 221.0888 -69.1371 221.0888 -70.2056 221.7573 C-81.3463 228.7734 -90.7502 237.1929 -100.0898 246.4336 C-100.6894 247.0127 -101.289 247.5918 -101.9067 248.1885 C-131.3566 276.9228 -147.7065 320.8107 -148.5115 361.4363 C-148.694 404.5266 -134.4971 445.7311 -106.0898 478.4336 C-105.2984 479.3591 -104.5069 480.2847 -103.6914 481.2383 C-97.998 487.722 -91.9433 493.2052 -85.0898 498.4336 C-83.9452 499.3205 -82.8005 500.2073 -81.6211 501.1211 C-59.897 517.6999 -34.9566 528.4619 -8.0898 533.4336 C-6.8111 533.6772 -5.5323 533.9209 -4.2148 534.1719 C38.5657 540.8337 82.6796 529.8583 118.043 505.2539 C121.0552 503.0439 123.9921 500.7665 126.9102 498.4336 C127.9698 497.5905 129.0294 496.7475 130.1211 495.8789 C163.2377 468.7406 183.8883 429.7025 190.3477 387.5586 C193.5187 354.2277 189.0081 319.6295 173.9102 289.4336 C173.8426 285.481 175.1232 284.1841 177.7258 281.1369 C178.9874 279.8638 180.2601 278.6017 181.5413 277.3484 C182.2339 276.6552 182.9266 275.9619 183.6402 275.2477 C185.9305 272.9602 188.2346 270.6872 190.5391 268.4141 C192.1303 266.8302 193.7207 265.2455 195.3103 263.66 C199.4953 259.4902 203.6922 255.3326 207.8917 251.1774 C212.1753 246.9347 216.4475 242.6808 220.7207 238.4277 C229.1061 230.0852 237.5042 221.7554 245.9102 213.4336 C248.9102 214.4336 248.9102 214.4336 250.9609 218.2734 C251.7291 219.9663 252.482 221.6661 253.2227 223.3711 C253.8187 224.7288 253.8187 224.7288 254.4268 226.114 C259.7468 238.4481 263.721 250.8263 266.6602 263.9336 C266.9584 265.2481 266.9584 265.2481 267.2627 266.5891 C270.2886 280.8764 271.218 295.4371 271.5195 310.0039 C271.5377 310.7853 271.5559 311.5668 271.5747 312.3719 C272.1041 335.1878 272.1331 358.0125 272.1504 380.8335 C272.1559 387.0965 272.1801 393.3594 272.2084 399.6223 C272.2272 404.5455 272.2322 409.4686 272.2337 414.3918 C272.2367 416.6998 272.2445 419.0077 272.2579 421.3156 C272.5478 475.0599 256.0264 523.5906 217.9102 562.4336 C216.2487 564.1055 214.582 565.7721 212.9102 567.4336 C212.3891 567.9739 211.8681 568.5142 211.3313 569.0708 C207.0972 573.4205 202.6265 577.2147 197.7852 580.8711 C197.0402 581.4353 196.2952 581.9995 195.5276 582.5808 C163.6939 606.4024 126.3463 617.9865 86.875 618.9883 C86.0837 619.0092 85.2924 619.0302 84.4771 619.0517 C64.2375 619.5756 43.9963 619.5862 23.7512 619.564 C18.5023 619.5582 13.2534 619.5617 8.0045 619.5674 C-10.4295 619.5845 -28.8622 619.5984 -47.2891 619.0273 C-49.0061 618.9771 -49.0061 618.9771 -50.7579 618.9258 C-76.0281 617.9943 -101.4037 611.5952 -124.0898 600.4336 C-124.8195 600.0849 -125.5491 599.7362 -126.3008 599.377 C-144.2339 590.7576 -159.8644 579.3193 -174.0898 565.4336 C-174.9123 564.673 -175.7347 563.9125 -176.582 563.1289 C-206.2481 534.9793 -223.1182 495.2591 -229.0898 455.4336 C-229.2596 454.369 -229.4293 453.3045 -229.6042 452.2077 C-230.0664 448.616 -230.221 445.2015 -230.2303 441.583 C-230.2389 439.5694 -230.2389 439.5694 -230.2476 437.5152 C-230.2487 436.0585 -230.2498 434.6019 -230.251 433.1011 C-230.2556 431.5381 -230.2606 429.9751 -230.266 428.4121 C-230.2791 424.1757 -230.2856 419.9393 -230.29 415.7029 C-230.293 413.0465 -230.2971 410.3901 -230.3015 407.7337 C-230.3152 399.3952 -230.3249 391.0567 -230.3287 382.7182 C-230.3332 373.1453 -230.3507 363.5726 -230.3797 353.9998 C-230.4015 346.5692 -230.4115 339.1387 -230.4128 331.7081 C-230.4138 327.2859 -230.4195 322.8639 -230.4376 318.4417 C-230.5241 295.996 -230.2517 274.2615 -223.7773 252.5586 C-223.4703 251.504 -223.1633 250.4494 -222.8469 249.3628 C-215.0319 223.0596 -201.7976 200.279 -184.0898 179.4336 C-183.2442 178.3611 -182.3986 177.2886 -181.5273 176.1836 C-178.999 173.3311 -176.3329 170.9286 -173.4297 168.4688 C-171.7385 166.9978 -170.0895 165.4779 -168.4688 163.9297 C-161.1689 156.9666 -153.5064 151.189 -145.0674 145.7183 C-143.2369 144.5291 -141.4242 143.3126 -139.6133 142.0938 C-112.9805 124.9898 -79.6491 116.1801 -48.1758 116.3359 C-46.5323 116.3381 -46.5323 116.3381 -44.8556 116.3402 C-41.392 116.3458 -37.9284 116.3583 -34.4648 116.3711 C-32.1016 116.3761 -29.7383 116.3807 -27.375 116.3848 C-21.6132 116.3949 -15.8516 116.4145 -10.0898 116.4336 C-10.0898 100.5936 -10.0898 84.7536 -10.0898 68.4336 C-12.7298 68.4336 -15.3698 68.4336 -18.0898 68.4336 C-28.7388 66.1707 -36.6367 61.3597 -42.8398 52.4258 C-47.7459 44.6067 -48.9269 36.2969 -47.4648 27.2461 C-46.2992 22.2843 -44.0786 18.5133 -41.0898 14.4336 C-40.5123 13.5673 -39.9348 12.7011 -39.3398 11.8086 C-28.4424 0.3058 -14.8933 -0.0342 0 0 Z ' transform='translate%28289.08984375,177.56640625%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C37.8811 -0.6219 70.3217 6.2574 98.7617 32.7891 C121.7712 55.5175 133.0308 84.3908 133.25 116.5 C133.2255 125.1463 132.6039 133.4887 131 142 C130.664 143.9996 130.33 145.9994 130 148 C130.6548 147.5643 131.3097 147.1286 131.9844 146.6797 C156.4513 130.714 183.3795 125.289 212.168 131.0898 C239.7701 137.6457 262.1107 155.0954 277 179 C286.217 195.2245 291.5421 211.566 294 230 C289.7523 227.8761 287.9147 225.9114 284.8125 222.375 C266.4453 202.1036 240.3322 187.7833 213 184 C211.5975 183.7731 210.195 183.5462 208.75 183.3125 C207.1689 183.1786 205.5847 183.0801 204 183 C202.7303 182.9355 201.4605 182.8711 200.1523 182.8047 C183.0835 182.3567 165.4081 185.2959 150 193 C150.6182 193.095 151.2364 193.19 151.8733 193.2878 C182.4124 198.0636 210.647 208.8181 230.0625 234.2227 C242.9949 252.7608 249.6083 273.0332 249.4375 295.5625 C249.4261 297.6713 249.4261 297.6713 249.4146 299.8228 C249.1108 319.1247 245.0902 338.7907 236 356 C235.34 356 234.68 356 234 356 C233.853 354.7277 233.7061 353.4554 233.5547 352.1445 C229.8943 322.5837 220.3017 292.2124 197.582 271.6016 C196 270 196 270 196 268 C194.68 267.34 193.36 266.68 192 266 C190.6778 264.8466 189.3888 263.6546 188.125 262.4375 C179.183 254.4071 169.0115 248.8041 158.25 243.625 C157.3873 243.2081 156.5246 242.7913 155.6357 242.3618 C149.8878 239.67 144.1256 237.655 138 236 C138.678 236.62 139.3561 237.2401 140.0547 237.8789 C155.4077 252.4877 165.9213 271.418 171 292 C171.3364 293.3342 171.3364 293.3342 171.6797 294.6953 C176.4575 317.6679 172.4332 342.1365 160.0859 362.0938 C155.5759 368.4905 150.3993 374.3427 145 380 C144.2502 380.8 144.2502 380.8 143.4854 381.6162 C139.0069 386.2704 134.1461 390.0349 128.875 393.75 C128.09 394.3133 127.3049 394.8766 126.4961 395.457 C115.9217 403 115.9217 403 113 403 C113.5992 398.9673 114.9505 395.3545 116.4253 391.5664 C127.5238 363.0357 127.5651 332.2467 119 303 C118.6404 301.7573 118.2807 300.5147 117.9102 299.2344 C111.387 278.2374 99.7133 259.3831 84 244 C83.3013 244.7219 82.6027 245.4438 81.8828 246.1875 C80.9727 247.1156 80.0627 248.0437 79.125 249 C77.7676 250.3922 77.7676 250.3922 76.3828 251.8125 C74 254 74 254 72 254 C72 254.66 72 255.32 72 256 C71.34 256 70.68 256 70 256 C70 256.66 70 257.32 70 258 C67.5335 260.6842 64.9657 263.0276 62.125 265.3125 C58.8656 268.1156 56.2355 271.1117 53.5156 274.4258 C53.0155 274.9453 52.5153 275.4648 52 276 C51.34 276 50.68 276 50 276 C49.34 277.32 48.68 278.64 48 280 C46.2866 281.4871 44.5697 282.9712 42.8125 284.4062 C40.7077 286.1745 40.7077 286.1745 38.1875 289.375 C37.4656 290.2412 36.7437 291.1075 36 292 C35.34 292 34.68 292 34 292 C33.34 293.32 32.68 294.64 32 296 C30 298.25 30 298.25 28 300 C27.34 300 26.68 300 26 300 C25.34 301.32 24.68 302.64 24 304 C21.9189 306.2492 19.8195 308.4129 17.6367 310.5586 C17.0077 311.1848 16.3787 311.8109 15.7307 312.4561 C13.7209 314.4546 11.7044 316.4461 9.6875 318.4375 C8.3413 319.7736 6.9956 321.1102 5.6504 322.4473 C2.62 325.4578 -0.4126 328.466 -3.4567 331.4626 C-4.884 332.8844 -6.2798 334.3376 -7.6726 335.7932 C-10 338 -10 338 -14 340 C-14 340.66 -14 341.32 -14 342 C-14.66 342 -15.32 342 -16 342 C-16.66 343.32 -17.32 344.64 -18 346 C-20.0584 348.2518 -22.1384 350.4167 -24.2989 352.5663 C-25.2791 353.5534 -25.2791 353.5534 -26.2792 354.5604 C-28.4745 356.7683 -30.6769 358.9691 -32.8794 361.1699 C-34.4533 362.7498 -36.0268 364.3301 -37.5999 365.9108 C-41.8783 370.2069 -46.1633 374.4965 -50.4499 378.7844 C-54.0274 382.3638 -57.6022 385.946 -61.1771 389.528 C-69.6126 397.9797 -78.0537 406.4258 -86.498 414.8687 C-95.2083 423.5777 -103.9074 432.2979 -112.6013 441.0234 C-120.0652 448.5134 -127.5367 455.9957 -135.0143 463.472 C-139.4805 467.9377 -143.9435 472.4063 -148.3987 476.8828 C-152.5907 481.0941 -156.7922 485.2957 -161.0011 489.4901 C-162.5428 491.0298 -164.0812 492.5728 -165.6158 494.1196 C-167.7145 496.2337 -169.8252 498.335 -171.9392 500.4337 C-172.541 501.0458 -173.1428 501.6578 -173.7628 502.2885 C-179.7601 508.1899 -186.5996 512.1046 -195.1875 512.25 C-203.3238 512.1534 -209.1584 509.7088 -215 504 C-221.044 496.1092 -221.7137 488.6704 -221 479 C-218.0762 465.9405 -203.6477 455.5141 -194.4082 446.3105 C-192.9502 444.8544 -191.4924 443.3981 -190.0348 441.9415 C-186.9146 438.8245 -183.7929 435.7091 -180.67 432.5948 C-175.7347 427.6731 -170.8033 422.7476 -165.8724 417.8214 C-155.4179 407.378 -144.9592 396.9388 -134.5 386.5 C-123.1795 375.2016 -111.8598 363.9024 -100.5449 352.5984 C-95.6393 347.6977 -90.7312 342.7994 -85.8212 337.9031 C-82.7779 334.8672 -79.7366 331.8292 -76.6959 328.7907 C-75.2813 327.378 -73.866 325.9663 -72.4496 324.5554 C-70.5236 322.6365 -68.6006 320.7146 -66.6783 318.7919 C-65.8281 317.947 -65.8281 317.947 -64.9607 317.0852 C-62.1294 314.3083 -62.1294 314.3083 -60 311 C-59.34 311 -58.68 311 -58 311 C-57.34 309.68 -56.68 308.36 -56 307 C-54.5301 305.5435 -52.999 304.1475 -51.4306 302.7976 C-46.4738 298.4437 -41.7673 293.9092 -37.1096 289.239 C-36.2839 288.4151 -35.4582 287.5911 -34.6075 286.7422 C-31.9142 284.0533 -29.2246 281.3608 -26.5352 278.668 C-24.6511 276.7845 -22.7668 274.9013 -20.8824 273.0181 C-16.9515 269.0887 -13.0223 265.1574 -9.0945 261.2249 C-4.0585 256.1831 0.982 251.146 6.0239 246.1101 C9.9075 242.2301 13.7887 238.3477 17.6693 234.4645 C19.5277 232.6054 21.3869 230.7471 23.2468 228.8895 C25.8388 226.3001 28.4275 223.7075 31.0154 221.114 C31.7837 220.3477 32.552 219.5814 33.3436 218.7919 C34.0485 218.0842 34.7534 217.3765 35.4796 216.6474 C36.0907 216.0359 36.7017 215.4245 37.3313 214.7945 C39.0417 212.9552 40.5302 211.0348 42 209 C10.917 189.0337 -25.9322 182.6588 -62 190 C-72.3639 192.2849 -81.7933 196.0296 -91.4375 200.375 C-92.4323 200.821 -93.4272 201.267 -94.4521 201.7266 C-100.44 204.5151 -105.7325 207.7081 -111.0237 211.6665 C-113 213 -113 213 -115 213 C-114.4248 207.8311 -112.6651 203.519 -110.4375 198.875 C-110.0803 198.1265 -109.7232 197.3781 -109.3552 196.6069 C-97.8764 173.1055 -78.8935 153.1445 -54 144 C-25.9621 134.9289 -1.6429 136.3673 25 149 C27.3293 150.0094 29.6614 151.0123 32 152 C10.5404 120.7637 -21.8101 99.1383 -58.9795 91.3779 C-70.2061 89.4135 -81.6222 88.5139 -93 88 C-93 87.34 -93 86.68 -93 86 C-90.8251 84.3338 -88.6633 82.8097 -86.375 81.3125 C-85.3549 80.6431 -85.3549 80.6431 -84.3142 79.9602 C-60.0307 64.303 -31.6153 57.9913 -3 63.125 C24.2683 69.6523 48.7254 85.2428 64 109 C69.5146 118.297 73.7027 127.7119 77 138 C78.2602 97.1604 65.243 60.5309 38.1406 29.8984 C27.8283 19.1441 15.2595 10.6277 2.2734 3.4805 C1.5232 2.9919 0.773 2.5034 0 2 C0 1.34 0 0.68 0 0 Z ' transform='translate%28502,59%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "act60",
-        "names": {
-          "name": "act60.me",
-          "shortName": "ACT60"
-        },
-        "category": "Act 60 planner",
-        "tagline": "Model the move to Puerto Rico before you make it.",
-        "short": "Estimate Act 60 savings after real costs, with sourced guides and a day tracker",
-        "meta": "act60.me estimates Puerto Rico Act 60 savings after fees and yearly costs. Sourced guides cover applying, residency, and moving; a private tracker counts days.",
-        "medium": "act60.me estimates Puerto Rico Act 60 savings after fees and yearly costs, with every assumption and source date beside the result. Sourced guides cover applying, federal residency, and moving; a private tracker counts your presence days.",
-        "long": "Act 60 promises large Puerto Rico tax savings, but fees, yearly costs, and the federal residency rules decide the real number. act60.me models the move before you make it: a calculator that itemizes one-time and annual costs beside its assumptions, guides that cite the official sources and the date each was checked, and a private day tracker for the presence tests a calendar can measure. Investor applications filed in 2026 face a December 31 deadline; the guides say which rules changed and which still apply.",
-        "hero": {
-          "heading": "Puerto Rico Act 60 calculator",
-          "summary": "Estimate your Act 60 savings after fees and yearly costs. No account required.",
-          "primaryAction": "Estimate your savings",
-          "secondaryAction": "Choose your guide"
-        },
-        "headings": {
-          "home-search-title": "Act 60 calculator: Puerto Rico tax savings after costs | act60.me",
-          "tracker-preview-title": "See the day tracker before you sign in.",
-          "how-to-read-title": "Choose the guide for your question.",
-          "compare-title": "How act60.me compares",
-          "benefits-title": "The business and investor benefits follow different rules.",
-          "costs-title": "The estimate itemizes one-time and annual costs.",
-          "requirements-title": "Plan the application, then the years after it.",
-          "residence-title": "Three residence checks apply every year.",
-          "steps-title": "Plan the work from filing through each later year.",
-          "questions-title": "Common questions about the benefits and the move.",
-          "sources-title": "Check the rules against the official sources.",
-          "calculator-title": "Estimate your savings after costs",
-          "home-presence-tax-home-or-closer-connection": "Presence, tax home, or closer connection",
-          "home-export-services-business-treatment": "Export-services business treatment",
-          "home-individual-investor-treatment": "Individual investor treatment",
-          "home-applying-moving-and-daily-life": "Applying, moving, and daily life",
-          "home-business-chapter-or-investor-chapter": "Business chapter or investor chapter",
-          "home-grant-receipt-or-federal-residence": "Grant, receipt, or federal residence",
-          "home-service-business-profit": "Service business profit",
-          "home-investment-income-after-the-move": "Investment income after the move",
-          "home-pass-one-day-count-option": "Pass one day-count option",
-          "home-base-your-work-in-puerto-rico": "Base your work in Puerto Rico",
-          "home-make-puerto-rico-the-center-of-your-life": "Make Puerto Rico the center of your life",
-          "home-prepare-and-file-the-applications": "Prepare and file the applications",
-          "home-build-a-real-puerto-rico-life": "Build a real Puerto Rico life",
-          "home-complete-the-investor-home-commitment": "Complete the investor home commitment",
-          "home-file-and-keep-proof-every-year": "File and keep proof every year",
-          "pillar-calculator": "Calculator",
-          "pillar-requirements": "Requirements",
-          "pillar-days": "Day tracker",
-          "social-image-title": "Act 60 calculator"
-        },
-        "channels": {
-          "social": {
-            "imageDescription": "Estimate Puerto Rico Act 60 savings after fees and yearly costs"
-          }
-        },
-        "status": {
-          "default": "proposed"
-        },
-        "reviewedOn": "2026-09-24"
-      }
-    },
     "direct": {
       "id": "direct",
       "name": "Direct",
@@ -1444,56 +1062,6 @@
           "states": "open any state by url",
           "readiness": "know when the app is ready",
           "features": "test your real feature code"
-        },
-        "status": {
-          "default": "proposed"
-        },
-        "reviewedOn": "2026-09-24"
-      }
-    },
-    "clankdar": {
-      "id": "clankdar",
-      "name": "Clankdar",
-      "oneLiner": "Fresh puzzles for AI agents, scored exactly, with a signed receipt",
-      "brandDescription": "Clankdar gives AI agents fresh puzzles to solve, scores their answers exactly, and signs a receipt anyone can recheck.",
-      "canonicalUrl": "https://clankdar.com",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [
-        "botcaptcha"
-      ],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 615 621' width='615' height='621'%3E%3Cpath d='M0 0 C9.5573 5.978 15.6313 13.7391 22 22.9141 C26.7585 29.7094 31.9753 36.1708 37.1001 42.6909 C38.8985 44.9847 40.6862 47.2867 42.4727 49.5898 C49.1268 58.1504 56.1114 66.428 63.1289 74.6914 C65.5323 77.5426 67.8994 80.4178 70.25 83.3125 C78.5635 93.5047 87.1764 103.3704 96.1445 112.9883 C98.2526 115.2691 100.2996 117.5737 102.3125 119.9375 C106.2082 124.4539 110.4898 128.5805 114.75 132.75 C116.9266 134.971 118.9568 137.1725 120.9727 139.5273 C125.7922 145.0961 131.0349 150.2425 136.25 155.4375 C137.2484 156.4397 138.2468 157.442 139.2754 158.4746 C144.0442 163.2372 148.8494 167.8672 153.969 172.2498 C157.2398 175.1333 160.2609 178.2633 163.3125 181.375 C167.6869 185.7918 172.0513 190.1358 176.8047 194.1484 C179.477 196.4464 182.0422 198.8521 184.625 201.25 C189.259 205.5128 194.0064 209.557 198.9102 213.5039 C202.2014 216.1927 205.4133 218.9675 208.625 221.75 C215.5115 227.6933 222.6123 233.3142 229.8125 238.875 C230.836 239.6729 231.8595 240.4709 232.9141 241.293 C238.4922 245.6213 244.1282 249.8469 249.8345 254.0042 C281.9669 277.4529 281.9669 277.4529 286.8125 297.875 C287.11 301.1505 287.1464 304.3999 287.125 307.6875 C287.1201 308.5761 287.1152 309.4646 287.1101 310.3801 C286.9982 316.6322 286.4706 322.1391 283.8125 327.875 C283.4838 328.6136 283.1551 329.3523 282.8164 330.1133 C277.01 341.7463 267.4785 350.3583 255.5 355.1875 C244.1465 358.886 231.8563 358.0198 220.0447 358.0044 C218.2807 358.0058 216.5166 358.0075 214.7526 358.0097 C209.9919 358.0142 205.2311 358.0125 200.4704 358.0093 C195.4611 358.0068 190.4519 358.0091 185.4426 358.0107 C177.0258 358.0125 168.609 358.0101 160.1921 358.0054 C150.5072 357.9999 140.8223 358.0017 131.1374 358.0072 C122.7837 358.0118 114.4299 358.0124 106.0761 358.0098 C101.1042 358.0082 96.1322 358.008 91.1602 358.0113 C86.4759 358.0142 81.7915 358.0121 77.1071 358.0064 C75.4041 358.0051 73.7012 358.0054 71.9982 358.0077 C63.2287 358.0181 54.4802 357.8897 45.7196 357.4724 C44.9623 357.4394 44.205 357.4064 43.4248 357.3725 C11.0064 355.6389 -19.1863 338.3848 -40.875 314.9375 C-64.2127 288.3128 -71.6949 256.3281 -71.5757 221.8088 C-71.5798 219.7876 -71.5851 217.7664 -71.5916 215.7451 C-71.6051 210.322 -71.6001 204.899 -71.5905 199.4759 C-71.5828 193.7686 -71.5899 188.0612 -71.5946 182.3539 C-71.6001 172.7827 -71.593 163.2116 -71.5786 153.6404 C-71.5623 142.6032 -71.5676 131.5662 -71.5841 120.529 C-71.5977 111.0109 -71.5996 101.4927 -71.5918 91.9746 C-71.5871 86.3076 -71.5864 80.6407 -71.5964 74.9737 C-71.6051 69.6506 -71.599 64.3277 -71.5817 59.0046 C-71.5778 57.0605 -71.5788 55.1163 -71.5855 53.1722 C-71.6313 38.4324 -71.0794 25.2189 -62.1875 12.875 C-61.735 12.2395 -61.2826 11.604 -60.8164 10.9492 C-46.3179 -7.5744 -20.0093 -10.9165 0 0 Z ' transform='translate%28114.1875,220.125%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C6.5609 5.3999 12.5065 11.3585 18.5 17.375 C20.0101 18.8793 20.0101 18.8793 21.5508 20.4141 C22.5343 21.3989 23.5179 22.3837 24.5312 23.3984 C25.4136 24.2819 26.296 25.1654 27.2051 26.0757 C29.2713 28.2375 31.2293 30.4087 33.173 32.675 C36.9526 37.0063 40.949 41.0763 45.0273 45.125 C45.7974 45.8936 46.5675 46.6622 47.3609 47.4541 C49.0201 49.1095 50.6804 50.7638 52.3418 52.417 C54.9763 55.0386 57.6076 57.6634 60.238 60.2891 C65.8226 65.8622 71.411 71.4314 77 77 C83.4805 83.4568 89.9593 89.9152 96.4339 96.3779 C99.0169 98.9545 101.603 101.5281 104.1892 104.1016 C105.7838 105.6926 107.3783 107.2837 108.9727 108.875 C109.6846 109.5817 110.3964 110.2885 111.1299 111.0166 C115.0913 114.9776 118.8693 119.0409 122.5194 123.2911 C124.4076 125.4704 126.3951 127.5278 128.4375 129.5625 C129.1168 130.2444 129.7962 130.9263 130.4961 131.6289 C132.472 133.5 134.473 135.271 136.5387 137.0385 C141.533 141.4009 146.2029 146.0628 150.885 150.7556 C151.8405 151.7094 152.7961 152.6632 153.7805 153.6458 C156.3794 156.2411 158.9761 158.8386 161.5716 161.4373 C164.3014 164.1697 167.0337 166.8996 169.7656 169.6299 C174.351 174.2135 178.9343 178.7991 183.5164 183.386 C188.7972 188.6723 194.0817 193.955 199.3681 199.2359 C203.9247 203.788 208.4794 208.342 213.0325 212.8977 C215.744 215.6108 218.4561 218.3231 221.17 221.0337 C224.1972 224.0584 227.2212 227.0863 230.2444 230.115 C231.1324 231.001 232.0204 231.8869 232.9353 232.7997 C237.2081 237.0871 241.3083 241.4436 245.2552 246.0314 C248.5407 249.7382 252.0808 253.1934 255.5974 256.6792 C256.4275 257.5062 257.2576 258.3332 258.1128 259.1853 C259.9014 260.9667 261.6911 262.7471 263.4818 264.5264 C266.3121 267.3392 269.1388 270.1557 271.9645 272.9732 C279.994 280.9783 288.0292 288.9776 296.0686 296.9727 C300.9956 301.873 305.9179 306.7781 310.8371 311.6863 C312.7136 313.5566 314.592 315.4249 316.4723 317.2914 C319.0888 319.8888 321.6993 322.4923 324.3083 325.0972 C325.0922 325.8722 325.876 326.6473 326.6835 327.4458 C327.3886 328.1522 328.0937 328.8586 328.8202 329.5864 C329.4379 330.201 330.0556 330.8156 330.6921 331.4488 C332 333 332 333 332 335 C333.32 335.66 334.64 336.32 336 337 C337.6495 338.4755 339.2476 340.0093 340.8086 341.5781 C341.7206 342.4921 342.6326 343.406 343.5723 344.3477 C344.5178 345.3054 345.4633 346.2632 346.4375 347.25 C347.3792 348.1923 348.3208 349.1346 349.291 350.1055 C353.7455 354.5882 358.0494 359.0676 362 364 C364.3592 366.4772 366.6554 368.737 369.375 370.8125 C371.7289 372.7741 373.7894 374.7613 375.875 377 C376.7993 377.99 376.7993 377.99 377.7422 379 C378.1573 379.66 378.5723 380.32 379 381 C376.347 391.6121 362.9199 399.3463 354 405 C328.9545 419.0551 301.3829 421.304 273.9141 413.8984 C258.907 409.3992 244.8782 403.2073 231 396 C229.8334 395.407 228.6668 394.8141 227.4648 394.2031 C200.8833 380.4267 175.3863 363.6723 152 345 C151.3094 344.4521 150.6188 343.9043 149.9072 343.3398 C142.2609 337.2623 134.7778 331.0728 127.625 324.4141 C125.6119 322.5628 123.5753 320.7798 121.4983 319.0032 C116.2408 314.4071 111.3331 309.4765 106.4023 304.5352 C104.9127 303.0469 104.9127 303.0469 103.393 301.5287 C100.7717 298.9083 98.1529 296.2854 95.5349 293.6618 C93.9388 292.0638 92.3407 290.4677 90.7419 288.8723 C87.6469 285.7835 84.5553 282.6911 81.4648 279.5977 C80.5199 278.6547 79.5749 277.7118 78.6013 276.7402 C71.0461 269.1585 64.0967 261.2074 57.3125 252.9375 C56.7087 252.2022 56.105 251.4668 55.4829 250.7092 C49.5925 243.5219 43.7396 236.3085 38 229 C36.6581 227.2984 36.6581 227.2984 35.2891 225.5625 C20.0352 205.8859 6.3877 184.5782 -6 163 C-6.4239 162.2702 -6.8479 161.5405 -7.2847 160.7886 C-27.6691 125.606 -42.5353 90.1787 -33 49 C-28.9597 35.1802 -21.4216 22.7978 -12 12 C-10.8128 10.631 -10.8128 10.631 -9.6016 9.2344 C-3.5217 2.3478 -3.5217 2.3478 0 0 Z ' transform='translate%28192,43%29' fill='%232474d4'/%3E%3Cpath d='M0 0 C0.99 0.33 1.98 0.66 3 1 C-1.4979 9.0724 -6.0373 17.1133 -10.75 25.0625 C-14.646 31.6415 -18.4369 38.2747 -22.1875 44.9375 C-32.3323 62.9516 -42.7176 80.8255 -53.1565 98.6704 C-56.2823 104.0233 -59.3613 109.3958 -62.375 114.8125 C-67.1295 123.3333 -72.1424 131.6978 -77.1318 140.0825 C-81.4134 147.2892 -85.5924 154.5343 -89.668 161.8594 C-98.172 177.0575 -107.1542 191.9988 -116 207 C-118 206 -120 205 -122 204 C-122 203.34 -122 202.68 -122 202 C-122.66 202 -123.32 202 -124 202 C-124 201.34 -124 200.68 -124 200 C-124.66 200 -125.32 200 -126 200 C-127.5682 198.2227 -129.1296 196.4392 -130.6641 194.6328 C-133.5609 191.3678 -136.6031 188.2745 -139.6875 185.1875 C-140.2461 184.6246 -140.8046 184.0617 -141.3801 183.4817 C-143.628 181.2412 -145.8352 179.1213 -148.3945 177.2383 C-148.9243 176.8296 -149.4541 176.421 -150 176 C-150 175.34 -150 174.68 -150 174 C-151.32 173.34 -152.64 172.68 -154 172 C-155.4634 170.7182 -156.8795 169.3807 -158.25 168 C-158.9564 167.2988 -159.6628 166.5975 -160.3906 165.875 C-162 164 -162 164 -162 162 C-163.32 161.34 -164.64 160.68 -166 160 C-167.5994 158.1964 -169.1923 156.3866 -170.75 154.5469 C-173.5334 151.3963 -176.4661 148.4089 -179.4375 145.4375 C-180.2808 144.5942 -180.2808 144.5942 -181.1411 143.7339 C-184.2682 140.6359 -187.4599 137.664 -190.8125 134.8125 C-192.3903 133.4203 -192.3903 133.4203 -194 132 C-194 131.34 -194 130.68 -194 130 C-195.32 129.34 -196.64 128.68 -198 128 C-203.1223 123.4894 -207.7412 118.3235 -212 113 C-212 112.34 -212 111.68 -212 111 C-210.1012 110.0139 -210.1012 110.0139 -208.1641 109.0078 C-199.114 104.3 -190.0724 99.5773 -181.0625 94.793 C-180.379 94.4301 -179.6955 94.0672 -178.9913 93.6933 C-176.1506 92.1849 -173.31 90.6764 -170.4695 89.1674 C-162.2836 84.8211 -154.082 80.5088 -145.8359 76.2773 C-145.0902 75.8946 -144.3444 75.5118 -143.5761 75.1174 C-140.0155 73.2915 -136.4522 71.471 -132.8853 69.6575 C-126.4915 66.3899 -120.235 63.0306 -114.1157 59.2739 C-111.219 57.5297 -108.2284 56.0387 -105.1875 54.5625 C-88.8627 46.5281 -72.6666 38.1912 -56.75 29.375 C-38.1238 19.0675 -19.0391 9.5195 0 0 Z ' transform='translate%28559,62%29' fill='%232474d4'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "clankdar",
-        "names": {
-          "name": "Clankdar",
-          "command": "clankdar",
-          "formerly": [
-            "botcaptcha"
-          ]
-        },
-        "category": "Agent capability checks",
-        "tagline": "Check what your agent can solve.",
-        "short": "Fresh puzzles for AI agents, scored exactly, with a signed receipt",
-        "meta": "Clankdar gives AI agents fresh puzzles to solve, scores their answers exactly, and signs a receipt anyone can recheck.",
-        "medium": "Clankdar checks what AI agents can solve. Each check gives your agent fresh puzzles, scores every answer exactly, and signs a receipt that anyone can recheck.",
-        "long": "Benchmark scores age: suites leak into training data and results stop meaning anything. Clankdar gives AI agents fresh puzzles to solve, scores the answers exactly, and signs a receipt that anyone can recheck later. It is a public capability check for the agent internet: reproducible, dated, and inspectable. Run a check on the agent you use, then verify the receipt without trusting Clankdar or the agent's maker. It is free to run.",
-        "hero": {
-          "heading": "Check what your agent can solve.",
-          "summary": "Give your agent fresh puzzles and get a receipt: a signed record of what it solved.",
-          "primaryAction": "Run a check",
-          "secondaryAction": "Verify a receipt"
-        },
-        "headings": {
-          "how-title": "Anyone can check the score.",
-          "issue-fresh-puzzles": "Issue fresh puzzles.",
-          "connect-your-agent": "Connect your agent.",
-          "score-each-answer": "Score each answer.",
-          "keep-the-signed-result": "Keep the signed result.",
-          "local-title": "Try a check on your machine.",
-          "integrations-title": "Where to add a check.",
-          "results-title": "Check the receipt yourself."
         },
         "status": {
           "default": "proposed"
@@ -1623,68 +1191,6 @@
           "summary": "A joke for your group chat, a moment in your story, or a product demo that feels like real life. Make it in a few taps, right in your browser.",
           "primaryAction": "Make a conversation",
           "secondaryAction": "Read the introduction"
-        },
-        "status": {
-          "default": "proposed"
-        }
-      }
-    },
-    "midiplace": {
-      "id": "midiplace",
-      "name": "midi.place",
-      "oneLiner": "Research lab for content-addressed MIDI ideas and variations",
-      "brandDescription": null,
-      "canonicalUrl": "https://midi.place",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M7 21a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm13-5a5 5 0 1 0 0 10 5 5 0 0 0 0-10ZM11 4h15v6H14v13h-3V4Zm13 6v8h-3V10h3Z'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "midiplace",
-        "names": {
-          "name": "midi.place"
-        },
-        "category": "MIDI research lab",
-        "tagline": "Compare MIDI ideas and their variations.",
-        "short": "Research lab for content-addressed MIDI ideas and variations",
-        "meta": "midi.place is a research lab for content-addressed MIDI ideas: original loops, controlled variations, and replayable generation receipts.",
-        "medium": "midi.place is a research lab for content-addressed MIDI ideas. It compares original loops with controlled variations, keeps a replayable receipt for every generation, and renders audio with Soundfish. The public site is not live yet.",
-        "hero": {
-          "heading": "Compare MIDI ideas and their variations.",
-          "summary": "midi.place is a research lab for content-addressed MIDI ideas: original loops, controlled variations, and replayable generation receipts.",
-          "primaryAction": "Open midi.place"
-        },
-        "status": {
-          "default": "proposed"
-        }
-      }
-    },
-    "alt": {
-      "id": "alt",
-      "name": "Alt",
-      "oneLiner": "Personal canvas with an on-device model and replayable plans",
-      "brandDescription": null,
-      "canonicalUrl": "https://alt.dog",
-      "status": "active",
-      "copyStatus": "proposed",
-      "aliases": [],
-      "mark": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'%3E%3Cpath fill='%232474d4' fill-rule='evenodd' d='M4 17C4 8 8 3 16 3s13 5 13 13v13H16C8 29 4 25 4 17Zm6 1c0-5 2-8 6-8s6 3 6 8v4h-4v-3c-1 3-8 4-8-1Zm4-1c0 3 4 2 4-1s-4-3-4 1Z'/%3E%3C/svg%3E",
-      "messaging": {
-        "formatVersion": 1,
-        "product": "alt",
-        "names": {
-          "name": "Alt"
-        },
-        "category": "Personal canvas",
-        "tagline": "A canvas for questions, drawings, and small tools.",
-        "short": "Personal canvas with an on-device model and replayable plans",
-        "meta": "Alt is a canvas for questions, drawings, and small tools, with a model that runs on your device and optional encrypted sync.",
-        "medium": "Alt is a personal workspace you can reshape with a local model. It keeps an editable plan with replayable history, and your plans, reading, tools, and conversations stay on your device, with optional encrypted sync.",
-        "hero": {
-          "heading": "A canvas for questions, drawings, and small tools.",
-          "summary": "Alt is a canvas for questions, drawings, and small tools, with a model that runs on your device and optional encrypted sync.",
-          "primaryAction": "Open Alt"
         },
         "status": {
           "default": "proposed"
@@ -1828,9 +1334,7 @@
         "kb",
         "oh-computer",
         "sponge",
-        "sloptrade",
-        "roughday",
-        "alt"
+        "roughday"
       ]
     },
     {
@@ -1839,10 +1343,7 @@
       "tone": "amber",
       "members": [
         "iconplace",
-        "slopcamera",
-        "soundfish",
-        "textmock",
-        "midiplace"
+        "textmock"
       ]
     },
     {
@@ -1853,25 +1354,11 @@
         "xcb",
         "algal",
         "gobstopper",
-        "sys1",
-        "aicharts",
-        "direct",
-        "clankdar",
-        "valhalla",
-        "swft"
+        "aicharts"
       ]
     }
   ],
   "relations": [
-    {
-      "id": "runtime:lifedaysleft:slopcamera:uses",
-      "source": "lifedaysleft",
-      "target": "slopcamera",
-      "kind": "runtime",
-      "direction": "forward",
-      "label": "uses",
-      "detail": null
-    },
     {
       "id": "development:roughday:direct:develops-with",
       "source": "roughday",
@@ -1972,15 +1459,6 @@
       "detail": "Soulscrape exports dated dossier packets that PeopleBlade imports and rebinds to contacts during local merge review."
     },
     {
-      "id": "development:slopcamera:direct:develops-with",
-      "source": "slopcamera",
-      "target": "direct",
-      "kind": "development",
-      "direction": "forward",
-      "label": "develops with",
-      "detail": null
-    },
-    {
       "id": "delivery:direct:hraness:readme-backed-direct",
       "source": "direct",
       "target": "hraness",
@@ -1988,15 +1466,6 @@
       "direction": "forward",
       "label": "README-backed /direct",
       "detail": "Hraness renders the pinned public Direct README and Agent Skill at /direct."
-    },
-    {
-      "id": "development:soundfish:direct:develops-with",
-      "source": "soundfish",
-      "target": "direct",
-      "kind": "development",
-      "direction": "forward",
-      "label": "develops with",
-      "detail": null
     },
     {
       "id": "runtime:message-like-me:xcb:drafts-replies-through",
@@ -2053,24 +1522,6 @@
       "detail": "Excalibur (xcb) can bind one explicit Wordcell vault through a hash-pinned CLI, giving workers a read-only memory search with citations; saving a note back to the vault is always an explicit step."
     },
     {
-      "id": "runtime:clankdar:algal:scores-puzzles-with",
-      "source": "clankdar",
-      "target": "algal",
-      "kind": "runtime",
-      "direction": "forward",
-      "label": "scores puzzles with",
-      "detail": "Clankdar's default puzzles are small programs in ALGAL's expression language, and ALGAL's official evaluator, pinned by commit and hash, computes each reference answer, so no judge model decides."
-    },
-    {
-      "id": "runtime:slopcamera:algal:bakes-character-behavior-with",
-      "source": "slopcamera",
-      "target": "algal",
-      "kind": "runtime",
-      "direction": "forward",
-      "label": "bakes character behavior with",
-      "detail": "SlopCamera's scene behavior bake runs character behavior as ALGAL organisms with no executors or side effects."
-    },
-    {
       "id": "runtime:sponge:wrench:captures-signed-in-pages-through",
       "source": "sponge",
       "target": "wrench",
@@ -2096,15 +1547,6 @@
       "direction": "forward",
       "label": "runs studies with",
       "detail": "Pattern Language uses ALGAL so its design experiments stay inspectable: content-addressed manifests and records you can replay."
-    },
-    {
-      "id": "delivery:system-one-skills:sys1:skills-guide-hosted-by",
-      "source": "system-one-skills",
-      "target": "sys1",
-      "kind": "delivery",
-      "direction": "forward",
-      "label": "skills guide hosted by",
-      "detail": "The System One Skills guide is published at sys1.io/skills on the Sys1 site; the skill pack does not require Sys1 at runtime."
     },
     {
       "id": "runtime:ghostget-skills:wrench:uses",
@@ -2170,15 +1612,6 @@
       "detail": "ALGAL's xcb executor hands coding tasks to Excalibur (xcb) through its JSON run command, and ALGAL never copies credentials or reimplements account switching."
     },
     {
-      "id": "runtime:soundfish:algal:evolves-loops-with",
-      "source": "soundfish",
-      "target": "algal",
-      "kind": "runtime",
-      "direction": "forward",
-      "label": "evolves loops with",
-      "detail": "Soundfish's evolve command turns a loop into an evolving recipe that a bundled ALGAL evaluator, pinned by SHA-256, runs offline."
-    },
-    {
       "id": "runtime:aicharts:gobstopper:reads-compaction-telemetry-from",
       "source": "aicharts",
       "target": "gobstopper",
@@ -2197,5 +1630,5 @@
       "detail": "The icon.place drawing lab runs each experiment as an ALGAL program in the browser and records the proposal, candidates, and selection as receipts it can replay; the live site does not use ALGAL yet."
     }
   ],
-  "digest": "sha256:eabb4369e2180151554d3387914d36cb1053014d02e882fc4fa8a23066d75b81"
+  "digest": "sha256:5cfe0558c23c21151b54894af3c36d086c248951a4e6c7be60d3ff2f5f0d09dd"
 }
