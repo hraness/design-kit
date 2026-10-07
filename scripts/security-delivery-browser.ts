@@ -49,7 +49,6 @@ const contentSecurityPolicy = [
   "default-src 'none'",
   "base-uri 'none'",
   "object-src 'none'",
-  "frame-ancestors 'none'",
   "form-action 'none'",
   `script-src 'nonce-${nonce}' 'strict-dynamic'`,
   "script-src-attr 'none'",
