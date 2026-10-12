@@ -56,7 +56,7 @@ Show the result of a feature before its implementation. A publishing section sho
 
 Keep a benchmark only when its result makes sense without knowing the test harness. Name the task, metric and unit, baseline, product version, and meaningful sample. Explain what improves in the reader's words. A tiny fixture or synthetic correctness check is engineering evidence, not a product advantage; remove its numbers from marketing rather than dressing them up as a benchmark.
 
-Put measurement dates, sources, sample details and necessary methodological limits in a compact note beside the result. Keep the result visually primary. A qualification that changes the meaning of the claim stays close to it and remains readable; fine print is a quieter typographic role, never low-contrast or hidden text. Detailed methodology and reproduction commands belong on the evidence page.
+Put measurement dates, sources, sample details and necessary methodological limits in a compact note beside the result. Keep the result visually primary. A qualification that changes the meaning of the claim stays close to it and remains readable; fine print is a quieter typographic role, never low-contrast or hidden text. Detailed methodology and reproduction commands belong on the evidence page. Draw the result with `ArticleBarChart` or `ComparisonTable`; [Mockups, diagrams, and benchmarks](DESIGN.md#mockups-diagrams-and-benchmarks) lists the figures every landing page carries.
 
 ## Plain-string props
 
