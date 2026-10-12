@@ -486,6 +486,13 @@ quotes, pricing, native questions, a maker section, a closing call to action,
 and an in-flow site footer. The classes own
 responsive structure and semantics-facing presentation.
 
+Each product keeps that core and adds its own shard: one accent hue, one drawn
+motif, and at most two signature moments that show the product's mechanism in
+motion or depth. Every landing page also carries one real proof object above
+the fold, one mechanism diagram, and a benchmark figure when real data exists.
+[Sharded identity](DESIGN.md#sharded-identity) in DESIGN.md gives the rules
+and the components to use.
+
 When a page also mounts the shared network footer from `@hraness/site-footer`,
 render it directly after the marketing footer: the grammar joins the pair into
 one band instead of two stacked bars. The product row's bottom space collapses
@@ -1008,7 +1015,7 @@ MIT. Vendored Nebula Sans, Geist Mono, and other upstream artifacts retain their
 
 ### Shared editorial marketing preset
 
-Import `@hraness/design-kit/product-marketing-preset.css` after your existing marketing styles, then opt in with `<MarketingPage preset="editorial">`. The editorial preset sets one large Nebula Sans heading at weight 550 on the flat palette background, with hairline rules and a thin header whose links move to their own scrolling row on phones. `preset="minimal"` uses a more compact sans hierarchy. Hero backdrops, patterns, and textures are retired; see [Hero fields](HERO_FIELDS.md). Product accents and copy remain product-owned.
+Import `@hraness/design-kit/product-marketing-preset.css` after your existing marketing styles, then opt in with `<MarketingPage preset="editorial">`. The editorial preset sets one large Nebula Sans heading at weight 550 on the flat palette background, with hairline rules and a thin header whose links move to their own scrolling row on phones. `preset="minimal"` uses a more compact sans hierarchy. Hero backdrops, patterns, and textures are retired as shared defaults; see [Hero fields](HERO_FIELDS.md). A product may add at most two signature moments of its own under [Sharded identity](DESIGN.md#sharded-identity). Product accents and copy remain product-owned.
 
 [Writing for the marketing components](MARKETING_COPY.md) says what each slot is for and which copy patterns to avoid.
 

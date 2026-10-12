@@ -1,8 +1,11 @@
 # Product landscape
 
 A product landscape is one detailed drawing of the product's world, drawn
-behind its marketing, documentation, and blog pages. It is the one sanctioned
-exception to the Quiet direction's flat page background. The drawing stays in
+behind its marketing, documentation, and blog pages. It is one of the two sanctioned
+departures from the Quiet direction's flat page background; the other is a
+signature moment, defined in [Sharded identity](DESIGN.md#sharded-identity).
+The drawing is the natural home for the product's signature motif, and its
+margins may host one signature moment. The drawing stays in
 the margins, takes its colour from the page's own text and background, and
 tiles down the page, so it never competes with the copy and never runs out on
 a long page.

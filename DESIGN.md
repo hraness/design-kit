@@ -13,9 +13,50 @@ Public product pages follow the Quiet direction, taken from the structure of alg
 - A flat palette background with content on opaque surfaces and hairline edges. Mono only for code, commands, and small labels.
 - Optionally, one product landscape: a detailed, product-specific drawing tinted from the palette, kept in the margins, and tiled behind the marketing, documentation, and blog pages. Over it, reading surfaces stay opaque with rounded edges and small cards and callouts become frosted panels. See [Product landscape](LANDSCAPE.md).
 
-Retired, and no longer produced by any shared default: hero backdrops and pointer-driven light (`ProductHero` `backdrop`, `HeroBackdrop`, `attachHeroLight`, `data-hraness-hero-item`), background textures and patterns (grain, cells, weave, contour, mesh, grid tiling, gradients behind text), serif display headings, glass or blur on cards and content outside a product landscape, heavy shadows and glowing edges, and large interactive app mockups on marketing pages. The retired component names stay exported and do nothing, so products can remove them on their own schedule. See [Hero fields](HERO_FIELDS.md) and [Marketing preset](MARKETING_PRESET.md).
+Retired as shared defaults and as decoration, and no longer produced by any shared default: hero backdrops and pointer-driven light (`ProductHero` `backdrop`, `HeroBackdrop`, `attachHeroLight`, `data-hraness-hero-item`), background textures and patterns (grain, cells, weave, contour, mesh, grid tiling, gradients behind text), serif display headings, glass or blur on cards and content outside a product landscape, heavy shadows and glowing edges, and large interactive app mockups on marketing pages. The retired component names stay exported and do nothing, so products can remove them on their own schedule. A product may bring motion, depth, or rendering back in one place only as a signature moment that meets every rule in [Sharded identity](#sharded-identity); the shared defaults stay flat. See [Hero fields](HERO_FIELDS.md) and [Marketing preset](MARKETING_PRESET.md).
 
 Blur remains allowed on a sticky header with real content scrolling behind it, and on small cards and callouts over a product landscape. Both turn opaque without backdrop support, with reduced transparency, and in forced colors.
+
+## Sharded identity
+
+The portfolio reads as one studio's work with distinct products in it. Every site keeps the same core, and each product adds a shard: one accent, one motif, and at most two signature moments where real craft shows. The reference is what the best design engineers do with tools like Paper, shaders, and WebGPU: subtle, physically plausible, surprising once, then quiet, so the product can speak for itself. The bar for the result is the polish of Stripe, Vercel, or Shopify.
+
+### The core every site keeps
+
+- The Paper palettes and the five-palette appearance menu as the final header control.
+- Nebula Sans at weight 550 for display headings, on the editorial type scale.
+- The foil brand lockup in the thin sticky header, and the same header on every public page.
+- Hairline rules, opaque reading surfaces, and the flat palette background.
+- Ruled sections: eyebrow, heading, one short paragraph, one concrete object.
+- The product landscape stays one of the sanctioned forms: one product-specific drawing in the margins, as described in [Product landscape](LANDSCAPE.md).
+
+### The shard each product adds
+
+- One accent palette role. The product binds `--hraness-marketing-accent` (with `--hraness-marketing-accent-soft` and `--hraness-marketing-accent-ink`) to one hue that holds across every palette and both appearances. Buttons, links, diagram strokes, chart bars, and the signature moments all use that one hue; a second accent appears only where data needs a second series.
+- One signature motif: a recurring drawn form taken from the product's mechanism, such as the fold of a compacted transcript, a route threading a bank of accounts, three records joining into one, a trail of sources becoming a report, a paused program resuming, posts travelling between peers, or notes on a piano roll. The motif recurs in the product landscape, the mechanism diagram, the social image, and the blog card images, drawn in the product's palette with that one accent. It never alters the wordmark or the mark.
+- At most two signature moments, defined below.
+
+### Signature moments
+
+A signature moment is one place on a site where motion, depth, or rendering goes beyond the Quiet defaults. Each one meets every rule below. A moment that fails one rule is decoration, and decoration stays retired.
+
+1. It demonstrates the product's mechanism: compaction squeezing a transcript, a route finding the one idle account, a contact book joining three sources into one record, a research trail turning into a cited report, a program pausing and resuming, signed posts flowing between peers, notes streaming down a piano roll. A reader who watches it learns how the product works. Decoration with no mechanism is out.
+2. It never sits behind text. Reading surfaces stay opaque. It lives in the hero proof frame, in a section figure, or in the product landscape margins.
+3. It respects `prefers-reduced-motion: reduce` with a static final frame that still shows the result, `forced-colors: active` with system colors or no drawing at all, and `prefers-reduced-transparency: reduce` with opaque surfaces. It reads correctly in both appearances and in every palette.
+4. It reserves its box before it loads, so it causes no layout shift, and it is skipped by search snippets and assistive technology: the drawing carries `aria-hidden="true"`, and its meaning lives in visible copy or in the accurate `alt` of the static fallback.
+5. It is product-owned CSS, SVG, canvas, or WebGL/WebGPU with a static fallback (an SVG or image) that renders without JavaScript and when a GPU or rendering context is unavailable. It loads lazily after first paint, and its script stays under about 60 KB compressed.
+6. It is tested at 375px and 1280px in light and dark, with reduced motion and forced colors, in the site's own browser checks.
+7. Each site has at most two. Everything else stays Quiet.
+
+Mark each moment with `data-hraness-signature` on its outermost element, with a value that names the mechanism (`data-hraness-signature="compaction"`). The attribute is the hook the site's own tests use to count moments, find the reduced-motion branch, and locate the static fallback. The kit's stylesheets do not style it and the kit's snapshot checks do not read it; the rules above are the site's to enforce.
+
+### Mockups, diagrams, and benchmarks
+
+Rich mockups and diagrams are the main tools for showing the product. Every landing page carries at least:
+
+- One real proof object above the fold: real command output in `MarketingProofFrame` (`chrome="terminal"`, capture date in `credit`), a real screen (`chrome="window"` or `chrome="browser"` with its `url`), or a mockup from `@hraness/design-kit/mockups`, optionally in a `ModeShowcase` with a few of its states. Mockups use invented names on example domains and an accurate accessible description.
+- One mechanism diagram: an SVG in `MarketingDiagram` (or `ArticleFigure` in a post), drawn in the product's palette with one dominant accent, legible in both appearances, with an accurate `alt`. One idea per drawing.
+- One benchmark or measurement figure, where real data exists: `ArticleBarChart` or `ComparisonTable`, with the task, metric and unit, baseline, product version, sample, and measurement date beside the result, as [Benchmarks](MARKETING_COPY.md#benchmarks) describes. A toy fixture is engineering evidence, not a benchmark; a page with no real data carries no figure.
 
 ## Launch posts
 

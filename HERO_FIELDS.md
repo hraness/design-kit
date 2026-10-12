@@ -1,6 +1,6 @@
 # Hero fields
 
-Hero backdrops are retired. Since 0.23.0, marketing heroes follow the Quiet
+Hero backdrops are retired as shared defaults; a product may add one signature moment to its hero proof frame under [Sharded identity](DESIGN.md#sharded-identity). Since 0.23.0, marketing heroes follow the Quiet
 direction: a flat palette background, a sans heading, a short summary, one next
 step, and one real proof of the product right after the copy. Nothing moves,
 glows, or blurs behind the text.
